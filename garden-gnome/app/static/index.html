@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Garden Gnome — Test Console</title>
+<style>
+  :root {
+    --green: #2e7d32;
+    --green-light: #e8f5e9;
+    --border: #cfd8d4;
+    --text: #1b1b1b;
+    --muted: #5f6b66;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+    margin: 0;
+    background: #fafaf8;
+    color: var(--text);
+  }
+  header {
+    background: var(--green);
+    color: white;
+    padding: 16px 24px;
+  }
+  header h1 { margin: 0; font-size: 20px; }
+  header p { margin: 4px 0 0; font-size: 13px; opacity: 0.85; }
+  nav {
+    display: flex;
+    gap: 4px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    flex-wrap: wrap;
+  }
+  nav button {
+    border: none;
+    background: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+  }
+  nav button.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+    font-weight: 600;
+  }
+  main { max-width: 900px; margin: 0 auto; padding: 24px 16px 64px; }
+  section.panel { display: none; }
+  section.panel.active { display: block; }
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .card h2 { margin-top: 0; font-size: 16px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  .row { display: flex; gap: 12px; }
+  .row > div { flex: 1; }
+  .checkbox-row { display: flex; align-items: center; gap: 8px; margin: 10px 0 4px; }
+  .checkbox-row input { width: auto; }
+  button.action {
+    margin-top: 14px;
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button.action:hover { background: #245c27; }
+  button.secondary {
+    background: white;
+    color: var(--green);
+    border: 1px solid var(--green);
+  }
+  button.danger {
+    background: white;
+    color: #b00020;
+    border: 1px solid #b00020;
+  }
+  pre.output {
+    background: #f1f4f1;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 400px;
+    overflow: auto;
+  }
+  .list-item {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .list-item:hover { background: var(--green-light); }
+  .list-item.selected { border-color: var(--green); background: var(--green-light); }
+  .active-plant-banner {
+    background: var(--green-light);
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .muted { color: var(--muted); font-size: 13px; }
+  .error { color: #b00020; }
+  .tag {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .uuid { font-size: 11px; color: var(--muted); font-family: monospace; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌱 Garden Gnome — Test Console</h1>
+  <p>Manual test GUI for the local API. Not part of the product UI.</p>
+</header>
+
+<nav id="tabs">
+  <button data-tab="species" class="active">Species</button>
+  <button data-tab="plants">Plants</button>
+  <button data-tab="environments">Environments</button>
+  <button data-tab="logs">Care Log</button>
+  <button data-tab="timeline">Timeline</button>
+  <button data-tab="advice">Advice</button>
+  <button data-tab="photo">Photo Diagnosis</button>
+  <button data-tab="census">Census</button>
+</nav>
+
+<main>
+  <div id="activePlantBanner" class="active-plant-banner" style="display:none;"></div>
+
+  <!-- SPECIES -->
+  <section class="panel active" id="panel-species">
+    <div class="card">
+      <h2>Species catalog</h2>
+      <button class="action secondary" onclick="loadSpeciesList()">Refresh list</button>
+      <div id="speciesList" style="margin-top:12px;"></div>
+    </div>
+    <div class="card">
+      <h2>Species detail</h2>
+      <p class="muted">Click a species above to load its care schedules and traits.</p>
+      <pre class="output" id="speciesDetailOutput">(nothing loaded yet)</pre>
+    </div>
+    <div class="card">
+      <h2>Generate species profile (AI-assisted)</h2>
+      <p class="muted">Enter a plant name and the server's LLM backend generates a care profile draft. Requires <code>ADVISOR_BACKEND=ollama</code> or <code>anthropic</code> — the stub backend returns a blank template to fill manually.</p>
+      <label>Plant name</label>
+      <input id="gen-name" placeholder="Boston Fern / Monstera Thai Constellation / Echeveria elegans">
+      <button class="action secondary" onclick="generateSpecies()">Generate draft</button>
+      <pre class="output" id="generateOutput">(no draft yet)</pre>
+      <button class="action" id="saveDraftBtn" style="display:none;" onclick="saveGeneratedDraft()">Save this draft to catalog</button>
+    </div>
+    <div class="card">
+      <h2>Bulk import from JSON</h2>
+      <p class="muted">Paste a JSON array of species records (same shape as <code>species_catalog.json</code>) to add multiple species at once. Entries that already exist by scientific name are skipped.</p>
+      <textarea id="bulk-json" style="min-height:120px; font-family:monospace;" placeholder='[{"common_name": "...", "scientific_name": "...", "light_need": "medium", ...}]'></textarea>
+      <button class="action secondary" onclick="bulkImportSpecies()">Import JSON</button>
+      <pre class="output" id="bulkImportOutput">(no import yet)</pre>
+    </div>
+  </section>
+
+  <!-- PLANTS -->
+  <section class="panel" id="panel-plants">
+    <div class="card">
+      <h2>Add a plant</h2>
+      <label>Nickname</label>
+      <input id="p-nickname" placeholder="Sir Hiss">
+      <div class="row">
+        <div>
+          <label>Species</label>
+          <select id="p-species"></select>
+        </div>
+        <div>
+          <label>Environment</label>
+          <select id="p-environment"><option value="">(default)</option></select>
+        </div>
+        <div>
+          <label>Maturity stage</label>
+          <select id="p-maturity">
+            <option value="seedling">seedling</option>
+            <option value="juvenile" selected>juvenile</option>
+            <option value="mature">mature</option>
+            <option value="flowering">flowering</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Location (room/spot)</label>
+          <input id="p-location" placeholder="office desk">
+        </div>
+        <div>
+          <label>Acquired on</label>
+          <input id="p-acquired" type="date">
+        </div>
+      </div>
+
+      <h2 style="margin-top:20px;">Intake condition (optional)</h2>
+      <div class="row">
+        <div>
+          <label>Soil moisture at acquisition</label>
+          <select id="p-soil">
+            <option value="">(not recorded)</option>
+            <option value="dry">dry</option>
+            <option value="moist">moist</option>
+            <option value="wet">wet</option>
+          </select>
+        </div>
+        <div>
+          <label>Leaf condition at acquisition</label>
+          <select id="p-leaf">
+            <option value="">(not recorded)</option>
+            <option value="healthy">healthy</option>
+            <option value="yellowing">yellowing</option>
+            <option value="browning">browning</option>
+            <option value="wilting">wilting</option>
+            <option value="pest_damage">pest_damage</option>
+            <option value="dropping">dropping</option>
+          </select>
+        </div>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="p-pests">
+        <label style="margin:0;">Pests observed at acquisition</label>
+      </div>
+      <label>Intake notes</label>
+      <textarea id="p-notes" placeholder="a couple unopened new leaves"></textarea>
+
+      <button class="action" onclick="createPlant()">Create plant</button>
+      <pre class="output" id="createPlantOutput">(no plant created yet)</pre>
+    </div>
+
+    <div class="card">
+      <h2>Existing plants</h2>
+      <button class="action secondary" onclick="loadPlantsList()">Refresh list</button>
+      <div id="plantsList" style="margin-top:12px;"></div>
+      <p class="muted">Click a plant to select it as the active plant for Care Log / Timeline / Advice / Photo tabs.</p>
+    </div>
+
+    <div class="card">
+      <h2>Transfer active plant</h2>
+      <p class="muted">Move the selected plant to a different environment. Its stewardship history is preserved, and its canonical UUID stays the same so the census doesn't double-count it.</p>
+      <label>Transfer to environment</label>
+      <select id="transfer-env"><option value="">(select environment)</option></select>
+      <label>Transfer notes (optional)</label>
+      <textarea id="transfer-notes" placeholder="Moved to office after leaf yellowing improved"></textarea>
+      <button class="action danger" onclick="transferPlant()">Transfer plant</button>
+      <pre class="output" id="transferOutput">(no transfer submitted yet)</pre>
+    </div>
+
+    <div class="card">
+      <h2>Stewardship history</h2>
+      <button class="action secondary" onclick="loadStewardship()">Load stewardship chain</button>
+      <pre class="output" id="stewardshipOutput">(not loaded yet)</pre>
+    </div>
+  </section>
+
+  <!-- ENVIRONMENTS -->
+  <section class="panel" id="panel-environments">
+    <div class="card">
+      <h2>Create environment</h2>
+      <p class="muted">An environment is a physical place (home, nursery, community garden, etc.). Plants and stewardship records are linked to environments so the census can analyse plant populations by location type independently of who owns them.</p>
+      <label>Name</label>
+      <input id="env-name" placeholder="Alice's Apartment / Sunflower Nursery / Riverside Community Garden">
+      <div class="row">
+        <div>
+          <label>Type</label>
+          <select id="env-type">
+            <option value="home">home</option>
+            <option value="nursery">nursery</option>
+            <option value="community_garden">community_garden</option>
+            <option value="conservation">conservation</option>
+            <option value="research">research</option>
+          </select>
+        </div>
+        <div>
+          <label>City</label>
+          <input id="env-city" placeholder="Austin">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Region / State</label>
+          <input id="env-region" placeholder="Texas">
+        </div>
+        <div>
+          <label>Country</label>
+          <input id="env-country" placeholder="USA">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Latitude (optional)</label>
+          <input id="env-lat" type="number" step="any" placeholder="30.2672">
+        </div>
+        <div>
+          <label>Longitude (optional)</label>
+          <input id="env-lng" type="number" step="any" placeholder="-97.7431">
+        </div>
+      </div>
+      <button class="action" onclick="createEnvironment()">Create environment</button>
+      <pre class="output" id="createEnvOutput">(no environment created yet)</pre>
+    </div>
+
+    <div class="card">
+      <h2>Environments</h2>
+      <button class="action secondary" onclick="loadEnvironmentsList()">Refresh list</button>
+      <div id="environmentsList" style="margin-top:12px;"></div>
+    </div>
+  </section>
+
+  <!-- CARE LOG -->
+  <section class="panel" id="panel-logs">
+    <div class="card">
+      <h2>Log a care event</h2>
+      <label>Action</label>
+      <select id="log-action">
+        <option value="water">water</option>
+        <option value="fertilize">fertilize</option>
+        <option value="mist">mist</option>
+        <option value="prune">prune</option>
+        <option value="repot">repot</option>
+        <option value="rotate">rotate</option>
+        <option value="clean">clean</option>
+        <option value="other">other</option>
+      </select>
+      <label>Notes</label>
+      <textarea id="log-notes" placeholder="soil was bone dry"></textarea>
+      <button class="action" onclick="addCareLog()">Add log</button>
+      <pre class="output" id="addLogOutput">(no log submitted yet)</pre>
+    </div>
+    <div class="card">
+      <h2>Recent logs</h2>
+      <button class="action secondary" onclick="loadCareLogs()">Refresh logs</button>
+      <pre class="output" id="logsOutput">(not loaded yet)</pre>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="panel" id="panel-timeline">
+    <div class="card">
+      <h2>Timeline</h2>
+      <div class="row">
+        <div>
+          <label>Since (optional)</label>
+          <input type="date" id="tl-since">
+        </div>
+        <div>
+          <label>Until (optional)</label>
+          <input type="date" id="tl-until">
+        </div>
+      </div>
+      <button class="action" onclick="loadTimeline()">Load timeline</button>
+      <pre class="output" id="timelineOutput">(not loaded yet)</pre>
+    </div>
+    <div class="card">
+      <h2>Per-care-type summary</h2>
+      <button class="action" onclick="loadTimelineSummary()">Load summary</button>
+      <pre class="output" id="timelineSummaryOutput">(not loaded yet)</pre>
+    </div>
+  </section>
+
+  <!-- ADVICE -->
+  <section class="panel" id="panel-advice">
+    <div class="card">
+      <h2>Get care advice</h2>
+      <label>Symptoms (optional free text)</label>
+      <textarea id="advice-symptoms" placeholder="leaves are turning yellow and mushy at the base"></textarea>
+      <button class="action" onclick="getAdvice()">Get advice</button>
+      <pre class="output" id="adviceOutput">(not requested yet)</pre>
+    </div>
+  </section>
+
+  <!-- PHOTO DIAGNOSIS -->
+  <section class="panel" id="panel-photo">
+    <div class="card">
+      <h2>Diagnose from a photo</h2>
+      <p class="muted">Backend is whatever VISION_BACKEND is set to on the server (stub by default — see README for enabling the local Ollama/moondream backend).</p>
+      <label>Photo (JPEG / PNG / WebP, max 8MB)</label>
+      <input type="file" id="photo-file" accept="image/jpeg,image/png,image/webp">
+      <label>Notes (optional)</label>
+      <textarea id="photo-notes" placeholder="lower leaves looking droopy"></textarea>
+      <button class="action" onclick="diagnosePhoto()">Diagnose</button>
+      <pre class="output" id="photoOutput">(not requested yet)</pre>
+    </div>
+  </section>
+
+  <!-- CENSUS -->
+  <section class="panel" id="panel-census">
+    <div class="card">
+      <h2>Census summary</h2>
+      <p class="muted">Aggregate counts across all environments on this installation. Plant counts by environment type and species distribution.</p>
+      <button class="action secondary" onclick="loadCensusSummary()">Load summary</button>
+      <pre class="output" id="censusSummaryOutput">(not loaded yet)</pre>
+    </div>
+    <div class="card">
+      <h2>Export anonymized data</h2>
+      <p class="muted">Downloads a PII-free JSON snapshot of all plant records. No nicknames, no personal notes — only species, environment type, geographic region, care timestamps, and stewardship chain. Identified by canonical plant_uuid so cross-installation aggregators don't double-count transferred plants.</p>
+      <button class="action secondary" onclick="exportCensus()">Download export JSON</button>
+      <pre class="output" id="censusExportOutput">(not exported yet)</pre>
+    </div>
+    <div class="card">
+      <h2>Sync to shared census</h2>
+      <p class="muted">Push the anonymized export to <code>CENSUS_API_URL</code> (configured in .env). If not configured, this will report "skipped" — no data is sent anywhere by default.</p>
+      <button class="action" onclick="syncCensus()">Sync now</button>
+      <pre class="output" id="censusSyncOutput">(not synced yet)</pre>
+    </div>
+  </section>
+</main>
+
+<script>
+const API = "";
+let activePlant = null;
+let speciesCache = [];
+let environmentsCache = [];
+
+function showTab(name) {
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  document.querySelectorAll("section.panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + name));
+}
+document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+
+function updateActivePlantBanner() {
+  const el = document.getElementById("activePlantBanner");
+  if (!activePlant) { el.style.display = "none"; return; }
+  const envName = environmentsCache.find(e => e.id === activePlant.environment_id)?.name || "";
+  const envTag = envName ? ` <span class="tag">${envName}</span>` : "";
+  el.style.display = "block";
+  el.innerHTML = `Active plant: <strong>#${activePlant.id} — ${activePlant.nickname}</strong>${envTag} <span class="uuid">${activePlant.plant_uuid}</span>`;
+}
+
+function setActivePlant(plant) {
+  activePlant = plant;
+  updateActivePlantBanner();
+}
+
+async function api(path, options) {
+  const resp = await fetch(API + path, options);
+  let body;
+  try { body = await resp.json(); } catch (e) { body = await resp.text(); }
+  if (!resp.ok) {
+    const err = new Error(typeof body === "object" ? JSON.stringify(body) : body);
+    err.status = resp.status;
+    err.body = body;
+    throw err;
+  }
+  return body;
+}
+
+function show(elementId, data) {
+  const el = document.getElementById(elementId);
+  el.classList.remove("error");
+  el.textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+}
+
+function showError(elementId, err) {
+  const el = document.getElementById(elementId);
+  el.classList.add("error");
+  el.textContent = `Error ${err.status || ""}: ${err.message}`;
+}
+
+// --- Species ---
+async function loadSpeciesList() {
+  try {
+    speciesCache = await api("/species/");
+    const listEl = document.getElementById("speciesList");
+    listEl.innerHTML = "";
+    speciesCache.forEach(s => {
+      const div = document.createElement("div");
+      div.className = "list-item";
+      div.textContent = `#${s.id} — ${s.common_name} (${s.scientific_name})`;
+      div.onclick = () => loadSpeciesDetail(s.id);
+      listEl.appendChild(div);
+    });
+    populateSpeciesDropdown();
+  } catch (err) { showError("speciesList", err); }
+}
+
+async function loadSpeciesDetail(id) {
+  try {
+    const detail = await api(`/species/${id}`);
+    show("speciesDetailOutput", detail);
+  } catch (err) { showError("speciesDetailOutput", err); }
+}
+
+function populateSpeciesDropdown() {
+  const sel = document.getElementById("p-species");
+  sel.innerHTML = "";
+  speciesCache.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s.id;
+    opt.textContent = `#${s.id} ${s.common_name}`;
+    sel.appendChild(opt);
+  });
+}
+
+// --- Environments ---
+async function loadEnvironmentsList() {
+  try {
+    environmentsCache = await api("/environments/");
+    const listEl = document.getElementById("environmentsList");
+    listEl.innerHTML = "";
+    environmentsCache.forEach(e => {
+      const div = document.createElement("div");
+      div.className = "list-item";
+      const loc = [e.city, e.region, e.country].filter(Boolean).join(", ");
+      div.innerHTML = `<strong>#${e.id} ${e.name}</strong> <span class="tag">${e.type}</span> — ${e.plant_count} plant${e.plant_count !== 1 ? "s" : ""}` +
+        (loc ? `<br><span class="muted">${loc}</span>` : "") +
+        `<br><span class="uuid">${e.uuid}</span>`;
+      listEl.appendChild(div);
+    });
+    populateEnvironmentDropdowns();
+    updateActivePlantBanner();
+  } catch (err) { showError("environmentsList", err); }
+}
+
+function populateEnvironmentDropdowns() {
+  ["p-environment", "transfer-env"].forEach(id => {
+    const sel = document.getElementById(id);
+    const defaultOpt = id === "p-environment"
+      ? '<option value="">(default)</option>'
+      : '<option value="">(select environment)</option>';
+    sel.innerHTML = defaultOpt;
+    environmentsCache.forEach(e => {
+      const opt = document.createElement("option");
+      opt.value = e.id;
+      opt.textContent = `#${e.id} ${e.name} (${e.type})`;
+      sel.appendChild(opt);
+    });
+  });
+}
+
+async function createEnvironment() {
+  const lat = document.getElementById("env-lat").value;
+  const lng = document.getElementById("env-lng").value;
+  const payload = {
+    name: document.getElementById("env-name").value,
+    type: document.getElementById("env-type").value,
+    city: document.getElementById("env-city").value,
+    region: document.getElementById("env-region").value,
+    country: document.getElementById("env-country").value,
+    lat: lat ? parseFloat(lat) : null,
+    lng: lng ? parseFloat(lng) : null,
+  };
+  try {
+    const env = await api("/environments/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    show("createEnvOutput", env);
+    loadEnvironmentsList();
+  } catch (err) { showError("createEnvOutput", err); }
+}
+
+// --- Plants ---
+async function createPlant() {
+  const envId = document.getElementById("p-environment").value;
+  const payload = {
+    nickname: document.getElementById("p-nickname").value,
+    species_id: parseInt(document.getElementById("p-species").value, 10),
+    environment_id: envId ? parseInt(envId, 10) : null,
+    location: document.getElementById("p-location").value,
+    maturity_stage: document.getElementById("p-maturity").value,
+    acquired_on: document.getElementById("p-acquired").value || null,
+    soil_moisture_at_acquisition: document.getElementById("p-soil").value || null,
+    leaf_condition_at_acquisition: document.getElementById("p-leaf").value || null,
+    pest_observed_at_acquisition: document.getElementById("p-pests").checked,
+    intake_notes: document.getElementById("p-notes").value,
+  };
+  try {
+    const plant = await api("/plants/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    show("createPlantOutput", plant);
+    setActivePlant(plant);
+    loadPlantsList();
+    loadEnvironmentsList();  // refresh plant counts
+  } catch (err) { showError("createPlantOutput", err); }
+}
+
+async function loadPlantsList() {
+  try {
+    const plants = await api("/plants/");
+    const listEl = document.getElementById("plantsList");
+    listEl.innerHTML = "";
+    plants.forEach(p => {
+      const env = environmentsCache.find(e => e.id === p.environment_id);
+      const envLabel = env ? ` <span class="tag">${env.name}</span>` : "";
+      const div = document.createElement("div");
+      div.className = "list-item" + (activePlant && activePlant.id === p.id ? " selected" : "");
+      div.innerHTML = `<strong>#${p.id} — ${p.nickname}</strong>${envLabel} (${speciesCache.find(s=>s.id===p.species_id)?.common_name || "species " + p.species_id})<br><span class="uuid">${p.plant_uuid}</span>`;
+      div.onclick = () => { setActivePlant(p); loadPlantsList(); };
+      listEl.appendChild(div);
+    });
+  } catch (err) { showError("plantsList", err); }
+}
+
+async function transferPlant() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  const envId = document.getElementById("transfer-env").value;
+  if (!envId) return alert("Select a destination environment.");
+  const payload = {
+    to_environment_id: parseInt(envId, 10),
+    transfer_notes: document.getElementById("transfer-notes").value,
+  };
+  try {
+    const plant = await api(`/plants/${activePlant.id}/transfer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    show("transferOutput", plant);
+    setActivePlant(plant);
+    loadPlantsList();
+    loadEnvironmentsList();
+  } catch (err) { showError("transferOutput", err); }
+}
+
+async function loadStewardship() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  try {
+    const records = await api(`/plants/${activePlant.id}/stewardship`);
+    show("stewardshipOutput", records);
+  } catch (err) { showError("stewardshipOutput", err); }
+}
+
+// --- Care logs ---
+async function addCareLog() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  const payload = {
+    action: document.getElementById("log-action").value,
+    notes: document.getElementById("log-notes").value,
+  };
+  try {
+    const log = await api(`/plants/${activePlant.id}/logs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    show("addLogOutput", log);
+  } catch (err) { showError("addLogOutput", err); }
+}
+
+async function loadCareLogs() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  try {
+    const logs = await api(`/plants/${activePlant.id}/logs`);
+    show("logsOutput", logs);
+  } catch (err) { showError("logsOutput", err); }
+}
+
+// --- Timeline ---
+async function loadTimeline() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  const since = document.getElementById("tl-since").value;
+  const until = document.getElementById("tl-until").value;
+  const params = new URLSearchParams();
+  if (since) params.set("since", since);
+  if (until) params.set("until", until);
+  const qs = params.toString() ? `?${params.toString()}` : "";
+  try {
+    const tl = await api(`/plants/${activePlant.id}/timeline${qs}`);
+    show("timelineOutput", tl);
+  } catch (err) { showError("timelineOutput", err); }
+}
+
+async function loadTimelineSummary() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  try {
+    const summary = await api(`/plants/${activePlant.id}/timeline/summary`);
+    show("timelineSummaryOutput", summary);
+  } catch (err) { showError("timelineSummaryOutput", err); }
+}
+
+// --- Advice ---
+async function getAdvice() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  const symptoms = document.getElementById("advice-symptoms").value;
+  try {
+    const advice = await api(`/plants/${activePlant.id}/advice`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ symptoms }),
+    });
+    show("adviceOutput", advice);
+  } catch (err) { showError("adviceOutput", err); }
+}
+
+// --- Photo diagnosis ---
+async function diagnosePhoto() {
+  if (!activePlant) return alert("Select a plant first (Plants tab).");
+  const fileInput = document.getElementById("photo-file");
+  if (!fileInput.files.length) return alert("Choose a photo first.");
+  const form = new FormData();
+  form.append("photo", fileInput.files[0]);
+  form.append("notes", document.getElementById("photo-notes").value);
+  try {
+    const result = await api(`/plants/${activePlant.id}/diagnose-photo`, {
+      method: "POST",
+      body: form,
+    });
+    show("photoOutput", result);
+  } catch (err) { showError("photoOutput", err); }
+}
+
+// --- Census ---
+async function loadCensusSummary() {
+  try {
+    const summary = await api("/census/summary");
+    show("censusSummaryOutput", summary);
+  } catch (err) { showError("censusSummaryOutput", err); }
+}
+
+async function exportCensus() {
+  try {
+    const data = await api("/census/export");
+    show("censusExportOutput", `${data.plant_count} plant(s) — downloading...`);
+    // Trigger a file download
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `garden_gnome_census_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    show("censusExportOutput", data);
+  } catch (err) { showError("censusExportOutput", err); }
+}
+
+async function syncCensus() {
+  try {
+    const result = await api("/census/sync", { method: "POST" });
+    show("censusSyncOutput", result);
+  } catch (err) { showError("censusSyncOutput", err); }
+}
+
+// --- Species generation & import ---
+let lastGeneratedDraft = null;
+
+async function generateSpecies() {
+  const name = document.getElementById("gen-name").value.trim();
+  if (!name) return alert("Enter a plant name first.");
+  document.getElementById("saveDraftBtn").style.display = "none";
+  lastGeneratedDraft = null;
+  show("generateOutput", "Generating… (this may take a few seconds with a local LLM)");
+  try {
+    const result = await api("/species/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    show("generateOutput", result);
+    lastGeneratedDraft = result.draft;
+    document.getElementById("saveDraftBtn").style.display = "";
+  } catch (err) { showError("generateOutput", err); }
+}
+
+async function saveGeneratedDraft() {
+  if (!lastGeneratedDraft) return alert("Generate a draft first.");
+  try {
+    const species = await api("/species/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(lastGeneratedDraft),
+    });
+    show("generateOutput", { saved: true, species });
+    document.getElementById("saveDraftBtn").style.display = "none";
+    lastGeneratedDraft = null;
+    loadSpeciesList();
+  } catch (err) { showError("generateOutput", err); }
+}
+
+async function bulkImportSpecies() {
+  const raw = document.getElementById("bulk-json").value.trim();
+  if (!raw) return alert("Paste a JSON array first.");
+  let payload;
+  try { payload = JSON.parse(raw); } catch (e) { return alert("Invalid JSON: " + e.message); }
+  if (!Array.isArray(payload)) return alert("Expected a JSON array at the top level.");
+  try {
+    const result = await api("/species/bulk", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    show("bulkImportOutput", result);
+    if (result.added > 0) loadSpeciesList();
+  } catch (err) { showError("bulkImportOutput", err); }
+}
+
+// Initial load
+loadSpeciesList();
+loadEnvironmentsList().then(() => loadPlantsList());
+</script>
+
+</body>
+</html>

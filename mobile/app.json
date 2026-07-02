@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Garden Gnome",
+    "slug": "garden-gnome",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gardengnome.app"
+    },
+    "android": {
+      "package": "com.gardengnome.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#2D6A4F",
+        "foregroundImage": "./assets/adaptive-icon.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-camera",
+        { "cameraPermission": "Allow Garden Gnome to access your camera to photograph plants." }
+      ],
+      [
+        "expo-image-picker",
+        { "photosPermission": "Allow Garden Gnome to access your photos to add plant images." }
+      ],
+      [
+        "expo-notifications",
+        { "icon": "./assets/icon.png", "color": "#2D6A4F" }
+      ]
+    ]
+  }
+}
