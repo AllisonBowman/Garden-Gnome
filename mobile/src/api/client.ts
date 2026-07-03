@@ -1,16 +1,26 @@
 import axios from 'axios';
+import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
 const DEFAULT_BASE_URL = 'http://localhost:8000';
 const BASE_URL_KEY = 'garden_gnome_api_url';
 
+// expo-secure-store has no web implementation (not a supported platform in
+// SDK 57), so the browser dev preview falls back to localStorage.
 export async function getBaseUrl(): Promise<string> {
-  const stored = await SecureStore.getItemAsync(BASE_URL_KEY);
+  const stored = Platform.OS === 'web'
+    ? localStorage.getItem(BASE_URL_KEY)
+    : await SecureStore.getItemAsync(BASE_URL_KEY);
   return stored ?? DEFAULT_BASE_URL;
 }
 
 export async function setBaseUrl(url: string): Promise<void> {
-  await SecureStore.setItemAsync(BASE_URL_KEY, url.replace(/\/$/, ''));
+  const value = url.replace(/\/$/, '');
+  if (Platform.OS === 'web') {
+    localStorage.setItem(BASE_URL_KEY, value);
+  } else {
+    await SecureStore.setItemAsync(BASE_URL_KEY, value);
+  }
 }
 
 // Build a fresh axios instance pointed at the current configured URL.
