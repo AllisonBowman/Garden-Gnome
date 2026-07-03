@@ -43,19 +43,19 @@ export interface CareLog {
   logged_at: string;
 }
 
+export type MaturityStage = 'seedling' | 'juvenile' | 'mature' | 'flowering';
+
 export interface Plant {
   id: number;
   plant_uuid: string;
   nickname: string;
   species_id: number;
   environment_id?: number;
-  location_description: string;
-  initial_condition: string;
+  location: string;
+  maturity_stage: MaturityStage;
   acquired_on?: string;
-  photo_url?: string;
-  is_active: boolean;
+  intake_notes: string;
   species?: Species;
-  care_logs?: CareLog[];
 }
 
 export interface Environment {

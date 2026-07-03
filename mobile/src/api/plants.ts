@@ -17,8 +17,8 @@ export async function createPlant(payload: {
   nickname: string;
   species_id: number;
   environment_id?: number;
-  location_description?: string;
-  initial_condition?: string;
+  location?: string;
+  intake_notes?: string;
   acquired_on?: string;
 }): Promise<Plant> {
   const client = await apiClient();
@@ -32,7 +32,7 @@ export async function logCare(
   notes = '',
 ): Promise<CareLog> {
   const client = await apiClient();
-  const { data } = await client.post<CareLog>(`/plants/${plantId}/log`, {
+  const { data } = await client.post<CareLog>(`/plants/${plantId}/logs`, {
     action,
     notes,
   });

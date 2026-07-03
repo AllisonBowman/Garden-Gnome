@@ -40,8 +40,10 @@ export default function AddPlantScreen() {
       nickname,
       species_id: speciesId!,
       environment_id: envId ?? undefined,
-      location_description: location,
-      initial_condition: condition,
+      location,
+      // The backend prefixes "Intake condition:" and logs this as the
+      // plant's first timeline entry
+      intake_notes: condition,
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plants'] });

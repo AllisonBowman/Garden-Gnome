@@ -49,6 +49,20 @@ class PlantCreate(SQLModel):
     intake_notes: str = ""
 
 
+class SpeciesRead(SQLModel):
+    id: int
+    common_name: str
+    scientific_name: str
+    light_need: LightNeed
+    humidity_pct_min: int
+    humidity_pct_max: int
+    temp_f_min: int
+    temp_f_max: int
+    soil_type: str
+    toxic_to_pets: bool
+    care_notes: str
+
+
 class PlantRead(SQLModel):
     id: int
     plant_uuid: str
@@ -62,6 +76,8 @@ class PlantRead(SQLModel):
     leaf_condition_at_acquisition: Optional[LeafCondition]
     pest_observed_at_acquisition: bool
     intake_notes: str
+    # Embedded so clients don't need a second request per plant
+    species: Optional[SpeciesRead] = None
 
 
 class PlantTransferRequest(SQLModel):

@@ -47,9 +47,9 @@ function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
               </Chip>
             )}
           </View>
-          {plant.location_description ? (
+          {plant.location ? (
             <Text variant="bodySmall" style={styles.location}>
-              📍 {plant.location_description}
+              📍 {plant.location}
             </Text>
           ) : null}
         </Card.Content>

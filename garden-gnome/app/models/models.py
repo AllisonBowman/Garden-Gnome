@@ -141,8 +141,9 @@ class Plant(SQLModel, table=True):
 
     species: Optional[Species] = Relationship(back_populates="plants")
     environment: Optional[Environment] = Relationship(back_populates="plants")
-    care_logs: list["CareLog"] = Relationship(back_populates="plant")
-    stewardship_records: list["StewardshipRecord"] = Relationship(back_populates="plant")
+    # A plant's history is meaningless without the plant; delete it together
+    care_logs: list["CareLog"] = Relationship(back_populates="plant", cascade_delete=True)
+    stewardship_records: list["StewardshipRecord"] = Relationship(back_populates="plant", cascade_delete=True)
 
 
 class CareLog(SQLModel, table=True):
