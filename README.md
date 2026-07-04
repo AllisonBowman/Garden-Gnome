@@ -43,7 +43,7 @@ The species/schedule tables are the single source of truth; `advisor.py` and `vi
 ## Key features (implemented)
 
 - **Species catalog** — 129 curated houseplant species with light/humidity/temperature ranges, soil, toxicity, and per-care-type schedules; extensible key-value traits table.
-- **Plant inventory** — CRUD, intake condition snapshot at acquisition, care logging across 8 care types.
+- **Plant inventory** — create, read, and delete plants (no generic update endpoint; state changes go through purpose-built endpoints like transfer and care logging), intake condition snapshot at acquisition, care logging across 8 care types.
 - **Timeline & stats** — full chronological care history with gap-from-previous per care type, plus per-type aggregate stats (avg/min/max interval vs. the species' scheduled interval).
 - **Care advice** — `/plants/{id}/advice`, grounded in species facts + schedules + recent logs; stub/Ollama/Anthropic backends; optional free-text symptom diagnosis.
 - **Photo diagnosis** — `/plants/{id}/diagnose-photo`, vision-model reasoning over an uploaded photo plus the same grounding facts; auto-logged to the timeline. (Backend-complete; not yet wired into the mobile UI.)
