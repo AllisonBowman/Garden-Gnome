@@ -132,6 +132,18 @@ def _build_prompt(
     return facts + schedules_block + this_plant + history + symptoms_block + question
 
 
+_CARE_TYPE_EMOJI = {
+    CareType.water: "💧",
+    CareType.fertilize: "🌿",
+    CareType.mist: "💨",
+    CareType.prune: "✂️",
+    CareType.repot: "🪴",
+    CareType.rotate: "🔄",
+    CareType.clean: "🧽",
+    CareType.other: "📝",
+}
+
+
 def _advise_stub(
     species: Species,
     plant: Plant,
@@ -139,23 +151,11 @@ def _advise_stub(
     care_schedules: list[CareSchedule],
     symptoms: str = "",
 ) -> str:
-    symptom_note = ""
-    if symptoms.strip():
-        symptom_note = (
-            f' [Reported symptom: "{symptoms.strip()}" -- the stub backend cannot '
-            f"diagnose free-text symptoms; set ADVISOR_BACKEND=ollama or "
-            f"anthropic for symptom analysis.]"
-        )
-
-    if not care_schedules:
-        return (
-            f"[STUB] {plant.nickname} ({species.common_name}): "
-            f"No care schedules defined.{symptom_note}"
-        )
-
+    # One line per care type; the client renders each line as its own row.
     lines = []
     for cs in care_schedules:
         label = _CARE_TYPE_LABELS.get(cs.care_type, cs.care_type.value)
+        emoji = _CARE_TYPE_EMOJI.get(cs.care_type, "🪴")
         last_log = next(
             (log for log in recent_logs if log.action == cs.care_type),
             None,
@@ -164,31 +164,41 @@ def _advise_stub(
 
         if days is None:
             lines.append(
-                f"{label}: No log yet. Recommended every "
-                f"{cs.interval_days_min}-{cs.interval_days_max} days."
+                f"{emoji} {label}: no log yet — recommended every "
+                f"{cs.interval_days_min}–{cs.interval_days_max} days."
             )
         elif days < cs.interval_days_min:
             lines.append(
-                f"{label}: Done {days}d ago. Next window opens in "
-                f"{cs.interval_days_min - days}d — hold off."
+                f"{emoji} {label}: done {days} day{'s' if days != 1 else ''} ago. "
+                f"Next window opens in {cs.interval_days_min - days} "
+                f"day{'s' if cs.interval_days_min - days != 1 else ''} — hold off."
             )
         elif days <= cs.interval_days_max:
             lines.append(
-                f"{label}: Done {days}d ago, inside the "
-                f"{cs.interval_days_min}-{cs.interval_days_max}d window. "
+                f"{emoji} {label}: done {days} days ago, inside the "
+                f"{cs.interval_days_min}–{cs.interval_days_max} day window. "
                 f"Check and do if needed."
             )
         else:
             lines.append(
-                f"{label}: Done {days}d ago — past the {cs.interval_days_max}d mark. Likely due."
+                f"{emoji} {label}: done {days} days ago — past the "
+                f"{cs.interval_days_max} day mark. Likely due."
             )
 
-    pet_warning = (
-        f" ⚠ {species.common_name} is toxic to pets."
-        if species.toxic_to_pets else ""
-    )
-    body = " | ".join(lines)
-    return f"[STUB] {plant.nickname} ({species.common_name}): {body}{pet_warning}{symptom_note}"
+    if not lines:
+        lines.append("No care schedules defined for this species yet.")
+
+    if species.toxic_to_pets:
+        lines.append(f"⚠️ {species.common_name} is toxic to pets.")
+
+    if symptoms.strip():
+        lines.append(
+            f"🔍 You reported: “{symptoms.strip()}”. Symptom diagnosis needs "
+            f"the AI advisor, which isn't enabled yet — these schedule-based "
+            f"tips are the best I can do for now."
+        )
+
+    return "\n".join(lines)
 
 
 def _advise_ollama(

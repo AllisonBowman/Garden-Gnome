@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import {
   Text, Card, Button, Chip, Divider, List,
-  ActivityIndicator, useTheme, Surface, TextInput,
+  ActivityIndicator, useTheme, Surface, TextInput, Snackbar,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -46,12 +46,17 @@ export default function PlantDetailScreen() {
     queryFn: () => fetchCareLogs(plantId),
   });
 
+  const [confirmation, setConfirmation] = useState<string | null>(null);
   const logMutation = useMutation({
     mutationFn: ({ type }: { type: CareType }) => logCare(plantId, type),
     onMutate: ({ type }) => setLoggingType(type),
-    onSuccess: () => {
+    onSuccess: (_data, { type }) => {
       queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
+      const action = CARE_ACTIONS.find((a) => a.type === type);
+      setConfirmation(
+        `${action?.icon ?? '✅'} ${action?.label ?? 'Care'} — added to ${plant?.nickname ?? 'plant'}'s log`,
+      );
     },
     onError: () => Alert.alert('Error', 'Could not log care action.'),
     onSettled: () => setLoggingType(null),
@@ -72,7 +77,8 @@ export default function PlantDetailScreen() {
   const { species } = plant;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <View style={styles.container}>
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
       {/* Header */}
       <Surface style={styles.header} elevation={1}>
         <Text variant="headlineSmall" style={{ color: theme.colors.primary }}>
@@ -134,7 +140,18 @@ export default function PlantDetailScreen() {
           </Button>
           {advice && (
             <View style={styles.adviceBox}>
-              <Text variant="bodyMedium" style={styles.adviceText}>{advice.advice}</Text>
+              {advice.advice.split('\n').filter((l) => l.trim()).map((line, i) => (
+                <Text
+                  key={i}
+                  variant="bodyMedium"
+                  style={[
+                    styles.adviceText,
+                    line.startsWith('⚠️') && styles.adviceWarningText,
+                  ]}
+                >
+                  {line}
+                </Text>
+              ))}
               <Chip compact style={styles.backendChip} textStyle={styles.backendChipText}>
                 {advice.backend === 'stub' ? 'rule-based' : advice.backend}
               </Chip>
@@ -184,6 +201,15 @@ export default function PlantDetailScreen() {
         </Card.Content>
       </Card>
     </ScrollView>
+    <Snackbar
+      visible={confirmation !== null}
+      onDismiss={() => setConfirmation(null)}
+      duration={2500}
+      style={styles.snackbar}
+    >
+      {confirmation}
+    </Snackbar>
+    </View>
   );
 }
 
@@ -216,10 +242,19 @@ const styles = StyleSheet.create({
   toxicChip: { backgroundColor: '#FFE0E0', alignSelf: 'flex-start' },
   logItem: { paddingVertical: 2 },
   empty: { color: '#aaa', fontStyle: 'italic' },
+  scroll: { flex: 1 },
   symptomsInput: { marginBottom: 12 },
   adviceBtn: { borderRadius: 8 },
-  adviceBox: { marginTop: 16 },
-  adviceText: { lineHeight: 22, color: '#333' },
-  backendChip: { alignSelf: 'flex-start', marginTop: 8, backgroundColor: '#E8F0EB' },
+  adviceBox: {
+    marginTop: 16,
+    backgroundColor: '#EFF6F0',
+    borderRadius: 10,
+    padding: 14,
+    gap: 10,
+  },
+  adviceText: { lineHeight: 21, color: '#2F3E36' },
+  adviceWarningText: { color: '#9A4D00', fontWeight: '600' },
+  backendChip: { alignSelf: 'flex-start', marginTop: 2, backgroundColor: '#E1EDE4' },
   backendChipText: { fontSize: 11, color: '#52796F' },
+  snackbar: { backgroundColor: '#2D6A4F' },
 });
