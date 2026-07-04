@@ -133,6 +133,90 @@ def _diagnose_ollama(
         ) from e
 
 
+IDENTIFY_INSTRUCTION = (
+    "You are a houseplant identification assistant. You are given a photo of "
+    "a plant and a list of candidate species. Name the most likely species "
+    "from the candidate list. Respond with up to three candidates, one per "
+    "line, exactly as they appear in the list (common name), most likely "
+    "first. If the plant matches none of the candidates, or the photo is "
+    "unclear, respond with the single word: UNKNOWN. Then, on a new line "
+    "starting with 'OBSERVED:', briefly describe the identifying features "
+    "you can see (leaf shape, pattern, growth habit)."
+)
+
+
+def _identify_stub(image_bytes: bytes, catalog: list[Species]) -> tuple[str, list[str]]:
+    return (
+        "📷 Photo received! AI identification isn't enabled yet, so pick "
+        "your plant from the search below — automatic identification will "
+        "light up once a vision backend is turned on.",
+        [],
+    )
+
+
+def _identify_ollama(image_bytes: bytes, catalog: list[Species]) -> tuple[str, list[str]]:
+    import httpx
+
+    names = "\n".join(f"- {s.common_name} ({s.scientific_name})" for s in catalog)
+    prompt = f"CANDIDATE SPECIES:\n{names}\n\nWhich species is in the photo?"
+    image_b64 = base64.b64encode(image_bytes).decode("ascii")
+    try:
+        resp = httpx.post(
+            f"{OLLAMA_HOST}/api/chat",
+            json={
+                "model": OLLAMA_VISION_MODEL,
+                "messages": [
+                    {"role": "system", "content": IDENTIFY_INSTRUCTION},
+                    {"role": "user", "content": prompt, "images": [image_b64]},
+                ],
+                "stream": False,
+            },
+            timeout=180.0,
+        )
+        resp.raise_for_status()
+        text = resp.json()["message"]["content"].strip()
+    except httpx.HTTPError as e:
+        raise RuntimeError(
+            f"Ollama vision request failed ({e}). Is `ollama serve` running and "
+            f"has '{OLLAMA_VISION_MODEL}' been pulled?"
+        ) from e
+
+    # The name lines come before the OBSERVED: line; keep order (most likely first)
+    name_lines = [
+        line.strip("- ").strip()
+        for line in text.splitlines()
+        if line.strip() and not line.upper().startswith(("OBSERVED:", "UNKNOWN"))
+    ]
+    return text, name_lines
+
+
+_IDENTIFY_BACKENDS = {
+    "stub": _identify_stub,
+    "ollama": _identify_ollama,
+}
+
+
+def identify_species(image_bytes: bytes, catalog: list[Species]) -> dict:
+    """Identify which catalog species a photo most likely shows.
+
+    Returns {"backend", "observation", "candidate_ids"} where candidate_ids
+    are Species.id values matched against the model's named candidates,
+    most likely first. The stub backend returns no candidates."""
+    fn = _IDENTIFY_BACKENDS.get(BACKEND, _identify_stub)
+    observation, names = fn(image_bytes, catalog)
+
+    candidate_ids: list[int] = []
+    for name in names:
+        lowered = name.lower()
+        for s in catalog:
+            if s.id in candidate_ids:
+                continue
+            if s.common_name.lower() in lowered or s.scientific_name.lower() in lowered:
+                candidate_ids.append(s.id)
+                break
+    return {"backend": BACKEND, "observation": observation, "candidate_ids": candidate_ids}
+
+
 _BACKENDS = {
     "stub": _diagnose_stub,
     "ollama": _diagnose_ollama,

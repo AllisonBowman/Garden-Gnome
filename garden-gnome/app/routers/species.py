@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
@@ -9,6 +9,9 @@ from app.models.schemas import (
 )
 
 router = APIRouter(prefix="/species", tags=["species"])
+
+ALLOWED_PHOTO_TYPES = {"image/jpeg", "image/png", "image/webp"}
+MAX_PHOTO_BYTES = 8 * 1024 * 1024  # 8MB
 
 
 def _load_with_relations(species_id: int, session: Session) -> Species:
@@ -105,6 +108,54 @@ def generate_species(
             "Review the draft, then POST it to /species/ to save. "
             "Or edit species_catalog.json and restart the server to seed it automatically."
         ),
+    }
+
+
+@router.post("/identify-photo")
+async def identify_species_photo(
+    photo: UploadFile = File(...),
+    session: Session = Depends(get_session),
+):
+    """Identify which catalog species a photo most likely shows.
+
+    Returns candidate species (most likely first) matched against the curated
+    catalog, plus the model's observation text. Backend is selected by
+    VISION_BACKEND (stub/ollama), same as photo diagnosis. The stub backend
+    returns no candidates and a note explaining how to enable identification."""
+    from app.services.vision import identify_species
+
+    if photo.content_type not in ALLOWED_PHOTO_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported image type '{photo.content_type}'. Use JPEG, PNG, or WebP.",
+        )
+
+    image_bytes = await photo.read()
+    if not image_bytes:
+        raise HTTPException(status_code=400, detail="Empty photo upload.")
+    if len(image_bytes) > MAX_PHOTO_BYTES:
+        raise HTTPException(status_code=400, detail="Image too large (max 8MB).")
+
+    catalog = session.exec(select(Species)).all()
+    try:
+        result = identify_species(image_bytes, catalog)
+    except RuntimeError as e:
+        raise HTTPException(status_code=503, detail=str(e)) from e
+
+    by_id = {s.id: s for s in catalog}
+    candidates = [
+        {
+            "id": sid,
+            "common_name": by_id[sid].common_name,
+            "scientific_name": by_id[sid].scientific_name,
+        }
+        for sid in result["candidate_ids"]
+        if sid in by_id
+    ]
+    return {
+        "backend": result["backend"],
+        "observation": result["observation"],
+        "candidates": candidates,
     }
 
 

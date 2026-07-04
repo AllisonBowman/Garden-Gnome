@@ -8,7 +8,10 @@ import {
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
-import { fetchSpeciesList } from '../api/species';
+import * as ImagePicker from 'expo-image-picker';
+import {
+  fetchSpeciesList, identifySpeciesPhoto, IdentifyResponse,
+} from '../api/species';
 import { fetchEnvironments } from '../api/environments';
 import { createPlant } from '../api/plants';
 import { Species, Environment } from '../types';
@@ -52,6 +55,29 @@ export default function AddPlantScreen() {
     onError: () => Alert.alert('Error', 'Could not save plant. Check the backend connection.'),
   });
 
+  const [identifyResult, setIdentifyResult] = useState<IdentifyResponse | null>(null);
+  const identifyMutation = useMutation({
+    mutationFn: identifySpeciesPhoto,
+    onSuccess: (result) => {
+      setIdentifyResult(result);
+      // Auto-select the top candidate; the user can still tap another chip
+      if (result.candidates.length > 0) {
+        setSpeciesId(result.candidates[0].id);
+        setSpeciesSearch(result.candidates[0].common_name);
+      }
+    },
+    onError: () => Alert.alert('Error', 'Could not identify the photo. Check the backend connection.'),
+  });
+
+  const pickAndIdentify = async () => {
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 0.8,
+    });
+    if (res.canceled || !res.assets?.length) return;
+    identifyMutation.mutate(res.assets[0]);
+  };
+
   const filteredSpecies = speciesList.filter((s: Species) =>
     s.common_name.toLowerCase().includes(speciesSearch.toLowerCase()) ||
     s.scientific_name.toLowerCase().includes(speciesSearch.toLowerCase()),
@@ -79,6 +105,47 @@ export default function AddPlantScreen() {
         />
 
         <Text variant="titleMedium" style={styles.sectionTitle}>Species *</Text>
+
+        <Button
+          mode="outlined"
+          icon="camera"
+          onPress={pickAndIdentify}
+          loading={identifyMutation.isPending}
+          disabled={identifyMutation.isPending}
+          style={styles.identifyBtn}
+        >
+          Identify from a photo
+        </Button>
+
+        {identifyResult && (
+          <View style={styles.identifyBox}>
+            {identifyResult.candidates.length > 0 ? (
+              <>
+                <Text variant="bodySmall" style={styles.identifyLabel}>
+                  Best matches — tap to choose:
+                </Text>
+                <View style={styles.suggestionBox}>
+                  {identifyResult.candidates.map((c) => (
+                    <Button
+                      key={c.id}
+                      mode={speciesId === c.id ? 'contained' : 'outlined'}
+                      onPress={() => { setSpeciesId(c.id); setSpeciesSearch(c.common_name); }}
+                      style={styles.suggestion}
+                      compact
+                    >
+                      {c.common_name}
+                    </Button>
+                  ))}
+                </View>
+              </>
+            ) : (
+              <Text variant="bodySmall" style={styles.identifyObservation}>
+                {identifyResult.observation}
+              </Text>
+            )}
+          </View>
+        )}
+
         <TextInput
           label="Search species"
           value={speciesSearch}
@@ -176,6 +243,15 @@ const styles = StyleSheet.create({
   input: { marginBottom: 4 },
   suggestionBox: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   suggestion: { marginBottom: 4 },
+  identifyBtn: { marginBottom: 8, borderStyle: 'dashed' },
+  identifyBox: {
+    backgroundColor: '#EFF6F0',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 8,
+  },
+  identifyLabel: { color: '#52796F', marginBottom: 8, fontWeight: '600' },
+  identifyObservation: { color: '#2F3E36', lineHeight: 19 },
   envGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   envBtn: { marginBottom: 4 },
   segmented: { marginBottom: 8 },

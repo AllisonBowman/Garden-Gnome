@@ -45,12 +45,12 @@ The species/schedule tables are the single source of truth; `advisor.py` and `vi
 - **Species catalog** — 129 curated houseplant species with light/humidity/temperature ranges, soil, toxicity, and per-care-type schedules; extensible key-value traits table.
 - **Plant inventory** — create, read, and delete plants (no generic update endpoint; state changes go through purpose-built endpoints like transfer and care logging), intake condition snapshot at acquisition, care logging across 8 care types.
 - **Timeline & stats** — full chronological care history with gap-from-previous per care type, plus per-type aggregate stats (avg/min/max interval vs. the species' scheduled interval).
-- **Care advice** — `/plants/{id}/advice`, grounded in species facts + schedules + recent logs; stub/Ollama/Anthropic backends; optional free-text symptom diagnosis.
+- **Care advice** — `/plants/{id}/advice`, grounded in species facts + schedules + recent logs; stub/Ollama/Anthropic backends; optional free-text symptom diagnosis. The rule-based stub backend renders as one labeled, emoji-tagged line per care type (not raw debug output), with toxicity warnings called out separately.
 - **Photo diagnosis** — `/plants/{id}/diagnose-photo`, vision-model reasoning over an uploaded photo plus the same grounding facts; auto-logged to the timeline. (Backend-complete; not yet wired into the mobile UI.)
 - **Environments & stewardship** — plants belong to a physical environment (home, nursery, community garden, etc.) and can be transferred between environments with a full chain-of-custody record, while keeping a stable UUID.
 - **Anonymized census** — aggregate/export/sync endpoints that strip all PII (no nicknames, no addresses) for cross-installation species and care-health analysis.
 - **LLM-assisted catalog authoring** — `/species/generate` drafts a new species record (schedules + traits) from a plant name for review before saving.
-- **Mobile app** — tab-based navigation (Plants, Species, Environments, Census, Settings), quick care logging, an "Ask the Gnome" advice card with symptom input, and species detail views.
+- **Mobile app** — tab-based navigation (Plants, Species, Environments, Census, Settings), quick care logging with a confirmation snackbar per logged action, an "Ask the Gnome" advice card with symptom input and styled advice output, and species detail views.
 
 ## Setup
 
