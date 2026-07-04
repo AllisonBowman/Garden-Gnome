@@ -4,11 +4,11 @@ import {
 } from 'react-native';
 import {
   Text, Card, Button, Chip, Divider, List,
-  ActivityIndicator, useTheme, Surface,
+  ActivityIndicator, useTheme, Surface, TextInput,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { fetchPlant, logCare, fetchCareLogs } from '../api/plants';
+import { fetchPlant, logCare, fetchCareLogs, getAdvice, AdviceResponse } from '../api/plants';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
 
@@ -57,6 +57,14 @@ export default function PlantDetailScreen() {
     onSettled: () => setLoggingType(null),
   });
 
+  const [symptoms, setSymptoms] = useState('');
+  const [advice, setAdvice] = useState<AdviceResponse | null>(null);
+  const adviceMutation = useMutation({
+    mutationFn: () => getAdvice(plantId, symptoms),
+    onSuccess: setAdvice,
+    onError: () => Alert.alert('Error', 'Could not get advice.'),
+  });
+
   if (isLoading || !plant) {
     return <ActivityIndicator style={styles.center} size="large" />;
   }
@@ -98,6 +106,40 @@ export default function PlantDetailScreen() {
               </Button>
             ))}
           </View>
+        </Card.Content>
+      </Card>
+
+      {/* Care advice */}
+      <Card style={styles.card}>
+        <Card.Title title="Ask the Gnome 🧙" titleVariant="titleMedium" />
+        <Card.Content>
+          <TextInput
+            label="Anything wrong? (optional)"
+            value={symptoms}
+            onChangeText={setSymptoms}
+            mode="outlined"
+            multiline
+            numberOfLines={2}
+            placeholder="e.g. leaves turning yellow at the base"
+            style={styles.symptomsInput}
+          />
+          <Button
+            mode="contained"
+            onPress={() => adviceMutation.mutate()}
+            loading={adviceMutation.isPending}
+            disabled={adviceMutation.isPending}
+            style={styles.adviceBtn}
+          >
+            Get care advice
+          </Button>
+          {advice && (
+            <View style={styles.adviceBox}>
+              <Text variant="bodyMedium" style={styles.adviceText}>{advice.advice}</Text>
+              <Chip compact style={styles.backendChip} textStyle={styles.backendChipText}>
+                {advice.backend === 'stub' ? 'rule-based' : advice.backend}
+              </Chip>
+            </View>
+          )}
         </Card.Content>
       </Card>
 
@@ -174,4 +216,10 @@ const styles = StyleSheet.create({
   toxicChip: { backgroundColor: '#FFE0E0', alignSelf: 'flex-start' },
   logItem: { paddingVertical: 2 },
   empty: { color: '#aaa', fontStyle: 'italic' },
+  symptomsInput: { marginBottom: 12 },
+  adviceBtn: { borderRadius: 8 },
+  adviceBox: { marginTop: 16 },
+  adviceText: { lineHeight: 22, color: '#333' },
+  backendChip: { alignSelf: 'flex-start', marginTop: 8, backgroundColor: '#E8F0EB' },
+  backendChipText: { fontSize: 11, color: '#52796F' },
 });

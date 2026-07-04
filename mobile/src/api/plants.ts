@@ -39,6 +39,22 @@ export async function logCare(
   return data;
 }
 
+export interface AdviceResponse {
+  plant_id: number;
+  nickname: string;
+  species: string;
+  backend: string;
+  advice: string;
+}
+
+export async function getAdvice(plantId: number, symptoms = ''): Promise<AdviceResponse> {
+  const client = await apiClient();
+  const { data } = await client.post<AdviceResponse>(`/plants/${plantId}/advice`, {
+    symptoms,
+  });
+  return data;
+}
+
 export async function fetchCareLogs(plantId: number): Promise<CareLog[]> {
   const client = await apiClient();
   const { data } = await client.get<CareLog[]>(`/plants/${plantId}/logs`);
