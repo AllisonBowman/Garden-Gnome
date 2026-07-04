@@ -23,6 +23,11 @@ from app.models.models import Species, Plant, CareLog, CareSchedule, CareType
 
 
 BACKEND = os.getenv("ADVISOR_BACKEND", "stub").lower()
+# Backend used when the owner reports free-text symptoms (which the stub
+# cannot diagnose). Defaults to the base backend, so setting only
+# ADVISOR_SYMPTOMS_BACKEND=anthropic gives cheap deterministic advice for
+# routine checks and an LLM for actual diagnosis.
+SYMPTOMS_BACKEND = os.getenv("ADVISOR_SYMPTOMS_BACKEND", BACKEND).lower()
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
@@ -229,13 +234,22 @@ def _advise_anthropic(
     import anthropic
 
     prompt = _build_prompt(species, plant, recent_logs, care_schedules, symptoms)
-    client = anthropic.Anthropic()
-    message = client.messages.create(
-        model=ANTHROPIC_MODEL,
-        max_tokens=400,
-        system=SYSTEM_INSTRUCTION,
-        messages=[{"role": "user", "content": prompt}],
-    )
+    try:
+        client = anthropic.Anthropic()
+        message = client.messages.create(
+            model=ANTHROPIC_MODEL,
+            max_tokens=400,
+            system=SYSTEM_INSTRUCTION,
+            messages=[{"role": "user", "content": prompt}],
+        )
+    except anthropic.APIError as e:
+        raise RuntimeError(
+            f"Anthropic request failed ({e}). Check ANTHROPIC_API_KEY in .env."
+        ) from e
+    except Exception as e:  # missing key raises at client construction
+        raise RuntimeError(
+            f"Anthropic client error ({e}). Is ANTHROPIC_API_KEY set in .env?"
+        ) from e
     usage = message.usage
     print(f"[advisor] anthropic tokens in={usage.input_tokens} out={usage.output_tokens}")
     return "".join(block.text for block in message.content if block.type == "text").strip()
@@ -255,6 +269,7 @@ def get_care_advice(
     care_schedules: list[CareSchedule],
     symptoms: str = "",
 ) -> dict:
-    fn = _BACKENDS.get(BACKEND, _advise_stub)
+    backend = SYMPTOMS_BACKEND if symptoms.strip() else BACKEND
+    fn = _BACKENDS.get(backend, _advise_stub)
     advice = fn(species, plant, recent_logs, care_schedules, symptoms)
-    return {"backend": BACKEND, "advice": advice}
+    return {"backend": backend, "advice": advice}

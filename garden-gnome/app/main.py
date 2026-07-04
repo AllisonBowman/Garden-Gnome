@@ -1,13 +1,20 @@
-from contextlib import asynccontextmanager
+﻿from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv
 
-from app.db.database import init_db, migrate_db
-from app.data.seed import seed_default_environment
-from app.routers import species, plants, environments, census
+# Load .env before importing routers: the advisor/vision services read their
+# backend config from the environment at import time. run_app.py does this
+# for the packaged .exe; this covers `uvicorn app.main:app` dev runs.
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
+from fastapi import FastAPI  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.staticfiles import StaticFiles  # noqa: E402
+
+from app.db.database import init_db, migrate_db  # noqa: E402
+from app.data.seed import seed_default_environment  # noqa: E402
+from app.routers import species, plants, environments, census  # noqa: E402
 
 
 @asynccontextmanager
