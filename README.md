@@ -47,10 +47,11 @@ The species/schedule tables are the single source of truth; `advisor.py` and `vi
 - **Timeline & stats** — full chronological care history with gap-from-previous per care type, plus per-type aggregate stats (avg/min/max interval vs. the species' scheduled interval).
 - **Care advice** — `/plants/{id}/advice`, grounded in species facts + schedules + recent logs; stub/Ollama/Anthropic backends; optional free-text symptom diagnosis. The rule-based stub backend renders as one labeled, emoji-tagged line per care type (not raw debug output), with toxicity warnings called out separately.
 - **Photo diagnosis** — `/plants/{id}/diagnose-photo`, vision-model reasoning over an uploaded photo plus the same grounding facts; auto-logged to the timeline. (Backend-complete; not yet wired into the mobile UI.)
+- **Photo identification** — `/species/identify-photo`, wired into the mobile Add Plant flow: snap or pick a photo and the vision backend names the species *from the curated catalog only* (never a species the app can't actually care for), returning tap-to-select candidates with the best match pre-selected.
 - **Environments & stewardship** — plants belong to a physical environment (home, nursery, community garden, etc.) and can be transferred between environments with a full chain-of-custody record, while keeping a stable UUID.
 - **Anonymized census** — aggregate/export/sync endpoints that strip all PII (no nicknames, no addresses) for cross-installation species and care-health analysis.
 - **LLM-assisted catalog authoring** — `/species/generate` drafts a new species record (schedules + traits) from a plant name for review before saving.
-- **Mobile app** — tab-based navigation (Plants, Species, Environments, Census, Settings), quick care logging with a confirmation snackbar per logged action, an "Ask the Gnome" advice card with symptom input and styled advice output, and species detail views.
+- **Mobile app** — tab-based navigation (Plants, Species, Environments, Census, Settings), quick care logging with a confirmation snackbar per logged action, an "Ask the Gnome" advice card with symptom input and styled advice output, photo identification in Add Plant, and species detail views.
 
 ## Setup
 
@@ -75,7 +76,7 @@ uvicorn app.main:app --reload
 By default the app runs entirely offline with deterministic (non-AI) advice. To enable model-backed features, copy `.env.example` to `.env` and set:
 - `ADVISOR_BACKEND=ollama` (local, free) or `anthropic` (cloud, requires `ANTHROPIC_API_KEY`) — text care advice.
 - `ADVISOR_SYMPTOMS_BACKEND=anthropic` — recommended hybrid: keep routine advice free/instant, use an LLM only for symptom diagnosis.
-- `VISION_BACKEND=ollama` — photo diagnosis via a local vision model (`ollama pull moondream`).
+- `VISION_BACKEND=ollama` — photo diagnosis and species identification via a local vision model (`ollama pull moondream`).
 
 A packaged Windows executable (`GardenGnome.exe`, built via `build_exe.ps1`) is also available for running the backend with no Python install required.
 
@@ -95,7 +96,7 @@ The mobile app talks to the FastAPI backend over HTTP — make sure the backend 
 |---|---|
 | 1. Plant inventory + curated care database | ✅ Done |
 | 2. LLM reasoning layer on top of the care database | ✅ Done |
-| 3. Photo-based diagnosis (local vision model) | ✅ Backend done; mobile UI pending |
+| 3. Photo-based diagnosis + identification (local vision model) | ✅ Backend done; photo ID live in Add Plant; diagnosis UI pending |
 | 4. Proactive scheduling & notifications | 🔜 Planned |
 | 5. Full "Gnome" character wrapper | 🔜 Planned |
 

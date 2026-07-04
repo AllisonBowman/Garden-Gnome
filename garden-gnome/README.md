@@ -141,6 +141,10 @@ curl http://127.0.0.1:8000/plants/1/timeline/summary
 curl -X POST http://127.0.0.1:8000/plants/1/diagnose-photo \
   -F "photo=@leaf.jpg;type=image/jpeg" \
   -F "notes=lower leaves looking droopy"
+
+# identify which catalog species a photo shows (used by the mobile Add Plant flow)
+curl -X POST http://127.0.0.1:8000/species/identify-photo \
+  -F "photo=@mystery-plant.jpg;type=image/jpeg"
 ```
 
 ## Care model
@@ -161,11 +165,17 @@ backend acknowledges the symptom but cannot diagnose free text.
 are provided, they're auto-logged as the plant's first `CareLog` entry (action=`other`),
 so the intake snapshot becomes day-zero of its `/timeline`.
 
-## Photo diagnosis (Phase 3)
+## Photo diagnosis & identification (Phase 3)
 `POST /plants/{id}/diagnose-photo` accepts a JPEG/PNG/WebP image (max 8MB) plus
 optional free-text `notes`, and reasons over it the same way `/advice` reasons
 over symptoms: grounded in the species facts, not invented. The diagnosis is
 auto-logged to the plant's timeline.
+
+`POST /species/identify-photo` accepts the same image types and asks the vision
+backend to name the species — constrained to the curated catalog, so it can only
+suggest plants the app actually has care data for. Returns candidates (most
+likely first) plus the model's observation text; the mobile Add Plant flow
+renders these as tap-to-select chips. Uses the same `VISION_BACKEND` switch.
 
 Backend is chosen by `VISION_BACKEND` (`stub` | `ollama`). **No cloud/paid
 backend is offered on purpose** — the default `ollama` model is
