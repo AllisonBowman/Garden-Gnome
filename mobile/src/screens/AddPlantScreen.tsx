@@ -14,6 +14,7 @@ import {
 } from '../api/species';
 import { fetchEnvironments } from '../api/environments';
 import { createPlant } from '../api/plants';
+import { rescheduleAllReminders } from '../notifications/reminders';
 import { Species, Environment } from '../types';
 
 export default function AddPlantScreen() {
@@ -50,6 +51,8 @@ export default function AddPlantScreen() {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plants'] });
+      // New plant may introduce new due dates (anchored to acquisition)
+      void rescheduleAllReminders();
       navigation.goBack();
     },
     onError: () => Alert.alert('Error', 'Could not save plant. Check the backend connection.'),

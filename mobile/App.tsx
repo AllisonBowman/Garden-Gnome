@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
@@ -16,6 +16,7 @@ import SpeciesDetailScreen from './src/screens/SpeciesDetailScreen';
 import EnvironmentsScreen  from './src/screens/EnvironmentsScreen';
 import CensusScreen        from './src/screens/CensusScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
+import { rescheduleAllReminders } from './src/notifications/reminders';
 
 // ── Param lists (imported by child screens) ───────────────────────────────────
 export type PlantsStackParamList = {
@@ -95,6 +96,12 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 export default function App() {
+  // Refresh the reminder schedule on every launch so it stays accurate even
+  // if the app was closed for days (no-op on web / when reminders are off)
+  useEffect(() => {
+    void rescheduleAllReminders();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>

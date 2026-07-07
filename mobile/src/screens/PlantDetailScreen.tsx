@@ -9,6 +9,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { fetchPlant, logCare, fetchCareLogs, getAdvice, AdviceResponse } from '../api/plants';
+import { rescheduleAllReminders } from '../notifications/reminders';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
 
@@ -57,6 +58,8 @@ export default function PlantDetailScreen() {
       setConfirmation(
         `${action?.icon ?? '✅'} ${action?.label ?? 'Care'} — added to ${plant?.nickname ?? 'plant'}'s log`,
       );
+      // Care history changed — recompute reminder schedule in the background
+      void rescheduleAllReminders();
     },
     onError: () => Alert.alert('Error', 'Could not log care action.'),
     onSettled: () => setLoggingType(null),
