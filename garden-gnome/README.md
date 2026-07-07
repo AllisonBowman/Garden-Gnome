@@ -74,6 +74,24 @@ uvicorn app.main:app --reload
   UI, just a manual testing tool. Served by the same FastAPI process, no
   extra setup or dependencies.
 
+## Deploy (Fly.io)
+
+The API is hosted at **https://garden-gnome-api.fly.dev** (app `garden-gnome-api`, org `allison-bowman`, region `iad`). The SQLite database lives on a persistent volume (`gnome_data` → `/data`), selected via the `DATABASE_URL` env var (`app/db/database.py` falls back to the local cwd-relative file when unset, so local dev is unchanged). The container seeds the species catalog on every boot — idempotent, so a redeploy never duplicates data.
+
+```bash
+# redeploy after code changes (config: Dockerfile + fly.toml)
+flyctl deploy
+
+# tail production logs
+flyctl logs
+
+# status / scale / volume info
+flyctl status
+flyctl volumes list
+```
+
+The machine auto-stops when idle (`auto_stop_machines = "stop"`), so the first request after a quiet period cold-starts in a couple of seconds. Keep it at exactly one machine — SQLite on a volume cannot be shared across machines.
+
 ## Project layout
 
 ```

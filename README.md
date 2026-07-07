@@ -80,6 +80,19 @@ By default the app runs entirely offline with deterministic (non-AI) advice. To 
 
 A packaged Windows executable (`GardenGnome.exe`, built via `build_exe.ps1`) is also available for running the backend with no Python install required.
 
+#### Hosted backend (Fly.io)
+
+The backend is deployed at **https://garden-gnome-api.fly.dev** (app `garden-gnome-api`, region `iad`). It runs as a single machine with the SQLite database on a persistent 1 GB volume (`gnome_data`, mounted at `/data` via the `DATABASE_URL` env var), seeds the species catalog on every boot (idempotent), and auto-stops when idle — the first request after a quiet period takes a couple of seconds while the machine wakes.
+
+To redeploy after backend changes:
+
+```bash
+cd garden-gnome
+flyctl deploy
+```
+
+Deployment config lives in `garden-gnome/Dockerfile` and `garden-gnome/fly.toml`.
+
 ### Mobile app (Expo)
 
 ```bash
@@ -88,7 +101,9 @@ npm install
 npm run start     # then press w for web, or scan the QR code in Expo Go
 ```
 
-The mobile app talks to the FastAPI backend over HTTP — make sure the backend is running first, and point the app at its address (see `src/api/client.ts`).
+The mobile app talks to the FastAPI backend over HTTPS. By default it points at the hosted backend (`https://garden-gnome-api.fly.dev` — see `src/api/client.ts`); iOS release builds require https to non-localhost hosts, so the default must stay https. For local development against a backend on your own machine, override the URL in the app's Settings tab (e.g. `http://localhost:8000`, or `http://192.168.x.x:8000` from a phone on the same network).
+
+Store builds are configured in `mobile/eas.json` (`development`, `preview`, and `production` profiles for EAS Build).
 
 ## Project status / roadmap
 

@@ -1,9 +1,12 @@
+import os
 from uuid import uuid4
 
 from sqlalchemy import text
 from sqlmodel import SQLModel, Session, create_engine
 
-DATABASE_URL = "sqlite:///garden_gnome.db"
+# Overridable so hosted deployments can point at a persistent volume
+# (e.g. sqlite:////data/garden_gnome.db on Fly.io)
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///garden_gnome.db")
 
 # check_same_thread=False is needed for SQLite + FastAPI
 engine = create_engine(

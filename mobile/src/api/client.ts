@@ -2,7 +2,10 @@ import axios from 'axios';
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-const DEFAULT_BASE_URL = 'http://localhost:8000';
+// Hosted backend (Fly.io). iOS release builds block plain http to
+// non-localhost hosts (ATS), so the default must be https. For local dev,
+// point at your machine via Settings (e.g. http://192.168.1.119:8000).
+const DEFAULT_BASE_URL = 'https://garden-gnome-api.fly.dev';
 const BASE_URL_KEY = 'garden_gnome_api_url';
 
 // expo-secure-store has no web implementation (not a supported platform in
