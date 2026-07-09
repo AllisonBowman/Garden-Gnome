@@ -13,7 +13,7 @@ from pathlib import Path
 
 from sqlmodel import Session, select
 
-from app.db.database import engine, init_db
+from app.db.database import engine, init_db, migrate_db
 from app.models.models import (
     Species, CareSchedule, SpeciesTrait, LightNeed, CareType,
     Environment, EnvironmentType,
@@ -318,6 +318,11 @@ def seed() -> None:
     ones are added. Run after editing the catalog to pick up new entries
     on an existing database without wiping anything."""
     init_db()
+    # Add any columns introduced since the DB was created BEFORE querying the
+    # tables — otherwise seeding an existing DB (e.g. the deployed one) crashes
+    # selecting columns the old table lacks. The app lifespan also migrates,
+    # but the Dockerfile runs this seed first, so it must migrate itself.
+    migrate_db()
     catalog = _load_catalog()
     added = 0
     with Session(engine) as session:
