@@ -30,8 +30,9 @@ from pathlib import Path
 from sqlmodel import Session, select
 
 from app.db.database import engine
-from app.models.models import CareSchedule, Species, SpeciesTrait
+from app.models.models import Species
 from app.data.expansion.run_expansion import import_record
+from app.data.expansion.recompute_xrefs import recompute_cross_references
 from app.data.expansion.sample import to_review_entry, weighted_sample
 from app.data.expansion.validate import _name_key
 
@@ -93,47 +94,12 @@ def main() -> int:
             session.commit()
 
         # ── Bidirectional cross-reference traits over the FULL catalog ───
-        all_species = session.exec(select(Species)).all()
-        by_common: dict[str, list[Species]] = {}
-        for s in all_species:
-            by_common.setdefault(_name_key(s.common_name), []).append(s)
-
-        def upsert_trait(species: Species, trait: str, value: str) -> None:
-            row = session.exec(select(SpeciesTrait).where(
-                SpeciesTrait.species_id == species.id,
-                SpeciesTrait.trait == trait)).first()
-            if row:
-                row.value = value
-                session.add(row)
-            else:
-                session.add(SpeciesTrait(
-                    species_id=species.id, trait=trait, value=value))
-
-        common_groups = variant_links = 0
-        for key, members in by_common.items():
-            if not key or len(members) < 2:
-                continue
-            common_groups += 1
-            for s in members:
-                others = "; ".join(sorted(
-                    m.scientific_name for m in members if m.id != s.id))[:800]
-                if not args.dry_run:
-                    upsert_trait(s, "shares_common_name_with", others)
-
-        # Cultivar/variant adjacency: normalized-name containment
-        keyed = [(_name_key(s.scientific_name), s) for s in all_species]
-        keyed.sort(key=lambda ks: len(ks[0]))
-        for i, (k_short, s_short) in enumerate(keyed):
-            if not k_short:
-                continue
-            for k_long, s_long in keyed[i + 1:]:
-                if k_long.startswith(k_short + " "):
-                    variant_links += 1
-                    if not args.dry_run:
-                        upsert_trait(s_long, "related_variant_of", s_short.scientific_name)
-
+        # (shared with recompute_xrefs so prod can be re-synced independently)
+        common_groups, variant_links = recompute_cross_references(session)
         if not args.dry_run:
             session.commit()
+        else:
+            session.rollback()  # discard xref upserts in preview mode
 
         # ── Rewrite the queue with what's left; refresh the sample ───────
         if not args.dry_run:
