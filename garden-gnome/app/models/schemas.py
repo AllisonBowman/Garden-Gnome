@@ -5,6 +5,7 @@ from sqlmodel import SQLModel
 
 from app.models.models import (
     MaturityStage, CareType, LightNeed, SoilMoisture, LeafCondition, EnvironmentType,
+    ReviewStatus, SpeciesSource,
 )
 
 
@@ -143,6 +144,10 @@ class SpeciesCreate(SQLModel):
     soil_type: str
     toxic_to_pets: bool = False
     care_notes: str = ""
+    source: SpeciesSource = SpeciesSource.curated
+    source_ref: str = ""
+    review_status: ReviewStatus = ReviewStatus.approved
+    review_note: str = ""
     schedules: list[CareScheduleCreate] = []
     traits: list[SpeciesTraitCreate] = []
 
@@ -182,6 +187,10 @@ class SpeciesDetail(SQLModel):
     soil_type: str
     toxic_to_pets: bool
     care_notes: str
+    source: SpeciesSource = SpeciesSource.curated
+    source_ref: str = ""
+    review_status: ReviewStatus = ReviewStatus.approved
+    review_note: str = ""
     care_schedules: list[CareScheduleRead] = []
     traits: list[SpeciesTraitRead] = []
 

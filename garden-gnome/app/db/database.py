@@ -53,6 +53,20 @@ def migrate_db() -> None:
                 "ALTER TABLE plant ADD COLUMN environment_id INTEGER REFERENCES environment(id)"
             ))
 
+        # Species provenance/review columns (catalog expansion). Pre-existing
+        # rows are the hand-written catalog: curated + approved by definition.
+        species_cols = {
+            row[1] for row in conn.execute(text("PRAGMA table_info(species)"))
+        }
+        for col, ddl in [
+            ("source", "ALTER TABLE species ADD COLUMN source TEXT NOT NULL DEFAULT 'curated'"),
+            ("source_ref", "ALTER TABLE species ADD COLUMN source_ref TEXT NOT NULL DEFAULT ''"),
+            ("review_status", "ALTER TABLE species ADD COLUMN review_status TEXT NOT NULL DEFAULT 'approved'"),
+            ("review_note", "ALTER TABLE species ADD COLUMN review_note TEXT NOT NULL DEFAULT ''"),
+        ]:
+            if col not in species_cols:
+                conn.execute(text(ddl))
+
         conn.commit()
 
 

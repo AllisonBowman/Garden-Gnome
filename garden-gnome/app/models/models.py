@@ -55,6 +55,18 @@ class EnvironmentType(str, Enum):
     research = "research"
 
 
+class SpeciesSource(str, Enum):
+    curated = "curated"            # hand-written original catalog
+    perenual = "perenual"          # mapped from the Perenual API
+    llm_generated = "llm_generated"  # drafted by /species/generate — heavier review
+
+
+class ReviewStatus(str, Enum):
+    approved = "approved"          # passed automated validation
+    needs_review = "needs_review"  # flagged by validation; in the review queue
+    verified = "verified"          # manually cross-checked against an authority
+
+
 class Species(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     common_name: str = Field(index=True)
@@ -68,6 +80,12 @@ class Species(SQLModel, table=True):
     soil_type: str
     toxic_to_pets: bool = False
     care_notes: str = ""
+
+    # Provenance + review trail for catalog expansion
+    source: SpeciesSource = SpeciesSource.curated
+    source_ref: str = ""           # e.g. Perenual species id, for traceability
+    review_status: ReviewStatus = ReviewStatus.approved
+    review_note: str = ""          # citation from manual verification (source + URL)
 
     plants: list["Plant"] = Relationship(back_populates="species")
     care_schedules: list["CareSchedule"] = Relationship(back_populates="species")
