@@ -146,7 +146,8 @@ export default function SettingsScreen() {
             Garden Gnome v1.0.0{'\n'}
             AI-powered plant care assistant with environmental stewardship census.{'\n\n'}
             The app connects to a self-hosted or cloud-deployed FastAPI backend.
-            All plant data remains under your control.
+            All plant data remains under your control.{'\n\n'}
+            Species data provided in part by Perenual (perenual.com).
           </Text>
         </Card.Content>
       </Card>

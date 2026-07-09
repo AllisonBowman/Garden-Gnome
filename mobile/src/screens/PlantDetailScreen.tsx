@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  ScrollView, View, StyleSheet, Alert,
+  ScrollView, View, StyleSheet, Alert, Platform,
 } from 'react-native';
 import {
   Text, Card, Button, Chip, Divider, List,
@@ -8,10 +8,23 @@ import {
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { fetchPlant, logCare, fetchCareLogs, getAdvice, AdviceResponse } from '../api/plants';
+import * as ImagePicker from 'expo-image-picker';
+import {
+  fetchPlant, logCare, fetchCareLogs, getAdvice, AdviceResponse,
+  diagnosePlantPhoto, DiagnosisResponse,
+} from '../api/plants';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
+
+// Landing-page palette (specimen-card look): ink/paper/marigold/clay
+const SPECIMEN = {
+  ink: '#1C2B1F',
+  inkSoft: '#2C3D2C',
+  paper: '#EEEBDD',
+  marigold: '#D9A441',
+  clay: '#A9542F',
+};
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 
@@ -72,6 +85,27 @@ export default function PlantDetailScreen() {
     onSuccess: setAdvice,
     onError: () => Alert.alert('Error', 'Could not get advice.'),
   });
+
+  const [diagnosisNotes, setDiagnosisNotes] = useState('');
+  const [diagnosis, setDiagnosis] = useState<DiagnosisResponse | null>(null);
+  const diagnoseMutation = useMutation({
+    mutationFn: (asset: { uri: string; mimeType?: string; fileName?: string | null }) =>
+      diagnosePlantPhoto(plantId, asset, diagnosisNotes),
+    onSuccess: (result) => {
+      setDiagnosis(result);
+      // The diagnosis is auto-logged to the timeline by the backend
+      queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });
+    },
+    onError: () => Alert.alert('Error', 'Could not diagnose the photo. Check the backend connection.'),
+  });
+
+  const pickAndDiagnose = async (useCamera: boolean) => {
+    const res = useCamera
+      ? await ImagePicker.launchCameraAsync({ quality: 0.8 })
+      : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8 });
+    if (res.canceled || !res.assets?.length) return;
+    diagnoseMutation.mutate(res.assets[0]);
+  };
 
   if (isLoading || !plant) {
     return <ActivityIndicator style={styles.center} size="large" />;
@@ -157,6 +191,75 @@ export default function PlantDetailScreen() {
               ))}
               <Chip compact style={styles.backendChip} textStyle={styles.backendChipText}>
                 {advice.backend === 'stub' ? 'rule-based' : advice.backend}
+              </Chip>
+            </View>
+          )}
+        </Card.Content>
+      </Card>
+
+      {/* Photo diagnosis — specimen-card styling from the landing page */}
+      <Card style={styles.specimenCard}>
+        <View style={styles.specimenHeader}>
+          <Text style={styles.specimenLabel}>SPECIMEN CHECK-UP</Text>
+          <Text style={styles.specimenTitle}>Photo diagnosis 📷</Text>
+          <Text style={styles.specimenSub}>
+            Snap the whole plant or a close-up of what worries you — the Gnome
+            reads it against {species?.common_name ?? 'this species'}&apos;s care
+            facts and this plant&apos;s history, then files it to the timeline.
+          </Text>
+        </View>
+        <Card.Content style={styles.specimenBody}>
+          <TextInput
+            label="Anything specific you noticed? (optional)"
+            value={diagnosisNotes}
+            onChangeText={setDiagnosisNotes}
+            mode="outlined"
+            style={styles.diagnosisInput}
+            outlineColor="rgba(28,43,31,0.25)"
+            activeOutlineColor={SPECIMEN.clay}
+            textColor={SPECIMEN.ink}
+            placeholder="e.g. brown spots since last week"
+          />
+          <View style={styles.diagnosisBtnRow}>
+            {Platform.OS !== 'web' && (
+              <Button
+                mode="contained"
+                icon="camera"
+                onPress={() => pickAndDiagnose(true)}
+                disabled={diagnoseMutation.isPending}
+                buttonColor={SPECIMEN.marigold}
+                textColor={SPECIMEN.ink}
+                style={styles.diagnosisBtn}
+              >
+                Take photo
+              </Button>
+            )}
+            <Button
+              mode={Platform.OS === 'web' ? 'contained' : 'outlined'}
+              icon="image"
+              onPress={() => pickAndDiagnose(false)}
+              loading={diagnoseMutation.isPending}
+              disabled={diagnoseMutation.isPending}
+              buttonColor={Platform.OS === 'web' ? SPECIMEN.marigold : undefined}
+              textColor={Platform.OS === 'web' ? SPECIMEN.ink : SPECIMEN.clay}
+              style={styles.diagnosisBtn}
+            >
+              Choose photo
+            </Button>
+          </View>
+          {diagnoseMutation.isPending && (
+            <Text style={styles.diagnosisPending}>
+              Examining the specimen… local vision models take a moment.
+            </Text>
+          )}
+          {diagnosis && (
+            <View style={styles.testimony}>
+              <Text style={styles.testimonyLabel}>GNOME&apos;S FINDINGS</Text>
+              {diagnosis.diagnosis.split('\n').filter((l) => l.trim()).map((line, i) => (
+                <Text key={i} style={styles.testimonyText}>{line}</Text>
+              ))}
+              <Chip compact style={styles.specimenChip} textStyle={styles.specimenChipText}>
+                {diagnosis.backend === 'stub' ? 'diagnosis not enabled yet' : diagnosis.backend}
               </Chip>
             </View>
           )}
@@ -260,4 +363,49 @@ const styles = StyleSheet.create({
   backendChip: { alignSelf: 'flex-start', marginTop: 2, backgroundColor: '#E1EDE4' },
   backendChipText: { fontSize: 11, color: '#52796F' },
   snackbar: { backgroundColor: '#2D6A4F' },
+
+  // Specimen card — palette borrowed from the landing page (ink/paper/marigold/clay)
+  specimenCard: { marginBottom: 12, borderRadius: 12, backgroundColor: SPECIMEN.paper },
+  specimenHeader: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderStyle: 'dashed',
+    borderBottomColor: 'rgba(28,43,31,0.25)',
+  },
+  specimenLabel: {
+    fontSize: 11,
+    letterSpacing: 1.5,
+    color: SPECIMEN.clay,
+    fontWeight: '600',
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+  },
+  specimenTitle: { fontSize: 19, fontWeight: '600', color: SPECIMEN.ink, marginTop: 4 },
+  specimenSub: { fontSize: 13, lineHeight: 19, color: SPECIMEN.inkSoft, marginTop: 6 },
+  specimenBody: { paddingTop: 14 },
+  diagnosisInput: { marginBottom: 12, backgroundColor: '#FFFFFF' },
+  diagnosisBtnRow: { flexDirection: 'row', gap: 10, flexWrap: 'wrap' },
+  diagnosisBtn: { borderRadius: 6, borderColor: SPECIMEN.clay },
+  diagnosisPending: { marginTop: 12, fontStyle: 'italic', color: SPECIMEN.inkSoft, fontSize: 13 },
+  testimony: {
+    marginTop: 16,
+    backgroundColor: 'rgba(217,164,65,0.12)',
+    borderLeftWidth: 2,
+    borderLeftColor: SPECIMEN.marigold,
+    borderTopRightRadius: 2,
+    borderBottomRightRadius: 2,
+    padding: 14,
+    gap: 8,
+  },
+  testimonyLabel: {
+    fontSize: 10,
+    letterSpacing: 1.2,
+    color: SPECIMEN.clay,
+    fontWeight: '600',
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+  },
+  testimonyText: { fontStyle: 'italic', lineHeight: 21, color: SPECIMEN.ink, fontSize: 14.5 },
+  specimenChip: { alignSelf: 'flex-start', marginTop: 4, backgroundColor: 'rgba(28,43,31,0.08)' },
+  specimenChipText: { fontSize: 11, color: SPECIMEN.inkSoft },
 });

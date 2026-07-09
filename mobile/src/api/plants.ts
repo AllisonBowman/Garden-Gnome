@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { apiClient } from './client';
 import { Plant, CareLog, CareType, StewardshipRecord } from '../types';
 
@@ -52,6 +53,41 @@ export async function getAdvice(plantId: number, symptoms = ''): Promise<AdviceR
   const { data } = await client.post<AdviceResponse>(`/plants/${plantId}/advice`, {
     symptoms,
   });
+  return data;
+}
+
+export interface DiagnosisResponse {
+  plant_id: number;
+  nickname: string;
+  species: string;
+  backend: string;
+  diagnosis: string;
+}
+
+export async function diagnosePlantPhoto(
+  plantId: number,
+  asset: { uri: string; mimeType?: string; fileName?: string | null },
+  notes = '',
+): Promise<DiagnosisResponse> {
+  const client = await apiClient();
+  const form = new FormData();
+  const name = asset.fileName ?? 'photo.jpg';
+  const type = asset.mimeType ?? 'image/jpeg';
+  if (Platform.OS === 'web') {
+    // Picker returns a data/blob URI on web; convert to a File for upload
+    const blob = await (await fetch(asset.uri)).blob();
+    form.append('photo', new File([blob], name, { type: blob.type || type }));
+  } else {
+    form.append('photo', { uri: asset.uri, name, type } as unknown as Blob);
+  }
+  form.append('notes', notes);
+  const { data } = await client.post<DiagnosisResponse>(
+    `/plants/${plantId}/diagnose-photo`, form, {
+      // Let axios/the browser set the multipart boundary; local vision models are slow
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 190000,
+    },
+  );
   return data;
 }
 
