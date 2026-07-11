@@ -175,6 +175,12 @@ export default function PlantDetailScreen() {
           >
             Get care advice
           </Button>
+          {!advice && !adviceMutation.isPending && (
+            <Text style={styles.adviceHint}>
+              Care tips for {plant.nickname}, grounded in its species and history.
+              Mention anything that looks off above.
+            </Text>
+          )}
           {advice && (
             <View style={styles.adviceBox}>
               {advice.advice.split('\n').filter((l) => l.trim()).map((line, i) => (
@@ -292,7 +298,10 @@ export default function PlantDetailScreen() {
         <Card.Title title="Recent care log" titleVariant="titleMedium" />
         <Card.Content>
           {(!logs || logs.length === 0) ? (
-            <Text style={styles.empty}>No care logged yet.</Text>
+            <Text style={styles.empty}>
+              No care logged yet — tap a care action above and {plant.nickname}&apos;s
+              timeline starts here.
+            </Text>
           ) : (
             logs.slice(0, 10).map((log) => (
               <List.Item
@@ -351,6 +360,7 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   symptomsInput: { marginBottom: 12 },
   adviceBtn: { borderRadius: 8 },
+  adviceHint: { marginTop: 12, fontSize: 13, lineHeight: 19, color: '#6b7d6e', fontStyle: 'italic' },
   adviceBox: {
     marginTop: 16,
     backgroundColor: '#EFF6F0',

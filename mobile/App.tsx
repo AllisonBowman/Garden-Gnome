@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper';
@@ -17,6 +17,9 @@ import EnvironmentsScreen  from './src/screens/EnvironmentsScreen';
 import CensusScreen        from './src/screens/CensusScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
 import { rescheduleAllReminders } from './src/notifications/reminders';
+import Onboarding from './src/onboarding/Onboarding';
+import { getOnboardingSeen, setOnboardingSeen } from './src/onboarding/storage';
+import { fetchPlants } from './src/api/plants';
 
 // ── Param lists (imported by child screens) ───────────────────────────────────
 export type PlantsStackParamList = {
@@ -96,17 +99,50 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 export default function App() {
+  const navigationRef = useNavigationContainerRef();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
   // Refresh the reminder schedule on every launch so it stays accurate even
   // if the app was closed for days (no-op on web / when reminders are off)
   useEffect(() => {
     void rescheduleAllReminders();
   }, []);
 
+  // First-run onboarding: show only if it hasn't been seen AND the household
+  // has no plants. Checking plants means a returning user (e.g. reinstall, or
+  // a second device on the shared backend) never sees it, even without the flag.
+  useEffect(() => {
+    (async () => {
+      if (await getOnboardingSeen()) return;
+      try {
+        const plants = await fetchPlants();
+        if (plants.length === 0) setShowOnboarding(true);
+        else await setOnboardingSeen(); // returning user — remember, don't show
+      } catch {
+        // Offline or backend unreachable — defer the decision to next launch
+      }
+    })();
+  }, []);
+
+  const dismissOnboarding = () => {
+    void setOnboardingSeen();
+    setShowOnboarding(false);
+  };
+  const onboardingAddPlant = () => {
+    void setOnboardingSeen();
+    setShowOnboarding(false);
+    // Tab 'Plants' contains a stack with the 'AddPlant' screen. The ref has no
+    // typed param list, so cast navigate to a permissive signature.
+    (navigationRef.navigate as (name: string, params?: object) => void)(
+      'Plants', { screen: 'AddPlant' },
+    );
+  };
+
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <PaperProvider theme={theme}>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <StatusBar style="light" />
             <Tab.Navigator
               screenOptions={{
@@ -157,6 +193,9 @@ export default function App() {
               />
             </Tab.Navigator>
           </NavigationContainer>
+          {showOnboarding && (
+            <Onboarding onSkip={dismissOnboarding} onAddPlant={onboardingAddPlant} />
+          )}
         </PaperProvider>
       </QueryClientProvider>
     </SafeAreaProvider>

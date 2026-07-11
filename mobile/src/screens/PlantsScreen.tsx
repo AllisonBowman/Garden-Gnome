@@ -11,6 +11,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchPlants } from '../api/plants';
 import { Plant } from '../types';
 import { PlantsStackParamList } from '../../App';
+import StreakBadges from '../streaks/StreakBadges';
+import EmptyState from '../components/EmptyState';
 
 type Nav = NativeStackNavigationProp<PlantsStackParamList, 'PlantsList'>;
 
@@ -93,8 +95,15 @@ export default function PlantsScreen() {
         keyExtractor={(p) => String(p.id)}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
+        ListHeaderComponent={<StreakBadges />}
         ListEmptyComponent={
-          <Text style={styles.empty}>No plants yet — tap + to add one.</Text>
+          <EmptyState
+            emoji="🪴"
+            title="Your garden's empty"
+            body="Add your first plant and Garden Gnome will help you keep it thriving — gentle reminders when care is due, no pressure."
+            actionLabel="Add your first plant"
+            onAction={() => navigation.navigate('AddPlant')}
+          />
         }
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
