@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView, View, StyleSheet, Alert, KeyboardAvoidingView, Platform,
 } from 'react-native';
@@ -9,9 +9,10 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import { fetchSpeciesList } from '../api/species';
 import {
-  fetchSpeciesList, identifySpeciesPhoto, IdentifyResponse,
-} from '../api/species';
+  identifySpeciesPhoto, IdentifyResponse, photoIdAvailable,
+} from '../photoId/identify';
 import { fetchEnvironments } from '../api/environments';
 import { createPlant } from '../api/plants';
 import { rescheduleAllReminders } from '../notifications/reminders';
@@ -59,8 +60,14 @@ export default function AddPlantScreen() {
   });
 
   const [identifyResult, setIdentifyResult] = useState<IdentifyResponse | null>(null);
+  // Whether on-device photo ID can run here. When false we hide the button
+  // entirely (never a dead button) and users rely on the search below.
+  const [aiIdAvailable, setAiIdAvailable] = useState(false);
+  useEffect(() => { photoIdAvailable().then(setAiIdAvailable); }, []);
+
   const identifyMutation = useMutation({
-    mutationFn: identifySpeciesPhoto,
+    mutationFn: (photo: { uri: string; mimeType?: string; fileName?: string | null }) =>
+      identifySpeciesPhoto(photo, speciesList),
     onSuccess: (result) => {
       setIdentifyResult(result);
       // Auto-select the top candidate; the user can still tap another chip
@@ -109,16 +116,18 @@ export default function AddPlantScreen() {
 
         <Text variant="titleMedium" style={styles.sectionTitle}>Species *</Text>
 
-        <Button
-          mode="outlined"
-          icon="camera"
-          onPress={pickAndIdentify}
-          loading={identifyMutation.isPending}
-          disabled={identifyMutation.isPending}
-          style={styles.identifyBtn}
-        >
-          Identify from a photo
-        </Button>
+        {aiIdAvailable && (
+          <Button
+            mode="outlined"
+            icon="camera"
+            onPress={pickAndIdentify}
+            loading={identifyMutation.isPending}
+            disabled={identifyMutation.isPending}
+            style={styles.identifyBtn}
+          >
+            Identify from a photo
+          </Button>
+        )}
 
         {identifyResult && (
           <View style={styles.identifyBox}>
