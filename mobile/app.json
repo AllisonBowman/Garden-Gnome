@@ -8,16 +8,23 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gardengnome.app"
+      "bundleIdentifier": "com.allisonbowman.gardengnome",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "package": "com.gardengnome.app",
+      "package": "com.allisonbowman.gardengnome",
       "adaptiveIcon": {
         "backgroundColor": "#2D6A4F",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,16 +42,29 @@
       "expo-secure-store",
       [
         "expo-camera",
-        { "cameraPermission": "Allow Garden Gnome to access your camera to photograph plants." }
+        {
+          "cameraPermission": "Allow Garden Gnome to access your camera to photograph plants."
+        }
       ],
       [
         "expo-image-picker",
-        { "photosPermission": "Allow Garden Gnome to access your photos to add plant images." }
+        {
+          "photosPermission": "Allow Garden Gnome to access your photos to add plant images."
+        }
       ],
       [
         "expo-notifications",
-        { "icon": "./assets/icon.png", "color": "#2D6A4F" }
+        {
+          "icon": "./assets/icon.png",
+          "color": "#2D6A4F"
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9f8bf927-1520-4e6f-ad37-c4fa5f70097e"
+      }
+    },
+    "owner": "allisonbowman"
   }
 }
