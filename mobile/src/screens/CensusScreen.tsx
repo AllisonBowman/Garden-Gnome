@@ -30,7 +30,8 @@ export default function CensusScreen() {
     return (
       <View style={styles.center}>
         <Text style={{ color: '#c00', textAlign: 'center' }}>
-          Could not load census. Check your API URL in Settings.
+          Could not load census.{' '}
+          {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
         </Text>
         <Button onPress={() => refetch()} style={{ marginTop: 12 }}>Retry</Button>
       </View>

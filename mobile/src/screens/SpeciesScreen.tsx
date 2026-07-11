@@ -68,7 +68,8 @@ export default function SpeciesScreen() {
     return (
       <View style={styles.center}>
         <Text style={{ color: '#c00', textAlign: 'center' }}>
-          Could not load species. Check API URL in Settings.
+          Could not load species.{' '}
+          {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
         </Text>
       </View>
     );

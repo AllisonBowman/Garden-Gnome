@@ -82,7 +82,8 @@ export default function PlantsScreen() {
     return (
       <View style={styles.center}>
         <Text variant="bodyLarge" style={styles.errorText}>
-          Could not reach the backend.{'\n'}Check your API URL in Settings.
+          Could not reach the backend.{'\n'}
+          {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
         </Text>
       </View>
     );

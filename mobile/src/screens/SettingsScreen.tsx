@@ -27,7 +27,7 @@ export default function SettingsScreen() {
   const remindersSupported = Platform.OS !== 'web';
 
   useEffect(() => {
-    getBaseUrl().then(setUrl);
+    if (__DEV__) getBaseUrl().then(setUrl); // field only shown in dev builds
     getReminderPrefs().then(setPrefs);
   }, []);
 
@@ -73,45 +73,52 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Card style={styles.card}>
-        <Card.Title title="Backend connection" titleVariant="titleMedium" />
-        <Card.Content>
-          <Text variant="bodySmall" style={styles.hint}>
-            Enter the URL of your Garden Gnome API server.{'\n'}
-            For local development: http://192.168.x.x:8000{'\n'}
-            For production: https://your-server.example.com
-          </Text>
-          <TextInput
-            label="API base URL"
-            value={url}
-            onChangeText={(v) => { setUrl(v); setSaved(false); }}
-            mode="outlined"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="url"
-            style={styles.input}
-            placeholder="http://localhost:8000"
-          />
-          <Button
-            mode="contained"
-            onPress={save}
-            style={styles.btn}
-            buttonColor="#2D6A4F"
-          >
-            {saved ? 'Saved ✓' : 'Save URL'}
-          </Button>
-          <Button
-            mode="outlined"
-            onPress={testConnection}
-            loading={testing}
-            style={styles.btn}
-          >
-            Test connection
-          </Button>
-        </Card.Content>
-      </Card>
+      {/* Dev-only: point the app at a local backend. Hidden in release builds
+          so end users can't accidentally break connectivity (the app then just
+          uses the hosted DEFAULT_BASE_URL). */}
+      {__DEV__ && (
+        <>
+          <Card style={styles.card}>
+            <Card.Title title="Backend connection (dev)" titleVariant="titleMedium" />
+            <Card.Content>
+              <Text variant="bodySmall" style={styles.hint}>
+                Dev only — override the API server URL.{'\n'}
+                For local development: http://192.168.x.x:8000{'\n'}
+                Default (release): https://garden-gnome-api.fly.dev
+              </Text>
+              <TextInput
+                label="API base URL"
+                value={url}
+                onChangeText={(v) => { setUrl(v); setSaved(false); }}
+                mode="outlined"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="url"
+                style={styles.input}
+                placeholder="http://localhost:8000"
+              />
+              <Button
+                mode="contained"
+                onPress={save}
+                style={styles.btn}
+                buttonColor="#2D6A4F"
+              >
+                {saved ? 'Saved ✓' : 'Save URL'}
+              </Button>
+              <Button
+                mode="outlined"
+                onPress={testConnection}
+                loading={testing}
+                style={styles.btn}
+              >
+                Test connection
+              </Button>
+            </Card.Content>
+          </Card>
 
-      <Divider style={styles.divider} />
+          <Divider style={styles.divider} />
+        </>
+      )}
 
       <Card style={styles.card}>
         <Card.Title title="Care reminders" titleVariant="titleMedium" />
