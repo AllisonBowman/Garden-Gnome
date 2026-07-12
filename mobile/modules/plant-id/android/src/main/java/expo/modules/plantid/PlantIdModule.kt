@@ -1,95 +1,72 @@
 package expo.modules.plantid
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import expo.modules.kotlin.Promise
 import expo.modules.kotlin.exception.CodedException
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
-// On-device plant identification for Android via ML Kit GenAI Prompt API
-// (AICore-backed Gemini Nano). No network call for inference.
+// ML Kit GenAI Prompt API (AICore-backed Gemini Nano, on-device). Multimodal:
+// image + text -> text. No network call for inference.
 //
-// ⚠️ BUILD/TEST CAVEAT: not compiled on this machine (no Android SDK). The ML
-// Kit GenAI Prompt API is new; verify the class/method surface below
-// (GenerativeModel / PromptRequest / feature status) against the shipping SDK.
-// Gemini Nano only runs on AICore-capable devices (currently newer flagships) —
-// unsupported devices return isAvailable() == false and the JS layer falls
-// back to manual species search.
-
-import com.google.mlkit.genai.common.FeatureStatus
-import com.google.mlkit.genai.common.DownloadCallback
-import com.google.mlkit.genai.prompt.Generation
-import com.google.mlkit.genai.prompt.GenerativeModel
-import com.google.mlkit.genai.prompt.PromptRequest
+// ⚠️ Not compiled on this machine (no Android SDK). Gemini Nano runs only on
+// AICore-capable devices (currently newer flagships) — unsupported devices
+// return isAvailable() == false and the JS layer falls back to manual search.
+import com.google.mlkit.genai.common.*
+import com.google.mlkit.genai.prompt.*
+import kotlinx.coroutines.flow.*
 
 class PlantIdModule : Module() {
-  private val model: GenerativeModel by lazy { Generation.getClient() }
+  // Generation.getClient() creates the on-device generative model client.
+  private val model by lazy { Generation.getClient() }
+
+  private val instructions =
+    "You identify houseplant species. Respond with ONLY the single most likely " +
+    "species: common name, plus scientific name in parentheses if confident. No extra words."
 
   override fun definition() = ModuleDefinition {
     Name("PlantId")
 
-    AsyncFunction("isAvailable") { promise: Promise ->
+    AsyncFunction("isAvailable") Coroutine {
       try {
-        model.checkFeatureStatus()
-          .addOnSuccessListener { status ->
-            promise.resolve(status == FeatureStatus.AVAILABLE || status == FeatureStatus.DOWNLOADABLE)
-          }
-          .addOnFailureListener { promise.resolve(false) }
+        val status = model.checkStatus()
+        status == FeatureStatus.AVAILABLE || status == FeatureStatus.DOWNLOADABLE
       } catch (e: Throwable) {
         // Missing AICore / unsupported device / API not present.
-        promise.resolve(false)
+        false
       }
     }
 
-    AsyncFunction("identify") { imageUri: String, prompt: String, promise: Promise ->
-      try {
-        model.checkFeatureStatus()
-          .addOnSuccessListener { status ->
-            when (status) {
-              FeatureStatus.UNAVAILABLE ->
-                promise.reject(CodedException("Gemini Nano is not available on this device."))
-              FeatureStatus.DOWNLOADABLE, FeatureStatus.DOWNLOADING ->
-                downloadThenInfer(imageUri, prompt, promise)
-              FeatureStatus.AVAILABLE ->
-                runInference(imageUri, prompt, promise)
-              else ->
-                promise.reject(CodedException("Unknown feature status: $status"))
-            }
-          }
-          .addOnFailureListener { e -> promise.reject(CodedException("Feature status check failed", e)) }
-      } catch (e: Throwable) {
-        promise.reject(CodedException("On-device model unavailable", e))
+    AsyncFunction("identify") Coroutine { imageUri: String, prompt: String ->
+      when (model.checkStatus()) {
+        FeatureStatus.UNAVAILABLE ->
+          throw CodedException("Gemini Nano is not available on this device.")
+        FeatureStatus.DOWNLOADABLE, FeatureStatus.DOWNLOADING ->
+          // One-time on-device model download before first use.
+          model.download().collect { }
+        FeatureStatus.AVAILABLE -> {}
+        else -> {}
       }
+
+      val bitmap = loadBitmap(imageUri)
+        ?: throw CodedException("Could not read the selected image.")
+
+      val response = model.generateContent(
+        generateContentRequest(
+          ImagePart(bitmap),
+          TextPart("$instructions\n$prompt"),
+        )
+      )
+      response.candidates.firstOrNull()?.text
+        ?: throw CodedException("The model returned no result.")
     }
   }
 
-  private fun downloadThenInfer(imageUri: String, prompt: String, promise: Promise) {
-    model.downloadFeature(object : DownloadCallback {
-      override fun onDownloadCompleted() = runInference(imageUri, prompt, promise)
-      override fun onDownloadFailed(e: Exception) =
-        promise.reject(CodedException("Model download failed", e))
-      override fun onDownloadStarted(bytesToDownload: Long) {}
-      override fun onDownloadProgress(totalBytesDownloaded: Long) {}
-    })
-  }
-
-  private fun runInference(imageUri: String, prompt: String, promise: Promise) {
-    val ctx = appContext.reactContext
-      ?: return promise.reject(CodedException("No Android context"))
-    val bitmap = ctx.contentResolver.openInputStream(Uri.parse(imageUri)).use {
+  private fun loadBitmap(imageUri: String): Bitmap? {
+    val ctx = appContext.reactContext ?: return null
+    return ctx.contentResolver.openInputStream(Uri.parse(imageUri)).use {
       BitmapFactory.decodeStream(it)
-    } ?: return promise.reject(CodedException("Could not read the selected image."))
-
-    val instructions =
-      "You identify houseplant species. Respond with ONLY the single most likely " +
-      "species: common name, plus scientific name in parentheses if confident. No extra words."
-    val request = PromptRequest.builder("$instructions\n$prompt")
-      .addImage(bitmap)
-      .build()
-
-    model.runInference(request)
-      .addOnSuccessListener { result -> promise.resolve(result.text) }
-      .addOnFailureListener { e -> promise.reject(CodedException("Inference failed", e)) }
+    }
   }
 }

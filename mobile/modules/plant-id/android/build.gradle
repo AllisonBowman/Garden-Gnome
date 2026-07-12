@@ -24,8 +24,9 @@ android {
 }
 
 dependencies {
-  // ML Kit GenAI Prompt API (AICore-backed Gemini Nano, on-device).
-  // ⚠️ Verify the artifact + version against the current ML Kit GenAI release
-  // when building — the Prompt API is new and the coordinates may change.
-  implementation "com.google.mlkit:genai-prompt:1.0.0-beta1"
+  // ML Kit GenAI Prompt API (AICore-backed Gemini Nano, on-device, multimodal).
+  implementation "com.google.mlkit:genai-prompt:1.0.0-beta2"
+
+  // Prompt API's suspend/Flow surface needs the coroutines runtime.
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
 }
