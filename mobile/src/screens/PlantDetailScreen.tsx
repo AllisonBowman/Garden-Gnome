@@ -14,6 +14,7 @@ import {
   diagnosePlantPhoto, DiagnosisResponse,
 } from '../api/plants';
 import { rescheduleAllReminders } from '../notifications/reminders';
+import { gnomeVoice } from '../gnomeVoice/restyle';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
 
@@ -79,9 +80,16 @@ export default function PlantDetailScreen() {
   });
 
   const [symptoms, setSymptoms] = useState('');
-  const [advice, setAdvice] = useState<AdviceResponse | null>(null);
+  const [advice, setAdvice] = useState<(AdviceResponse & { gnomeStyled: boolean }) | null>(null);
   const adviceMutation = useMutation({
-    mutationFn: () => getAdvice(plantId, symptoms),
+    mutationFn: async () => {
+      // The rule engine determines WHAT to say; the on-device gnome only
+      // restyles HOW it's said (and falls back to the flat text everywhere
+      // the model can't run or drifts from the given facts).
+      const result = await getAdvice(plantId, symptoms);
+      const voiced = await gnomeVoice(result.advice, plant?.nickname);
+      return { ...result, advice: voiced.text, gnomeStyled: voiced.styled };
+    },
     onSuccess: setAdvice,
     onError: () => Alert.alert('Error', 'Could not get advice.'),
   });
@@ -189,6 +197,7 @@ export default function PlantDetailScreen() {
                   variant="bodyMedium"
                   style={[
                     styles.adviceText,
+                    advice.gnomeStyled && styles.gnomeVoiceText,
                     line.startsWith('⚠️') && styles.adviceWarningText,
                   ]}
                 >
@@ -196,7 +205,8 @@ export default function PlantDetailScreen() {
                 </Text>
               ))}
               <Chip compact style={styles.backendChip} textStyle={styles.backendChipText}>
-                {advice.backend === 'stub' ? 'rule-based' : advice.backend}
+                {(advice.backend === 'stub' ? 'rule-based' : advice.backend)
+                  + (advice.gnomeStyled ? ' • gnome voice' : '')}
               </Chip>
             </View>
           )}
@@ -369,6 +379,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   adviceText: { lineHeight: 21, color: '#2F3E36' },
+  gnomeVoiceText: { fontStyle: 'italic', fontSize: 14.5 },
   adviceWarningText: { color: '#9A4D00', fontWeight: '600' },
   backendChip: { alignSelf: 'flex-start', marginTop: 2, backgroundColor: '#E1EDE4' },
   backendChipText: { fontSize: 11, color: '#52796F' },

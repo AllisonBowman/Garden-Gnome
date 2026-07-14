@@ -14,6 +14,11 @@ interface PlantIdNativeModule {
    * against the curated catalog.
    */
   identify(imageUri: string, prompt: string): Promise<string>;
+  /**
+   * Text-only on-device generation (no image). Same trust rule: callers must
+   * validate the output before showing it — see the gnome-voice drift check.
+   */
+  generate(prompt: string): Promise<string>;
 }
 
 /** True when the native module is linked into this build at all. */
@@ -31,4 +36,9 @@ export async function isAvailable(): Promise<boolean> {
 export async function identify(imageUri: string, prompt: string): Promise<string | null> {
   if (!PlantId) return null;
   return PlantId.identify(imageUri, prompt);
+}
+
+export async function generate(prompt: string): Promise<string | null> {
+  if (!PlantId) return null;
+  return PlantId.generate(prompt);
 }

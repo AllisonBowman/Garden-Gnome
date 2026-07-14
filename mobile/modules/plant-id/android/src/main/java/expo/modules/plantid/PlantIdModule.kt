@@ -39,15 +39,7 @@ class PlantIdModule : Module() {
     }
 
     AsyncFunction("identify") Coroutine { imageUri: String, prompt: String ->
-      when (model.checkStatus()) {
-        FeatureStatus.UNAVAILABLE ->
-          throw CodedException("Gemini Nano is not available on this device.")
-        FeatureStatus.DOWNLOADABLE, FeatureStatus.DOWNLOADING ->
-          // One-time on-device model download before first use.
-          model.download().collect { }
-        FeatureStatus.AVAILABLE -> {}
-        else -> {}
-      }
+      ensureModelReady()
 
       val bitmap = loadBitmap(imageUri)
         ?: throw CodedException("Could not read the selected image.")
@@ -60,6 +52,27 @@ class PlantIdModule : Module() {
       )
       response.candidates.firstOrNull()?.text
         ?: throw CodedException("The model returned no result.")
+    }
+
+    // Text-only generation over the same on-device model (used by the gnome
+    // voice). The caller supplies the full prompt; no instructions added here.
+    AsyncFunction("generate") Coroutine { prompt: String ->
+      ensureModelReady()
+      val response = model.generateContent(generateContentRequest(TextPart(prompt)))
+      response.candidates.firstOrNull()?.text
+        ?: throw CodedException("The model returned no result.")
+    }
+  }
+
+  private suspend fun ensureModelReady() {
+    when (model.checkStatus()) {
+      FeatureStatus.UNAVAILABLE ->
+        throw CodedException("Gemini Nano is not available on this device.")
+      FeatureStatus.DOWNLOADABLE, FeatureStatus.DOWNLOADING ->
+        // One-time on-device model download before first use.
+        model.download().collect { }
+      FeatureStatus.AVAILABLE -> {}
+      else -> {}
     }
   }
 

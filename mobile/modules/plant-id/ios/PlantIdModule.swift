@@ -57,6 +57,22 @@ public class PlantIdModule: Module {
       #endif
       throw PlantIdError(message: "Foundation Models requires iOS 26 or newer.")
     }
+
+    // Text-only generation over the same on-device model (used by the gnome
+    // voice). The caller supplies the full prompt; no instructions added here.
+    AsyncFunction("generate") { (prompt: String) async throws -> String in
+      guard PlantIdModule.foundationModelsAvailable() else {
+        throw PlantIdError(message: "Apple Intelligence / Foundation Models is not available on this device.")
+      }
+      #if canImport(FoundationModels)
+      if #available(iOS 26.0, *) {
+        let session = LanguageModelSession()
+        let response = try await session.respond(to: prompt)
+        return response.content
+      }
+      #endif
+      throw PlantIdError(message: "Foundation Models requires iOS 26 or newer.")
+    }
   }
 
   private static func foundationModelsAvailable() -> Bool {
