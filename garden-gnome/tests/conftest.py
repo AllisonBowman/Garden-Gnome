@@ -14,7 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 # Must be set before app.config / app.db.database are imported anywhere.
-os.environ.setdefault("JWT_SECRET", "test-secret-not-for-production")
+os.environ.setdefault(
+    "JWT_SECRET", "test-secret-not-for-production-0123456789abcdef")
 os.environ.setdefault(
     "FERNET_KEY", "3xNZZ39kIYYjBTGoTUdBjPIHpBTHQniku9UYc9pRcNo="  # test-only key
 )
