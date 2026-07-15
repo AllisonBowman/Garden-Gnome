@@ -7,6 +7,7 @@ Sign-in upsert (shared by both providers):
 3. Otherwise create the User, the identity, AND a default "My Home"
    environment so every new account starts usable (decision 5).
 """
+import logging
 from datetime import datetime
 from typing import Optional
 
@@ -18,7 +19,7 @@ from app.config import get_settings
 from app.db.database import get_session
 from app.deps import get_current_user
 from app.models.models import (
-    AuthIdentity, AuthProvider, Environment, EnvironmentType, User,
+    AuthIdentity, AuthProvider, Environment, EnvironmentType, Plant, User,
 )
 from app.models.schemas import (
     AppleSignInRequest, AuthTokensOut, GoogleSignInRequest, LogoutRequest,
@@ -27,8 +28,10 @@ from app.models.schemas import (
 from app.services import tokens
 from app.services.oauth import (
     ProviderConfigError, ProviderTokenError, exchange_apple_code,
-    verify_apple_token, verify_google_token,
+    revoke_apple_token, verify_apple_token, verify_google_token,
 )
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["auth"])
 
@@ -204,6 +207,55 @@ def logout(payload: LogoutRequest, session: Session = Depends(get_session)):
 @router.get("/me", response_model=UserOut)
 def get_me(user: User = Depends(get_current_user)):
     return UserOut(**user.model_dump())
+
+
+@router.delete("/me", status_code=204)
+def delete_me(
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Delete the account and everything it owns (App Store 5.1.1(v)).
+
+    Order matters: revoke the Apple session first (needs the stored token
+    decrypted before rows die), then wipe data, then hard-delete the user.
+    A failed Apple revoke is logged as retryable and NEVER blocks deletion."""
+    identities = session.exec(
+        select(AuthIdentity).where(AuthIdentity.user_id == user.id)
+    ).all()
+    fernet = Fernet(get_settings().fernet_key.encode())
+    for ident in identities:
+        if ident.apple_refresh_token_enc:
+            try:
+                apple_token = fernet.decrypt(
+                    ident.apple_refresh_token_enc.encode()).decode()
+                revoke_apple_token(apple_token)
+            except Exception as e:  # noqa: BLE001 — never block deletion
+                logger.warning(
+                    "RETRYABLE: could not revoke Apple session during "
+                    "account deletion: %s", e)
+
+    tokens.revoke_all_for_user(session, user.id)
+
+    # Plants first: ORM cascade removes their care logs and stewardship
+    # records with them.
+    plants = session.exec(
+        select(Plant).where(Plant.user_id == user.id)).all()
+    for plant in plants:
+        session.delete(plant)
+    session.flush()
+
+    # Environments next. The router-level "has stewardship history" 409
+    # guard is for user-initiated environment deletes only — account
+    # deletion wipes the history above, and must never be blocked.
+    envs = session.exec(
+        select(Environment).where(Environment.user_id == user.id)).all()
+    for env in envs:
+        session.delete(env)
+
+    # Hard delete; ORM cascade removes AuthIdentity and RefreshToken rows.
+    session.delete(user)
+    session.commit()
+    return Response(status_code=204)
 
 
 @router.patch("/me", response_model=UserOut)

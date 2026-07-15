@@ -245,22 +245,26 @@ def test_census_summary_is_callers_own(iso):
 
 
 def test_export_excludes_non_opted_in_users(iso):
-    # Nobody opted in yet -> export is empty even though plants exist
+    with iso.db() as s:
+        a_uuid = s.get(Plant, iso.a["plant_id"]).plant_uuid
+        b_uuid = s.get(Plant, iso.b["plant_id"]).plant_uuid
+
+    # Neither A nor B has opted in -> neither's plants may be exported
+    # (assert on OUR plants, not global emptiness — the test DB is shared
+    # across modules and other tests may have opted-in users of their own)
     r = iso.client.get("/census/export", headers=iso.a["headers"])
     assert r.status_code == 200
-    assert r.json()["plant_count"] == 0
+    uuids = {p["plant_uuid"] for p in r.json()["plants"]}
+    assert a_uuid not in uuids
+    assert b_uuid not in uuids
 
     # A opts in via PATCH /me; B stays out
     p = iso.client.patch(
         "/me", json={"census_opt_in": True}, headers=iso.a["headers"])
     assert p.status_code == 200 and p.json()["census_opt_in"] is True
 
-    body = iso.client.get(
-        "/census/export", headers=iso.a["headers"]).json()
-    uuids = {p["plant_uuid"] for p in body["plants"]}
-    with iso.db() as s:
-        a_uuid = s.get(Plant, iso.a["plant_id"]).plant_uuid
-        b_uuid = s.get(Plant, iso.b["plant_id"]).plant_uuid
+    uuids = {p["plant_uuid"] for p in iso.client.get(
+        "/census/export", headers=iso.a["headers"]).json()["plants"]}
     assert a_uuid in uuids
     assert b_uuid not in uuids  # B never opted in — never exported
 

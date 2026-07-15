@@ -1,5 +1,5 @@
 from app.services.oauth.apple import (  # noqa: F401
-    AppleClaims, exchange_apple_code, verify_apple_token,
+    AppleClaims, exchange_apple_code, revoke_apple_token, verify_apple_token,
 )
 from app.services.oauth.errors import (  # noqa: F401
     JWKSUnavailable, NonceMismatch, ProviderConfigError, ProviderTokenError,
