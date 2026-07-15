@@ -55,6 +55,11 @@ class EnvironmentType(str, Enum):
     research = "research"
 
 
+class AuthProvider(str, Enum):
+    apple = "apple"
+    google = "google"
+
+
 class SpeciesSource(str, Enum):
     curated = "curated"            # hand-written original catalog
     perenual = "perenual"          # mapped from the Perenual API
@@ -65,6 +70,62 @@ class ReviewStatus(str, Enum):
     approved = "approved"          # passed automated validation
     needs_review = "needs_review"  # flagged by validation; in the review queue
     verified = "verified"          # manually cross-checked against an authority
+
+
+class User(SQLModel, table=True):
+    """An account holder. Social login only — no password column by design.
+
+    Note: the table is named `user`, a reserved word in Postgres; SQLAlchemy
+    quotes identifiers so it works, but consider renaming at the Postgres move.
+    """
+    id: str = Field(default_factory=lambda: str(uuid4()), primary_key=True)
+    email: Optional[str] = Field(default=None, index=True)
+    display_name: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    last_login_at: Optional[datetime] = None
+    # Soft-delete marker; DELETE /me (Phase 7) decides hard vs soft
+    deleted_at: Optional[datetime] = None
+
+    identities: list["AuthIdentity"] = Relationship(
+        back_populates="user", cascade_delete=True)
+    refresh_tokens: list["RefreshToken"] = Relationship(
+        back_populates="user", cascade_delete=True)
+    plants: list["Plant"] = Relationship(back_populates="user")
+
+
+class AuthIdentity(SQLModel, table=True):
+    """One provider login (apple/google) linked to a User.
+
+    A user may hold several identities (Apple + Google) but each provider
+    subject maps to exactly one user — unique(provider, provider_sub)."""
+    __table_args__ = (UniqueConstraint("provider", "provider_sub"),)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: str = Field(foreign_key="user.id", index=True)
+    provider: AuthProvider
+    provider_sub: str
+    email_at_signup: Optional[str] = None
+    # Apple refresh token (Fernet-encrypted) — needed only to revoke the
+    # user's Apple session on account deletion (App Store 5.1.1(v))
+    apple_refresh_token_enc: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    user: Optional[User] = Relationship(back_populates="identities")
+
+
+class RefreshToken(SQLModel, table=True):
+    """Opaque rotating refresh token, stored as a sha256 hash only.
+
+    family_id groups a rotation chain; if a revoked token is presented again
+    (reuse detection), the whole family is revoked — see Phase 3."""
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: str = Field(foreign_key="user.id", index=True)
+    token_hash: str = Field(unique=True)
+    family_id: str = Field(default_factory=lambda: str(uuid4()), index=True)
+    expires_at: datetime
+    revoked_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    user: Optional[User] = Relationship(back_populates="refresh_tokens")
 
 
 class Species(SQLModel, table=True):
@@ -144,6 +205,11 @@ class Plant(SQLModel, table=True):
     nickname: str
     species_id: int = Field(foreign_key="species.id")
     environment_id: Optional[int] = Field(default=None, foreign_key="environment.id")
+    # Owner. Schema-nullable only because SQLite can't add a NOT NULL column
+    # to existing rows; the migration backfills every plant to the dev user
+    # and Phase 6 enforces presence at the application layer. Make it
+    # NOT NULL for real at the Postgres move.
+    user_id: Optional[str] = Field(default=None, foreign_key="user.id", index=True)
 
     location: str = ""
     maturity_stage: MaturityStage = MaturityStage.juvenile
@@ -159,6 +225,7 @@ class Plant(SQLModel, table=True):
 
     species: Optional[Species] = Relationship(back_populates="plants")
     environment: Optional[Environment] = Relationship(back_populates="plants")
+    user: Optional[User] = Relationship(back_populates="plants")
     # A plant's history is meaningless without the plant; delete it together
     care_logs: list["CareLog"] = Relationship(back_populates="plant", cascade_delete=True)
     stewardship_records: list["StewardshipRecord"] = Relationship(back_populates="plant", cascade_delete=True)

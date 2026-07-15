@@ -70,6 +70,39 @@ def migrate_db() -> None:
         conn.commit()
 
 
+BASELINE_REVISION = "0001_baseline"
+
+
+def run_migrations() -> None:
+    """Bring the database to the latest Alembic revision at startup.
+
+    Pre-Alembic databases (created by init_db/migrate_db before the auth work)
+    are detected by having tables but no alembic_version, and are stamped at
+    the baseline revision before upgrading — so existing dev DBs and the Fly
+    volume adopt Alembic without being re-created.
+
+    The table probe below is SQLite-specific (sqlite_master); switch to
+    sqlalchemy.inspect() when moving to Postgres."""
+    from pathlib import Path
+
+    from alembic import command
+    from alembic.config import Config
+
+    root = Path(__file__).resolve().parents[2]
+    cfg = Config(str(root / "alembic.ini"))
+    cfg.set_main_option("script_location", str(root / "alembic"))
+
+    with engine.connect() as conn:
+        tables = {
+            row[0] for row in conn.execute(
+                text("SELECT name FROM sqlite_master WHERE type='table'")
+            )
+        }
+    if "plant" in tables and "alembic_version" not in tables:
+        command.stamp(cfg, BASELINE_REVISION)
+    command.upgrade(cfg, "head")
+
+
 def get_session():
     """FastAPI dependency that yields a DB session."""
     with Session(engine) as session:

@@ -12,15 +12,16 @@ from fastapi import FastAPI  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
-from app.db.database import init_db, migrate_db  # noqa: E402
+from app.config import get_settings  # noqa: E402
+from app.db.database import run_migrations  # noqa: E402
 from app.data.seed import seed_default_environment  # noqa: E402
 from app.routers import species, plants, environments, census  # noqa: E402
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()           # create any new tables
-    migrate_db()        # add new columns to existing tables
+    get_settings()      # fail fast if required secrets are missing
+    run_migrations()    # Alembic owns the schema now (replaces init/migrate_db)
     seed_default_environment()  # ensure an environment exists for new plants
     yield
 
