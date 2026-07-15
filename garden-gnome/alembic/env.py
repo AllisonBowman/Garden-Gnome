@@ -18,7 +18,10 @@ from app.models import models  # noqa: E402,F401
 config = context.config
 
 if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    # disable_existing_loggers=False: migrations run inside the app's startup
+    # lifespan; the default (True) would permanently silence every app logger
+    # created before this point.
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 target_metadata = SQLModel.metadata
 

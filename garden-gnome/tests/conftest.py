@@ -19,6 +19,11 @@ os.environ.setdefault(
 os.environ.setdefault(
     "FERNET_KEY", "3xNZZ39kIYYjBTGoTUdBjPIHpBTHQniku9UYc9pRcNo="  # test-only key
 )
+# Provider config for Phase 4 verification tests (mocked JWKS, no live calls)
+os.environ.setdefault("APPLE_BUNDLE_ID", "com.allisonbowman.plantadvocate")
+os.environ.setdefault("APPLE_TEAM_ID", "TESTTEAM99")
+os.environ.setdefault("APPLE_KEY_ID", "TESTKEY123")
+os.environ.setdefault("GOOGLE_CLIENT_ID", "test-client.apps.googleusercontent.com")
 
 
 @pytest.fixture(scope="session")

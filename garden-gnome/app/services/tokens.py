@@ -22,7 +22,7 @@ from sqlmodel import Session, select
 from app.config import get_settings
 from app.models.models import RefreshToken
 
-ISSUER = "garden-gnome"
+ISSUER = "plantadvocate"
 # Tolerated clock skew when validating exp/iat (plan cap: <= 60 s)
 LEEWAY_SECONDS = 30
 

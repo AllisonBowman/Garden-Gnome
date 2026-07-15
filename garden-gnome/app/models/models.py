@@ -85,6 +85,9 @@ class User(SQLModel, table=True):
     last_login_at: Optional[datetime] = None
     # Soft-delete marker; DELETE /me (Phase 7) decides hard vs soft
     deleted_at: Optional[datetime] = None
+    # Census participation is per-user consent, default OFF (privacy decision
+    # 2026-07-15). Export/sync include only opted-in users' data.
+    census_opt_in: bool = Field(default=False)
 
     identities: list["AuthIdentity"] = Relationship(
         back_populates="user", cascade_delete=True)
