@@ -41,6 +41,8 @@ class UserOut(SQLModel):
 
 class UserPatch(SQLModel):
     display_name: Optional[str] = None
+    # Per-user census consent (decision 3) — settable only by the user
+    census_opt_in: Optional[bool] = None
 
 
 class AuthTokensOut(SQLModel):
@@ -58,6 +60,16 @@ class EnvironmentCreate(SQLModel):
     city: str = ""
     region: str = ""
     country: str = ""
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+
+
+class EnvironmentPatch(SQLModel):
+    name: Optional[str] = None
+    type: Optional[EnvironmentType] = None
+    city: Optional[str] = None
+    region: Optional[str] = None
+    country: Optional[str] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
 

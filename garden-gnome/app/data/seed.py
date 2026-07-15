@@ -290,11 +290,14 @@ SEED_DATA = [
 
 
 def seed_default_environment() -> None:
-    """Create a default Environment for this installation if none exists yet.
+    """DEV-ONLY (decision 5, 2026-07-15): create a global default Environment.
 
-    Called on every startup — safe to run repeatedly. The name and type can be
-    pre-configured via DEFAULT_ENV_NAME / DEFAULT_ENV_TYPE env vars (useful for
-    nursery or community-garden deployments that want a different default)."""
+    In production, every account gets its own "My Home" environment at
+    sign-up (Phase 5) and plant creation self-heals a missing default — a
+    global unowned environment no longer makes sense. Set GG_DEV_SEED=1 to
+    keep the old single-user dev convenience (attached to dev@local)."""
+    if os.getenv("GG_DEV_SEED", "") != "1":
+        return
     with Session(engine) as session:
         existing = session.exec(select(Environment)).first()
         if existing:
@@ -305,7 +308,19 @@ def seed_default_environment() -> None:
             env_type = EnvironmentType(env_type_str)
         except ValueError:
             env_type = EnvironmentType.home
-        env = Environment(name=env_name, type=env_type)
+
+        # Attach to dev@local so the environment is owned even in dev
+        from datetime import datetime
+
+        from app.models.models import User
+        dev = session.exec(
+            select(User).where(User.email == "dev@local")).first()
+        if dev is None:
+            dev = User(email="dev@local", display_name="Dev User",
+                       created_at=datetime.utcnow())
+            session.add(dev)
+            session.flush()
+        env = Environment(name=env_name, type=env_type, user_id=dev.id)
         session.add(env)
         session.commit()
         print(f"Created default environment: '{env_name}' ({env_type.value})")

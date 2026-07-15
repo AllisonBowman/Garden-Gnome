@@ -6,8 +6,10 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlmodel import Session, select
 
 from app.db.database import get_session
+from app.deps import get_current_user
 from app.models.models import (
-    CareLog, CareSchedule, CareType, Environment, Plant, Species, StewardshipRecord,
+    CareLog, CareSchedule, CareType, Environment, EnvironmentType, Plant,
+    Species, StewardshipRecord, User,
 )
 from app.models.schemas import (
     AdviceRequest, CareLogCreate, PlantCreate, PlantRead, PlantTransferRequest,
@@ -26,24 +28,56 @@ def _installation_uuid() -> str:
     return os.getenv("INSTALLATION_UUID", "")
 
 
+def _owned_plant(plant_id: int, user: User, session: Session) -> Plant:
+    """Load a plant owned by the caller; 404 otherwise.
+
+    404 (not 403) for other users' plants, so plant ids can't be probed."""
+    plant = session.get(Plant, plant_id)
+    if plant is None or plant.user_id != user.id:
+        raise HTTPException(status_code=404, detail="Plant not found")
+    return plant
+
+
+def _owned_environment(env_id: int, user: User, session: Session) -> Environment:
+    env = session.get(Environment, env_id)
+    if env is None or env.user_id != user.id:
+        raise HTTPException(status_code=404, detail="Environment not found")
+    return env
+
+
 @router.post("/", response_model=PlantRead, status_code=201)
-def create_plant(payload: PlantCreate, session: Session = Depends(get_session)):
+def create_plant(
+    payload: PlantCreate,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
     if not session.get(Species, payload.species_id):
         raise HTTPException(status_code=400, detail="species_id does not exist")
 
-    # Resolve environment: use provided id, fall back to the first (default) env
+    # Resolve environment: a provided id must belong to the caller; otherwise
+    # fall back to the caller's default (oldest) environment, creating "My
+    # Home" if the account somehow has none. NEVER "first environment in the
+    # DB" — that leaked across accounts once environments became user-owned.
     environment_id = payload.environment_id
     if environment_id is not None:
-        if not session.get(Environment, environment_id):
-            raise HTTPException(status_code=400, detail="environment_id does not exist")
+        _owned_environment(environment_id, user, session)
     else:
-        default_env = session.exec(select(Environment)).first()
-        if default_env:
-            environment_id = default_env.id
+        default_env = session.exec(
+            select(Environment)
+            .where(Environment.user_id == user.id)
+            .order_by(Environment.id.asc())
+        ).first()
+        if default_env is None:
+            default_env = Environment(
+                name="My Home", type=EnvironmentType.home, user_id=user.id)
+            session.add(default_env)
+            session.flush()
+        environment_id = default_env.id
 
     data = payload.model_dump()
     data["environment_id"] = environment_id
-    plant = Plant(**data)
+    # Stamp ownership; keeps plant.user_id == environment.user_id invariant
+    plant = Plant(**data, user_id=user.id)
     session.add(plant)
     session.commit()
     session.refresh(plant)
@@ -86,23 +120,29 @@ def create_plant(payload: PlantCreate, session: Session = Depends(get_session)):
 
 
 @router.get("/", response_model=list[PlantRead])
-def list_plants(session: Session = Depends(get_session)):
-    return session.exec(select(Plant)).all()
+def list_plants(
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    return session.exec(select(Plant).where(Plant.user_id == user.id)).all()
 
 
 @router.get("/{plant_id}", response_model=PlantRead)
-def get_plant(plant_id: int, session: Session = Depends(get_session)):
-    plant = session.get(Plant, plant_id)
-    if not plant:
-        raise HTTPException(status_code=404, detail="Plant not found")
-    return plant
+def get_plant(
+    plant_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    return _owned_plant(plant_id, user, session)
 
 
 @router.delete("/{plant_id}", status_code=204)
-def delete_plant(plant_id: int, session: Session = Depends(get_session)):
-    plant = session.get(Plant, plant_id)
-    if not plant:
-        raise HTTPException(status_code=404, detail="Plant not found")
+def delete_plant(
+    plant_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    plant = _owned_plant(plant_id, user, session)
     session.delete(plant)
     session.commit()
 
@@ -111,6 +151,7 @@ def delete_plant(plant_id: int, session: Session = Depends(get_session)):
 def transfer_plant(
     plant_id: int,
     payload: PlantTransferRequest,
+    user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     """Move a plant to a different environment, preserving its plant_uuid.
@@ -118,14 +159,18 @@ def transfer_plant(
     Closes the current stewardship record and opens a new one. The plant's
     canonical UUID doesn't change, so the census treats it as the same
     physical plant — not a new entry. A transfer event is auto-logged to
-    the plant's timeline."""
-    plant = session.get(Plant, plant_id)
-    if not plant:
-        raise HTTPException(status_code=404, detail="Plant not found")
+    the plant's timeline.
 
-    new_env = session.get(Environment, payload.to_environment_id)
-    if not new_env:
-        raise HTTPException(status_code=400, detail="to_environment_id does not exist")
+    v1 rule (decision 4): BOTH sides must belong to the caller — the plant
+    (and thus its current environment) and the destination. No cross-account
+    transfers."""
+    plant = _owned_plant(plant_id, user, session)
+    if plant.environment_id is not None:
+        # Belt-and-braces: the from-side must also be caller-owned even if
+        # the plant/env ownership invariant ever drifted.
+        _owned_environment(plant.environment_id, user, session)
+
+    new_env = _owned_environment(payload.to_environment_id, user, session)
 
     # Close the active stewardship record
     current = session.exec(
@@ -165,10 +210,13 @@ def transfer_plant(
 
 
 @router.get("/{plant_id}/stewardship", response_model=list[StewardshipRecordRead])
-def get_plant_stewardship(plant_id: int, session: Session = Depends(get_session)):
+def get_plant_stewardship(
+    plant_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
     """Full chain-of-custody history for a plant."""
-    if not session.get(Plant, plant_id):
-        raise HTTPException(status_code=404, detail="Plant not found")
+    _owned_plant(plant_id, user, session)
     return session.exec(
         select(StewardshipRecord)
         .where(StewardshipRecord.plant_id == plant_id)
@@ -180,10 +228,10 @@ def get_plant_stewardship(plant_id: int, session: Session = Depends(get_session)
 def add_care_log(
     plant_id: int,
     payload: CareLogCreate,
+    user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    if not session.get(Plant, plant_id):
-        raise HTTPException(status_code=404, detail="Plant not found")
+    _owned_plant(plant_id, user, session)
     log = CareLog(plant_id=plant_id, **payload.model_dump())
     session.add(log)
     session.commit()
@@ -192,9 +240,12 @@ def add_care_log(
 
 
 @router.get("/{plant_id}/logs", response_model=list[CareLog])
-def list_care_logs(plant_id: int, session: Session = Depends(get_session)):
-    if not session.get(Plant, plant_id):
-        raise HTTPException(status_code=404, detail="Plant not found")
+def list_care_logs(
+    plant_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    _owned_plant(plant_id, user, session)
     return session.exec(
         select(CareLog).where(CareLog.plant_id == plant_id)
     ).all()
@@ -205,6 +256,7 @@ def get_plant_timeline(
     plant_id: int,
     since: Optional[date] = None,
     until: Optional[date] = None,
+    user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     """Chronological care history. Each entry's `days_since_previous` is the
@@ -212,8 +264,7 @@ def get_plant_timeline(
     history, even if since/until narrows what's returned) -- this is the
     season-over-season comparison primitive: call twice with different
     since/until windows to compare "this time last summer vs now"."""
-    if not session.get(Plant, plant_id):
-        raise HTTPException(status_code=404, detail="Plant not found")
+    _owned_plant(plant_id, user, session)
 
     all_logs = session.exec(
         select(CareLog)
@@ -244,13 +295,15 @@ def get_plant_timeline(
 
 
 @router.get("/{plant_id}/timeline/summary", response_model=PlantTimelineSummary)
-def get_plant_timeline_summary(plant_id: int, session: Session = Depends(get_session)):
+def get_plant_timeline_summary(
+    plant_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
     """Per-care-type stats (count, last logged, actual avg/min/max interval)
     compared against the species' scheduled interval. Includes scheduled care
     types with zero logs so the UI can flag "never logged" gaps."""
-    plant = session.get(Plant, plant_id)
-    if not plant:
-        raise HTTPException(status_code=404, detail="Plant not found")
+    plant = _owned_plant(plant_id, user, session)
 
     all_logs = session.exec(
         select(CareLog)
@@ -296,6 +349,7 @@ def get_plant_timeline_summary(plant_id: int, session: Session = Depends(get_ses
 def advise_plant(
     plant_id: int,
     payload: Optional[AdviceRequest] = None,
+    user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     """Generate care advice for a plant by reasoning over its species care
@@ -303,9 +357,7 @@ def advise_plant(
     accepts free-text `symptoms` in the body for conversational diagnosis."""
     symptoms = payload.symptoms if payload else ""
 
-    plant = session.get(Plant, plant_id)
-    if not plant:
-        raise HTTPException(status_code=404, detail="Plant not found")
+    plant = _owned_plant(plant_id, user, session)
 
     species = session.get(Species, plant.species_id)
     if not species:
@@ -341,6 +393,7 @@ async def diagnose_plant_photo(
     plant_id: int,
     photo: UploadFile = File(...),
     notes: str = Form(""),
+    user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     """Photo-based diagnosis (Phase 3). Uses a local, permissively-licensed
@@ -348,9 +401,7 @@ async def diagnose_plant_photo(
     so there's no per-call API cost and no licensing fee at any commercial
     scale. Backend is selected by the VISION_BACKEND env var (stub/ollama).
     The diagnosis is auto-logged to the plant's timeline."""
-    plant = session.get(Plant, plant_id)
-    if not plant:
-        raise HTTPException(status_code=404, detail="Plant not found")
+    plant = _owned_plant(plant_id, user, session)
 
     species = session.get(Species, plant.species_id)
     if not species:

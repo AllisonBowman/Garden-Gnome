@@ -1,33 +1,45 @@
-"""Census router — anonymized aggregate views of plant data across all environments.
+"""Census router — anonymized aggregate views of plant data.
 
-The census layer is intentionally detached from human identity: no nicknames,
-no personal notes, no installation-specific context. Plants are identified only
-by their canonical plant_uuid (persistent across owner/environment transfers),
-and locations are expressed as city/region/country — not precise addresses.
+Privacy model (decision 3, 2026-07-15):
+- Participation is per-user consent: only users with census_opt_in=True
+  contribute to /census/export and /census/sync. Consent is toggled via
+  PATCH /me.
+- No stable pseudonymous identifiers: environment UUIDs are rotated fresh on
+  every export (consistent within one export so stewardship chains still
+  read, but never linkable across exports).
+- No precise location: lat/lng never leave the server; city/region/country
+  only, and only for opted-in users.
+- No human identity: no nicknames, no personal notes, no emails, ever.
 
-This makes the exported data suitable for environmental stewardship analysis
-(species distribution, care health trends by geography and environment type)
-without exposing personally identifiable information."""
+/census/summary is the caller's own view of their garden — it requires auth
+and covers only their data.
+"""
 import os
 from datetime import datetime
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.db.database import get_session
+from app.deps import get_current_user
 from app.models.models import (
-    CareLog, Environment, Plant, Species, StewardshipRecord,
+    CareLog, Environment, Plant, Species, StewardshipRecord, User,
 )
 
 router = APIRouter(prefix="/census", tags=["census"])
 
 
 @router.get("/summary")
-def census_summary(session: Session = Depends(get_session)):
-    """Aggregate counts — total plants/environments, breakdown by environment
-    type, species distribution. Useful for a quick population snapshot."""
-    plants = session.exec(select(Plant)).all()
-    environments = session.exec(select(Environment)).all()
+def census_summary(
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Aggregate counts for the CALLER's garden — their population snapshot."""
+    plants = session.exec(
+        select(Plant).where(Plant.user_id == user.id)).all()
+    environments = session.exec(
+        select(Environment).where(Environment.user_id == user.id)).all()
     species_list = session.exec(select(Species)).all()
 
     species_name_map = {s.id: s.common_name for s in species_list}
@@ -61,17 +73,39 @@ def census_summary(session: Session = Depends(get_session)):
     }
 
 
+def _opted_in_user_ids(session: Session) -> set[str]:
+    rows = session.exec(
+        select(User.id)
+        .where(User.census_opt_in == True)  # noqa: E712
+        .where(User.deleted_at == None)  # noqa: E711
+    ).all()
+    return set(rows)
+
+
 @router.get("/export")
-def census_export(session: Session = Depends(get_session)):
-    """Full anonymized export of all plant records.
+def census_export(
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Anonymized export of OPTED-IN users' plant records.
 
-    Each plant is identified by its plant_uuid, which persists across transfers
-    so a central aggregator won't double-count the same physical plant if it
-    moves between installations. PII fields (nickname, personal care notes) are
-    excluded. Location is city/region/country only."""
+    Environment identifiers are rotated per export: consistent within this
+    payload (stewardship chains stay meaningful) but freshly generated each time,
+    so exports can't be joined into a longitudinal profile of a household.
+    Locations are city/region/country only — lat/lng never leave the server."""
+    opted = _opted_in_user_ids(session)
     plants = session.exec(select(Plant)).all()
-    records = []
+    plants = [p for p in plants if p.user_id in opted]
 
+    # Per-export rotation map: real env id -> ephemeral UUID
+    rotated: dict[int, str] = {}
+
+    def rotated_uuid(env_id: int) -> str:
+        if env_id not in rotated:
+            rotated[env_id] = str(uuid4())
+        return rotated[env_id]
+
+    records = []
     for plant in plants:
         env = session.get(Environment, plant.environment_id) if plant.environment_id else None
 
@@ -88,13 +122,11 @@ def census_export(session: Session = Depends(get_session)):
             .order_by(StewardshipRecord.started_at.asc())
         ).all()
 
-        # Stewardship dimension: chain of custody without PII. Each record
-        # links to an environment UUID (not a person or installation name).
         stewardship_chain = []
         for rec in stewardship:
             rec_env = session.get(Environment, rec.environment_id)
             stewardship_chain.append({
-                "environment_uuid": rec_env.uuid if rec_env else None,
+                "environment_ref": rotated_uuid(rec.environment_id) if rec_env else None,
                 "environment_type": rec_env.type.value if rec_env else None,
                 "started_at": rec.started_at.isoformat(),
                 "ended_at": rec.ended_at.isoformat() if rec.ended_at else None,
@@ -105,20 +137,17 @@ def census_export(session: Session = Depends(get_session)):
             "species_id": plant.species_id,
             "maturity_stage": plant.maturity_stage.value,
             "acquired_on": plant.acquired_on.isoformat() if plant.acquired_on else None,
-            # Location dimension: geographic region, not specific address
+            # Location dimension: geographic region only — never lat/lng
             "environment": {
-                "uuid": env.uuid,
+                "ref": rotated_uuid(env.id),
                 "type": env.type.value,
                 "city": env.city,
                 "region": env.region,
                 "country": env.country,
             } if env else None,
-            # Stewardship dimension: chain of custody over time
             "stewardship_chain": stewardship_chain,
             "stewardship_count": len(stewardship),
-            # Care history: timestamps by care type for frequency analysis
             "care_history": care_by_type,
-            # Initial health snapshot for longitudinal health tracking
             "initial_condition": {
                 "soil_moisture": plant.soil_moisture_at_acquisition.value
                     if plant.soil_moisture_at_acquisition else None,
@@ -129,7 +158,7 @@ def census_export(session: Session = Depends(get_session)):
         })
 
     return {
-        "export_version": "1.0",
+        "export_version": "2.0",
         "exported_at": datetime.utcnow().isoformat() + "Z",
         "installation_uuid": os.getenv("INSTALLATION_UUID", ""),
         "plant_count": len(records),
@@ -138,10 +167,12 @@ def census_export(session: Session = Depends(get_session)):
 
 
 @router.post("/sync")
-def census_sync(session: Session = Depends(get_session)):
-    """Push the anonymized export to the configured CENSUS_API_URL.
+def census_sync(
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Push the anonymized, consent-filtered export to CENSUS_API_URL.
 
-    Set CENSUS_API_URL in .env to opt in to contributing to the shared census.
     If not configured, returns a 'skipped' status — no data is sent."""
     census_url = os.getenv("CENSUS_API_URL", "").rstrip("/")
     if not census_url:
@@ -151,7 +182,7 @@ def census_sync(session: Session = Depends(get_session)):
         }
     try:
         import httpx
-        payload = census_export(session)
+        payload = census_export(user, session)
         resp = httpx.post(f"{census_url}/ingest", json=payload, timeout=30.0)
         resp.raise_for_status()
         return {

@@ -214,6 +214,8 @@ def patch_me(
 ):
     if payload.display_name is not None:
         user.display_name = payload.display_name
+    if payload.census_opt_in is not None:
+        user.census_opt_in = payload.census_opt_in
     session.add(user)
     session.commit()
     session.refresh(user)
