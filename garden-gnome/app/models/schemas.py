@@ -9,6 +9,47 @@ from app.models.models import (
 )
 
 
+# --- Auth (Phase 5) ---
+
+class AppleSignInRequest(SQLModel):
+    identity_token: str
+    authorization_code: str
+    raw_nonce: str
+    # Apple sends the user's name ONLY on first authorization
+    full_name: Optional[str] = None
+
+
+class GoogleSignInRequest(SQLModel):
+    id_token: str
+
+
+class RefreshRequest(SQLModel):
+    refresh_token: str
+
+
+class LogoutRequest(SQLModel):
+    refresh_token: str
+
+
+class UserOut(SQLModel):
+    id: str
+    email: Optional[str]
+    display_name: Optional[str]
+    census_opt_in: bool
+    created_at: datetime
+
+
+class UserPatch(SQLModel):
+    display_name: Optional[str] = None
+
+
+class AuthTokensOut(SQLModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+    user: UserOut
+
+
 # --- Environment ---
 
 class EnvironmentCreate(SQLModel):

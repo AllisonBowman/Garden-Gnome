@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 from app.config import get_settings  # noqa: E402
 from app.db.database import run_migrations  # noqa: E402
 from app.data.seed import seed_default_environment  # noqa: E402
-from app.routers import species, plants, environments, census  # noqa: E402
+from app.routers import auth, species, plants, environments, census  # noqa: E402
 
 
 @asynccontextmanager
@@ -40,6 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
 app.include_router(species.router)
 app.include_router(plants.router)
 app.include_router(environments.router)

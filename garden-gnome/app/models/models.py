@@ -50,9 +50,13 @@ class LeafCondition(str, Enum):
 class EnvironmentType(str, Enum):
     home = "home"
     nursery = "nursery"
-    community_garden = "community_garden"
+    community_garden = "community_garden"  # plan's "community_plot" maps here
     conservation = "conservation"
     research = "research"
+    # Added 2026-07-15 (auth plan decision 1) — per-user growing environments
+    balcony = "balcony"
+    greenhouse = "greenhouse"
+    other = "other"
 
 
 class AuthProvider(str, Enum):
@@ -94,6 +98,7 @@ class User(SQLModel, table=True):
     refresh_tokens: list["RefreshToken"] = Relationship(
         back_populates="user", cascade_delete=True)
     plants: list["Plant"] = Relationship(back_populates="user")
+    environments: list["Environment"] = Relationship(back_populates="user")
 
 
 class AuthIdentity(SQLModel, table=True):
@@ -190,6 +195,10 @@ class Environment(SQLModel, table=True):
     uuid: str = Field(default_factory=lambda: str(uuid4()), unique=True)
     name: str
     type: EnvironmentType = EnvironmentType.home
+    # Owner (auth plan decision 1). Schema-nullable only because SQLite can't
+    # add NOT NULL to existing rows; backfilled to dev@local in 0004 and
+    # required at the application layer from Phase 5 onward.
+    user_id: Optional[str] = Field(default=None, foreign_key="user.id", index=True)
     city: str = ""
     region: str = ""
     country: str = ""
@@ -197,6 +206,7 @@ class Environment(SQLModel, table=True):
     lng: Optional[float] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+    user: Optional[User] = Relationship(back_populates="environments")
     plants: list["Plant"] = Relationship(back_populates="environment")
 
 
