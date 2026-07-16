@@ -101,7 +101,7 @@ export default function PlantsScreen() {
           <EmptyState
             emoji="🪴"
             title="Your garden's empty"
-            body="Add your first plant and Garden Gnome will help you keep it thriving — gentle reminders when care is due, no pressure."
+            body="Add your first plant and PlantAdvocate will help you keep it thriving — gentle reminders when care is due, no pressure."
             actionLabel="Add your first plant"
             onAction={() => navigation.navigate('AddPlant')}
           />

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Garden Gnome",
+    "name": "PlantAdvocate",
     "slug": "garden-gnome",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,7 +8,8 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.allisonbowman.gardengnome",
+      "bundleIdentifier": "com.allisonbowman.plantadvocate",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -40,16 +41,23 @@
         }
       ],
       "expo-secure-store",
+      "expo-apple-authentication",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.997811516738-l75faapsrdvglh34tfj8vj15r0lcs0qt"
+        }
+      ],
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Garden Gnome to access your camera to photograph plants."
+          "cameraPermission": "Allow PlantAdvocate to access your camera to photograph plants."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Garden Gnome to access your photos to add plant images."
+          "photosPermission": "Allow PlantAdvocate to access your photos to add plant images."
         }
       ],
       [

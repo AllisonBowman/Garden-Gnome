@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Alert, View, Platform } from 'react-native';
 import { Text, TextInput, Button, Card, Divider, Switch } from 'react-native-paper';
 import { getBaseUrl, setBaseUrl } from '../api/client';
+import { useAuth } from '../auth/AuthContext';
 import {
   getReminderPrefs, setReminderPrefs, ensureNotificationPermission,
   rescheduleAllReminders,
@@ -18,13 +19,61 @@ const REMINDER_TOGGLES: { type: CareType; icon: string; label: string }[] = [
   { type: 'rotate',    icon: '🔄', label: 'Rotating'    },
 ];
 
+// Cross-platform confirm: Alert.alert buttons are no-ops on react-native-web
+function confirmDialog(
+  title: string, message: string, confirmLabel: string,
+): Promise<boolean> {
+  if (Platform.OS === 'web') {
+    return Promise.resolve(window.confirm(`${title}\n\n${message}`));
+  }
+  return new Promise((resolve) => {
+    Alert.alert(title, message, [
+      { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+      { text: confirmLabel, style: 'destructive', onPress: () => resolve(true) },
+    ]);
+  });
+}
+
 export default function SettingsScreen() {
+  const { user, signOut, deleteAccount } = useAuth();
   const [url, setUrl]       = useState('');
   const [saved, setSaved]   = useState(false);
   const [testing, setTesting] = useState(false);
   const [prefs, setPrefs]   = useState<ReminderPrefs>({});
+  const [signingOut, setSigningOut] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const remindersSupported = Platform.OS !== 'web';
+
+  async function onSignOut() {
+    setSigningOut(true);
+    try {
+      await signOut();
+    } finally {
+      setSigningOut(false);
+    }
+  }
+
+  async function onDeleteAccount() {
+    const sure = await confirmDialog(
+      'Delete your account?',
+      'This permanently deletes your account, plants, care history, and '
+      + 'environments from PlantAdvocate. This cannot be undone.',
+      'Delete forever',
+    );
+    if (!sure) return;
+    setDeleting(true);
+    try {
+      await deleteAccount();
+    } catch {
+      Alert.alert(
+        'Deletion failed',
+        'PlantAdvocate could not delete your account. Check your connection and try again.',
+      );
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   useEffect(() => {
     if (__DEV__) getBaseUrl().then(setUrl); // field only shown in dev builds
@@ -38,7 +87,7 @@ export default function SettingsScreen() {
       if (!granted) {
         Alert.alert(
           'Notifications disabled',
-          'Garden Gnome needs notification permission for care reminders. You can enable it in your device settings.',
+          'PlantAdvocate needs notification permission for care reminders. You can enable it in your device settings.',
         );
         return;
       }
@@ -73,6 +122,41 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Card style={styles.card}>
+        <Card.Title title="Account" titleVariant="titleMedium" />
+        <Card.Content>
+          <Text variant="bodyMedium" style={styles.accountName}>
+            {user?.display_name || user?.email || 'Signed in'}
+          </Text>
+          {user?.email && user.display_name ? (
+            <Text variant="bodySmall" style={styles.hint}>{user.email}</Text>
+          ) : null}
+          <Button
+            mode="outlined"
+            icon="logout"
+            onPress={onSignOut}
+            loading={signingOut}
+            disabled={signingOut || deleting}
+            style={styles.btn}
+          >
+            Sign out
+          </Button>
+          <Button
+            mode="text"
+            icon="delete-forever"
+            onPress={onDeleteAccount}
+            loading={deleting}
+            disabled={signingOut || deleting}
+            textColor="#B3261E"
+            style={styles.btn}
+          >
+            Delete account
+          </Button>
+        </Card.Content>
+      </Card>
+
+      <Divider style={styles.divider} />
+
       {/* Dev-only: point the app at a local backend. Hidden in release builds
           so end users can't accidentally break connectivity (the app then just
           uses the hosted DEFAULT_BASE_URL). */}
@@ -150,7 +234,7 @@ export default function SettingsScreen() {
         <Card.Title title="About" titleVariant="titleMedium" />
         <Card.Content>
           <Text variant="bodySmall" style={styles.about}>
-            Garden Gnome v1.0.0{'\n'}
+            PlantAdvocate v1.0.0{'\n'}
             AI-powered plant care assistant with environmental stewardship census.{'\n\n'}
             The app connects to a self-hosted or cloud-deployed FastAPI backend.
             All plant data remains under your control.{'\n\n'}
@@ -171,6 +255,7 @@ const styles = StyleSheet.create({
   btn: { marginBottom: 10, borderRadius: 8 },
   divider: { marginVertical: 8 },
   about: { color: '#666', lineHeight: 20 },
+  accountName: { color: '#333', fontWeight: '600', marginBottom: 2 },
   reminderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

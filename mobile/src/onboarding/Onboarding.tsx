@@ -13,13 +13,13 @@ interface Slide {
 const SLIDES: Slide[] = [
   {
     emoji: '🌱',
-    title: 'Welcome to Garden Gnome',
+    title: 'Welcome to PlantAdvocate',
     body: 'A calm home for your plants and the care you give them.',
   },
   {
     emoji: '💧',
     title: 'Add plants, log care',
-    body: "Add each plant, then tap to log watering, feeding, and more. Garden Gnome keeps track so you don't have to.",
+    body: "Add each plant, then tap to log watering, feeding, and more. PlantAdvocate keeps track so you don't have to.",
   },
   {
     emoji: '🧙',

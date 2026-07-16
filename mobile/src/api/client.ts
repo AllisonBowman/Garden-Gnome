@@ -1,6 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import {
+  clearSession, emitForcedSignOut, getAccessToken, getRefreshToken,
+  storeTokens,
+} from '../auth/tokenStorage';
 
 // Hosted backend (Fly.io). iOS release builds block plain http to
 // non-localhost hosts (ATS), so the default must be https. For local dev,
@@ -26,14 +30,78 @@ export async function setBaseUrl(url: string): Promise<void> {
   }
 }
 
+// ── Single-flight token refresh ────────────────────────────────────────────────
+// Many requests can 401 at once when the access token expires; they must all
+// share ONE /auth/refresh call (rotation makes a second concurrent refresh a
+// reuse -> the backend would revoke the whole token family).
+
+let refreshInFlight: Promise<string | null> | null = null;
+
+async function doRefresh(): Promise<string | null> {
+  const refreshToken = await getRefreshToken();
+  if (!refreshToken) return null;
+  try {
+    const baseURL = await getBaseUrl();
+    // Bare axios on purpose: the refresh call must not run through the
+    // 401-retry interceptor itself.
+    const { data } = await axios.post(`${baseURL}/auth/refresh`, {
+      refresh_token: refreshToken,
+    }, { timeout: 15000 });
+    await storeTokens(data.access_token, data.refresh_token);
+    return data.access_token as string;
+  } catch {
+    // Refresh failed (revoked/expired/reused) — session is over.
+    await clearSession();
+    emitForcedSignOut();
+    return null;
+  }
+}
+
+function sharedRefresh(): Promise<string | null> {
+  if (!refreshInFlight) {
+    refreshInFlight = doRefresh().finally(() => { refreshInFlight = null; });
+  }
+  return refreshInFlight;
+}
+
+type RetriableConfig = InternalAxiosRequestConfig & { _retried?: boolean };
+
 // Build a fresh axios instance pointed at the current configured URL.
 // Call this before each request batch rather than caching at module load time
 // so URL changes in Settings take effect immediately.
-export async function apiClient() {
+export async function apiClient(): Promise<AxiosInstance> {
   const baseURL = await getBaseUrl();
-  return axios.create({
+  const instance = axios.create({
     baseURL,
     timeout: 15000,
     headers: { 'Content-Type': 'application/json' },
   });
+
+  instance.interceptors.request.use(async (config) => {
+    const token = await getAccessToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
+
+  instance.interceptors.response.use(
+    (resp) => resp,
+    async (error: AxiosError) => {
+      const config = error.config as RetriableConfig | undefined;
+      const isAuthRoute = (config?.url ?? '').startsWith('/auth/');
+      if (
+        error.response?.status === 401 &&
+        config && !config._retried && !isAuthRoute
+      ) {
+        const newToken = await sharedRefresh();
+        if (newToken) {
+          config._retried = true;
+          config.headers.Authorization = `Bearer ${newToken}`;
+          return instance.request(config);
+        }
+      }
+      throw error;
+    },
+  );
+
+  return instance;
 }

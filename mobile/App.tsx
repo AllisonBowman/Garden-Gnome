@@ -20,6 +20,8 @@ import { rescheduleAllReminders } from './src/notifications/reminders';
 import Onboarding from './src/onboarding/Onboarding';
 import { getOnboardingSeen, setOnboardingSeen } from './src/onboarding/storage';
 import { fetchPlants } from './src/api/plants';
+import { AuthProvider, useAuth } from './src/auth/AuthContext';
+import LoginScreen from './src/auth/LoginScreen';
 
 // ── Param lists (imported by child screens) ───────────────────────────────────
 export type PlantsStackParamList = {
@@ -98,20 +100,24 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 }
 
 // ── Root ──────────────────────────────────────────────────────────────────────
-export default function App() {
+// AuthGate decides between the login screen and the app proper; it must live
+// inside AuthProvider, so App wraps it below.
+function AuthGate() {
+  const { status } = useAuth();
   const navigationRef = useNavigationContainerRef();
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const signedIn = status === 'signedIn';
 
   // Refresh the reminder schedule on every launch so it stays accurate even
   // if the app was closed for days (no-op on web / when reminders are off)
   useEffect(() => {
-    void rescheduleAllReminders();
-  }, []);
+    if (signedIn) void rescheduleAllReminders();
+  }, [signedIn]);
 
-  // First-run onboarding: show only if it hasn't been seen AND the household
-  // has no plants. Checking plants means a returning user (e.g. reinstall, or
-  // a second device on the shared backend) never sees it, even without the flag.
+  // First-run onboarding: show only if it hasn't been seen AND the account
+  // has no plants. Runs only once signed in (the plants call needs a token).
   useEffect(() => {
+    if (!signedIn) return;
     (async () => {
       if (await getOnboardingSeen()) return;
       try {
@@ -122,7 +128,7 @@ export default function App() {
         // Offline or backend unreachable — defer the decision to next launch
       }
     })();
-  }, []);
+  }, [signedIn]);
 
   const dismissOnboarding = () => {
     void setOnboardingSeen();
@@ -138,13 +144,22 @@ export default function App() {
     );
   };
 
+  // Booting: keep the splash background, no flicker to login
+  if (status === 'loading') return null;
+
+  if (!signedIn) {
+    return (
+      <>
+        <StatusBar style="dark" />
+        <LoginScreen />
+      </>
+    );
+  }
+
   return (
-    <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <PaperProvider theme={theme}>
-          <NavigationContainer ref={navigationRef}>
-            <StatusBar style="light" />
-            <Tab.Navigator
+    <NavigationContainer ref={navigationRef}>
+      <StatusBar style="light" />
+      <Tab.Navigator
               screenOptions={{
                 tabBarActiveTintColor: '#2D6A4F',
                 tabBarStyle: { paddingBottom: 4 },
@@ -191,11 +206,22 @@ export default function App() {
                   tabBarIcon: ({ focused }) => <TabIcon emoji="⚙️" focused={focused} />,
                 }}
               />
-            </Tab.Navigator>
-          </NavigationContainer>
-          {showOnboarding && (
-            <Onboarding onSkip={dismissOnboarding} onAddPlant={onboardingAddPlant} />
-          )}
+      </Tab.Navigator>
+      {showOnboarding && (
+        <Onboarding onSkip={dismissOnboarding} onAddPlant={onboardingAddPlant} />
+      )}
+    </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <PaperProvider theme={theme}>
+          <AuthProvider>
+            <AuthGate />
+          </AuthProvider>
         </PaperProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
