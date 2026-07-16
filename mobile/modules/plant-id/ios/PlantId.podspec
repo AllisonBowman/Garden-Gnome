@@ -8,11 +8,12 @@ Pod::Spec.new do |s|
   s.license        = { :type => 'MIT' }
   s.source         = { :git => '' }
 
-  # NOTE: deployment target stays low on purpose so the app still installs on
-  # pre-iOS-26 devices. All Foundation Models usage is @available-guarded and
-  # the framework is weak-linked, so unsupported devices just report
-  # isAvailable() == false rather than failing to launch.
-  s.platforms      = { :ios => '15.1' }
+  # NOTE: 16.4 matches ExpoModulesCore's minimum for SDK 57 — CocoaPods
+  # refuses to resolve a pod pinned below its dependency's platform. This
+  # does NOT gate the iOS-26 Foundation Models feature: that usage is
+  # @available-guarded and the framework is weak-linked below, so pre-26
+  # devices simply report isAvailable() == false rather than failing.
+  s.platforms      = { :ios => '16.4' }
   s.swift_version  = '5.9'
   s.static_framework = true
 
