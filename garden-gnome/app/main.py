@@ -12,9 +12,13 @@ from fastapi import FastAPI  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
+from slowapi import _rate_limit_exceeded_handler  # noqa: E402
+from slowapi.errors import RateLimitExceeded  # noqa: E402
+
 from app.config import get_settings  # noqa: E402
 from app.db.database import run_migrations  # noqa: E402
 from app.data.seed import seed_default_environment  # noqa: E402
+from app.rate_limit import limiter  # noqa: E402
 from app.routers import auth, species, plants, environments, census  # noqa: E402
 
 
@@ -32,6 +36,9 @@ app = FastAPI(
     version="0.2.0",
     lifespan=lifespan,
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,

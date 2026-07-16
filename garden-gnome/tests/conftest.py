@@ -26,6 +26,16 @@ os.environ.setdefault("APPLE_KEY_ID", "TESTKEY123")
 os.environ.setdefault("GOOGLE_CLIENT_ID", "test-client.apps.googleusercontent.com")
 
 
+@pytest.fixture(autouse=True)
+def _rate_limiting_off():
+    """Rate limiting is exercised only by its dedicated test — everywhere
+    else the shared 'testclient' IP would trip limits across test modules."""
+    from app.rate_limit import limiter
+    limiter.enabled = False
+    yield
+    limiter.enabled = False
+
+
 @pytest.fixture(scope="session")
 def migrated_db_url(tmp_path_factory) -> str:
     """A fresh SQLite database at alembic head, shared by the session."""

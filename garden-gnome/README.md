@@ -52,6 +52,54 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## User accounts & auth (PlantAdvocate)
+
+The API is multi-user: every non-species endpoint requires a Bearer access
+token obtained via Sign in with Apple or Google Sign-In (`POST /auth/apple`,
+`POST /auth/google`), refreshed via rotating refresh tokens
+(`POST /auth/refresh`). Accounts are deletable in-app via `DELETE /me`
+(App Store 5.1.1(v) — also revokes the user's Apple session). `/auth/*`
+endpoints are rate-limited per IP.
+
+### Required configuration (.env)
+
+Copy `.env.example` to `.env` and fill these — the app **refuses to boot**
+without the first two. Variable names only; generate/collect your own values:
+
+| Variable | What it is |
+|---|---|
+| `JWT_SECRET` | HS256 signing secret for access tokens (32+ random bytes, hex) |
+| `FERNET_KEY` | Encrypts stored Apple refresh tokens at rest |
+| `APPLE_BUNDLE_ID` | The iOS app's bundle identifier |
+| `APPLE_TEAM_ID` | Apple Developer team id |
+| `APPLE_KEY_ID` | Sign in with Apple key id (from the `.p8` filename) |
+| `APPLE_PRIVATE_KEY_PATH` | Path to the `.p8`, e.g. `secrets/AuthKey_XXXX.p8` (gitignored) |
+| `GOOGLE_CLIENT_ID` | Google OAuth iOS client id |
+| `RATE_LIMIT_SIGNIN` / `RATE_LIMIT_TOKEN` | Optional overrides, e.g. `10/minute` |
+
+Provider variables are only needed once real Apple/Google sign-ins are
+exercised; the test suite runs fully mocked without them.
+
+### Database migrations (Alembic)
+
+The schema is owned by Alembic — `create_all` is no longer used. The server
+runs migrations automatically at startup (pre-Alembic databases are detected
+and stamped at the baseline first). To migrate manually:
+
+```bash
+alembic upgrade head     # bring the DB at DATABASE_URL to the latest schema
+```
+
+New schema changes: `alembic revision --autogenerate -m "..."`, review the
+generated file, commit it. Never edit applied revisions.
+
+### Running the test suite
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
 ## Seed the care database
 
 ```bash

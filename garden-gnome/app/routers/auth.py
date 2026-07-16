@@ -12,12 +12,13 @@ from datetime import datetime
 from typing import Optional
 
 from cryptography.fernet import Fernet
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlmodel import Session, select
 
 from app.config import get_settings
 from app.db.database import get_session
 from app.deps import get_current_user
+from app.rate_limit import SIGNIN_LIMIT, TOKEN_LIMIT, limiter
 from app.models.models import (
     AuthIdentity, AuthProvider, Environment, EnvironmentType, Plant, User,
 )
@@ -120,7 +121,9 @@ def _token_response(session: Session, user: User) -> AuthTokensOut:
 
 
 @router.post("/auth/apple", response_model=AuthTokensOut)
+@limiter.limit(SIGNIN_LIMIT)
 def sign_in_with_apple(
+    request: Request,
     payload: AppleSignInRequest,
     session: Session = Depends(get_session),
 ):
@@ -157,7 +160,9 @@ def sign_in_with_apple(
 
 
 @router.post("/auth/google", response_model=AuthTokensOut)
+@limiter.limit(SIGNIN_LIMIT)
 def sign_in_with_google(
+    request: Request,
     payload: GoogleSignInRequest,
     session: Session = Depends(get_session),
 ):
@@ -182,7 +187,12 @@ def sign_in_with_google(
 
 
 @router.post("/auth/refresh")
-def refresh(payload: RefreshRequest, session: Session = Depends(get_session)):
+@limiter.limit(TOKEN_LIMIT)
+def refresh(
+    request: Request,
+    payload: RefreshRequest,
+    session: Session = Depends(get_session),
+):
     try:
         result = tokens.rotate_refresh_token(session, payload.refresh_token)
     except tokens.AuthTokenError:
@@ -199,7 +209,12 @@ def refresh(payload: RefreshRequest, session: Session = Depends(get_session)):
 
 
 @router.post("/auth/logout", status_code=204)
-def logout(payload: LogoutRequest, session: Session = Depends(get_session)):
+@limiter.limit(TOKEN_LIMIT)
+def logout(
+    request: Request,
+    payload: LogoutRequest,
+    session: Session = Depends(get_session),
+):
     tokens.revoke_refresh_token(session, payload.refresh_token)
     return Response(status_code=204)
 
