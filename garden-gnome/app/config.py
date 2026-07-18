@@ -37,10 +37,29 @@ class Settings(BaseSettings):
     apple_bundle_id: Optional[str] = None
     apple_team_id: Optional[str] = None
     apple_key_id: Optional[str] = None
+    # Two ways to supply the .p8 private key:
+    #  - APPLE_PRIVATE_KEY_PATH: a file path (local dev; the .p8 in secrets/)
+    #  - APPLE_PRIVATE_KEY: the PEM contents inline (hosted: Fly has no file,
+    #    so the key rides in as a secret env var)
+    # Inline wins when both are set.
     apple_private_key_path: Optional[str] = None
+    apple_private_key: Optional[str] = None
 
     # --- Google Sign-In (required from Phase 4 onward) ---
     google_client_id: Optional[str] = None
+
+    def apple_private_key_pem(self) -> Optional[str]:
+        """Resolve the Apple signing key PEM from the inline env var or the
+        file path, or None if neither is configured. `fly secrets set` and
+        some shells deliver multi-line values with literal backslash-n, so
+        those are normalized back to real newlines."""
+        if self.apple_private_key:
+            return self.apple_private_key.replace("\\n", "\n")
+        if self.apple_private_key_path:
+            p = Path(self.apple_private_key_path)
+            if p.exists():
+                return p.read_text()
+        return None
 
 
 @lru_cache

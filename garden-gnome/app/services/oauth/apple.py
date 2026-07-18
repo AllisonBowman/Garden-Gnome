@@ -13,7 +13,6 @@ import hashlib
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from pathlib import Path
 from typing import Optional
 
 import httpx
@@ -86,12 +85,14 @@ def verify_apple_token(identity_token: str, raw_nonce: str) -> AppleClaims:
 def _build_client_secret() -> str:
     """ES256 JWT that authenticates us to Apple's token endpoint."""
     s = get_settings()
-    if not (s.apple_team_id and s.apple_key_id and s.apple_private_key_path
-            and s.apple_bundle_id):
+    private_key = s.apple_private_key_pem()
+    if not (s.apple_team_id and s.apple_key_id and s.apple_bundle_id
+            and private_key):
         raise ProviderConfigError(
-            "Apple key settings are not configured (see plan Phase 0)")
+            "Apple key settings are not configured — set APPLE_TEAM_ID, "
+            "APPLE_KEY_ID, APPLE_BUNDLE_ID, and either APPLE_PRIVATE_KEY "
+            "(inline PEM) or APPLE_PRIVATE_KEY_PATH (see plan Phase 0)")
 
-    private_key = Path(s.apple_private_key_path).read_text()
     now = datetime.utcnow()
     return jwt.encode(
         {

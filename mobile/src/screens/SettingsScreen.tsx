@@ -10,6 +10,13 @@ import {
 import { ReminderPrefs } from '../notifications/plan';
 import { CareType } from '../types';
 
+// The backend-URL override is shown in dev AND in builds that opt in via
+// EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE (set for the development + preview EAS
+// profiles, not production) — so preview testers can point at the Fly URL
+// (the default) or a LAN server, while App Store builds keep it hidden.
+const SHOW_BACKEND_OVERRIDE =
+  __DEV__ || process.env.EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE === '1';
+
 const REMINDER_TOGGLES: { type: CareType; icon: string; label: string }[] = [
   { type: 'water',     icon: '💧', label: 'Watering'    },
   { type: 'fertilize', icon: '🌿', label: 'Fertilizing' },
@@ -76,7 +83,7 @@ export default function SettingsScreen() {
   }
 
   useEffect(() => {
-    if (__DEV__) getBaseUrl().then(setUrl); // field only shown in dev builds
+    if (SHOW_BACKEND_OVERRIDE) getBaseUrl().then(setUrl);
     getReminderPrefs().then(setPrefs);
   }, []);
 
@@ -157,18 +164,18 @@ export default function SettingsScreen() {
 
       <Divider style={styles.divider} />
 
-      {/* Dev-only: point the app at a local backend. Hidden in release builds
-          so end users can't accidentally break connectivity (the app then just
-          uses the hosted DEFAULT_BASE_URL). */}
-      {__DEV__ && (
+      {/* Shown in dev + preview builds only (see SHOW_BACKEND_OVERRIDE);
+          hidden in production so end users can't break connectivity — the
+          app then just uses the hosted DEFAULT_BASE_URL. */}
+      {SHOW_BACKEND_OVERRIDE && (
         <>
           <Card style={styles.card}>
-            <Card.Title title="Backend connection (dev)" titleVariant="titleMedium" />
+            <Card.Title title="Backend connection" titleVariant="titleMedium" />
             <Card.Content>
               <Text variant="bodySmall" style={styles.hint}>
-                Dev only — override the API server URL.{'\n'}
-                For local development: http://192.168.x.x:8000{'\n'}
-                Default (release): https://garden-gnome-api.fly.dev
+                Override the API server URL.{'\n'}
+                Default (cloud): https://garden-gnome-api.fly.dev{'\n'}
+                Local network: http://192.168.x.x:8000
               </Text>
               <TextInput
                 label="API base URL"
