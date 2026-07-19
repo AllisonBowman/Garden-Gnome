@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Garden — PlantAdvocate</title>
+<meta name="description" content="A demo virtual community garden — choose a species and watch it grow at its own realistic pace.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   PlantAdvocate — shared design system
+   Tokens match the original landing page (index.html)
+   ============================================================ */
+:root{
+  --ink:#1C2B1F;
+  --ink-soft:#2C3D2C;
+  --paper:#EEEBDD;
+  --paper-dim:#E2DFCF;
+  --marigold:#D9A441;
+  --clay:#A9542F;
+  --leaf:#7C9A6A;
+  --leaf-deep:#5B7A4C;
+  --line: rgba(238,235,221,0.18);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:'Inter', sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+a{color:inherit;}
+img{max-width:100%; display:block;}
+.wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+@media (max-width:640px){.wrap{padding:0 20px;}}
+
+/* ---------- NAV ---------- */
+header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(28,43,31,0.9);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 32px;
+  max-width:1180px; margin:0 auto;
+}
+.brand{
+  font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem;
+  letter-spacing:0.01em; display:flex; align-items:center; gap:10px;
+  text-decoration:none; color:var(--paper);
+}
+.brand-mark{
+  width:9px; height:9px; border-radius:50%; background:var(--marigold);
+  box-shadow:0 0 0 3px rgba(217,164,65,0.18); flex-shrink:0;
+}
+.nav-links{display:flex; gap:28px; font-size:0.9rem; color:var(--paper-dim);}
+.nav-links a{text-decoration:none; transition:color .2s; white-space:nowrap;}
+.nav-links a:hover, .nav-links a.active{color:var(--marigold);}
+.nav-cta{
+  font-size:0.85rem; font-family:'IBM Plex Mono', monospace;
+  border:1px solid var(--line); padding:9px 16px; border-radius:2px;
+  text-decoration:none; transition:all .2s; white-space:nowrap;
+}
+.nav-cta:hover{border-color:var(--marigold); color:var(--marigold);}
+@media (max-width:920px){.nav-links{display:none;}}
+
+/* ---------- PAGE HEADER (non-hero pages) ---------- */
+.page-head{padding:76px 0 56px; border-bottom:1px solid var(--line);}
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--marigold); margin-bottom:18px;
+  display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:''; width:22px; height:1px; background:var(--marigold);}
+h1{
+  font-family:'Fraunces', serif; font-weight:500; font-size:clamp(2.1rem, 4.4vw, 3.1rem);
+  line-height:1.1; letter-spacing:-0.01em; color:var(--paper); max-width:720px;
+}
+h1 em{font-style:italic; color:var(--marigold); font-weight:400;}
+.page-sub{margin-top:20px; font-size:1.05rem; line-height:1.65; color:var(--paper-dim); max-width:600px;}
+
+/* ---------- SECTION SCAFFOLD ---------- */
+section{padding:88px 0;}
+.section-tag{
+  font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--marigold); margin-bottom:16px;
+}
+h2{
+  font-family:'Fraunces', serif; font-weight:500; font-size:clamp(1.7rem, 3.2vw, 2.3rem);
+  line-height:1.18; max-width:640px; letter-spacing:-0.01em;
+}
+h3{font-family:'Fraunces', serif; font-weight:500; font-size:1.25rem; color:var(--paper);}
+.lede{font-size:1.02rem; line-height:1.7; color:var(--paper-dim); max-width:560px; margin-top:18px;}
+.mono{font-family:'IBM Plex Mono', monospace;}
+
+/* ---------- BUTTONS ---------- */
+.btn-primary{
+  display:inline-block; background:var(--marigold); color:var(--ink); font-weight:600; font-size:0.95rem;
+  padding:14px 26px; border-radius:2px; text-decoration:none; border:1px solid var(--marigold);
+  transition:transform .18s ease, background .18s ease; cursor:pointer;
+}
+.btn-primary:hover{background:#E6B559; transform:translateY(-1px);}
+.btn-ghost{
+  display:inline-block; padding:14px 24px; border-radius:2px; border:1px solid var(--line);
+  text-decoration:none; font-size:0.95rem; color:var(--paper-dim); transition:all .18s;
+  background:transparent; cursor:pointer; font-family:inherit;
+}
+.btn-ghost:hover{border-color:var(--paper-dim); color:var(--paper);}
+.actions{display:flex; gap:16px; margin-top:34px; flex-wrap:wrap;}
+
+/* ---------- CARD GRID ---------- */
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:2px; background:var(--line); margin-top:48px;}
+.grid-3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; background:var(--line); margin-top:48px;}
+@media (max-width:820px){.grid-2, .grid-3{grid-template-columns:1fr;}}
+.card{background:var(--ink); padding:32px 30px;}
+.card .mark{font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--clay); margin-bottom:14px;}
+.card h3{margin-bottom:10px;}
+.card p{font-size:0.92rem; line-height:1.6; color:var(--paper-dim);}
+
+/* ---------- PANEL (light paper block) ---------- */
+.panel{
+  background:var(--paper); color:var(--ink); border-radius:4px;
+  margin:0 32px; padding:56px;
+}
+@media (max-width:820px){.panel{padding:38px 26px; margin:0 20px;}}
+.panel .section-tag{color:var(--clay);}
+.panel h2{color:var(--ink);}
+.panel .lede{color:var(--ink-soft);}
+.panel-list{list-style:none; margin-top:8px;}
+.panel-list li{
+  display:flex; gap:14px; padding:16px 0; border-bottom:1px solid rgba(28,43,31,0.1);
+  font-size:0.95rem; line-height:1.55;
+}
+.panel-list li:last-child{border-bottom:none;}
+.panel-list .num{font-family:'IBM Plex Mono', monospace; color:var(--clay); font-size:0.85rem; flex-shrink:0; padding-top:2px;}
+
+/* ---------- SPECIMEN / TESTIMONY TAG ---------- */
+.specimen{
+  background:var(--paper); color:var(--ink); border-radius:3px; padding:0; position:relative;
+  box-shadow:0 24px 50px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.04);
+}
+.specimen-header{padding:24px 26px 16px; border-bottom:1px dashed rgba(28,43,31,0.25);}
+.specimen-label{font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--clay);}
+.specimen-name{font-family:'Fraunces', serif; font-style:italic; font-weight:500; font-size:1.3rem; margin-top:6px; color:var(--ink);}
+.specimen-sub{font-size:0.82rem; color:var(--ink-soft); margin-top:4px;}
+.specimen-body{padding:20px 26px 24px;}
+.testimony{margin-top:6px; padding:16px 18px; background:rgba(217,164,65,0.12); border-left:2px solid var(--marigold); border-radius:0 2px 2px 0;}
+.testimony-label{font-family:'IBM Plex Mono', monospace; font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--clay); margin-bottom:6px;}
+.testimony p{font-family:'Fraunces', serif; font-style:italic; font-size:0.98rem; line-height:1.45; color:var(--ink);}
+
+/* ---------- FORMS ---------- */
+.field{margin-bottom:20px;}
+.field label{display:block; font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:8px;}
+.field input, .field textarea, .field select{
+  width:100%; background:var(--ink-soft); border:1px solid var(--line); color:var(--paper);
+  padding:13px 15px; font-family:'Inter', sans-serif; font-size:0.95rem; border-radius:2px;
+}
+.field input::placeholder, .field textarea::placeholder{color:rgba(238,235,221,0.4);}
+.field input:focus, .field textarea:focus, .field select:focus{outline:none; border-color:var(--marigold);}
+.field textarea{resize:vertical; min-height:120px;}
+.form-note{margin-top:14px; font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:rgba(238,235,221,0.45);}
+.confirm{margin-top:18px; font-family:'IBM Plex Mono', monospace; font-size:0.85rem; color:var(--marigold); display:none;}
+
+/* light-panel form variant */
+.panel .field label{color:var(--ink-soft);}
+.panel .field input, .panel .field textarea, .panel .field select{
+  background:#fff; border:1px solid rgba(28,43,31,0.18); color:var(--ink);
+}
+
+/* ---------- ACCORDION (FAQ) ---------- */
+.accordion{margin-top:48px; border-top:1px solid var(--line);}
+.acc-item{border-bottom:1px solid var(--line);}
+.acc-q{
+  width:100%; text-align:left; background:none; border:none; color:var(--paper); cursor:pointer;
+  font-family:'Fraunces', serif; font-size:1.1rem; padding:24px 0; display:flex; justify-content:space-between; align-items:center; gap:20px;
+}
+.acc-q .plus{font-family:'IBM Plex Mono', monospace; color:var(--marigold); font-size:1.2rem; transition:transform .25s; flex-shrink:0;}
+.acc-item.open .plus{transform:rotate(45deg);}
+.acc-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+.acc-a p{padding-bottom:24px; font-size:0.95rem; line-height:1.65; color:var(--paper-dim); max-width:680px;}
+
+/* ---------- PRICING ---------- */
+.pricing-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:52px;}
+@media (max-width:760px){.pricing-grid{grid-template-columns:1fr;}}
+.price-card{
+  border:1px solid var(--line); border-radius:4px; padding:36px 32px; position:relative;
+  display:flex; flex-direction:column;
+}
+.price-card.featured{border-color:var(--marigold); background:rgba(217,164,65,0.06);}
+.price-card .badge{
+  position:absolute; top:-12px; right:28px; background:var(--marigold); color:var(--ink);
+  font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+  padding:5px 12px; border-radius:2px;
+}
+.price-card h3{font-size:1.3rem;}
+.price-amount{font-family:'Fraunces', serif; font-size:2.6rem; margin:16px 0 4px; color:var(--paper);}
+.price-amount span{font-size:1rem; font-family:'Inter', sans-serif; color:var(--paper-dim);}
+.price-desc{font-size:0.9rem; color:var(--paper-dim); margin-bottom:24px;}
+.price-features{list-style:none; margin-bottom:28px; flex-grow:1;}
+.price-features li{
+  padding:10px 0; border-top:1px solid var(--line); font-size:0.9rem; color:var(--paper-dim);
+  display:flex; gap:10px;
+}
+.price-features li:first-child{border-top:none;}
+.price-features .tick{color:var(--leaf); flex-shrink:0;}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line); padding:56px 0 32px;}
+.foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px; padding-bottom:36px;}
+@media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr; row-gap:32px;}}
+.foot-col h4{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--marigold); margin-bottom:14px;}
+.foot-col a{display:block; text-decoration:none; font-size:0.88rem; color:var(--paper-dim); margin-bottom:10px; transition:color .2s;}
+.foot-col a:hover{color:var(--paper);}
+.foot-bottom{
+  border-top:1px solid var(--line); padding-top:24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  font-family:'IBM Plex Mono', monospace; font-size:0.76rem; color:rgba(238,235,221,0.4);
+}
+
+:focus-visible{outline:2px solid var(--marigold); outline-offset:3px;}
+
+</style>
+<style>
+.species-picker{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:36px 0;}
+@media (max-width:820px){.species-picker{grid-template-columns:repeat(2,1fr);}}
+.species-card{background:var(--ink-soft); border:1px solid var(--line); border-radius:4px; padding:14px 10px 16px; text-align:center; cursor:pointer; transition:border-color .2s, transform .2s; color:var(--paper); font-family:inherit;}
+.species-card:hover{transform:translateY(-2px); border-color:rgba(217,164,65,0.5);}
+.species-card.selected{border-color:var(--marigold); background:rgba(217,164,65,0.08);}
+.species-icon{width:100%; height:90px; margin-bottom:8px;}
+.species-name{font-family:'Fraunces',serif; font-size:0.95rem; margin-bottom:4px;}
+.species-speed{font-size:0.7rem; color:var(--paper-dim); line-height:1.3;}
+.garden-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; max-width:640px;}
+.plot{aspect-ratio:1; background:var(--ink-soft); border:1px solid var(--line); border-radius:4px; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.plot.empty{cursor:pointer; transition:border-color .2s;}
+.plot.empty:hover{border-color:var(--marigold);}
+.gardener-tag{
+  display:inline-block; margin-top:18px; font-family:'IBM Plex Mono', monospace; font-size:0.76rem;
+  color:rgba(238,235,221,0.5); border:1px solid var(--line); padding:8px 14px; border-radius:2px;
+}
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <a class="brand" href="index.html"><span class="brand-mark"></span>PlantAdvocate</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="how-it-works.html">How it works</a><a href="pricing.html">Pricing</a><a href="nurseries.html">For nurseries</a><a href="community-garden.html" class="active">Community garden</a><a href="faq.html">FAQ</a>
+    </div>
+    <a class="nav-cta" href="index.html#cta">Get early access &rarr;</a>
+  </nav>
+</header>
+
+<section class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">Community garden &middot; demo</div>
+    <h1>Pick a plant. <em>Watch it grow the way it actually would.</em></h1>
+    <p class="page-sub">Five species, five different growth rates and shapes &mdash; a fast-trailing pothos fills in within hours, an echeveria barely moves. This is a working local demo: your plots live in this browser, identified by a persistent cookie rather than IP (IPs are shared and unreliable across visitors).</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-tag">Choose a species</div>
+    <h2>Each one grows on its own schedule.</h2>
+    <div class="species-picker" id="species-picker"></div>
+
+    <div class="garden-grid" id="garden-grid"></div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="resetGarden()">Reset my garden</button>
+    </div>
+    <div class="form-note" id="garden-status" style="margin-top:20px;"></div>
+    <div class="gardener-tag" id="gardener-tag"></div>
+  </div>
+</section>
+
+<section id="trust">
+  <div class="panel wrap">
+    <div class="section-tag">Every plant lives somewhere</div>
+    <h2>In PlantAdvocate, each plant belongs to a growing environment.</h2>
+    <p class="lede">This demo is a playful version of a real idea in the app: your plants aren't a flat list &mdash; they live in environments, each with its own conditions. A sunny windowsill, a shaded balcony, a greenhouse, a community plot. A plant can even move between them and keep its full history intact, so its care always reflects where it actually lives.</p>
+  </div>
+</section>
+
+<script>
+const GRID_SIZE = 24;
+const STAGE_NAMES = ['Seed','Sprout','Juvenile','Mature'];
+
+const SPECIES = {
+  pothos:    { name:'Pothos',        color:'#7C9A6A', colorDeep:'#5B7A4C', hoursPerStage:2,  leafCounts:[0,1,3,5],  speed:'Fast grower — new growth every couple hours' },
+  snake:     { name:'Snake Plant',   color:'#5B7A4C', colorDeep:'#3F5A38', hoursPerStage:10, leafCounts:[0,1,3,5],  speed:'Slow & steady — barely needs you to look at it' },
+  succulent: { name:'Echeveria',     color:'#9CAE6B', colorDeep:'#7C8F4F', hoursPerStage:16, leafCounts:[0,3,6,10], speed:'Painfully slow, nearly impossible to kill' },
+  monstera:  { name:'Monstera',      color:'#6B8F5A', colorDeep:'#4C6B3E', hoursPerStage:5,  leafCounts:[0,1,2,3],  speed:'Steady, iconic growth once established' },
+  fern:      { name:'Boston Fern',   color:'#7FA06B', colorDeep:'#5C7A4B', hoursPerStage:3,  leafCounts:[0,1,2,4],  speed:'Lush and fast, fussier about consistency' },
+};
+
+function potSVG(){
+  return '<path d="M40,112 L80,112 L74,140 L46,140 Z" fill="#A9542F"/>' +
+         '<rect x="37" y="104" width="46" height="10" rx="2" fill="#8B4A3B"/>' +
+         '<ellipse cx="60" cy="106" rx="21" ry="4" fill="#2A1D14"/>';
+}
+function leafEl(path,x,y,rot,scale,fill){
+  return '<path d="'+path+'" transform="translate('+x+','+y+') rotate('+rot+') scale('+scale+')" fill="'+fill+'"/>';
+}
+function renderPothos(stage, sp){
+  const count = sp.leafCounts[stage];
+  const heart = "M0,0 C5,-9 14,-7 12,2 C11,9 4,14 0,20 C-4,14 -11,9 -12,2 C-14,-7 -5,-9 0,0 Z";
+  let out='';
+  for(let i=0;i<count;i++){
+    const t = count>1 ? i/(count-1) : 0.5;
+    const x = 60 + (t-0.5)*46;
+    const droop = stage>=3 ? 10*t : 0;
+    const y = 100 - (i%2===0?4:0) + droop;
+    const rot = -20 + t*40;
+    out += leafEl(heart, x, y, rot, 0.85+0.15*stage, i%2===0?sp.color:sp.colorDeep);
+  }
+  return out;
+}
+function renderSnake(stage, sp){
+  const count = sp.leafCounts[stage];
+  const h = [0,20,30,40][stage];
+  const blade = "M-4,0 C-5,"+(-h*0.4)+" -2,"+(-h*0.8)+" 0,"+(-h)+" C2,"+(-h*0.8)+" 5,"+(-h*0.4)+" 4,0 Z";
+  let out='';
+  for(let i=0;i<count;i++){
+    const t = count>1 ? (i/(count-1))-0.5 : 0;
+    out += leafEl(blade, 60+t*22, 106, t*18, 1, i%2===0?sp.color:sp.colorDeep);
+  }
+  return out;
+}
+function renderSucculent(stage, sp){
+  const count = sp.leafCounts[stage];
+  const size = [0,10,14,18][stage];
+  const petal = "M-5,0 C-6,"+(-size*0.4)+" -3,"+(-size*0.8)+" 0,"+(-size)+" C3,"+(-size*0.8)+" 6,"+(-size*0.4)+" 5,0 Z";
+  let out='';
+  for(let i=0;i<count;i++){
+    out += leafEl(petal, 60, 104, (360/count)*i, 1, i%2===0?sp.color:sp.colorDeep);
+  }
+  return out;
+}
+function renderMonstera(stage, sp){
+  const count = sp.leafCounts[stage];
+  const scaleBase = [0,0.6,0.85,1.1][stage];
+  const leafPath = "M0,0 C-14,-4 -20,-16 -14,-26 C-9,-33 -4,-36 0,-38 C4,-36 9,-33 14,-26 C20,-16 14,-4 0,0 Z";
+  const positions = [[60,104,0],[48,102,-16],[74,102,14]];
+  let out='';
+  for(let i=0;i<count;i++){
+    const p = positions[i % positions.length];
+    out += leafEl(leafPath, p[0], p[1], p[2], scaleBase, i%2===0?sp.color:sp.colorDeep);
+    if(stage>=2){
+      out += '<ellipse cx="'+(p[0]-4)+'" cy="'+(p[1]-20*scaleBase)+'" rx="2" ry="3" fill="#1C2B1F" transform="rotate('+p[2]+' '+p[0]+' '+p[1]+')"/>';
+    }
+  }
+  return out;
+}
+function renderFern(stage, sp){
+  const count = sp.leafCounts[stage];
+  const h = [0,18,28,36][stage];
+  let out='';
+  for(let f=0; f<count; f++){
+    const t = count>1 ? (f/(count-1))-0.5 : 0;
+    const baseX = 60 + t*20;
+    const rot = t*24;
+    out += '<line x1="0" y1="0" x2="0" y2="'+(-h)+'" stroke="'+sp.colorDeep+'" stroke-width="1.5" transform="translate('+baseX+',106) rotate('+rot+')"/>';
+    const leafletCount = Math.floor(h/6);
+    for(let j=1;j<=leafletCount;j++){
+      const ly = -j*6, side = j%2===0?1:-1;
+      out += '<ellipse cx="'+(side*4)+'" cy="'+ly+'" rx="3.5" ry="1.6" fill="'+sp.color+'" transform="translate('+baseX+',106) rotate('+rot+')"/>';
+    }
+  }
+  return out;
+}
+function plantSVG(key, stage){
+  const sp = SPECIES[key];
+  let inner = potSVG();
+  if(stage===0){
+    inner += '<ellipse cx="60" cy="103" rx="4" ry="3" fill="#8B5E34"/>';
+  } else if(key==='pothos'){ inner += renderPothos(stage, sp); }
+  else if(key==='snake'){ inner += renderSnake(stage, sp); }
+  else if(key==='succulent'){ inner += renderSucculent(stage, sp); }
+  else if(key==='monstera'){ inner += renderMonstera(stage, sp); }
+  else if(key==='fern'){ inner += renderFern(stage, sp); }
+  return '<svg viewBox="0 0 120 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">'+inner+'</svg>';
+}
+
+/* --- cookie-based gardener identity --- */
+function setCookie(name,value,days){
+  const d = new Date(); d.setTime(d.getTime()+days*24*60*60*1000);
+  document.cookie = name+'='+value+';expires='+d.toUTCString()+';path=/;SameSite=Lax';
+}
+function getCookie(name){
+  const m = document.cookie.match(new RegExp('(^| )'+name+'=([^;]+)'));
+  return m ? m[2] : null;
+}
+function getOrCreateGardenerId(){
+  let id = getCookie('gg_gardener_id');
+  if(!id){
+    id = 'g_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+    setCookie('gg_gardener_id', id, 365);
+  }
+  return id;
+}
+const GARDENER_ID = getOrCreateGardenerId();
+const STORAGE_KEY = 'gg-community-garden-' + GARDENER_ID;
+
+function loadGarden(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }catch(e){ return {}; } }
+function saveGarden(g){ localStorage.setItem(STORAGE_KEY, JSON.stringify(g)); }
+
+let selectedSpecies = 'pothos';
+
+function initPicker(){
+  const el = document.getElementById('species-picker');
+  el.innerHTML = Object.keys(SPECIES).map(function(key){
+    const sp = SPECIES[key];
+    const sel = key===selectedSpecies ? ' selected' : '';
+    return '<button class="species-card'+sel+'" data-species="'+key+'" onclick="selectSpecies(\''+key+'\')">'+
+      '<div class="species-icon">'+plantSVG(key,3)+'</div>'+
+      '<div class="species-name">'+sp.name+'</div>'+
+      '<div class="species-speed">'+sp.speed+'</div>'+
+    '</button>';
+  }).join('');
+}
+function selectSpecies(key){
+  selectedSpecies = key;
+  document.querySelectorAll('.species-card').forEach(function(c){ c.classList.toggle('selected', c.dataset.species===key); });
+  document.getElementById('garden-status').textContent = 'Selected ' + SPECIES[key].name + ' — click an empty plot to plant it.';
+}
+function stageFor(entry){
+  const sp = SPECIES[entry.species];
+  const hoursElapsed = (Date.now()-entry.plantedAt)/(1000*60*60);
+  return Math.min(3, Math.floor(hoursElapsed/sp.hoursPerStage));
+}
+function renderGarden(){
+  const garden = loadGarden();
+  const grid = document.getElementById('garden-grid');
+  grid.innerHTML='';
+  let planted=0;
+  for(let i=0;i<GRID_SIZE;i++){
+    const cell=document.createElement('div');
+    cell.className='plot';
+    const entry = garden[i];
+    if(entry){
+      planted++;
+      const stage = stageFor(entry);
+      cell.innerHTML = plantSVG(entry.species, stage);
+      cell.title = SPECIES[entry.species].name + ' — ' + STAGE_NAMES[stage];
+    } else {
+      cell.classList.add('empty');
+      cell.onclick = function(){ plantAt(i); };
+      cell.title = 'Plant ' + SPECIES[selectedSpecies].name + ' here';
+    }
+    grid.appendChild(cell);
+  }
+  document.getElementById('garden-status').textContent = planted===0
+    ? 'Select a species above, then click a plot to plant it.'
+    : planted + ' of ' + GRID_SIZE + ' plots planted. Growth updates automatically over time.';
+  document.getElementById('gardener-tag').textContent = 'Gardener ID (cookie): ' + GARDENER_ID;
+}
+function plantAt(i){
+  const garden = loadGarden();
+  garden[i] = { species: selectedSpecies, plantedAt: Date.now() };
+  saveGarden(garden);
+  renderGarden();
+}
+function resetGarden(){
+  localStorage.removeItem(STORAGE_KEY);
+  renderGarden();
+}
+initPicker();
+renderGarden();
+setInterval(renderGarden, 60000);
+</script>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <h4>PlantAdvocate</h4>
+        <a href="index.html" style="color:var(--paper); font-family:'Fraunces',serif; font-style:italic; font-size:1.05rem; margin-bottom:14px;">An advocate for every plant.</a>
+        <a href="about.html">About &amp; story</a>
+        <a href="contact.html">Contact</a>
+        <a href="support.html">Support</a>
+        <a href="privacy.html">Privacy policy</a>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="how-it-works.html">How it works</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="recommendations.html">Find your plant</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+      <div class="foot-col">
+        <h4>Community</h4>
+        <a href="community-garden.html">Community garden</a>
+        <a href="testimonials.html">Beta experiences</a>
+        <a href="resources.html">Plant resources</a>
+        <a href="conservation.html">Conservation</a>
+      </div>
+      <div class="foot-col">
+        <h4>Partners</h4>
+        <a href="nurseries.html">For nurseries</a>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>PLANTADVOCATE &mdash; built for growers who want the truth, translated.</span>
+      <span>&copy; 2026 PlantAdvocate</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

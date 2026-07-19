@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlantAdvocate — Every plant deserves an advocate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C2B1F;
+    --ink-soft:#2C3D2C;
+    --paper:#EEEBDD;
+    --paper-dim:#E2DFCF;
+    --marigold:#D9A441;
+    --clay:#A9542F;
+    --leaf:#7C9A6A;
+    --leaf-deep:#5B7A4C;
+    --line: rgba(238,235,221,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+  a{color:inherit;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){.wrap{padding:0 20px;}}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(28,43,31,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px;
+    max-width:1180px; margin:0 auto;
+  }
+  .brand{
+    font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem;
+    letter-spacing:0.01em; display:flex; align-items:center; gap:10px;
+  }
+  .brand-mark{
+    width:9px; height:9px; border-radius:50%; background:var(--marigold);
+    box-shadow:0 0 0 3px rgba(217,164,65,0.18);
+  }
+  .nav-links{display:flex; gap:36px; font-size:0.92rem; color:var(--paper-dim);}
+  .nav-links a{text-decoration:none; transition:color .2s;}
+  .nav-links a:hover{color:var(--marigold);}
+  .nav-cta{
+    font-size:0.85rem; font-family:'IBM Plex Mono', monospace;
+    border:1px solid var(--line); padding:9px 16px; border-radius:2px;
+    text-decoration:none; transition:all .2s; white-space:nowrap;
+  }
+  .nav-cta:hover{border-color:var(--marigold); color:var(--marigold);}
+  @media (max-width:800px){.nav-links{display:none;}}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:96px 0 120px;
+    position:relative;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:64px; align-items:center;
+  }
+  @media (max-width:960px){.hero-grid{grid-template-columns:1fr; gap:72px;}}
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--marigold); margin-bottom:22px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--marigold);}
+
+  h1{
+    font-family:'Fraunces', serif; font-weight:500; font-size:clamp(2.4rem, 5vw, 3.6rem);
+    line-height:1.08; letter-spacing:-0.01em; color:var(--paper);
+    max-width:640px;
+  }
+  h1 em{font-style:italic; color:var(--marigold); font-weight:400;}
+
+  .hero-sub{
+    margin-top:26px; font-size:1.08rem; line-height:1.65; color:var(--paper-dim);
+    max-width:520px;
+  }
+
+  .hero-actions{display:flex; gap:16px; margin-top:38px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--marigold); color:var(--ink); font-weight:600; font-size:0.95rem;
+    padding:14px 26px; border-radius:2px; text-decoration:none; border:1px solid var(--marigold);
+    transition:transform .18s ease, background .18s ease;
+  }
+  .btn-primary:hover{background:#E6B559; transform:translateY(-1px);}
+  .btn-ghost{
+    padding:14px 24px; border-radius:2px; border:1px solid var(--line);
+    text-decoration:none; font-size:0.95rem; color:var(--paper-dim); transition:all .18s;
+  }
+  .btn-ghost:hover{border-color:var(--paper-dim); color:var(--paper);}
+
+  .hero-foot{
+    margin-top:34px; font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    color:rgba(238,235,221,0.45); letter-spacing:0.02em;
+  }
+
+  /* ---------- SPECIMEN CARD (signature element) ---------- */
+  .specimen{
+    background:var(--paper); color:var(--ink); border-radius:3px;
+    padding:0; position:relative; transform:rotate(1.3deg);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.04);
+    transition:transform .4s ease;
+  }
+  .specimen:hover{transform:rotate(0deg) translateY(-4px);}
+  .specimen-punch{
+    position:absolute; top:22px; right:26px; width:14px; height:14px;
+    border-radius:50%; background:var(--ink); box-shadow:0 0 0 3px var(--paper);
+  }
+  .specimen-header{
+    padding:26px 28px 18px; border-bottom:1px dashed rgba(28,43,31,0.25);
+  }
+  .specimen-label{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--clay);
+  }
+  .specimen-name{
+    font-family:'Fraunces', serif; font-style:italic; font-weight:500;
+    font-size:1.5rem; margin-top:6px; color:var(--ink);
+  }
+  .specimen-sub{font-size:0.85rem; color:var(--ink-soft); margin-top:4px;}
+  .specimen-body{padding:22px 28px 26px;}
+  .specimen-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    padding:9px 0; border-bottom:1px solid rgba(28,43,31,0.08);
+  }
+  .specimen-row span:first-child{color:rgba(28,43,31,0.55); letter-spacing:0.04em;}
+  .specimen-row span:last-child{color:var(--ink); font-weight:500;}
+  .specimen-row.flag span:last-child{color:var(--clay);}
+  .testimony{
+    margin-top:20px; padding:16px 18px; background:rgba(217,164,65,0.12);
+    border-left:2px solid var(--marigold); border-radius:0 2px 2px 0;
+  }
+  .testimony-label{
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--clay); margin-bottom:6px;
+  }
+  .testimony p{
+    font-family:'Fraunces', serif; font-style:italic; font-size:1.02rem;
+    line-height:1.45; color:var(--ink);
+  }
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{padding:100px 0;}
+  .section-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--marigold); margin-bottom:16px;
+  }
+  h2{
+    font-family:'Fraunces', serif; font-weight:500; font-size:clamp(1.8rem, 3.4vw, 2.6rem);
+    line-height:1.15; max-width:640px; letter-spacing:-0.01em;
+  }
+  .lede{font-size:1.05rem; line-height:1.7; color:var(--paper-dim); max-width:560px; margin-top:20px;}
+
+  /* ---------- PROBLEM ---------- */
+  .problem{background:var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .problem-grid{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; margin-top:56px;
+    background:var(--line);
+  }
+  @media (max-width:800px){.problem-grid{grid-template-columns:1fr;}}
+  .problem-card{background:var(--ink-soft); padding:34px 30px;}
+  .problem-card .mark{
+    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--clay); margin-bottom:14px;
+  }
+  .problem-card h3{
+    font-family:'Fraunces', serif; font-weight:500; font-size:1.2rem; margin-bottom:10px; color:var(--paper);
+  }
+  .problem-card p{font-size:0.92rem; line-height:1.6; color:var(--paper-dim);}
+
+  /* ---------- ADVOCACY MODEL ---------- */
+  .model{background:var(--ink);}
+  .model-flow{
+    margin-top:64px; display:grid; grid-template-columns:1fr auto 1fr auto 1fr; align-items:start; gap:0;
+  }
+  @media (max-width:900px){.model-flow{grid-template-columns:1fr;}}
+  .model-step{padding:4px 22px;}
+  .model-arrow{
+    display:flex; align-items:center; justify-content:center; padding-top:44px;
+    color:var(--marigold); font-family:'IBM Plex Mono', monospace; font-size:1.1rem;
+  }
+  @media (max-width:900px){
+    .model-arrow{transform:rotate(90deg); padding:14px 0;}
+    .model-step{padding:0 4px;}
+  }
+  .model-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--leaf); margin-bottom:14px;
+  }
+  .model-step h3{
+    font-family:'Fraunces', serif; font-weight:500; font-size:1.3rem; color:var(--paper); margin-bottom:10px;
+  }
+  .model-step p{font-size:0.92rem; line-height:1.65; color:var(--paper-dim);}
+
+  /* ---------- TRUST ---------- */
+  .trust{
+    background:var(--paper); color:var(--ink); border-radius:4px;
+    margin:0 32px; padding:64px 56px;
+    display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;
+  }
+  @media (max-width:900px){.trust{grid-template-columns:1fr; padding:44px 28px; margin:0 20px;}}
+  .trust .section-tag{color:var(--clay);}
+  .trust h2{color:var(--ink);}
+  .trust .lede{color:var(--ink-soft);}
+  .trust-list{list-style:none; margin-top:8px;}
+  .trust-list li{
+    display:flex; gap:14px; padding:16px 0; border-bottom:1px solid rgba(28,43,31,0.1);
+    font-size:0.95rem; line-height:1.55;
+  }
+  .trust-list li:last-child{border-bottom:none;}
+  .trust-list .num{
+    font-family:'IBM Plex Mono', monospace; color:var(--clay); font-size:0.85rem; flex-shrink:0; padding-top:2px;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta{padding:130px 0 110px; text-align:center;}
+  .cta h2{margin:0 auto; max-width:620px; text-align:center;}
+  .cta .lede{margin-left:auto; margin-right:auto; text-align:center; max-width:480px;}
+  .signup{
+    margin-top:40px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  }
+  .signup input{
+    background:transparent; border:1px solid var(--line); color:var(--paper);
+    padding:14px 18px; font-family:'Inter', sans-serif; font-size:0.95rem; border-radius:2px;
+    width:280px; max-width:80vw;
+  }
+  .signup input::placeholder{color:rgba(238,235,221,0.4);}
+  .signup input:focus{outline:none; border-color:var(--marigold);}
+  .signup-note{
+    margin-top:16px; font-family:'IBM Plex Mono', monospace; font-size:0.76rem;
+    color:rgba(238,235,221,0.4);
+  }
+  .confirm{
+    margin-top:22px; font-family:'IBM Plex Mono', monospace; font-size:0.85rem;
+    color:var(--marigold); display:none;
+  }
+
+  footer{border-top:1px solid var(--line); padding:56px 0 32px;}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px; padding-bottom:36px;}
+  @media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr; row-gap:32px;}}
+  .foot-col h4{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--marigold); margin-bottom:14px;}
+  .foot-col a{display:block; text-decoration:none; font-size:0.88rem; color:var(--paper-dim); margin-bottom:10px; transition:color .2s;}
+  .foot-col a:hover{color:var(--paper);}
+  .foot-bottom{
+    border-top:1px solid var(--line); padding-top:24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-family:'IBM Plex Mono', monospace; font-size:0.76rem; color:rgba(238,235,221,0.4);
+  }
+
+  :focus-visible{outline:2px solid var(--marigold); outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a class="brand" href="index.html"><span class="brand-mark"></span>PlantAdvocate</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="nurseries.html">For nurseries</a>
+      <a href="community-garden.html">Community garden</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <a class="nav-cta" href="#cta">Get early access →</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Grounded plant advocacy</div>
+      <h1>Your plants can't ask for help. <em>So we built something that speaks for them.</em></h1>
+      <p class="hero-sub">PlantAdvocate reads your plant's real conditions — species, light, watering history — and advocates on its behalf, in plain language. Every recommendation is grounded in a curated care database, not invented on the spot.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#cta">Join the beta</a>
+        <a class="btn-ghost" href="#model">See how it works</a>
+      </div>
+      <div class="hero-foot">NO GUESSWORK · NO GENERATED CARE ADVICE · SPECIES DATA VERIFIED</div>
+    </div>
+
+    <div class="specimen">
+      <div class="specimen-punch"></div>
+      <div class="specimen-header">
+        <div class="specimen-label">Specimen No. 014</div>
+        <div class="specimen-name">Monstera deliciosa</div>
+        <div class="specimen-sub">Living room · west-facing window</div>
+      </div>
+      <div class="specimen-body">
+        <div class="specimen-row"><span>Last watered</span><span>6 days ago</span></div>
+        <div class="specimen-row flag"><span>Soil moisture</span><span>Dry — below threshold</span></div>
+        <div class="specimen-row"><span>Light exposure</span><span>Bright, indirect</span></div>
+        <div class="specimen-row flag"><span>Lower leaves</span><span>Yellowing detected</span></div>
+        <div class="testimony">
+          <div class="testimony-label">Advocacy note</div>
+          <p>"I haven't been watered since last Wednesday. The yellowing on my lower leaves isn't dust — that's a signal. Water me today, and check that my drainage hasn't backed up."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="problem" id="problem">
+  <div class="wrap">
+    <div class="section-tag">The problem</div>
+    <h2>Most plant apps guess. Your plant pays for it.</h2>
+    <p class="lede">Generic advice treats every monstera, every window, every home the same. Plants don't fail because owners don't care — they fail because the signals get lost in translation.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="mark">01</div>
+        <h3>Watering-only tunnel vision</h3>
+        <p>Most tools fixate on a watering schedule and stop there — ignoring light, humidity, and the dozens of other factors that actually determine whether a plant thrives.</p>
+      </div>
+      <div class="problem-card">
+        <div class="mark">02</div>
+        <h3>No memory of what happened</h3>
+        <p>Without a real history of your plant's care, every check-in starts from zero. Patterns that would catch a problem early go unnoticed.</p>
+      </div>
+      <div class="problem-card">
+        <div class="mark">03</div>
+        <h3>Rigid menus, real questions</h3>
+        <p>Your plant's problem doesn't fit a dropdown. You need to describe what you're seeing and get an answer grounded in your plant's actual species and history.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="model" id="model">
+  <div class="wrap">
+    <div class="section-tag">How the advocacy works</div>
+    <h2>An advocate needs facts before it can speak.</h2>
+    <p class="lede">PlantAdvocate doesn't generate care advice from thin air. It reasons over a curated species database — grounded in authoritative botanical sources like Royal Botanic Gardens, Kew — then gives your plant a voice.</p>
+
+    <div class="model-flow">
+      <div class="model-step">
+        <div class="model-tag">Its file</div>
+        <h3>Curated species data</h3>
+        <p>Every recommendation traces back to verified care facts for your plant's exact species — light, water, humidity, soil — not a model's best guess.</p>
+      </div>
+      <div class="model-arrow">→</div>
+      <div class="model-step">
+        <div class="model-tag">Its signals</div>
+        <h3>Your plant's real history</h3>
+        <p>Watering logs, light conditions, and what you've noticed over time — the specific context no generic app has access to.</p>
+      </div>
+      <div class="model-arrow">→</div>
+      <div class="model-step">
+        <div class="model-tag">Its voice</div>
+        <h3>Plain-language advocacy</h3>
+        <p>The two combine into a clear, specific recommendation — written as if your plant could finally tell you what it needs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="trust">
+  <div class="trust wrap">
+    <div>
+      <div class="section-tag">Grounded in fact</div>
+      <h2>The database is the source of truth. Nothing gets invented.</h2>
+      <p class="lede">This is the one rule we don't bend: care facts come from a verified species database. The care engine's job is to reason over that data and communicate it clearly — never to invent it.</p>
+    </div>
+    <ul class="trust-list">
+      <li><span class="num">→</span><span>Every care recommendation is traceable to a specific, verified fact about your plant's species.</span></li>
+      <li><span class="num">→</span><span>Your plant's full history lives in one place — no more guessing what happened three weeks ago.</span></li>
+      <li><span class="num">→</span><span>Ask a real question, in your own words, and get an answer grounded in data — not a rigid preset menu.</span></li>
+      <li><span class="num">→</span><span>A clean, honest free tier. No paywalling basic care for the plants already depending on you.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="cta" id="cta">
+  <div class="wrap">
+    <div class="section-tag" style="justify-content:center; display:flex;">Early access</div>
+    <h2>Give your plants an advocate.</h2>
+    <p class="lede">Join the beta and help shape how PlantAdvocate speaks up for the plants that can't speak for themselves.</p>
+    <form class="signup" onsubmit="return false;">
+      <input type="email" id="email-input" placeholder="you@email.com" required>
+      <button class="btn-primary" type="submit" onclick="document.getElementById('confirm-msg').style.display='block'; this.closest('form').reset();">Request access</button>
+    </form>
+    <div class="confirm" id="confirm-msg">You're on the list. We'll be in touch before the first plant does.</div>
+    <div class="signup-note">No spam. No card required. Just an update when the beta opens.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <h4>PlantAdvocate</h4>
+        <a href="index.html" style="color:var(--paper); font-family:'Fraunces',serif; font-style:italic; font-size:1.05rem; margin-bottom:14px;">An advocate for every plant.</a>
+        <a href="about.html">About &amp; story</a>
+        <a href="contact.html">Contact</a>
+        <a href="support.html">Support</a>
+        <a href="privacy.html">Privacy policy</a>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="how-it-works.html">How it works</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="recommendations.html">Find your plant</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+      <div class="foot-col">
+        <h4>Community</h4>
+        <a href="community-garden.html">Community garden</a>
+        <a href="testimonials.html">Beta experiences</a>
+        <a href="resources.html">Plant resources</a>
+        <a href="conservation.html">Conservation</a>
+      </div>
+      <div class="foot-col">
+        <h4>Partners</h4>
+        <a href="nurseries.html">For nurseries</a>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>PLANTADVOCATE &mdash; built for growers who want the truth, translated.</span>
+      <span>&copy; 2026 PlantAdvocate</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
