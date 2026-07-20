@@ -138,7 +138,7 @@ async def identify_species_photo(
 
     catalog = session.exec(select(Species)).all()
     try:
-        result = identify_species(image_bytes, catalog)
+        result = await identify_species(image_bytes, catalog)
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
 

@@ -297,6 +297,25 @@ ollama pull moondream
 # then set VISION_BACKEND=ollama in your .env (OLLAMA_VISION_MODEL=moondream by default)
 ```
 
+Or run the whole stack (API + Ollama sidecar) with `docker compose up -d`
+— see `docker-compose.yml` for the one-time model pull.
+
+The Ollama path is production-shaped: requests are async (a slow local
+inference never blocks other API requests), photos are EXIF-rotated and
+downscaled server-side before inference (a 7 MB phone photo becomes a
+~100 KB JPEG — small vision models ingest at ~1k px anyway), and the model
+is kept loaded between requests (`keep_alive`) so only the first photo
+after a quiet period pays the load cost. When the backend is down or the
+model isn't pulled, clients get a 503 with a user-presentable message;
+the technical cause (connection refused, `ollama pull` needed, …) is
+server-log only.
+
+`GET /ai/status` (unauthenticated, like `/`) reports the active advisor and
+vision backends plus vision readiness — whether Ollama answers and the model
+is pulled — so a fresh deploy can be smoke-checked with one request and the
+mobile app can gate photo UI on reality. The same check prints one
+`[vision]` line at startup.
+
 Other Apache-2.0 vision models (`qwen2.5vl`, `minicpm-v`) are drop-in swaps via
 `OLLAMA_VISION_MODEL` for more accuracy. Avoid LLaMA-derived vision models
 (`llava`, `llama3.2-vision`) — their weights carry Meta's community license

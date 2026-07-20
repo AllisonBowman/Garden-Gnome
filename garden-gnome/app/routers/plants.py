@@ -424,7 +424,7 @@ async def diagnose_plant_photo(
     ).all()
 
     try:
-        result = diagnose_photo(species, plant, care_schedules, image_bytes, notes)
+        result = await diagnose_photo(species, plant, care_schedules, image_bytes, notes)
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
 
