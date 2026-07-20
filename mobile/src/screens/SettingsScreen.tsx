@@ -4,6 +4,9 @@ import { Text, TextInput, Button, Card, Divider, Switch } from 'react-native-pap
 import { getBaseUrl, setBaseUrl } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import {
+  APP_VERSION, WEBSITE_URL, SUPPORT_URL, SUPPORT_EMAIL, openExternal,
+} from '../support';
+import {
   getReminderPrefs, setReminderPrefs, ensureNotificationPermission,
   rescheduleAllReminders,
 } from '../notifications/reminders';
@@ -238,15 +241,38 @@ export default function SettingsScreen() {
       <Divider style={styles.divider} />
 
       <Card style={styles.card}>
-        <Card.Title title="About" titleVariant="titleMedium" />
+        <Card.Title title="About & Support" titleVariant="titleMedium" />
         <Card.Content>
           <Text variant="bodySmall" style={styles.about}>
-            PlantAdvocate v1.0.0{'\n'}
-            AI-powered plant care assistant with environmental stewardship census.{'\n\n'}
-            The app connects to a self-hosted or cloud-deployed FastAPI backend.
-            All plant data remains under your control.{'\n\n'}
+            PlantAdvocate v{APP_VERSION}{'\n'}
+            Every plant deserves an advocate. Care schedules, reminders, and a
+            care engine grounded in a curated species database.{'\n\n'}
             Species data provided in part by Perenual (perenual.com).
           </Text>
+          <Button
+            mode="outlined"
+            icon="web"
+            onPress={() => openExternal(WEBSITE_URL)}
+            style={styles.btn}
+          >
+            plantadvocate.ai
+          </Button>
+          <Button
+            mode="outlined"
+            icon="lifebuoy"
+            onPress={() => openExternal(SUPPORT_URL)}
+            style={styles.btn}
+          >
+            Help & support
+          </Button>
+          <Button
+            mode="outlined"
+            icon="email-outline"
+            onPress={() => openExternal(`mailto:${SUPPORT_EMAIL}`)}
+            style={styles.btn}
+          >
+            {SUPPORT_EMAIL}
+          </Button>
         </Card.Content>
       </Card>
     </ScrollView>

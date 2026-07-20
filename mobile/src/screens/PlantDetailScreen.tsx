@@ -15,6 +15,7 @@ import {
 } from '../api/plants';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { gnomeVoice } from '../gnomeVoice/restyle';
+import ReportResult from '../components/ReportResult';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
 
@@ -204,10 +205,20 @@ export default function PlantDetailScreen() {
                   {line}
                 </Text>
               ))}
-              <Chip compact style={styles.backendChip} textStyle={styles.backendChipText}>
-                {(advice.backend === 'stub' ? 'rule-based' : advice.backend)
-                  + (advice.gnomeStyled ? ' • gnome voice' : '')}
-              </Chip>
+              <View style={styles.resultMetaRow}>
+                <Chip compact style={styles.backendChip} textStyle={styles.backendChipText}>
+                  {(advice.backend === 'stub' ? 'rule-based' : advice.backend)
+                    + (advice.gnomeStyled ? ' • gnome voice' : '')}
+                </Chip>
+                <ReportResult
+                  surfaceLabel="care advice"
+                  result={advice.advice}
+                  context={[
+                    `Plant: ${plant.nickname}`,
+                    ...(species ? [`Species: ${species.common_name} (${species.scientific_name})`] : []),
+                  ]}
+                />
+              </View>
             </View>
           )}
         </Card.Content>
@@ -274,9 +285,20 @@ export default function PlantDetailScreen() {
               {diagnosis.diagnosis.split('\n').filter((l) => l.trim()).map((line, i) => (
                 <Text key={i} style={styles.testimonyText}>{line}</Text>
               ))}
-              <Chip compact style={styles.specimenChip} textStyle={styles.specimenChipText}>
-                {diagnosis.backend === 'stub' ? 'diagnosis not enabled yet' : diagnosis.backend}
-              </Chip>
+              <View style={styles.resultMetaRow}>
+                <Chip compact style={styles.specimenChip} textStyle={styles.specimenChipText}>
+                  {diagnosis.backend === 'stub' ? 'diagnosis not enabled yet' : diagnosis.backend}
+                </Chip>
+                <ReportResult
+                  surfaceLabel="diagnosis"
+                  result={diagnosis.diagnosis}
+                  textColor={SPECIMEN.clay}
+                  context={[
+                    `Plant: ${plant.nickname}`,
+                    ...(species ? [`Species: ${species.common_name} (${species.scientific_name})`] : []),
+                  ]}
+                />
+              </View>
             </View>
           )}
         </Card.Content>
@@ -382,6 +404,13 @@ const styles = StyleSheet.create({
   gnomeVoiceText: { fontStyle: 'italic', fontSize: 14.5 },
   adviceWarningText: { color: '#9A4D00', fontWeight: '600' },
   backendChip: { alignSelf: 'flex-start', marginTop: 2, backgroundColor: '#E1EDE4' },
+  resultMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
   backendChipText: { fontSize: 11, color: '#52796F' },
   snackbar: { backgroundColor: '#2D6A4F' },
 

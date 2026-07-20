@@ -15,6 +15,7 @@ import {
 } from '../photoId/identify';
 import { fetchEnvironments } from '../api/environments';
 import { createPlant } from '../api/plants';
+import ReportResult from '../components/ReportResult';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { Species, Environment } from '../types';
 
@@ -155,6 +156,15 @@ export default function AddPlantScreen() {
                 {identifyResult.observation}
               </Text>
             )}
+            <ReportResult
+              surfaceLabel="identification"
+              result={[
+                identifyResult.observation,
+                ...(identifyResult.candidates.length > 0
+                  ? [`Candidates: ${identifyResult.candidates.map((c) => c.common_name).join(', ')}`]
+                  : []),
+              ].join('\n')}
+            />
           </View>
         )}
 
