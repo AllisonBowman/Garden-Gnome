@@ -182,6 +182,64 @@ you see it on this build, that's expected. Note it and move on.
 
 ---
 
+## Step 3.5 — Previewing in TestFlight
+
+A `development` build installs straight from the EAS link and never touches
+TestFlight. To preview in TestFlight you need a **production** build, uploaded
+to App Store Connect.
+
+### The trap to avoid
+
+Build **3** of version 1.0.0 is already in App Store Connect, uploaded
+2026-07-21 from commit `3f7d80d` — **before** the Phase 0 fixes. Your new build
+will also be version **1.0.0** (only the build number increments), so
+TestFlight will list *two* builds under 1.0.0 and only the newer one has the
+fixes.
+
+**Always check the build number in TestFlight, not the version string.**
+
+### Build and upload
+
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\mobile
+
+# 1. confirm you are building what you think you are
+git status
+git log --oneline -1
+
+# 2. build (version stays 1.0.0; build number auto-increments to 4)
+eas build --profile production --platform ios
+
+# 3. confirm the finished build came from the right commit
+eas build:list --platform ios --limit 1
+
+# 4. upload to App Store Connect
+eas submit --platform ios --latest
+```
+
+Step 1 matters: EAS builds from committed state, so uncommitted changes are
+**not** included. `git status` must be clean.
+
+Step 3 matters more: the `Commit` field in the output must match what
+`git log --oneline -1` showed. If it doesn't, you built stale code — stop and
+work out why before uploading.
+
+### After upload
+
+- Apple processes the binary for ~5–10 minutes; you get an email.
+- It then appears at
+  https://appstoreconnect.apple.com/apps/6792203800/testflight/ios
+- **Internal testers** (you, your team) can install as soon as processing
+  finishes — no App Review involved.
+- **External testers** require a Beta App Review first. Not needed just to
+  preview it yourself.
+
+Installing a TestFlight build is not the same as submitting for App Review.
+Nothing goes to Apple's reviewers until you explicitly submit for review from
+App Store Connect.
+
+---
+
 ## Step 4 — Tell me what you found
 
 The useful things to report back, roughly in order:
