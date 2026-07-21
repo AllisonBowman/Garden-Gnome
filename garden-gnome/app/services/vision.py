@@ -6,8 +6,9 @@ app/services/advisor.py's backend-swap pattern: the rest of the app calls
 change here, nothing else.
 
 Backend is chosen by the VISION_BACKEND environment variable:
-    stub   - no model; returns a placeholder explaining how to enable it (default)
-    ollama - local vision-capable model via Ollama (free, private, self-hosted)
+    stub      - no model; returns a placeholder explaining how to enable it (default)
+    ollama    - local vision-capable model via Ollama (free, private, self-hosted)
+    anthropic - Claude API (cloud, paid per photo, no infrastructure to run)
 
 Licensing note: the default Ollama model is `moondream` (Apache 2.0), chosen
 specifically because it is free for unrestricted commercial use at any scale
@@ -50,6 +51,19 @@ logger = logging.getLogger("plantadvocate.vision")
 
 DEFAULT_VISION_MODEL = "moondream"
 
+# Cloud vision defaults. Sonnet 5 was chosen over Haiku for identification:
+# picking between visually similar species (Pothos vs. Heartleaf Philodendron)
+# is exactly where the cheaper tier struggles, and that is the failure this
+# backend exists to fix. ~$0.008 per photo at introductory pricing.
+DEFAULT_ANTHROPIC_VISION_MODEL = "claude-sonnet-5"
+# Effort bounds how much the model thinks (and therefore what a photo costs).
+# medium is the balance point; raise to high if similar species still confuse it.
+DEFAULT_ANTHROPIC_EFFORT = "medium"
+# Generous enough that adaptive thinking can't crowd out the answer -- thinking
+# tokens count against max_tokens, and a truncated diagnosis is worse than a
+# slightly pricier one.
+ANTHROPIC_MAX_TOKENS = 2048
+
 # Inference tuning. keep_alive holds the model in memory between requests so
 # only the first diagnosis after a quiet period pays the model-load cost.
 KEEP_ALIVE = "30m"
@@ -88,6 +102,14 @@ def _ollama_host() -> str:
 
 def _model() -> str:
     return os.getenv("OLLAMA_VISION_MODEL", DEFAULT_VISION_MODEL)
+
+
+def _anthropic_model() -> str:
+    return os.getenv("ANTHROPIC_VISION_MODEL", DEFAULT_ANTHROPIC_VISION_MODEL)
+
+
+def _anthropic_effort() -> str:
+    return os.getenv("ANTHROPIC_VISION_EFFORT", DEFAULT_ANTHROPIC_EFFORT).lower()
 
 
 SYSTEM_INSTRUCTION = (
@@ -185,6 +207,92 @@ async def _ollama_chat(system: str, prompt: str, image_bytes: bytes, purpose: st
     return content
 
 
+def _media_type(image_bytes: bytes) -> str:
+    """Sniff the media type from magic bytes.
+
+    prepare_image normally re-encodes to JPEG, but falls back to the original
+    bytes when Pillow is missing or the image won't decode -- so the format
+    isn't guaranteed. Anthropic rejects a mismatched media_type, so sniff
+    rather than assume."""
+    if image_bytes.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if image_bytes[:4] == b"RIFF" and image_bytes[8:12] == b"WEBP":
+        return "image/webp"
+    if image_bytes.startswith(b"GIF8"):
+        return "image/gif"
+    return "image/jpeg"
+
+
+async def _anthropic_vision_chat(
+    system: str, prompt: str, image_bytes: bytes, purpose: str
+) -> str:
+    """One vision round trip to the Claude API. Raises VisionUnavailable (with a
+    user-safe message) on any failure; logs the technical cause.
+
+    Async on purpose: this module promises never to block the FastAPI event
+    loop, so use AsyncAnthropic rather than the sync client advisor.py uses."""
+    try:
+        import anthropic
+    except ImportError:
+        logger.error("anthropic package not installed; cannot use the anthropic vision backend")
+        raise VisionUnavailable(UNAVAILABLE_MESSAGE)
+
+    if not os.getenv("ANTHROPIC_API_KEY", ""):
+        logger.error("ANTHROPIC_API_KEY is not set; cannot use the anthropic vision backend")
+        raise VisionUnavailable(UNAVAILABLE_MESSAGE)
+
+    prepared = prepare_image(image_bytes)
+    model = _anthropic_model()
+    try:
+        client = anthropic.AsyncAnthropic()
+        message = await client.messages.create(
+            model=model,
+            max_tokens=ANTHROPIC_MAX_TOKENS,
+            system=system,
+            # Adaptive thinking helps most on the case this backend exists for:
+            # telling visually similar species apart. Effort bounds the spend.
+            # Note: Sonnet 5 rejects temperature/top_p/top_k -- don't add them.
+            thinking={"type": "adaptive"},
+            output_config={"effort": _anthropic_effort()},
+            messages=[{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image",
+                        "source": {
+                            "type": "base64",
+                            "media_type": _media_type(prepared),
+                            "data": base64.b64encode(prepared).decode("ascii"),
+                        },
+                    },
+                    {"type": "text", "text": prompt},
+                ],
+            }],
+        )
+    except anthropic.APIError as e:
+        logger.error("Anthropic %s failed: %s", purpose, e)
+        raise VisionUnavailable(UNAVAILABLE_MESSAGE) from e
+    except Exception as e:  # missing/invalid key surfaces at client construction
+        logger.error("Anthropic %s client error: %s", purpose, e)
+        raise VisionUnavailable(UNAVAILABLE_MESSAGE) from e
+
+    # A safety decline returns HTTP 200 with empty content -- check before reading.
+    if message.stop_reason == "refusal":
+        logger.error("Anthropic %s was declined by safety classifiers", purpose)
+        raise VisionUnavailable(UNAVAILABLE_MESSAGE)
+
+    content = "".join(b.text for b in message.content if b.type == "text").strip()
+    if not content:
+        logger.error("Anthropic %s returned no text (stop_reason=%s)", purpose, message.stop_reason)
+        raise VisionUnavailable(UNAVAILABLE_MESSAGE)
+
+    logger.info(
+        "Anthropic %s with %s: in=%d out=%d tokens",
+        purpose, model, message.usage.input_tokens, message.usage.output_tokens,
+    )
+    return content
+
+
 def _build_context(
     species: Species, plant: Plant, care_schedules: list[CareSchedule]
 ) -> str:
@@ -242,6 +350,18 @@ async def _diagnose_stub(
     )
 
 
+def _build_diagnose_prompt(
+    species: Species,
+    plant: Plant,
+    care_schedules: list[CareSchedule],
+    user_notes: str,
+) -> str:
+    prompt = _build_context(species, plant, care_schedules)
+    if user_notes.strip():
+        prompt += f"\nOWNER NOTES:\n{user_notes.strip()}\n"
+    return prompt + "\nWhat do you observe in the photo, and what's the likely cause?"
+
+
 async def _diagnose_ollama(
     species: Species,
     plant: Plant,
@@ -249,11 +369,19 @@ async def _diagnose_ollama(
     image_bytes: bytes,
     user_notes: str,
 ) -> str:
-    prompt = _build_context(species, plant, care_schedules)
-    if user_notes.strip():
-        prompt += f"\nOWNER NOTES:\n{user_notes.strip()}\n"
-    prompt += "\nWhat do you observe in the photo, and what's the likely cause?"
+    prompt = _build_diagnose_prompt(species, plant, care_schedules, user_notes)
     return await _ollama_chat(SYSTEM_INSTRUCTION, prompt, image_bytes, "diagnosis")
+
+
+async def _diagnose_anthropic(
+    species: Species,
+    plant: Plant,
+    care_schedules: list[CareSchedule],
+    image_bytes: bytes,
+    user_notes: str,
+) -> str:
+    prompt = _build_diagnose_prompt(species, plant, care_schedules, user_notes)
+    return await _anthropic_vision_chat(SYSTEM_INSTRUCTION, prompt, image_bytes, "diagnosis")
 
 
 IDENTIFY_INSTRUCTION = (
@@ -277,23 +405,47 @@ async def _identify_stub(image_bytes: bytes, catalog: list[Species]) -> tuple[st
     )
 
 
-async def _identify_ollama(image_bytes: bytes, catalog: list[Species]) -> tuple[str, list[str]]:
-    names = "\n".join(f"- {s.common_name} ({s.scientific_name})" for s in catalog)
-    prompt = f"CANDIDATE SPECIES:\n{names}\n\nWhich species is in the photo?"
-    text = await _ollama_chat(IDENTIFY_INSTRUCTION, prompt, image_bytes, "identification")
+def _build_identify_prompt(catalog: list[Species]) -> str:
+    """Hand the model every catalog species and let it pick.
 
-    # The name lines come before the OBSERVED: line; keep order (most likely first)
-    name_lines = [
+    At 129 species the whole list is ~2k tokens, so brute force beats any
+    retrieval scheme -- no index to build, no embedding drift, and the model
+    sees every option. Revisit somewhere north of ~1000 species, where the
+    candidate list starts to dominate the request."""
+    names = "\n".join(f"- {s.common_name} ({s.scientific_name})" for s in catalog)
+    return f"CANDIDATE SPECIES:\n{names}\n\nWhich species is in the photo?"
+
+
+def _parse_identify_response(text: str) -> list[str]:
+    """Pull the candidate name lines out of a model reply.
+
+    The name lines come before the OBSERVED: line; keep order (most likely
+    first). UNKNOWN yields no names, which the UI renders as manual search."""
+    return [
         line.strip("- ").strip()
         for line in text.splitlines()
         if line.strip() and not line.upper().startswith(("OBSERVED:", "UNKNOWN"))
     ]
-    return text, name_lines
+
+
+async def _identify_ollama(image_bytes: bytes, catalog: list[Species]) -> tuple[str, list[str]]:
+    prompt = _build_identify_prompt(catalog)
+    text = await _ollama_chat(IDENTIFY_INSTRUCTION, prompt, image_bytes, "identification")
+    return text, _parse_identify_response(text)
+
+
+async def _identify_anthropic(image_bytes: bytes, catalog: list[Species]) -> tuple[str, list[str]]:
+    prompt = _build_identify_prompt(catalog)
+    text = await _anthropic_vision_chat(
+        IDENTIFY_INSTRUCTION, prompt, image_bytes, "identification"
+    )
+    return text, _parse_identify_response(text)
 
 
 _IDENTIFY_BACKENDS = {
     "stub": _identify_stub,
     "ollama": _identify_ollama,
+    "anthropic": _identify_anthropic,
 }
 
 
@@ -322,6 +474,7 @@ async def identify_species(image_bytes: bytes, catalog: list[Species]) -> dict:
 _BACKENDS = {
     "stub": _diagnose_stub,
     "ollama": _diagnose_ollama,
+    "anthropic": _diagnose_anthropic,
 }
 
 
@@ -348,6 +501,17 @@ async def vision_status() -> dict:
     is ollama, the host answers, and the configured model is pulled. Detail
     strings are operator-facing but contain no hosts or secrets."""
     backend = _backend()
+    if backend == "anthropic":
+        # No network probe: a readiness call would cost tokens on every poll.
+        # Key presence is the only thing checkable for free.
+        has_key = bool(os.getenv("ANTHROPIC_API_KEY", ""))
+        return {
+            "backend": backend,
+            "model": _anthropic_model(),
+            "ready": has_key,
+            "detail": "ok" if has_key else "API key is not configured.",
+        }
+
     if backend != "ollama":
         return {
             "backend": backend,

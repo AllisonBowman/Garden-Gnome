@@ -381,3 +381,131 @@ def test_stub_diagnosis_files_no_care_log(migrated_db_url):
     finally:
         app.dependency_overrides.clear()
         engine.dispose()
+
+
+# --- anthropic vision backend --------------------------------------------
+
+class _FakeTextBlock:
+    type = "text"
+
+    def __init__(self, text: str):
+        self.text = text
+
+
+class _FakeUsage:
+    input_tokens = 2300
+    output_tokens = 350
+
+
+class _FakeMessage:
+    def __init__(self, text: str = "", stop_reason: str = "end_turn"):
+        self.content = [_FakeTextBlock(text)] if text else []
+        self.stop_reason = stop_reason
+        self.usage = _FakeUsage()
+
+
+def _install_anthropic(monkeypatch, message: _FakeMessage, captured: dict | None = None):
+    """Point vision.py's `import anthropic` at a fake AsyncAnthropic."""
+    import anthropic
+
+    class _FakeMessages:
+        async def create(self, **kwargs):
+            if captured is not None:
+                captured.update(kwargs)
+            return message
+
+    class _FakeClient:
+        def __init__(self, *a, **kw):
+            self.messages = _FakeMessages()
+
+    monkeypatch.setenv("VISION_BACKEND", "anthropic")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-test")
+    monkeypatch.setattr(anthropic, "AsyncAnthropic", _FakeClient)
+
+
+@pytest.mark.asyncio
+async def test_anthropic_diagnose_happy_path(monkeypatch, sunflower, plant, schedules):
+    seen: dict = {}
+    _install_anthropic(monkeypatch, _FakeMessage("Lower leaves are yellowing."), seen)
+
+    result = await vision.diagnose_photo(
+        sunflower, plant, schedules, _png_bytes(80, 80), "brown spots"
+    )
+
+    assert result == {"backend": "anthropic", "diagnosis": "Lower leaves are yellowing."}
+    assert seen["model"] == vision.DEFAULT_ANTHROPIC_VISION_MODEL
+    assert seen["thinking"] == {"type": "adaptive"}
+    assert seen["output_config"] == {"effort": "medium"}
+    # Sonnet 5 rejects sampling parameters -- they must never be sent.
+    for banned in ("temperature", "top_p", "top_k"):
+        assert banned not in seen
+
+    blocks = seen["messages"][0]["content"]
+    assert blocks[0]["type"] == "image"
+    assert blocks[0]["source"]["media_type"] == "image/jpeg"  # prepare_image re-encodes
+    assert "brown spots" in blocks[1]["text"]
+    assert "every 35-35 days" in blocks[1]["text"], "care schedules ground the diagnosis"
+
+
+@pytest.mark.asyncio
+async def test_anthropic_identify_matches_catalog(monkeypatch, sunflower):
+    other = Species(
+        id=2, common_name="Snake Plant", scientific_name="Dracaena trifasciata",
+        light_need=LightNeed.low, humidity_pct_min=30, humidity_pct_max=50,
+        temp_f_min=60, temp_f_max=85, soil_type="sandy",
+    )
+    seen: dict = {}
+    _install_anthropic(
+        monkeypatch, _FakeMessage("Sunflower\nOBSERVED: broad leaves, tall stem"), seen
+    )
+
+    result = await vision.identify_species(b"bytes", [sunflower, other])
+
+    assert result["backend"] == "anthropic"
+    assert result["candidate_ids"] == [1]
+    # Every catalog species is offered as a candidate -- the design that makes
+    # a 129-species catalog work without a retrieval index.
+    prompt = seen["messages"][0]["content"][1]["text"]
+    assert "Sunflower" in prompt and "Snake Plant" in prompt
+
+
+@pytest.mark.asyncio
+async def test_anthropic_without_key_raises_user_safe_error(monkeypatch, sunflower, plant, schedules):
+    monkeypatch.setenv("VISION_BACKEND", "anthropic")
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+
+    with pytest.raises(vision.VisionUnavailable) as exc:
+        await vision.diagnose_photo(sunflower, plant, schedules, b"bytes")
+    for jargon in ("ANTHROPIC_API_KEY", "api key", "backend", "anthropic"):
+        assert jargon.lower() not in str(exc.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_anthropic_refusal_raises_user_safe_error(monkeypatch, sunflower, plant, schedules):
+    """A safety decline returns HTTP 200 with empty content, not an exception."""
+    _install_anthropic(monkeypatch, _FakeMessage("", stop_reason="refusal"))
+
+    with pytest.raises(vision.VisionUnavailable):
+        await vision.diagnose_photo(sunflower, plant, schedules, b"bytes")
+
+
+@pytest.mark.asyncio
+async def test_anthropic_status_reports_key_presence(monkeypatch):
+    monkeypatch.setenv("VISION_BACKEND", "anthropic")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-test")
+    ready = await vision.vision_status()
+    assert ready["ready"] is True
+    assert ready["model"] == vision.DEFAULT_ANTHROPIC_VISION_MODEL
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    missing = await vision.vision_status()
+    assert missing["ready"] is False
+    assert "sk-ant" not in str(missing), "status must never echo a key"
+
+
+def test_media_type_sniffing():
+    """prepare_image falls back to original bytes when Pillow can't decode, so
+    the media type has to be sniffed rather than assumed to be JPEG."""
+    assert vision._media_type(_png_bytes(10, 10)) == "image/png"
+    assert vision._media_type(b"\xff\xd8\xff\xe0 jpeg-ish") == "image/jpeg"
+    assert vision._media_type(b"RIFF\x00\x00\x00\x00WEBPVP8 ") == "image/webp"
