@@ -117,6 +117,16 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
+On the Windows dev box the venv is `.venv-win` (Windows layout — `Scripts`,
+not `bin`), so the interpreter is addressed directly:
+
+```bash
+.venv-win/Scripts/python.exe -m pytest
+```
+
+`pytest.ini` pins `testpaths = tests`, so anything added outside `tests/`
+is not collected.
+
 ## Seed the care database
 
 ```bash
