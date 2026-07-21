@@ -21,40 +21,64 @@ testing in Expo Go proves nothing about this code. You need a *development*
 build, which compiles the native module into a real app you install on a real
 phone.
 
-### 1a. Install the CLI and sign in
+All commands below are **PowerShell**, run from
+`C:\Users\14439\Garden-Gnome\mobile`.
 
-```bash
-cd C:\Users\14439\Garden-Gnome\mobile
-npx eas-cli@latest login
+> PowerShell 5.1 has no `&&`. Chain with `;` if you want commands on one line.
+
+### 1a. Already done — no action needed
+
+Checked on 2026-07-21:
+
+- `eas-cli` is installed globally (v20.5.1) — no `npx` needed, just `eas`.
+- You are already signed in as **allisonbowman** (`bowman0509@gmail.com`),
+  which matches `owner` in `app.json`. **No login step.**
+- Two iPhones are already registered to Apple team `FK6E9XBY6Y`
+  ("I 13" and "Allison's iPhone"). **No `device:create` step.**
+
+Your Apple Team ID is **`FK6E9XBY6Y`**. Some `eas` commands can't pick a team
+on their own and need `--apple-team-id FK6E9XBY6Y` appended.
+
+To re-check any of that:
+
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\mobile
+eas whoami
+eas device:list --apple-team-id FK6E9XBY6Y
 ```
 
-Use your Expo account (`owner` is set to `allisonbowman` in `app.json`).
+### 1b. Confirm the build profile (optional, ~20 seconds)
 
-### 1b. Register your iPhone
+Already verified, but it's the cheapest way to catch a config mistake before a
+30-minute build:
 
-The `development` profile uses `distribution: "internal"`, which means the
-build is signed for specific registered devices. Your phone has to be on the
-list or the app will refuse to install.
-
-```bash
-npx eas-cli@latest device:create
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\mobile
+eas config --platform ios --profile development --non-interactive
 ```
 
-Pick "Website" when asked — it generates a link/QR you open **on the iPhone**,
-which installs a small profile that registers the device UDID. You only ever
-do this once per device.
+Look for `"image": "macos-tahoe-26.5-xcode-26.6"`, `"developmentClient": true`,
+and `"distribution": "internal"`.
 
 ### 1c. Build
 
-```bash
-npx eas-cli@latest build --profile development --platform ios
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\mobile
+eas build --profile development --platform ios
 ```
 
-This runs on Expo's macOS machines (~15–30 min). I already pinned the build
-image to `macos-tahoe-26.5-xcode-26.6` in `mobile/eas.json`, because the
-module needs the **Xcode 26 SDK** for Apple's Foundation Models framework.
-Without that pin the build would use a default image and could fail, or worse,
-quietly produce a build with the feature stripped out.
+Run this in your own terminal — it may prompt about credentials, and answering
+"yes, let EAS handle it" is correct.
+
+This runs on Expo's macOS machines (~15–30 min). The build image is pinned to
+`macos-tahoe-26.5-xcode-26.6` in `mobile/eas.json`, because the module needs
+the **Xcode 26 SDK** for Apple's Foundation Models framework. Without that pin
+the build would use a default image and could fail — or worse, quietly produce
+a build with the feature stripped out.
+
+**Optional:** `eas-cli` 21.0.2 is available (you have 20.5.1). Not required —
+20.5.1 accepted the pinned image fine. If you want it:
+`npm install -g eas-cli`
 
 ### 1d. Read the result carefully
 
@@ -81,7 +105,13 @@ On-device identification runs on **Apple Intelligence**, which requires an
 **iPhone 15 Pro / 15 Pro Max or newer, on iOS 26**. Base iPhone 15, iPhone 14,
 and older cannot run it — no exceptions, it's a hardware limit.
 
-**Check your phone: Settings → General → About → Model Name, and iOS version.**
+**Check the phone you'll install on: Settings → General → About → Model Name,
+plus the iOS version.**
+
+Of your two registered devices, the one named "I 13" is almost certainly an
+iPhone 13, which **cannot** run Apple Intelligence — install on that one and
+you are testing path 2c. I can't tell what "Allison's iPhone" is from its UDID,
+so check it in Settings rather than assuming.
 
 - **If your phone qualifies** → do 2b.
 - **If it doesn't** → do 2c instead. That is still a real, necessary test, not
@@ -181,23 +211,34 @@ Depending on how Step 1 goes:
 
 ---
 
-## Reference — commands on the dev machine
+## Reference — PowerShell commands on the dev machine
 
-For when you want to check the state of things yourself:
+Backend tests (expect `89 passed`):
 
-```bash
-# backend tests (expect 89 passed)
-cd C:\Users\14439\Garden-Gnome\garden-gnome
-.venv-win/Scripts/python.exe -m pytest
-
-# mobile typecheck (expect no output, exit 0)
-cd C:\Users\14439\Garden-Gnome\mobile
-npm run typecheck
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\garden-gnome
+.\.venv-win\Scripts\python.exe -m pytest
 ```
 
-If pytest fails with `No module named 'PIL'`, your venv is behind the
-requirements file:
+Mobile typecheck (expect no output; `$LASTEXITCODE` is 0):
 
-```bash
-.venv-win/Scripts/python.exe -m pip install -r requirements-dev.txt
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\mobile
+npm run typecheck
+$LASTEXITCODE
+```
+
+If pytest fails with `No module named 'PIL'`, the venv is behind
+`requirements.txt`:
+
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\garden-gnome
+.\.venv-win\Scripts\python.exe -m pip install -r requirements-dev.txt
+```
+
+Check build status / grab a log URL after a build:
+
+```powershell
+Set-Location C:\Users\14439\Garden-Gnome\mobile
+eas build:list --platform ios --limit 5
 ```
