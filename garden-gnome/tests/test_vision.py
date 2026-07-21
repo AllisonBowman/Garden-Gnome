@@ -70,7 +70,19 @@ def schedules() -> list[CareSchedule]:
 async def test_stub_diagnose_is_default(sunflower, plant, schedules):
     result = await vision.diagnose_photo(sunflower, plant, schedules, b"12345")
     assert result["backend"] == "stub"
-    assert "not analyzed" in result["diagnosis"]
+    assert plant.nickname in result["diagnosis"]
+
+
+@pytest.mark.asyncio
+async def test_stub_diagnose_leaks_no_developer_text(sunflower, plant, schedules):
+    """Regression for docs/screenshots/2026-07-20-photo-diagnosis-stub.png,
+    where a build showed a user `[STUB] ... Set VISION_BACKEND=ollama and pull
+    a vision model (`ollama pull moondream`)`. Setup instructions belong in
+    the server log, never in a consumer-facing string."""
+    result = await vision.diagnose_photo(sunflower, plant, schedules, b"12345")
+    text = result["diagnosis"].lower()
+    for leak in ("[stub]", "vision_backend", "ollama", "backend", "pull", "configured"):
+        assert leak not in text, f"developer text {leak!r} reached the user"
 
 
 # --- diagnose: ollama -----------------------------------------------------
@@ -301,3 +313,71 @@ def test_ai_status_endpoint():
     assert body["advisor_backend"] == "stub"
     assert body["vision"]["backend"] == "stub"
     assert body["vision"]["ready"] is False
+
+
+# --- stub diagnosis must not reach the plant's timeline -------------------
+
+def test_stub_diagnosis_files_no_care_log(migrated_db_url):
+    """Phase 0 accept criterion: a stub diagnosis run leaves no CareLog behind.
+
+    Before this fix the route auto-logged `Photo diagnosis: {text}` for every
+    backend, so the `[STUB] ... Set VISION_BACKEND=ollama` string was filed to
+    the plant's permanent timeline (visible in
+    docs/screenshots/2026-07-20-gnome-voice-letter.png) and then fed back to
+    the advisor as if the owner had written it.
+    """
+    from fastapi.testclient import TestClient
+    from sqlmodel import Session, create_engine, select
+
+    from app.db.database import get_session
+    from app.main import app
+    from app.models.models import CareLog, Environment, EnvironmentType, User
+    from app.services import tokens
+
+    engine = create_engine(migrated_db_url, connect_args={"check_same_thread": False})
+
+    def override():
+        with Session(engine) as s:
+            yield s
+
+    app.dependency_overrides[get_session] = override
+    try:
+        with Session(engine) as s:
+            species = s.exec(select(Species)).first()
+            if species is None:
+                species = Species(
+                    common_name="Log Fern", scientific_name="Logus testus",
+                    light_need="medium", humidity_pct_min=40, humidity_pct_max=60,
+                    temp_f_min=60, temp_f_max=80, soil_type="mix",
+                )
+                s.add(species)
+                s.flush()
+            user = User(email="stub-log@example.com")
+            s.add(user)
+            s.flush()
+            env = Environment(name="home", type=EnvironmentType.home, user_id=user.id)
+            s.add(env)
+            s.flush()
+            plant = Plant(
+                nickname="Stub Subject", species_id=species.id,
+                environment_id=env.id, user_id=user.id,
+            )
+            s.add(plant)
+            s.commit()
+            plant_id, user_id = plant.id, user.id
+
+        headers = {"Authorization": f"Bearer {tokens.issue_access_token(user_id)}"}
+        resp = TestClient(app).post(
+            f"/plants/{plant_id}/diagnose-photo",
+            files={"photo": ("p.png", _png_bytes(40, 40), "image/png")},
+            headers=headers,
+        )
+        assert resp.status_code == 200
+        assert resp.json()["backend"] == "stub"
+
+        with Session(engine) as s:
+            logs = s.exec(select(CareLog).where(CareLog.plant_id == plant_id)).all()
+        assert logs == [], f"stub diagnosis filed {len(logs)} care log(s)"
+    finally:
+        app.dependency_overrides.clear()
+        engine.dispose()

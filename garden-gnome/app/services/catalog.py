@@ -10,10 +10,15 @@ Uses the same ADVISOR_BACKEND / OLLAMA_HOST / OLLAMA_MODEL settings as
 advisor.py, so no extra configuration is needed if text advice is already
 working."""
 import json
+import logging
 import os
 import re
 
 import httpx
+
+from app.services.advisor import AdvisorUnavailable, UNAVAILABLE_MESSAGE
+
+logger = logging.getLogger("plantadvocate.catalog")
 
 BACKEND = os.getenv("ADVISOR_BACKEND", "stub")
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
@@ -106,7 +111,8 @@ def _wrap_for_api(species_dict: dict) -> dict:
     }
     missing = required - species_dict.keys()
     if missing:
-        raise RuntimeError(f"LLM response missing fields: {sorted(missing)}")
+        logger.error("Model profile response missing fields: %s", sorted(missing))
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE)
     return species_dict
 
 
@@ -127,7 +133,8 @@ def generate_species_profile(name: str) -> dict:
     if BACKEND == "anthropic":
         return _generate_anthropic(name)
 
-    raise RuntimeError(f"Unknown ADVISOR_BACKEND: {BACKEND!r}")
+    logger.error("Unknown ADVISOR_BACKEND: %r", BACKEND)
+    raise AdvisorUnavailable(UNAVAILABLE_MESSAGE)
 
 
 def _generate_ollama(name: str) -> dict:
@@ -145,16 +152,22 @@ def _generate_ollama(name: str) -> dict:
         text = resp.json()["message"]["content"]
         return _wrap_for_api(_extract_json(text))
     except (httpx.RequestError, httpx.HTTPStatusError) as exc:
-        raise RuntimeError(f"Ollama request failed: {exc}") from exc
+        logger.error(
+            "Ollama profile request failed: %s. Is `ollama serve` running at %s "
+            "and has '%s' been pulled?", exc, OLLAMA_HOST, OLLAMA_MODEL,
+        )
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from exc
     except (json.JSONDecodeError, KeyError) as exc:
-        raise RuntimeError(f"Could not parse LLM JSON response: {exc}") from exc
+        logger.error("Could not parse model JSON profile response: %s", exc)
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from exc
 
 
 def _generate_anthropic(name: str) -> dict:
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     model = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
     if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY not set in .env")
+        logger.error("ANTHROPIC_API_KEY not set in .env")
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE)
     try:
         import anthropic
         client = anthropic.Anthropic(api_key=api_key)
@@ -165,5 +178,8 @@ def _generate_anthropic(name: str) -> dict:
         )
         text = msg.content[0].text
         return _wrap_for_api(_extract_json(text))
+    except AdvisorUnavailable:
+        raise  # already logged and already user-safe
     except Exception as exc:
-        raise RuntimeError(f"Anthropic request failed: {exc}") from exc
+        logger.error("Anthropic profile request failed: %s", exc)
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from exc

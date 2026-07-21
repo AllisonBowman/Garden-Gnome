@@ -16,10 +16,32 @@ Backend is chosen by the ADVISOR_BACKEND environment variable:
 """
 from __future__ import annotations
 
+import logging
 import os
 from datetime import datetime, timezone
 
 from app.models.models import Species, Plant, CareLog, CareSchedule, CareType
+
+logger = logging.getLogger("plantadvocate.advisor")
+
+# The one user-facing failure message, mirroring vision.UNAVAILABLE_MESSAGE.
+# Deliberately free of setup instructions, env var names, and tool names --
+# those go to the log.
+UNAVAILABLE_MESSAGE = (
+    "The Gnome couldn't put together advice just now — the care engine didn't "
+    "respond. Please try again in a few minutes."
+)
+
+# Prefix the diagnose route uses when it files a photo diagnosis to a plant's
+# timeline. _build_prompt recognizes it so model output never re-enters a
+# prompt disguised as owner-recorded history.
+PHOTO_DIAGNOSIS_PREFIX = "Photo diagnosis: "
+
+
+class AdvisorUnavailable(RuntimeError):
+    """The configured advisor backend cannot serve requests right now.
+
+    str(exc) is user-presentable; the technical cause is already logged."""
 
 
 BACKEND = os.getenv("ADVISOR_BACKEND", "stub").lower()
@@ -109,7 +131,15 @@ def _build_prompt(
         for log in recent_logs:
             d = _days_since(log.logged_at)
             ago = f"{d} days ago" if d is not None else "date unknown"
-            note = f" ({log.notes})" if log.notes else ""
+            raw_note = log.notes or ""
+            if raw_note.startswith(PHOTO_DIAGNOSIS_PREFIX):
+                # A filed photo diagnosis is model output. Inlining it verbatim
+                # would feed the model its own words back as owner-recorded
+                # history, compounding any earlier drift. Record that a
+                # check-up happened; drop what it said.
+                lines.append(f"- photo check-up filed, {ago}")
+                continue
+            note = f" ({raw_note})" if raw_note else ""
             lines.append(f"- {log.action.value}, {ago}{note}")
         history = "\nRECENT CARE HISTORY (newest first):\n" + "\n".join(lines) + "\n"
     else:
@@ -192,10 +222,11 @@ def _advise_stub(
         lines.append(f"⚠️ {species.common_name} is toxic to pets.")
 
     if symptoms.strip():
+        # "AI advisor" violates the handoff rebrand rule ("care engine", never
+        # "AI", and the gnome is the voice the caretaker hears).
         lines.append(
-            f"🔍 You reported: “{symptoms.strip()}”. Symptom diagnosis needs "
-            f"the AI advisor, which isn't enabled yet — these schedule-based "
-            f"tips are the best I can do for now."
+            f"🔍 You noted: “{symptoms.strip()}”. The Gnome can't read symptoms "
+            f"yet — these schedule-based tips are the best he can offer for now."
         )
 
     return "\n".join(lines)
@@ -228,10 +259,15 @@ def _advise_ollama(
         data = resp.json()
         return data["message"]["content"].strip()
     except httpx.HTTPError as e:
-        raise RuntimeError(
-            f"Ollama request failed ({e}). Is `ollama serve` running and has "
-            f"'{OLLAMA_MODEL}' been pulled?"
-        ) from e
+        logger.error(
+            "Ollama advice failed: %s: %s. Is `ollama serve` running at %s and "
+            "has '%s' been pulled?",
+            type(e).__name__, e, OLLAMA_HOST, OLLAMA_MODEL,
+        )
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from e
+    except (KeyError, TypeError, ValueError) as e:
+        logger.error("Ollama advice returned an unexpected payload: %s", e)
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from e
 
 
 def _advise_anthropic(
@@ -253,15 +289,17 @@ def _advise_anthropic(
             messages=[{"role": "user", "content": prompt}],
         )
     except anthropic.APIError as e:
-        raise RuntimeError(
-            f"Anthropic request failed ({e}). Check ANTHROPIC_API_KEY in .env."
-        ) from e
+        logger.error("Anthropic advice failed: %s", e)
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from e
     except Exception as e:  # missing key raises at client construction
-        raise RuntimeError(
-            f"Anthropic client error ({e}). Is ANTHROPIC_API_KEY set in .env?"
-        ) from e
+        logger.error(
+            "Anthropic client error (%s). Is ANTHROPIC_API_KEY set in .env?", e
+        )
+        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from e
     usage = message.usage
-    print(f"[advisor] anthropic tokens in={usage.input_tokens} out={usage.output_tokens}")
+    logger.info(
+        "Anthropic advice tokens in=%d out=%d", usage.input_tokens, usage.output_tokens
+    )
     return "".join(block.text for block in message.content if block.type == "text").strip()
 
 

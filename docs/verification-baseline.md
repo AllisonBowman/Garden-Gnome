@@ -35,6 +35,8 @@ cd garden-gnome
 
 71 pre-existing tests + 16 in `tests/test_vision.py`.
 
+**Now 89** — alignment-plan Phase 0 added two regression tests (see below).
+
 **First run failed: `2 failed, 85 passed`** — `ModuleNotFoundError: No module
 named 'PIL'` in `test_prepare_image_downscales_and_reencodes` and
 `test_diagnose_sends_downscaled_photo`. Not a code defect: commit `a99b1fb`
@@ -77,11 +79,54 @@ the merged tree. They were shipped unverified, but they were not broken.
 
   Remaining step is Allison's: `eas build --profile development --platform ios`,
   install on device, confirm `isAvailable()`.
-- Two committed screenshots (`docs/screenshots/2026-07-20-*.png`) document
-  user-facing defects in a shipped build: `[STUB] … Set VISION_BACKEND=ollama`
-  rendered to a user, and a gnome note claiming *"I've watered your Front Yard
-  Sunflower"* signed *"Love, [Your Name]"*. Fixes are
-  `plantadvocate-alignment-plan.md` Phase 0/1 — not addressed here.
+- The gnome-voice drift in `docs/screenshots/2026-07-20-gnome-voice-letter.png`
+  ("I've watered…", "Love, [Your Name]", "thirty-five days") is **not** fixed.
+  That is alignment-plan Phases 1–2 (persona contract + drift guard v2).
+
+## Alignment plan Phase 0 — done 2026-07-21
+
+"Stop shipping developer text." All four items complete; suite 89 passed,
+typecheck exit 0.
+
+1. `vision._diagnose_stub` rewritten in the `_identify_stub` voice. Byte count,
+   `VISION_BACKEND`, and `ollama pull` moved to `logger.info`.
+2. `AdvisorUnavailable` added (mirrors `VisionUnavailable`): `_advise_ollama`,
+   `_advise_anthropic`, and every `catalog.generate_species_profile` failure
+   path now raise a user-safe message and log the cause. The stray
+   `print("[advisor] anthropic tokens…")` became `logger.info`.
+3. Stub diagnoses no longer auto-file a `CareLog`, and `advisor._build_prompt`
+   summarizes any note starting with `PHOTO_DIAGNOSIS_PREFIX` to
+   "photo check-up filed, N days ago" instead of inlining it — model output
+   can no longer re-enter a prompt as owner-recorded history.
+4. Mobile "Check the backend connection" alerts replaced with caretaker copy
+   via the new `serverMessage()` helper (`mobile/src/api/errorMessage.ts`),
+   which surfaces the server's 503 `detail` when present and falls back
+   otherwise.
+
+Also fixed in passing: `_advise_stub` said "Symptom diagnosis needs the AI
+advisor", violating the handoff's "care engine, never AI" rebrand rule.
+
+### Accept-when results
+
+```bash
+grep -rniE "\[stub\]|VISION_BACKEND|ADVISOR_BACKEND|ANTHROPIC_API_KEY|ollama|api key" mobile/src/
+# no matches
+
+grep -rnE "\[STUB\]" garden-gnome/app/
+# no matches
+```
+
+Two regression tests lock it in — `test_stub_diagnose_leaks_no_developer_text`
+(asserts the six leak strings are absent from the returned diagnosis) and
+`test_stub_diagnosis_files_no_care_log` (drives the real route and asserts the
+plant's timeline stays empty).
+
+**Known, deliberate exception:** `vision_status()` detail strings
+("Ollama is not reachable", "Model 'x' is not pulled") do name the tool. They
+are served only by `GET /ai/status`, which is an operator/ops endpoint that
+the mobile app never calls — its docstring commits to "operator-facing but
+contains no hosts or secrets." If the app ever probes `/ai/status` to gate its
+photo UI, that copy must not be shown to a caretaker verbatim.
 
 ## How to re-run
 

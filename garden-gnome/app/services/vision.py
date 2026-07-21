@@ -224,11 +224,21 @@ async def _diagnose_stub(
     image_bytes: bytes,
     user_notes: str,
 ) -> str:
+    # Same voice as _identify_stub: what happened, what the caretaker can do
+    # instead. How an operator would switch this on is log-only -- setup
+    # instructions in a consumer app read as a broken app, and App Review
+    # treats them as unfinished software.
+    logger.info(
+        "Stub diagnosis for plant %r: no vision backend configured "
+        "(%d byte photo received, not analyzed). Set VISION_BACKEND=ollama "
+        "and `ollama pull %s` to enable.",
+        plant.nickname, len(image_bytes), _model(),
+    )
     return (
-        f"[STUB] {plant.nickname} ({species.common_name}): No vision backend "
-        f"configured ({len(image_bytes)} byte photo received but not analyzed). "
-        f"Set VISION_BACKEND=ollama and pull a vision model "
-        f"(`ollama pull {_model()}`) to enable photo diagnosis."
+        f"📷 Photo received! The Gnome's photo check-ups aren't switched on "
+        f"yet, so there's no reading to share for {plant.nickname} this time. "
+        f"Jot down what you're seeing in the care log — that history is what "
+        f"the Gnome reads next time."
     )
 
 

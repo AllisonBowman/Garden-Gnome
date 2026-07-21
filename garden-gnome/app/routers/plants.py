@@ -15,7 +15,7 @@ from app.models.schemas import (
     AdviceRequest, CareLogCreate, PlantCreate, PlantRead, PlantTransferRequest,
     StewardshipRecordRead, TimelineEntry, CareTypeSummary, PlantTimelineSummary,
 )
-from app.services.advisor import get_care_advice
+from app.services.advisor import PHOTO_DIAGNOSIS_PREFIX, get_care_advice
 from app.services.vision import diagnose_photo
 
 router = APIRouter(prefix="/plants", tags=["plants"])
@@ -428,12 +428,17 @@ async def diagnose_plant_photo(
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
 
-    session.add(CareLog(
-        plant_id=plant_id,
-        action=CareType.other,
-        notes=f"Photo diagnosis: {result['diagnosis']}",
-    ))
-    session.commit()
+    # Only file a real reading to the plant's permanent timeline. The stub
+    # produces a "not switched on yet" message, and filing that would put a
+    # non-event in the care history the caretaker reads -- and, before the
+    # _build_prompt fix, feed it back to the advisor as owner-recorded history.
+    if result["backend"] != "stub":
+        session.add(CareLog(
+            plant_id=plant_id,
+            action=CareType.other,
+            notes=f"{PHOTO_DIAGNOSIS_PREFIX}{result['diagnosis']}",
+        ))
+        session.commit()
 
     return {
         "plant_id": plant_id,
