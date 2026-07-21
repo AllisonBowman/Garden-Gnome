@@ -19,6 +19,9 @@ export interface IdentifyResponse {
   backend: string;
   observation: string;
   candidates: IdentifyCandidate[];
+  /** Raw on-device model text, present only in dev/preview builds so the
+   * device test can transcribe it (see evals/replay_device.py). */
+  debugRawText?: string;
 }
 
 const PROMPT =
@@ -28,6 +31,15 @@ function backendLabel(): string {
   return Platform.OS === 'ios' ? 'apple-foundation-models'
     : Platform.OS === 'android' ? 'gemini-nano'
     : 'unavailable';
+}
+
+// Same gate as the Settings backend-override card: on in dev and in the
+// dev/preview EAS profiles, never in production.
+const SHOW_DEBUG =
+  __DEV__ || process.env.EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE === '1';
+
+function withDebug(response: IdentifyResponse, aiText: string): IdentifyResponse {
+  return SHOW_DEBUG ? { ...response, debugRawText: aiText.trim() } : response;
 }
 
 export type PhotoAsset = { uri: string; mimeType?: string; fileName?: string | null };
@@ -82,29 +94,29 @@ export async function identifySpeciesPhoto(
   });
 
   if (tier === 'confident') {
-    return {
+    return withDebug({
       backend,
       observation: 'Identified on-device — tap to confirm, or pick another below.',
       candidates: candidates.map(toCandidate),
-    };
+    }, aiText);
   }
   if (tier === 'plausible') {
-    return {
+    return withDebug({
       backend,
       observation: 'Best guesses from the photo — tap one, or search below.',
       candidates: candidates.map(toCandidate),
-    };
+    }, aiText);
   }
 
   // 4. No confident catalog match: surface the model's guess but flag that we
   //    have no curated care data for it, and hand off to manual search.
-  return {
+  return withDebug({
     backend,
     observation:
       `The photo looks like “${aiText.trim()}”, but that isn't in our care ` +
       `database yet — search below to pick the closest match.`,
     candidates: [],
-  };
+  }, aiText);
 }
 
 /** Whether the "Identify from a photo" button should be offered at all. */

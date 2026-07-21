@@ -156,6 +156,11 @@ export default function AddPlantScreen() {
                 {identifyResult.observation}
               </Text>
             )}
+            {identifyResult.debugRawText != null && (
+              <Text variant="bodySmall" style={styles.debugRawText}>
+                raw: {identifyResult.debugRawText}
+              </Text>
+            )}
             <ReportResult
               surfaceLabel="identification"
               result={[
@@ -274,6 +279,7 @@ const styles = StyleSheet.create({
   },
   identifyLabel: { color: '#52796F', marginBottom: 8, fontWeight: '600' },
   identifyObservation: { color: '#2F3E36', lineHeight: 19 },
+  debugRawText: { fontFamily: 'monospace', fontSize: 11, color: '#6B7A70', marginTop: 4 },
   envGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   envBtn: { marginBottom: 4 },
   segmented: { marginBottom: 8 },
