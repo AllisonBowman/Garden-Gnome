@@ -276,7 +276,7 @@ export default function PlantDetailScreen() {
           </View>
           {diagnoseMutation.isPending && (
             <Text style={styles.diagnosisPending}>
-              Examining the specimen… local vision models take a moment.
+              Examining the specimen… this can take a moment.
             </Text>
           )}
           {diagnosis && (

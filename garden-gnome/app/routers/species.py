@@ -95,7 +95,7 @@ def generate_species(
     Returns a SpeciesCreate-compatible dict for review. Nothing is saved —
     POST the returned `draft` to POST /species/ after verifying the data.
 
-    Requires ADVISOR_BACKEND=ollama or anthropic. The stub backend returns
+    Requires ADVISOR_BACKEND=anthropic. The stub backend returns
     a placeholder template for manual filling."""
     from app.services.catalog import generate_species_profile
     try:
@@ -120,7 +120,7 @@ async def identify_species_photo(
 
     Returns candidate species (most likely first) matched against the curated
     catalog, plus the model's observation text. Backend is selected by
-    VISION_BACKEND (stub/ollama), same as photo diagnosis. The stub backend
+    VISION_BACKEND (stub only — no hosted backend), same as photo diagnosis. The stub backend
     returns no candidates and a note explaining how to enable identification."""
     from app.services.vision import identify_species
 

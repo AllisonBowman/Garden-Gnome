@@ -396,10 +396,9 @@ async def diagnose_plant_photo(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    """Photo-based diagnosis (Phase 3). Uses a local, permissively-licensed
-    vision model via Ollama (default: moondream, Apache 2.0) -- self-hosted,
-    so there's no per-call API cost and no licensing fee at any commercial
-    scale. Backend is selected by the VISION_BACKEND env var (stub/ollama).
+    """Photo-based diagnosis (Phase 3). No hosted vision backend is
+    configured (VISION_BACKEND knows only `stub`), so this answers with a
+    friendly not-enabled message until a backend direction is chosen.
     The diagnosis is auto-logged to the plant's timeline."""
     plant = _owned_plant(plant_id, user, session)
 

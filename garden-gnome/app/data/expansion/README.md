@@ -32,7 +32,7 @@ python -m app.data.expansion.fetch_targets --from-perenual --count 1900
 python -m app.data.expansion.run_expansion --dry-run --limit 50
 
 # 3. Real run. Tier 1: Perenual; tier 2: LLM fallback for misses
-#    (fallback needs ADVISOR_BACKEND=anthropic|ollama, else misses are
+#    (fallback needs ADVISOR_BACKEND=anthropic, else misses are
 #    reported and skipped); tier 3: validation on everything.
 python -m app.data.expansion.run_expansion
 
