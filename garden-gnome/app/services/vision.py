@@ -46,6 +46,7 @@ import os
 import httpx
 
 from app.models.models import Species, Plant, CareSchedule
+from app.services.name_match import classify_matches, match_species
 
 logger = logging.getLogger("plantadvocate.vision")
 
@@ -385,14 +386,14 @@ async def _diagnose_anthropic(
 
 
 IDENTIFY_INSTRUCTION = (
-    "You are a houseplant identification assistant. You are given a photo of "
-    "a plant and a list of candidate species. Name the most likely species "
-    "from the candidate list. Respond with up to three candidates, one per "
-    "line, exactly as they appear in the list (common name), most likely "
-    "first. If the plant matches none of the candidates, or the photo is "
-    "unclear, respond with the single word: UNKNOWN. Then, on a new line "
-    "starting with 'OBSERVED:', briefly describe the identifying features "
-    "you can see (leaf shape, pattern, growth habit)."
+    "You are a houseplant identification assistant. Identify the plant in the "
+    "photo. Respond with up to three candidate species, one per line, most "
+    "likely first, each as 'Scientific name (Common name)'. Prefer the "
+    "botanical binomial — it is how the answer is looked up. If you cannot "
+    "identify the plant, or the photo is too unclear to judge, respond with "
+    "the single word: UNKNOWN. Then, on a new line starting with 'OBSERVED:', "
+    "briefly describe the identifying features you can see (leaf shape, "
+    "venation, pattern, growth habit)."
 )
 
 
@@ -405,15 +406,16 @@ async def _identify_stub(image_bytes: bytes, catalog: list[Species]) -> tuple[st
     )
 
 
-def _build_identify_prompt(catalog: list[Species]) -> str:
-    """Hand the model every catalog species and let it pick.
+IDENTIFY_PROMPT = "What plant is in this photo?"
 
-    At 129 species the whole list is ~2k tokens, so brute force beats any
-    retrieval scheme -- no index to build, no embedding drift, and the model
-    sees every option. Revisit somewhere north of ~1000 species, where the
-    candidate list starts to dominate the request."""
-    names = "\n".join(f"- {s.common_name} ({s.scientific_name})" for s in catalog)
-    return f"CANDIDATE SPECIES:\n{names}\n\nWhich species is in the photo?"
+
+def _build_identify_prompt(catalog: list[Species]) -> str:
+    """Ask the model to name the plant. The catalog is deliberately NOT sent.
+
+    Listing all ~1940 species costs ~20k tokens (~$0.04) per request and asks
+    the model to scan a long flat list, which is a harder task than naming the
+    plant outright. Grounding happens after the fact, in name_match."""
+    return IDENTIFY_PROMPT
 
 
 def _parse_identify_response(text: str) -> list[str]:
@@ -452,23 +454,46 @@ _IDENTIFY_BACKENDS = {
 async def identify_species(image_bytes: bytes, catalog: list[Species]) -> dict:
     """Identify which catalog species a photo most likely shows.
 
-    Returns {"backend", "observation", "candidate_ids"} where candidate_ids
-    are Species.id values matched against the model's named candidates,
-    most likely first. The stub backend returns no candidates."""
+    Returns {"backend", "observation", "candidate_ids", "tier", "unreviewed"}.
+    candidate_ids are Species.id values, most likely first; the stub backend
+    returns none.
+
+    The model names the plant freely and name_match decides whether that name
+    corresponds to a record we hold -- a weak match yields no candidates rather
+    than a wrong one, so an out-of-catalog plant degrades to manual search."""
     backend = _backend()
     fn = _IDENTIFY_BACKENDS.get(backend, _identify_stub)
     observation, names = await fn(image_bytes, catalog)
 
+    # Score every named candidate against the catalog, keeping the best score
+    # per species and preserving the model's ordering across candidates.
     candidate_ids: list[int] = []
+    tier = "none"
+    unreviewed: list[int] = []
     for name in names:
-        lowered = name.lower()
-        for s in catalog:
-            if s.id in candidate_ids:
+        result = classify_matches(match_species(name, catalog))
+        if result.tier == "none":
+            continue
+        if tier == "none":
+            tier = result.tier
+        for match in result.candidates:
+            sid = match.species.id
+            if sid is None or sid in candidate_ids:
                 continue
-            if s.common_name.lower() in lowered or s.scientific_name.lower() in lowered:
-                candidate_ids.append(s.id)
-                break
-    return {"backend": backend, "observation": observation, "candidate_ids": candidate_ids}
+            candidate_ids.append(sid)
+            if not match.reviewed:
+                unreviewed.append(sid)
+
+    return {
+        "backend": backend,
+        "observation": observation,
+        "candidate_ids": candidate_ids,
+        # "confident" means the top match is strong enough to pre-select.
+        "tier": tier,
+        # Matches whose care data no human has checked yet -- the client should
+        # hedge rather than present these as settled fact.
+        "unreviewed_ids": unreviewed,
+    }
 
 
 _BACKENDS = {

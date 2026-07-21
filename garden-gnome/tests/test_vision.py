@@ -456,17 +456,54 @@ async def test_anthropic_identify_matches_catalog(monkeypatch, sunflower):
     )
     seen: dict = {}
     _install_anthropic(
-        monkeypatch, _FakeMessage("Sunflower\nOBSERVED: broad leaves, tall stem"), seen
+        monkeypatch,
+        _FakeMessage("Helianthus annuus (Sunflower)\nOBSERVED: broad leaves, tall stem"),
+        seen,
     )
 
     result = await vision.identify_species(b"bytes", [sunflower, other])
 
     assert result["backend"] == "anthropic"
     assert result["candidate_ids"] == [1]
-    # Every catalog species is offered as a candidate -- the design that makes
-    # a 129-species catalog work without a retrieval index.
+    assert result["tier"] == "confident"
+
+    # The catalog is deliberately NOT in the prompt. Listing ~1940 species
+    # costs ~20k tokens (~$0.04) per identify; grounding happens afterwards in
+    # name_match instead. Regression guard against reintroducing the list.
     prompt = seen["messages"][0]["content"][1]["text"]
-    assert "Sunflower" in prompt and "Snake Plant" in prompt
+    assert "Snake Plant" not in prompt
+    assert "Dracaena" not in prompt
+    assert len(prompt) < 200, f"identify prompt should stay tiny, got {len(prompt)} chars"
+
+
+@pytest.mark.asyncio
+async def test_identify_out_of_catalog_yields_no_candidates(monkeypatch, sunflower):
+    """A plant we don't stock must degrade to manual search, never to a forced
+    nearest match -- the model naming it correctly is not permission to offer
+    care data we don't have."""
+    _install_anthropic(monkeypatch, _FakeMessage("Ficus lyrata (Fiddle Leaf Fig)"))
+
+    result = await vision.identify_species(b"bytes", [sunflower])
+
+    assert result["candidate_ids"] == []
+    assert result["tier"] == "none"
+
+
+@pytest.mark.asyncio
+async def test_identify_flags_unreviewed_matches(monkeypatch):
+    """87% of the catalog is needs_review; a match against unchecked care data
+    is reported so the client can hedge rather than assert."""
+    unchecked = Species(
+        id=7, common_name="Cape Primrose", scientific_name="Streptocarpus x hybridus",
+        light_need=LightNeed.bright_indirect, humidity_pct_min=40, humidity_pct_max=60,
+        temp_f_min=40, temp_f_max=85, soil_type="mix", review_status="needs_review",
+    )
+    _install_anthropic(monkeypatch, _FakeMessage("Streptocarpus x hybridus"))
+
+    result = await vision.identify_species(b"bytes", [unchecked])
+
+    assert result["candidate_ids"] == [7]
+    assert result["unreviewed_ids"] == [7]
 
 
 @pytest.mark.asyncio
