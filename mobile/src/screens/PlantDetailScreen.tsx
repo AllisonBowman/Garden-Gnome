@@ -16,6 +16,7 @@ import {
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { gnomeVoice } from '../gnomeVoice/restyle';
 import { serverMessage } from '../api/errorMessage';
+import { ensureCameraPermission } from '../photoPermissions';
 import ReportResult from '../components/ReportResult';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
@@ -124,6 +125,9 @@ export default function PlantDetailScreen() {
   });
 
   const pickAndDiagnose = async (useCamera: boolean) => {
+    // launchCameraAsync requires camera permission and does not request it;
+    // without this the button silently does nothing (see photoPermissions.ts).
+    if (useCamera && !(await ensureCameraPermission())) return;
     const res = useCamera
       ? await ImagePicker.launchCameraAsync({ quality: 0.8 })
       : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8 });
