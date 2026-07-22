@@ -45,10 +45,11 @@ pre-iOS-build blockers** — the stub is the experience users will see.
 
 ## Phase 0 — Stop shipping developer text (smallest, do first)
 
-1. **Rewrite the diagnosis stub copy** (`vision._diagnose_stub`) in the
+1. ✅ **Rewrite the diagnosis stub copy** (`vision._diagnose_stub`) in the
    voice of the identify stub: photo received, check-ups aren't enabled yet.
    The `[STUB]` marker and byte count go to a `logger.info` instead. The
-   mobile "diagnosis not enabled yet" chip already covers status.
+   mobile "diagnosis not enabled yet" chip already covers status. *(Done —
+   friendly copy, `[STUB]`/byte count now server-log only.)*
 2. **The advisor backend gets a friendly-failure treatment.**
    `_advise_anthropic` raises RuntimeErrors whose text ("Check
    ANTHROPIC_API_KEY in .env") flows through the router's 503 `detail` to
@@ -65,11 +66,14 @@ pre-iOS-build blockers** — the stub is the experience users will see.
    text, so `[STUB]…` is filed to the plant's permanent timeline (visible in
    the first screenshot's history) **and** fed back into future LLM prompts
    via `recent_logs` in `advisor._build_prompt`. Fix both ends:
-   - only auto-log when `backend != "stub"` and the call succeeded;
+   - ✅ only auto-log when `backend != "stub"` and the call succeeded
+     *(done — router now guards the CareLog on `backend != "stub"`, with a
+     regression test)*;
    - when building advisor prompts, exclude `CareLog` notes that begin with
      `Photo diagnosis:` from verbatim inclusion (summarize to "photo
      check-up filed N days ago") so model output never becomes model input
-     masquerading as owner history.
+     masquerading as owner history. *(Still open — matters once a real
+     vision backend exists.)*
 
 **Accept when:** grep of user-visible strings (mobile + API responses) finds
 no env var names, no `[STUB]`, no model-server or `API key` strings; a stub

@@ -427,12 +427,17 @@ async def diagnose_plant_photo(
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
 
-    session.add(CareLog(
-        plant_id=plant_id,
-        action=CareType.other,
-        notes=f"Photo diagnosis: {result['diagnosis']}",
-    ))
-    session.commit()
+    # Only a real analysis belongs on the permanent timeline. The stub never
+    # examined the photo, so logging its placeholder would both clutter the
+    # plant's history and feed non-diagnosis text back into future advisor
+    # prompts via recent care logs.
+    if result["backend"] != "stub":
+        session.add(CareLog(
+            plant_id=plant_id,
+            action=CareType.other,
+            notes=f"Photo diagnosis: {result['diagnosis']}",
+        ))
+        session.commit()
 
     return {
         "plant_id": plant_id,

@@ -22,9 +22,12 @@ facts -- it does not invent diagnoses unsupported by the image or the data.
 """
 from __future__ import annotations
 
+import logging
 import os
 
 from app.models.models import Species, Plant, CareSchedule
+
+logger = logging.getLogger("plantadvocate.vision")
 
 
 # Config is read at call time, not import time, so tests and long-running
@@ -40,10 +43,17 @@ async def _diagnose_stub(
     image_bytes: bytes,
     user_notes: str,
 ) -> str:
+    # The photo is received but never analyzed while diagnosis is disabled.
+    # Keep the operational detail (that this is the stub, and the byte count)
+    # in the server log; the user only ever sees the friendly note below.
+    logger.info(
+        "stub diagnosis: %d byte photo for plant %s (%s) received, not analyzed",
+        len(image_bytes), plant.nickname, species.common_name,
+    )
     return (
-        f"[STUB] {plant.nickname} ({species.common_name}): No vision backend "
-        f"configured ({len(image_bytes)} byte photo received but not analyzed). "
-        f"Photo diagnosis is not enabled on this server."
+        "📷 Photo received! The Gnome's photo check-ups aren't switched on "
+        "yet, so there's no diagnosis to share this time. Your plant's care "
+        "guide below still has everything for its species and history."
     )
 
 

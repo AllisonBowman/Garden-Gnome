@@ -55,22 +55,24 @@ def schedules() -> list[CareSchedule]:
 async def test_stub_diagnose_is_default(sunflower, plant, schedules):
     result = await vision.diagnose_photo(sunflower, plant, schedules, b"12345")
     assert result["backend"] == "stub"
-    assert "not analyzed" in result["diagnosis"]
+    assert "Photo received" in result["diagnosis"]
 
 
 @pytest.mark.asyncio
 async def test_unknown_backend_falls_back_to_stub(monkeypatch, sunflower, plant, schedules):
     monkeypatch.setenv("VISION_BACKEND", "something-else")
     result = await vision.diagnose_photo(sunflower, plant, schedules, b"bytes")
-    assert "not analyzed" in result["diagnosis"]
+    assert "Photo received" in result["diagnosis"]
 
 
 @pytest.mark.asyncio
-async def test_stub_diagnose_never_mentions_setup_tooling(sunflower, plant, schedules):
-    # Server setup vocabulary must not reach the consumer UI.
+async def test_stub_diagnose_is_consumer_friendly(sunflower, plant, schedules):
+    # No developer marker, no server-setup vocabulary reaches the UI.
     result = await vision.diagnose_photo(sunflower, plant, schedules, b"bytes")
-    for jargon in ("ollama", "VISION_BACKEND", "pull", "env"):
-        assert jargon.lower() not in result["diagnosis"].lower()
+    text = result["diagnosis"]
+    assert "[STUB]" not in text
+    for jargon in ("ollama", "vision_backend", "backend", "pull", "byte", "server"):
+        assert jargon not in text.lower()
 
 
 # --- identify -------------------------------------------------------------
@@ -125,3 +127,73 @@ def test_ai_status_endpoint():
     assert body["advisor_backend"] == "stub"
     assert body["vision"]["backend"] == "stub"
     assert body["vision"]["ready"] is False
+
+
+# --- router: stub diagnosis must not touch the timeline --------------------
+
+@pytest.fixture()
+def api(migrated_db_url):
+    """A signed-in user with one owned plant, hitting the real router."""
+    from fastapi.testclient import TestClient
+    from sqlmodel import Session, create_engine, select
+
+    from app.db.database import get_session
+    from app.main import app
+    from app.models.models import Environment, EnvironmentType, Plant, Species, User
+    from app.services import tokens
+
+    engine = create_engine(migrated_db_url, connect_args={"check_same_thread": False})
+
+    def override():
+        with Session(engine) as s:
+            yield s
+
+    app.dependency_overrides[get_session] = override
+
+    with Session(engine) as s:
+        species = s.exec(select(Species)).first()
+        if species is None:
+            species = Species(
+                common_name="Sunflower", scientific_name="Helianthus annuus",
+                light_need="direct", humidity_pct_min=30, humidity_pct_max=60,
+                temp_f_min=45, temp_f_max=90, soil_type="loamy",
+            )
+            s.add(species)
+            s.flush()
+        user = User(email="diag@example.com")
+        s.add(user)
+        s.flush()
+        env = Environment(name="home", type=EnvironmentType.home, user_id=user.id)
+        s.add(env)
+        s.flush()
+        plant = Plant(nickname="Front yard sunflower", species_id=species.id,
+                      environment_id=env.id, user_id=user.id)
+        s.add(plant)
+        s.commit()
+        plant_id = plant.id
+        headers = {"Authorization": f"Bearer {tokens.issue_access_token(user.id)}"}
+
+    client = TestClient(app)
+    try:
+        yield client, plant_id, headers
+    finally:
+        app.dependency_overrides.clear()
+        engine.dispose()
+
+
+def test_stub_diagnosis_is_not_logged_to_timeline(api):
+    client, plant_id, headers = api
+
+    before = client.get(f"/plants/{plant_id}/logs", headers=headers).json()
+    resp = client.post(
+        f"/plants/{plant_id}/diagnose-photo",
+        headers=headers,
+        files={"photo": ("plant.jpg", b"\xff\xd8\xff\xe0 not-a-real-jpeg", "image/jpeg")},
+    )
+    assert resp.status_code == 200
+    assert resp.json()["backend"] == "stub"
+
+    after = client.get(f"/plants/{plant_id}/logs", headers=headers).json()
+    # The stub never analyzed the photo, so it must add no timeline entry.
+    assert len(after) == len(before)
+    assert not any("Photo diagnosis" in (log.get("notes") or "") for log in after)
