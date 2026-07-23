@@ -48,6 +48,15 @@ class Settings(BaseSettings):
     # --- Google Sign-In (required from Phase 4 onward) ---
     google_client_id: Optional[str] = None
 
+    # --- Apple WeatherKit (weather; reuses apple_team_id) ---
+    # A separate WeatherKit key (.p8) + Key ID from the Apple Developer portal,
+    # plus a WeatherKit-enabled Services ID. Supplied like the sign-in key:
+    # inline PEM (hosted) or a file path (local dev).
+    weatherkit_key_id: Optional[str] = None
+    weatherkit_service_id: Optional[str] = None
+    weatherkit_private_key_path: Optional[str] = None
+    weatherkit_private_key: Optional[str] = None
+
     def apple_private_key_pem(self) -> Optional[str]:
         """Resolve the Apple signing key PEM from the inline env var or the
         file path, or None if neither is configured. `fly secrets set` and
@@ -57,6 +66,17 @@ class Settings(BaseSettings):
             return self.apple_private_key.replace("\\n", "\n")
         if self.apple_private_key_path:
             p = Path(self.apple_private_key_path)
+            if p.exists():
+                return p.read_text()
+        return None
+
+    def weatherkit_private_key_pem(self) -> Optional[str]:
+        """Resolve the WeatherKit signing key PEM (inline env var or file
+        path), normalizing literal backslash-n as `apple_private_key_pem`."""
+        if self.weatherkit_private_key:
+            return self.weatherkit_private_key.replace("\\n", "\n")
+        if self.weatherkit_private_key_path:
+            p = Path(self.weatherkit_private_key_path)
             if p.exists():
                 return p.read_text()
         return None
