@@ -3,12 +3,22 @@ from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
 from app.db.database import get_session
+from app.deps import get_current_user
 from app.models.models import CareSchedule, Species, SpeciesTrait
 from app.models.schemas import (
     SpeciesCreate, SpeciesDetail, SpeciesGenerateRequest,
 )
 
-router = APIRouter(prefix="/species", tags=["species"])
+# Every species route requires a signed-in caller. Reads are only ever hit by
+# the app post-login (it sends a bearer token), and the catalog is populated by
+# direct DB writes (seed.py / the offline expansion pipeline), not HTTP — so the
+# write routes have no anonymous caller to serve. Router-level dependency keeps
+# this uniform: a new endpoint can't accidentally ship unauthenticated.
+router = APIRouter(
+    prefix="/species",
+    tags=["species"],
+    dependencies=[Depends(get_current_user)],
+)
 
 ALLOWED_PHOTO_TYPES = {"image/jpeg", "image/png", "image/webp"}
 MAX_PHOTO_BYTES = 8 * 1024 * 1024  # 8MB
