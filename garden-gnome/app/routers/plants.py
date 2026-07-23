@@ -15,8 +15,9 @@ from app.models.schemas import (
     AdviceRequest, CareLogCreate, PlantCreate, PlantRead, PlantTransferRequest,
     StewardshipRecordRead, TimelineEntry, CareTypeSummary, PlantTimelineSummary,
 )
-from app.services.advisor import PHOTO_DIAGNOSIS_PREFIX, get_care_advice
+from app.services.advisor import PHOTO_DIAGNOSIS_PREFIX, get_care_advice, weather_applies
 from app.services.vision import diagnose_photo
+from app.services.weather import fetch_weather
 
 router = APIRouter(prefix="/plants", tags=["plants"])
 
@@ -346,14 +347,15 @@ def get_plant_timeline_summary(
 
 
 @router.post("/{plant_id}/advice")
-def advise_plant(
+async def advise_plant(
     plant_id: int,
     payload: Optional[AdviceRequest] = None,
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     """Generate care advice for a plant by reasoning over its species care
-    facts, care schedules (ground truth), and recent care history. Optionally
+    facts, care schedules (ground truth), recent care history, and — for plants
+    whose environment is exposed to the weather — the local forecast. Optionally
     accepts free-text `symptoms` in the body for conversational diagnosis."""
     symptoms = payload.symptoms if payload else ""
 
@@ -375,8 +377,21 @@ def advise_plant(
         .where(CareSchedule.species_id == species.id)
     ).all()
 
+    # Weather grounding: only for plants the outside world reaches, only when
+    # the environment has coordinates. Any failure (no key, no coords, fetch
+    # error) leaves weather None and advice degrades to weather-free.
+    environment = (
+        session.get(Environment, plant.environment_id)
+        if plant.environment_id is not None else None
+    )
+    weather = None
+    if weather_applies(environment) and environment.lat is not None and environment.lng is not None:
+        weather = await fetch_weather(environment.lat, environment.lng)
+
     try:
-        result = get_care_advice(species, plant, recent_logs, care_schedules, symptoms)
+        result = get_care_advice(
+            species, plant, recent_logs, care_schedules, symptoms, environment, weather
+        )
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
 

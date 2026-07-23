@@ -19,7 +19,10 @@ import logging
 import os
 from datetime import datetime, timezone
 
-from app.models.models import Species, Plant, CareLog, CareSchedule, CareType
+from app.models.models import (
+    Species, Plant, CareLog, CareSchedule, CareType, Environment,
+    Shelter, TempExposure, SunExposure,
+)
 
 logger = logging.getLogger("plantadvocate.advisor")
 
@@ -60,8 +63,16 @@ SYSTEM_INSTRUCTION = (
     "requirements that are not grounded in the data. If the owner reports "
     "symptoms, diagnose them using only the provided species facts and care "
     "history -- do not guess at causes the data doesn't support. If the data "
-    "is insufficient to answer something, say so plainly. Keep advice "
-    "concise, specific, and friendly."
+    "is insufficient to answer something, say so plainly. "
+    "If a GROW ENVIRONMENT and LOCAL WEATHER are provided, treat the forecast "
+    "as authoritative and translate the OUTSIDE conditions into what the plant "
+    "actually experiences IN HERE, given how sheltered it is and whether it "
+    "feels outdoor air: an exposed, outdoor plant feels the full forecast; a "
+    "partially sheltered one feels a muted version; a fully sheltered indoor "
+    "plant is barely affected. Turn that into concrete timing (e.g. skip a "
+    "watering before heavy rain reaches an unsheltered plant, check sooner in a "
+    "heat spike, protect from a cold snap or scorching UV). "
+    "Keep advice concise, specific, and friendly."
 )
 
 _CARE_TYPE_LABELS = {
@@ -85,12 +96,84 @@ def _days_since(when: datetime | None) -> int | None:
     return (now - when).days
 
 
+def weather_applies(environment: Environment | None) -> bool:
+    """Whether the outside world reaches this plant enough for weather to matter.
+
+    A desk plant in a climate-controlled room (indoor + sheltered) is unaffected
+    by the forecast, so weather grounding and nudges are skipped for it. This is
+    the gate that scopes the feature to "plants outside of shelters." """
+    if environment is None:
+        return False
+    return (
+        environment.temp_exposure == TempExposure.outdoor
+        or environment.shelter in (Shelter.partial, Shelter.exposed)
+    )
+
+
+_SHELTER_DESC = {
+    Shelter.sheltered: "sheltered (roofed/indoors — rain and wind don't reach it)",
+    Shelter.partial: "partial (covered balcony/porch — some rain and wind)",
+    Shelter.exposed: "exposed (open to the sky — full rain and wind)",
+}
+_TEMP_EXPOSURE_DESC = {
+    TempExposure.indoor: "indoor (climate-controlled, stable temperature)",
+    TempExposure.outdoor: "outdoor (feels the outside air temperature)",
+}
+
+
+def _environment_block(environment: Environment) -> str:
+    return (
+        "\nGROW ENVIRONMENT (how much of the weather actually reaches this plant):\n"
+        f"- Name: {environment.name}\n"
+        f"- Shelter: {_SHELTER_DESC.get(environment.shelter, environment.shelter.value)}\n"
+        f"- Temperature exposure: "
+        f"{_TEMP_EXPOSURE_DESC.get(environment.temp_exposure, environment.temp_exposure.value)}\n"
+        f"- Sun exposure: {environment.sun_exposure.value}\n"
+    )
+
+
+def _weather_block(weather: dict) -> str:
+    cur = weather.get("current") or {}
+    parts = []
+    if cur.get("temp_f") is not None:
+        parts.append(f"{cur['temp_f']}°F")
+    if cur.get("humidity_pct") is not None:
+        parts.append(f"humidity {cur['humidity_pct']}%")
+    if cur.get("uv_index") is not None:
+        parts.append(f"UV {cur['uv_index']}")
+    if cur.get("condition"):
+        parts.append(str(cur["condition"]))
+    now_line = ", ".join(parts) if parts else "unavailable"
+
+    lines = [
+        "\nLOCAL WEATHER (Apple Weather — authoritative current conditions and forecast):",
+        f"- Now: {now_line}",
+    ]
+    days = weather.get("daily") or []
+    if days:
+        lines.append("- Forecast:")
+        for d in days:
+            seg = []
+            if d.get("high_f") is not None and d.get("low_f") is not None:
+                seg.append(f"high {d['high_f']}°F / low {d['low_f']}°F")
+            if d.get("precip_chance_pct") is not None:
+                seg.append(f"rain {d['precip_chance_pct']}%")
+            if d.get("uv_max") is not None:
+                seg.append(f"UV up to {d['uv_max']}")
+            if d.get("daylight_hours") is not None:
+                seg.append(f"~{d['daylight_hours']}h daylight")
+            lines.append(f"  - {d.get('date') or '?'}: {', '.join(seg)}")
+    return "\n".join(lines) + "\n"
+
+
 def _build_prompt(
     species: Species,
     plant: Plant,
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
+    environment: Environment | None = None,
+    weather: dict | None = None,
 ) -> str:
     facts = (
         f"SPECIES CARE FACTS (authoritative):\n"
@@ -142,21 +225,34 @@ def _build_prompt(
     else:
         history = "\nRECENT CARE HISTORY: none logged yet.\n"
 
+    # Environment + weather only when the outside world reaches this plant and
+    # we actually have a forecast; a desk plant's prompt is unchanged.
+    if weather is not None and weather_applies(environment):
+        env_weather = _environment_block(environment) + _weather_block(weather)
+        weather_clause = (
+            " Factor in the local weather and how much of it this plant's "
+            "environment actually exposes it to."
+        )
+    else:
+        env_weather = ""
+        weather_clause = ""
+
     if symptoms.strip():
         symptoms_block = f"\nOWNER-REPORTED SYMPTOMS:\n{symptoms.strip()}\n"
         question = (
             "\nDiagnose the reported symptoms using only the facts above and "
             "explain the most likely cause(s) and what to do. Then cover any "
             "other care types that have a schedule and are due, mentioning "
-            "timing specifically."
+            "timing specifically." + weather_clause
         )
     else:
         symptoms_block = ""
         question = (
             "\nGiven only the above, what should the owner do for this plant now? "
-            "Cover each care type that has a schedule, mentioning timing specifically."
+            "Cover each care type that has a schedule, mentioning timing "
+            "specifically." + weather_clause
         )
-    return facts + schedules_block + this_plant + history + symptoms_block + question
+    return facts + schedules_block + this_plant + env_weather + history + symptoms_block + question
 
 
 _CARE_TYPE_EMOJI = {
@@ -171,12 +267,80 @@ _CARE_TYPE_EMOJI = {
 }
 
 
+def _weather_nudges(
+    species: Species,
+    environment: Environment | None,
+    weather: dict | None,
+) -> list[str]:
+    """Deterministic, conservative forecast nudges for plants the weather
+    reaches. One line per applicable signal; each is gated by the physical
+    reality of the environment (rain only matters where the sky reaches, heat
+    and cold only where the plant feels outdoor air, UV only in open sun)."""
+    if environment is None or weather is None:
+        return []
+
+    days = weather.get("daily") or []
+    current = weather.get("current") or {}
+    unsheltered = environment.shelter in (Shelter.partial, Shelter.exposed)
+    outdoor = environment.temp_exposure == TempExposure.outdoor
+    open_sun = unsheltered and environment.sun_exposure != SunExposure.shade
+
+    nudges: list[str] = []
+
+    # Rain reaching an unsheltered plant → let the sky do the watering.
+    if unsheltered:
+        wet = next((d for d in days if (d.get("precip_chance_pct") or 0) >= 60), None)
+        if wet:
+            nudges.append(
+                f"🌧️ Rain likely ({wet['precip_chance_pct']}% on {wet['date']}) — "
+                f"hold off watering; the sky may do it for you."
+            )
+
+    # Heat spike above the species' comfort ceiling for an outdoor plant.
+    if outdoor and species.temp_f_max is not None:
+        hot = next(
+            (d for d in days if d.get("high_f") is not None and d["high_f"] > species.temp_f_max),
+            None,
+        )
+        if hot:
+            nudges.append(
+                f"🔥 Heat ahead (high {hot['high_f']}°F on {hot['date']}, above its "
+                f"{species.temp_f_max}°F comfort ceiling) — check soil sooner and add shade or water."
+            )
+
+    # Cold snap below the comfort floor for an outdoor plant.
+    if outdoor and species.temp_f_min is not None:
+        cold = next(
+            (d for d in days if d.get("low_f") is not None and d["low_f"] < species.temp_f_min),
+            None,
+        )
+        if cold:
+            nudges.append(
+                f"❄️ Cold night ahead (low {cold['low_f']}°F on {cold['date']}, below its "
+                f"{species.temp_f_min}°F comfort floor) — bring it in or shelter it."
+            )
+
+    # Very high UV reaching a plant that's open to the sky and not in shade.
+    if open_sun:
+        uv_vals = [current.get("uv_index")] + [d.get("uv_max") for d in days]
+        peak = max((u for u in uv_vals if isinstance(u, (int, float))), default=None)
+        if peak is not None and peak >= 8:
+            nudges.append(
+                f"☀️ Very high UV (up to {peak}) — even sun-lovers can scorch; "
+                f"a little midday shade helps."
+            )
+
+    return nudges
+
+
 def _advise_stub(
     species: Species,
     plant: Plant,
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
+    environment: Environment | None = None,
+    weather: dict | None = None,
 ) -> str:
     # One line per care type; the client renders each line as its own row.
     lines = []
@@ -215,6 +379,9 @@ def _advise_stub(
     if not lines:
         lines.append("No care schedules defined for this species yet.")
 
+    # Weather-driven nudges for plants the forecast actually reaches.
+    lines.extend(_weather_nudges(species, environment, weather))
+
     if species.toxic_to_pets:
         lines.append(f"⚠️ {species.common_name} is toxic to pets.")
 
@@ -235,10 +402,14 @@ def _advise_anthropic(
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
+    environment: Environment | None = None,
+    weather: dict | None = None,
 ) -> str:
     import anthropic
 
-    prompt = _build_prompt(species, plant, recent_logs, care_schedules, symptoms)
+    prompt = _build_prompt(
+        species, plant, recent_logs, care_schedules, symptoms, environment, weather
+    )
     try:
         client = anthropic.Anthropic()
         message = client.messages.create(
@@ -274,8 +445,10 @@ def get_care_advice(
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
+    environment: Environment | None = None,
+    weather: dict | None = None,
 ) -> dict:
     backend = SYMPTOMS_BACKEND if symptoms.strip() else BACKEND
     fn = _BACKENDS.get(backend, _advise_stub)
-    advice = fn(species, plant, recent_logs, care_schedules, symptoms)
+    advice = fn(species, plant, recent_logs, care_schedules, symptoms, environment, weather)
     return {"backend": backend, "advice": advice}
