@@ -15,6 +15,7 @@ import {
 } from '../photoId/identify';
 import { fetchEnvironments } from '../api/environments';
 import { serverMessage } from '../api/errorMessage';
+import { ensureCameraPermission } from '../photoPermissions';
 import { createPlant } from '../api/plants';
 import ReportResult from '../components/ReportResult';
 import { rescheduleAllReminders } from '../notifications/reminders';
@@ -95,11 +96,17 @@ export default function AddPlantScreen() {
       ),
   });
 
-  const pickAndIdentify = async () => {
-    const res = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      quality: 0.8,
-    });
+  const pickAndIdentify = async (useCamera: boolean) => {
+    // allowsEditing opens the OS crop/zoom step so the user can frame the
+    // plant's distinctive features (a leaf, the flower). On-device ID is far
+    // more accurate on a tight crop than on a wide scene where the plant is
+    // small — this is the whole point of capturing up close.
+    if (useCamera && !(await ensureCameraPermission())) return;
+    const res = useCamera
+      ? await ImagePicker.launchCameraAsync({ quality: 0.8, allowsEditing: true })
+      : await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ['images'], quality: 0.8, allowsEditing: true,
+        });
     if (res.canceled || !res.assets?.length) return;
     identifyMutation.mutate(res.assets[0]);
   };
@@ -133,16 +140,37 @@ export default function AddPlantScreen() {
         <Text variant="titleMedium" style={styles.sectionTitle}>Species *</Text>
 
         {aiIdAvailable && (
-          <Button
-            mode="outlined"
-            icon="camera"
-            onPress={pickAndIdentify}
-            loading={identifyMutation.isPending}
-            disabled={identifyMutation.isPending}
-            style={styles.identifyBtn}
-          >
-            Identify from a photo
-          </Button>
+          <>
+            <View style={styles.identifyBtnRow}>
+              {Platform.OS !== 'web' && (
+                <Button
+                  mode="contained"
+                  icon="camera"
+                  onPress={() => pickAndIdentify(true)}
+                  loading={identifyMutation.isPending}
+                  disabled={identifyMutation.isPending}
+                  style={styles.identifyBtn}
+                >
+                  Take photo
+                </Button>
+              )}
+              <Button
+                mode="outlined"
+                icon="image"
+                onPress={() => pickAndIdentify(false)}
+                loading={identifyMutation.isPending && Platform.OS === 'web'}
+                disabled={identifyMutation.isPending}
+                style={styles.identifyBtn}
+              >
+                Choose photo
+              </Button>
+            </View>
+            <HelperText type="info" style={styles.identifyHint}>
+              Tip: zoom and crop close to a leaf or the flower — identification is
+              much more accurate on the plant's distinctive features than on a
+              wide shot.
+            </HelperText>
+          </>
         )}
 
         {identifyResult && (
@@ -285,7 +313,9 @@ const styles = StyleSheet.create({
   input: { marginBottom: 4 },
   suggestionBox: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   suggestion: { marginBottom: 4 },
-  identifyBtn: { marginBottom: 8, borderStyle: 'dashed' },
+  identifyBtnRow: { flexDirection: 'row', gap: 8 },
+  identifyBtn: { flex: 1 },
+  identifyHint: { marginBottom: 8 },
   identifyBox: {
     backgroundColor: '#EFF6F0',
     borderRadius: 10,
