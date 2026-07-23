@@ -135,7 +135,6 @@ export default function PlantDetailScreen() {
             {species.scientific_name}
           </Text>
         )}
-        <Text variant="bodySmall" style={styles.uuid}>UUID: {plant.plant_uuid}</Text>
       </Surface>
 
       {/* Quick-log care */}
@@ -375,7 +374,6 @@ const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   header: { borderRadius: 12, padding: 16, marginBottom: 12 },
   scientific: { fontStyle: 'italic', color: '#555', marginTop: 2 },
-  uuid: { color: '#aaa', fontFamily: 'monospace', marginTop: 4, fontSize: 11 },
   card: { marginBottom: 12, borderRadius: 12 },
   careGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   careBtn: { marginBottom: 4 },

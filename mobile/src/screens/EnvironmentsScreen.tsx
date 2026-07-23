@@ -27,7 +27,6 @@ function EnvironmentCard({ env }: { env: Environment }) {
           <Text variant="bodySmall" style={styles.meta}>📍 {env.city}{env.region ? `, ${env.region}` : ''}</Text>
         ) : null}
         <Text variant="bodySmall" style={styles.count}>{env.plant_count} plant{env.plant_count !== 1 ? 's' : ''}</Text>
-        <Text variant="bodySmall" style={styles.uuid}>UUID: {env.uuid}</Text>
       </Card.Content>
     </Card>
   );
@@ -124,7 +123,6 @@ const styles = StyleSheet.create({
   card: { marginBottom: 10, borderRadius: 12 },
   meta: { color: '#666', marginTop: 2 },
   count: { color: '#2D6A4F', marginTop: 4, fontWeight: '600' },
-  uuid: { color: '#bbb', fontFamily: 'monospace', fontSize: 10, marginTop: 4 },
   fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: '#2D6A4F' },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   empty: { textAlign: 'center', color: '#888', marginTop: 48 },
