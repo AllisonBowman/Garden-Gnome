@@ -55,9 +55,11 @@ def test_rate_limit_does_not_touch_normal_routes(api):
     limiter.reset()
     limiter.enabled = True
     try:
-        # /species is public and undecorated — hammering it never 429s
+        # The root health route is public and undecorated — hammering it never
+        # 429s (only the auth routes carry a limiter). /species used to serve
+        # this role but now requires auth.
         for _ in range(15):
-            assert api.get("/species/").status_code == 200
+            assert api.get("/").status_code == 200
     finally:
         limiter.enabled = False
         limiter.reset()

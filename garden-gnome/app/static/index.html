@@ -173,7 +173,7 @@
     </div>
     <div class="card">
       <h2>Generate species profile (AI-assisted)</h2>
-      <p class="muted">Enter a plant name and the server's LLM backend generates a care profile draft. Requires <code>ADVISOR_BACKEND=ollama</code> or <code>anthropic</code> — the stub backend returns a blank template to fill manually.</p>
+      <p class="muted">Enter a plant name and the server's LLM backend generates a care profile draft. Requires <code>ADVISOR_BACKEND=anthropic</code> — the stub backend returns a blank template to fill manually.</p>
       <label>Plant name</label>
       <input id="gen-name" placeholder="Boston Fern / Monstera Thai Constellation / Echeveria elegans">
       <button class="action secondary" onclick="generateSpecies()">Generate draft</button>
@@ -405,7 +405,7 @@
   <section class="panel" id="panel-photo">
     <div class="card">
       <h2>Diagnose from a photo</h2>
-      <p class="muted">Backend is whatever VISION_BACKEND is set to on the server (stub by default — see README for enabling the local Ollama/moondream backend).</p>
+      <p class="muted">Backend is whatever VISION_BACKEND is set to on the server (stub is the only backend — no hosted vision model is configured).</p>
       <label>Photo (JPEG / PNG / WebP, max 8MB)</label>
       <input type="file" id="photo-file" accept="image/jpeg,image/png,image/webp">
       <label>Notes (optional)</label>

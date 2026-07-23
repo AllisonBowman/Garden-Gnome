@@ -78,8 +78,8 @@ something. Two concrete expressions of that principle:
                                                             │  │ migrations       │  │
                                                             │  └──────────────────┘  │
                                                             │  ┌──────────────────┐  │
-                                                            │  │ advisor.py ──────┼──┼─▶ stub / Ollama / Claude
-                                                            │  │ vision.py  ──────┼──┼─▶ stub / Ollama (moondream)
+                                                            │  │ advisor.py ──────┼──┼─▶ stub / Claude
+                                                            │  │ vision.py  ──────┼──┼─▶ stub (not enabled)
                                                             │  └──────────────────┘  │
                                                             └───────────────────────┘
 ```
@@ -101,10 +101,10 @@ scoped to the signed-in user.
   tokens in `expo-secure-store`. Notifications, Camera, Image Picker. A custom
   Expo native module (`modules/plant-id`) bridges Apple Foundation Models
   (Swift) and Gemini Nano / ML Kit GenAI (Kotlin).
-- **Server-side AI/vision:** Anthropic Claude API (cloud) or Ollama (local,
-  self-hosted) for text advice; Ollama with `moondream` (Apache-2.0) for photo
-  diagnosis. **On-device AI:** Apple Foundation Models (iOS 26+) / Gemini Nano
-  (AICore Android) — no key, no network, no cost.
+- **Server-side AI:** Anthropic Claude API (cloud) for text advice; no hosted
+  vision backend (server photo diagnosis ships disabled). **On-device AI:**
+  Apple Foundation Models (iOS 26+) / Gemini Nano (AICore Android) — no key,
+  no network, no cost.
 
 ## Key features
 

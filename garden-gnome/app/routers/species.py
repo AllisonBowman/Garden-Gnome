@@ -3,12 +3,22 @@ from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
 from app.db.database import get_session
+from app.deps import get_current_user
 from app.models.models import CareSchedule, Species, SpeciesTrait
 from app.models.schemas import (
     SpeciesCreate, SpeciesDetail, SpeciesGenerateRequest,
 )
 
-router = APIRouter(prefix="/species", tags=["species"])
+# Every species route requires a signed-in caller. Reads are only ever hit by
+# the app post-login (it sends a bearer token), and the catalog is populated by
+# direct DB writes (seed.py / the offline expansion pipeline), not HTTP — so the
+# write routes have no anonymous caller to serve. Router-level dependency keeps
+# this uniform: a new endpoint can't accidentally ship unauthenticated.
+router = APIRouter(
+    prefix="/species",
+    tags=["species"],
+    dependencies=[Depends(get_current_user)],
+)
 
 ALLOWED_PHOTO_TYPES = {"image/jpeg", "image/png", "image/webp"}
 MAX_PHOTO_BYTES = 8 * 1024 * 1024  # 8MB
@@ -95,7 +105,7 @@ def generate_species(
     Returns a SpeciesCreate-compatible dict for review. Nothing is saved —
     POST the returned `draft` to POST /species/ after verifying the data.
 
-    Requires ADVISOR_BACKEND=ollama or anthropic. The stub backend returns
+    Requires ADVISOR_BACKEND=anthropic. The stub backend returns
     a placeholder template for manual filling."""
     from app.services.catalog import generate_species_profile
     try:
@@ -120,7 +130,7 @@ async def identify_species_photo(
 
     Returns candidate species (most likely first) matched against the curated
     catalog, plus the model's observation text. Backend is selected by
-    VISION_BACKEND (stub/ollama), same as photo diagnosis. The stub backend
+    VISION_BACKEND (stub only — no hosted backend), same as photo diagnosis. The stub backend
     returns no candidates and a note explaining how to enable identification."""
     from app.services.vision import identify_species
 

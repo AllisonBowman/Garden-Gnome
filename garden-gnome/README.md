@@ -17,7 +17,8 @@ deployment. See the sections below.
 - **Plant inventory, environments, care logging, timeline & stats**, all scoped
   to the signed-in user.
 - **Grounded advice** (`/plants/{id}/advice`) and **photo diagnosis /
-  identification** — pluggable `stub` / Ollama / Anthropic backends.
+  identification** — pluggable backends (`stub` / Anthropic for advice;
+  vision ships stub-only, see below).
 - **User accounts & auth** — Apple + Google sign-in, rotating refresh tokens,
   account deletion, per-IP rate limiting (see below).
 - **Alembic** migrations and a **pytest** suite.
@@ -38,9 +39,9 @@ automatically.
 > **Note:** now that the API is multi-user, the app **won't boot without**
 > `JWT_SECRET` and `FERNET_KEY` in that `.env` (see the auth section below).
 > The `.exe` path predates the accounts work and the Fly.io deployment; for a
-> shared backend, the hosted API is the primary target. To enable the local
-> Ollama backends beyond the stub, add the `ADVISOR_BACKEND` / `VISION_BACKEND`
-> variables as in `.env.example`.
+> shared backend, the hosted API is the primary target. To enable the Claude
+> advice backend beyond the stub, add the `ADVISOR_BACKEND` variable as in
+> `.env.example`.
 
 This .exe bundles everything needed to run the app and is independent of the
 Python dev setup below, which is only needed if you're changing code.
@@ -90,7 +91,8 @@ without the first two. Variable names only; generate/collect your own values:
 | `APPLE_PRIVATE_KEY_PATH` | Path to the `.p8`, e.g. `secrets/AuthKey_XXXX.p8` (gitignored) — for local dev |
 | `APPLE_PRIVATE_KEY` | The `.p8` PEM contents **inline** (used instead of the path where there's no file on disk, e.g. Fly). Literal `\n` is normalized to real newlines. Inline wins if both are set. |
 | `GOOGLE_CLIENT_ID` | Google OAuth iOS client id |
-| `ADVISOR_BACKEND` / `VISION_BACKEND` | `stub` (default) / `ollama` / `anthropic` — see below |
+| `ADVISOR_BACKEND` | `stub` (default) / `anthropic` — see below |
+| `VISION_BACKEND` | `stub` (default and only value — no hosted vision backend) |
 | `ADVISOR_SYMPTOMS_BACKEND` | Backend for free-text symptom diagnosis only (hybrid) |
 | `RATE_LIMIT_SIGNIN` / `RATE_LIMIT_TOKEN` | Optional overrides, e.g. `10/minute` |
 
@@ -155,7 +157,7 @@ uvicorn app.main:app --reload
 
 The API is hosted at **https://garden-gnome-api.fly.dev** (app `garden-gnome-api`, org `personal`, region `iad`). The SQLite database lives on a persistent volume (`gnome_data` → `/data`), selected via the `DATABASE_URL` env var (`app/db/database.py` falls back to the local cwd-relative file when unset, so local dev is unchanged). On every boot the container runs Alembic migrations and seeds the species catalog — both idempotent, so a redeploy never duplicates data or skips a schema change. (Migrations run at boot rather than as a Fly `release_command` because release machines don't mount the volume — boot-time is the correct place for volume-backed SQLite.)
 
-**Secrets** are set with `fly secrets set`/`import` (never committed). The two required ones (`JWT_SECRET`, `FERNET_KEY`) gate boot; the Apple/Google provider vars enable sign-in; on Fly the Apple key is supplied inline via `APPLE_PRIVATE_KEY` (there's no `.p8` file in the container). The hosted app runs `ADVISOR_BACKEND=stub` / `VISION_BACKEND=stub` (no LLM key / no Ollama in the container) — deterministic rule-based advice; upgrade later by setting `ADVISOR_BACKEND=anthropic` + `ANTHROPIC_API_KEY` and redeploying.
+**Secrets** are set with `fly secrets set`/`import` (never committed). The two required ones (`JWT_SECRET`, `FERNET_KEY`) gate boot; the Apple/Google provider vars enable sign-in; on Fly the Apple key is supplied inline via `APPLE_PRIVATE_KEY` (there's no `.p8` file in the container). The hosted app runs `ADVISOR_BACKEND=stub` / `VISION_BACKEND=stub` (no LLM key in the container) — deterministic rule-based advice; upgrade later by setting `ADVISOR_BACKEND=anthropic` + `ANTHROPIC_API_KEY` and redeploying.
 
 **Verify a deploy from outside:** `GET /` → 200; `GET /plants/` → 401 (auth enforced); `POST /auth/google` with a garbage token → 401 (not 503 — a 503 would mean `GOOGLE_CLIENT_ID` didn't load).
 
@@ -193,8 +195,8 @@ app/
     census.py        # opt-in anonymized aggregate/export/sync
     auth.py          # sign-in (apple/google), refresh, logout, /me, DELETE /me
   services/
-    advisor.py       # text advice service (stub/ollama/anthropic)
-    vision.py        # photo diagnosis + identification (stub/ollama)
+    advisor.py       # text advice service (stub/anthropic)
+    vision.py        # photo diagnosis + identification (stub only)
     tokens.py        # access JWTs + rotating refresh tokens (reuse detection)
     oauth/           # apple.py, google.py, jwks.py — provider verification
   data/
@@ -297,39 +299,19 @@ suggest plants the app actually has care data for. Returns candidates (most
 likely first) plus the model's observation text; the mobile Add Plant flow
 renders these as tap-to-select chips. Uses the same `VISION_BACKEND` switch.
 
-Backend is chosen by `VISION_BACKEND` (`stub` | `ollama`). **No cloud/paid
-backend is offered on purpose** — the default `ollama` model is
-[moondream](https://github.com/vikhyat/moondream) (Apache 2.0), which is free
-for unrestricted commercial use at any scale. To enable it:
-
-```bash
-ollama pull moondream
-# then set VISION_BACKEND=ollama in your .env (OLLAMA_VISION_MODEL=moondream by default)
-```
-
-Or run the whole stack (API + Ollama sidecar) with `docker compose up -d`
-— see `docker-compose.yml` for the one-time model pull.
-
-The Ollama path is production-shaped: requests are async (a slow local
-inference never blocks other API requests), photos are EXIF-rotated and
-downscaled server-side before inference (a 7 MB phone photo becomes a
-~100 KB JPEG — small vision models ingest at ~1k px anyway), and the model
-is kept loaded between requests (`keep_alive`) so only the first photo
-after a quiet period pays the load cost. When the backend is down or the
-model isn't pulled, clients get a 503 with a user-presentable message;
-the technical cause (connection refused, `ollama pull` needed, …) is
-server-log only.
+**No hosted vision backend is configured, on purpose.** `VISION_BACKEND`
+knows only `stub`: both endpoints answer with a friendly not-enabled message
+(and, for identification, no candidates). Photo species ID runs *on-device*
+in the mobile app (Apple Foundation Models / Gemini Nano — see the mobile
+README); server-side photo diagnosis ships disabled until a backend
+direction is chosen. The service keeps advisor.py's backend-swap shape, so
+enabling one later is a config change in `vision.py`, nothing else.
 
 `GET /ai/status` (unauthenticated, like `/`) reports the active advisor and
-vision backends plus vision readiness — whether Ollama answers and the model
-is pulled — so a fresh deploy can be smoke-checked with one request and the
-mobile app can gate photo UI on reality. The same check prints one
-`[vision]` line at startup.
-
-Other Apache-2.0 vision models (`qwen2.5vl`, `minicpm-v`) are drop-in swaps via
-`OLLAMA_VISION_MODEL` for more accuracy. Avoid LLaMA-derived vision models
-(`llava`, `llama3.2-vision`) — their weights carry Meta's community license
-with commercial-use conditions, not a clean permissive license.
+vision backends plus vision readiness — always `ready: false` today — so a
+fresh deploy can be smoke-checked with one request and the mobile app can
+gate photo UI on reality. The same check prints one `[vision]` line at
+startup.
 
 ## Status
 Backend feature-complete for v1: grounded advice, photo diagnosis +

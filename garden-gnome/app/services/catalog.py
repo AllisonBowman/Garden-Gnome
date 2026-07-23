@@ -6,23 +6,18 @@ schedules, traits) in the same shape as SpeciesCreate / species_catalog.json.
 The output is a review-and-confirm draft — not saved automatically. Caller
 should POST the returned dict to POST /species/ after verification.
 
-Uses the same ADVISOR_BACKEND / OLLAMA_HOST / OLLAMA_MODEL settings as
-advisor.py, so no extra configuration is needed if text advice is already
-working."""
+Uses the same ADVISOR_BACKEND settings as advisor.py, so no extra
+configuration is needed if text advice is already working."""
 import json
 import logging
 import os
 import re
-
-import httpx
 
 from app.services.advisor import AdvisorUnavailable, UNAVAILABLE_MESSAGE
 
 logger = logging.getLogger("plantadvocate.catalog")
 
 BACKEND = os.getenv("ADVISOR_BACKEND", "stub")
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
 
 _PROMPT = """\
 You are a plant care database assistant. Given a plant name, produce a single \
@@ -78,7 +73,7 @@ _STUB_TEMPLATE = {
     "temp_f_max": 80,
     "soil_type": "Well-draining potting mix",
     "toxic_to_pets": False,
-    "care_notes": "Review and fill in all fields. Set ADVISOR_BACKEND=ollama or anthropic for AI-generated profiles.",
+    "care_notes": "Review and fill in all fields. Set ADVISOR_BACKEND=anthropic for AI-generated profiles.",
     "schedules": [
         {"care_type": "water", "interval_days_min": 7, "interval_days_max": 14, "notes": "Fill in watering guidance."},
         {"care_type": "fertilize", "interval_days_min": 30, "interval_days_max": 60, "notes": "Fill in fertilizing guidance."},
@@ -120,7 +115,7 @@ def generate_species_profile(name: str) -> dict:
     """Return a draft SpeciesCreate-compatible dict for the given plant name.
 
     Stub backend returns a template with placeholder values.
-    Ollama/Anthropic backends ask the model to produce structured JSON.
+    The Anthropic backend asks the model to produce structured JSON.
     The caller must review and POST to POST /species/ to persist."""
     if BACKEND == "stub":
         draft = json.loads(json.dumps(_STUB_TEMPLATE))
@@ -128,38 +123,11 @@ def generate_species_profile(name: str) -> dict:
         draft["scientific_name"] = f"(scientific name for {name} — fill in)"
         return draft
 
-    if BACKEND == "ollama":
-        return _generate_ollama(name)
     if BACKEND == "anthropic":
         return _generate_anthropic(name)
 
     logger.error("Unknown ADVISOR_BACKEND: %r", BACKEND)
     raise AdvisorUnavailable(UNAVAILABLE_MESSAGE)
-
-
-def _generate_ollama(name: str) -> dict:
-    try:
-        resp = httpx.post(
-            f"{OLLAMA_HOST}/api/chat",
-            json={
-                "model": OLLAMA_MODEL,
-                "messages": [{"role": "user", "content": _PROMPT.format(name=name)}],
-                "stream": False,
-            },
-            timeout=60.0,
-        )
-        resp.raise_for_status()
-        text = resp.json()["message"]["content"]
-        return _wrap_for_api(_extract_json(text))
-    except (httpx.RequestError, httpx.HTTPStatusError) as exc:
-        logger.error(
-            "Ollama profile request failed: %s. Is `ollama serve` running at %s "
-            "and has '%s' been pulled?", exc, OLLAMA_HOST, OLLAMA_MODEL,
-        )
-        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from exc
-    except (json.JSONDecodeError, KeyError) as exc:
-        logger.error("Could not parse model JSON profile response: %s", exc)
-        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from exc
 
 
 def _generate_anthropic(name: str) -> dict:

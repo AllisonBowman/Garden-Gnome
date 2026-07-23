@@ -2,7 +2,7 @@
 
 This module is the ONLY place that talks to an LLM. The rest of the app calls
 `get_care_advice(species, plant, recent_logs, care_schedules)` and gets back a
-string. Swapping providers (stub -> ollama -> anthropic) is a config change
+string. Swapping providers (stub -> anthropic) is a config change
 here, nothing else.
 
 Core principle: the species row + care schedules are authoritative ground truth.
@@ -11,7 +11,6 @@ knowledge. The prompt enforces this.
 
 Backend is chosen by the ADVISOR_BACKEND environment variable:
     stub      - no model; returns deterministic advice from the data (default)
-    ollama    - local model via Ollama's HTTP API (free, private)
     anthropic - Claude API (cloud, paid)
 """
 from __future__ import annotations
@@ -50,8 +49,6 @@ BACKEND = os.getenv("ADVISOR_BACKEND", "stub").lower()
 # ADVISOR_SYMPTOMS_BACKEND=anthropic gives cheap deterministic advice for
 # routine checks and an LLM for actual diagnosis.
 SYMPTOMS_BACKEND = os.getenv("ADVISOR_SYMPTOMS_BACKEND", BACKEND).lower()
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 
 
@@ -232,44 +229,6 @@ def _advise_stub(
     return "\n".join(lines)
 
 
-def _advise_ollama(
-    species: Species,
-    plant: Plant,
-    recent_logs: list[CareLog],
-    care_schedules: list[CareSchedule],
-    symptoms: str = "",
-) -> str:
-    import httpx
-
-    prompt = _build_prompt(species, plant, recent_logs, care_schedules, symptoms)
-    try:
-        resp = httpx.post(
-            f"{OLLAMA_HOST}/api/chat",
-            json={
-                "model": OLLAMA_MODEL,
-                "messages": [
-                    {"role": "system", "content": SYSTEM_INSTRUCTION},
-                    {"role": "user", "content": prompt},
-                ],
-                "stream": False,
-            },
-            timeout=120.0,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        return data["message"]["content"].strip()
-    except httpx.HTTPError as e:
-        logger.error(
-            "Ollama advice failed: %s: %s. Is `ollama serve` running at %s and "
-            "has '%s' been pulled?",
-            type(e).__name__, e, OLLAMA_HOST, OLLAMA_MODEL,
-        )
-        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from e
-    except (KeyError, TypeError, ValueError) as e:
-        logger.error("Ollama advice returned an unexpected payload: %s", e)
-        raise AdvisorUnavailable(UNAVAILABLE_MESSAGE) from e
-
-
 def _advise_anthropic(
     species: Species,
     plant: Plant,
@@ -305,7 +264,6 @@ def _advise_anthropic(
 
 _BACKENDS = {
     "stub": _advise_stub,
-    "ollama": _advise_ollama,
     "anthropic": _advise_anthropic,
 }
 

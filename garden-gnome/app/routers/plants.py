@@ -396,10 +396,9 @@ async def diagnose_plant_photo(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    """Photo-based diagnosis (Phase 3). Uses a local, permissively-licensed
-    vision model via Ollama (default: moondream, Apache 2.0) -- self-hosted,
-    so there's no per-call API cost and no licensing fee at any commercial
-    scale. Backend is selected by the VISION_BACKEND env var (stub/ollama).
+    """Photo-based diagnosis (Phase 3). No hosted vision backend is
+    configured (VISION_BACKEND knows only `stub`), so this answers with a
+    friendly not-enabled message until a backend direction is chosen.
     The diagnosis is auto-logged to the plant's timeline."""
     plant = _owned_plant(plant_id, user, session)
 
@@ -428,10 +427,10 @@ async def diagnose_plant_photo(
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
 
-    # Only file a real reading to the plant's permanent timeline. The stub
-    # produces a "not switched on yet" message, and filing that would put a
-    # non-event in the care history the caretaker reads -- and, before the
-    # _build_prompt fix, feed it back to the advisor as owner-recorded history.
+    # Only a real analysis belongs on the permanent timeline. The stub never
+    # examined the photo, so logging its placeholder would both clutter the
+    # plant's history and feed non-diagnosis text back into future advisor
+    # prompts via recent care logs.
     if result["backend"] != "stub":
         session.add(CareLog(
             plant_id=plant_id,

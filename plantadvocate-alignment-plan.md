@@ -34,25 +34,27 @@ strings in user-facing copy; "care engine" not "AI"; gnome = mascot).
 
 ## Already done (this branch)
 
-The Ollama vision path now raises `VisionUnavailable` with a user-safe
-message and logs the technical cause server-side; `/ai/status` +
-`vision_status()` report readiness. This plan covers everything that
-remains.
+The Ollama backend has since been **removed entirely** (Allison's call:
+"scrub the llama framework") — vision is stub-only, the advisor is
+stub/anthropic, and the stub texts no longer name any setup tooling.
+`/ai/status` + `vision_status()` report readiness (always not-ready today).
+With diagnosis shipping disabled, **Phase 0 items 1 and 4 below are
+pre-iOS-build blockers** — the stub is the experience users will see.
 
 ---
 
 ## Phase 0 — Stop shipping developer text (smallest, do first)
 
-1. **Rewrite the diagnosis stub copy** (`vision._diagnose_stub`) in the
-   voice of the identify stub: photo received, check-ups aren't enabled yet,
-   no setup instructions. Byte count and `VISION_BACKEND`/`ollama pull`
-   strings go to a `logger.info` instead. The mobile "diagnosis not enabled
-   yet" chip already covers status.
-2. **Advisor backends get the vision treatment.** `_advise_ollama` /
-   `_advise_anthropic` raise RuntimeErrors whose text ("Is `ollama serve`
-   running…", "Check ANTHROPIC_API_KEY in .env") flows through the router's
-   503 `detail` to the client. Mirror the vision fix: one `AdvisorUnavailable`
-   with a user-presentable message, technical cause logged. Same for
+1. ✅ **Rewrite the diagnosis stub copy** (`vision._diagnose_stub`) in the
+   voice of the identify stub: photo received, check-ups aren't enabled yet.
+   The `[STUB]` marker and byte count go to a `logger.info` instead. The
+   mobile "diagnosis not enabled yet" chip already covers status. *(Done —
+   friendly copy, `[STUB]`/byte count now server-log only.)*
+2. **The advisor backend gets a friendly-failure treatment.**
+   `_advise_anthropic` raises RuntimeErrors whose text ("Check
+   ANTHROPIC_API_KEY in .env") flows through the router's 503 `detail` to
+   the client. Introduce one `AdvisorUnavailable` with a user-presentable
+   message, technical cause logged. Same for
    `catalog.generate_species_profile`'s 503 path.
 3. **Mobile error copy.** Replace "Could not diagnose the photo. Check the
    backend connection." and the advice/identify equivalents with
@@ -64,14 +66,17 @@ remains.
    text, so `[STUB]…` is filed to the plant's permanent timeline (visible in
    the first screenshot's history) **and** fed back into future LLM prompts
    via `recent_logs` in `advisor._build_prompt`. Fix both ends:
-   - only auto-log when `backend != "stub"` and the call succeeded;
+   - ✅ only auto-log when `backend != "stub"` and the call succeeded
+     *(done — router now guards the CareLog on `backend != "stub"`, with a
+     regression test)*;
    - when building advisor prompts, exclude `CareLog` notes that begin with
      `Photo diagnosis:` from verbatim inclusion (summarize to "photo
      check-up filed N days ago") so model output never becomes model input
-     masquerading as owner history.
+     masquerading as owner history. *(Still open — matters once a real
+     vision backend exists.)*
 
 **Accept when:** grep of user-visible strings (mobile + API responses) finds
-no env var names, no `[STUB]`, no `ollama`/`serve`/`API key`; a stub
+no env var names, no `[STUB]`, no model-server or `API key` strings; a stub
 diagnosis run leaves no `[STUB]` CareLog behind; suite green.
 
 ## Phase 1 — One persona contract (extends 1.0.1 plan Phase 1)
@@ -145,7 +150,7 @@ existing well-behaved restyle fixtures still style, typecheck clean.
 ## Phase 3 — Server-side groundedness guard
 
 Today `driftsFromFact` exists only on the phone; server LLM output
-(`_advise_ollama`, `_advise_anthropic`, `_diagnose_ollama`) reaches users on
+(`_advise_anthropic`, and any future vision backend) reaches users on
 prompt discipline alone.
 
 - Port the guard to Python (`app/services/grounding.py`), shared by advisor
@@ -155,11 +160,11 @@ prompt discipline alone.
 - **Advisor:** guard failure falls back to `_advise_stub` output (always
   computable) with the backend reported as `stub` plus a `guarded: true`
   flag so the client badge stays honest.
-- **Vision diagnosis:** the model legitimately describes photo observations
-  that aren't in the facts, so scope the guard to *care claims*: numbers
-  must come from the fact block, no invented schedule intervals, no
-  template artifacts. On failure, retry once (temperature already 0.2),
-  then return the user-safe unavailable message rather than an ungrounded
+- **Vision diagnosis (when a backend returns):** the model legitimately
+  describes photo observations that aren't in the facts, so scope the guard
+  to *care claims*: numbers must come from the fact block, no invented
+  schedule intervals, no template artifacts. On failure, retry once, then
+  return a user-safe unavailable message rather than an ungrounded
   diagnosis.
 - Log every guarded rejection (`logger.warning` with the offending span,
   not the full photo/PII) — these are the training set for tightening
