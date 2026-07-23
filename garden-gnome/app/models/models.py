@@ -87,7 +87,12 @@ class User(SQLModel, table=True):
     display_name: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     last_login_at: Optional[datetime] = None
-    # Soft-delete marker; DELETE /me (Phase 7) decides hard vs soft
+    # Account deletion is HARD: DELETE /me removes this row and cascades
+    # (see auth.delete_me; locked by test_account_deletion). This column is
+    # kept as a defensive soft-deactivation guard — get_current_user, sign-in,
+    # and the census export already reject/exclude any user whose deleted_at is
+    # set — so a future soft-deactivation path would be safe by construction.
+    # Nothing sets it today, so it is always None.
     deleted_at: Optional[datetime] = None
     # Census participation is per-user consent, default OFF (privacy decision
     # 2026-07-15). Export/sync include only opted-in users' data.
