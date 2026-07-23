@@ -13,6 +13,19 @@ export const CARE_VERBS: Record<string, string> = {
 
 export type ReminderPrefs = Partial<Record<CareType, boolean>>;
 
+export interface WeatherSignal {
+  /**
+   * Whole-day shift applied to WATERING due-dates only: negative brings the
+   * reminder sooner (heat dries the plant out faster), positive pushes it
+   * later (rain will water an unsheltered plant). Bounded to ±2 days by the
+   * planner so weather can nudge, never upend, the schedule.
+   */
+  waterShiftDays: number;
+}
+
+/** Max days weather may move a watering reminder in either direction. */
+export const MAX_WEATHER_SHIFT_DAYS = 2;
+
 export interface ReminderItem {
   plantId: number;
   nickname: string;
@@ -36,6 +49,12 @@ interface PlanInput {
   horizonDays?: number;
   /** Local hour of day to deliver reminders (default 9am). */
   deliveryHour?: number;
+  /**
+   * Optional per-environment weather nudge, keyed by environment id. Populated
+   * only when the user opts in (Settings → weather adjustments). Absent = no
+   * weather influence, so the schedule is identical to the weather-free plan.
+   */
+  weatherByEnv?: Record<number, WeatherSignal>;
 }
 
 /**
@@ -50,6 +69,7 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
   const {
     plants, logsByPlant, speciesById, prefs,
     now = new Date(), horizonDays = 30, deliveryHour = 9,
+    weatherByEnv,
   } = input;
 
   // Earliest allowed delivery slot: today at deliveryHour if that's still in
@@ -84,6 +104,19 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
 
       // Due when the plant enters its care window ("every 7–10 days" → day 7)
       const due = new Date(anchorMs + schedule.interval_days_min * 86_400_000);
+
+      // Opt-in weather nudge: only watering, only for plants whose environment
+      // has a signal, clamped so weather can't move a reminder more than a
+      // couple of days. Advancing past `nextSlot` is floored below, so an
+      // overdue-after-shift plant simply lands in the next delivery slot.
+      if (careType === 'water' && weatherByEnv && plant.environment_id != null) {
+        const shift = weatherByEnv[plant.environment_id]?.waterShiftDays ?? 0;
+        if (shift) {
+          const bounded = Math.max(-MAX_WEATHER_SHIFT_DAYS, Math.min(MAX_WEATHER_SHIFT_DAYS, shift));
+          due.setDate(due.getDate() + bounded);
+        }
+      }
+
       due.setHours(deliveryHour, 0, 0, 0);
       const slot = due <= nextSlot ? nextSlot : due;
       if (slot > horizonEnd) continue;

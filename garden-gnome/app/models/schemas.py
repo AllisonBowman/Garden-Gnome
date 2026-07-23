@@ -5,7 +5,7 @@ from sqlmodel import SQLModel
 
 from app.models.models import (
     MaturityStage, CareType, LightNeed, SoilMoisture, LeafCondition, EnvironmentType,
-    ReviewStatus, SpeciesSource,
+    ReviewStatus, SpeciesSource, Shelter, TempExposure, SunExposure,
 )
 
 
@@ -62,6 +62,9 @@ class EnvironmentCreate(SQLModel):
     country: str = ""
     lat: Optional[float] = None
     lng: Optional[float] = None
+    shelter: Shelter = Shelter.sheltered
+    temp_exposure: TempExposure = TempExposure.indoor
+    sun_exposure: SunExposure = SunExposure.partial_sun
 
 
 class EnvironmentPatch(SQLModel):
@@ -72,6 +75,9 @@ class EnvironmentPatch(SQLModel):
     country: Optional[str] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
+    shelter: Optional[Shelter] = None
+    temp_exposure: Optional[TempExposure] = None
+    sun_exposure: Optional[SunExposure] = None
 
 
 class EnvironmentRead(SQLModel):
@@ -84,6 +90,9 @@ class EnvironmentRead(SQLModel):
     country: str
     lat: Optional[float]
     lng: Optional[float]
+    shelter: Shelter
+    temp_exposure: TempExposure
+    sun_exposure: SunExposure
     created_at: datetime
     plant_count: int = 0  # computed in the router, not stored
 

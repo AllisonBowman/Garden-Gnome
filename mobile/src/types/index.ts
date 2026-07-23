@@ -58,6 +58,10 @@ export interface Plant {
   species?: Species;
 }
 
+export type Shelter = 'sheltered' | 'partial' | 'exposed';
+export type TempExposure = 'indoor' | 'outdoor';
+export type SunExposure = 'full_sun' | 'partial_sun' | 'shade';
+
 export interface Environment {
   id: number;
   uuid: string;
@@ -68,8 +72,41 @@ export interface Environment {
   country: string;
   lat?: number;
   lng?: number;
+  shelter: Shelter;
+  temp_exposure: TempExposure;
+  sun_exposure: SunExposure;
   created_at: string;
   plant_count: number;
+}
+
+export interface WeatherCurrent {
+  temp_f: number | null;
+  humidity_pct: number | null;
+  uv_index: number | null;
+  condition: string | null;
+}
+
+export interface WeatherDay {
+  date: string;
+  high_f: number | null;
+  low_f: number | null;
+  precip_chance_pct: number | null;
+  uv_max: number | null;
+  sunrise: string | null;
+  sunset: string | null;
+  daylight_hours: number | null;
+  condition: string | null;
+}
+
+export interface WeatherAttribution {
+  text: string;
+  url: string;
+}
+
+export interface Weather {
+  current: WeatherCurrent;
+  daily: WeatherDay[];
+  attribution: WeatherAttribution;
 }
 
 export interface StewardshipRecord {

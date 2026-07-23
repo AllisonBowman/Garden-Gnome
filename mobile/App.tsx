@@ -14,6 +14,7 @@ import AddPlantScreen      from './src/screens/AddPlantScreen';
 import SpeciesScreen       from './src/screens/SpeciesScreen';
 import SpeciesDetailScreen from './src/screens/SpeciesDetailScreen';
 import EnvironmentsScreen  from './src/screens/EnvironmentsScreen';
+import EnvironmentDetailScreen from './src/screens/EnvironmentDetailScreen';
 import CensusScreen        from './src/screens/CensusScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
 import { rescheduleAllReminders } from './src/notifications/reminders';
@@ -35,6 +36,11 @@ export type SpeciesStackParamList = {
   SpeciesDetail: { speciesId: number };
 };
 
+export type EnvironmentsStackParamList = {
+  EnvironmentsList:  undefined;
+  EnvironmentDetail: { environmentId: number; name?: string };
+};
+
 type RootTabParamList = {
   Plants:       undefined;
   Species:      undefined;
@@ -44,9 +50,10 @@ type RootTabParamList = {
 };
 
 // ── Stack navigators ──────────────────────────────────────────────────────────
-const PlantsStack  = createNativeStackNavigator<PlantsStackParamList>();
-const SpeciesStack = createNativeStackNavigator<SpeciesStackParamList>();
-const Tab          = createBottomTabNavigator<RootTabParamList>();
+const PlantsStack       = createNativeStackNavigator<PlantsStackParamList>();
+const SpeciesStack      = createNativeStackNavigator<SpeciesStackParamList>();
+const EnvironmentsStack = createNativeStackNavigator<EnvironmentsStackParamList>();
+const Tab               = createBottomTabNavigator<RootTabParamList>();
 
 const HEADER_OPTS = {
   headerStyle:      { backgroundColor: '#2D6A4F' },
@@ -70,6 +77,19 @@ function SpeciesNavigator() {
       <SpeciesStack.Screen name="SpeciesList"   component={SpeciesScreen}       options={{ title: 'Species catalog' }} />
       <SpeciesStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
     </SpeciesStack.Navigator>
+  );
+}
+
+function EnvironmentsNavigator() {
+  return (
+    <EnvironmentsStack.Navigator screenOptions={HEADER_OPTS}>
+      <EnvironmentsStack.Screen name="EnvironmentsList" component={EnvironmentsScreen} options={{ title: 'Environments' }} />
+      <EnvironmentsStack.Screen
+        name="EnvironmentDetail"
+        component={EnvironmentDetailScreen}
+        options={({ route }) => ({ title: route.params.name ?? 'Environment' })}
+      />
+    </EnvironmentsStack.Navigator>
   );
 }
 
@@ -184,9 +204,9 @@ function AuthGate() {
               />
               <Tab.Screen
                 name="Environments"
-                component={EnvironmentsScreen}
+                component={EnvironmentsNavigator}
                 options={{
-                  title: 'Environments',
+                  headerShown: false,
                   tabBarIcon: ({ focused }) => <TabIcon emoji="🌍" focused={focused} />,
                 }}
               />

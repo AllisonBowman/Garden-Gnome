@@ -3,12 +3,15 @@ import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import { fetchPlants, fetchCareLogs } from '../api/plants';
 import { fetchSpecies } from '../api/species';
-import { CareLog, CareType, Species } from '../types';
+import { fetchEnvironments, fetchEnvironmentWeather } from '../api/environments';
+import { CareLog, CareType, Environment, Species } from '../types';
 import {
-  computeReminderPlan, ReminderPrefs, REMINDER_CARE_TYPES,
+  computeReminderPlan, ReminderPrefs, REMINDER_CARE_TYPES, WeatherSignal,
 } from './plan';
+import { computeWeatherSignal } from '../weather/signal';
 
 const PREFS_KEY = 'garden_gnome_reminder_prefs';
+const WEATHER_SHIFT_KEY = 'garden_gnome_weather_shift';
 const CHANNEL_ID = 'care-reminders';
 
 // expo-notifications has no web implementation (Android/iOS only in SDK 57)
@@ -53,6 +56,61 @@ export async function setReminderPrefs(prefs: ReminderPrefs): Promise<void> {
   } else {
     await SecureStore.setItemAsync(PREFS_KEY, value);
   }
+}
+
+// Whether the forecast may nudge watering reminders (default OFF — opt-in).
+export async function getWeatherShiftPref(): Promise<boolean> {
+  const raw = Platform.OS === 'web'
+    ? localStorage.getItem(WEATHER_SHIFT_KEY)
+    : await SecureStore.getItemAsync(WEATHER_SHIFT_KEY);
+  return raw === '1';
+}
+
+export async function setWeatherShiftPref(enabled: boolean): Promise<void> {
+  const value = enabled ? '1' : '0';
+  if (Platform.OS === 'web') {
+    localStorage.setItem(WEATHER_SHIFT_KEY, value);
+  } else {
+    await SecureStore.setItemAsync(WEATHER_SHIFT_KEY, value);
+  }
+}
+
+// Build the per-environment weather nudge map used by the planner when the
+// user has opted in. Only fetches weather for environments the outside world
+// actually reaches and that have coordinates. Fully self-contained: any
+// failure yields no signal for that environment, so reminders still schedule
+// (just without the weather adjustment).
+async function buildWeatherSignals(
+  plants: { environment_id?: number }[],
+): Promise<Record<number, WeatherSignal>> {
+  const out: Record<number, WeatherSignal> = {};
+  try {
+    const envIds = [...new Set(
+      plants.map((p) => p.environment_id).filter((id): id is number => id != null),
+    )];
+    if (!envIds.length) return out;
+
+    const envById: Record<number, Environment> = {};
+    for (const env of await fetchEnvironments()) envById[env.id] = env;
+
+    await Promise.all(envIds.map(async (id) => {
+      const env = envById[id];
+      const weatherReaches = !!env
+        && (env.temp_exposure === 'outdoor' || env.shelter !== 'sheltered');
+      if (!weatherReaches || env.lat == null || env.lng == null) return;
+      try {
+        const resp = await fetchEnvironmentWeather(id);
+        if (resp.available && resp.weather) {
+          out[id] = computeWeatherSignal(env, resp.weather);
+        }
+      } catch {
+        // Skip this environment's nudge; the rest still apply.
+      }
+    }));
+  } catch {
+    // No environments/weather available — return an empty map (no nudges).
+  }
+  return out;
 }
 
 // ── Permissions ───────────────────────────────────────────────────────────────
@@ -124,7 +182,14 @@ export async function rescheduleAllReminders(): Promise<void> {
       speciesById[id] = await fetchSpecies(id);
     }));
 
-    const batches = computeReminderPlan({ plants, logsByPlant, speciesById, prefs });
+    // Opt-in: let the forecast nudge watering due-dates (default off).
+    const weatherByEnv = (await getWeatherShiftPref())
+      ? await buildWeatherSignals(plants)
+      : undefined;
+
+    const batches = computeReminderPlan({
+      plants, logsByPlant, speciesById, prefs, weatherByEnv,
+    });
 
     // This app schedules no other local notifications, so a full replace is safe
     await Notifications.cancelAllScheduledNotificationsAsync();
