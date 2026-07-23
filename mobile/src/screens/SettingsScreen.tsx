@@ -8,7 +8,7 @@ import {
 } from '../support';
 import {
   getReminderPrefs, setReminderPrefs, ensureNotificationPermission,
-  rescheduleAllReminders,
+  rescheduleAllReminders, getWeatherShiftPref, setWeatherShiftPref,
 } from '../notifications/reminders';
 import { ReminderPrefs } from '../notifications/plan';
 import { CareType } from '../types';
@@ -50,6 +50,7 @@ export default function SettingsScreen() {
   const [saved, setSaved]   = useState(false);
   const [testing, setTesting] = useState(false);
   const [prefs, setPrefs]   = useState<ReminderPrefs>({});
+  const [weatherShift, setWeatherShift] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -88,7 +89,15 @@ export default function SettingsScreen() {
   useEffect(() => {
     if (SHOW_BACKEND_OVERRIDE) getBaseUrl().then(setUrl);
     getReminderPrefs().then(setPrefs);
+    getWeatherShiftPref().then(setWeatherShift);
   }, []);
+
+  async function toggleWeatherShift(value: boolean) {
+    setWeatherShift(value);
+    await setWeatherShiftPref(value);
+    // Recompute the schedule so the change takes effect immediately.
+    void rescheduleAllReminders();
+  }
 
   async function toggleReminder(type: CareType, value: boolean) {
     if (value) {
@@ -235,6 +244,28 @@ export default function SettingsScreen() {
               />
             </View>
           ))}
+
+          {remindersSupported && (
+            <>
+              <Divider style={styles.innerDivider} />
+              <View style={styles.reminderRow}>
+                <Text variant="bodyMedium" style={styles.reminderLabel}>
+                  🌦️ Let weather adjust watering
+                </Text>
+                <Switch
+                  value={weatherShift}
+                  disabled={!prefs.water}
+                  onValueChange={toggleWeatherShift}
+                  color="#2D6A4F"
+                />
+              </View>
+              <Text variant="bodySmall" style={styles.subHint}>
+                {prefs.water
+                  ? 'Nudges watering reminders by a day or two for outdoor, unsheltered plants — later before rain, sooner in a heat spike. Needs a location on the environment.'
+                  : 'Turn on watering reminders above to use this.'}
+              </Text>
+            </>
+          )}
         </Card.Content>
       </Card>
 
@@ -295,5 +326,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 6,
   },
-  reminderLabel: { color: '#333' },
+  reminderLabel: { color: '#333', flexShrink: 1, paddingRight: 12 },
+  innerDivider: { marginTop: 10, marginBottom: 4 },
+  subHint: { color: '#888', lineHeight: 18, marginTop: 2 },
 });
