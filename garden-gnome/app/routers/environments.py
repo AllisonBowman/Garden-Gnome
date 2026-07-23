@@ -7,6 +7,7 @@ from app.models.models import Environment, Plant, StewardshipRecord, User
 from app.models.schemas import (
     EnvironmentCreate, EnvironmentPatch, EnvironmentRead,
 )
+from app.services.weather import fetch_weather
 
 router = APIRouter(prefix="/environments", tags=["environments"])
 
@@ -55,6 +56,34 @@ def get_environment(
     session: Session = Depends(get_session),
 ):
     return _with_count(_owned(env_id, user, session), session)
+
+
+@router.get("/{env_id}/weather")
+async def get_environment_weather(
+    env_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Current + forecast Apple Weather for this environment's coordinates.
+
+    Weather is an enhancement: when the environment has no location, or no
+    weather backend is configured, this returns `available: false` with a
+    friendly reason rather than an error, so the app degrades gracefully."""
+    env = _owned(env_id, user, session)
+    if env.lat is None or env.lng is None:
+        return {
+            "available": False,
+            "detail": "Add this environment's location to see local weather.",
+            "weather": None,
+        }
+    weather = await fetch_weather(env.lat, env.lng)
+    if weather is None:
+        return {
+            "available": False,
+            "detail": "Weather isn't available right now.",
+            "weather": None,
+        }
+    return {"available": True, "detail": "ok", "weather": weather}
 
 
 @router.patch("/{env_id}", response_model=EnvironmentRead)
