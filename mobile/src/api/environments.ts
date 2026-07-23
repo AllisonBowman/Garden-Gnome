@@ -1,6 +1,6 @@
 import { apiClient } from './client';
 import {
-  Environment, EnvironmentType, Shelter, TempExposure, SunExposure,
+  Environment, EnvironmentType, Shelter, TempExposure, SunExposure, Weather,
 } from '../types';
 
 export interface EnvironmentClimate {
@@ -18,6 +18,18 @@ export async function fetchEnvironments(): Promise<Environment[]> {
 export async function fetchEnvironment(id: number): Promise<Environment> {
   const client = await apiClient();
   const { data } = await client.get<Environment>(`/environments/${id}`);
+  return data;
+}
+
+export interface EnvironmentWeatherResponse {
+  available: boolean;
+  detail: string;
+  weather: Weather | null;
+}
+
+export async function fetchEnvironmentWeather(id: number): Promise<EnvironmentWeatherResponse> {
+  const client = await apiClient();
+  const { data } = await client.get<EnvironmentWeatherResponse>(`/environments/${id}/weather`);
   return data;
 }
 

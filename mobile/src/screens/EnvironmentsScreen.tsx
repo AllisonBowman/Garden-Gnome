@@ -5,10 +5,15 @@ import {
   ActivityIndicator, FAB, Portal, Modal,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchEnvironments, createEnvironment } from '../api/environments';
 import {
   Environment, EnvironmentType, Shelter, TempExposure, SunExposure,
 } from '../types';
+import type { EnvironmentsStackParamList } from '../../App';
+
+type Nav = NativeStackNavigationProp<EnvironmentsStackParamList, 'EnvironmentsList'>;
 
 const ENV_TYPES: { value: EnvironmentType; label: string }[] = [
   { value: 'home',             label: '🏠 Home'        },
@@ -29,17 +34,20 @@ const CLIMATE_PRESETS: Record<EnvironmentType, Climate> = {
   research:         { shelter: 'sheltered', temp_exposure: 'indoor',  sun_exposure: 'partial_sun' },
 };
 
-function EnvironmentCard({ env }: { env: Environment }) {
+function EnvironmentCard({ env, onPress }: { env: Environment; onPress: () => void }) {
   const typeLabel = ENV_TYPES.find((t) => t.value === env.type)?.label ?? env.type;
   return (
-    <Card style={styles.card} mode="elevated">
+    <Card style={styles.card} mode="elevated" onPress={onPress}>
       <Card.Content>
         <Text variant="titleMedium">{env.name}</Text>
         <Text variant="bodySmall" style={styles.meta}>{typeLabel}</Text>
         {env.city ? (
           <Text variant="bodySmall" style={styles.meta}>📍 {env.city}{env.region ? `, ${env.region}` : ''}</Text>
         ) : null}
-        <Text variant="bodySmall" style={styles.count}>{env.plant_count} plant{env.plant_count !== 1 ? 's' : ''}</Text>
+        <View style={styles.cardFooter}>
+          <Text variant="bodySmall" style={styles.count}>{env.plant_count} plant{env.plant_count !== 1 ? 's' : ''}</Text>
+          <Text variant="bodySmall" style={styles.weatherHint}>Weather ›</Text>
+        </View>
       </Card.Content>
     </Card>
   );
@@ -47,6 +55,7 @@ function EnvironmentCard({ env }: { env: Environment }) {
 
 export default function EnvironmentsScreen() {
   const queryClient = useQueryClient();
+  const navigation = useNavigation<Nav>();
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName]     = useState('');
   const [type, setType]     = useState<EnvironmentType>('home');
@@ -94,7 +103,13 @@ export default function EnvironmentsScreen() {
         {environments.length === 0 ? (
           <Text style={styles.empty}>No environments yet. Create one to get started.</Text>
         ) : (
-          environments.map((e: Environment) => <EnvironmentCard key={e.id} env={e} />)
+          environments.map((e: Environment) => (
+            <EnvironmentCard
+              key={e.id}
+              env={e}
+              onPress={() => navigation.navigate('EnvironmentDetail', { environmentId: e.id, name: e.name })}
+            />
+          ))
         )}
       </ScrollView>
 
@@ -187,7 +202,9 @@ const styles = StyleSheet.create({
   content: { padding: 12, paddingBottom: 96 },
   card: { marginBottom: 10, borderRadius: 12 },
   meta: { color: '#666', marginTop: 2 },
-  count: { color: '#2D6A4F', marginTop: 4, fontWeight: '600' },
+  cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
+  count: { color: '#2D6A4F', fontWeight: '600' },
+  weatherHint: { color: '#8a8a8a' },
   fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: '#2D6A4F' },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   empty: { textAlign: 'center', color: '#888', marginTop: 48 },
