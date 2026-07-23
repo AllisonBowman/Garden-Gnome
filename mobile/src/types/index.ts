@@ -58,6 +58,10 @@ export interface Plant {
   species?: Species;
 }
 
+export type Shelter = 'sheltered' | 'partial' | 'exposed';
+export type TempExposure = 'indoor' | 'outdoor';
+export type SunExposure = 'full_sun' | 'partial_sun' | 'shade';
+
 export interface Environment {
   id: number;
   uuid: string;
@@ -68,6 +72,9 @@ export interface Environment {
   country: string;
   lat?: number;
   lng?: number;
+  shelter: Shelter;
+  temp_exposure: TempExposure;
+  sun_exposure: SunExposure;
   created_at: string;
   plant_count: number;
 }

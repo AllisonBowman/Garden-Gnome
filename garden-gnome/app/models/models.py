@@ -59,6 +59,27 @@ class EnvironmentType(str, Enum):
     other = "other"
 
 
+# --- Environment climate characteristics (weather feature) ---
+# These describe how much the outside world reaches a plant, so weather-driven
+# advice applies only where it makes sense (an exposed balcony, not a desk).
+
+class Shelter(str, Enum):
+    sheltered = "sheltered"      # roofed/indoors — rain and wind don't reach it
+    partial = "partial"          # covered balcony/porch — some exposure
+    exposed = "exposed"          # open to the sky — full rain and wind
+
+
+class TempExposure(str, Enum):
+    indoor = "indoor"            # climate-controlled; stable ambient temperature
+    outdoor = "outdoor"          # experiences the outside air temperature
+
+
+class SunExposure(str, Enum):
+    full_sun = "full_sun"        # 6+ hours of direct sun
+    partial_sun = "partial_sun"  # 3–6 hours
+    shade = "shade"              # under 3 hours of direct sun
+
+
 class AuthProvider(str, Enum):
     apple = "apple"
     google = "google"
@@ -209,6 +230,10 @@ class Environment(SQLModel, table=True):
     country: str = ""
     lat: Optional[float] = None
     lng: Optional[float] = None
+    # Climate characteristics — how much weather reaches plants here.
+    shelter: Shelter = Shelter.sheltered
+    temp_exposure: TempExposure = TempExposure.indoor
+    sun_exposure: SunExposure = SunExposure.partial_sun
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     user: Optional[User] = Relationship(back_populates="environments")

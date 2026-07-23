@@ -6,7 +6,9 @@ import {
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchEnvironments, createEnvironment } from '../api/environments';
-import { Environment, EnvironmentType } from '../types';
+import {
+  Environment, EnvironmentType, Shelter, TempExposure, SunExposure,
+} from '../types';
 
 const ENV_TYPES: { value: EnvironmentType; label: string }[] = [
   { value: 'home',             label: '🏠 Home'        },
@@ -15,6 +17,17 @@ const ENV_TYPES: { value: EnvironmentType; label: string }[] = [
   { value: 'conservation',     label: '🌿 Conservation'},
   { value: 'research',         label: '🔬 Research'    },
 ];
+
+// Sensible climate defaults per environment type — presets the toggles so most
+// users don't have to think about it, but they can still adjust.
+type Climate = { shelter: Shelter; temp_exposure: TempExposure; sun_exposure: SunExposure };
+const CLIMATE_PRESETS: Record<EnvironmentType, Climate> = {
+  home:             { shelter: 'sheltered', temp_exposure: 'indoor',  sun_exposure: 'partial_sun' },
+  nursery:          { shelter: 'partial',   temp_exposure: 'outdoor', sun_exposure: 'full_sun'    },
+  community_garden: { shelter: 'exposed',   temp_exposure: 'outdoor', sun_exposure: 'full_sun'    },
+  conservation:     { shelter: 'exposed',   temp_exposure: 'outdoor', sun_exposure: 'full_sun'    },
+  research:         { shelter: 'sheltered', temp_exposure: 'indoor',  sun_exposure: 'partial_sun' },
+};
 
 function EnvironmentCard({ env }: { env: Environment }) {
   const typeLabel = ENV_TYPES.find((t) => t.value === env.type)?.label ?? env.type;
@@ -40,6 +53,20 @@ export default function EnvironmentsScreen() {
   const [city, setCity]     = useState('');
   const [region, setRegion] = useState('');
   const [country, setCountry] = useState('');
+  const [shelter, setShelter] = useState<Shelter>('sheltered');
+  const [tempExposure, setTempExposure] = useState<TempExposure>('indoor');
+  const [sunExposure, setSunExposure] = useState<SunExposure>('partial_sun');
+
+  // Changing the type presets the climate toggles; the user can still tweak.
+  const applyType = (t: EnvironmentType) => {
+    setType(t);
+    const preset = CLIMATE_PRESETS[t];
+    if (preset) {
+      setShelter(preset.shelter);
+      setTempExposure(preset.temp_exposure);
+      setSunExposure(preset.sun_exposure);
+    }
+  };
 
   const { data: environments = [], isLoading } = useQuery({
     queryKey: ['environments'],
@@ -47,7 +74,10 @@ export default function EnvironmentsScreen() {
   });
 
   const mutation = useMutation({
-    mutationFn: () => createEnvironment({ name, type, city, region, country }),
+    mutationFn: () => createEnvironment({
+      name, type, city, region, country,
+      shelter, temp_exposure: tempExposure, sun_exposure: sunExposure,
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['environments'] });
       setModalVisible(false);
@@ -88,7 +118,7 @@ export default function EnvironmentsScreen() {
           <Text variant="labelMedium" style={styles.label}>Type</Text>
           <SegmentedButtons
             value={type}
-            onValueChange={(v) => setType(v as EnvironmentType)}
+            onValueChange={(v) => applyType(v as EnvironmentType)}
             buttons={[
               { value: 'home',    label: '🏠' },
               { value: 'nursery', label: '🌱' },
@@ -102,6 +132,41 @@ export default function EnvironmentsScreen() {
           <TextInput label="City"    value={city}    onChangeText={setCity}    mode="outlined" style={styles.input} />
           <TextInput label="Region"  value={region}  onChangeText={setRegion}  mode="outlined" style={styles.input} />
           <TextInput label="Country" value={country} onChangeText={setCountry} mode="outlined" style={styles.input} />
+
+          <Text variant="labelMedium" style={styles.label}>Shelter</Text>
+          <SegmentedButtons
+            value={shelter}
+            onValueChange={(v) => setShelter(v as Shelter)}
+            buttons={[
+              { value: 'sheltered', label: 'Sheltered' },
+              { value: 'partial',   label: 'Partial'   },
+              { value: 'exposed',   label: 'Exposed'   },
+            ]}
+            style={styles.segmented}
+          />
+
+          <Text variant="labelMedium" style={styles.label}>Temperature</Text>
+          <SegmentedButtons
+            value={tempExposure}
+            onValueChange={(v) => setTempExposure(v as TempExposure)}
+            buttons={[
+              { value: 'indoor',  label: 'Indoor'  },
+              { value: 'outdoor', label: 'Outdoor' },
+            ]}
+            style={styles.segmented}
+          />
+
+          <Text variant="labelMedium" style={styles.label}>Sun</Text>
+          <SegmentedButtons
+            value={sunExposure}
+            onValueChange={(v) => setSunExposure(v as SunExposure)}
+            buttons={[
+              { value: 'full_sun',    label: 'Full sun' },
+              { value: 'partial_sun', label: 'Partial'  },
+              { value: 'shade',       label: 'Shade'    },
+            ]}
+            style={styles.segmented}
+          />
 
           <Button
             mode="contained"
