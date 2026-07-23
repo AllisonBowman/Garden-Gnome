@@ -15,7 +15,7 @@ from app.models.schemas import (
     AdviceRequest, CareLogCreate, PlantCreate, PlantRead, PlantTransferRequest,
     StewardshipRecordRead, TimelineEntry, CareTypeSummary, PlantTimelineSummary,
 )
-from app.services.advisor import get_care_advice
+from app.services.advisor import PHOTO_DIAGNOSIS_PREFIX, get_care_advice
 from app.services.vision import diagnose_photo
 
 router = APIRouter(prefix="/plants", tags=["plants"])
@@ -435,7 +435,7 @@ async def diagnose_plant_photo(
         session.add(CareLog(
             plant_id=plant_id,
             action=CareType.other,
-            notes=f"Photo diagnosis: {result['diagnosis']}",
+            notes=f"{PHOTO_DIAGNOSIS_PREFIX}{result['diagnosis']}",
         ))
         session.commit()
 

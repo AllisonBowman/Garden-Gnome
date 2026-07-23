@@ -15,6 +15,8 @@ import {
 } from '../api/plants';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { gnomeVoice } from '../gnomeVoice/restyle';
+import { serverMessage } from '../api/errorMessage';
+import { ensureCameraPermission } from '../photoPermissions';
 import ReportResult from '../components/ReportResult';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
@@ -92,7 +94,14 @@ export default function PlantDetailScreen() {
       return { ...result, advice: voiced.text, gnomeStyled: voiced.styled };
     },
     onSuccess: setAdvice,
-    onError: () => Alert.alert('Error', 'Could not get advice.'),
+    onError: (err) =>
+      Alert.alert(
+        'No advice just now',
+        serverMessage(
+          err,
+          "The Gnome couldn't put together advice just now. Please try again in a few minutes.",
+        ),
+      ),
   });
 
   const [diagnosisNotes, setDiagnosisNotes] = useState('');
@@ -105,10 +114,20 @@ export default function PlantDetailScreen() {
       // The diagnosis is auto-logged to the timeline by the backend
       queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });
     },
-    onError: () => Alert.alert('Error', 'Could not diagnose the photo. Check the backend connection.'),
+    onError: (err) =>
+      Alert.alert(
+        'No reading just now',
+        serverMessage(
+          err,
+          "The Gnome couldn't examine this photo just now. Your photo was not analyzed — please try again in a few minutes.",
+        ),
+      ),
   });
 
   const pickAndDiagnose = async (useCamera: boolean) => {
+    // launchCameraAsync requires camera permission and does not request it;
+    // without this the button silently does nothing (see photoPermissions.ts).
+    if (useCamera && !(await ensureCameraPermission())) return;
     const res = useCamera
       ? await ImagePicker.launchCameraAsync({ quality: 0.8 })
       : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8 });

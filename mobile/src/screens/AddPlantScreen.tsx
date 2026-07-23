@@ -14,6 +14,7 @@ import {
   identifySpeciesPhoto, IdentifyResponse, photoIdAvailable,
 } from '../photoId/identify';
 import { fetchEnvironments } from '../api/environments';
+import { serverMessage } from '../api/errorMessage';
 import { createPlant } from '../api/plants';
 import ReportResult from '../components/ReportResult';
 import { rescheduleAllReminders } from '../notifications/reminders';
@@ -57,7 +58,14 @@ export default function AddPlantScreen() {
       void rescheduleAllReminders();
       navigation.goBack();
     },
-    onError: () => Alert.alert('Error', 'Could not save plant. Check the backend connection.'),
+    onError: (err) =>
+      Alert.alert(
+        "Couldn't save",
+        serverMessage(
+          err,
+          "This plant couldn't be saved just now. Check your connection and try again — nothing was lost.",
+        ),
+      ),
   });
 
   const [identifyResult, setIdentifyResult] = useState<IdentifyResponse | null>(null);
@@ -77,7 +85,14 @@ export default function AddPlantScreen() {
         setSpeciesSearch(result.candidates[0].common_name);
       }
     },
-    onError: () => Alert.alert('Error', 'Could not identify the photo. Check the backend connection.'),
+    onError: (err) =>
+      Alert.alert(
+        'No match just now',
+        serverMessage(
+          err,
+          "The Gnome couldn't read this photo just now — you can still pick the species from the search below.",
+        ),
+      ),
   });
 
   const pickAndIdentify = async () => {
