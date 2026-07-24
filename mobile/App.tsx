@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AppThemeProvider } from './src/theme/ThemeProvider';
+import { AppThemeProvider, useAppTheme } from './src/theme/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -55,15 +55,20 @@ const SpeciesStack      = createNativeStackNavigator<SpeciesStackParamList>();
 const EnvironmentsStack = createNativeStackNavigator<EnvironmentsStackParamList>();
 const Tab               = createBottomTabNavigator<RootTabParamList>();
 
-const HEADER_OPTS = {
-  headerStyle:      { backgroundColor: '#2D6A4F' },
-  headerTintColor:  '#fff',
-  headerTitleStyle: { fontWeight: '700' as const },
-};
+// Header colors come from the active theme so the nav bar matches Almanac /
+// Observatory (hook, so each navigator recomputes on a theme toggle).
+function useHeaderOpts() {
+  const { palette } = useAppTheme();
+  return {
+    headerStyle:      { backgroundColor: palette.acc },
+    headerTintColor:  palette.btnInk,
+    headerTitleStyle: { fontWeight: '700' as const },
+  };
+}
 
 function PlantsNavigator() {
   return (
-    <PlantsStack.Navigator screenOptions={HEADER_OPTS}>
+    <PlantsStack.Navigator screenOptions={useHeaderOpts()}>
       <PlantsStack.Screen name="PlantsList"  component={PlantsScreen}      options={{ title: 'My Plants' }} />
       <PlantsStack.Screen name="PlantDetail" component={PlantDetailScreen} options={{ title: 'Plant' }} />
       <PlantsStack.Screen name="AddPlant"    component={AddPlantScreen}    options={{ title: 'Add plant' }} />
@@ -73,7 +78,7 @@ function PlantsNavigator() {
 
 function SpeciesNavigator() {
   return (
-    <SpeciesStack.Navigator screenOptions={HEADER_OPTS}>
+    <SpeciesStack.Navigator screenOptions={useHeaderOpts()}>
       <SpeciesStack.Screen name="SpeciesList"   component={SpeciesScreen}       options={{ title: 'Species catalog' }} />
       <SpeciesStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
     </SpeciesStack.Navigator>
@@ -82,7 +87,7 @@ function SpeciesNavigator() {
 
 function EnvironmentsNavigator() {
   return (
-    <EnvironmentsStack.Navigator screenOptions={HEADER_OPTS}>
+    <EnvironmentsStack.Navigator screenOptions={useHeaderOpts()}>
       <EnvironmentsStack.Screen name="EnvironmentsList" component={EnvironmentsScreen} options={{ title: 'Environments' }} />
       <EnvironmentsStack.Screen
         name="EnvironmentDetail"
@@ -112,6 +117,8 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 // inside AuthProvider, so App wraps it below.
 function AuthGate() {
   const { status } = useAuth();
+  const { palette, name: themeName } = useAppTheme();
+  const headerOpts = useHeaderOpts();
   const navigationRef = useNavigationContainerRef();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const signedIn = status === 'signedIn';
@@ -158,7 +165,7 @@ function AuthGate() {
   if (!signedIn) {
     return (
       <>
-        <StatusBar style="dark" />
+        <StatusBar style={themeName === 'observatory' ? 'light' : 'dark'} />
         <LoginScreen />
       </>
     );
@@ -169,9 +176,14 @@ function AuthGate() {
       <StatusBar style="light" />
       <Tab.Navigator
               screenOptions={{
-                tabBarActiveTintColor: '#2D6A4F',
-                tabBarStyle: { paddingBottom: 4 },
-                ...HEADER_OPTS,
+                tabBarActiveTintColor: palette.acc,
+                tabBarInactiveTintColor: palette.sub,
+                tabBarStyle: {
+                  paddingBottom: 4,
+                  backgroundColor: palette.card,
+                  borderTopColor: palette.line,
+                },
+                ...headerOpts,
               }}
             >
               <Tab.Screen
