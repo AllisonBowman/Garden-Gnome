@@ -11,6 +11,8 @@ import { fetchEnvironments, createEnvironment } from '../api/environments';
 import {
   Environment, EnvironmentType, Shelter, TempExposure, SunExposure,
 } from '../types';
+import AddressPicker from '../components/AddressPicker';
+import { ResolvedPlace } from '../location/geocode';
 import type { EnvironmentsStackParamList } from '../../App';
 
 type Nav = NativeStackNavigationProp<EnvironmentsStackParamList, 'EnvironmentsList'>;
@@ -59,9 +61,9 @@ export default function EnvironmentsScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName]     = useState('');
   const [type, setType]     = useState<EnvironmentType>('home');
-  const [city, setCity]     = useState('');
-  const [region, setRegion] = useState('');
-  const [country, setCountry] = useState('');
+  const [place, setPlace]   = useState<ResolvedPlace | null>(null);
+  // Bumped on reset to remount AddressPicker with fresh internal state.
+  const [pickerKey, setPickerKey] = useState(0);
   const [shelter, setShelter] = useState<Shelter>('sheltered');
   const [tempExposure, setTempExposure] = useState<TempExposure>('indoor');
   const [sunExposure, setSunExposure] = useState<SunExposure>('partial_sun');
@@ -84,13 +86,21 @@ export default function EnvironmentsScreen() {
 
   const mutation = useMutation({
     mutationFn: () => createEnvironment({
-      name, type, city, region, country,
+      name, type,
+      // Geography is derived from a validated, geocoded place (or blank).
+      city: place?.city ?? '',
+      region: place?.region ?? '',
+      country: place?.country ?? '',
+      lat: place?.lat,
+      lng: place?.lng,
       shelter, temp_exposure: tempExposure, sun_exposure: sunExposure,
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['environments'] });
       setModalVisible(false);
-      setName(''); setCity(''); setRegion(''); setCountry('');
+      setName('');
+      setPlace(null);
+      setPickerKey((k) => k + 1);
     },
     onError: () => Alert.alert('Error', 'Could not create environment.'),
   });
@@ -144,9 +154,12 @@ export default function EnvironmentsScreen() {
             style={styles.segmented}
           />
 
-          <TextInput label="City"    value={city}    onChangeText={setCity}    mode="outlined" style={styles.input} />
-          <TextInput label="Region"  value={region}  onChangeText={setRegion}  mode="outlined" style={styles.input} />
-          <TextInput label="Country" value={country} onChangeText={setCountry} mode="outlined" style={styles.input} />
+          <Text variant="labelMedium" style={styles.label}>Location</Text>
+          <Text variant="bodySmall" style={styles.locationHint}>
+            Set a place to unlock local weather. Search an address or use your
+            location — only a real, resolved place can be saved.
+          </Text>
+          <AddressPicker key={pickerKey} onChange={setPlace} />
 
           <Text variant="labelMedium" style={styles.label}>Shelter</Text>
           <SegmentedButtons
@@ -211,6 +224,7 @@ const styles = StyleSheet.create({
   modal: { backgroundColor: '#fff', margin: 20, borderRadius: 12, padding: 20 },
   modalTitle: { marginBottom: 16, fontWeight: '700' },
   label: { color: '#555', marginBottom: 6, marginTop: 8 },
+  locationHint: { color: '#888', marginBottom: 8, lineHeight: 18 },
   input: { marginBottom: 10 },
   segmented: { marginBottom: 12 },
   saveBtn: { marginTop: 8 },
