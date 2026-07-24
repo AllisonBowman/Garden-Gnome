@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import {
   TextInput, Button, Text, ActivityIndicator, TouchableRipple,
@@ -6,6 +6,8 @@ import {
 import { ensureLocationPermission } from '../location/permissions';
 import { searchAddress, locateMe } from '../location/lookup';
 import { ResolvedPlace } from '../location/geocode';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
 
 const DEBOUNCE_MS = 600;
 const MIN_CHARS = 4;
@@ -27,6 +29,9 @@ export default function AddressPicker({
   const [searching, setSearching] = useState(false);
   const [locating, setLocating] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
   const scheduleSearch = (text: string) => {
     if (timer.current) clearTimeout(timer.current);
@@ -116,17 +121,17 @@ export default function AddressPicker({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   input: { marginBottom: 4 },
   gpsBtn: { alignSelf: 'flex-start', marginBottom: 4 },
   suggestion: {
-    backgroundColor: '#EFF6F0',
-    borderRadius: 8,
+    backgroundColor: p.accSoft,
+    borderRadius: 12,
     padding: 12,
     marginBottom: 8,
   },
-  suggestionText: { color: '#2F3E36' },
-  suggestionHint: { color: '#6b7d6e', marginTop: 2 },
-  confirmed: { color: '#2D6A4F', marginBottom: 8, fontWeight: '600' },
-  noMatch: { color: '#8a8a8a', marginBottom: 8, fontStyle: 'italic' },
+  suggestionText: { color: p.ink },
+  suggestionHint: { color: p.sub, marginTop: 2 },
+  confirmed: { color: p.good, marginBottom: 8, fontWeight: '600' },
+  noMatch: { color: p.faint, marginBottom: 8, fontStyle: 'italic' },
 });

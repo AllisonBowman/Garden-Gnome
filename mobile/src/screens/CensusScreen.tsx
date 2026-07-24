@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, View, StyleSheet, Alert } from 'react-native';
-import { Text, Card, Button, ActivityIndicator, ProgressBar, useTheme } from 'react-native-paper';
+import { Text, Card, Button, ActivityIndicator, ProgressBar } from 'react-native-paper';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { fetchCensusSummary, syncCensus } from '../api/census';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
+import Eyebrow from '../components/Eyebrow';
 
 const ENV_LABEL: Record<string, string> = {
   home: '🏠 Home', nursery: '🌱 Nursery',
@@ -11,7 +14,8 @@ const ENV_LABEL: Record<string, string> = {
 };
 
 export default function CensusScreen() {
-  const theme = useTheme();
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
   const { data: summary, isLoading, isError, refetch } = useQuery({
     queryKey: ['census'],
@@ -29,7 +33,7 @@ export default function CensusScreen() {
   if (isError || !summary) {
     return (
       <View style={styles.center}>
-        <Text style={{ color: '#c00', textAlign: 'center' }}>
+        <Text style={{ color: palette.warn, textAlign: 'center' }}>
           Could not load census.{' '}
           {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
         </Text>
@@ -45,13 +49,13 @@ export default function CensusScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Totals */}
       <View style={styles.totalsRow}>
-        <TotalCard label="Plants" value={summary.total_plants} color={theme.colors.primary} />
-        <TotalCard label="Environments" value={summary.total_environments} color="#52796F" />
+        <TotalCard styles={styles} label="Plants" value={summary.total_plants} color={palette.acc} />
+        <TotalCard styles={styles} label="Environments" value={summary.total_environments} color={palette.sub} />
       </View>
 
       {/* Environments by type */}
       <Card style={styles.card}>
-        <Card.Title title="Environments by type" titleVariant="titleMedium" />
+        <Card.Title title="Environments by type" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {Object.entries(summary.environments_by_type).map(([type, count]) => (
             <View key={type} style={styles.envRow}>
@@ -66,7 +70,7 @@ export default function CensusScreen() {
 
       {/* Species distribution */}
       <Card style={styles.card}>
-        <Card.Title title="Top species" titleVariant="titleMedium" />
+        <Card.Title title="Top species" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {topSpecies.map((s) => (
             <View key={s.species_id} style={styles.speciesRow}>
@@ -75,7 +79,7 @@ export default function CensusScreen() {
               </Text>
               <ProgressBar
                 progress={s.count / maxCount}
-                color={theme.colors.primary}
+                color={palette.acc}
                 style={styles.bar}
               />
               <Text variant="bodySmall" style={styles.speciesCount}>{s.count}</Text>
@@ -86,7 +90,7 @@ export default function CensusScreen() {
 
       {/* Sync */}
       <Card style={styles.card}>
-        <Card.Title title="Census sync" titleVariant="titleMedium" />
+        <Card.Title title="Census sync" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.syncNote}>
             Push anonymised plant data to the central census server (if configured).
@@ -96,7 +100,8 @@ export default function CensusScreen() {
             onPress={() => syncMutation.mutate()}
             loading={syncMutation.isPending}
             style={styles.syncBtn}
-            buttonColor="#52796F"
+            buttonColor={palette.acc}
+            textColor={palette.btnInk}
           >
             Sync now
           </Button>
@@ -106,32 +111,37 @@ export default function CensusScreen() {
   );
 }
 
-function TotalCard({ label, value, color }: { label: string; value: number; color: string }) {
+type Styles = ReturnType<typeof makeStyles>;
+
+function TotalCard({ styles, label, value, color }: { styles: Styles; label: string; value: number; color: string }) {
   return (
     <View style={[styles.totalCard, { borderColor: color }]}>
-      <Text variant="displaySmall" style={{ color, fontWeight: '700' }}>{value}</Text>
-      <Text variant="labelMedium" style={{ color: '#555' }}>{label}</Text>
+      <Text variant="displaySmall" style={[styles.totalValue, { color }]}>{value}</Text>
+      <Eyebrow style={styles.totalLabel}>{label}</Eyebrow>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F6FAF7' },
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 12, paddingBottom: 48 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   totalsRow: { flexDirection: 'row', gap: 12, marginBottom: 12 },
   totalCard: {
     flex: 1, alignItems: 'center', padding: 16, borderRadius: 12,
-    backgroundColor: '#fff', borderWidth: 2, elevation: 2,
+    backgroundColor: p.card, borderWidth: 2, elevation: 2,
   },
-  card: { marginBottom: 12, borderRadius: 12 },
-  envRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#eee' },
-  envLabel: { color: '#333', flex: 1 },
-  envCount: { fontWeight: '700', color: '#2D6A4F' },
+  totalValue: { fontWeight: '700', fontFamily: f.numeric },
+  totalLabel: { marginTop: 2 },
+  card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
+  cardTitle: { fontFamily: f.display, color: p.ink },
+  envRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line2 },
+  envLabel: { color: p.ink, flex: 1 },
+  envCount: { fontWeight: '700', color: p.acc, fontFamily: f.numeric },
   speciesRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, gap: 8 },
-  speciesName: { width: 110, color: '#333' },
+  speciesName: { width: 110, color: p.ink },
   bar: { flex: 1, height: 8, borderRadius: 4 },
-  speciesCount: { width: 24, textAlign: 'right', fontWeight: '700', color: '#2D6A4F' },
-  syncNote: { color: '#666', marginBottom: 12 },
+  speciesCount: { width: 24, textAlign: 'right', fontWeight: '700', color: p.acc, fontFamily: f.numeric },
+  syncNote: { color: p.sub, marginBottom: 12 },
   syncBtn: { borderRadius: 8 },
 });

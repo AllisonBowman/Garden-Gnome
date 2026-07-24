@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ScrollView, View, StyleSheet, Linking, Platform, Pressable,
 } from 'react-native';
 import {
-  Text, Card, Chip, ActivityIndicator, Surface, Divider, useTheme,
+  Text, Card, Chip, ActivityIndicator, Surface, Divider,
 } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -15,15 +15,8 @@ import {
   conditionText, weekday, exposureSummary, translateWeather,
 } from '../weather/translate';
 import { EnvironmentsStackParamList } from '../../App';
-
-// Notebook palette, shared with the specimen cards on PlantDetail.
-const SPECIMEN = {
-  ink: '#1C2B1F',
-  inkSoft: '#2C3D2C',
-  paper: '#EEEBDD',
-  marigold: '#D9A441',
-  clay: '#A9542F',
-};
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
 
 type Route = RouteProp<EnvironmentsStackParamList, 'EnvironmentDetail'>;
 
@@ -53,6 +46,8 @@ const SUN_LABEL: Record<string, string> = {
 };
 
 function ForecastDay({ day }: { day: WeatherDay }) {
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   return (
     <View style={styles.foreDay}>
       <Text style={styles.foreDow}>{weekday(day.date)}</Text>
@@ -71,7 +66,8 @@ function ForecastDay({ day }: { day: WeatherDay }) {
 export default function EnvironmentDetailScreen() {
   const route = useRoute<Route>();
   const { environmentId } = route.params;
-  const theme = useTheme();
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
   const { data: env, isLoading } = useQuery({
     queryKey: ['environment', environmentId],
@@ -96,7 +92,7 @@ export default function EnvironmentDetailScreen() {
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
       {/* Header */}
       <Surface style={styles.header} elevation={1}>
-        <Text variant="headlineSmall" style={{ color: theme.colors.primary }}>
+        <Text variant="headlineSmall" style={styles.envName}>
           {env.name}
         </Text>
         <Text variant="bodyMedium" style={styles.subtle}>
@@ -107,7 +103,7 @@ export default function EnvironmentDetailScreen() {
 
       {/* Climate characteristics */}
       <Card style={styles.card}>
-        <Card.Title title="Climate" titleVariant="titleMedium" />
+        <Card.Title title="Climate" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <View style={styles.chipRow}>
             <Chip compact style={styles.chip}>{SHELTER_LABEL[env.shelter] ?? env.shelter}</Chip>
@@ -119,7 +115,7 @@ export default function EnvironmentDetailScreen() {
 
       {/* Weather strip */}
       <Card style={styles.card}>
-        <Card.Title title="Local weather" titleVariant="titleMedium" />
+        <Card.Title title="Local weather" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {weatherLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
@@ -191,54 +187,56 @@ export default function EnvironmentDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: '#F6FAF7' },
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  scroll: { flex: 1, backgroundColor: p.bg },
   content: { padding: 12, paddingBottom: 48 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  header: { borderRadius: 12, padding: 16, marginBottom: 12 },
-  subtle: { color: '#555', marginTop: 2 },
-  card: { marginBottom: 12, borderRadius: 12 },
+  header: { borderRadius: 12, padding: 16, marginBottom: 12, backgroundColor: p.card },
+  envName: { color: p.acc, fontFamily: f.display },
+  subtle: { color: p.sub, marginTop: 2 },
+  card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
+  cardTitle: { color: p.ink, fontFamily: f.display },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { backgroundColor: '#E1EDE4' },
-  unavailable: { color: '#6b7d6e', fontStyle: 'italic', lineHeight: 20 },
+  chip: { backgroundColor: p.accSoft },
+  unavailable: { color: p.sub, fontStyle: 'italic', lineHeight: 20 },
 
   nowRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   nowMain: {},
-  nowTemp: { fontSize: 34, fontWeight: '700', color: '#1C2B1F' },
-  nowCond: { color: '#52796F', marginTop: 2 },
+  nowTemp: { fontSize: 34, fontWeight: '700', color: p.ink, fontFamily: f.numeric },
+  nowCond: { color: p.sub, marginTop: 2 },
   nowStats: { alignItems: 'flex-end', gap: 4 },
-  nowStat: { color: '#3b4b3f', fontSize: 13 },
+  nowStat: { color: p.sub, fontSize: 13 },
 
   divider: { marginVertical: 12 },
   foreRow: { gap: 14, paddingVertical: 2 },
   foreDay: { alignItems: 'center', minWidth: 52 },
-  foreDow: { fontSize: 12, color: '#888', marginBottom: 4, fontWeight: '600' },
-  foreTemp: { fontSize: 16, fontWeight: '700', color: '#1C2B1F' },
-  foreLow: { fontSize: 13, color: '#8a8a8a' },
-  foreMeta: { fontSize: 11, color: '#52796F', marginTop: 3 },
+  foreDow: { fontSize: 12, color: p.faint, marginBottom: 4, fontWeight: '600' },
+  foreTemp: { fontSize: 16, fontWeight: '700', color: p.ink, fontFamily: f.numeric },
+  foreLow: { fontSize: 13, color: p.faint, fontFamily: f.numeric },
+  foreMeta: { fontSize: 11, color: p.sub, marginTop: 3 },
 
   attribution: { marginTop: 14, alignSelf: 'flex-start' },
-  attributionText: { fontSize: 12, color: '#8a8a8a' },
+  attributionText: { fontSize: 12, color: p.faint },
 
   // Notebook "outside → in here" card
-  specimenCard: { marginBottom: 12, borderRadius: 12, backgroundColor: SPECIMEN.paper },
+  specimenCard: { marginBottom: 12, borderRadius: 12, backgroundColor: p.desk },
   specimenHeader: {
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 12,
     borderBottomWidth: 1,
     borderStyle: 'dashed',
-    borderBottomColor: 'rgba(28,43,31,0.25)',
+    borderBottomColor: p.line,
   },
   specimenLabel: {
     fontSize: 11,
     letterSpacing: 1.5,
-    color: SPECIMEN.clay,
+    color: p.warn,
     fontWeight: '600',
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
   },
-  specimenSub: { fontSize: 13, lineHeight: 19, color: SPECIMEN.inkSoft, marginTop: 6 },
+  specimenSub: { fontSize: 13, lineHeight: 19, color: p.sub, marginTop: 6 },
   specimenBody: { paddingTop: 14, gap: 8 },
-  translateLine: { lineHeight: 21, color: SPECIMEN.ink, fontSize: 14.5 },
-  translateFootnote: { marginTop: 6, fontSize: 12, fontStyle: 'italic', color: SPECIMEN.inkSoft },
+  translateLine: { lineHeight: 21, color: p.ink, fontSize: 14.5 },
+  translateFootnote: { marginTop: 6, fontSize: 12, fontStyle: 'italic', color: p.sub },
 });

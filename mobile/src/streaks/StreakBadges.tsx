@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, Card, Divider, ActivityIndicator } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { fetchPlants, fetchCareLogs } from '../api/plants';
 import { fetchSpecies } from '../api/species';
 import { CareLog, Species } from '../types';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
+import Eyebrow from '../components/Eyebrow';
 import {
   computeStreak, computeMetrics, computeBadges, Badge,
 } from './streaks';
@@ -45,11 +48,13 @@ function useStreakBadges() {
 }
 
 export default function StreakBadges() {
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const { loading, hasPlants, streak, badges } = useStreakBadges();
   const [selected, setSelected] = useState<Badge | null>(null);
 
   if (loading) {
-    return <ActivityIndicator style={styles.loading} color="#2D6A4F" />;
+    return <ActivityIndicator style={styles.loading} color={palette.acc} />;
   }
   if (!hasPlants || !streak) return null; // nothing to celebrate yet
 
@@ -87,7 +92,7 @@ export default function StreakBadges() {
         <Divider style={styles.divider} />
 
         {/* Badges */}
-        <Text style={styles.badgesHeading}>Badges · {earnedCount} of {badges.length}</Text>
+        <Eyebrow style={styles.badgesHeading}>Badges · {earnedCount} of {badges.length}</Eyebrow>
         <View style={styles.badgeGrid}>
           {badges.map((b) => (
             <Pressable
@@ -114,31 +119,28 @@ export default function StreakBadges() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   loading: { marginVertical: 20 },
-  card: { marginBottom: 12, borderRadius: 12, backgroundColor: '#FFFFFF' },
+  card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
   streakRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   streakEmoji: { fontSize: 34 },
   streakText: { flex: 1 },
-  streakNum: { fontSize: 18, fontWeight: '700', color: '#2D6A4F' },
-  streakSub: { fontSize: 13, color: '#6b7d6e', marginTop: 2 },
+  streakNum: { fontSize: 18, fontWeight: '700', color: p.acc, fontFamily: f.display },
+  streakSub: { fontSize: 13, color: p.sub, marginTop: 2 },
   divider: { marginVertical: 14 },
-  badgesHeading: {
-    fontSize: 12, letterSpacing: 0.5, color: '#52796F',
-    fontWeight: '600', marginBottom: 10, textTransform: 'uppercase',
-  },
+  badgesHeading: { marginBottom: 10 },
   badgeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   badge: {
     width: '31%', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 4,
-    borderRadius: 10, backgroundColor: '#F1F6F2',
+    borderRadius: 10, backgroundColor: p.desk,
   },
-  badgeSelected: { backgroundColor: '#E1EDE4' },
+  badgeSelected: { backgroundColor: p.accSoft },
   badgeEmoji: { fontSize: 26, marginBottom: 4 },
   badgeLocked: { opacity: 0.28 },
-  badgeName: { fontSize: 11, textAlign: 'center', color: '#2F3E36', fontWeight: '600' },
-  badgeNameLocked: { color: '#9aa89c', fontWeight: '400' },
+  badgeName: { fontSize: 11, textAlign: 'center', color: p.ink, fontWeight: '600' },
+  badgeNameLocked: { color: p.faint, fontWeight: '400' },
   badgeDesc: {
-    marginTop: 12, fontSize: 13, color: '#2F3E36', lineHeight: 18,
-    backgroundColor: '#F1F6F2', padding: 10, borderRadius: 8,
+    marginTop: 12, fontSize: 13, color: p.ink, lineHeight: 18,
+    backgroundColor: p.desk, padding: 10, borderRadius: 8,
   },
 });
