@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper';
+import { AppThemeProvider } from './src/theme/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -92,18 +92,6 @@ function EnvironmentsNavigator() {
     </EnvironmentsStack.Navigator>
   );
 }
-
-// ── Theme ─────────────────────────────────────────────────────────────────────
-const theme = {
-  ...MD3LightTheme,
-  colors: {
-    ...MD3LightTheme.colors,
-    primary:    '#2D6A4F',
-    secondary:  '#52796F',
-    background: '#F6FAF7',
-    surface:    '#FFFFFF',
-  },
-};
 
 // ── React Query ───────────────────────────────────────────────────────────────
 const queryClient = new QueryClient({
@@ -238,11 +226,11 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <PaperProvider theme={theme}>
+        <AppThemeProvider>
           <AuthProvider>
             <AuthGate />
           </AuthProvider>
-        </PaperProvider>
+        </AppThemeProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

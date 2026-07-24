@@ -11,6 +11,7 @@ import {
   rescheduleAllReminders, getWeatherShiftPref, setWeatherShiftPref,
 } from '../notifications/reminders';
 import { ReminderPrefs } from '../notifications/plan';
+import { useAppTheme } from '../theme/ThemeProvider';
 import { CareType } from '../types';
 
 // The backend-URL override is shown in dev AND in builds that opt in via
@@ -46,6 +47,7 @@ function confirmDialog(
 
 export default function SettingsScreen() {
   const { user, signOut, deleteAccount } = useAuth();
+  const { name: themeName, toggle: toggleTheme } = useAppTheme();
   const [url, setUrl]       = useState('');
   const [saved, setSaved]   = useState(false);
   const [testing, setTesting] = useState(false);
@@ -171,6 +173,28 @@ export default function SettingsScreen() {
           >
             Delete account
           </Button>
+        </Card.Content>
+      </Card>
+
+      <Divider style={styles.divider} />
+
+      <Card style={styles.card}>
+        <Card.Title title="Appearance" titleVariant="titleMedium" />
+        <Card.Content>
+          <View style={styles.reminderRow}>
+            <Text variant="bodyMedium" style={styles.reminderLabel}>
+              {themeName === 'observatory' ? '🌙 Observatory (dark)' : '☀️ Almanac (light)'}
+            </Text>
+            <Switch
+              value={themeName === 'observatory'}
+              onValueChange={toggleTheme}
+              color="#2D6A4F"
+            />
+          </View>
+          <Text variant="bodySmall" style={styles.hint}>
+            Almanac is the warm field-notebook look; Observatory is a dark,
+            colorblind-safe night theme.
+          </Text>
         </Card.Content>
       </Card>
 

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@400;500;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,700;1,6..72,400;1,6..72,500&amp;display=swap" rel="stylesheet"><style>body{margin:0;background:#F0EEE9;font-family:system-ui,-apple-system,sans-serif}a{color:#2D6A4F}a:hover{color:#1C2B1F}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}</style></helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">PlantAdvocate iOS — reasoning UI explorations: 4 reasoning components · 5 screen wireframes · 3 aesthetics</span></div>
+
+<div style="background:#FFFFFF;border:1px solid rgba(0,0,0,.08);border-radius:8px;padding:18px 20px;margin:0 0 26px;max-width:1230px;display:flex;gap:28px;flex-wrap:wrap">
+  <div style="flex:1;min-width:260px">
+    <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:1.5px;color:#A9542F;margin-bottom:8px">GROUNDED IN THE REPO</div>
+    <div style="font-size:12px;line-height:1.55;color:#333">Species windows + care-log gap math come straight from <span style="font-family:Menlo,monospace;font-size:11px">advisor.py</span> (hold off / in window / past window). Sample data is the real seed catalog: Monstera 7–12d water, Calathea 60–80% RH, Snake Plant 14–21d. Palettes reuse the app green <span style="font-family:Menlo,monospace;font-size:11px">#2D6A4F</span> and the landing page's ink/paper/marigold/clay.</div>
+  </div>
+  <div style="flex:1.2;min-width:300px">
+    <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:1.5px;color:#A9542F;margin-bottom:8px">DECISIONS LOCKED FROM YOUR ANSWERS</div>
+    <div style="font-size:12px;line-height:1.55;color:#333">Environments <em>are</em> the dashboard, plants nested inside. One reasoning component reused everywhere (inline, sheet, jobs, chat). Forecast is a first-class factor, passed through each environment's <strong>lens</strong> (indoor / shelter / exposure modulate raw weather). Confidence = numeric + in-character hedge. Jobs: rolling 7 days, urgent floats up, day-pinned by weather. Gnome inferred from behavior and evolves — archetypes: <em>Meticulous Botanist · Weekend Tender · Rescue Romantic · Wild Experimenter</em>. Affiliate recs appear only where a recommendation creates the need.</div>
+  </div>
+  <div style="flex:.8;min-width:220px">
+    <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:1.5px;color:#A9542F;margin-bottom:8px">ACCESSIBILITY RULE</div>
+    <div style="font-size:12px;line-height:1.55;color:#333">No meaning carried by color alone, ever: direction = position + arrow + signed number; status = shape + label; charts use bands, hatching and annotations. Text contrast ≥ 4.5:1 in every direction below.</div>
+  </div>
+</div>
+
+<div style="font:700 11px ui-monospace,Menlo,monospace;letter-spacing:2.5px;color:#555;margin:0 0 14px">A — THE REASONING COMPONENT <span style="font-weight:400;letter-spacing:0;font-family:system-ui,sans-serif;color:#888;text-transform:none">· same case in all four: “Freckles” the Monstera, Living Room, watered 9 days ago, heat spike coming</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a" data-screen-label="1a Causal chain">
+  <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Causal chain — evidence flows to a verdict; the environment lens is an explicit step</div>
+  <div class="dv-card" style="width:390px;background:#FBFAF7">
+    <div style="padding:18px 18px 8px;border-bottom:1px solid rgba(28,43,31,.1)">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:13px;font-weight:600;color:#1C2B1F">Freckles</span>
+        <span style="font-size:11.5px;font-style:italic;color:#667">Monstera deliciosa</span>
+        <span style="font-size:10px;border:1px solid rgba(28,43,31,.25);border-radius:999px;padding:1.5px 8px;color:#445">Living Room</span>
+      </div>
+      <div style="font-size:15px;font-weight:600;color:#1C2B1F;margin-top:8px">Why water tomorrow, not day 12?</div>
+    </div>
+    <div style="padding:14px 18px 6px;display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:22px 1fr;column-gap:12px">
+        <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#2D6A4F;margin-top:4px"></span><span style="flex:1;width:2px;background:rgba(28,43,31,.18)"></span></div>
+        <div style="padding-bottom:12px"><span style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#52796F">YOUR LOG</span><div style="font-size:12.5px;color:#1C2B1F;line-height:1.45">Last deep watering <strong>9 days ago</strong> (Jul 11)</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;background:#1C2B1F;margin-top:4px"></span><span style="flex:1;width:2px;background:rgba(28,43,31,.18)"></span></div>
+        <div style="padding-bottom:12px"><span style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#52796F">SPECIES DB</span><div style="font-size:12.5px;color:#1C2B1F;line-height:1.45">Monstera window: water every <strong>7–12 days</strong>; prefers 50–70% RH</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#2D6A4F;margin-top:4px"></span><span style="flex:1;width:2px;background:rgba(28,43,31,.18)"></span></div>
+        <div style="padding-bottom:12px"><span style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#52796F">FORECAST</span><div style="font-size:12.5px;color:#1C2B1F;line-height:1.45">Heat spike Tue–Wed: <strong>91°F</strong> outside, dry air behind it</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center"><span style="width:12px;height:12px;background:#D9A441;transform:rotate(45deg);margin-top:3px"></span><span style="flex:1;width:2px;background:rgba(28,43,31,.18)"></span></div>
+        <div style="padding-bottom:12px;background:rgba(217,164,65,.14);border-radius:8px;padding:8px 10px 10px;margin-bottom:12px"><span style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#8a6414">ENVIRONMENT LENS · LIVING ROOM</span><div style="font-size:12.5px;color:#1C2B1F;line-height:1.45">Indoor, AC running → the spike reaches Freckles as <strong>+3°F and ~41% RH</strong> — below the 50–70% it likes. No direct sun, so light is unchanged.</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:13px;color:#A9542F;line-height:1;margin-top:2px">▶</span><span style="flex:1;width:2px;background:rgba(28,43,31,.18)"></span></div>
+        <div style="padding-bottom:12px"><span style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#A9542F">INFERENCE</span><div style="font-size:12.5px;color:#1C2B1F;line-height:1.45">Dry room + heat → soil drying <strong>~15% faster</strong> than Freckles' average cycle</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center"><span style="font-size:13px;color:#A9542F;line-height:1;margin-top:2px">▶</span><span style="flex:1;width:2px;background:rgba(28,43,31,.18)"></span></div>
+        <div style="padding-bottom:14px"><span style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#A9542F">INFERENCE</span><div style="font-size:12.5px;color:#1C2B1F;line-height:1.45">Last cycle the leaves curled at day 11 (Jun 30). This cycle that point lands <strong>~day 10</strong></div></div>
+      </div>
+      <div style="border:1.5px solid #2D6A4F;border-radius:10px;padding:12px 14px;background:#EFF6F0;margin-left:34px">
+        <div style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#2D6A4F">VERDICT</div>
+        <div style="font-size:14px;font-weight:600;color:#1C2B1F;margin-top:3px">Water tomorrow morning — day 10</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+          <div style="flex:1;height:8px;border:1px solid rgba(28,43,31,.3);border-radius:4px;position:relative"><span style="position:absolute;inset:1px auto 1px 1px;width:84%;background:#2D6A4F;border-radius:3px"></span></div>
+          <span style="font:600 12px Menlo,monospace;color:#1C2B1F">84%</span>
+        </div>
+        <div style="font-size:11.5px;font-style:italic;color:#52604f;margin-top:6px">“I'd stake my second-best hat on it.” — Fernsby</div>
+      </div>
+      <div style="font-size:11px;color:#667;line-height:1.5;margin:12px 0 0 34px">What would change my mind: a damp top-2-inches on the poke test — your finger outranks my arithmetic.</div>
+    </div>
+    <div style="display:flex;gap:12px;padding:10px 18px 14px;margin-top:8px;border-top:1px dashed rgba(28,43,31,.18);font-size:9.5px;color:#556;flex-wrap:wrap">
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2D6A4F;vertical-align:-1px"></span> observed</span>
+      <span><span style="display:inline-block;width:8px;height:8px;background:#1C2B1F;vertical-align:-1px"></span> species fact</span>
+      <span><span style="display:inline-block;width:8px;height:8px;background:#D9A441;transform:rotate(45deg);vertical-align:-1px"></span> environment lens</span>
+      <span><span style="color:#A9542F">▶</span> inference</span>
+    </div>
+  </div>
+  <div style="width:390px;font-size:11px;line-height:1.5;color:#666">Strong for teaching how the app thinks; the lens step is where indoor/shelter/exposure logic becomes visible. Longest to scan.</div>
+</div>
+
+<div class="dv-opt" id="1b" data-screen-label="1b Weighted factor ledger">
+  <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Weighted ledger — every factor pushes the verdict left or right; net + confidence</div>
+  <div class="dv-card" style="width:390px;background:#FBFAF7">
+    <div style="padding:18px 18px 12px">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:13px;font-weight:600;color:#1C2B1F">Freckles</span>
+        <span style="font-size:11.5px;font-style:italic;color:#667">Monstera deliciosa</span>
+        <span style="font-size:10px;border:1px solid rgba(28,43,31,.25);border-radius:999px;padding:1.5px 8px;color:#445">Living Room</span>
+      </div>
+      <div style="font-size:15px;font-weight:600;color:#1C2B1F;margin-top:8px">Water tomorrow — here's the weighing</div>
+    </div>
+    <div style="padding:0 18px 6px">
+      <div style="display:flex;justify-content:space-between;font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#556;padding:0 0 6px"><span>◀ CAN WAIT</span><span>WATER SOONER ▶</span></div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:#1C2B1F"><span>9 days dry of a 7–12 day window</span><span style="font:600 11px Menlo,monospace;color:#A9542F">▲ +2.4</span></div><div style="position:relative;height:10px;margin-top:3px;background:rgba(28,43,31,.05);border-radius:5px"><span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:rgba(28,43,31,.35)"></span><span style="position:absolute;left:50%;top:1px;bottom:1px;width:40%;background:#A9542F;border-radius:0 4px 4px 0"></span></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:#1C2B1F"><span>Room air 41% RH — likes 50–70%</span><span style="font:600 11px Menlo,monospace;color:#A9542F">▲ +1.8</span></div><div style="position:relative;height:10px;margin-top:3px;background:rgba(28,43,31,.05);border-radius:5px"><span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:rgba(28,43,31,.35)"></span><span style="position:absolute;left:50%;top:1px;bottom:1px;width:30%;background:#A9542F;border-radius:0 4px 4px 0"></span></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:#1C2B1F"><span>Heat spike Tue reaches indoors as +3°F</span><span style="font:600 11px Menlo,monospace;color:#A9542F">▲ +1.2</span></div><div style="position:relative;height:10px;margin-top:3px;background:rgba(28,43,31,.05);border-radius:5px"><span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:rgba(28,43,31,.35)"></span><span style="position:absolute;left:50%;top:1px;bottom:1px;width:20%;background:#A9542F;border-radius:0 4px 4px 0"></span></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:#1C2B1F"><span>Chunky aroid mix drains fast</span><span style="font:600 11px Menlo,monospace;color:#A9542F">▲ +0.4</span></div><div style="position:relative;height:10px;margin-top:3px;background:rgba(28,43,31,.05);border-radius:5px"><span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:rgba(28,43,31,.35)"></span><span style="position:absolute;left:50%;top:1px;bottom:1px;width:7%;background:#A9542F;border-radius:0 4px 4px 0"></span></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:#1C2B1F"><span>Jul 11 was a deep soak — reserves ran long</span><span style="font:600 11px Menlo,monospace;color:#2D6A4F">▼ −1.1</span></div><div style="position:relative;height:10px;margin-top:3px;background:rgba(28,43,31,.05);border-radius:5px"><span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:rgba(28,43,31,.35)"></span><span style="position:absolute;right:50%;top:1px;bottom:1px;width:18%;background:repeating-linear-gradient(-45deg,#2D6A4F 0 3px,#9fc4ae 3px 6px);border-radius:4px 0 0 4px"></span></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:#1C2B1F"><span>No thirst signals logged — no curl, no droop</span><span style="font:600 11px Menlo,monospace;color:#2D6A4F">▼ −0.6</span></div><div style="position:relative;height:10px;margin-top:3px;background:rgba(28,43,31,.05);border-radius:5px"><span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:rgba(28,43,31,.35)"></span><span style="position:absolute;right:50%;top:1px;bottom:1px;width:10%;background:repeating-linear-gradient(-45deg,#2D6A4F 0 3px,#9fc4ae 3px 6px);border-radius:4px 0 0 4px"></span></div></div>
+      </div>
+      <div style="position:relative;height:26px;margin-top:12px;border-top:1.5px solid rgba(28,43,31,.25)">
+        <span style="position:absolute;left:50%;top:-4px;width:1.5px;height:7px;background:rgba(28,43,31,.35)"></span>
+        <span style="position:absolute;left:69%;top:-7px;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #1C2B1F"></span>
+        <span style="position:absolute;left:69%;top:5px;transform:translateX(-50%);font:600 10px Menlo,monospace;color:#1C2B1F;white-space:nowrap">net +4.1 · sooner</span>
+      </div>
+    </div>
+    <div style="margin:6px 18px 16px;border:1.5px solid #2D6A4F;border-radius:10px;background:#EFF6F0;padding:12px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:600;color:#1C2B1F">Water tomorrow (day 10)</span><span style="font:600 12px Menlo,monospace;color:#1C2B1F">84%</span></div>
+      <div style="position:relative;height:8px;border:1px solid rgba(28,43,31,.3);border-radius:4px;margin-top:8px"><span style="position:absolute;inset:1px auto 1px 1px;width:84%;background:#2D6A4F;border-radius:3px"></span><span style="position:absolute;left:50%;top:-3px;width:1px;height:14px;background:rgba(28,43,31,.4)"></span><span style="position:absolute;left:75%;top:-3px;width:1px;height:14px;background:rgba(28,43,31,.4)"></span><span style="position:absolute;left:90%;top:-3px;width:1px;height:14px;background:rgba(28,43,31,.4)"></span></div>
+      <div style="display:flex;justify-content:space-between;font-size:8.5px;color:#667;margin-top:3px"><span>hunch</span><span style="padding-left:26px">fairly sure</span><span>hat</span><span>hat &amp; beard</span></div>
+      <div style="font-size:11.5px;font-style:italic;color:#52604f;margin-top:7px">“I'd stake my second-best hat on it.” — Fernsby</div>
+    </div>
+    <div style="padding:0 18px 16px;font-size:10.5px;color:#667;line-height:1.5">Weights come from the care database + your own logs. Tap any factor to see its source record.</div>
+  </div>
+  <div style="width:390px;font-size:11px;line-height:1.5;color:#666">Fastest honest read — shows counter-evidence, which builds trust. Direction is position + arrow + sign (hatching for “wait” side), never color alone.</div>
+</div>
+
+<div class="dv-opt" id="1c" data-screen-label="1c Annotated drying curve">
+  <div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>The drying curve — this cycle vs. your average, with the species window as a band</div>
+  <div class="dv-card" style="width:390px;background:#FBFAF7">
+    <div style="padding:18px 18px 10px">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:13px;font-weight:600;color:#1C2B1F">Freckles</span>
+        <span style="font-size:11.5px;font-style:italic;color:#667">Monstera deliciosa</span>
+        <span style="font-size:10px;border:1px solid rgba(28,43,31,.25);border-radius:999px;padding:1.5px 8px;color:#445">Living Room</span>
+      </div>
+      <div style="font-size:15px;font-weight:600;color:#1C2B1F;margin-top:8px">This cycle is drying faster than your rhythm</div>
+    </div>
+    <div style="display:flex;gap:3px;padding:0 18px 8px">
+      <div style="flex:1;text-align:center;border:1px solid rgba(28,43,31,.2);border-radius:6px;padding:3px 0;font-size:9px;color:#445"><div style="font-weight:600">Mon</div>84°</div>
+      <div style="flex:1;text-align:center;border:1.5px solid #A9542F;border-radius:6px;padding:3px 0;font-size:9px;color:#A9542F;background:rgba(169,84,47,.07)"><div style="font-weight:700">Tue</div>91°▲</div>
+      <div style="flex:1;text-align:center;border:1.5px solid #A9542F;border-radius:6px;padding:3px 0;font-size:9px;color:#A9542F;background:rgba(169,84,47,.07)"><div style="font-weight:700">Wed</div>89°▲</div>
+      <div style="flex:1;text-align:center;border:1px solid rgba(28,43,31,.2);border-radius:6px;padding:3px 0;font-size:9px;color:#445"><div style="font-weight:600">Thu</div>⛈ 77°</div>
+      <div style="flex:1;text-align:center;border:1px solid rgba(28,43,31,.2);border-radius:6px;padding:3px 0;font-size:9px;color:#445"><div style="font-weight:600">Fri</div>80°</div>
+      <div style="flex:1;text-align:center;border:1px solid rgba(28,43,31,.2);border-radius:6px;padding:3px 0;font-size:9px;color:#445"><div style="font-weight:600">Sat</div>78°</div>
+      <div style="flex:1;text-align:center;border:1px solid rgba(28,43,31,.2);border-radius:6px;padding:3px 0;font-size:9px;color:#445"><div style="font-weight:600">Sun</div>81°</div>
+    </div>
+    <div style="padding:0 8px">
+      <svg width="374" height="226" viewBox="0 0 374 226" role="img" aria-label="Soil moisture projection chart">
+        <defs><pattern id="hx1c" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#A9542F" stroke-width="1.4" opacity="0.45"></line></pattern></defs>
+        <rect x="170" y="18" width="100" height="160" fill="#2D6A4F" opacity="0.09"></rect>
+        <line x1="170" y1="18" x2="170" y2="178" stroke="#2D6A4F" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"></line>
+        <line x1="270" y1="18" x2="270" y2="178" stroke="#2D6A4F" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"></line>
+        <text x="220" y="30" font-size="9" fill="#2D6A4F" text-anchor="middle" font-family="Menlo,monospace">species window 7–12d</text>
+        <rect x="210" y="18" width="50" height="160" fill="url(#hx1c)"></rect>
+        <text x="235" y="192" font-size="8.5" fill="#A9542F" text-anchor="middle" font-family="Menlo,monospace">heat Tue–Wed</text>
+        <line x1="30" y1="140" x2="344" y2="140" stroke="#A9542F" stroke-width="1" stroke-dasharray="2 3"></line>
+        <text x="36" y="151" font-size="8.5" fill="#A9542F" font-family="Menlo,monospace">curl zone — leaves complain here</text>
+        <path d="M 30 40 Q 150 52 250 128 T 344 172" fill="none" stroke="#52796F" stroke-width="1.6" stroke-dasharray="5 4"></path>
+        <path d="M 30 40 Q 130 54 230 140 T 320 184" fill="none" stroke="#1C2B1F" stroke-width="2.2"></path>
+        <circle cx="210" cy="122" r="5" fill="#1C2B1F"></circle>
+        <text x="210" y="112" font-size="9.5" font-weight="700" fill="#1C2B1F" text-anchor="middle" font-family="Menlo,monospace">today · d9</text>
+        <circle cx="250" cy="151" r="4.5" fill="none" stroke="#A9542F" stroke-width="2"></circle>
+        <text x="253" y="166" font-size="8.5" fill="#A9542F" font-family="Menlo,monospace">curl Jun 30 (d11)</text>
+        <line x1="230" y1="140" x2="230" y2="70" stroke="#2D6A4F" stroke-width="1.4"></line>
+        <path d="M 230 70 L 262 70 L 262 86 L 230 86 Z" fill="#2D6A4F"></path>
+        <text x="246" y="81" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="Menlo,monospace">d10</text>
+        <text x="268" y="81" font-size="9" fill="#2D6A4F" font-family="Menlo,monospace">← water here</text>
+        <line x1="30" y1="178" x2="344" y2="178" stroke="#1C2B1F" stroke-width="1.2"></line>
+        <g font-size="8.5" fill="#556" font-family="Menlo,monospace" text-anchor="middle"><text x="30" y="204">0d</text><text x="110" y="204">4d</text><text x="190" y="204">8d</text><text x="270" y="204">12d</text><text x="344" y="204">16d</text></g>
+        <text x="30" y="220" font-size="8.5" fill="#556" font-family="Menlo,monospace">days since last watering</text>
+      </svg>
+    </div>
+    <div style="display:flex;gap:12px;padding:4px 18px 10px;font-size:9.5px;color:#556;flex-wrap:wrap">
+      <span><span style="display:inline-block;width:16px;height:0;border-top:2.2px solid #1C2B1F;vertical-align:3px"></span> this cycle (projected)</span>
+      <span><span style="display:inline-block;width:16px;height:0;border-top:2px dashed #52796F;vertical-align:3px"></span> your avg cycle (8.2d)</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:#2D6A4F;opacity:.15;vertical-align:-1px;border:1px solid #2D6A4F"></span> window</span>
+    </div>
+    <div style="margin:0 18px 16px;border:1.5px solid #2D6A4F;border-radius:10px;background:#EFF6F0;padding:12px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:600;color:#1C2B1F">Water tomorrow (day 10)</span><span style="font:600 12px Menlo,monospace;color:#1C2B1F">84%</span></div>
+      <div style="font-size:11.5px;color:#33413a;line-height:1.5;margin-top:5px">The solid line hits the curl zone a full day before your usual rhythm — the heat spike and 41% air steepen the slope.</div>
+      <div style="font-size:11.5px;font-style:italic;color:#52604f;margin-top:6px">“I'd stake my second-best hat on it.” — Fernsby</div>
+    </div>
+  </div>
+  <div style="width:390px;font-size:11px;line-height:1.5;color:#666">Best at showing <em>trend + threshold + forecast</em> in one picture; annotations carry the story. Needs the most horizontal care on small phones.</div>
+</div>
+
+<div class="dv-opt" id="1d" data-screen-label="1d Gnome testimony">
+  <div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Gnome's testimony — prose verdict with numbered evidence, dial + hedge scale</div>
+  <div class="dv-card" style="width:390px;background:#FBFAF7">
+    <div style="display:flex;gap:12px;align-items:center;padding:18px 18px 12px">
+      <div style="width:46px;height:46px;border-radius:50%;border:1.5px dashed #A9542F;display:flex;align-items:center;justify-content:center;font-size:8px;color:#A9542F;text-align:center;line-height:1.2;flex:none">gnome art<br>TBD</div>
+      <div>
+        <div style="font-size:14px;font-weight:600;color:#1C2B1F">Fernsby's verdict</div>
+        <div style="font-size:10.5px;color:#667">your gnome · matched to <em>The Weekend Tender</em></div>
+      </div>
+      <div style="margin-left:auto;position:relative;width:56px;height:56px;flex:none">
+        <svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(28,43,31,.15)" stroke-width="5"></circle><circle cx="28" cy="28" r="24" fill="none" stroke="#2D6A4F" stroke-width="5" stroke-dasharray="126.7 150.8" stroke-linecap="round" transform="rotate(-90 28 28)"></circle><text x="28" y="32" font-size="13" font-weight="700" fill="#1C2B1F" text-anchor="middle" font-family="Menlo,monospace">84%</text></svg>
+      </div>
+    </div>
+    <div style="margin:0 18px;padding:14px 16px;background:rgba(217,164,65,.12);border-left:2px solid #D9A441;border-radius:2px">
+      <div style="font:600 9px Menlo,monospace;letter-spacing:1.2px;color:#A9542F;margin-bottom:6px">THE GNOME'S FINDINGS</div>
+      <div style="font-size:13.5px;font-style:italic;line-height:1.65;color:#1C2B1F">Water Freckles tomorrow morning, friend. It's been nine days since the last good soak<sup style="font-style:normal;font-weight:700;color:#A9542F">1</sup>, the air in that room has gone parched since the cooling took over<sup style="font-style:normal;font-weight:700;color:#A9542F">2</sup>, and there's a proper scorcher rolling in Tuesday<sup style="font-style:normal;font-weight:700;color:#A9542F">3</sup>. The soil will hit day-eleven dryness a day early — I've seen those leaves curl before<sup style="font-style:normal;font-weight:700;color:#A9542F">4</sup>.</div>
+      <div style="font-size:11.5px;font-style:italic;color:#7a5a1e;margin-top:8px">“I'd stake my second-best hat on it.”</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 18px 4px">
+      <div style="border:1px solid rgba(28,43,31,.18);border-radius:8px;padding:8px 10px"><span style="font:700 9px Menlo,monospace;color:#A9542F">1 · YOUR LOG</span><div style="font-size:11px;color:#1C2B1F;line-height:1.4;margin-top:2px">Deep watering Jul 11 — 9 days ago</div></div>
+      <div style="border:1px solid rgba(28,43,31,.18);border-radius:8px;padding:8px 10px"><span style="font:700 9px Menlo,monospace;color:#A9542F">2 · ROOM LENS</span><div style="font-size:11px;color:#1C2B1F;line-height:1.4;margin-top:2px">Est. 41% RH indoors; species likes 50–70%</div></div>
+      <div style="border:1px solid rgba(28,43,31,.18);border-radius:8px;padding:8px 10px"><span style="font:700 9px Menlo,monospace;color:#A9542F">3 · FORECAST</span><div style="font-size:11px;color:#1C2B1F;line-height:1.4;margin-top:2px">91°F Tue → +3°F indoors, drier air</div></div>
+      <div style="border:1px solid rgba(28,43,31,.18);border-radius:8px;padding:8px 10px"><span style="font:700 9px Menlo,monospace;color:#A9542F">4 · HISTORY</span><div style="font-size:11px;color:#1C2B1F;line-height:1.4;margin-top:2px">Leaf-curl logged Jun 30, day 11 of cycle</div></div>
+    </div>
+    <div style="margin:10px 18px 0;padding:9px 12px;border:1px dashed rgba(28,43,31,.25);border-radius:8px">
+      <div style="font:600 8.5px Menlo,monospace;letter-spacing:1px;color:#556;margin-bottom:4px">HOW SURE IS A GNOME? · THE HAT SCALE</div>
+      <div style="display:flex;gap:4px;font-size:9px;color:#445;text-align:center">
+        <span style="flex:1;padding:3px 2px;border:1px solid rgba(28,43,31,.15);border-radius:5px">&lt;50<br>mushrooms disagree</span>
+        <span style="flex:1;padding:3px 2px;border:1px solid rgba(28,43,31,.15);border-radius:5px">50–75<br>a hunch</span>
+        <span style="flex:1;padding:3px 2px;border:1.5px solid #2D6A4F;border-radius:5px;background:#EFF6F0;font-weight:700">75–90<br>second-best hat</span>
+        <span style="flex:1;padding:3px 2px;border:1px solid rgba(28,43,31,.15);border-radius:5px">&gt;90<br>hat &amp; beard</span>
+      </div>
+    </div>
+    <div style="padding:12px 18px 16px;font-size:11px;color:#667;line-height:1.5">Every claim is footnoted to a source record — the character can charm, but never un-cite.</div>
+  </div>
+  <div style="width:390px;font-size:11px;line-height:1.5;color:#666">Most personality per pixel; reads like the gnome talking with receipts. Pairs naturally with chat. Least graphical about <em>magnitudes</em>.</div>
+</div>
+</div>
+
+<div style="font:700 11px ui-monospace,Menlo,monospace;letter-spacing:2.5px;color:#555;margin:34px 0 14px">B — SCREEN LAYOUT WIREFRAMES <span style="font-weight:400;letter-spacing:0;font-family:system-ui,sans-serif;color:#888;text-transform:none">· structure only; the reasoning component from row A drops into the ⓦ slots</span></div>
+<div class="dv-opts" style="font-family:'Shantell Sans',cursive">
+
+<div class="dv-opt" id="1e" data-screen-label="1e Home — environments dashboard">
+  <div class="dv-olabel" style="font-family:system-ui,sans-serif"><a class="dv-oid" href="#1e">1e</a>Home — environments are the dashboard</div>
+  <div class="dv-card" style="width:300px;background:#fff;border:2px solid #333;border-radius:18px;padding:14px 12px 6px;color:#222">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:14px;font-weight:700">Monday, Jul 20</div><div style="font-size:10px;color:#666">East Lansing ▾</div></div>
+    <div style="display:flex;gap:5px;margin-top:8px">
+      <div style="flex:1;border:1.5px solid #444;border-radius:8px;text-align:center;padding:5px 0;font-size:10px"><b>Now</b><br>84° humid</div>
+      <div style="flex:1;border:2px solid #A9542F;border-radius:8px;text-align:center;padding:5px 0;font-size:10px;color:#A9542F"><b>Tue ⚠</b><br>91° heat</div>
+      <div style="flex:1;border:1.5px solid #444;border-radius:8px;text-align:center;padding:5px 0;font-size:10px"><b>Thu</b><br>⛈ 0.4″</div>
+    </div>
+    <div style="margin-top:8px;border:2px solid #2D6A4F;border-radius:999px;text-align:center;padding:5px;font-size:11px;color:#2D6A4F;font-weight:700">3 jobs today → Jobs</div>
+    <div style="border:1.5px solid #444;border-radius:12px;padding:10px;margin-top:10px">
+      <div style="display:flex;justify-content:space-between"><b style="font-size:12.5px">Living Room</b><span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:0 6px">indoor</span></div>
+      <div style="font-size:10px;color:#555;margin-top:3px">6 plants · south window · AC on</div>
+      <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">
+        <span style="font-size:9.5px;border:1.5px solid #A9542F;color:#A9542F;border-radius:99px;padding:1px 7px;font-weight:700">⚠ air 41% — low for 3</span>
+        <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:1px 7px">● 2 due</span>
+      </div>
+    </div>
+    <div style="border:1.5px solid #444;border-radius:12px;padding:10px;margin-top:8px">
+      <div style="display:flex;justify-content:space-between"><b style="font-size:12.5px">Covered Balcony</b><span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:0 6px">outdoor·sheltered</span></div>
+      <div style="font-size:10px;color:#555;margin-top:3px">3 plants · east light · roof over</div>
+      <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">
+        <span style="font-size:9.5px;border:1.5px solid #A9542F;color:#A9542F;border-radius:99px;padding:1px 7px;font-weight:700">⚠ heat Tue</span>
+        <span style="font-size:9.5px;border:1.5px dashed #444;border-radius:99px;padding:1px 7px">Thu rain won't reach pots</span>
+      </div>
+    </div>
+    <div style="border:2px dashed #999;border-radius:12px;padding:8px;margin-top:8px;text-align:center;font-size:11px;color:#888">+ new environment</div>
+    <div style="border:1.5px dashed #444;border-radius:10px;padding:6px 10px;margin-top:8px;font-size:10px;color:#555">Census: your 9 plants join 12,400 counted →</div>
+    <div style="display:flex;justify-content:space-between;border-top:2px solid #333;margin:10px -12px 0;padding:6px 14px 4px;font-size:9px;text-align:center">
+      <span style="font-weight:700">⌂<br>Home</span><span>☑<br>Jobs</span><span>🧙<br>Gnome</span><span>📊<br>Census</span><span>⚙<br>More</span>
+    </div>
+  </div>
+  <div style="width:300px;font-family:system-ui,sans-serif;font-size:11px;line-height:1.5;color:#666">Weather is read once, then each card translates it through its own lens. Attention chips = shape + word, not color dots.</div>
+</div>
+
+<div class="dv-opt" id="1f" data-screen-label="1f Environment detail">
+  <div class="dv-olabel" style="font-family:system-ui,sans-serif"><a class="dv-oid" href="#1f">1f</a>Environment detail — the lens made visible</div>
+  <div class="dv-card" style="width:300px;background:#fff;border:2px solid #333;border-radius:18px;padding:14px 12px 6px;color:#222">
+    <div style="font-size:10px;color:#888">← Home</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px"><b style="font-size:15px">Living Room</b><span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:0 6px">indoor</span></div>
+    <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">
+      <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:1px 7px">south window</span>
+      <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:1px 7px">AC on</span>
+      <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:1px 7px">no drafts</span>
+      <span style="font-size:9.5px;border:1.5px dashed #999;border-radius:99px;padding:1px 7px;color:#888">edit ✎</span>
+    </div>
+    <div style="border:1.5px solid #444;border-radius:12px;padding:9px 10px;margin-top:10px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.5px">OUTSIDE → IN HERE</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;margin-top:6px"><span style="flex:1">84° humid air</span><span>⟶</span><span style="flex:1;text-align:right"><b>74° / 41% RH</b> (AC dries)</span></div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;margin-top:4px"><span style="flex:1">14h 50m daylight</span><span>⟶</span><span style="flex:1;text-align:right"><b>~8h bright-indirect</b></span></div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;margin-top:4px"><span style="flex:1">Thu storm 0.4″</span><span>⟶</span><span style="flex:1;text-align:right"><b>no effect</b> indoors</span></div>
+      <div style="font-size:9px;color:#777;margin-top:6px;border-top:1.5px dashed #999;padding-top:4px">ⓦ tap a row → why (reasoning component)</div>
+    </div>
+    <div style="font-size:10px;font-weight:700;margin-top:10px;letter-spacing:.5px">PLANTS (6)</div>
+    <div style="border:1.5px solid #444;border-radius:10px;padding:7px 9px;margin-top:5px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px"><b>Freckles</b> · monstera</span><span style="font-size:9px;border:1.5px solid #2D6A4F;color:#2D6A4F;border-radius:99px;padding:1px 6px;font-weight:700">● due tmrw</span></div>
+    <div style="border:2px solid #A9542F;border-radius:10px;padding:7px 9px;margin-top:5px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px"><b>Miss Prism</b> · calathea</span><span style="font-size:9px;border:1.5px solid #A9542F;color:#A9542F;border-radius:99px;padding:1px 6px;font-weight:700">⚠ mist today</span></div>
+    <div style="border:1.5px solid #444;border-radius:10px;padding:7px 9px;margin-top:5px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px"><b>Brutus</b> · snake plant</span><span style="font-size:9px;border:1.5px solid #444;border-radius:99px;padding:1px 6px">◌ rests 9d</span></div>
+    <div style="border:1.5px dashed #999;border-radius:10px;padding:6px;margin-top:5px;text-align:center;font-size:10px;color:#888">…3 more · + add plant</div>
+    <div style="display:flex;justify-content:space-between;border-top:2px solid #333;margin:10px -12px 0;padding:6px 14px 4px;font-size:9px;text-align:center">
+      <span style="font-weight:700">⌂<br>Home</span><span>☑<br>Jobs</span><span>🧙<br>Gnome</span><span>📊<br>Census</span><span>⚙<br>More</span>
+    </div>
+  </div>
+  <div style="width:300px;font-family:system-ui,sans-serif;font-size:11px;line-height:1.5;color:#666">The OUTSIDE→IN table is the novel piece: declared attributes (shelter, exposure, AC) visibly transform raw weather — same rows feed every plant's reasoning here.</div>
+</div>
+
+<div class="dv-opt" id="1g" data-screen-label="1g Plant detail">
+  <div class="dv-olabel" style="font-family:system-ui,sans-serif"><a class="dv-oid" href="#1g">1g</a>Plant detail — verdict up top, log below</div>
+  <div class="dv-card" style="width:300px;background:#fff;border:2px solid #333;border-radius:18px;padding:14px 12px 6px;color:#222">
+    <div style="font-size:10px;color:#888">← Living Room</div>
+    <div style="display:flex;gap:9px;margin-top:6px;align-items:center">
+      <div style="width:44px;height:44px;border:2px dashed #999;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#999;text-align:center">photo</div>
+      <div><b style="font-size:14px">Freckles</b><div style="font-size:10px;font-style:italic;color:#666">Monstera deliciosa · juvenile</div></div>
+    </div>
+    <div style="border:2px solid #2D6A4F;border-radius:12px;padding:9px 10px;margin-top:10px;background:#f4f9f5">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:12px;color:#2D6A4F">💧 Water tomorrow AM</b><span style="font-size:10px;font-weight:700">84%</span></div>
+      <div style="font-size:9.5px;color:#555;margin-top:3px">heat spike + dry room moved it up 1 day</div>
+      <div style="font-size:10px;color:#2D6A4F;font-weight:700;margin-top:5px;border-top:1.5px dashed #2D6A4F;padding-top:4px">ⓦ why? ▾ — expands reasoning inline</div>
+    </div>
+    <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:2px 8px">💧 log water</span>
+      <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:2px 8px">🌿 fertilize</span>
+      <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:2px 8px">📷 diagnose</span>
+      <span style="font-size:9.5px;border:1.5px solid #444;border-radius:99px;padding:2px 8px">⋯</span>
+    </div>
+    <div style="border:1.5px solid #444;border-radius:10px;padding:7px 9px;margin-top:8px;font-size:10px">your rhythm: <b>every 8.2d</b> · species window 7–12d <span style="display:inline-block;width:60px;height:6px;border:1px solid #444;border-radius:3px;vertical-align:1px;margin-left:4px"><span style="display:block;width:40%;height:100%;background:#2D6A4F"></span></span></div>
+    <div style="font-size:10px;font-weight:700;margin-top:10px;letter-spacing:.5px">TIMELINE</div>
+    <div style="border-left:2px solid #444;margin:6px 0 0 6px;padding-left:10px">
+      <div style="font-size:10px;margin-bottom:6px"><b>Jul 15</b> · fertilized <span style="color:#777">(+31d gap)</span></div>
+      <div style="font-size:10px;margin-bottom:6px"><b>Jul 11</b> · watered — deep soak <span style="color:#777">(+9d)</span></div>
+      <div style="font-size:10px;margin-bottom:6px;border:1.5px dashed #A9542F;border-radius:8px;padding:4px 6px;color:#A9542F"><b>Jun 30</b> · 📷 diagnosis: leaf curl — thirst (day 11)</div>
+      <div style="font-size:10px;margin-bottom:6px"><b>Jun 21</b> · watered <span style="color:#777">(+8d)</span></div>
+      <div style="font-size:9.5px;color:#888">⟲ moved from Balcony → Living Room, May 3</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;border-top:2px solid #333;margin:10px -12px 0;padding:6px 14px 4px;font-size:9px;text-align:center">
+      <span style="font-weight:700">⌂<br>Home</span><span>☑<br>Jobs</span><span>🧙<br>Gnome</span><span>📊<br>Census</span><span>⚙<br>More</span>
+    </div>
+  </div>
+  <div style="width:300px;font-family:system-ui,sans-serif;font-size:11px;line-height:1.5;color:#666">Next-care verdict is the hero; the ⓦ expander is the same component as row A. Timeline keeps the repo's gap-per-care-type stats and photo-diagnosis entries.</div>
+</div>
+
+<div class="dv-opt" id="1h" data-screen-label="1h Jobs — rolling week">
+  <div class="dv-olabel" style="font-family:system-ui,sans-serif"><a class="dv-oid" href="#1h">1h</a>Jobs — rolling 7 days, pinned to the right day</div>
+  <div class="dv-card" style="width:300px;background:#fff;border:2px solid #333;border-radius:18px;padding:14px 12px 6px;color:#222">
+    <b style="font-size:14px">Jobs — next 7 days</b>
+    <div style="display:flex;gap:3px;margin-top:7px;font-size:8.5px;text-align:center">
+      <span style="flex:1;border:1.5px solid #444;border-radius:6px;padding:2px 0;font-weight:700">M<br>☀</span><span style="flex:1;border:2px solid #A9542F;border-radius:6px;padding:2px 0;color:#A9542F;font-weight:700">T<br>91°</span><span style="flex:1;border:1.5px solid #A9542F;border-radius:6px;padding:2px 0;color:#A9542F">W<br>89°</span><span style="flex:1;border:1.5px solid #444;border-radius:6px;padding:2px 0">T<br>⛈</span><span style="flex:1;border:1.5px solid #444;border-radius:6px;padding:2px 0">F<br>☀</span><span style="flex:1;border:1.5px solid #444;border-radius:6px;padding:2px 0">S<br>☀</span><span style="flex:1;border:1.5px solid #444;border-radius:6px;padding:2px 0">S<br>☁</span>
+    </div>
+    <div style="border:2.5px solid #A9542F;border-radius:12px;padding:8px 10px;margin-top:10px">
+      <div style="font-size:9px;font-weight:700;color:#A9542F;letter-spacing:1px">⚠ URGENT — TODAY</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><span style="font-size:11px">▢ Mist <b>Miss Prism</b></span><span style="font-size:9px;color:#A9542F;font-weight:700">why? ⓦ</span></div>
+      <div style="font-size:9.5px;color:#555">air crashed to 41% — calathea wants 60–80%</div>
+    </div>
+    <div style="font-size:10px;font-weight:700;margin-top:10px">TUE <span style="color:#A9542F">· 91° heat</span></div>
+    <div style="border:1.5px solid #444;border-radius:10px;padding:6px 9px;margin-top:4px">
+      <div style="display:flex;justify-content:space-between"><span style="font-size:11px">▢ Water <b>Freckles</b></span><span style="font-size:9px;color:#2D6A4F;font-weight:700">why? ⓦ</span></div>
+      <div style="font-size:9.5px;color:#555">moved up 1 day — heat reaches indoors as drier air</div>
+    </div>
+    <div style="font-size:10px;font-weight:700;margin-top:8px">WED</div>
+    <div style="border:1.5px solid #444;border-radius:10px;padding:6px 9px;margin-top:4px">
+      <div style="display:flex;justify-content:space-between"><span style="font-size:11px">▢ Fertilize <b>Ivy</b> (pothos)</span><span style="font-size:9px;color:#2D6A4F;font-weight:700">why? ⓦ</span></div>
+      <div style="font-size:9.5px;color:#555">34d since last feed · window 30–60d</div>
+      <div style="border:1.5px dashed #444;border-radius:8px;padding:5px 7px;margin-top:5px;font-size:9.5px;background:#fafafa">🛒 plant food: ~2 doses left · arrives Thu if ordered today · <b>add to Amazon cart ↗</b><div style="color:#888;font-size:8.5px;margin-top:2px">affiliate link · suggested because this job recurs in 30d</div></div>
+    </div>
+    <div style="font-size:10px;font-weight:700;margin-top:8px">THU <span style="color:#555">· ⛈ indoors day</span></div>
+    <div style="border:1.5px solid #444;border-radius:10px;padding:6px 9px;margin-top:4px">
+      <div style="font-size:11px">▢ Wipe <b>Freckles</b> + <b>Ruby</b> leaves</div>
+      <div style="font-size:9.5px;color:#555">rain won't reach covered balcony — Aloe still waters Sat</div>
+    </div>
+    <div style="font-size:10px;font-weight:700;margin-top:8px">SAT <span style="color:#555">· dry, mild</span></div>
+    <div style="border:1.5px solid #444;border-radius:10px;padding:6px 9px;margin-top:4px;margin-bottom:4px">
+      <div style="display:flex;justify-content:space-between"><span style="font-size:11px">▢ Repot <b>Boo</b> (spider plant)</span><span style="font-size:9px;color:#2D6A4F;font-weight:700">why? ⓦ</span></div>
+      <div style="font-size:9.5px;color:#555">best messy-outdoor-work day of the week</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;border-top:2px solid #333;margin:10px -12px 0;padding:6px 14px 4px;font-size:9px;text-align:center">
+      <span>⌂<br>Home</span><span style="font-weight:700">☑<br>Jobs</span><span>🧙<br>Gnome</span><span>📊<br>Census</span><span>⚙<br>More</span>
+    </div>
+  </div>
+  <div style="width:300px;font-family:system-ui,sans-serif;font-size:11px;line-height:1.5;color:#666">Monty's rhythm, rolling: every job carries its one-line reason + a ⓦ. Supplies appear only attached to the job that needs them, always labeled affiliate.</div>
+</div>
+
+<div class="dv-opt" id="1i" data-screen-label="1i Gnome chat">
+  <div class="dv-olabel" style="font-family:system-ui,sans-serif"><a class="dv-oid" href="#1i">1i</a>Gnome chat — answers that show their working</div>
+  <div class="dv-card" style="width:300px;background:#fff;border:2px solid #333;border-radius:18px;padding:14px 12px 6px;color:#222">
+    <div style="display:flex;gap:8px;align-items:center;border-bottom:1.5px dashed #999;padding-bottom:8px">
+      <div style="width:36px;height:36px;border-radius:50%;border:2px dashed #999;display:flex;align-items:center;justify-content:center;font-size:7px;color:#999;text-align:center">gnome<br>art</div>
+      <div><b style="font-size:13px">Fernsby</b><div style="font-size:9px;color:#666">matched to you: <b>The Weekend Tender</b> · evolves as you garden ⓘ</div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:10px"><div style="border:1.5px solid #444;border-radius:12px 12px 3px 12px;padding:7px 10px;font-size:10.5px;max-width:80%;background:#f2f2f2">What should I do with my plants while I'm on vacation Aug 3–14?</div></div>
+    <div style="border:1.5px solid #444;border-radius:12px 12px 12px 3px;padding:8px 10px;margin-top:8px;font-size:10.5px;line-height:1.45">Twelve days away — most of your nine will simply nap, three need arranging:
+      <div style="border:1.5px solid #444;border-radius:8px;padding:5px 7px;margin-top:6px;font-size:9.5px"><b>Brutus, Zizi</b> (snake, ZZ) — fine. Water Aug 2; their window is 14–21d. <span style="color:#2D6A4F;font-weight:700">why? ⓦ</span></div>
+      <div style="border:1.5px solid #444;border-radius:8px;padding:5px 7px;margin-top:4px;font-size:9.5px"><b>Freckles</b> — lands on day 12 of 7–12. Borderline: friend visit or a dripper. <span style="color:#2D6A4F;font-weight:700">why? ⓦ</span></div>
+      <div style="border:2px solid #A9542F;border-radius:8px;padding:5px 7px;margin-top:4px;font-size:9.5px;color:#A9542F"><b>Miss Prism</b> — won't last: needs misting every 1–2d. Sitter or auto-mist. <span style="font-weight:700">why? ⓦ</span></div>
+      <div style="border:1.5px dashed #444;border-radius:8px;padding:6px 8px;margin-top:6px;font-size:9.5px;background:#fafafa">🛒 <b>Drip-stake watering set (6-pack)</b> — fits Freckles' + Miss Prism's pots · <b>add to Amazon cart ↗</b><div style="color:#888;font-size:8.5px;margin-top:2px">affiliate · picked because: 12-day gap, 2 plants above their window</div></div>
+    </div>
+    <div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:9px;border:1.5px dashed #999;border-radius:99px;padding:2px 8px;color:#666">reads your logs</span>
+      <span style="font-size:9px;border:1.5px dashed #999;border-radius:99px;padding:2px 8px;color:#666">cites the species DB</span>
+      <span style="font-size:9px;border:1.5px dashed #999;border-radius:99px;padding:2px 8px;color:#666">never invents care</span>
+    </div>
+    <div style="border:1.5px solid #444;border-radius:99px;padding:6px 12px;margin-top:8px;font-size:10px;color:#888">Ask Fernsby anything… 🎤</div>
+    <div style="display:flex;justify-content:space-between;border-top:2px solid #333;margin:10px -12px 0;padding:6px 14px 4px;font-size:9px;text-align:center">
+      <span>⌂<br>Home</span><span>☑<br>Jobs</span><span style="font-weight:700">🧙<br>Gnome</span><span>📊<br>Census</span><span>⚙<br>More</span>
+    </div>
+  </div>
+  <div style="width:300px;font-family:system-ui,sans-serif;font-size:11px;line-height:1.5;color:#666">Chat answers decompose into per-plant verdict rows, each with its ⓦ. The vacation flow is where the auto-watering affiliate rec earns its place.</div>
+</div>
+</div>
+
+<div style="font:700 11px ui-monospace,Menlo,monospace;letter-spacing:2.5px;color:#555;margin:34px 0 14px">C — AESTHETIC DIRECTIONS <span style="font-weight:400;letter-spacing:0;font-family:system-ui,sans-serif;color:#888;text-transform:none">· same plant-detail fragment, three skins; all pass 4.5:1 text contrast</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1j" data-screen-label="1j Field Journal aesthetic">
+  <div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>Field Journal — the landing page's specimen-ledger DNA, app-wide</div>
+  <div class="dv-card" style="width:390px;background:#EEEBDD">
+    <div style="padding:18px 20px 12px;border-bottom:1px dashed rgba(28,43,31,.35)">
+      <div style="font:600 10px Menlo,monospace;letter-spacing:2px;color:#A9542F">SPECIMEN № 007 · LIVING ROOM</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div style="font-size:22px;font-weight:700;color:#1C2B1F;margin-top:4px">Freckles</div>
+        <div style="font-size:12px;font-style:italic;color:#2C3D2C">Monstera deliciosa</div>
+      </div>
+    </div>
+    <div style="margin:14px 20px 0;background:#FFFFFF;border:1px solid rgba(28,43,31,.2);border-radius:4px;padding:14px 16px;position:relative">
+      <div style="font:600 9px Menlo,monospace;letter-spacing:1.5px;color:#A9542F">TODAY'S DETERMINATION</div>
+      <div style="font-size:16px;font-weight:700;color:#1C2B1F;margin-top:4px">Water tomorrow morning</div>
+      <div style="font-size:12px;color:#2C3D2C;line-height:1.5;margin-top:4px">Heat spike + parched room air move day 11 up to day 10.</div>
+      <div style="position:absolute;top:12px;right:14px;border:2.5px solid #A9542F;color:#A9542F;border-radius:4px;padding:3px 8px;transform:rotate(-4deg);font:700 13px Menlo,monospace;opacity:.85">84%</div>
+      <div style="font-size:11px;font-style:italic;color:#6b5423;margin-top:8px">“Second-best hat.” — Fernsby</div>
+    </div>
+    <div style="margin:10px 20px 0;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 9px Menlo,monospace;color:#A9542F;flex:none;width:70px">YOUR LOG</span><span style="font-size:12px;color:#1C2B1F;border-bottom:1px dotted rgba(28,43,31,.35);flex:1;padding-bottom:2px">Deep watering — 9 days ago</span></div>
+      <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 9px Menlo,monospace;color:#A9542F;flex:none;width:70px">ROOM LENS</span><span style="font-size:12px;color:#1C2B1F;border-bottom:1px dotted rgba(28,43,31,.35);flex:1;padding-bottom:2px">41% RH — wants 50–70%</span></div>
+    </div>
+    <div style="margin:14px 20px 18px;border-top:1px dashed rgba(28,43,31,.35);padding-top:10px">
+      <div style="font:600 9px Menlo,monospace;letter-spacing:1.5px;color:#52604f">LEDGER · JUL 11</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#1C2B1F;margin-top:4px"><span>💧 Watered — deep soak</span><span style="font:600 11px Menlo,monospace;color:#52604f">+9d</span></div>
+    </div>
+    <div style="background:#D9A441;height:6px"></div>
+  </div>
+  <div style="width:390px;font-size:11px;line-height:1.5;color:#666">Ink on paper 12.9:1; clay labels 5.9:1. Confidence as a rubber stamp. Marigold is decoration only — never the sole signal. Warm, archival, distinctly PlantAdvocate.</div>
+</div>
+
+<div class="dv-opt" id="1k" data-screen-label="1k Almanac aesthetic">
+  <div class="dv-olabel"><a class="dv-oid" href="#1k">1k</a>Almanac — seasonal, serif, sun-arc; the gardener's yearbook</div>
+  <div class="dv-card" style="width:390px;background:#F7EFDD">
+    <div style="padding:18px 20px 0;text-align:center">
+      <div style="font-family:Newsreader,Georgia,serif;font-size:11px;letter-spacing:2.5px;color:#6d5836">LATE JULY · DAY LENGTH 14H 50M ↓2M</div>
+      <div style="border-top:2px solid #2F4A33;border-bottom:1px solid #2F4A33;margin-top:6px;padding:10px 0 8px">
+        <div style="font-family:Newsreader,Georgia,serif;font-size:26px;font-weight:500;color:#2F4A33">Freckles</div>
+        <div style="font-family:Newsreader,Georgia,serif;font-size:13px;font-style:italic;color:#5a6b52">Monstera deliciosa · the living room</div>
+      </div>
+    </div>
+    <div style="margin:14px 20px 0;background:#FFFDF6;border:1px solid #cdbd9a;border-radius:10px;padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-family:Newsreader,Georgia,serif;font-size:18px;font-weight:600;color:#2F4A33">Water on the morrow</div>
+          <div style="font-size:12px;color:#4a5842;line-height:1.55;margin-top:4px;font-family:Newsreader,Georgia,serif">A scorcher approaches Tuesday; the cooled air runs dry at 41%. The soil will thirst a day ahead of its custom.</div>
+        </div>
+        <div style="flex:none;margin-left:12px;text-align:center">
+          <svg width="54" height="34" viewBox="0 0 54 34"><path d="M 5 30 A 23 23 0 0 1 49 30" fill="none" stroke="#cdbd9a" stroke-width="4" stroke-linecap="round"></path><path d="M 5 30 A 23 23 0 0 1 44.6 15.7" fill="none" stroke="#2F4A33" stroke-width="4" stroke-linecap="round"></path></svg>
+          <div style="font-family:Newsreader,Georgia,serif;font-size:14px;font-weight:600;color:#2F4A33;margin-top:-2px">84%</div>
+        </div>
+      </div>
+      <div style="font-family:Newsreader,Georgia,serif;font-size:12px;font-style:italic;color:#8a6414;margin-top:8px;border-top:1px solid #e5d9bc;padding-top:8px">“I'd stake my second-best hat on it.” — Fernsby</div>
+    </div>
+    <div style="display:flex;gap:8px;margin:10px 20px 0">
+      <div style="flex:1;border:1px solid #cdbd9a;border-radius:8px;padding:8px 10px;background:rgba(255,253,246,.6)"><div style="font-size:9px;letter-spacing:1px;color:#6d5836;font-family:Newsreader,Georgia,serif">THE LOG SAYS</div><div style="font-size:12px;color:#2F4A33;margin-top:2px;font-family:Newsreader,Georgia,serif">9 days since a deep soak</div></div>
+      <div style="flex:1;border:1px solid #cdbd9a;border-radius:8px;padding:8px 10px;background:rgba(255,253,246,.6)"><div style="font-size:9px;letter-spacing:1px;color:#6d5836;font-family:Newsreader,Georgia,serif">THE ROOM SAYS</div><div style="font-size:12px;color:#2F4A33;margin-top:2px;font-family:Newsreader,Georgia,serif">41% air; it favors 50–70%</div></div>
+    </div>
+    <div style="margin:14px 20px 18px;display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #cdbd9a;padding-top:10px">
+      <span style="font-family:Newsreader,Georgia,serif;font-size:12.5px;color:#2F4A33">July 11 — watered, a proper soak</span>
+      <span style="font-family:Newsreader,Georgia,serif;font-size:11px;color:#6d5836">nine days past</span>
+    </div>
+  </div>
+  <div style="width:390px;font-size:11px;line-height:1.5;color:#666">Deep green on cream 9.8:1. Confidence as a filling sun-arc + numeral. Warmest voice-match for the gnome; least “instrument”.</div>
+</div>
+
+<div class="dv-opt" id="1l" data-screen-label="1l Observatory aesthetic">
+  <div class="dv-olabel"><a class="dv-oid" href="#1l">1l</a>Observatory — dark instrument panel, Okabe-Ito accents (colorblind-safe palette)</div>
+  <div class="dv-card" style="width:390px;background:#131A1D">
+    <div style="padding:18px 20px 12px;border-bottom:1px solid rgba(232,240,236,.12)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div style="font-size:20px;font-weight:600;color:#E8F0EC;letter-spacing:.3px">Freckles</div>
+        <div style="font:500 10px Menlo,monospace;color:#9fb3ab;letter-spacing:1px">LIVING ROOM · IN-04</div>
+      </div>
+      <div style="font-size:12px;font-style:italic;color:#9fb3ab;margin-top:2px">Monstera deliciosa</div>
+    </div>
+    <div style="margin:14px 20px 0;border:1px solid rgba(232,240,236,.18);border-radius:10px;padding:14px 16px;background:rgba(232,240,236,.03)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font:600 10px Menlo,monospace;letter-spacing:1.5px;color:#56B4E9">◉ NEXT ACTION · T−1 DAY</div>
+        <div style="font:700 13px Menlo,monospace;color:#E8F0EC">84<span style="font-size:10px;color:#9fb3ab">%</span></div>
+      </div>
+      <div style="font-size:16px;font-weight:600;color:#E8F0EC;margin-top:6px">Water — tomorrow 07:00–10:00</div>
+      <div style="position:relative;height:6px;background:rgba(232,240,236,.12);border-radius:3px;margin-top:10px"><span style="position:absolute;inset:0 auto 0 0;width:84%;background:#56B4E9;border-radius:3px"></span><span style="position:absolute;left:50%;top:-3px;width:1px;height:12px;background:rgba(232,240,236,.4)"></span><span style="position:absolute;left:75%;top:-3px;width:1px;height:12px;background:rgba(232,240,236,.4)"></span><span style="position:absolute;left:90%;top:-3px;width:1px;height:12px;background:rgba(232,240,236,.4)"></span></div>
+      <div style="font-size:11px;font-style:italic;color:#9fb3ab;margin-top:8px">“I'd stake my second-best hat on it.” — Fernsby</div>
+    </div>
+    <div style="margin:10px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="border:1px solid rgba(232,240,236,.18);border-radius:8px;padding:9px 11px"><div style="font:600 9px Menlo,monospace;letter-spacing:1px;color:#E69F00">▲ DRY STREAK</div><div style="font:600 15px Menlo,monospace;color:#E8F0EC;margin-top:3px">9<span style="font-size:10px;color:#9fb3ab">/7–12d</span></div></div>
+      <div style="border:1px solid rgba(232,240,236,.18);border-radius:8px;padding:9px 11px"><div style="font:600 9px Menlo,monospace;letter-spacing:1px;color:#E69F00">▼ HUMIDITY</div><div style="font:600 15px Menlo,monospace;color:#E8F0EC;margin-top:3px">41<span style="font-size:10px;color:#9fb3ab">% of 50–70</span></div></div>
+    </div>
+    <div style="margin:14px 20px 18px;border-top:1px solid rgba(232,240,236,.12);padding-top:10px;display:flex;justify-content:space-between;align-items:baseline">
+      <span style="font-size:12px;color:#E8F0EC">JUL 11 · watered — deep soak</span>
+      <span style="font:500 11px Menlo,monospace;color:#009E73">Δ +9d ok</span>
+    </div>
+  </div>
+  <div style="width:390px;font-size:11px;line-height:1.5;color:#666">Okabe-Ito blue/amber/green read distinctly under all common CVD types; every accent doubled with ▲▼/labels. Text 13.9:1. Precise, but coolest fit for the gnome's warmth.</div>
+</div>
+</div>
+
+<p class="dv-next">Try next: “build the winner: <a class="dv-oid" href="#1b">1b</a>'s ledger inside <a class="dv-oid" href="#1d">1d</a>'s voice, skinned as <a class="dv-oid" href="#1j">1j</a>” · “show the reasoning component expanded inside <a class="dv-oid" href="#1g">1g</a>” · “riff <a class="dv-oid" href="#1j">1j</a> across all five screens” · “new reasoning directions”</p>
+</section>
+
+</x-dc>
+</body>
+</html>
