@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ScrollView, View, StyleSheet, Alert, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import {
-  Text, TextInput, Button, SegmentedButtons, useTheme,
+  Text, TextInput, Button, SegmentedButtons,
   HelperText,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -20,9 +20,13 @@ import { createPlant } from '../api/plants';
 import ReportResult from '../components/ReportResult';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { Species, Environment } from '../types';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
+import Eyebrow from '../components/Eyebrow';
 
 export default function AddPlantScreen() {
-  const theme = useTheme();
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const navigation = useNavigation();
   const queryClient = useQueryClient();
 
@@ -126,7 +130,7 @@ export default function AddPlantScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text variant="titleMedium" style={styles.sectionTitle}>Plant details</Text>
+        <Eyebrow style={styles.sectionLabel}>Plant details</Eyebrow>
 
         <TextInput
           label="Nickname *"
@@ -137,7 +141,7 @@ export default function AddPlantScreen() {
           placeholder="e.g. Sunny, Big Fern, Corner Cactus"
         />
 
-        <Text variant="titleMedium" style={styles.sectionTitle}>Species *</Text>
+        <Eyebrow style={styles.sectionLabel}>Species *</Eyebrow>
 
         {aiIdAvailable && (
           <>
@@ -250,7 +254,7 @@ export default function AddPlantScreen() {
 
         {environments.length > 0 && (
           <>
-            <Text variant="titleMedium" style={styles.sectionTitle}>Environment</Text>
+            <Eyebrow style={styles.sectionLabel}>Environment</Eyebrow>
             <View style={styles.envGrid}>
               {environments.map((e: Environment) => (
                 <Button
@@ -267,7 +271,7 @@ export default function AddPlantScreen() {
           </>
         )}
 
-        <Text variant="titleMedium" style={styles.sectionTitle}>Location note</Text>
+        <Eyebrow style={styles.sectionLabel}>Location note</Eyebrow>
         <TextInput
           label="Where in the space?"
           value={location}
@@ -277,7 +281,7 @@ export default function AddPlantScreen() {
           placeholder="e.g. South window, bathroom shelf"
         />
 
-        <Text variant="titleMedium" style={styles.sectionTitle}>Initial condition</Text>
+        <Eyebrow style={styles.sectionLabel}>Initial condition</Eyebrow>
         <SegmentedButtons
           value={condition}
           onValueChange={setCondition}
@@ -297,7 +301,8 @@ export default function AddPlantScreen() {
           loading={mutation.isPending}
           style={styles.saveBtn}
           contentStyle={styles.saveBtnContent}
-          buttonColor={theme.colors.primary}
+          buttonColor={palette.acc}
+          textColor={palette.btnInk}
         >
           Save plant
         </Button>
@@ -306,10 +311,10 @@ export default function AddPlantScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F6FAF7' },
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 16, paddingBottom: 48 },
-  sectionTitle: { marginTop: 20, marginBottom: 8, fontWeight: '600', color: '#2D6A4F' },
+  sectionLabel: { marginTop: 20, marginBottom: 8 },
   input: { marginBottom: 4 },
   suggestionBox: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   suggestion: { marginBottom: 4 },
@@ -317,14 +322,14 @@ const styles = StyleSheet.create({
   identifyBtn: { flex: 1 },
   identifyHint: { marginBottom: 8 },
   identifyBox: {
-    backgroundColor: '#EFF6F0',
-    borderRadius: 10,
+    backgroundColor: p.accSoft,
+    borderRadius: 12,
     padding: 12,
     marginBottom: 8,
   },
-  identifyLabel: { color: '#52796F', marginBottom: 8, fontWeight: '600' },
-  identifyObservation: { color: '#2F3E36', lineHeight: 19 },
-  debugRawText: { fontFamily: 'monospace', fontSize: 11, color: '#6B7A70', marginTop: 4 },
+  identifyLabel: { color: p.sub, marginBottom: 8, fontWeight: '600' },
+  identifyObservation: { color: p.ink, lineHeight: 19 },
+  debugRawText: { fontFamily: 'monospace', fontSize: 11, color: p.faint, marginTop: 4 },
   envGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   envBtn: { marginBottom: 4 },
   segmented: { marginBottom: 8 },

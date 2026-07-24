@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ScrollView, View, StyleSheet, Alert } from 'react-native';
 import {
   Text, Card, Button, TextInput, SegmentedButtons,
@@ -11,7 +11,12 @@ import { fetchEnvironments, createEnvironment } from '../api/environments';
 import {
   Environment, EnvironmentType, Shelter, TempExposure, SunExposure,
 } from '../types';
+import AddressPicker from '../components/AddressPicker';
+import { ResolvedPlace } from '../location/geocode';
 import type { EnvironmentsStackParamList } from '../../App';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
+import Eyebrow from '../components/Eyebrow';
 
 type Nav = NativeStackNavigationProp<EnvironmentsStackParamList, 'EnvironmentsList'>;
 
@@ -35,11 +40,13 @@ const CLIMATE_PRESETS: Record<EnvironmentType, Climate> = {
 };
 
 function EnvironmentCard({ env, onPress }: { env: Environment; onPress: () => void }) {
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const typeLabel = ENV_TYPES.find((t) => t.value === env.type)?.label ?? env.type;
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
       <Card.Content>
-        <Text variant="titleMedium">{env.name}</Text>
+        <Text variant="titleMedium" style={styles.name}>{env.name}</Text>
         <Text variant="bodySmall" style={styles.meta}>{typeLabel}</Text>
         {env.city ? (
           <Text variant="bodySmall" style={styles.meta}>📍 {env.city}{env.region ? `, ${env.region}` : ''}</Text>
@@ -56,12 +63,14 @@ function EnvironmentCard({ env, onPress }: { env: Environment; onPress: () => vo
 export default function EnvironmentsScreen() {
   const queryClient = useQueryClient();
   const navigation = useNavigation<Nav>();
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName]     = useState('');
   const [type, setType]     = useState<EnvironmentType>('home');
-  const [city, setCity]     = useState('');
-  const [region, setRegion] = useState('');
-  const [country, setCountry] = useState('');
+  const [place, setPlace]   = useState<ResolvedPlace | null>(null);
+  // Bumped on reset to remount AddressPicker with fresh internal state.
+  const [pickerKey, setPickerKey] = useState(0);
   const [shelter, setShelter] = useState<Shelter>('sheltered');
   const [tempExposure, setTempExposure] = useState<TempExposure>('indoor');
   const [sunExposure, setSunExposure] = useState<SunExposure>('partial_sun');
@@ -84,13 +93,21 @@ export default function EnvironmentsScreen() {
 
   const mutation = useMutation({
     mutationFn: () => createEnvironment({
-      name, type, city, region, country,
+      name, type,
+      // Geography is derived from a validated, geocoded place (or blank).
+      city: place?.city ?? '',
+      region: place?.region ?? '',
+      country: place?.country ?? '',
+      lat: place?.lat,
+      lng: place?.lng,
       shelter, temp_exposure: tempExposure, sun_exposure: sunExposure,
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['environments'] });
       setModalVisible(false);
-      setName(''); setCity(''); setRegion(''); setCountry('');
+      setName('');
+      setPlace(null);
+      setPickerKey((k) => k + 1);
     },
     onError: () => Alert.alert('Error', 'Could not create environment.'),
   });
@@ -98,7 +115,7 @@ export default function EnvironmentsScreen() {
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F6FAF7' }}>
+    <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
         {environments.length === 0 ? (
           <Text style={styles.empty}>No environments yet. Create one to get started.</Text>
@@ -116,6 +133,7 @@ export default function EnvironmentsScreen() {
       <FAB
         icon="plus"
         style={styles.fab}
+        color={palette.btnInk}
         label="New environment"
         onPress={() => setModalVisible(true)}
       />
@@ -130,7 +148,7 @@ export default function EnvironmentsScreen() {
 
           <TextInput label="Name *" value={name} onChangeText={setName} mode="outlined" style={styles.input} />
 
-          <Text variant="labelMedium" style={styles.label}>Type</Text>
+          <Eyebrow style={styles.label}>Type</Eyebrow>
           <SegmentedButtons
             value={type}
             onValueChange={(v) => applyType(v as EnvironmentType)}
@@ -144,11 +162,14 @@ export default function EnvironmentsScreen() {
             style={styles.segmented}
           />
 
-          <TextInput label="City"    value={city}    onChangeText={setCity}    mode="outlined" style={styles.input} />
-          <TextInput label="Region"  value={region}  onChangeText={setRegion}  mode="outlined" style={styles.input} />
-          <TextInput label="Country" value={country} onChangeText={setCountry} mode="outlined" style={styles.input} />
+          <Eyebrow style={styles.label}>Location</Eyebrow>
+          <Text variant="bodySmall" style={styles.locationHint}>
+            Set a place to unlock local weather. Search an address or use your
+            location — only a real, resolved place can be saved.
+          </Text>
+          <AddressPicker key={pickerKey} onChange={setPlace} />
 
-          <Text variant="labelMedium" style={styles.label}>Shelter</Text>
+          <Eyebrow style={styles.label}>Shelter</Eyebrow>
           <SegmentedButtons
             value={shelter}
             onValueChange={(v) => setShelter(v as Shelter)}
@@ -160,7 +181,7 @@ export default function EnvironmentsScreen() {
             style={styles.segmented}
           />
 
-          <Text variant="labelMedium" style={styles.label}>Temperature</Text>
+          <Eyebrow style={styles.label}>Temperature</Eyebrow>
           <SegmentedButtons
             value={tempExposure}
             onValueChange={(v) => setTempExposure(v as TempExposure)}
@@ -171,7 +192,7 @@ export default function EnvironmentsScreen() {
             style={styles.segmented}
           />
 
-          <Text variant="labelMedium" style={styles.label}>Sun</Text>
+          <Eyebrow style={styles.label}>Sun</Eyebrow>
           <SegmentedButtons
             value={sunExposure}
             onValueChange={(v) => setSunExposure(v as SunExposure)}
@@ -198,19 +219,22 @@ export default function EnvironmentsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  screen: { flex: 1, backgroundColor: p.bg },
   content: { padding: 12, paddingBottom: 96 },
-  card: { marginBottom: 10, borderRadius: 12 },
-  meta: { color: '#666', marginTop: 2 },
+  card: { marginBottom: 10, borderRadius: 12, backgroundColor: p.card },
+  name: { fontFamily: f.display, color: p.ink },
+  meta: { color: p.sub, marginTop: 2 },
   cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
-  count: { color: '#2D6A4F', fontWeight: '600' },
-  weatherHint: { color: '#8a8a8a' },
-  fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: '#2D6A4F' },
+  count: { color: p.acc, fontWeight: '600' },
+  weatherHint: { color: p.faint },
+  fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: p.acc },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  empty: { textAlign: 'center', color: '#888', marginTop: 48 },
-  modal: { backgroundColor: '#fff', margin: 20, borderRadius: 12, padding: 20 },
-  modalTitle: { marginBottom: 16, fontWeight: '700' },
-  label: { color: '#555', marginBottom: 6, marginTop: 8 },
+  empty: { textAlign: 'center', color: p.faint, marginTop: 48 },
+  modal: { backgroundColor: p.card, margin: 20, borderRadius: 12, padding: 20 },
+  modalTitle: { marginBottom: 16, fontWeight: '700', fontFamily: f.display, color: p.ink },
+  label: { marginBottom: 6, marginTop: 8 },
+  locationHint: { color: p.faint, marginBottom: 8, lineHeight: 18 },
   input: { marginBottom: 10 },
   segmented: { marginBottom: 12 },
   saveBtn: { marginTop: 8 },

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
 import { useAuth } from './AuthContext';
 import { signInWithApple, signInWithGoogle } from './signIn';
 
@@ -13,6 +15,8 @@ if (Platform.OS === 'ios') {
 }
 
 export default function LoginScreen() {
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const { setSession } = useAuth();
   const [busy, setBusy] = useState<'apple' | 'google' | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -90,37 +94,39 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6FAF7',
+    backgroundColor: p.bg,
     padding: 24,
     justifyContent: 'space-between',
   },
   hero: { alignItems: 'center', marginTop: 96 },
   mascot: { fontSize: 56, marginBottom: 12 },
-  title: { fontSize: 32, fontWeight: '700', color: '#2D6A4F' },
+  title: { fontSize: 32, fontWeight: '700', color: p.acc, fontFamily: f.display },
   tagline: {
     marginTop: 10,
     textAlign: 'center',
-    color: '#52796F',
+    color: p.sub,
     fontSize: 15,
     lineHeight: 22,
     maxWidth: 300,
   },
   buttons: { gap: 12, alignItems: 'stretch' },
   appleButton: { height: 48 },
+  // Google's brand button keeps its required white fill + #DADCE0 border in
+  // both themes, so a theme token would break the brand spec here.
   googleButton: { borderRadius: 8, borderWidth: 1, borderColor: '#DADCE0' },
   webNote: {
     textAlign: 'center',
-    color: '#6b7d6e',
+    color: p.sub,
     fontStyle: 'italic',
     lineHeight: 20,
   },
-  error: { textAlign: 'center', color: '#B3261E' },
+  error: { textAlign: 'center', color: p.warn },
   footer: {
     textAlign: 'center',
-    color: '#9DB2A4',
+    color: p.faint,
     fontSize: 12,
     lineHeight: 18,
     marginBottom: 12,

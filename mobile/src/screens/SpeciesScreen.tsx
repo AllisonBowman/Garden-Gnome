@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { FlatList, View, StyleSheet, TouchableOpacity } from 'react-native';
 import {
-  Text, Searchbar, Card, Chip, ActivityIndicator, useTheme,
+  Text, Searchbar, Card, ActivityIndicator, useTheme,
 } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,9 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { Species } from '../types';
 import { SpeciesStackParamList } from '../../App';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
+import Pill from '../components/Pill';
 
 type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'SpeciesList'>;
 
@@ -17,21 +20,23 @@ const LIGHT_ICON: Record<string, string> = {
 };
 
 function SpeciesCard({ species, onPress }: { species: Species; onPress: () => void }) {
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.85}>
       <Card style={styles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleSmall">{species.common_name}</Text>
+          <Text variant="titleSmall" style={styles.name}>{species.common_name}</Text>
           <Text variant="bodySmall" style={styles.scientific}>{species.scientific_name}</Text>
           <View style={styles.chipRow}>
-            <Chip compact style={styles.chip}>
+            <Pill>
               {LIGHT_ICON[species.light_need]} {species.light_need.replace('_', ' ')}
-            </Chip>
-            <Chip compact style={styles.chip}>
+            </Pill>
+            <Pill>
               🌡 {species.temp_f_min}–{species.temp_f_max}°F
-            </Chip>
+            </Pill>
             {species.toxic_to_pets && (
-              <Chip compact style={styles.toxicChip} icon="alert">Pet caution</Chip>
+              <Pill tone="warn" filled>Pet caution</Pill>
             )}
           </View>
         </Card.Content>
@@ -42,8 +47,10 @@ function SpeciesCard({ species, onPress }: { species: Species; onPress: () => vo
 
 export default function SpeciesScreen() {
   const theme = useTheme();
+  const { palette, fonts } = useAppTheme();
   const navigation = useNavigation<Nav>();
   const [search, setSearch] = useState('');
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
   const { data: speciesList = [], isLoading, isError } = useQuery({
     queryKey: ['species'],
@@ -67,7 +74,7 @@ export default function SpeciesScreen() {
   if (isError) {
     return (
       <View style={styles.center}>
-        <Text style={{ color: '#c00', textAlign: 'center' }}>
+        <Text style={styles.error}>
           Could not load species.{' '}
           {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
         </Text>
@@ -96,15 +103,15 @@ export default function SpeciesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F6FAF7' },
-  searchbar: { margin: 12, borderRadius: 10 },
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: p.bg },
+  searchbar: { margin: 12, borderRadius: 10, backgroundColor: p.card },
   list: { paddingHorizontal: 12, paddingBottom: 24 },
-  card: { marginBottom: 8, borderRadius: 10 },
-  scientific: { fontStyle: 'italic', color: '#666', marginTop: 2 },
+  card: { marginBottom: 8, borderRadius: 12, backgroundColor: p.card },
+  name: { fontFamily: f.display, color: p.ink },
+  scientific: { fontStyle: 'italic', color: p.sub, marginTop: 2 },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6, gap: 4 },
-  chip: { marginRight: 4 },
-  toxicChip: { backgroundColor: '#FFE0E0', marginRight: 4 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  empty: { textAlign: 'center', color: '#888', marginTop: 48 },
+  error: { color: p.warn, textAlign: 'center' },
+  empty: { textAlign: 'center', color: p.faint, marginTop: 48 },
 });
