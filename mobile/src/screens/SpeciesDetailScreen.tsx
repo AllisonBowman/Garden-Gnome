@@ -52,11 +52,18 @@ export default function SpeciesDetailScreen() {
         <Text variant="bodyMedium" style={styles.scientific}>
           {species.scientific_name}
         </Text>
-        {species.toxic_to_pets && (
+        {/* The generated sentence when the API supplies one — it distinguishes
+            which parts are toxic and to which animals. Falls back to the flat
+            chip on older API versions. */}
+        {species.toxicity_description ? (
+          <Text variant="bodySmall" style={styles.toxicityNote}>
+            {species.toxicity_description}
+          </Text>
+        ) : species.toxic_to_pets ? (
           <Chip icon="alert" style={styles.toxicChip} textStyle={styles.toxicChipText}>
             ⚠️ Toxic to pets
           </Chip>
-        )}
+        ) : null}
       </View>
 
       {/* Care summary stats */}
@@ -133,6 +140,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   scientific: { fontStyle: 'italic', color: p.sub, fontFamily: f.display, marginTop: 2, marginBottom: 8 },
   toxicChip: { backgroundColor: p.warnSoft, alignSelf: 'flex-start' },
   toxicChipText: { color: p.warn },
+  toxicityNote: { color: p.warn, marginTop: 8, lineHeight: 19 },
   card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
   cardTitle: { color: p.ink, fontFamily: f.display },
   statRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },

@@ -186,6 +186,19 @@ class Species(SQLModel, table=True):
     care_schedules: list["CareSchedule"] = Relationship(back_populates="species")
     traits: list["SpeciesTrait"] = Relationship(back_populates="species")
 
+    @property
+    def toxicity_description(self) -> str:
+        """A plain-language toxicity sentence, generated from what we know.
+
+        A property rather than a column: it is derived, so it can improve as the
+        nuance table does without a migration, and every endpoint that returns a
+        Species picks it up automatically. `toxic_to_pets` stays as the raw flag
+        for filtering; this is what a person should actually read."""
+        from app.services.toxicity import describe_for_species
+        return describe_for_species(
+            self.scientific_name, self.common_name, self.toxic_to_pets
+        )
+
 
 class CareSchedule(SQLModel, table=True):
     __table_args__ = (UniqueConstraint("species_id", "care_type"),)

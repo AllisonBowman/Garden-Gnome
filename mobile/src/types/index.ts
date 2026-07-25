@@ -30,6 +30,12 @@ export interface Species {
   temp_f_max: number;
   soil_type: string;
   toxic_to_pets: boolean;
+  /** Plain-language toxicity sentence derived server-side — names which parts
+   *  are toxic, to which animals, and how serious. Prefer this over the bare
+   *  flag wherever there is room to show it: "Tomato: toxic" is contradictory
+   *  to anyone who eats tomatoes, and a lily and a pothos are not the same
+   *  risk. Empty on older API versions, so always fall back to the flag. */
+  toxicity_description?: string;
   care_notes: string;
   care_schedules?: CareSchedule[];
   traits?: SpeciesTrait[];

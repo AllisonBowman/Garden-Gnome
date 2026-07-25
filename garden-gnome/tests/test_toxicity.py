@@ -138,3 +138,32 @@ def test_severe_cases_direct_to_a_vet_and_do_not_triage():
     text = tx.describe_for_species("Lilium longiflorum", "Easter Lily", True)
     assert "contact a vet" in text.lower()
     assert "do not wait" in text.lower()
+
+
+# --- it actually reaches the client -----------------------------------------
+
+def test_species_model_exposes_the_generated_sentence():
+    """A property on the model, so every endpoint returning a Species picks it
+    up without each router being patched."""
+    from app.models.models import Species
+    sp = Species(common_name="Tomato", scientific_name="Solanum lycopersicum",
+                 light_need="direct", humidity_pct_min=40, humidity_pct_max=70,
+                 temp_f_min=55, temp_f_max=90, soil_type="loam",
+                 toxic_to_pets=True)
+    assert "You can eat the fruit" in sp.toxicity_description
+
+
+def test_derived_field_survives_serialization_to_the_api_schema():
+    """Guards the wiring: a schema change that drops the field would otherwise
+    fail silently, and the app would quietly fall back to the flat chip."""
+    from app.models.models import Species
+    from app.models.schemas import SpeciesDetail, SpeciesRead
+
+    sp = Species(id=1, common_name="Easter Lily", scientific_name="Lilium longiflorum",
+                 light_need="direct", humidity_pct_min=40, humidity_pct_max=60,
+                 temp_f_min=50, temp_f_max=80, soil_type="loam",
+                 toxic_to_pets=True)
+    for schema in (SpeciesDetail, SpeciesRead):
+        out = schema.model_validate(sp, from_attributes=True)
+        assert "cats" in out.toxicity_description
+        assert out.toxic_to_pets is True, "the raw flag stays available for filtering"
