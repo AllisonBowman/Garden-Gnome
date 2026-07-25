@@ -226,6 +226,10 @@ garden-gnome/     FastAPI backend — API, auth, SQLite/Alembic, AI services,
                   Fly.io deploy config, tests.  See its README.
 mobile/           Expo / React Native app — screens, auth, on-device AI native
                   module (modules/plant-id), reminders, streaks, onboarding.
-garden-gnome-auth-plan.md   The user-accounts implementation plan and the
-                  recorded design decisions it was built against.
+site/             The marketing site sources.
+docs/             Plans, audits, design references, and screenshots — including
+                  garden-gnome-auth-plan.md (the user-accounts implementation
+                  plan and the design decisions it was built against) and
+                  design/ (the design-lab pixel reference behind the app's
+                  Almanac/Observatory themes).
 ```

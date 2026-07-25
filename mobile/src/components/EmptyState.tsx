@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Button } from 'react-native-paper';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
 
 interface Props {
   emoji: string;
@@ -13,6 +15,8 @@ interface Props {
 /** Calm, reusable empty state — a friendly icon, a line of reassurance, and
  *  an optional call to action. Matches the app's low-pressure tone. */
 export default function EmptyState({ emoji, title, body, actionLabel, onAction }: Props) {
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>{emoji}</Text>
@@ -23,7 +27,8 @@ export default function EmptyState({ emoji, title, body, actionLabel, onAction }
           mode="contained"
           onPress={onAction}
           style={styles.button}
-          buttonColor="#2D6A4F"
+          buttonColor={palette.acc}
+          textColor={palette.btnInk}
           contentStyle={styles.buttonContent}
         >
           {actionLabel}
@@ -33,11 +38,11 @@ export default function EmptyState({ emoji, title, body, actionLabel, onAction }
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   container: { alignItems: 'center', paddingHorizontal: 32, paddingVertical: 56 },
   emoji: { fontSize: 46, marginBottom: 16 },
-  title: { fontSize: 19, fontWeight: '700', color: '#2D6A4F', marginBottom: 8, textAlign: 'center' },
-  body: { fontSize: 14.5, lineHeight: 21, color: '#6b7d6e', textAlign: 'center', maxWidth: 320 },
+  title: { fontSize: 19, fontWeight: '700', color: p.acc, fontFamily: f.display, marginBottom: 8, textAlign: 'center' },
+  body: { fontSize: 14.5, lineHeight: 21, color: p.sub, textAlign: 'center', maxWidth: 320 },
   button: { marginTop: 22, borderRadius: 8 },
   buttonContent: { paddingVertical: 4, paddingHorizontal: 8 },
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, Alert, View, Platform } from 'react-native';
 import { Text, TextInput, Button, Card, Divider, Switch } from 'react-native-paper';
 import { getBaseUrl, setBaseUrl } from '../api/client';
@@ -11,6 +11,9 @@ import {
   rescheduleAllReminders, getWeatherShiftPref, setWeatherShiftPref,
 } from '../notifications/reminders';
 import { ReminderPrefs } from '../notifications/plan';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
+import { BUILD_NUMBER, BUILD_COMMIT } from '../buildInfo';
 import { CareType } from '../types';
 
 // The backend-URL override is shown in dev AND in builds that opt in via
@@ -46,6 +49,8 @@ function confirmDialog(
 
 export default function SettingsScreen() {
   const { user, signOut, deleteAccount } = useAuth();
+  const { name: themeName, toggle: toggleTheme, palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [url, setUrl]       = useState('');
   const [saved, setSaved]   = useState(false);
   const [testing, setTesting] = useState(false);
@@ -142,7 +147,7 @@ export default function SettingsScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Card style={styles.card}>
-        <Card.Title title="Account" titleVariant="titleMedium" />
+        <Card.Title title="Account" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodyMedium" style={styles.accountName}>
             {user?.display_name || user?.email || 'Signed in'}
@@ -166,11 +171,33 @@ export default function SettingsScreen() {
             onPress={onDeleteAccount}
             loading={deleting}
             disabled={signingOut || deleting}
-            textColor="#B3261E"
+            textColor={palette.warn}
             style={styles.btn}
           >
             Delete account
           </Button>
+        </Card.Content>
+      </Card>
+
+      <Divider style={styles.divider} />
+
+      <Card style={styles.card}>
+        <Card.Title title="Appearance" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Content>
+          <View style={styles.reminderRow}>
+            <Text variant="bodyMedium" style={styles.reminderLabel}>
+              {themeName === 'observatory' ? '🌙 Observatory (dark)' : '☀️ Almanac (light)'}
+            </Text>
+            <Switch
+              value={themeName === 'observatory'}
+              onValueChange={toggleTheme}
+              color={palette.acc}
+            />
+          </View>
+          <Text variant="bodySmall" style={styles.hint}>
+            Almanac is the warm field-notebook look; Observatory is a dark,
+            colorblind-safe night theme.
+          </Text>
         </Card.Content>
       </Card>
 
@@ -182,7 +209,7 @@ export default function SettingsScreen() {
       {SHOW_BACKEND_OVERRIDE && (
         <>
           <Card style={styles.card}>
-            <Card.Title title="Backend connection" titleVariant="titleMedium" />
+            <Card.Title title="Backend connection" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
             <Card.Content>
               <Text variant="bodySmall" style={styles.hint}>
                 Override the API server URL.{'\n'}
@@ -204,7 +231,7 @@ export default function SettingsScreen() {
                 mode="contained"
                 onPress={save}
                 style={styles.btn}
-                buttonColor="#2D6A4F"
+                buttonColor={palette.acc}
               >
                 {saved ? 'Saved ✓' : 'Save URL'}
               </Button>
@@ -224,7 +251,7 @@ export default function SettingsScreen() {
       )}
 
       <Card style={styles.card}>
-        <Card.Title title="Care reminders" titleVariant="titleMedium" />
+        <Card.Title title="Care reminders" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.hint}>
             {remindersSupported
@@ -240,7 +267,7 @@ export default function SettingsScreen() {
                 value={!!prefs[t.type]}
                 disabled={!remindersSupported}
                 onValueChange={(v) => toggleReminder(t.type, v)}
-                color="#2D6A4F"
+                color={palette.acc}
               />
             </View>
           ))}
@@ -256,7 +283,7 @@ export default function SettingsScreen() {
                   value={weatherShift}
                   disabled={!prefs.water}
                   onValueChange={toggleWeatherShift}
-                  color="#2D6A4F"
+                  color={palette.acc}
                 />
               </View>
               <Text variant="bodySmall" style={styles.subHint}>
@@ -272,10 +299,11 @@ export default function SettingsScreen() {
       <Divider style={styles.divider} />
 
       <Card style={styles.card}>
-        <Card.Title title="About & Support" titleVariant="titleMedium" />
+        <Card.Title title="About & Support" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.about}>
-            PlantAdvocate v{APP_VERSION}{'\n'}
+            PlantAdvocate v{APP_VERSION}
+            {BUILD_NUMBER > 0 ? `  ·  build ${BUILD_NUMBER} (${BUILD_COMMIT})` : ''}{'\n'}
             Every plant deserves an advocate. Care schedules, reminders, and a
             care engine grounded in a curated species database.{'\n\n'}
             Species data provided in part by Perenual (perenual.com).
@@ -310,23 +338,24 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F6FAF7' },
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 16, paddingBottom: 48 },
-  card: { marginBottom: 16, borderRadius: 12 },
-  hint: { color: '#666', lineHeight: 20, marginBottom: 12 },
+  card: { marginBottom: 16, borderRadius: 12, backgroundColor: p.card },
+  cardTitle: { fontFamily: f.display, color: p.ink },
+  hint: { color: p.sub, lineHeight: 20, marginBottom: 12 },
   input: { marginBottom: 12 },
   btn: { marginBottom: 10, borderRadius: 8 },
-  divider: { marginVertical: 8 },
-  about: { color: '#666', lineHeight: 20 },
-  accountName: { color: '#333', fontWeight: '600', marginBottom: 2 },
+  divider: { marginVertical: 8, backgroundColor: p.line },
+  about: { color: p.sub, lineHeight: 20 },
+  accountName: { color: p.ink, fontWeight: '600', marginBottom: 2 },
   reminderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 6,
   },
-  reminderLabel: { color: '#333', flexShrink: 1, paddingRight: 12 },
-  innerDivider: { marginTop: 10, marginBottom: 4 },
-  subHint: { color: '#888', lineHeight: 18, marginTop: 2 },
+  reminderLabel: { color: p.ink, flexShrink: 1, paddingRight: 12 },
+  innerDivider: { marginTop: 10, marginBottom: 4, backgroundColor: p.line },
+  subHint: { color: p.faint, lineHeight: 18, marginTop: 2 },
 });

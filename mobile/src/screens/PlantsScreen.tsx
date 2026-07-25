@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   FlatList, View, StyleSheet, RefreshControl, TouchableOpacity,
 } from 'react-native';
 import {
-  Text, Card, FAB, Chip, ActivityIndicator, useTheme,
+  Text, Card, FAB, Chip, ActivityIndicator,
 } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +13,8 @@ import { Plant } from '../types';
 import { PlantsStackParamList } from '../../App';
 import StreakBadges from '../streaks/StreakBadges';
 import EmptyState from '../components/EmptyState';
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
 
 type Nav = NativeStackNavigationProp<PlantsStackParamList, 'PlantsList'>;
 
@@ -24,12 +26,13 @@ const LIGHT_LABELS: Record<string, string> = {
 };
 
 function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
-  const theme = useTheme();
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.85}>
       <Card style={styles.card} mode="elevated">
         <Card.Content>
-          <Text variant="titleMedium" style={{ color: theme.colors.primary }}>
+          <Text variant="titleMedium" style={styles.name}>
             {plant.nickname}
           </Text>
           {plant.species && (
@@ -44,7 +47,12 @@ function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
               </Chip>
             )}
             {plant.species?.toxic_to_pets && (
-              <Chip compact icon="alert" style={[styles.chip, styles.toxicChip]}>
+              <Chip
+                compact
+                icon="alert"
+                style={[styles.chip, styles.toxicChip]}
+                textStyle={styles.toxicChipText}
+              >
                 Pet caution
               </Chip>
             )}
@@ -62,6 +70,8 @@ function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
 
 export default function PlantsScreen() {
   const navigation = useNavigation<Nav>();
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const { data: plants, isLoading, isError, refetch, isRefetching } = useQuery({
     queryKey: ['plants'],
     queryFn: fetchPlants,
@@ -113,6 +123,7 @@ export default function PlantsScreen() {
       <FAB
         icon="plus"
         style={styles.fab}
+        color={palette.btnInk}
         onPress={() => navigation.navigate('AddPlant')}
         label="Add plant"
       />
@@ -120,17 +131,19 @@ export default function PlantsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F6FAF7' },
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: p.bg },
   list: { padding: 12, paddingBottom: 96 },
   card: { marginBottom: 10, borderRadius: 12 },
+  name: { color: p.acc, fontFamily: f.display },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6, gap: 4 },
   chip: { marginRight: 4 },
-  toxicChip: { backgroundColor: '#FFE0E0' },
-  scientific: { color: '#666', fontStyle: 'italic', marginTop: 2 },
-  location: { color: '#888', marginTop: 4 },
-  fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: '#2D6A4F' },
+  toxicChip: { backgroundColor: p.warnSoft },
+  toxicChipText: { color: p.warn },
+  scientific: { color: p.sub, fontStyle: 'italic', marginTop: 2 },
+  location: { color: p.faint, marginTop: 4 },
+  fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: p.acc },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  errorText: { textAlign: 'center', color: '#c00' },
-  empty: { textAlign: 'center', color: '#888', marginTop: 48, fontSize: 15 },
+  errorText: { textAlign: 'center', color: p.warn },
+  empty: { textAlign: 'center', color: p.faint, marginTop: 48, fontSize: 15 },
 });

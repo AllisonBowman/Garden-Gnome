@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   ScrollView, View, StyleSheet, Alert, Platform,
 } from 'react-native';
 import {
   Text, Card, Button, Chip, Divider, List,
-  ActivityIndicator, useTheme, Surface, TextInput, Snackbar,
+  ActivityIndicator, Surface, TextInput, Snackbar,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -20,15 +20,10 @@ import { ensureCameraPermission } from '../photoPermissions';
 import ReportResult from '../components/ReportResult';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
-
-// Landing-page palette (specimen-card look): ink/paper/marigold/clay
-const SPECIMEN = {
-  ink: '#1C2B1F',
-  inkSoft: '#2C3D2C',
-  paper: '#EEEBDD',
-  marigold: '#D9A441',
-  clay: '#A9542F',
-};
+import { useAppTheme } from '../theme/ThemeProvider';
+import { Palette, Fonts } from '../theme/tokens';
+import Eyebrow from '../components/Eyebrow';
+import Pill from '../components/Pill';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 
@@ -50,7 +45,8 @@ function formatDate(iso: string) {
 export default function PlantDetailScreen() {
   const route = useRoute<Route>();
   const { plantId } = route.params;
-  const theme = useTheme();
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const queryClient = useQueryClient();
   const [loggingType, setLoggingType] = useState<CareType | null>(null);
 
@@ -146,7 +142,7 @@ export default function PlantDetailScreen() {
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
       {/* Header */}
       <Surface style={styles.header} elevation={1}>
-        <Text variant="headlineSmall" style={{ color: theme.colors.primary }}>
+        <Text variant="headlineSmall" style={styles.plantName}>
           {plant.nickname}
         </Text>
         {species && (
@@ -158,7 +154,7 @@ export default function PlantDetailScreen() {
 
       {/* Quick-log care */}
       <Card style={styles.card}>
-        <Card.Title title="Log care" titleVariant="titleMedium" />
+        <Card.Title title="Log care" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <View style={styles.careGrid}>
             {CARE_ACTIONS.map((a) => (
@@ -181,7 +177,7 @@ export default function PlantDetailScreen() {
 
       {/* Care advice */}
       <Card style={styles.card}>
-        <Card.Title title="Ask the Gnome 🧙" titleVariant="titleMedium" />
+        <Card.Title title="Ask the Gnome 🧙" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <TextInput
             label="Anything wrong? (optional)"
@@ -224,10 +220,10 @@ export default function PlantDetailScreen() {
                 </Text>
               ))}
               <View style={styles.resultMetaRow}>
-                <Chip compact style={styles.backendChip} textStyle={styles.backendChipText}>
+                <Pill tone="neutral" filled style={styles.metaPill}>
                   {(advice.backend === 'stub' ? 'rule-based' : advice.backend)
                     + (advice.gnomeStyled ? ' • gnome voice' : '')}
-                </Chip>
+                </Pill>
                 <ReportResult
                   surfaceLabel="care advice"
                   result={advice.advice}
@@ -245,7 +241,7 @@ export default function PlantDetailScreen() {
       {/* Photo diagnosis — specimen-card styling from the landing page */}
       <Card style={styles.specimenCard}>
         <View style={styles.specimenHeader}>
-          <Text style={styles.specimenLabel}>SPECIMEN CHECK-UP</Text>
+          <Eyebrow color={palette.warn}>SPECIMEN CHECK-UP</Eyebrow>
           <Text style={styles.specimenTitle}>Photo diagnosis 📷</Text>
           <Text style={styles.specimenSub}>
             Snap the whole plant or a close-up of what worries you — the Gnome
@@ -260,9 +256,9 @@ export default function PlantDetailScreen() {
             onChangeText={setDiagnosisNotes}
             mode="outlined"
             style={styles.diagnosisInput}
-            outlineColor="rgba(28,43,31,0.25)"
-            activeOutlineColor={SPECIMEN.clay}
-            textColor={SPECIMEN.ink}
+            outlineColor={palette.line}
+            activeOutlineColor={palette.warn}
+            textColor={palette.ink}
             placeholder="e.g. brown spots since last week"
           />
           <View style={styles.diagnosisBtnRow}>
@@ -272,8 +268,8 @@ export default function PlantDetailScreen() {
                 icon="camera"
                 onPress={() => pickAndDiagnose(true)}
                 disabled={diagnoseMutation.isPending}
-                buttonColor={SPECIMEN.marigold}
-                textColor={SPECIMEN.ink}
+                buttonColor={palette.hedge}
+                textColor={palette.btnInk}
                 style={styles.diagnosisBtn}
               >
                 Take photo
@@ -285,8 +281,8 @@ export default function PlantDetailScreen() {
               onPress={() => pickAndDiagnose(false)}
               loading={diagnoseMutation.isPending}
               disabled={diagnoseMutation.isPending}
-              buttonColor={Platform.OS === 'web' ? SPECIMEN.marigold : undefined}
-              textColor={Platform.OS === 'web' ? SPECIMEN.ink : SPECIMEN.clay}
+              buttonColor={Platform.OS === 'web' ? palette.hedge : undefined}
+              textColor={Platform.OS === 'web' ? palette.btnInk : palette.warn}
               style={styles.diagnosisBtn}
             >
               Choose photo
@@ -299,18 +295,18 @@ export default function PlantDetailScreen() {
           )}
           {diagnosis && (
             <View style={styles.testimony}>
-              <Text style={styles.testimonyLabel}>GNOME&apos;S FINDINGS</Text>
+              <Eyebrow color={palette.warn}>GNOME&apos;S FINDINGS</Eyebrow>
               {diagnosis.diagnosis.split('\n').filter((l) => l.trim()).map((line, i) => (
                 <Text key={i} style={styles.testimonyText}>{line}</Text>
               ))}
               <View style={styles.resultMetaRow}>
-                <Chip compact style={styles.specimenChip} textStyle={styles.specimenChipText}>
+                <Pill tone="neutral" filled style={styles.metaPill}>
                   {diagnosis.backend === 'stub' ? 'diagnosis not enabled yet' : diagnosis.backend}
-                </Chip>
+                </Pill>
                 <ReportResult
                   surfaceLabel="diagnosis"
                   result={diagnosis.diagnosis}
-                  textColor={SPECIMEN.clay}
+                  textColor={palette.warn}
                   context={[
                     `Plant: ${plant.nickname}`,
                     ...(species ? [`Species: ${species.common_name} (${species.scientific_name})`] : []),
@@ -325,7 +321,7 @@ export default function PlantDetailScreen() {
       {/* Species details */}
       {species && (
         <Card style={styles.card}>
-          <Card.Title title="Care guide" titleVariant="titleMedium" />
+          <Card.Title title="Care guide" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             <Text variant="bodyMedium" style={styles.careNotes}>{species.care_notes}</Text>
             <Divider style={styles.divider} />
@@ -335,7 +331,7 @@ export default function PlantDetailScreen() {
               <Stat label="Temp (°F)" value={`${species.temp_f_min}–${species.temp_f_max}`} />
             </View>
             {species.toxic_to_pets && (
-              <Chip icon="alert" style={styles.toxicChip} textStyle={{ color: '#900' }}>
+              <Chip icon="alert" style={styles.toxicChip} textStyle={{ color: palette.warn }}>
                 ⚠️ Caution: toxic to pets
               </Chip>
             )}
@@ -345,7 +341,7 @@ export default function PlantDetailScreen() {
 
       {/* Care log */}
       <Card style={styles.card}>
-        <Card.Title title="Recent care log" titleVariant="titleMedium" />
+        <Card.Title title="Recent care log" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {(!logs || logs.length === 0) ? (
             <Text style={styles.empty}>
@@ -372,13 +368,15 @@ export default function PlantDetailScreen() {
       duration={2500}
       style={styles.snackbar}
     >
-      {confirmation}
+      <Text style={styles.snackbarText}>{confirmation}</Text>
     </Snackbar>
     </View>
   );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
+  const { palette, fonts } = useAppTheme();
+  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   return (
     <View style={styles.stat}>
       <Text variant="labelSmall" style={styles.statLabel}>{label}</Text>
@@ -387,40 +385,42 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F6FAF7' },
+const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 12, paddingBottom: 48 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   header: { borderRadius: 12, padding: 16, marginBottom: 12 },
-  scientific: { fontStyle: 'italic', color: '#555', marginTop: 2 },
+  plantName: { color: p.acc, fontFamily: f.display },
+  scientific: { fontStyle: 'italic', color: p.sub, marginTop: 2, fontFamily: f.display },
   card: { marginBottom: 12, borderRadius: 12 },
+  cardTitle: { fontFamily: f.display },
   careGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   careBtn: { marginBottom: 4 },
   careBtnLabel: { fontSize: 13 },
-  careNotes: { lineHeight: 22, color: '#333' },
+  careNotes: { lineHeight: 22, color: p.ink },
   divider: { marginVertical: 12 },
   statRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
   stat: { alignItems: 'center', flex: 1 },
-  statLabel: { color: '#888', marginBottom: 2 },
-  statValue: { fontWeight: '600' },
-  toxicChip: { backgroundColor: '#FFE0E0', alignSelf: 'flex-start' },
+  statLabel: { color: p.faint, marginBottom: 2 },
+  statValue: { fontWeight: '600', fontFamily: f.numeric, color: p.ink },
+  toxicChip: { backgroundColor: p.warnSoft, alignSelf: 'flex-start' },
   logItem: { paddingVertical: 2 },
-  empty: { color: '#aaa', fontStyle: 'italic' },
+  empty: { color: p.faint, fontStyle: 'italic' },
   scroll: { flex: 1 },
   symptomsInput: { marginBottom: 12 },
   adviceBtn: { borderRadius: 8 },
-  adviceHint: { marginTop: 12, fontSize: 13, lineHeight: 19, color: '#6b7d6e', fontStyle: 'italic' },
+  adviceHint: { marginTop: 12, fontSize: 13, lineHeight: 19, color: p.sub, fontStyle: 'italic' },
   adviceBox: {
     marginTop: 16,
-    backgroundColor: '#EFF6F0',
+    backgroundColor: p.accSoft,
     borderRadius: 10,
     padding: 14,
     gap: 10,
   },
-  adviceText: { lineHeight: 21, color: '#2F3E36' },
+  adviceText: { lineHeight: 21, color: p.ink },
   gnomeVoiceText: { fontStyle: 'italic', fontSize: 14.5 },
-  adviceWarningText: { color: '#9A4D00', fontWeight: '600' },
-  backendChip: { alignSelf: 'flex-start', marginTop: 2, backgroundColor: '#E1EDE4' },
+  adviceWarningText: { color: p.warn, fontWeight: '600' },
+  metaPill: { marginTop: 2 },
   resultMetaRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -428,51 +428,35 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
   },
-  backendChipText: { fontSize: 11, color: '#52796F' },
-  snackbar: { backgroundColor: '#2D6A4F' },
+  snackbar: { backgroundColor: p.acc },
+  snackbarText: { color: p.btnInk },
 
-  // Specimen card — palette borrowed from the landing page (ink/paper/marigold/clay)
-  specimenCard: { marginBottom: 12, borderRadius: 12, backgroundColor: SPECIMEN.paper },
+  // Specimen card — field-notebook look (paper/gold/clay) mapped to tokens
+  specimenCard: { marginBottom: 12, borderRadius: 12, backgroundColor: p.desk },
   specimenHeader: {
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 12,
     borderBottomWidth: 1,
     borderStyle: 'dashed',
-    borderBottomColor: 'rgba(28,43,31,0.25)',
+    borderBottomColor: p.line,
   },
-  specimenLabel: {
-    fontSize: 11,
-    letterSpacing: 1.5,
-    color: SPECIMEN.clay,
-    fontWeight: '600',
-    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-  },
-  specimenTitle: { fontSize: 19, fontWeight: '600', color: SPECIMEN.ink, marginTop: 4 },
-  specimenSub: { fontSize: 13, lineHeight: 19, color: SPECIMEN.inkSoft, marginTop: 6 },
+  specimenTitle: { fontSize: 19, fontWeight: '600', color: p.ink, marginTop: 4, fontFamily: f.display },
+  specimenSub: { fontSize: 13, lineHeight: 19, color: p.sub, marginTop: 6 },
   specimenBody: { paddingTop: 14 },
-  diagnosisInput: { marginBottom: 12, backgroundColor: '#FFFFFF' },
+  diagnosisInput: { marginBottom: 12, backgroundColor: p.card },
   diagnosisBtnRow: { flexDirection: 'row', gap: 10, flexWrap: 'wrap' },
-  diagnosisBtn: { borderRadius: 6, borderColor: SPECIMEN.clay },
-  diagnosisPending: { marginTop: 12, fontStyle: 'italic', color: SPECIMEN.inkSoft, fontSize: 13 },
+  diagnosisBtn: { borderRadius: 6, borderColor: p.warn },
+  diagnosisPending: { marginTop: 12, fontStyle: 'italic', color: p.sub, fontSize: 13 },
   testimony: {
     marginTop: 16,
-    backgroundColor: 'rgba(217,164,65,0.12)',
+    backgroundColor: p.card2,
     borderLeftWidth: 2,
-    borderLeftColor: SPECIMEN.marigold,
+    borderLeftColor: p.hedge,
     borderTopRightRadius: 2,
     borderBottomRightRadius: 2,
     padding: 14,
     gap: 8,
   },
-  testimonyLabel: {
-    fontSize: 10,
-    letterSpacing: 1.2,
-    color: SPECIMEN.clay,
-    fontWeight: '600',
-    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-  },
-  testimonyText: { fontStyle: 'italic', lineHeight: 21, color: SPECIMEN.ink, fontSize: 14.5 },
-  specimenChip: { alignSelf: 'flex-start', marginTop: 4, backgroundColor: 'rgba(28,43,31,0.08)' },
-  specimenChipText: { fontSize: 11, color: SPECIMEN.inkSoft },
+  testimonyText: { fontStyle: 'italic', lineHeight: 21, color: p.ink, fontSize: 14.5 },
 });

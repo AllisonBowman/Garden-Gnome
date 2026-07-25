@@ -9,6 +9,5 @@ garden-gnome/ directory:
     python -m evals.checklist --print     # per-photo device checklist
     python -m evals.replay_device ...     # re-grade transcribed device runs
 
-See plantadvocate-vision-test-plan.md at the repo root for the full
-procedure.
+See docs/plantadvocate-vision-test-plan.md for the full procedure.
 """
