@@ -32,15 +32,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     (async () => {
-      const [storedUser, refresh] = await Promise.all([
-        getStoredUser(), getRefreshToken(),
-      ]);
-      if (storedUser && refresh) {
-        setUser(storedUser);
-        setStatus('signedIn');
-      } else {
-        setStatus('signedOut');
+      try {
+        const [storedUser, refresh] = await Promise.all([
+          getStoredUser(), getRefreshToken(),
+        ]);
+        if (storedUser && refresh) {
+          setUser(storedUser);
+          setStatus('signedIn');
+          return;
+        }
+      } catch {
+        // Keychain unreadable — locked device, a build without the keychain
+        // entitlement, or a corrupted item. Fall through to signedOut: the
+        // user can sign in again, which rewrites the session. Rethrowing (or
+        // just letting this reject) would leave status on 'loading' forever,
+        // and AuthGate renders nothing while loading — a permanent splash.
       }
+      setStatus('signedOut');
     })();
   }, []);
 
