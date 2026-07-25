@@ -55,28 +55,47 @@ Outputs (in `app/data/expansion/output/`, gitignored):
 
 ## Working down the `needs_review` backlog
 
-Two tools draft verdicts into the file `apply_review.py` consumes. **Neither
-writes to the catalog** — a human reads the file first.
+Run the free passes first, then pay for only what's left. **None of these write
+to the catalog** — they draft verdicts into the file `apply_review.py` consumes,
+for a human to read.
 
 ```bash
-# 1. Wikipedia triage — FREE, deterministic. Run this FIRST.
-#    Finds synonyms/duplicate rows and non-species names; leaves care
-#    numbers alone (Wikipedia is a taxonomic source, not a care source).
-python -m app.data.expansion.wiki_enrich --limit 25
+# 1. Genus inference — FREE, OFFLINE, no network at all.
+#    Fills defaulted care data from human-approved siblings in the same genus.
+#    Usually the biggest single win, and it costs nothing.
+python -m app.data.expansion.genus_fill --all
+
+# 2. Wikipedia triage — FREE (MediaWiki).
+#    Finds synonym/duplicate rows and corrects names to accepted binomials.
+python -m app.data.expansion.wiki_enrich --all
 python -m app.data.expansion.wiki_enrich --mock-dir fixtures/wiki   # offline
 
-# 2. Horticultural research — COSTS MONEY per record. Run it over what
-#    survives step 1, on a smaller, deduplicated set.
+# 3. Merge both + see exactly what's left
+python -m app.data.expansion.populate_catalog --dry-run   # report only
+python -m app.data.expansion.populate_catalog             # write merged file
+
+# 4. Horticultural research — COSTS MONEY per record. Only for what survives.
 python -m app.data.expansion.research_review --limit 10
 
-# 3. Apply, after reading the file
-python -m app.data.expansion.apply_review output/wiki_review.json
+# 5. Apply, after reading the file
+python -m app.data.expansion.apply_review output/populate_review.json
 ```
 
-Why this order: near-duplicate rows are what make *identification* ambiguous,
-and `wiki_enrich` finds them for free. Deduplicating before paying per record
-shrinks the expensive pass. `rejected` verdicts are the duplicates; `uncertain`
-still needs a horticultural source for light/humidity/temp/soil.
+Why this order:
+
+- **Genus inference first** because it is free, offline, and care attributes are
+  largely conserved within a genus — an approved *Anthurium* sibling is a far
+  better estimate than a mapper default.
+- **Then dedup**, because near-duplicate rows are what make *identification*
+  ambiguous. Removing them is an ID fix, not tidying.
+- **Then pay**, over a set that is now smaller and deduplicated.
+
+`populate_catalog` reports coverage: duplicates to remove, records now complete,
+partially filled, and how many still need a paid horticultural source.
+
+Coverage depends entirely on **genus overlap** — how many `needs_review` rows
+share a genus with one of the approved species. Run step 1 and read the report
+before assuming a number.
 
 Safety properties (shared with `research_review`, tested): a verdict without a
 citation URL is downgraded to `uncertain`; corrections outside the allowed field
