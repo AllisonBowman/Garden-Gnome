@@ -46,6 +46,10 @@ export interface AdviceResponse {
   species: string;
   backend: string;
   advice: string;
+  /** True when model output failed the server's groundedness guard and this
+   * is the rule-based fallback. `backend` already reads "stub" in that case,
+   * so the badge is honest either way. */
+  guarded?: boolean;
 }
 
 export async function getAdvice(plantId: number, symptoms = ''): Promise<AdviceResponse> {

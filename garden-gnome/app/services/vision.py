@@ -27,7 +27,9 @@ import logging
 import os
 
 from app.models.models import Species, Plant, CareSchedule
+from app.services.grounding import grounding_failures, log_rejection
 from app.services.name_match import classify_matches, match_species
+from app.services.persona import PERSONA_PREAMBLE
 
 logger = logging.getLogger("plantadvocate.vision")
 
@@ -78,7 +80,8 @@ def _anthropic_effort() -> str:
 
 
 SYSTEM_INSTRUCTION = (
-    "You are a careful houseplant diagnosis assistant. You are given a photo "
+    PERSONA_PREAMBLE
+    + "You are a careful houseplant diagnosis assistant. You are given a photo "
     "of a plant plus authoritative species care facts and care schedules. "
     "First describe what you observe in the photo (leaf color, spots, "
     "wilting, pests, soil condition, etc.). Then reason about the likely "
@@ -277,7 +280,22 @@ async def _diagnose_anthropic(
     user_notes: str,
 ) -> str:
     prompt = _build_diagnose_prompt(species, plant, care_schedules, user_notes)
-    return await _anthropic_vision_chat(SYSTEM_INSTRUCTION, prompt, image_bytes, "diagnosis")
+
+    # A diagnosis legitimately describes things no fact mentions (spots,
+    # wilting, pests), so the care-stem check is off here. The number,
+    # template, first-person, and commitment checks still apply: those govern
+    # care *claims*, which must stay grounded in the fact block. One retry,
+    # then the honest unavailable message -- never an ungrounded diagnosis.
+    for attempt in (1, 2):
+        text = await _anthropic_vision_chat(
+            SYSTEM_INSTRUCTION, prompt, image_bytes, "diagnosis"
+        )
+        failures = grounding_failures(prompt, text, check_care_stems=False)
+        if not failures:
+            return text
+        log_rejection(f"diagnosis (attempt {attempt})", failures, text)
+
+    raise VisionUnavailable(UNAVAILABLE_MESSAGE)
 
 
 IDENTIFY_INSTRUCTION = (

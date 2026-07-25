@@ -1,9 +1,14 @@
 # PlantAdvocate — AI Alignment Fix Plan
 
-> **STATUS: PARTIALLY DONE (2026-07-25).** Phase 0 shipped (no developer text
-> reaches users; the `[STUB]` copy and setup instructions are gone, with tests
-> pinning it). Later phases — persona contract, drift guard v2, server-side
-> groundedness guard — are NOT built.
+> **STATUS: DONE (2026-07-25), one item deferred.** Phases 0–4 are built:
+> persona contract (`persona.ts` / `persona.py`), drift guard v2, server-side
+> groundedness guard, and the cross-surface audit in
+> `alignment-audit-2026-07-25.md`. The screenshot letter is rejected by four
+> independent checks on both platforms.
+>
+> Deferred: re-taking the two evidence screenshots on a dev build (Phase 4
+> item 3) — blocked on iOS code signing; the behaviour is pinned by
+> golden-path tests instead. See the audit's "Not done" section.
 
 Implementation plan for Claude Code. Scope: every place a model's output can
 drift from the facts it was given, misattribute who did what, or leak

@@ -23,6 +23,8 @@ from app.models.models import (
     Species, Plant, CareLog, CareSchedule, CareType, Environment,
     Shelter, TempExposure, SunExposure,
 )
+from app.services.grounding import grounding_failures, log_rejection
+from app.services.persona import PERSONA_PREAMBLE
 
 logger = logging.getLogger("plantadvocate.advisor")
 
@@ -56,7 +58,8 @@ ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
 
 
 SYSTEM_INSTRUCTION = (
-    "You are a careful houseplant care assistant. You are given authoritative "
+    PERSONA_PREAMBLE
+    + "You are a careful houseplant care assistant. You are given authoritative "
     "care facts and care schedules for a plant's species and that specific "
     "plant's recent care history. Advise the owner on what to do now. Base "
     "every recommendation ONLY on the facts provided. Do not invent care "
@@ -451,4 +454,26 @@ def get_care_advice(
     backend = SYMPTOMS_BACKEND if symptoms.strip() else BACKEND
     fn = _BACKENDS.get(backend, _advise_stub)
     advice = fn(species, plant, recent_logs, care_schedules, symptoms, environment, weather)
-    return {"backend": backend, "advice": advice}
+
+    # The stub is derived from the data, so it is grounded by construction and
+    # needs no check. Model output does: if it drifts from the facts it was
+    # given, fall back to the stub — always computable — and report the
+    # backend as "stub" so the client's badge stays honest about what the user
+    # is actually reading.
+    if backend != "stub":
+        facts = _build_prompt(
+            species, plant, recent_logs, care_schedules, symptoms, environment, weather
+        )
+        failures = grounding_failures(facts, advice)
+        if failures:
+            log_rejection("advice", failures, advice)
+            return {
+                "backend": "stub",
+                "advice": _advise_stub(
+                    species, plant, recent_logs, care_schedules, symptoms,
+                    environment, weather,
+                ),
+                "guarded": True,
+            }
+
+    return {"backend": backend, "advice": advice, "guarded": False}

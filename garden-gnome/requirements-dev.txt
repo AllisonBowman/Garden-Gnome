@@ -1,3 +1,7 @@
 -r requirements.txt
 pytest>=8.3
 pytest-asyncio>=0.24
+# vision.prepare_image treats Pillow as optional at runtime (falls back to the
+# raw bytes), but test_vision.py exercises the resize/re-encode path directly,
+# so the suite cannot go green without it.
+pillow>=10.0
