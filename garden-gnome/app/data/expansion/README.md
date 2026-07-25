@@ -53,6 +53,37 @@ Outputs (in `app/data/expansion/output/`, gitignored):
 - `expansion_report.json` — full run report including Perenual misses and
   LLM failures.
 
+## Working down the `needs_review` backlog
+
+Two tools draft verdicts into the file `apply_review.py` consumes. **Neither
+writes to the catalog** — a human reads the file first.
+
+```bash
+# 1. Wikipedia triage — FREE, deterministic. Run this FIRST.
+#    Finds synonyms/duplicate rows and non-species names; leaves care
+#    numbers alone (Wikipedia is a taxonomic source, not a care source).
+python -m app.data.expansion.wiki_enrich --limit 25
+python -m app.data.expansion.wiki_enrich --mock-dir fixtures/wiki   # offline
+
+# 2. Horticultural research — COSTS MONEY per record. Run it over what
+#    survives step 1, on a smaller, deduplicated set.
+python -m app.data.expansion.research_review --limit 10
+
+# 3. Apply, after reading the file
+python -m app.data.expansion.apply_review output/wiki_review.json
+```
+
+Why this order: near-duplicate rows are what make *identification* ambiguous,
+and `wiki_enrich` finds them for free. Deduplicating before paying per record
+shrinks the expensive pass. `rejected` verdicts are the duplicates; `uncertain`
+still needs a horticultural source for light/humidity/temp/soil.
+
+Safety properties (shared with `research_review`, tested): a verdict without a
+citation URL is downgraded to `uncertain`; corrections outside the allowed field
+set are stripped; every entry is stamped machine-drafted. Toxicity is only ever
+proposed non-toxic → toxic — clearing a warning because an article didn't
+mention it would be an unsafe inference, so that direction is refused.
+
 ## Field-mapping notes (Perenual → our schema)
 
 - **Water schedule**: `watering_general_benchmark` ("5-7 days") when present,
