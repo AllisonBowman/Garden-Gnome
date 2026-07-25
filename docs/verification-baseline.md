@@ -1,5 +1,9 @@
 # Verification baseline — 2026-07-21
 
+> **STATUS: SUPERSEDED (2026-07-25).** The recorded numbers are stale. Current
+> baseline on master: backend **146 passed**, mobile **37 passed**, `tsc
+> --noEmit` clean. Kept as the historical first run of the acceptance gates.
+
 First run of both acceptance gates against released code. Every plan in this
 repo (`plantadvocate-1.0.1-plan.md`, `plantadvocate-alignment-plan.md`, the
 vision-eval handoff) ends its phases with "the suite green and the mobile

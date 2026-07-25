@@ -1,5 +1,10 @@
 # Site copy corrections — privacy & pricing vs. what the app actually does
 
+> **STATUS: ACTION PENDING (2026-07-25).** The corrections have NOT been applied
+> to the live site. `site/` here is a recovered copy — the real pages come from
+> a `build.py` generator on the desktop machine that deploys to Cloudflare
+> Pages. Until that generator is edited, the live site still overstates things.
+
 **Important:** `site/` in this repo is a **recovered copy** of the live site,
 not its source. The real pages are produced by a `build.py` generator that
 lives on the desktop machine and deploys to Cloudflare Pages

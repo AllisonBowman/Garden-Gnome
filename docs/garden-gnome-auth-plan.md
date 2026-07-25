@@ -1,5 +1,9 @@
 # PlantAdvocate — User Accounts & Auth Implementation Plan
 
+> **STATUS: DONE (2026-07-25).** Fully implemented and shipped — Apple/Google
+> sign-in, token refresh, per-user scoping, and hard account deletion are live
+> and covered by tests. Kept for the recorded design decisions, not as a to-do.
+
 Implementation plan for Claude Code. Backend lives in `garden-gnome/`.
 Work through phases in order; each phase ends with passing tests before moving on.
 

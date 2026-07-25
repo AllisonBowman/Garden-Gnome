@@ -1,5 +1,10 @@
 # PlantAdvocate — Identification Strategy Revision
 
+> **STATUS: ACTIVE, partially implemented (2026-07-25).** The cloud vision
+> backend and catalog name-matching this plan calls for are merged to master,
+> but **inert**: `VISION_BACKEND` defaults to `stub`, so nothing changes until
+> someone opts in with an API key.
+
 Implementation plan for Claude Code. Triggered by a real finding from a
 TestFlight build on an iPhone 17 Pro Max: **on-device identification does not
 reliably distinguish visually similar species.**

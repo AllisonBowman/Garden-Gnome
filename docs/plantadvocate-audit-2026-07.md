@@ -1,5 +1,10 @@
 # PlantAdvocate — System Audit (what the code does)
 
+> **STATUS: HISTORICAL SNAPSHOT (2026-07-25).** Accurate as of 2026-07-23; the
+> findings it raised (open `/species` router, exposed UUIDs, missing mobile
+> tests, site copy) have since been addressed. Read as a system map, not as an
+> open issue list.
+
 *Snapshot: 2026-07-23, branch `claude/plant-advocate-screenshots-xxt8ed`.*
 
 A behavioral and architectural map of PlantAdvocate as it exists today — what

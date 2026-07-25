@@ -1,5 +1,8 @@
 # PlantAdvocate — Vision Feature Test Handoff
 
+> **STATUS: ACTIVE (2026-07-25).** Still the current procedure for structured
+> identification/diagnosis testing. Tooling lives in `garden-gnome/evals/`.
+
 Structured pre-build test of the two photo features, executable by a future
 Claude Code session or by Allison directly. Written after the decision to
 **remove the Ollama backend entirely**, which reshapes what "testing the
