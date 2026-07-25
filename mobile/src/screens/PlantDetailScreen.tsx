@@ -124,9 +124,15 @@ export default function PlantDetailScreen() {
     // launchCameraAsync requires camera permission and does not request it;
     // without this the button silently does nothing (see photoPermissions.ts).
     if (useCamera && !(await ensureCameraPermission())) return;
+    // allowsEditing opens the OS crop/zoom step. Framing matters even more for
+    // diagnosis than for identification: the answer hinges on one affected
+    // leaf or spot, and a wide shot of the whole plant buries it in context.
+    // Mirrors the identify flow in AddPlantScreen.
     const res = useCamera
-      ? await ImagePicker.launchCameraAsync({ quality: 0.8 })
-      : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8 });
+      ? await ImagePicker.launchCameraAsync({ quality: 0.8, allowsEditing: true })
+      : await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ['images'], quality: 0.8, allowsEditing: true,
+        });
     if (res.canceled || !res.assets?.length) return;
     diagnoseMutation.mutate(res.assets[0]);
   };
@@ -244,9 +250,9 @@ export default function PlantDetailScreen() {
           <Eyebrow color={palette.warn}>SPECIMEN CHECK-UP</Eyebrow>
           <Text style={styles.specimenTitle}>Photo diagnosis 📷</Text>
           <Text style={styles.specimenSub}>
-            Snap the whole plant or a close-up of what worries you — the Gnome
-            reads it against {species?.common_name ?? 'this species'}&apos;s care
-            facts and this plant&apos;s history, then files it to the timeline.
+            Snap what worries you and crop in close — the Gnome reads it
+            against {species?.common_name ?? 'this species'}&apos;s care facts
+            and this plant&apos;s history, then files it to the timeline.
           </Text>
         </View>
         <Card.Content style={styles.specimenBody}>
