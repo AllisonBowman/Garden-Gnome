@@ -1,5 +1,10 @@
 # Next steps — what only you can do
 
+> **STATUS: DONE (2026-07-25).** These steps are complete — the on-device
+> plant-id module compiled (TestFlight build 7) and on-device identify was
+> confirmed working on device. Do not follow this as a checklist; for building
+> now, use `cd mobile && npm run sim`.
+
 Everything in this file needs your Apple account, your EAS account, or your
 phone. Nothing here can be done from the dev machine.
 

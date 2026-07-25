@@ -1,5 +1,11 @@
 # PlantAdvocate — 1.0.1 Feature Plan
 
+> **STATUS: PARTIALLY DONE (2026-07-25).** Phase 0 shipped. Phase 2's interim
+> capture-crop shipped (camera + `allowsEditing`); the full draggable ROI flow
+> is NOT built. Phase 3's "on-device first" stance for *identification* is
+> superseded by `plantadvocate-identify-strategy-plan.md` — on-device ID proved
+> unreliable on similar species, so a cloud backend now exists (opt-in).
+
 Implementation plan for Claude Code. Repo: `C:\Users\14439\garden-gnome`
 (backend at root, app in `mobile\`). Work phases in order; each ends with the
 suite green and the mobile typecheck clean. Follow the adopted decisions in

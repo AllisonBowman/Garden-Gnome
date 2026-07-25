@@ -1,5 +1,10 @@
 # PlantAdvocate — AI Alignment Fix Plan
 
+> **STATUS: PARTIALLY DONE (2026-07-25).** Phase 0 shipped (no developer text
+> reaches users; the `[STUB]` copy and setup instructions are gone, with tests
+> pinning it). Later phases — persona contract, drift guard v2, server-side
+> groundedness guard — are NOT built.
+
 Implementation plan for Claude Code. Scope: every place a model's output can
 drift from the facts it was given, misattribute who did what, or leak
 developer-facing text to an end user. Triggered by two screenshots from the
