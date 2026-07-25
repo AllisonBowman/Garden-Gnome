@@ -16,6 +16,7 @@ import SpeciesDetailScreen from './src/screens/SpeciesDetailScreen';
 import EnvironmentsScreen  from './src/screens/EnvironmentsScreen';
 import EnvironmentDetailScreen from './src/screens/EnvironmentDetailScreen';
 import CensusScreen        from './src/screens/CensusScreen';
+import AlmanacScreen      from './src/screens/AlmanacScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
 import { rescheduleAllReminders } from './src/notifications/reminders';
 import Onboarding from './src/onboarding/Onboarding';
@@ -41,6 +42,12 @@ export type EnvironmentsStackParamList = {
   EnvironmentDetail: { environmentId: number; name?: string };
 };
 
+export type CensusStackParamList = {
+  CensusSummary: undefined;
+  Almanac:       undefined;
+  SpeciesDetail: { speciesId: number };
+};
+
 type RootTabParamList = {
   Plants:       undefined;
   Species:      undefined;
@@ -53,6 +60,7 @@ type RootTabParamList = {
 const PlantsStack       = createNativeStackNavigator<PlantsStackParamList>();
 const SpeciesStack      = createNativeStackNavigator<SpeciesStackParamList>();
 const EnvironmentsStack = createNativeStackNavigator<EnvironmentsStackParamList>();
+const CensusStack       = createNativeStackNavigator<CensusStackParamList>();
 const Tab               = createBottomTabNavigator<RootTabParamList>();
 
 // Header colors come from the active theme so the nav bar matches Almanac /
@@ -82,6 +90,16 @@ function SpeciesNavigator() {
       <SpeciesStack.Screen name="SpeciesList"   component={SpeciesScreen}       options={{ title: 'Species catalog' }} />
       <SpeciesStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
     </SpeciesStack.Navigator>
+  );
+}
+
+function CensusNavigator() {
+  return (
+    <CensusStack.Navigator screenOptions={useHeaderOpts()}>
+      <CensusStack.Screen name="CensusSummary" component={CensusScreen}  options={{ title: 'Census' }} />
+      <CensusStack.Screen name="Almanac"       component={AlmanacScreen} options={{ title: 'Species Almanac' }} />
+      <CensusStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
+    </CensusStack.Navigator>
   );
 }
 
@@ -212,9 +230,9 @@ function AuthGate() {
               />
               <Tab.Screen
                 name="Census"
-                component={CensusScreen}
+                component={CensusNavigator}
                 options={{
-                  title: 'Census',
+                  headerShown: false,
                   tabBarIcon: ({ focused }) => <TabIcon emoji="📊" focused={focused} />,
                 }}
               />

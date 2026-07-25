@@ -6,7 +6,7 @@ from app.db.database import get_session
 from app.deps import get_current_user
 from app.models.models import CareSchedule, Species, SpeciesTrait
 from app.models.schemas import (
-    SpeciesCreate, SpeciesDetail, SpeciesGenerateRequest,
+    SpeciesCreate, SpeciesDetail, SpeciesGenerateRequest, SpeciesRead,
 )
 
 # Every species route requires a signed-in caller. Reads are only ever hit by
@@ -45,8 +45,15 @@ def _create_one(entry: SpeciesCreate, session: Session) -> Species:
     return species
 
 
-@router.get("/", response_model=list[Species])
+@router.get("/", response_model=list[SpeciesRead])
 def list_species(session: Session = Depends(get_session)):
+    """The catalog as clients should see it.
+
+    Deliberately SpeciesRead, not the table model: the raw model leaks the
+    internal review trail (review_status, review_note, source, source_ref),
+    which is operator state and no business of a client. SpeciesRead also
+    carries the derived toxicity_description, so a list view can show the
+    nuanced sentence rather than a flat 'toxic' flag."""
     return session.exec(select(Species)).all()
 
 
