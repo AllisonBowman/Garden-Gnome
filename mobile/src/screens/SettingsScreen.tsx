@@ -13,6 +13,7 @@ import {
 import { ReminderPrefs } from '../notifications/plan';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { BUILD_NUMBER, BUILD_COMMIT } from '../buildInfo';
 import { CareType } from '../types';
 
 // The backend-URL override is shown in dev AND in builds that opt in via
@@ -301,7 +302,8 @@ export default function SettingsScreen() {
         <Card.Title title="About & Support" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.about}>
-            PlantAdvocate v{APP_VERSION}{'\n'}
+            PlantAdvocate v{APP_VERSION}
+            {BUILD_NUMBER > 0 ? `  ·  build ${BUILD_NUMBER} (${BUILD_COMMIT})` : ''}{'\n'}
             Every plant deserves an advocate. Care schedules, reminders, and a
             care engine grounded in a curated species database.{'\n\n'}
             Species data provided in part by Perenual (perenual.com).
