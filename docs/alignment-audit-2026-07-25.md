@@ -5,7 +5,7 @@ can reach a caretaker, checked against the persona contract
 (`mobile/src/gnomeVoice/persona.ts`, `app/services/persona.py`) and the
 no-developer-text rule.
 
-Suites at time of audit: backend **283 passed**, mobile **81 passed**,
+Suites at time of audit: backend **287 passed**, mobile **88 passed**,
 `tsc --noEmit` clean.
 
 ## Surfaces
@@ -41,6 +41,11 @@ Suites at time of audit: backend **283 passed**, mobile **81 passed**,
       and reports `backend: "stub"`, `guarded: true`, so the badge describes
       what the user is reading. Vision retries once, then returns the
       unavailable message rather than an ungrounded diagnosis.
+- [x] **Verified through the wired route**, not only the service:
+      `test_advice_route_grounding.py` drives `POST /plants/{id}/advice` with
+      the screenshot letter as the backend's response and asserts it never
+      appears in the response body. A guard that works in the service but is
+      bypassed by the route protects nobody.
 - [x] **Report affordances present** on both model-facing surfaces
       (`ReportResult` in `PlantDetailScreen` and `AddPlantScreen`).
 - [x] **Rejections are logged without PII** — reasons plus a 120-char excerpt,
@@ -53,8 +58,15 @@ Suites at time of audit: backend **283 passed**, mobile **81 passed**,
   `npm run ios` cannot build. The app runs via a direct `xcodebuild`
   simulator build, but the advisor path needs a reachable backend and a
   seeded plant to reproduce the exact card. The behaviour is pinned by the
-  golden-path tests in `restyle.test.ts` instead — weaker evidence than a
-  screenshot, and worth redoing once signing is set up.
+  golden-path tests in `restyle.test.ts` and by the route-level tests in
+  `test_advice_route_grounding.py` instead — the wired server path is now
+  covered, so what a screenshot would add is confirmation of the *rendered*
+  card. Worth redoing once signing is set up.
+- **On-device restyle has never run on real hardware.** The simulator has no
+  Apple Foundation Models backing `plant-id`, so `isAvailable()` is false
+  there and `gnomeVoice` always returns the flat fallback. Every mobile guard
+  test drives `driftReasons` directly or mocks `generate`. The guard logic is
+  covered; the native round trip is not.
 - **Guard parity is maintained by hand.** `CARE_STEMS` and the number-word
   tables exist in both TypeScript and Python. They are tested against the same
   fixtures, so a divergence shows up as a failing test on one side only — but

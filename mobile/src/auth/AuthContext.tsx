@@ -5,8 +5,8 @@ import axios from 'axios';
 import { apiClient, getBaseUrl } from '../api/client';
 import { googleSignOutLocal } from './signIn';
 import {
-  AuthUser, clearSession, getRefreshToken, getStoredUser, onForcedSignOut,
-  storeSession,
+  AuthUser, clearSession, getRefreshToken, onForcedSignOut,
+  resolveInitialSession, storeSession,
 } from './tokenStorage';
 
 export type AuthStatus = 'loading' | 'signedOut' | 'signedIn';
@@ -32,23 +32,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     (async () => {
-      try {
-        const [storedUser, refresh] = await Promise.all([
-          getStoredUser(), getRefreshToken(),
-        ]);
-        if (storedUser && refresh) {
-          setUser(storedUser);
-          setStatus('signedIn');
-          return;
-        }
-      } catch {
-        // Keychain unreadable — locked device, a build without the keychain
-        // entitlement, or a corrupted item. Fall through to signedOut: the
-        // user can sign in again, which rewrites the session. Rethrowing (or
-        // just letting this reject) would leave status on 'loading' forever,
-        // and AuthGate renders nothing while loading — a permanent splash.
-      }
-      setStatus('signedOut');
+      // resolveInitialSession swallows an unreadable keychain and reports
+      // signedOut, so status always leaves 'loading' — AuthGate renders
+      // nothing while loading, so a throw here is a permanent blank splash.
+      const initial = await resolveInitialSession();
+      setUser(initial.user);
+      setStatus(initial.status);
     })();
   }, []);
 
