@@ -123,6 +123,9 @@ class SpeciesRead(SQLModel):
     temp_f_max: int
     soil_type: str
     toxic_to_pets: bool
+    # Derived on the model — the sentence a person should read. toxic_to_pets
+    # remains the raw flag for filtering.
+    toxicity_description: str = ""
     care_notes: str
 
 
@@ -248,6 +251,7 @@ class SpeciesDetail(SQLModel):
     temp_f_max: int
     soil_type: str
     toxic_to_pets: bool
+    toxicity_description: str = ""
     care_notes: str
     source: SpeciesSource = SpeciesSource.curated
     source_ref: str = ""

@@ -336,11 +336,18 @@ export default function PlantDetailScreen() {
               <Stat label="Humidity"  value={`${species.humidity_pct_min}–${species.humidity_pct_max}%`} />
               <Stat label="Temp (°F)" value={`${species.temp_f_min}–${species.temp_f_max}`} />
             </View>
-            {species.toxic_to_pets && (
+            {/* Prefer the generated sentence: it names which parts are toxic
+                and to which animals, which a flat chip cannot. Falls back to
+                the chip when the API doesn't supply one. */}
+            {species.toxicity_description ? (
+              <Text variant="bodySmall" style={styles.toxicityNote}>
+                {species.toxicity_description}
+              </Text>
+            ) : species.toxic_to_pets ? (
               <Chip icon="alert" style={styles.toxicChip} textStyle={{ color: palette.warn }}>
                 ⚠️ Caution: toxic to pets
               </Chip>
-            )}
+            ) : null}
           </Card.Content>
         </Card>
       )}
@@ -410,6 +417,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   statLabel: { color: p.faint, marginBottom: 2 },
   statValue: { fontWeight: '600', fontFamily: f.numeric, color: p.ink },
   toxicChip: { backgroundColor: p.warnSoft, alignSelf: 'flex-start' },
+  toxicityNote: {
+    color: p.warn, backgroundColor: p.warnSoft, borderRadius: 8,
+    padding: 10, lineHeight: 19,
+  },
   logItem: { paddingVertical: 2 },
   empty: { color: p.faint, fontStyle: 'italic' },
   scroll: { flex: 1 },
