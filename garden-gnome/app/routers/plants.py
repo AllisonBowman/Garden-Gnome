@@ -400,6 +400,15 @@ async def advise_plant(
         "nickname": plant.nickname,
         "species": species.common_name,
         **result,
+        # WeatherKit's terms require the Apple Weather attribution wherever its
+        # data is shown, and advice for an exposed plant restates the forecast
+        # in words ("hold off — rain Thursday"). That is weather data on the
+        # screen, so the attribution has to travel with the advice: the client
+        # cannot tell from the prose whether the forecast informed it, and
+        # showing the credit on every plant would be its own kind of untrue.
+        # None whenever no forecast was fetched — indoor plants, no
+        # coordinates, no key, or a failed call.
+        "weather_attribution": weather["attribution"] if weather else None,
     }
 
 

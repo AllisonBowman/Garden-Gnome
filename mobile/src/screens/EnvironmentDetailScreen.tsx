@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import {
-  ScrollView, View, StyleSheet, Linking, Platform, Pressable,
+  ScrollView, View, StyleSheet, Platform,
 } from 'react-native';
 import {
   Text, Card, Chip, ActivityIndicator, Surface, Divider,
@@ -15,6 +15,7 @@ import {
   conditionText, weekday, exposureSummary, translateWeather,
 } from '../weather/translate';
 import { EnvironmentsStackParamList } from '../../App';
+import WeatherCredit from '../components/WeatherCredit';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 
@@ -153,14 +154,7 @@ export default function EnvironmentDetailScreen() {
               )}
 
               {/* Apple Weather attribution — required wherever WeatherKit data shows */}
-              <Pressable
-                onPress={() => weather.attribution?.url && Linking.openURL(weather.attribution.url)}
-                style={styles.attribution}
-              >
-                <Text style={styles.attributionText}>
-                  {(weather.attribution?.text ?? ' Weather').trim() || 'Weather'} ›
-                </Text>
-              </Pressable>
+              <WeatherCredit attribution={weather.attribution} style={styles.attribution} />
             </>
           )}
         </Card.Content>
@@ -215,8 +209,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   foreLow: { fontSize: 13, color: p.faint, fontFamily: f.numeric },
   foreMeta: { fontSize: 11, color: p.sub, marginTop: 3 },
 
-  attribution: { marginTop: 14, alignSelf: 'flex-start' },
-  attributionText: { fontSize: 12, color: p.faint },
+  attribution: { marginTop: 14 },
 
   // Notebook "outside → in here" card
   specimenCard: { marginBottom: 12, borderRadius: 12, backgroundColor: p.desk },
