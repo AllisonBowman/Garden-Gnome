@@ -4,8 +4,12 @@ import { Text, TextInput, Button, Card, Divider, Switch } from 'react-native-pap
 import { getBaseUrl, setBaseUrl } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import {
-  APP_VERSION, WEBSITE_URL, SUPPORT_URL, SUPPORT_EMAIL, openExternal,
+  APP_VERSION, WEBSITE_URL, SUPPORT_URL, SUPPORT_EMAIL, PRIVACY_URL, openExternal,
 } from '../support';
+import { updateMe } from '../api/me';
+import {
+  orderedFlows, DESTINATION_LABELS, CENSUS_CONSENT, PRIVACY_INTRO,
+} from '../consent/copy';
 import {
   getReminderPrefs, setReminderPrefs, ensureNotificationPermission,
   rescheduleAllReminders, getWeatherShiftPref, setWeatherShiftPref,
@@ -48,7 +52,7 @@ function confirmDialog(
 }
 
 export default function SettingsScreen() {
-  const { user, signOut, deleteAccount } = useAuth();
+  const { user, signOut, deleteAccount, updateUser } = useAuth();
   const { name: themeName, toggle: toggleTheme, palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [url, setUrl]       = useState('');
@@ -58,6 +62,8 @@ export default function SettingsScreen() {
   const [weatherShift, setWeatherShift] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [censusSaving, setCensusSaving] = useState(false);
+  const [openFlow, setOpenFlow] = useState<string | null>(null);
 
   const remindersSupported = Platform.OS !== 'web';
 
@@ -96,6 +102,27 @@ export default function SettingsScreen() {
     getReminderPrefs().then(setPrefs);
     getWeatherShiftPref().then(setWeatherShift);
   }, []);
+
+  // Consent has to round-trip to the server before the UI claims it happened:
+  // the census reads the column, not this screen. On failure we say so and
+  // leave the switch where it was, rather than showing a state the server
+  // does not agree with.
+  async function toggleCensus(value: boolean) {
+    if (!user) return;
+    setCensusSaving(true);
+    try {
+      const updated = await updateMe({ census_opt_in: value });
+      await updateUser({ ...user, census_opt_in: updated.census_opt_in });
+    } catch {
+      Alert.alert(
+        'Could not save that',
+        'PlantAdvocate could not reach the server to change your census '
+        + 'setting, so nothing has changed. Check your connection and try again.',
+      );
+    } finally {
+      setCensusSaving(false);
+    }
+  }
 
   async function toggleWeatherShift(value: boolean) {
     setWeatherShift(value);
@@ -299,6 +326,71 @@ export default function SettingsScreen() {
       <Divider style={styles.divider} />
 
       <Card style={styles.card}>
+        <Card.Title title="Privacy & data" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Content>
+          <Text variant="bodySmall" style={styles.hint}>{PRIVACY_INTRO}</Text>
+
+          {/* The one control the policy promises. Everything else on this card
+              is disclosure; this is the part the caretaker can actually set. */}
+          <View style={styles.reminderRow}>
+            <Text variant="bodyMedium" style={styles.reminderLabel}>
+              🌍 {CENSUS_CONSENT.label}
+            </Text>
+            <Switch
+              value={!!user?.census_opt_in}
+              disabled={censusSaving || !user}
+              onValueChange={toggleCensus}
+              color={palette.acc}
+            />
+          </View>
+          <Text variant="bodySmall" style={styles.subHint}>
+            {user?.census_opt_in ? CENSUS_CONSENT.on : CENSUS_CONSENT.off}
+          </Text>
+
+          <Divider style={styles.innerDivider} />
+
+          {orderedFlows().map((flow) => {
+            const open = openFlow === flow.id;
+            return (
+              <View key={flow.id} style={styles.flowRow}>
+                <Button
+                  mode="text"
+                  compact
+                  onPress={() => setOpenFlow(open ? null : flow.id)}
+                  contentStyle={styles.flowBtnContent}
+                  labelStyle={styles.flowBtnLabel}
+                  textColor={palette.ink}
+                  accessibilityLabel={
+                    `${flow.title}. ${DESTINATION_LABELS[flow.destination]}. `
+                    + `${open ? 'Hide' : 'Show'} details.`
+                  }
+                >
+                  {`${open ? '▾' : '▸'}  ${flow.title}`}
+                </Button>
+                <Text variant="bodySmall" style={styles.flowSummary}>
+                  {flow.destination === 'device' ? '✓ ' : '→ '}{flow.summary}
+                </Text>
+                {open && (
+                  <Text variant="bodySmall" style={styles.flowDetail}>{flow.detail}</Text>
+                )}
+              </View>
+            );
+          })}
+
+          <Button
+            mode="outlined"
+            icon="shield-account-outline"
+            onPress={() => openExternal(PRIVACY_URL)}
+            style={styles.privacyBtn}
+          >
+            Read the full policy
+          </Button>
+        </Card.Content>
+      </Card>
+
+      <Divider style={styles.divider} />
+
+      <Card style={styles.card}>
         <Card.Title title="About & Support" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.about}>
@@ -358,4 +450,15 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   reminderLabel: { color: p.ink, flexShrink: 1, paddingRight: 12 },
   innerDivider: { marginTop: 10, marginBottom: 4, backgroundColor: p.line },
   subHint: { color: p.faint, lineHeight: 18, marginTop: 2 },
+  flowRow: { marginBottom: 10 },
+  // Pull the text button back to the card's left edge so the disclosure list
+  // reads as a list, not as a column of buttons.
+  flowBtnContent: { justifyContent: 'flex-start', paddingHorizontal: 0, minHeight: 44 },
+  flowBtnLabel: { marginHorizontal: 0, textAlign: 'left', fontWeight: '600' },
+  flowSummary: { color: p.sub, lineHeight: 18, marginTop: -2 },
+  flowDetail: {
+    color: p.faint, lineHeight: 18, marginTop: 6, paddingLeft: 10,
+    borderLeftWidth: 2, borderLeftColor: p.line,
+  },
+  privacyBtn: { marginTop: 12, borderRadius: 8 },
 });

@@ -6,7 +6,7 @@ import { apiClient, getBaseUrl } from '../api/client';
 import { googleSignOutLocal } from './signIn';
 import {
   AuthUser, clearSession, getRefreshToken, onForcedSignOut,
-  resolveInitialSession, storeSession,
+  resolveInitialSession, storeSession, updateStoredUser,
 } from './tokenStorage';
 
 export type AuthStatus = 'loading' | 'signedOut' | 'signedIn';
@@ -20,8 +20,9 @@ interface AuthContextValue {
   signOut: () => Promise<void>;
   /** DELETE /me then full local sign-out. */
   deleteAccount: () => Promise<void>;
-  /** Refresh the cached profile after PATCH /me etc. */
-  updateUser: (user: AuthUser) => void;
+  /** Refresh the cached profile after PATCH /me etc. Persists, so a consent
+   *  choice survives a cold start rather than reverting to the stored copy. */
+  updateUser: (user: AuthUser) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -83,7 +84,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await localSignOut();
   }, [localSignOut]);
 
-  const updateUser = useCallback((next: AuthUser) => setUser(next), []);
+  const updateUser = useCallback(async (next: AuthUser) => {
+    setUser(next);
+    await updateStoredUser(next);
+  }, []);
 
   const value = useMemo(
     () => ({ status, user, setSession, signOut, deleteAccount, updateUser }),
