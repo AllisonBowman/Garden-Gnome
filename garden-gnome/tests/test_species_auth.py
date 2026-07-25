@@ -63,3 +63,18 @@ def test_species_list_works_with_a_token(api):
     resp = client.get("/species/", headers=headers)
     assert resp.status_code == 200
     assert isinstance(resp.json(), list)
+
+
+def test_species_list_does_not_leak_the_internal_review_trail():
+    """review_status / review_note / source_ref are operator state. The list
+    endpoint once returned the raw table model, which exposed all of them."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.models.schemas import SpeciesRead
+
+    for internal in ("review_status", "review_note", "source", "source_ref"):
+        assert internal not in SpeciesRead.model_fields, (
+            f"{internal} must not be part of the client-facing species schema"
+        )
+    # and the derived sentence IS part of it
+    assert "toxicity_description" in SpeciesRead.model_fields

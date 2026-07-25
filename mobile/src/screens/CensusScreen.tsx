@@ -2,10 +2,15 @@ import React, { useMemo } from 'react';
 import { ScrollView, View, StyleSheet, Alert } from 'react-native';
 import { Text, Card, Button, ActivityIndicator, ProgressBar } from 'react-native-paper';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchCensusSummary, syncCensus } from '../api/census';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
+import type { CensusStackParamList } from '../../App';
+
+type Nav = NativeStackNavigationProp<CensusStackParamList, 'CensusSummary'>;
 
 const ENV_LABEL: Record<string, string> = {
   home: '🏠 Home', nursery: '🌱 Nursery',
@@ -14,6 +19,7 @@ const ENV_LABEL: Record<string, string> = {
 };
 
 export default function CensusScreen() {
+  const navigation = useNavigation<Nav>();
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
@@ -47,6 +53,20 @@ export default function CensusScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* The almanac: the catalog as something to read, not just count */}
+      <Card style={styles.almanacCard} mode="elevated" onPress={() => navigation.navigate('Almanac')}>
+        <Card.Content>
+          <Eyebrow>Species Almanac</Eyebrow>
+          <Text variant="titleMedium" style={styles.almanacTitle}>
+            Read the catalog ›
+          </Text>
+          <Text variant="bodySmall" style={styles.almanacSub}>
+            Every species we hold, with its care fingerprint and how demanding
+            it is to keep.
+          </Text>
+        </Card.Content>
+      </Card>
+
       {/* Totals */}
       <View style={styles.totalsRow}>
         <TotalCard styles={styles} label="Plants" value={summary.total_plants} color={palette.acc} />
@@ -123,6 +143,9 @@ function TotalCard({ styles, label, value, color }: { styles: Styles; label: str
 }
 
 const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+  almanacCard: { marginBottom: 14, borderRadius: 12, backgroundColor: p.card },
+  almanacTitle: { color: p.acc, fontFamily: f.display, marginTop: 4 },
+  almanacSub: { color: p.sub, marginTop: 4, lineHeight: 18 },
   container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 12, paddingBottom: 48 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
