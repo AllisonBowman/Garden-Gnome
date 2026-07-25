@@ -59,6 +59,15 @@ VETTED_WORKS = [
             "propagation per entry."
         ),
         "best_for": ["soil_type", "light_need", "temp_f_min", "temp_f_max"],
+        # Located 2026-07-25. Internet Archive item ids; OCR text is at
+        # https://archive.org/download/{id}/{id}_djvu.txt
+        "archive_ids": ["standardcycloped01bail", "standardcycloped05bailrich",
+                        "standardcycloped030104mbp"],
+        "bhl": "https://www.biodiversitylibrary.org/bibliography/23351",
+        "note": (
+            "Volume ids beyond those listed follow the same pattern but were "
+            "not individually confirmed — check before fetching."
+        ),
     },
     {
         "id": "nicholson-illustrated-dictionary",
@@ -74,10 +83,13 @@ VETTED_WORKS = [
             "independent cross-check against Bailey."
         ),
         "best_for": ["soil_type", "light_need", "temp_f_min", "temp_f_max"],
+        "archive_ids": ["illustrateddicti01nich", "illustrateddicti03nichiala",
+                        "mobot31753000409331", "cu31924051991812"],
+        "bhl": "https://www.biodiversitylibrary.org/bibliography/21232",
     },
     {
-        "id": "usda-farmers-bulletins",
-        "title": "USDA Farmers' Bulletins / Yearbooks of Agriculture",
+        "id": "usda-house-plants",
+        "title": "USDA Home and Garden Bulletins / Farmers' Bulletins",
         "author": "United States Department of Agriculture",
         "year": 0,  # ongoing series; PD by authorship, not by age
         "volumes": 0,
@@ -85,12 +97,27 @@ VETTED_WORKS = [
         "authority": "high",
         "scope": (
             "Modern names and modern units, which the Victorian references "
-            "lack. Thin on tropical houseplants, but what it covers is "
-            "directly usable without idiom translation."
+            "lack — no idiom translation needed. Notably HGB 82, 'Selecting "
+            "and growing house plants' (1979). Thin on tropical houseplants "
+            "overall, but what it covers is directly usable."
         ),
         "best_for": ["temp_f_min", "temp_f_max", "toxic_to_pets"],
+        "archive_ids": [],
+        "index": "https://pubs.nal.usda.gov/sites/pubs.nal.usda.gov/files/hgb.htm",
     },
 ]
+
+# Internet Archive serves OCR text for any item at this path. It is the
+# cheapest way to get a whole volume as plain text — no API key, no scraping.
+IA_FULLTEXT = "https://archive.org/download/{id}/{id}_djvu.txt"
+
+
+def fulltext_urls(work_id: str) -> list[str]:
+    """Plain-text OCR URLs for every located volume of a vetted work."""
+    work = work_by_id(work_id)
+    if not work:
+        return []
+    return [IA_FULLTEXT.format(id=i) for i in work.get("archive_ids", [])]
 
 # Recorded so the reasoning is not lost, and so tests can assert they stay out.
 KNOWN_UNUSABLE = [

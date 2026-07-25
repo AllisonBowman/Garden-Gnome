@@ -241,3 +241,13 @@ def test_genuinely_different_soil_is_still_a_conflict():
 
 def test_sphagnum_moss_counts_as_one_component():
     assert bv.soil_components("sphagnum moss and sand") == {"sphagnum", "sand"}
+
+
+def test_located_works_expose_fetchable_fulltext_urls():
+    """The registry has to be actionable, not just descriptive — every located
+    volume resolves to a plain-text OCR URL."""
+    urls = bs.fulltext_urls("bailey-standard-cyclopedia")
+    assert urls, "Bailey has located archive ids"
+    assert all(u.startswith("https://archive.org/download/") for u in urls)
+    assert all(u.endswith("_djvu.txt") for u in urls)
+    assert bs.fulltext_urls("no-such-work") == []
