@@ -3,7 +3,9 @@ import { Alert, Linking, Platform } from 'react-native';
 // Single source of truth for the app's outward-facing contact points.
 // The App Store listing uses the same URLs (privacy/support must resolve
 // on plantadvocate.ai), so change them here and there together.
-export const APP_VERSION = '1.0.0';
+// Must match expo.version in app.json — it labels every support email, so a
+// stale value here misattributes tester reports to the wrong build.
+export const APP_VERSION = '1.0.1';
 export const WEBSITE_URL = 'https://plantadvocate.ai';
 export const SUPPORT_URL = 'https://plantadvocate.ai/support.html';
 export const SUPPORT_EMAIL = 'support@plantadvocate.ai';
