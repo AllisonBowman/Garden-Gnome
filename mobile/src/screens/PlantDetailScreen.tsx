@@ -17,6 +17,8 @@ import { rescheduleAllReminders } from '../notifications/reminders';
 import { gnomeVoice } from '../gnomeVoice/restyle';
 import { serverMessage } from '../api/errorMessage';
 import { ensureCameraPermission } from '../photoPermissions';
+import { ensurePhotoUploadConsent } from '../consent/photoUpload';
+import WeatherCredit from '../components/WeatherCredit';
 import ReportResult from '../components/ReportResult';
 import { CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
@@ -121,6 +123,11 @@ export default function PlantDetailScreen() {
   });
 
   const pickAndDiagnose = async (useCamera: boolean) => {
+    // Consent before the picker, not after: a photo check-up is the only
+    // feature in the app that uploads an image, and identification — the
+    // feature it sits next to — does not. Asking once the photo is already
+    // chosen would be asking too late to matter.
+    if (!(await ensurePhotoUploadConsent())) return;
     // launchCameraAsync requires camera permission and does not request it;
     // without this the button silently does nothing (see photoPermissions.ts).
     if (useCamera && !(await ensureCameraPermission())) return;
@@ -225,6 +232,9 @@ export default function PlantDetailScreen() {
                   {line}
                 </Text>
               ))}
+              {/* Shown only when the forecast actually informed this advice —
+                  the server sends the credit exactly then. */}
+              <WeatherCredit attribution={advice.weather_attribution} />
               <View style={styles.resultMetaRow}>
                 <Pill tone="neutral" filled style={styles.metaPill}>
                   {(advice.backend === 'stub' ? 'rule-based' : advice.backend)

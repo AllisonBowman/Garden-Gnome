@@ -1,6 +1,8 @@
 import { Platform } from 'react-native';
 import { apiClient } from './client';
-import { Plant, CareLog, CareType, StewardshipRecord } from '../types';
+import {
+  Plant, CareLog, CareType, StewardshipRecord, WeatherAttribution,
+} from '../types';
 
 export async function fetchPlants(): Promise<Plant[]> {
   const client = await apiClient();
@@ -50,6 +52,11 @@ export interface AdviceResponse {
    * is the rule-based fallback. `backend` already reads "stub" in that case,
    * so the badge is honest either way. */
   guarded?: boolean;
+  /** Present only when the local forecast informed this advice. Apple's terms
+   *  require the credit wherever WeatherKit data is shown, and advice for an
+   *  exposed plant restates the forecast in words. Null for indoor plants and
+   *  whenever no forecast was fetched. */
+  weather_attribution?: WeatherAttribution | null;
 }
 
 export async function getAdvice(plantId: number, symptoms = ''): Promise<AdviceResponse> {

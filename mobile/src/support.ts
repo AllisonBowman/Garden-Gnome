@@ -7,6 +7,9 @@ export const APP_VERSION = '1.0.0';
 export const WEBSITE_URL = 'https://plantadvocate.ai';
 export const SUPPORT_URL = 'https://plantadvocate.ai/support.html';
 export const SUPPORT_EMAIL = 'support@plantadvocate.ai';
+// App Review requires a reachable privacy policy, and the in-app consent card
+// links to it as the binding version of the plain-language summary.
+export const PRIVACY_URL = 'https://plantadvocate.ai/privacy.html';
 
 /** Open an external URL in the device's default browser/mail app. */
 export async function openExternal(url: string): Promise<void> {

@@ -59,6 +59,17 @@ export async function storeSession(
   await setItem(REFRESH_KEY, refreshToken);
 }
 
+/**
+ * Persist a changed profile without touching the tokens.
+ *
+ * The consent switch is read from the cached user on launch, so a toggle that
+ * only updated React state would silently revert on the next cold start — the
+ * caretaker would see themselves opted out of something they had joined.
+ */
+export async function updateStoredUser(user: AuthUser): Promise<void> {
+  await setItem(USER_KEY, JSON.stringify(user));
+}
+
 export async function storeTokens(
   accessToken: string, refreshToken: string,
 ): Promise<void> {
