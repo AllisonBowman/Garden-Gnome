@@ -19,6 +19,10 @@ them, so neither has to re-derive what the other already knows.
 Anything below marked **local-only** is blocked in the cloud for the reason
 just given, not because it wasn't tried.
 
+> **The two sessions now have a channel: GitHub issue #14.** Post command
+> output there instead of relaying it by hand — see `docs/session-mailbox.md`.
+> `gh issue view 14 --repo AllisonBowman/Garden-Gnome --comments`
+
 ---
 
 ## Verified state
