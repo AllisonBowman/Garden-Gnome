@@ -1,0 +1,937 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-07-20",
+  "notes": "Curated Amazon product network for PlantAdvocate. Each product is a tightly-scoped Amazon SEARCH (never a pinned ASIN), so entries cannot go stale when a listing disappears. `match` rules are evaluated against the tag set derived from a species' own catalog record (see app/services/plant_profile.py) — nothing here is keyed to a hand-maintained per-species list, so every species in the catalog (curated and expansion-sourced alike) resolves to recommendations. `grounded_on` names the species fields that justify the recommendation; the API returns it so the UI can show WHY a product was suggested, the same grounding discipline the advisor uses.",
+
+  "categories": [
+    { "id": "soil",        "label": "Soil & growing medium", "blurb": "The mix this species' roots actually want.",           "sort": 10 },
+    { "id": "fertilizer",  "label": "Fertilizer",            "blurb": "Feeding matched to how hungry this plant is.",         "sort": 20 },
+    { "id": "pots",        "label": "Pots & drainage",       "blurb": "Containers sized and drained for this root system.",   "sort": 30 },
+    { "id": "watering",    "label": "Watering",              "blurb": "How this plant likes to be watered.",                  "sort": 40 },
+    { "id": "tools",       "label": "Tools",                 "blurb": "The hand tools this plant's care routine calls for.",  "sort": 50 },
+    { "id": "support",     "label": "Support & training",    "blurb": "Stakes, poles and trellises for how this plant grows.", "sort": 60 },
+    { "id": "humidity",    "label": "Humidity & climate",    "blurb": "Hitting this species' humidity range indoors.",        "sort": 70 },
+    { "id": "lighting",    "label": "Grow lights",           "blurb": "Supplementing light when a window isn't enough.",      "sort": 80 },
+    { "id": "pest",        "label": "Pest & disease",        "blurb": "Treatments appropriate to this plant and household.",  "sort": 90 },
+    { "id": "propagation", "label": "Seed starting & propagation", "blurb": "Getting more of this plant going.",             "sort": 100 },
+    { "id": "monitoring",  "label": "Meters & monitoring",   "blurb": "Measuring instead of guessing.",                       "sort": 110 },
+    { "id": "companion",   "label": "Companion plants",      "blurb": "Plants that grow well alongside this one.",            "sort": 120 }
+  ],
+
+  "products": [
+    {
+      "id": "soil-cactus",
+      "category": "soil",
+      "title": "Cactus & succulent potting mix",
+      "keywords": "cactus succulent potting mix fast draining",
+      "department": "lawngarden",
+      "why": "This species is listed for a fast-draining cactus/succulent mix — ordinary potting soil holds far too much water and is the usual cause of rot here.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 95,
+      "match": { "any_of": ["soil-cactus"] }
+    },
+    {
+      "id": "soil-perlite",
+      "category": "soil",
+      "title": "Perlite (drainage amendment)",
+      "keywords": "horticultural perlite coarse potting soil amendment",
+      "department": "lawngarden",
+      "why": "Cut into any bagged mix to open it up. The care record for this plant calls for extra drainage.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 60,
+      "match": { "any_of": ["soil-cactus", "soil-aroid", "soil-standard"], "none_of": ["outdoor-only"] }
+    },
+    {
+      "id": "soil-aroid",
+      "category": "soil",
+      "title": "Chunky aroid mix (bark, perlite, coco coir)",
+      "keywords": "chunky aroid potting mix orchid bark perlite coco coir monstera philodendron",
+      "department": "lawngarden",
+      "why": "Aroid roots need air pockets between waterings; the bark-and-perlite structure is what keeps this species' roots from sitting wet.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 95,
+      "match": { "any_of": ["soil-aroid"] }
+    },
+    {
+      "id": "soil-orchid-bark",
+      "category": "soil",
+      "title": "Orchid bark potting medium",
+      "keywords": "orchid bark potting medium phalaenopsis fir bark",
+      "department": "lawngarden",
+      "why": "This is an epiphyte — its roots grow in air on bark, not in soil. Packing it into potting mix suffocates the roots.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 98,
+      "match": { "any_of": ["soil-orchid", "orchid"] }
+    },
+    {
+      "id": "soil-sphagnum",
+      "category": "soil",
+      "title": "Sphagnum moss",
+      "keywords": "sphagnum moss long fiber horticultural",
+      "department": "lawngarden",
+      "why": "Holds moisture at the roots without going dense — useful for a species that wants steady moisture and high humidity.",
+      "grounded_on": ["soil_type", "humidity_pct_min"],
+      "care_types": ["repot"],
+      "priority": 45,
+      "match": { "any_of": ["soil-moisture-retentive", "humidity-high", "orchid"] }
+    },
+    {
+      "id": "soil-moisture-mix",
+      "category": "soil",
+      "title": "Moisture-retentive indoor potting mix",
+      "keywords": "indoor potting mix moisture control peat coir houseplant",
+      "department": "lawngarden",
+      "why": "This species is listed for a moisture-retentive mix — it should never dry out completely between waterings.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 90,
+      "match": { "any_of": ["soil-moisture-retentive"] }
+    },
+    {
+      "id": "soil-standard-indoor",
+      "category": "soil",
+      "title": "All-purpose indoor potting mix",
+      "keywords": "indoor houseplant potting mix all purpose well draining",
+      "department": "lawngarden",
+      "why": "A standard well-draining houseplant mix is what this species' record calls for — no special amendment needed.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 85,
+      "match": { "any_of": ["soil-standard"], "none_of": ["outdoor"] }
+    },
+    {
+      "id": "soil-acidic",
+      "category": "soil",
+      "title": "Acidic soil mix for acid-loving plants",
+      "keywords": "acidic potting soil azalea camellia blueberry acid loving",
+      "department": "lawngarden",
+      "why": "This plant needs genuinely acidic soil — in neutral soil it can't take up iron and the leaves yellow between the veins.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 95,
+      "match": { "any_of": ["soil-acidic"] }
+    },
+    {
+      "id": "soil-sulfur",
+      "category": "soil",
+      "title": "Soil acidifier (elemental sulfur)",
+      "keywords": "soil acidifier elemental sulfur lower soil ph",
+      "department": "lawngarden",
+      "why": "Drops soil pH into the acidic range this species requires, and keeps it there as tap water pushes it back up.",
+      "grounded_on": ["soil_type"],
+      "priority": 55,
+      "match": { "any_of": ["soil-acidic"] }
+    },
+    {
+      "id": "soil-garden-raised-bed",
+      "category": "soil",
+      "title": "Raised bed / garden soil",
+      "keywords": "raised bed garden soil organic vegetable",
+      "department": "lawngarden",
+      "why": "An outdoor grower — bed or large-container soil, not indoor potting mix, is the right base for this one.",
+      "grounded_on": ["soil_type", "light_need"],
+      "priority": 85,
+      "match": { "all_of": ["outdoor"] }
+    },
+    {
+      "id": "soil-compost",
+      "category": "soil",
+      "title": "Organic compost / soil conditioner",
+      "keywords": "organic compost soil conditioner garden amendment",
+      "department": "lawngarden",
+      "why": "Rich, fertile soil is what this species' record asks for; compost supplies it plus the structure a heavy feeder wants.",
+      "grounded_on": ["soil_type"],
+      "priority": 60,
+      "match": { "any_of": ["soil-rich", "feeder-heavy"], "all_of": ["outdoor"] }
+    },
+    {
+      "id": "soil-mulch",
+      "category": "soil",
+      "title": "Garden mulch (straw or bark)",
+      "keywords": "garden mulch straw bark natural weed suppression",
+      "department": "lawngarden",
+      "why": "Evens out soil moisture outdoors — worth it for a plant whose record warns about inconsistent watering.",
+      "grounded_on": ["care_notes", "soil_type"],
+      "priority": 40,
+      "match": { "all_of": ["outdoor"], "any_of": ["vegetable", "fruit", "perennial"] }
+    },
+
+    {
+      "id": "fert-balanced-liquid",
+      "category": "fertilizer",
+      "title": "Balanced liquid houseplant fertilizer",
+      "keywords": "balanced liquid houseplant fertilizer indoor plant food",
+      "department": "lawngarden",
+      "why": "Matches the balanced feeding this species' fertilize schedule describes, and liquid feed is easy to dilute to the half-strength many entries call for.",
+      "grounded_on": ["schedule:fertilize"],
+      "care_types": ["fertilize"],
+      "priority": 85,
+      "match": { "all_of": ["care-fertilize", "indoor"], "none_of": ["feeder-heavy", "soil-acidic", "orchid", "succulent", "soil-cactus"] }
+    },
+    {
+      "id": "fert-heavy-feeder",
+      "category": "fertilizer",
+      "title": "High-nitrogen fertilizer for fast growers",
+      "keywords": "high nitrogen liquid fertilizer foliage plant food",
+      "department": "lawngarden",
+      "why": "This species feeds on a short interval during the growing season — a heavy feeder by its own schedule.",
+      "grounded_on": ["schedule:fertilize"],
+      "care_types": ["fertilize"],
+      "priority": 90,
+      "match": { "all_of": ["feeder-heavy", "indoor"], "none_of": ["succulent", "orchid"] }
+    },
+    {
+      "id": "fert-succulent",
+      "category": "fertilizer",
+      "title": "Cactus & succulent fertilizer",
+      "keywords": "cactus succulent fertilizer low nitrogen plant food",
+      "department": "lawngarden",
+      "why": "A very light feeder — regular houseplant food at full strength burns the roots of a plant on this schedule.",
+      "grounded_on": ["schedule:fertilize", "soil_type"],
+      "care_types": ["fertilize"],
+      "priority": 90,
+      "match": { "any_of": ["succulent", "cactus", "soil-cactus"] }
+    },
+    {
+      "id": "fert-orchid",
+      "category": "fertilizer",
+      "title": "Orchid fertilizer",
+      "keywords": "orchid fertilizer bloom booster urea free",
+      "department": "lawngarden",
+      "why": "Bark medium holds no nutrients at all, so orchids depend entirely on what you feed them.",
+      "grounded_on": ["soil_type", "schedule:fertilize"],
+      "care_types": ["fertilize"],
+      "priority": 92,
+      "match": { "any_of": ["orchid", "soil-orchid"] }
+    },
+    {
+      "id": "fert-acid",
+      "category": "fertilizer",
+      "title": "Acid-loving plant fertilizer",
+      "keywords": "acid loving plant fertilizer azalea holly blueberry",
+      "department": "lawngarden",
+      "why": "Formulated to feed without pushing soil pH up out of the acidic range this species needs.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["fertilize"],
+      "priority": 90,
+      "match": { "any_of": ["soil-acidic"] }
+    },
+    {
+      "id": "fert-tomato-veg",
+      "category": "fertilizer",
+      "title": "Vegetable & tomato fertilizer",
+      "keywords": "tomato vegetable garden fertilizer organic",
+      "department": "lawngarden",
+      "why": "Fruiting vegetables need phosphorus and potassium at flowering, not the nitrogen that grows leaves at the expense of fruit.",
+      "grounded_on": ["schedule:fertilize", "care_notes"],
+      "care_types": ["fertilize"],
+      "priority": 90,
+      "match": { "any_of": ["nightshade", "cucurbit", "fruit"], "none_of": ["indoor-only", "soil-acidic"] }
+    },
+    {
+      "id": "fert-bloom",
+      "category": "fertilizer",
+      "title": "Bloom-boosting fertilizer",
+      "keywords": "bloom booster flower fertilizer high phosphorus",
+      "department": "lawngarden",
+      "why": "For a plant grown for its flowers, a higher-phosphorus feed during budding gives more bloom per plant.",
+      "grounded_on": ["care_notes"],
+      "care_types": ["fertilize"],
+      "priority": 70,
+      "match": { "any_of": ["flowering", "cut-flower"], "none_of": ["orchid"] }
+    },
+    {
+      "id": "fert-slow-release",
+      "category": "fertilizer",
+      "title": "Slow-release granular plant food",
+      "keywords": "slow release granular fertilizer plant food outdoor",
+      "department": "lawngarden",
+      "why": "One application covers most of the season — easier to keep on schedule than remembering a liquid feed every few weeks.",
+      "grounded_on": ["schedule:fertilize"],
+      "care_types": ["fertilize"],
+      "priority": 50,
+      "match": { "all_of": ["care-fertilize", "outdoor"] }
+    },
+    {
+      "id": "fert-herb",
+      "category": "fertilizer",
+      "title": "Gentle organic fertilizer for herbs",
+      "keywords": "organic herb fertilizer gentle plant food edible",
+      "department": "lawngarden",
+      "why": "Herbs grown for flavor do better on a light, organic feed — over-fertilized herbs grow fast and taste of almost nothing.",
+      "grounded_on": ["soil_type", "care_notes"],
+      "care_types": ["fertilize"],
+      "priority": 75,
+      "match": { "all_of": ["herb"] }
+    },
+
+    {
+      "id": "pot-terracotta",
+      "category": "pots",
+      "title": "Terracotta pots with drainage holes",
+      "keywords": "terracotta clay pots drainage holes saucer",
+      "department": "lawngarden",
+      "why": "Unglazed clay breathes and pulls water out of the mix — the right pot for a species that must dry out between waterings.",
+      "grounded_on": ["soil_type", "schedule:water"],
+      "care_types": ["repot"],
+      "priority": 85,
+      "match": { "any_of": ["succulent", "cactus", "soil-cactus", "water-infrequent"] }
+    },
+    {
+      "id": "pot-drainage-plastic",
+      "category": "pots",
+      "title": "Nursery pots with drainage",
+      "keywords": "plastic nursery pots drainage holes plant pots with saucer",
+      "department": "lawngarden",
+      "why": "Holds moisture more evenly than clay, which suits a species that wants its mix to stay damp.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 70,
+      "match": { "any_of": ["soil-moisture-retentive", "water-frequent"], "none_of": ["outdoor-only"] }
+    },
+    {
+      "id": "pot-orchid-clear",
+      "category": "pots",
+      "title": "Slotted clear orchid pots",
+      "keywords": "clear orchid pot slotted drainage phalaenopsis",
+      "department": "lawngarden",
+      "why": "Orchid roots photosynthesize and need airflow; the clear wall also lets you see root health and moisture without unpotting.",
+      "grounded_on": ["soil_type"],
+      "care_types": ["repot"],
+      "priority": 88,
+      "match": { "any_of": ["orchid", "soil-orchid"] }
+    },
+    {
+      "id": "pot-large-planter",
+      "category": "pots",
+      "title": "Large floor planter with drainage",
+      "keywords": "large indoor planter pot drainage hole floor plant",
+      "department": "lawngarden",
+      "why": "This species gets tall enough that it will outgrow a tabletop pot and start tipping.",
+      "grounded_on": ["trait:max_height_inches"],
+      "care_types": ["repot"],
+      "priority": 60,
+      "match": { "all_of": ["tall", "indoor"] }
+    },
+    {
+      "id": "pot-grow-bags",
+      "category": "pots",
+      "title": "Fabric grow bags",
+      "keywords": "fabric grow bags with handles vegetable planting",
+      "department": "lawngarden",
+      "why": "Air-prunes the roots and drains freely — a good container answer for growing this outdoors without a bed.",
+      "grounded_on": ["soil_type"],
+      "priority": 65,
+      "match": { "all_of": ["outdoor"], "any_of": ["vegetable", "root-crop", "fruit", "herb", "flowering", "ornamental"] }
+    },
+    {
+      "id": "pot-saucers",
+      "category": "pots",
+      "title": "Plant saucers / drip trays",
+      "keywords": "plant saucer drip tray clear plastic pot trays",
+      "department": "lawngarden",
+      "why": "Catches the runoff you want when watering thoroughly — as long as you tip out what's left, so the roots aren't standing in it.",
+      "grounded_on": ["schedule:water"],
+      "priority": 35,
+      "match": { "all_of": ["indoor"] }
+    },
+    {
+      "id": "pot-repot-kit",
+      "category": "pots",
+      "title": "Repotting mat / tarp",
+      "keywords": "repotting mat waterproof gardening tarp indoor",
+      "department": "lawngarden",
+      "why": "This species is on a regular repotting schedule; a mat makes it a kitchen-table job instead of a cleanup.",
+      "grounded_on": ["schedule:repot"],
+      "care_types": ["repot"],
+      "priority": 30,
+      "match": { "all_of": ["care-repot", "indoor"] }
+    },
+
+    {
+      "id": "water-can-indoor",
+      "category": "watering",
+      "title": "Long-spout indoor watering can",
+      "keywords": "long spout indoor watering can houseplant",
+      "department": "lawngarden",
+      "why": "Puts water at the soil instead of on the crown and leaves — which matters for the species whose records warn about rot or leaf spotting.",
+      "grounded_on": ["schedule:water"],
+      "care_types": ["water"],
+      "priority": 60,
+      "match": { "all_of": ["indoor"] }
+    },
+    {
+      "id": "water-bottom-tray",
+      "category": "watering",
+      "title": "Bottom-watering trays",
+      "keywords": "bottom watering tray plant self watering tray",
+      "department": "lawngarden",
+      "why": "Lets the mix wick water up evenly — the gentlest option for a species that wants steady moisture but hates a wet crown.",
+      "grounded_on": ["schedule:water", "soil_type"],
+      "care_types": ["water"],
+      "priority": 55,
+      "match": { "any_of": ["water-frequent", "soil-moisture-retentive"], "all_of": ["indoor"] }
+    },
+    {
+      "id": "water-filter-pitcher",
+      "category": "watering",
+      "title": "Water filter pitcher",
+      "keywords": "water filter pitcher",
+      "department": "kitchen",
+      "why": "This species' record specifically flags sensitivity to tap water — filtered or distilled water prevents the brown, crispy tips.",
+      "grounded_on": ["care_notes", "schedule:water"],
+      "care_types": ["water"],
+      "priority": 80,
+      "match": { "all_of": ["hard-water-sensitive"] }
+    },
+    {
+      "id": "water-globes",
+      "category": "watering",
+      "title": "Self-watering spikes / globes",
+      "keywords": "self watering spikes globes plant vacation",
+      "department": "lawngarden",
+      "why": "Covers the gap for a plant on a short watering interval when you're away.",
+      "grounded_on": ["schedule:water"],
+      "care_types": ["water"],
+      "priority": 40,
+      "match": { "all_of": ["water-frequent", "indoor"] }
+    },
+    {
+      "id": "water-hose-wand",
+      "category": "watering",
+      "title": "Watering wand / garden hose nozzle",
+      "keywords": "watering wand garden hose nozzle gentle shower",
+      "department": "lawngarden",
+      "why": "A gentle shower head waters an outdoor planting deeply without blasting soil off the roots.",
+      "grounded_on": ["schedule:water"],
+      "care_types": ["water"],
+      "priority": 45,
+      "match": { "all_of": ["outdoor"] }
+    },
+    {
+      "id": "water-soaker-hose",
+      "category": "watering",
+      "title": "Soaker hose / drip irrigation kit",
+      "keywords": "soaker hose drip irrigation kit garden bed",
+      "department": "lawngarden",
+      "why": "Even moisture at the root zone is exactly what this plant's record asks for, and drip keeps the foliage dry, which cuts fungal disease.",
+      "grounded_on": ["schedule:water", "care_notes"],
+      "care_types": ["water"],
+      "priority": 55,
+      "match": { "all_of": ["outdoor"], "any_of": ["water-frequent", "vegetable", "fruit"] }
+    },
+
+    {
+      "id": "tool-pruners",
+      "category": "tools",
+      "title": "Bypass pruning shears",
+      "keywords": "bypass pruning shears garden pruners sharp",
+      "department": "lawngarden",
+      "why": "This species is on a regular pruning schedule; a clean bypass cut heals far better than the crush a cheap anvil pruner leaves.",
+      "grounded_on": ["schedule:prune"],
+      "care_types": ["prune"],
+      "priority": 80,
+      "match": { "all_of": ["care-prune"] }
+    },
+    {
+      "id": "tool-snips",
+      "category": "tools",
+      "title": "Precision micro snips",
+      "keywords": "micro tip pruning snips precision garden scissors",
+      "department": "lawngarden",
+      "why": "For deadheading and fine trimming on small, soft growth where full-size pruners do more harm than good.",
+      "grounded_on": ["schedule:prune"],
+      "care_types": ["prune"],
+      "priority": 55,
+      "match": { "any_of": ["herb", "flowering", "indoor"], "all_of": ["care-prune"] }
+    },
+    {
+      "id": "tool-hand-set",
+      "category": "tools",
+      "title": "Hand trowel & transplanting set",
+      "keywords": "garden hand trowel transplanter tool set stainless",
+      "department": "lawngarden",
+      "why": "The basic planting and repotting tools this species' schedule will have you reaching for.",
+      "grounded_on": ["schedule:repot"],
+      "care_types": ["repot"],
+      "priority": 50,
+      "match": { "any_of": ["care-repot", "outdoor"] }
+    },
+    {
+      "id": "tool-gloves",
+      "category": "tools",
+      "title": "Gardening gloves",
+      "keywords": "gardening gloves breathable nitrile coated",
+      "department": "lawngarden",
+      "why": "This species is listed as toxic — its sap is a skin and eye irritant, so handle it with gloves when pruning or repotting.",
+      "grounded_on": ["toxic_to_pets", "care_notes"],
+      "care_types": ["prune", "repot"],
+      "priority": 65,
+      "match": { "any_of": ["pet-toxic", "outdoor"] }
+    },
+    {
+      "id": "tool-leaf-cloth",
+      "category": "tools",
+      "title": "Microfiber cloths for leaf cleaning",
+      "keywords": "microfiber cleaning cloths soft lint free",
+      "department": "kitchen",
+      "why": "This species has a leaf-cleaning schedule — dust on broad leaves measurably cuts the light reaching them.",
+      "grounded_on": ["schedule:clean"],
+      "care_types": ["clean"],
+      "priority": 55,
+      "match": { "all_of": ["care-clean"] }
+    },
+    {
+      "id": "tool-labels",
+      "category": "tools",
+      "title": "Plant labels & marker",
+      "keywords": "plant labels garden markers waterproof",
+      "department": "lawngarden",
+      "why": "Sowings and cuttings look identical for weeks; labels are the difference between a record and a guess.",
+      "grounded_on": ["trait:propagation"],
+      "priority": 30,
+      "match": { "any_of": ["seed-started", "outdoor"] }
+    },
+    {
+      "id": "tool-harvest-basket",
+      "category": "tools",
+      "title": "Harvest basket / colander",
+      "keywords": "garden harvest basket colander vegetable",
+      "department": "lawngarden",
+      "why": "For an edible crop, somewhere to put the harvest that lets you rinse and drain in one step.",
+      "grounded_on": ["care_notes"],
+      "priority": 25,
+      "match": { "any_of": ["vegetable", "fruit"] }
+    },
+
+    {
+      "id": "support-moss-pole",
+      "category": "support",
+      "title": "Moss pole / coir climbing pole",
+      "keywords": "moss pole coir plant support climbing monstera philodendron",
+      "department": "lawngarden",
+      "why": "This is a climber — given something to attach to, its aerial roots grip and the leaves mature larger than they ever do trailing.",
+      "grounded_on": ["care_notes", "trait:growth_rate"],
+      "priority": 85,
+      "match": { "all_of": ["climber", "indoor"] }
+    },
+    {
+      "id": "support-trellis-indoor",
+      "category": "support",
+      "title": "Indoor plant trellis",
+      "keywords": "indoor plant trellis small pot support arch",
+      "department": "lawngarden",
+      "why": "Gives a vining houseplant a shape to grow into instead of trailing off the shelf.",
+      "grounded_on": ["care_notes"],
+      "priority": 60,
+      "match": { "all_of": ["vine", "indoor"], "none_of": ["climber"] }
+    },
+    {
+      "id": "support-stakes-ties",
+      "category": "support",
+      "title": "Plant stakes & soft plant ties",
+      "keywords": "plant stakes garden ties soft velcro support",
+      "department": "lawngarden",
+      "why": "This species gets tall enough to lean or snap in wind once it's carrying weight up top.",
+      "grounded_on": ["trait:max_height_inches", "care_notes"],
+      "priority": 70,
+      "match": { "any_of": ["needs-support", "tall"], "none_of": ["indoor-only"] }
+    },
+    {
+      "id": "support-tomato-cage",
+      "category": "support",
+      "title": "Tomato cages / heavy-duty plant cages",
+      "keywords": "tomato cage heavy duty plant support garden",
+      "department": "lawngarden",
+      "why": "A fruiting plant this size will pull itself over once it's loaded; cage it before it needs it, not after.",
+      "grounded_on": ["care_notes"],
+      "priority": 80,
+      "match": { "any_of": ["nightshade", "cucurbit"], "all_of": ["outdoor"] }
+    },
+    {
+      "id": "support-garden-trellis",
+      "category": "support",
+      "title": "Garden trellis / netting",
+      "keywords": "garden trellis netting climbing vegetable pea bean",
+      "department": "lawngarden",
+      "why": "A vining outdoor crop yields more per square foot grown up than sprawling across the ground, and stays cleaner and less disease-prone.",
+      "grounded_on": ["care_notes"],
+      "priority": 75,
+      "match": { "all_of": ["outdoor", "vine"] }
+    },
+
+    {
+      "id": "humid-humidifier",
+      "category": "humidity",
+      "title": "Cool-mist room humidifier",
+      "keywords": "cool mist humidifier room quiet",
+      "department": "kitchen",
+      "why": "This species wants humidity most homes never reach — a humidifier is the only reliable way to hold that range, and it works far better than misting.",
+      "grounded_on": ["humidity_pct_min", "humidity_pct_max"],
+      "care_types": ["mist"],
+      "priority": 90,
+      "match": { "all_of": ["humidity-high", "indoor"] }
+    },
+    {
+      "id": "humid-pebble-tray",
+      "category": "humidity",
+      "title": "Pebble humidity tray",
+      "keywords": "humidity tray pebble plant tray indoor",
+      "department": "lawngarden",
+      "why": "A modest local humidity bump for a plant that likes it damper than the room, without running an appliance.",
+      "grounded_on": ["humidity_pct_min", "schedule:mist"],
+      "care_types": ["mist"],
+      "priority": 55,
+      "match": { "any_of": ["humidity-high", "care-mist"], "all_of": ["indoor"] }
+    },
+    {
+      "id": "humid-mister",
+      "category": "humidity",
+      "title": "Plant mister / spray bottle",
+      "keywords": "plant mister spray bottle fine mist",
+      "department": "lawngarden",
+      "why": "This species has a misting schedule of its own; a fine-mist bottle beats a jet that soaks the leaves.",
+      "grounded_on": ["schedule:mist"],
+      "care_types": ["mist"],
+      "priority": 65,
+      "match": { "all_of": ["care-mist"] }
+    },
+    {
+      "id": "humid-frost-cover",
+      "category": "humidity",
+      "title": "Frost cloth / plant cover",
+      "keywords": "frost cloth plant cover freeze protection garden",
+      "department": "lawngarden",
+      "why": "This species' minimum temperature is above freezing — one unexpected frost ends it, and a cover buys the nights at the edges of the season.",
+      "grounded_on": ["temp_f_min"],
+      "priority": 60,
+      "match": { "all_of": ["frost-sensitive", "outdoor"] }
+    },
+
+    {
+      "id": "light-grow-bulb",
+      "category": "lighting",
+      "title": "Full-spectrum grow light bulb",
+      "keywords": "full spectrum grow light bulb led e26 plant",
+      "department": "lawngarden",
+      "why": "Screws into a normal lamp. Enough for a single plant that wants bright light through a winter or in a dim room.",
+      "grounded_on": ["light_need"],
+      "priority": 60,
+      "match": { "any_of": ["light-bright-indirect", "light-medium"], "all_of": ["indoor"] }
+    },
+    {
+      "id": "light-grow-panel",
+      "category": "lighting",
+      "title": "Full-spectrum LED grow light panel",
+      "keywords": "led grow light panel full spectrum indoor plants timer",
+      "department": "lawngarden",
+      "why": "This species wants direct sun. Indoors — or out of season — that's more light than a window gives, and a panel is the honest substitute.",
+      "grounded_on": ["light_need"],
+      "priority": 80,
+      "match": { "all_of": ["light-direct", "indoor"] }
+    },
+    {
+      "id": "light-seedling-light",
+      "category": "lighting",
+      "title": "Seed-starting grow light with stand",
+      "keywords": "seed starting grow light stand adjustable seedlings",
+      "department": "lawngarden",
+      "why": "Seedlings started on a windowsill stretch and flop; light directly overhead is what keeps them stocky.",
+      "grounded_on": ["trait:propagation"],
+      "priority": 65,
+      "match": { "all_of": ["seed-started"] }
+    },
+    {
+      "id": "light-timer",
+      "category": "lighting",
+      "title": "Outlet timer for grow lights",
+      "keywords": "outlet timer plug in programmable grow light",
+      "department": "tools",
+      "why": "Plants respond to consistent day length; a timer removes the part of that you'd otherwise have to remember.",
+      "grounded_on": ["light_need"],
+      "priority": 30,
+      "match": { "any_of": ["light-direct", "seed-started"], "none_of": ["outdoor-only"] }
+    },
+
+    {
+      "id": "pest-neem",
+      "category": "pest",
+      "title": "Neem oil concentrate",
+      "keywords": "neem oil concentrate plant spray organic",
+      "department": "lawngarden",
+      "why": "The broad first response to most soft-bodied houseplant pests, and safe on edibles up to harvest.",
+      "grounded_on": ["care_notes"],
+      "priority": 70,
+      "match": { "any_of": ["indoor", "outdoor"] }
+    },
+    {
+      "id": "pest-insecticidal-soap",
+      "category": "pest",
+      "title": "Insecticidal soap spray",
+      "keywords": "insecticidal soap plant spray ready to use",
+      "department": "lawngarden",
+      "why": "Gentler than neem on thin or fuzzy leaves, and the standard treatment for aphids, mites and mealybugs indoors.",
+      "grounded_on": ["care_notes"],
+      "priority": 65,
+      "match": { "all_of": ["indoor"] }
+    },
+    {
+      "id": "pest-sticky-traps",
+      "category": "pest",
+      "title": "Yellow sticky traps",
+      "keywords": "yellow sticky traps fungus gnats indoor plants",
+      "department": "lawngarden",
+      "why": "Catches fungus gnats, which show up wherever the top of the mix stays damp — likely for a species on a short watering interval.",
+      "grounded_on": ["schedule:water", "soil_type"],
+      "priority": 55,
+      "match": { "any_of": ["water-frequent", "soil-moisture-retentive"], "all_of": ["indoor"] }
+    },
+    {
+      "id": "pest-pet-safe",
+      "category": "pest",
+      "title": "Pet-safe plant pest spray",
+      "keywords": "pet safe plant insect spray non toxic indoor",
+      "department": "lawngarden",
+      "why": "This species is already toxic to pets. If it lives with animals, don't add a second hazard on the leaf surface.",
+      "grounded_on": ["toxic_to_pets"],
+      "priority": 60,
+      "match": { "all_of": ["pet-toxic", "indoor"] }
+    },
+    {
+      "id": "pest-slug",
+      "category": "pest",
+      "title": "Slug & snail bait (iron phosphate)",
+      "keywords": "slug snail bait iron phosphate pet safe garden",
+      "department": "lawngarden",
+      "why": "Slugs go for exactly this kind of soft outdoor foliage; the iron-phosphate baits work without the pet risk of metaldehyde.",
+      "grounded_on": ["care_notes"],
+      "priority": 50,
+      "match": { "all_of": ["outdoor"], "any_of": ["vegetable", "flowering", "herb"] }
+    },
+    {
+      "id": "pest-row-cover",
+      "category": "pest",
+      "title": "Floating row cover / insect netting",
+      "keywords": "floating row cover insect netting garden crop protection",
+      "department": "lawngarden",
+      "why": "A physical barrier is the only thing that reliably stops cabbage moths and beetles, and it needs no spray at all.",
+      "grounded_on": ["care_notes"],
+      "priority": 60,
+      "match": { "any_of": ["brassica", "vegetable"], "all_of": ["outdoor"] }
+    },
+    {
+      "id": "pest-fungicide",
+      "category": "pest",
+      "title": "Copper fungicide",
+      "keywords": "copper fungicide garden plant disease spray",
+      "department": "lawngarden",
+      "why": "Humid conditions plus dense foliage is how leaf-spot and blight get started on this kind of crop.",
+      "grounded_on": ["humidity_pct_max", "care_notes"],
+      "priority": 45,
+      "match": { "all_of": ["outdoor"], "any_of": ["nightshade", "cucurbit", "fruit"] }
+    },
+
+    {
+      "id": "prop-seed-tray",
+      "category": "propagation",
+      "title": "Seed starting trays with humidity dome",
+      "keywords": "seed starting tray humidity dome cell trays",
+      "department": "lawngarden",
+      "why": "This species is started from seed indoors ahead of the season — a domed tray holds the warmth and moisture germination needs.",
+      "grounded_on": ["trait:propagation", "care_notes"],
+      "priority": 80,
+      "match": { "all_of": ["seed-started"] }
+    },
+    {
+      "id": "prop-seed-mix",
+      "category": "propagation",
+      "title": "Seed starting mix",
+      "keywords": "seed starting mix germination fine potting",
+      "department": "lawngarden",
+      "why": "A fine, sterile mix — potting soil is too coarse and too rich for germinating seed.",
+      "grounded_on": ["trait:propagation"],
+      "priority": 70,
+      "match": { "any_of": ["seed-started", "soil-seed-start"] }
+    },
+    {
+      "id": "prop-heat-mat",
+      "category": "propagation",
+      "title": "Seedling heat mat",
+      "keywords": "seedling heat mat germination warming thermostat",
+      "department": "lawngarden",
+      "why": "This species' record names a soil temperature for germination that indoor air alone won't hold.",
+      "grounded_on": ["temp_f_min", "care_notes"],
+      "priority": 60,
+      "match": { "all_of": ["seed-started", "frost-sensitive"] }
+    },
+    {
+      "id": "prop-rooting-hormone",
+      "category": "propagation",
+      "title": "Rooting hormone",
+      "keywords": "rooting hormone powder gel plant cuttings propagation",
+      "department": "lawngarden",
+      "why": "This species propagates from cuttings; rooting hormone raises the strike rate and shortens the wait.",
+      "grounded_on": ["trait:propagation"],
+      "priority": 60,
+      "match": { "all_of": ["cutting-propagated"] }
+    },
+    {
+      "id": "prop-propagation-station",
+      "category": "propagation",
+      "title": "Propagation station (rooting vases)",
+      "keywords": "propagation station glass vases plant cuttings rooting",
+      "department": "lawngarden",
+      "why": "Cuttings from this species root in water, where you can watch the roots develop before potting them up.",
+      "grounded_on": ["trait:propagation"],
+      "priority": 45,
+      "match": { "all_of": ["cutting-propagated", "indoor"] }
+    },
+
+    {
+      "id": "monitor-moisture-meter",
+      "category": "monitoring",
+      "title": "Soil moisture meter",
+      "keywords": "soil moisture meter plant hygrometer probe",
+      "department": "lawngarden",
+      "why": "Overwatering is the top killer for a species on a long watering interval — a probe reads the root zone instead of the surface, which dries first and lies.",
+      "grounded_on": ["schedule:water", "care_notes"],
+      "care_types": ["water"],
+      "priority": 75,
+      "match": { "any_of": ["water-infrequent", "succulent", "soil-cactus"] }
+    },
+    {
+      "id": "monitor-hygrometer",
+      "category": "monitoring",
+      "title": "Digital hygrometer / thermometer",
+      "keywords": "digital hygrometer thermometer indoor humidity monitor",
+      "department": "kitchen",
+      "why": "This species has a specific humidity and temperature range in its record; a $10 meter tells you whether the spot you picked actually meets it.",
+      "grounded_on": ["humidity_pct_min", "humidity_pct_max", "temp_f_min", "temp_f_max"],
+      "priority": 65,
+      "match": { "any_of": ["humidity-high", "hard-water-sensitive"], "all_of": ["indoor"] }
+    },
+    {
+      "id": "monitor-light-meter",
+      "category": "monitoring",
+      "title": "Light meter for plants",
+      "keywords": "light meter plants lux foot candle indoor",
+      "department": "tools",
+      "why": "\"Bright indirect\" is the vaguest instruction in plant care. A meter converts it to a number you can actually place a pot by.",
+      "grounded_on": ["light_need"],
+      "priority": 35,
+      "match": { "any_of": ["light-bright-indirect", "light-direct"], "all_of": ["indoor"] }
+    },
+    {
+      "id": "monitor-ph-kit",
+      "category": "monitoring",
+      "title": "Soil pH test kit",
+      "keywords": "soil ph test kit garden meter",
+      "department": "lawngarden",
+      "why": "This species' soil requirement is stated as a pH range — the only way to know you're in it is to measure.",
+      "grounded_on": ["soil_type"],
+      "priority": 60,
+      "match": { "any_of": ["soil-acidic", "soil-ph-specified"] }
+    },
+    {
+      "id": "monitor-thermometer-soil",
+      "category": "monitoring",
+      "title": "Soil thermometer",
+      "keywords": "soil thermometer garden compost planting temperature",
+      "department": "lawngarden",
+      "why": "Transplanting and sowing dates for this species are given in soil temperature, not calendar dates.",
+      "grounded_on": ["temp_f_min", "care_notes"],
+      "priority": 40,
+      "match": { "all_of": ["seed-started", "outdoor"] }
+    }
+  ],
+
+  "companions": [
+    {
+      "id": "comp-nightshade",
+      "match": { "any_of": ["nightshade"] },
+      "plants": [
+        { "name": "Basil",      "keywords": "basil seeds organic non gmo",           "why": "The classic tomato neighbor — shares the same water and sun needs and is widely grown to deter thrips and hornworms." },
+        { "name": "Marigold",   "keywords": "marigold seeds french tagetes",          "why": "Planted along tomato and pepper rows for root-knot nematode suppression." },
+        { "name": "Nasturtium", "keywords": "nasturtium seeds climbing",              "why": "Draws aphids away from the crop and can be pulled once it's covered in them." }
+      ]
+    },
+    {
+      "id": "comp-brassica",
+      "match": { "any_of": ["brassica"] },
+      "plants": [
+        { "name": "Dill",       "keywords": "dill seeds herb garden",                "why": "Its flowers feed the parasitic wasps that control cabbage worm." },
+        { "name": "Nasturtium", "keywords": "nasturtium seeds",                      "why": "A trap crop — cabbage moths lay on it in preference to the brassica." },
+        { "name": "Thyme",      "keywords": "thyme seeds creeping herb",             "why": "Aromatic groundcover that masks the scent brassica pests home in on." }
+      ]
+    },
+    {
+      "id": "comp-cucurbit",
+      "match": { "any_of": ["cucurbit"] },
+      "plants": [
+        { "name": "Sunflower",  "keywords": "sunflower seeds tall variety",          "why": "Pulls in the pollinators squash and cucumber flowers depend on, and gives vines something to climb." },
+        { "name": "Marigold",   "keywords": "marigold seeds",                        "why": "Commonly interplanted for cucumber beetle deterrence." },
+        { "name": "Borage",     "keywords": "borage seeds herb",                     "why": "One of the strongest bee draws you can plant, which directly raises fruit set." }
+      ]
+    },
+    {
+      "id": "comp-allium",
+      "match": { "any_of": ["allium"] },
+      "plants": [
+        { "name": "Carrots",    "keywords": "carrot seeds garden",                   "why": "The reciprocal pairing — alliums confuse carrot fly, carrots confuse onion fly." },
+        { "name": "Chamomile",  "keywords": "chamomile seeds german",                "why": "A traditional allium companion, planted for bulb size and flavor." }
+      ]
+    },
+    {
+      "id": "comp-root-crop",
+      "match": { "any_of": ["root-crop"] },
+      "plants": [
+        { "name": "Onions",     "keywords": "onion seeds garden",                    "why": "Interplanted with root crops to break up the scent trail carrot fly follows." },
+        { "name": "Radish",     "keywords": "radish seeds fast growing",             "why": "Fast enough to mark the row and be harvested before the slower root crop needs the space." }
+      ]
+    },
+    {
+      "id": "comp-legume",
+      "match": { "any_of": ["legume"] },
+      "plants": [
+        { "name": "Sweet Corn", "keywords": "sweet corn seeds garden",               "why": "The Three Sisters pairing — corn is the pole, beans put back the nitrogen corn takes." },
+        { "name": "Squash",     "keywords": "squash seeds summer winter",            "why": "Third of the Three Sisters: broad leaves shade the soil and hold moisture." }
+      ]
+    },
+    {
+      "id": "comp-fruit",
+      "match": { "any_of": ["fruit"] },
+      "plants": [
+        { "name": "Borage",     "keywords": "borage seeds herb",                     "why": "Strawberry growers plant it for pollination and reported fruit quality." },
+        { "name": "Chives",     "keywords": "chives seeds herb garden",              "why": "Ringed around berries and fruit for its reputation against aphids and mildew." }
+      ]
+    },
+    {
+      "id": "comp-herb",
+      "match": { "any_of": ["herb"] },
+      "plants": [
+        { "name": "Oregano",    "keywords": "oregano seeds herb garden",             "why": "Same sun, same lean soil, same watering — herbs of this type share a pot happily." },
+        { "name": "Thyme",      "keywords": "thyme seeds herb",                      "why": "Another dry-side Mediterranean herb; grouping them means one watering rhythm, not three." }
+      ]
+    },
+    {
+      "id": "comp-flowering-outdoor",
+      "match": { "any_of": ["flowering"], "all_of": ["outdoor"] },
+      "plants": [
+        { "name": "Sweet Alyssum", "keywords": "sweet alyssum seeds",                "why": "Low, long-blooming edging that feeds hoverflies — the aphid predators worth having nearby." },
+        { "name": "Zinnia",     "keywords": "zinnia seeds cut flower mix",           "why": "Pollinator magnet with a long cutting season; easy from direct sowing." }
+      ]
+    },
+    {
+      "id": "comp-indoor",
+      "match": { "all_of": ["indoor"] },
+      "plants": [
+        { "name": "Pothos",     "keywords": "pothos live plant golden",              "why": "Tolerates the same indoor light range with far less fuss — a good shelf-mate while you learn a harder plant." },
+        { "name": "Snake Plant","keywords": "snake plant live sansevieria",          "why": "Thrives in the same rooms, on a completely different watering interval, so a missed week costs nothing." }
+      ]
+    }
+  ]
+}
