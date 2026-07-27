@@ -5,38 +5,34 @@
 
 ---
 
-## ⛔ Read first: production is not this repository
+## ✅ Resolved: production and master are the same tree again
 
-**Do not run `fly deploy`** until the recovery on PR #15 is finished and pushed.
+**Deployed Jul 27 as v14.** The drift described below is history; the ban on
+`fly deploy` is lifted.
 
-`garden-gnome-api.fly.dev` serves a `/products/*` router — a 71-item Amazon
-affiliate catalog with FTC disclosure copy — **whose source is in no commit on
-any branch.** Verified from both sessions:
+For four days production ran an unversioned build carrying a `/products/*`
+Amazon affiliate router whose source was in no commit on any branch, while
+missing `weather.py`, `ai.py`, and five other committed modules. Cause: there is
+no CI, and `fly deploy` builds the *working directory*, not git — so one manual
+deploy from a dirty tree shipped uncommitted files and omitted committed ones.
 
-```
-$ git log --all --oneline -S"products"      # nothing
-$ curl -s https://garden-gnome-api.fly.dev/products/status   # live, 71 products
-```
+How it ended:
 
-It also does **not** serve `/ai/status`, which *is* committed (`ai.py`,
-registered at `main.py:54`). So production has diverged in both directions: it
-is not behind master, it is a different lineage.
+| | |
+|---|---|
+| Recovered source | `rescue/deployed-production` (`8f02b7b`), 66 files under `recovered/` |
+| Deployed | v14, migration `0005` applied, species count unchanged at **1,940** |
+| Volume backup | taken before the deploy, kept outside the repo |
+| `/products/*` | now 404 — removed from production, source preserved on the rescue branch |
 
-**The mechanism.** There is no `.github/workflows/` — no automated deploy — and
-`fly deploy` builds the *working directory*, not git (`COPY app ./app`).
-Uncommitted files ship; committed-but-absent files don't. One manual deploy from
-a dirty tree explains both halves. The Windows box is the likely origin.
+**The root cause is still live.** No CI, no deploy workflow, `fly deploy` still
+ships the working directory. The next manual deploy from a dirty tree recreates
+this exactly. Now that production matches master, a GitHub Actions workflow
+deploying on merge is finally *safe* to add — it wasn't before, because its
+first run would have destroyed the unarchived affiliate feature. Needs a
+`FLY_API_TOKEN` repo secret, so it's Allison's call.
 
-**Why the ban matters.** That source exists in exactly two places: whichever
-machine's disk still has it, and the running container image. A deploy from this
-tree overwrites the second one permanently.
-
-**Everything downstream is affected.** Any reasoning that starts "the code says
-X, therefore production does X" is invalid until the drift is measured — that
-includes the `ADVISOR_BACKEND` default, the four WeatherKit values, and
-Section A below, which runs *container* code, not repo code.
-
-Recovery procedure and progress: **PR #15**.
+Full record: **PR #15**.
 
 ---
 

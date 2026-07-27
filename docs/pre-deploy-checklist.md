@@ -1,9 +1,13 @@
 # Pre-deploy checklist — the first deploy after the drift
 
-> **STATUS: READY, NOT RUN (2026-07-26).** Every fact here was verified against
-> the recovered production image on branch `rescue/deployed-production`
-> (`8f02b7b`) and against master. Nothing in this file is inferred from the
-> feature list.
+> **STATUS: RUN AND VERIFIED (2026-07-27, v14).** Kept as the runbook for future
+> deploys. Outcome recorded at the bottom — including two things that looked
+> like failures and weren't, which is the part worth reading before the next
+> one.
+>
+> Every fact here was verified against the recovered production image
+> (`rescue/deployed-production`, `8f02b7b`) and against master. Nothing is
+> inferred from the feature list.
 
 This is not a routine deploy. Production has been running an unversioned build
 since **Jul 23** — see the banner in `docs/local-session-handoff.md`. Its source
@@ -190,3 +194,77 @@ PlantAdvocate earns from qualifying purchases"* — that has never been reviewed
 and `affiliate_configured` is `false`, so it has never earned anything either.
 
 Its own branch, its own PR, its own tests. Not this deploy.
+
+---
+
+## Outcome — v14, 2026-07-27
+
+Deployed as **v14**, image `deployment-01KYJ8V85Y8RXAQ35515TVJG4G`. Both gates
+passed. Migration `0005` applied; species count unchanged at **1,940** across
+it. Volume backed up first (2,789,376 bytes, integrity `ok`, `alembic_version`
+`0004` — confirming the superset analysis from the outside).
+
+### Two things that look like a broken deploy and aren't
+
+Both will recur on every future deploy. Read these before rolling anything back.
+
+**1. `WARNING The app is not listening on the expected address`**, listing only
+`/.fly/hallpass` on port 22. This is the exact signature described above for a
+migration boot loop. **It is not one** — it's the window before uvicorn binds.
+`/` returned 200 immediately after.
+
+**2. `curl` returning `http 000` a few minutes later.** Also not a crash:
+`auto_stop_machines` idles the machine down (`min_machines_running = 0` in
+`fly.toml`). The next request cold-starts it.
+
+Anyone reading either as a failure will roll back a healthy deploy. Check
+`fly status` before concluding anything — `stopped` means asleep, not broken.
+
+### Results
+
+| check | outcome |
+|---|---|
+| `/ai/status` | `{"advisor_backend":"stub","vision":{"backend":"stub","ready":false}}` |
+| `/products/status` | **404** — affiliate feature removed, source on the rescue branch |
+| `/environments/{id}/weather` | **401** — route exists and is auth-gated; it did not exist before v14 |
+| `populate_catalog --dry-run` | refused correctly until `genus_fill` ran; then real numbers (below) |
+
+### The AI answer, stated precisely
+
+`ADVISOR_BACKEND` is **set, and set to `stub`**. Not unset-and-defaulting, which
+is what was assumed twice. The shared digest with `VISION_BACKEND` is explained:
+both hold the literal string `stub`.
+
+The predicted `ollama` silent-fallback trap did not fire. But the distinction
+matters for what happens next: **someone deliberately configured stub.** Turning
+the AI on is a decision to reverse, not an oversight to fix — it needs
+`ADVISOR_BACKEND=anthropic` *and* an `ANTHROPIC_API_KEY`, which is still not in
+the secrets list.
+
+### The catalog number, at last
+
+Against the live volume, not a recovered artifact:
+
+```
+needs_review: 1688 pending, 252 approved siblings across 198 genera
+verdicts: {'uncertain': 1239, 'corrected': 449}
+```
+
+The free offline genus pass proposes values for **449** of 1,688 — about 27% —
+and leaves **1,239** needing `wiki_enrich`, paid research, or manual work.
+Nothing was written; `apply_review` remains a separate deliberate step.
+
+The stale in-container artifact had said 1,714 flagged. Close enough to show it
+was broadly right, far enough off that quoting it as the number would have been
+wrong.
+
+### Still open
+
+**WeatherKit has never been exercised.** A 401 proves the route and service are
+deployed; it does not prove the credentials authenticate against Apple, because
+that only happens on a real authenticated request. Those four secrets sat
+configured for a service that didn't exist — the first call from the app is the
+first test they have ever had.
+
+If the forecast fails to render, *that* is finally the WeatherKit-credentials
+problem, and only then.
