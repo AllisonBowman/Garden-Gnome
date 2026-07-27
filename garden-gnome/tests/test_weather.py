@@ -188,3 +188,33 @@ def test_weather_endpoint_happy_path(api, monkeypatch):
 def test_weather_endpoint_requires_auth(api):
     client, _, ids = api
     assert client.get(f"/environments/{ids['located']}/weather").status_code == 401
+
+
+def test_adding_a_location_later_turns_weather_on(api, monkeypatch):
+    """An environment created without coordinates can be given them afterwards.
+
+    This is the path that made weather look broken on device: environments
+    predating the address picker had no lat/lng, and nothing in the app could
+    add them, so the forecast never appeared no matter what the caretaker did
+    with location permission. The server always supported the PATCH — only the
+    screen was missing — so this pins the half that has to keep working."""
+    client, headers, ids = api
+
+    before = client.get(f"/environments/{ids['no_loc']}/weather", headers=headers)
+    assert before.json()["available"] is False
+
+    patched = client.patch(
+        f"/environments/{ids['no_loc']}",
+        json={"city": "Baltimore", "region": "MD", "country": "US",
+              "lat": 39.29, "lng": -76.61},
+        headers=headers,
+    )
+    assert patched.status_code == 200
+    assert patched.json()["lat"] == 39.29
+
+    async def fake_fetch(lat, lng, lang="en"):
+        return weather.normalize(SAMPLE_WEATHERKIT)
+
+    monkeypatch.setattr("app.routers.environments.fetch_weather", fake_fetch)
+    after = client.get(f"/environments/{ids['no_loc']}/weather", headers=headers)
+    assert after.json()["available"] is True
