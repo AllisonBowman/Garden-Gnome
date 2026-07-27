@@ -19,7 +19,7 @@
   --paper:#EEEBDD;
   --paper-dim:#E2DFCF;
   --marigold:#D9A441;
-  --clay:#A9542F;
+  --clay:#904728;--clay-on-dark:#E09A75;
   --leaf:#7C9A6A;
   --leaf-deep:#5B7A4C;
   --line: rgba(238,235,221,0.18);
@@ -217,7 +217,7 @@ h3{font-family:'Fraunces', serif; font-weight:500; font-size:1.25rem; color:var(
 footer{border-top:1px solid var(--line); padding:56px 0 32px;}
 .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px; padding-bottom:36px;}
 @media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr; row-gap:32px;}}
-.foot-col h4{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--marigold); margin-bottom:14px;}
+.foot-col h2{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--marigold); margin-bottom:14px;}
 .foot-col a{display:block; text-decoration:none; font-size:0.88rem; color:var(--paper-dim); margin-bottom:10px; transition:color .2s;}
 .foot-col a:hover{color:var(--paper);}
 .foot-bottom{
@@ -227,10 +227,20 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
 
 :focus-visible{outline:2px solid var(--marigold); outline-offset:3px;}
 
+
+/* --- Accessibility utilities (WCAG 2.1 AA) --- */
+.skip-link{position:absolute;left:-9999px;top:0;z-index:999;background:var(--marigold);
+  color:var(--ink);padding:12px 20px;font-weight:600;text-decoration:none;
+  border-radius:0 0 6px 0}
+.skip-link:focus{left:0}
+main:focus{outline:none}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 </style>
 
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 <header>
   <nav class="wrap">
     <a class="brand" href="index.html"><span class="brand-mark"></span>PlantAdvocate</a>
@@ -240,6 +250,8 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
     <a class="nav-cta" href="index.html#cta">Get early access &rarr;</a>
   </nav>
 </header>
+
+<main id="main" tabindex="-1">
 
 <section class="page-head">
   <div class="wrap">
@@ -281,11 +293,13 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
   </div>
 </section>
 
+</main>
+
 <footer>
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-col">
-        <h4>PlantAdvocate</h4>
+        <h2>PlantAdvocate</h2>
         <a href="index.html" style="color:var(--paper); font-family:'Fraunces',serif; font-style:italic; font-size:1.05rem; margin-bottom:14px;">An advocate for every plant.</a>
         <a href="about.html">About &amp; story</a>
         <a href="contact.html">Contact</a>
@@ -293,21 +307,21 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
         <a href="privacy.html">Privacy policy</a>
       </div>
       <div class="foot-col">
-        <h4>Product</h4>
+        <h2>Product</h2>
         <a href="how-it-works.html">How it works</a>
         <a href="pricing.html">Pricing</a>
         <a href="recommendations.html">Find your plant</a>
         <a href="faq.html">FAQ</a>
       </div>
       <div class="foot-col">
-        <h4>Community</h4>
+        <h2>Community</h2>
         <a href="community-garden.html">Community garden</a>
         <a href="testimonials.html">Beta experiences</a>
         <a href="resources.html">Plant resources</a>
         <a href="conservation.html">Conservation</a>
       </div>
       <div class="foot-col">
-        <h4>Partners</h4>
+        <h2>Partners</h2>
         <a href="nurseries.html">For nurseries</a>
         <a href="contact.html">Get in touch</a>
       </div>
