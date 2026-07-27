@@ -1,8 +1,44 @@
 # Handoff — local terminal session
 
-> **STATUS: ACTIVE (2026-07-25).** Written by the cloud session for the local
-> Claude Code session on the MacBook Air. Delete or mark DONE once the three
-> pending commands below have been run and their output acted on.
+> **STATUS: ACTIVE (2026-07-26).** Written by the cloud session for the local
+> Claude Code session on the MacBook Air.
+
+---
+
+## ⛔ Read first: production is not this repository
+
+**Do not run `fly deploy`** until the recovery on PR #15 is finished and pushed.
+
+`garden-gnome-api.fly.dev` serves a `/products/*` router — a 71-item Amazon
+affiliate catalog with FTC disclosure copy — **whose source is in no commit on
+any branch.** Verified from both sessions:
+
+```
+$ git log --all --oneline -S"products"      # nothing
+$ curl -s https://garden-gnome-api.fly.dev/products/status   # live, 71 products
+```
+
+It also does **not** serve `/ai/status`, which *is* committed (`ai.py`,
+registered at `main.py:54`). So production has diverged in both directions: it
+is not behind master, it is a different lineage.
+
+**The mechanism.** There is no `.github/workflows/` — no automated deploy — and
+`fly deploy` builds the *working directory*, not git (`COPY app ./app`).
+Uncommitted files ship; committed-but-absent files don't. One manual deploy from
+a dirty tree explains both halves. The Windows box is the likely origin.
+
+**Why the ban matters.** That source exists in exactly two places: whichever
+machine's disk still has it, and the running container image. A deploy from this
+tree overwrites the second one permanently.
+
+**Everything downstream is affected.** Any reasoning that starts "the code says
+X, therefore production does X" is invalid until the drift is measured — that
+includes the `ADVISOR_BACKEND` default, the four WeatherKit values, and
+Section A below, which runs *container* code, not repo code.
+
+Recovery procedure and progress: **PR #15**.
+
+---
 
 The project is being worked from two places. This file is the seam between
 them, so neither has to re-derive what the other already knows.
@@ -31,16 +67,27 @@ Checked on this exact checkout, not quoted from a PR description:
 
 | | |
 |---|---|
-| `master` | `db5c520` (PR #11 merged) |
-| Working branch | `claude/plant-advocate-screenshots-xxt8ed`, even with master |
-| Backend | **261 passed** (`.venv/bin/python -m pytest`) |
-| Mobile | `tsc --noEmit` clean, **47 passed** (`npx jest`) |
-| Stale branches | `claude/anthropic-vision-backend`, `recover/anthropic-vision` — **deleted** |
+| `master` | `3b78258` (PR #13 merged) |
+| Working branch | `claude/plant-advocate-screenshots-xxt8ed` |
+| Backend | **291 passed** (`.venv/bin/python -m pytest`) |
+| Mobile | `tsc --noEmit` clean, **97 passed** (`npx jest`) |
+| Open PR | **#15** — the session channel, and where the recovery is running |
 
-The last merge added the Census Species Almanac (search, difficulty filters,
-care fingerprint) and changed `GET /species/` to return `SpeciesRead`, so the
-internal review trail — `review_status`, `review_note`, `source`, `source_ref`
-— no longer reaches clients.
+These numbers describe **this repository**, which is not what production runs.
+See the banner above.
+
+Merged since the last revision of this file:
+
+- **#11** Census Species Almanac; `GET /species/` returns `SpeciesRead`, so the
+  internal review trail no longer reaches clients.
+- **#12** Consent copy — Settings → Privacy & data, the photo-upload notice, and
+  the census opt-in switch, which the privacy policy had promised for months
+  while no control existed anywhere in the app. Also stopped requesting
+  microphone access the app never uses.
+- **#13** An environment can be given a location *after* it was created. This
+  was the weather bug: `updateEnvironment` sat unused in the API client, so
+  environments predating the address picker had no coordinates and no way to get
+  any. Location permission was never the problem.
 
 ---
 
@@ -65,8 +112,17 @@ Two ways forward, in the order they should be tried.
 
 ### A. Get the coverage number without moving any data (local-only)
 
+> ⚠️ **In question since the drift was found.** This runs the expansion scripts
+> *inside the container*, which is container code — and container code is not
+> repo code. The volume data is presumably still the real catalog, but the
+> script reading it may not be the script in this branch, and the package may
+> not be in the image at all. Check first:
+> `ls /app/app/data/expansion/`. Treat any tally it prints as coming from an
+> unknown version until the diff on PR #15 says otherwise.
+
 Read-only, nothing leaves the server. The machine sleeps
-(`min_machines_running = 0` in `fly.toml`), so wake it first:
+(`min_machines_running = 0` in `fly.toml`), so wake it first — though in
+practice it has been answering `/` immediately without one:
 
 ```bash
 curl -s https://garden-gnome-api.fly.dev/ > /dev/null
@@ -155,13 +211,23 @@ Metro. Census tab → the Almanac card.
 
 ## Known-open, not yet scheduled
 
+- **Deploys have no guard rail.** No CI, no deploy workflow, and `fly deploy`
+  ships whatever is in the working directory. This is the root cause of the
+  drift above, and it is still unfixed — the next manual deploy from a dirty
+  tree recreates the same problem. Worth a GitHub Actions workflow deploying
+  from `master` on merge, which needs a `FLY_API_TOKEN` repo secret and is
+  therefore Allison's call.
+- **`site/privacy.html` still contradicts the app.** It denies the photo upload
+  that ships today and omits location entirely, though coordinates reach Apple
+  WeatherKit. Exact replacement paragraphs are in
+  `docs/privacy-policy-corrections.md`; publishing them is the owner's call.
 - **Cloud vision backend is unreachable from the app.** `VISION_BACKEND` has no
-  hosted option wired up; `/species/identify-photo` degrades to the stub, which
-  returns no candidates. On-device identify works; the cloud path was never
-  built.
-- **No consent copy anywhere in the app.** This is an App Review blocker for a
-  build that uploads photos, and it is zero lines of UI today.
+  hosted option wired up in this tree; `/species/identify-photo` degrades to the
+  stub. On-device identify works. (What *production* does here is now an open
+  question, not a known.)
 - **All catalog tooling is fixture-verified only.** Wikipedia, GBIF, and the
-  public-domain book sources are all blocked from the cloud container, and no
-  populated species DB is reachable there. The logic has tests; it has never
-  been run against real data. Section A above is the first time it will be.
+  public-domain book sources are blocked from the cloud container, and no
+  populated species DB is reachable there. The logic has tests; it has never run
+  against real data.
+- **`app.json` changed in #12 and again in the Apple team pin**, so the next
+  `npm run sim` does a full prebuild (minutes, not the fast path).
