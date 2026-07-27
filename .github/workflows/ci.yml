@@ -1,0 +1,103 @@
+# Tests on every PR; tests-then-deploy on every push to master.
+#
+# This exists because of a specific incident. For four days production ran a
+# build that was on no branch: `fly deploy` ships the *working directory*, not
+# git, so one manual deploy from a dirty checkout put an uncommitted router
+# into production while leaving out seven committed modules. Nobody noticed,
+# because nothing compared the two.
+#
+# The invariant this restores: master is what runs. Deploying is not something
+# a person does from a laptop, so a laptop's uncommitted state can't reach
+# production.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+# Never let two deploys race. Not cancel-in-progress: interrupting a deploy
+# mid-flight is worse than queueing behind it, because migrations run at boot.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: garden-gnome
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          # Matches the Dockerfile. Testing on a different minor than
+          # production ships is how you find out about a stdlib change from
+          # a user.
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: python -m pytest
+
+  mobile:
+    name: Mobile typecheck and tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npx jest
+
+  deploy:
+    name: Deploy to Fly
+    # Both suites, not just the backend. The mobile app is the only client the
+    # API has; shipping an API whose client no longer typechecks against it is
+    # a broken release even when the server tests are green.
+    needs: [backend, mobile]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    # Requires a FLY_API_TOKEN repo secret. Create one scoped to this app:
+    #   fly tokens create deploy -x 999999h -a garden-gnome-api
+    # A deploy token can deploy this app and nothing else — don't use a
+    # personal auth token here.
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy
+        # Run from garden-gnome/, not the repo root. The Dockerfile's
+        # `COPY app ./app` is relative to the build context, so a root-level
+        # build would look for ./app and fail. This mirrors deploying by hand
+        # from that directory, which is what has always been done.
+        working-directory: garden-gnome
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      # The machine has min_machines_running = 0, so this also cold-starts it
+      # and proves it boots. Migrations run before uvicorn binds, so a broken
+      # migration shows up here as a failure to ever answer.
+      - name: Smoke check
+        run: |
+          for i in $(seq 1 12); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" https://garden-gnome-api.fly.dev/ || true)
+            if [ "$code" = "200" ]; then
+              echo "up after ${i} attempt(s)"
+              curl -s https://garden-gnome-api.fly.dev/ai/status
+              exit 0
+            fi
+            echo "attempt ${i}: got ${code}, waiting"
+            sleep 10
+          done
+          echo "never returned 200 — check 'fly logs -a garden-gnome-api' for a boot loop"
+          exit 1
