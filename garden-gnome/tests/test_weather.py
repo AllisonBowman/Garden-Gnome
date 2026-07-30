@@ -56,6 +56,90 @@ def test_normalize_tolerates_missing_fields():
     assert out["daily"] == []
 
 
+# --- Open-Meteo fallback normalizer (pure) --------------------------------
+
+# A representative Open-Meteo response (already °F / % via request params).
+SAMPLE_OPENMETEO = {
+    "current": {
+        "temperature_2m": 83.9, "relative_humidity_2m": 42,
+        "weather_code": 2, "uv_index": 7.3,
+    },
+    "daily": {
+        "time": ["2026-07-30", "2026-07-31"],
+        "weather_code": [3, 81],
+        "temperature_2m_max": [85.3, 89.7],
+        "temperature_2m_min": [68.1, 67.4],
+        "precipitation_probability_max": [10, 55],
+        "uv_index_max": [7.8, 8.1],
+        "sunrise": ["2026-07-30T06:05", "2026-07-31T06:06"],
+        "sunset": ["2026-07-30T20:25", "2026-07-31T20:24"],  # ~14.3h daylight
+    },
+}
+
+
+def test_normalize_openmeteo_shape_and_condition_mapping():
+    out = weather.normalize_openmeteo(SAMPLE_OPENMETEO)
+    # Rounded, and WMO code 2 -> WeatherKit-style "PartlyCloudy"
+    assert out["current"] == {
+        "temp_f": 84, "humidity_pct": 42, "uv_index": 7, "condition": "PartlyCloudy",
+    }
+    d0, d1 = out["daily"]
+    assert d0["high_f"] == 85 and d0["low_f"] == 68
+    assert d0["precip_chance_pct"] == 10 and d0["uv_max"] == 8
+    assert d0["condition"] == "Cloudy"        # WMO 3 (overcast)
+    assert d1["condition"] == "Showers"       # WMO 81 (rain showers)
+    assert d0["daylight_hours"] == pytest.approx(14.3, abs=0.1)
+    # Fallback source is credited honestly, not as Apple.
+    assert out["attribution"]["url"].startswith("https://open-meteo.com")
+
+
+def test_normalize_openmeteo_tolerates_missing_fields():
+    out = weather.normalize_openmeteo({})
+    assert out["current"]["temp_f"] is None
+    assert out["daily"] == []
+
+
+# --- NWS fallback normalizer (pure) ---------------------------------------
+
+# NWS forecast periods alternate daytime/nighttime; temps already °F.
+SAMPLE_NWS_PERIODS = [
+    {"isDaytime": True,  "startTime": "2026-07-30T14:00:00-04:00", "temperature": 86,
+     "probabilityOfPrecipitation": {"value": 1}, "shortForecast": "Partly Sunny"},
+    {"isDaytime": False, "startTime": "2026-07-30T18:00:00-04:00", "temperature": 68,
+     "probabilityOfPrecipitation": {"value": 20}, "shortForecast": "Partly Cloudy"},
+    {"isDaytime": True,  "startTime": "2026-07-31T06:00:00-04:00", "temperature": 90,
+     "probabilityOfPrecipitation": {"value": 0}, "shortForecast": "Sunny"},
+    {"isDaytime": False, "startTime": "2026-07-31T18:00:00-04:00", "temperature": 67,
+     "probabilityOfPrecipitation": {"value": 5}, "shortForecast": "Clear"},
+]
+SAMPLE_NWS_OBS = {
+    "temperature": {"value": 28.3},        # °C -> 83 °F
+    "relativeHumidity": {"value": 48.5},   # -> 48%
+    "textDescription": "Cloudy",
+}
+
+
+def test_normalize_nws_pairs_day_night_and_omits_uv_and_daylight():
+    out = weather.normalize_nws(SAMPLE_NWS_PERIODS, SAMPLE_NWS_OBS)
+    assert out["current"] == {
+        "temp_f": 83, "humidity_pct": 48, "uv_index": None, "condition": "Cloudy",
+    }
+    d0, d1 = out["daily"]
+    assert d0["date"] == "2026-07-30"
+    assert d0["high_f"] == 86 and d0["low_f"] == 68   # daytime high, nighttime low
+    assert d0["precip_chance_pct"] == 1
+    assert d0["condition"] == "Partly Sunny"          # daytime condition wins
+    assert d0["uv_max"] is None and d0["daylight_hours"] is None  # NWS lacks both
+    assert d1["high_f"] == 90 and d1["low_f"] == 67
+    assert out["attribution"]["url"].startswith("https://www.weather.gov")
+
+
+def test_normalize_nws_tolerates_empty():
+    out = weather.normalize_nws([], {})
+    assert out["current"]["temp_f"] is None
+    assert out["daily"] == []
+
+
 # --- token / configuration ------------------------------------------------
 
 def _ec_private_key_pem() -> str:
@@ -108,13 +192,73 @@ def test_build_token_has_weatherkit_header_and_claims(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_fetch_weather_unconfigured_returns_none(monkeypatch):
+async def test_fetch_weather_none_when_all_providers_fail(monkeypatch):
+    # WeatherKit unconfigured, NWS + Open-Meteo unavailable -> None. Both web
+    # providers are stubbed so the test never makes a real network call.
     monkeypatch.delenv("WEATHERKIT_KEY_ID", raising=False)
     from app.config import get_settings
     get_settings.cache_clear()
     weather._token_cache.update(jwt=None, exp=0.0)
+    weather._weather_cache.clear()
+
+    async def _none(lat, lng):
+        return None
+    monkeypatch.setattr(weather, "_fetch_nws", _none)
+    monkeypatch.setattr(weather, "_fetch_openmeteo", _none)
     try:
         assert await weather.fetch_weather(39.29, -76.61) is None
+    finally:
+        get_settings.cache_clear()
+
+
+@pytest.mark.asyncio
+async def test_fetch_weather_prefers_nws_over_openmeteo(monkeypatch):
+    # NWS answers first for a US coord; Open-Meteo must not even be called.
+    monkeypatch.delenv("WEATHERKIT_KEY_ID", raising=False)
+    from app.config import get_settings
+    get_settings.cache_clear()
+    weather._token_cache.update(jwt=None, exp=0.0)
+    weather._weather_cache.clear()
+
+    nws = {"current": {}, "daily": [], "attribution": weather.NWS_ATTRIBUTION}
+
+    async def _nws(lat, lng):
+        return nws
+
+    async def _boom(lat, lng):
+        raise AssertionError("Open-Meteo must not run when NWS answers")
+    monkeypatch.setattr(weather, "_fetch_nws", _nws)
+    monkeypatch.setattr(weather, "_fetch_openmeteo", _boom)
+    try:
+        out = await weather.fetch_weather(38.98, -76.94)
+        assert out is nws
+        assert out["attribution"]["url"].startswith("https://www.weather.gov")
+    finally:
+        get_settings.cache_clear()
+
+
+@pytest.mark.asyncio
+async def test_fetch_weather_falls_back_to_openmeteo_when_nws_empty(monkeypatch):
+    # Non-US / NWS-less coord: falls through NWS to Open-Meteo, credited to it.
+    monkeypatch.delenv("WEATHERKIT_KEY_ID", raising=False)
+    from app.config import get_settings
+    get_settings.cache_clear()
+    weather._token_cache.update(jwt=None, exp=0.0)
+    weather._weather_cache.clear()
+
+    sentinel = {"current": {}, "daily": [], "attribution": weather.OPENMETEO_ATTRIBUTION}
+
+    async def _none(lat, lng):
+        return None
+
+    async def _fake_openmeteo(lat, lng):
+        return sentinel
+    monkeypatch.setattr(weather, "_fetch_nws", _none)
+    monkeypatch.setattr(weather, "_fetch_openmeteo", _fake_openmeteo)
+    try:
+        out = await weather.fetch_weather(1.0, 2.0)
+        assert out is sentinel
+        assert out["attribution"]["url"].startswith("https://open-meteo.com")
     finally:
         get_settings.cache_clear()
 
