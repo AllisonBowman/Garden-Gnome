@@ -26,6 +26,7 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
+import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 
@@ -69,6 +70,7 @@ export default function PlantDetailScreen() {
     onSuccess: (_data, { type }) => {
       queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
+      queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       const action = CARE_ACTIONS.find((a) => a.type === type);
       setConfirmation(
         `${action?.icon ?? '✅'} ${action?.label ?? 'Care'} — added to ${plant?.nickname ?? 'plant'}'s log`,

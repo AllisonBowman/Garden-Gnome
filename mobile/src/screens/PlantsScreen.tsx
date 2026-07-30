@@ -12,6 +12,7 @@ import { fetchPlants } from '../api/plants';
 import { Plant } from '../types';
 import { PlantsStackParamList } from '../../App';
 import StreakBadges from '../streaks/StreakBadges';
+import CareTodos from '../care/CareTodos';
 import EmptyState from '../components/EmptyState';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -106,7 +107,14 @@ export default function PlantsScreen() {
         keyExtractor={(p) => String(p.id)}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
-        ListHeaderComponent={<StreakBadges />}
+        ListHeaderComponent={
+          <>
+            <StreakBadges />
+            <CareTodos
+              onOpenPlant={(plantId) => navigation.navigate('PlantDetail', { plantId })}
+            />
+          </>
+        }
         ListEmptyComponent={
           <EmptyState
             emoji="🪴"

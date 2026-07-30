@@ -20,6 +20,8 @@ import AddressPicker from '../components/AddressPicker';
 import { ResolvedPlace } from '../location/geocode';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { useCareTasks } from '../care/useCareTasks';
+import CareCalendar from '../care/CareCalendar';
 
 type Route = RouteProp<EnvironmentsStackParamList, 'EnvironmentDetail'>;
 
@@ -84,6 +86,9 @@ export default function EnvironmentDetailScreen() {
     staleTime: 30 * 60 * 1000, // weather is cached hourly server-side
   });
 
+  // Care schedule for the plants living in THIS environment (scoped by id).
+  const { tasks: careTasks, isLoading: careLoading } = useCareTasks(environmentId);
+
   // Setting a location on an environment that has none. Environments created
   // before the address picker existed have no coordinates, and until now there
   // was no screen anywhere that could add them — granting location permission
@@ -144,6 +149,23 @@ export default function EnvironmentDetailScreen() {
             <Chip compact style={styles.chip}>{TEMP_LABEL[env.temp_exposure] ?? env.temp_exposure}</Chip>
             <Chip compact style={styles.chip}>{SUN_LABEL[env.sun_exposure] ?? env.sun_exposure}</Chip>
           </View>
+        </Card.Content>
+      </Card>
+
+      {/* Care calendar — the schedule for plants living in this environment */}
+      <Card style={styles.card}>
+        <Card.Title title="Care calendar" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Content>
+          {careLoading ? (
+            <ActivityIndicator style={{ marginVertical: 16 }} />
+          ) : careTasks.length === 0 ? (
+            <Text style={styles.unavailable}>
+              No care scheduled here yet. Add plants to this environment and their
+              watering, feeding and grooming schedule fills in the calendar.
+            </Text>
+          ) : (
+            <CareCalendar tasks={careTasks} />
+          )}
         </Card.Content>
       </Card>
 

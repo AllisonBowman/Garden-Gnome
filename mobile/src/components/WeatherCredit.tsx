@@ -40,7 +40,7 @@ export default function WeatherCredit({
       disabled={!url}
       style={[styles.wrap, style]}
       accessibilityRole="link"
-      accessibilityLabel={`${label}. Opens Apple's weather data legal attribution.`}
+      accessibilityLabel={`${label}. Opens the weather data provider's attribution page.`}
     >
       <Text style={styles.text}>{label}{url ? ' ›' : ''}</Text>
     </Pressable>
