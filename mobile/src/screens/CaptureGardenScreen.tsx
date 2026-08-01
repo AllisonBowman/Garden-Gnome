@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import {
   View, StyleSheet, ScrollView, Alert, Platform,
 } from 'react-native';
@@ -15,6 +15,7 @@ import { Species } from '../types';
 import { splitUtterance } from '../capture/splitUtterance';
 import { groundEntries, GroundedEntry, effectiveCount } from '../capture/ground';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
+import * as speech from '../../modules/plant-speech';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
@@ -65,6 +66,61 @@ export default function CaptureGardenScreen() {
   const [heard, setHeard] = useState('');
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [note, setNote] = useState<string | null>(null);
+  const [listening, setListening] = useState(false);
+  const [canListen, setCanListen] = useState(false);
+  // What was already committed before this dictation started, so a running
+  // transcript replaces only itself and never eats earlier text.
+  const beforeDictation = useRef('');
+
+  useEffect(() => {
+    let alive = true;
+    void speech.isAvailable().then((ok) => { if (alive) setCanListen(ok); });
+    return () => { alive = false; };
+  }, []);
+
+  // The recognizer sends the whole utterance each time, not a delta.
+  useEffect(() => {
+    if (!listening) return undefined;
+    const heardSub = speech.onTranscript((e) => {
+      setHeard(`${beforeDictation.current}${e.text}`.trimStart());
+    });
+    const errSub = speech.onSpeechError((e) => {
+      setListening(false);
+      setNote(e.message);
+    });
+    return () => { heardSub.remove(); errSub.remove(); };
+  }, [listening]);
+
+  // Never leave the microphone open behind a screen the caretaker has left.
+  useEffect(() => {
+    if (!isFocused && listening) {
+      void speech.stop();
+      setListening(false);
+    }
+  }, [isFocused, listening]);
+  useEffect(() => () => { void speech.stop(); }, []);
+
+  const toggleListening = useCallback(async () => {
+    if (listening) {
+      await speech.stop();
+      setListening(false);
+      return;
+    }
+    if (!(await speech.requestPermission())) {
+      setNote('PlantAdvocate needs the microphone to listen. You can still type.');
+      return;
+    }
+    beforeDictation.current = heard ? `${heard} ` : '';
+    try {
+      const onDevice = await speech.start();
+      setListening(true);
+      setNote(onDevice
+        ? 'Listening — say what’s planted. Nothing leaves your phone.'
+        : 'Listening — this device sends audio to Apple to transcribe it.');
+    } catch {
+      setNote('Couldn’t start listening. You can still type.');
+    }
+  }, [listening, heard]);
 
   const { data: catalog = [], isLoading: catalogLoading } = useQuery({
     queryKey: ['species'],
@@ -156,10 +212,22 @@ export default function CaptureGardenScreen() {
           placeholder="Twelve tomatoes along the south fence, a rosemary bush by the gate…"
           label="What's planted here?"
           style={styles.input}
-          right={<TextInput.Icon icon="microphone" onPress={() => setNote(
-            'Tap the microphone on your keyboard to speak instead of typing.',
-          )} />}
+          right={(
+            <TextInput.Icon
+              // Falls back to pointing at the keyboard's own dictation key on
+              // builds without the native module — typing is never the only way
+              // in, but nor is the fancy path ever required.
+              icon={listening ? 'stop-circle' : 'microphone'}
+              color={listening ? palette.warn : undefined}
+              onPress={canListen ? toggleListening : () => setNote(
+                'Tap the microphone on your keyboard to speak instead of typing.',
+              )}
+            />
+          )}
         />
+        {listening && (
+          <Text style={styles.listening}>● Listening — tap the square to stop.</Text>
+        )}
         <Button
           mode="contained"
           onPress={add}
@@ -323,6 +391,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   envRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   envChip: { backgroundColor: p.card },
   input: { backgroundColor: p.card },
+  listening: { color: p.btnInk, fontSize: 12, marginTop: -4 },
   addBtn: { borderRadius: 8 },
   saveBtn: { borderRadius: 8, marginTop: 6 },
   card: { borderRadius: 12, backgroundColor: p.card },
