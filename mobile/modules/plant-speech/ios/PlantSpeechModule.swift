@@ -63,8 +63,17 @@ public class PlantSpeechModule: Module {
           promise.resolve(false)
           return
         }
-        AVAudioApplication.requestRecordPermission { granted in
-          promise.resolve(granted)
+        // AVAudioApplication arrived in iOS 17. This pod's floor is 16.4 (that
+        // is ExpoModulesCore's minimum for SDK 57), so the call it replaced is
+        // still the only one available at the bottom of the supported range.
+        if #available(iOS 17.0, *) {
+          AVAudioApplication.requestRecordPermission { granted in
+            promise.resolve(granted)
+          }
+        } else {
+          AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            promise.resolve(granted)
+          }
         }
       }
     }
@@ -98,9 +107,25 @@ public class PlantSpeechModule: Module {
     }
     self.recognizer = recognizer
 
+    // The simulator has no working audio input. Starting the engine there does
+    // not fail politely: AURemoteIO's RPC to the audio server times out and
+    // AudioToolbox calls abort(), killing the app from a C++ frame that no
+    // Swift error handling can reach. Refusing up front is the only way to
+    // keep the crash from happening, and a clear message beats a dead app.
+    #if targetEnvironment(simulator)
+    throw PlantSpeechError(
+      message: "Listening needs a real device — the simulator has no microphone to open.")
+    #else
     let session = AVAudioSession.sharedInstance()
     try session.setCategory(.record, mode: .measurement, options: .duckOthers)
     try session.setActive(true, options: .notifyOthersOnDeactivation)
+
+    // Same reasoning on hardware: if there is no input route, starting the
+    // engine can abort rather than return. Ask first.
+    guard session.isInputAvailable else {
+      throw PlantSpeechError(
+        message: "No microphone is available right now.")
+    }
 
     let request = SFSpeechAudioBufferRecognitionRequest()
     // Keep the session open across pauses — someone walking a bed stops
@@ -111,13 +136,28 @@ public class PlantSpeechModule: Module {
     self.request = request
 
     let input = audioEngine.inputNode
-    let format = input.outputFormat(forBus: 0)
     input.removeTap(onBus: 0)
+    // Prepare before reading the format: the input node can still be reporting
+    // a zeroed format immediately after the session goes active.
+    audioEngine.prepare()
+    let format = input.inputFormat(forBus: 0)
+
+    // installTap validates this with an Objective-C assertion, and an
+    // Objective-C exception is not catchable from Swift — an invalid format
+    // terminates the whole app instead of returning an error. So check it here
+    // and fail like a normal function. Simulators routinely report a zeroed
+    // format, and so does a device whose microphone was taken by another app
+    // between the permission grant and this line.
+    guard format.sampleRate > 0, format.channelCount > 0 else {
+      stopListening()
+      throw PlantSpeechError(
+        message: "This device isn't offering a usable microphone right now.")
+    }
+
     input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak request] buffer, _ in
       request?.append(buffer)
     }
 
-    audioEngine.prepare()
     try audioEngine.start()
 
     self.task = recognizer.recognitionTask(with: request) { [weak self] result, error in
@@ -140,17 +180,23 @@ public class PlantSpeechModule: Module {
     }
 
     return onDevice
+    #endif
   }
 
   private func stopListening() {
+    // Touching inputNode at all spins up the audio unit, which is exactly what
+    // aborts on a simulator — so on that platform there is nothing to tear down
+    // because nothing was ever started.
+    #if !targetEnvironment(simulator)
     if audioEngine.isRunning {
       audioEngine.stop()
     }
     audioEngine.inputNode.removeTap(onBus: 0)
+    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+    #endif
     request?.endAudio()
     task?.cancel()
     task = nil
     request = nil
-    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
   }
 }
