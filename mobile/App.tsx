@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PlantsScreen        from './src/screens/PlantsScreen';
 import PlantDetailScreen   from './src/screens/PlantDetailScreen';
 import AddPlantScreen      from './src/screens/AddPlantScreen';
+import CaptureGardenScreen from './src/screens/CaptureGardenScreen';
 import SpeciesScreen       from './src/screens/SpeciesScreen';
 import SpeciesDetailScreen from './src/screens/SpeciesDetailScreen';
 import EnvironmentsScreen  from './src/screens/EnvironmentsScreen';
@@ -27,9 +28,10 @@ import LoginScreen from './src/auth/LoginScreen';
 
 // ── Param lists (imported by child screens) ───────────────────────────────────
 export type PlantsStackParamList = {
-  PlantsList:  undefined;
-  PlantDetail: { plantId: number };
-  AddPlant:    undefined;
+  PlantsList:    undefined;
+  PlantDetail:   { plantId: number };
+  AddPlant:      undefined;
+  CaptureGarden: undefined;
 };
 
 export type SpeciesStackParamList = {
@@ -80,6 +82,7 @@ function PlantsNavigator() {
       <PlantsStack.Screen name="PlantsList"  component={PlantsScreen}      options={{ title: 'My Plants' }} />
       <PlantsStack.Screen name="PlantDetail" component={PlantDetailScreen} options={{ title: 'Plant' }} />
       <PlantsStack.Screen name="AddPlant"    component={AddPlantScreen}    options={{ title: 'Add plant' }} />
+      <PlantsStack.Screen name="CaptureGarden" component={CaptureGardenScreen} options={{ title: 'Walk the garden' }} />
     </PlantsStack.Navigator>
   );
 }

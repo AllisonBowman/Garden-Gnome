@@ -132,6 +132,18 @@ export default function PlantsScreen() {
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
       />
+      {/* Two ways in, because they suit different gardens. One plant you want
+          to name and fuss over goes through Add plant; a whole bed you'd rather
+          just describe out loud goes through the walk. */}
+      <FAB
+        icon="text-recognition"
+        style={styles.captureFab}
+        color={palette.acc}
+        onPress={() => navigation.navigate('CaptureGarden')}
+        label="Walk the garden"
+        variant="surface"
+        size="small"
+      />
       <FAB
         icon="plus"
         style={styles.fab}
@@ -155,6 +167,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   scientific: { color: p.sub, fontStyle: 'italic', marginTop: 2 },
   location: { color: p.faint, marginTop: 4 },
   fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: p.acc },
+  captureFab: { position: 'absolute', right: 16, bottom: 84 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   errorText: { textAlign: 'center', color: p.warn },
   empty: { textAlign: 'center', color: p.faint, marginTop: 48, fontSize: 15 },
