@@ -1,4 +1,5 @@
 export type LightNeed = 'low' | 'medium' | 'bright_indirect' | 'direct';
+export type ReviewStatus = 'approved' | 'needs_review' | 'verified';
 export type CareType = 'water' | 'fertilize' | 'mist' | 'prune' | 'repot' | 'rotate' | 'clean' | 'other';
 export type EnvironmentType = 'home' | 'nursery' | 'community_garden' | 'conservation' | 'research';
 
@@ -37,6 +38,13 @@ export interface Species {
    *  risk. Empty on older API versions, so always fall back to the flag. */
   toxicity_description?: string;
   care_notes: string;
+  /** How trustworthy this row's care data is, when a caller happens to know.
+   *  Deliberately NOT sent by `GET /species/`: review status, notes and source
+   *  are operator state, and a test guards the list schema against leaking
+   *  them. Matching uses it as a tiebreak only when it is present — see
+   *  `identify-photo`'s `unreviewed_ids`, which is how the server flags
+   *  provisional rows without putting the review trail on every species. */
+  review_status?: ReviewStatus;
   care_schedules?: CareSchedule[];
   traits?: SpeciesTrait[];
 }

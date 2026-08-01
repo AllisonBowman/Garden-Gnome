@@ -8,6 +8,15 @@ import { Species } from '../types';
 export interface ScoredSpecies {
   species: Species;
   score: number; // 0..1
+  /** Which name earned the score — a scientific-name hit is stronger evidence
+   *  than a common-name one, so it wins ties. */
+  matchedOn: 'scientific' | 'common';
+}
+
+/** Rows still in the import review queue lose ties to reviewed ones. Absent
+ *  status means an older API that only ever served reviewed data. */
+function isReviewed(sp: Species): boolean {
+  return sp.review_status !== 'needs_review';
 }
 
 // Confidence tiers (tuned in fuzzyMatch tests against realistic model output):
@@ -82,15 +91,25 @@ export function scoreName(aiText: string, name: string): number {
  */
 export function matchSpecies(aiText: string, species: Species[]): ScoredSpecies[] {
   return species
-    .map((sp) => ({
-      species: sp,
-      score: Math.max(
-        scoreName(aiText, sp.common_name),
-        scoreName(aiText, sp.scientific_name),
-      ),
-    }))
+    .map((sp) => {
+      const common = scoreName(aiText, sp.common_name);
+      const scientific = scoreName(aiText, sp.scientific_name);
+      return {
+        species: sp,
+        score: Math.max(common, scientific),
+        matchedOn: (scientific >= common ? 'scientific' : 'common') as 'scientific' | 'common',
+      };
+    })
     .filter((s) => s.score > 0)
-    .sort((a, b) => b.score - a.score);
+    // Ties are common — a 1,900-row catalog puts many rows at the same score —
+    // so break them the same way the server's name_match.py does. Without this
+    // the identical text grounds differently on-device than it does server-side.
+    .sort((a, b) => (
+      b.score - a.score
+      || Number(isReviewed(b.species)) - Number(isReviewed(a.species))
+      || Number(b.matchedOn === 'scientific') - Number(a.matchedOn === 'scientific')
+      || a.species.id - b.species.id
+    ));
 }
 
 export interface MatchResult {
@@ -102,13 +121,30 @@ export interface MatchResult {
  * Turn ranked matches into a decision: a confident single hit, a few plausible
  * options to choose from, or nothing worth trusting.
  */
-export function classifyMatches(scored: ScoredSpecies[]): MatchResult {
+export interface ClassifyLimits {
+  /** Near-ties shown alongside a confident pick. */
+  confident?: number;
+  /** Options offered when nothing is confident. */
+  plausible?: number;
+}
+
+export function classifyMatches(
+  scored: ScoredSpecies[],
+  limits: ClassifyLimits = {},
+): MatchResult {
+  // Defaults match the photo-ID flow these tiers were tuned against: one photo,
+  // one species, a short pick list. Callers grounding several species at once
+  // raise them, because there a truncated list silently drops a real plant.
+  const { confident = 3, plausible = 4 } = limits;
   const best = scored[0];
   if (!best || best.score < PLAUSIBLE) return { tier: 'none', candidates: [] };
   if (best.score >= CONFIDENT) {
     // Include near-ties so an obvious pick is pre-selected but alternatives show.
-    const near = scored.filter((s) => s.score >= best.score - 0.12).slice(0, 3);
+    const near = scored.filter((s) => s.score >= best.score - 0.12).slice(0, confident);
     return { tier: 'confident', candidates: near };
   }
-  return { tier: 'plausible', candidates: scored.filter((s) => s.score >= PLAUSIBLE).slice(0, 4) };
+  return {
+    tier: 'plausible',
+    candidates: scored.filter((s) => s.score >= PLAUSIBLE).slice(0, plausible),
+  };
 }
