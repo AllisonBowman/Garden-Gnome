@@ -31,6 +31,10 @@ export default function AddPlantScreen() {
   const queryClient = useQueryClient();
 
   const [nickname, setNickname]       = useState('');
+  const [quantity, setQuantity]       = useState('1');
+  // An empty or nonsense field means one plant, not zero — the server rejects
+  // anything below 1 and the caretaker plainly has at least one.
+  const quantityValue = Math.max(1, parseInt(quantity, 10) || 1);
   const [speciesId, setSpeciesId]     = useState<number | null>(null);
   const [envId, setEnvId]             = useState<number | null>(null);
   const [location, setLocation]       = useState('');
@@ -51,6 +55,7 @@ export default function AddPlantScreen() {
     mutationFn: () => createPlant({
       nickname,
       species_id: speciesId!,
+      quantity: quantityValue,
       environment_id: envId ?? undefined,
       location,
       // The backend prefixes "Intake condition:" and logs this as the
@@ -122,7 +127,10 @@ export default function AddPlantScreen() {
 
   const selectedSpecies = speciesList.find((s: Species) => s.id === speciesId);
 
-  const canSubmit = nickname.trim().length > 0 && speciesId !== null;
+  // Nickname is no longer required: a planting has no name of its own, and the
+  // server fills in one from the species and place ("Tomatoes — south fence")
+  // so every surface that addresses a plant by name still has something to say.
+  const canSubmit = speciesId !== null;
 
   return (
     <KeyboardAvoidingView
@@ -133,13 +141,32 @@ export default function AddPlantScreen() {
         <Eyebrow style={styles.sectionLabel}>Plant details</Eyebrow>
 
         <TextInput
-          label="Nickname *"
+          label="Nickname"
           value={nickname}
           onChangeText={setNickname}
           mode="outlined"
           style={styles.input}
           placeholder="e.g. Sunny, Big Fern, Corner Cactus"
         />
+
+        {/* A row of twelve tomatoes is one thing to the person who planted it,
+            not twelve. Leaving this at 1 keeps the old behaviour exactly — a
+            single plant you can name. */}
+        <TextInput
+          label="How many?"
+          value={quantity}
+          onChangeText={(t) => setQuantity(t.replace(/[^0-9]/g, ''))}
+          mode="outlined"
+          keyboardType="number-pad"
+          style={styles.input}
+          placeholder="1"
+        />
+        {quantityValue > 1 && (
+          <Text style={styles.quantityHint}>
+            Kept together as one planting — care you log covers all
+            {' '}{quantityValue}.
+          </Text>
+        )}
 
         <Eyebrow style={styles.sectionLabel}>Species *</Eyebrow>
 
@@ -315,6 +342,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 16, paddingBottom: 48 },
   sectionLabel: { marginTop: 20, marginBottom: 8 },
+  quantityHint: {
+    color: p.sub, fontSize: 13, fontStyle: 'italic',
+    marginTop: -4, marginBottom: 8,
+  },
   input: { marginBottom: 4 },
   suggestionBox: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   suggestion: { marginBottom: 4 },

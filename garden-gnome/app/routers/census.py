@@ -49,16 +49,24 @@ def census_summary(
     for e in environments:
         env_type_counts[e.type.value] = env_type_counts.get(e.type.value, 0) + 1
 
+    # Count PLANTS, not rows. One row can stand for a whole planting — "twelve
+    # tomatoes along the south fence" — so summing quantity is what keeps
+    # "total_plants" true to its name. Rows created before quantity existed
+    # carry the default of 1 and count exactly as they always did.
     plants_by_env_type: dict[str, int] = {}
     species_counts: dict[int, int] = {}
     for p in plants:
         env = env_map.get(p.environment_id) if p.environment_id else None
         env_label = env.type.value if env else "unassigned"
-        plants_by_env_type[env_label] = plants_by_env_type.get(env_label, 0) + 1
-        species_counts[p.species_id] = species_counts.get(p.species_id, 0) + 1
+        qty = p.quantity or 1
+        plants_by_env_type[env_label] = plants_by_env_type.get(env_label, 0) + qty
+        species_counts[p.species_id] = species_counts.get(p.species_id, 0) + qty
 
     return {
-        "total_plants": len(plants),
+        "total_plants": sum((p.quantity or 1) for p in plants),
+        # Rows, which is also how many care schedules the caretaker actually
+        # tends — twelve tomatoes watered together are one job, not twelve.
+        "total_plantings": len(plants),
         "total_environments": len(environments),
         "environments_by_type": env_type_counts,
         "plants_by_environment_type": plants_by_env_type,
@@ -134,6 +142,16 @@ def census_export(
 
         records.append({
             "plant_uuid": plant.plant_uuid,
+            # How many physical plants this record stands for. Without it a
+            # bed of twelve tomatoes would export as indistinguishable from a
+            # single plant on a windowsill.
+            "quantity": plant.quantity or 1,
+            # Set when this record was split off another planting. The pair
+            # was once counted under one plant_uuid, so an aggregator needs
+            # this to avoid reading a split as newly appeared plants. Same
+            # class of identifier as plant_uuid, which this export already
+            # carries as its dedup key.
+            "split_from_uuid": plant.split_from_uuid,
             "species_id": plant.species_id,
             "maturity_stage": plant.maturity_stage.value,
             "acquired_on": plant.acquired_on.isoformat() if plant.acquired_on else None,
@@ -158,10 +176,14 @@ def census_export(
         })
 
     return {
-        "export_version": "2.0",
+        # 2.1 adds per-record `quantity` and `split_from_uuid`. Bumped rather
+        # than added silently because `plant_count` changes meaning with it:
+        # it now counts plants, as its name always claimed, instead of rows.
+        "export_version": "2.1",
         "exported_at": datetime.utcnow().isoformat() + "Z",
         "installation_uuid": os.getenv("INSTALLATION_UUID", ""),
-        "plant_count": len(records),
+        "plant_count": sum(r["quantity"] for r in records),
+        "planting_count": len(records),
         "plants": records,
     }
 

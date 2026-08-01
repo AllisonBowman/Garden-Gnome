@@ -56,6 +56,14 @@ export interface Plant {
   plant_uuid: string;
   nickname: string;
   species_id: number;
+  /** How many physical plants this row stands for. 1 is an individual — a
+   *  named houseplant; more is a planting, "twelve tomatoes along the south
+   *  fence", which a gardener counts rather than names. Older API versions
+   *  omit it, so treat a missing value as 1. */
+  quantity?: number;
+  /** Set when this row was split off another planting; carries the original's
+   *  plant_uuid so the census can tell a rearrangement from new plants. */
+  split_from_uuid?: string | null;
   environment_id?: number;
   location: string;
   maturity_stage: MaturityStage;

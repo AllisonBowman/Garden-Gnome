@@ -34,6 +34,10 @@ function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
       <Card style={styles.card} mode="elevated">
         <Card.Content>
           <Text variant="titleMedium" style={styles.name}>
+            {/* A planting leads with its count — "12 × Tomatoes" is how the
+                person who planted it thinks of that row. An individual shows
+                no count at all, so nothing changes for houseplants. */}
+            {(plant.quantity ?? 1) > 1 ? `${plant.quantity} × ` : ''}
             {plant.nickname}
           </Text>
           {plant.species && (

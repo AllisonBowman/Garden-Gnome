@@ -19,6 +19,20 @@ export interface StreakResult {
   current: number;
   /** Longest good-standing run in the household's history (for badges). */
   best: number;
+  /**
+   * Share of tracked plantings currently inside their care window, 0–100.
+   *
+   * The streak is an AND across every plant: one thirsty pot zeroes it. That
+   * reads as encouragement on a shelf of five and as a permanent scolding in a
+   * garden of three hundred, where something is always a day late. This is the
+   * number that stays useful at that size — you can be 96% on track and see
+   * it, instead of seeing a zero that never moves.
+   */
+  onTrackPct: number;
+  /** How many tracked plantings are past their window right now. */
+  behindCount: number;
+  /** How many plantings have a schedule to be judged against at all. */
+  trackedCount: number;
 }
 
 export interface StreakInput {
@@ -93,30 +107,45 @@ export function computeStreak(input: StreakInput): StreakResult {
     if (start < earliest) earliest = start;
   }
 
-  if (!tracked.length) return { current: 0, best: 0 };
+  if (!tracked.length) {
+    return { current: 0, best: 0, onTrackPct: 100, behindCount: 0, trackedCount: 0 };
+  }
+
+  /** Is this planting past the far end of any of its care windows on day d? */
+  const isBehindOn = (t: typeof tracked[number], d: number): boolean => {
+    for (const iv of t.intervals) {
+      const days = t.logDaysByType[iv.careType] ?? [];
+      // newest log of this type on or before day d
+      let last = -1;
+      for (let i = days.length - 1; i >= 0; i--) {
+        if (days[i] <= d) { last = days[i]; break; }
+      }
+      const anchor = last === -1 ? t.start : last;
+      if (d - anchor > (iv.maxDays + GRACE_DAYS) * DAY) return true;
+    }
+    return false;
+  };
 
   // Walk each day from the oldest plant's start (capped at a year) to today,
   // marking whether the household was in good standing.
+  //
+  // Stepping with `new Date().setDate(+1)` rather than adding 86,400,000ms:
+  // a fixed millisecond day drifts an hour off local midnight the moment the
+  // walk crosses a daylight-saving boundary, and the old code then compared
+  // `d === today` for an exact match that could never land — silently
+  // reporting a zero streak to anyone whose history spanned a time change.
   const rangeStart = Math.max(earliest, today - 365 * DAY);
-  let current = 0, best = 0, run = 0;
+  let best = 0, run = 0;
 
-  for (let d = rangeStart; d <= today; d += DAY) {
+  const cursor = new Date(rangeStart);
+  while (cursor.getTime() <= today) {
+    const d = cursor.getTime();
     let inScope = false;
     let behind = false;
     for (const t of tracked) {
       if (d < t.start) continue;
       inScope = true;
-      for (const iv of t.intervals) {
-        const days = t.logDaysByType[iv.careType] ?? [];
-        // newest log of this type on or before day d
-        let last = -1;
-        for (let i = days.length - 1; i >= 0; i--) {
-          if (days[i] <= d) { last = days[i]; break; }
-        }
-        const anchor = last === -1 ? t.start : last;
-        if (d - anchor > (iv.maxDays + GRACE_DAYS) * DAY) { behind = true; break; }
-      }
-      if (behind) break;
+      if (isBehindOn(t, d)) { behind = true; break; }
     }
     if (inScope && !behind) {
       run += 1;
@@ -124,10 +153,21 @@ export function computeStreak(input: StreakInput): StreakResult {
     } else {
       run = 0;
     }
-    if (d === today) current = run;
+    cursor.setDate(cursor.getDate() + 1);
   }
+  // The loop ends on the first day past today, so `run` is today's streak.
+  // Assigning it here rather than inside the loop removes the exact-equality
+  // test that the DST drift used to defeat.
+  const current = run;
 
-  return { current, best };
+  const inScopeToday = tracked.filter((t) => t.start <= today);
+  const behindCount = inScopeToday.filter((t) => isBehindOn(t, today)).length;
+  const trackedCount = inScopeToday.length;
+  const onTrackPct = trackedCount === 0
+    ? 100
+    : Math.round(((trackedCount - behindCount) / trackedCount) * 100);
+
+  return { current, best, onTrackPct, behindCount, trackedCount };
 }
 
 // ── Badges ────────────────────────────────────────────────────────────────────

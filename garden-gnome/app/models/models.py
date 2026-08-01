@@ -258,8 +258,27 @@ class Plant(SQLModel, table=True):
     # Canonical UUID: never changes, even when the plant is transferred to a
     # new owner or installation. Census aggregators use this to deduplicate.
     plant_uuid: str = Field(default_factory=lambda: str(uuid4()), unique=True)
-    nickname: str
+    nickname: str = ""
     species_id: int = Field(foreign_key="species.id")
+    # How many physical plants this row stands for.
+    #
+    #   quantity == 1  -> an individual. plant_uuid identifies one physical
+    #                     plant, and stewardship + census dedup mean exactly
+    #                     what they have always meant. Every row that existed
+    #                     before this column was added is this case.
+    #   quantity  > 1  -> a planting: "twelve tomatoes along the south fence".
+    #                     A gardener counts rather than names, and care is
+    #                     applied to the group, so care logs and stewardship
+    #                     records describe all of them at once.
+    #
+    # The census must therefore SUM this column rather than count rows; see
+    # app/routers/census.py.
+    quantity: int = Field(default=1)
+    # Set when this row was split off another (see POST /plants/{id}/split).
+    # Splitting is the one operation that mints a second plant_uuid for plants
+    # that were previously counted under one, so recording the origin is what
+    # lets a census aggregator recognise the pair and avoid double-counting.
+    split_from_uuid: Optional[str] = Field(default=None, index=True)
     environment_id: Optional[int] = Field(default=None, foreign_key="environment.id")
     # Owner. Schema-nullable only because SQLite can't add a NOT NULL column
     # to existing rows; the migration backfills every plant to the dev user
