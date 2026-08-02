@@ -5,7 +5,7 @@ import { Alert, Linking, Platform } from 'react-native';
 // on plantadvocate.ai), so change them here and there together.
 // Must match expo.version in app.json — it labels every support email, so a
 // stale value here misattributes tester reports to the wrong build.
-export const APP_VERSION = '1.1.1';
+export const APP_VERSION = '1.1.2';
 export const WEBSITE_URL = 'https://plantadvocate.ai';
 export const SUPPORT_URL = 'https://plantadvocate.ai/support.html';
 export const SUPPORT_EMAIL = 'support@plantadvocate.ai';

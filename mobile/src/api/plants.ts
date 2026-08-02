@@ -134,6 +134,16 @@ export async function fetchCareLogs(plantId: number): Promise<CareLog[]> {
   return data;
 }
 
+/**
+ * Remove a plant and everything recorded about it. The server cascades its
+ * care logs and stewardship history, so this cannot be undone from the app —
+ * callers must confirm first.
+ */
+export async function deletePlant(plantId: number): Promise<void> {
+  const client = await apiClient();
+  await client.delete(`/plants/${plantId}`);
+}
+
 export async function transferPlant(
   plantId: number,
   toEnvironmentId: number,
