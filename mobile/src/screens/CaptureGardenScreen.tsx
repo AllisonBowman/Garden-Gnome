@@ -78,11 +78,34 @@ export default function CaptureGardenScreen() {
     return () => { alive = false; };
   }, []);
 
-  // The recognizer sends the whole utterance each time, not a delta.
+  // Within one phrase the recognizer resends the whole thing, so the text is
+  // rebuilt from a fixed prefix rather than appended to. But once it decides a
+  // phrase is FINISHED it starts a fresh segment, and the next phrase arrives
+  // as its own text with no memory of the last — so the prefix has to absorb
+  // each finished phrase, or every new one overwrites its predecessor and only
+  // the plant you named last survives.
   useEffect(() => {
     if (!listening) return undefined;
     const heardSub = speech.onTranscript((e) => {
-      setHeard(`${beforeDictation.current}${e.text}`.trimStart());
+      const combined = `${beforeDictation.current}${e.text}`.trimStart();
+
+      // A finished phrase becomes cards straight away, so each plant is there
+      // to check while you're still standing in front of it — rather than
+      // everything arriving in one heap at the end of the walk.
+      if (e.isFinal && combined) {
+        const grounded = groundEntries(splitUtterance(combined), catalogRef.current);
+        if (grounded.length) {
+          setDrafts((prev) => [...prev, ...grounded.map(toDraft)]);
+          beforeDictation.current = '';
+          setHeard('');
+          return;
+        }
+        // Nothing recognisable in it. Keep the words rather than dropping them
+        // silently — they're still editable, and losing what someone said is
+        // worse than showing it unmatched.
+        beforeDictation.current = `${combined} `;
+      }
+      setHeard(combined);
     });
     const errSub = speech.onSpeechError((e) => {
       setListening(false);
@@ -130,6 +153,12 @@ export default function CaptureGardenScreen() {
     queryKey: ['environments'],
     queryFn: fetchEnvironments,
   });
+  // Read the catalog through a ref inside the transcript handler: that handler
+  // is installed once per listening session, and resubscribing when the
+  // species query settles would tear the microphone down mid-sentence.
+  const catalogRef = useRef(catalog);
+  catalogRef.current = catalog;
+
   const [envId, setEnvId] = useState<number | null>(null);
   const targetEnv = envId ?? environments[0]?.id ?? null;
 

@@ -7,12 +7,13 @@ import {
   ActivityIndicator, Surface, TextInput, Snackbar,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import {
   fetchPlant, logCare, fetchCareLogs, getAdvice, AdviceResponse,
-  diagnosePlantPhoto, DiagnosisResponse,
+  diagnosePlantPhoto, DiagnosisResponse, deletePlant, transferPlant,
 } from '../api/plants';
+import { fetchEnvironments } from '../api/environments';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { gnomeVoice } from '../gnomeVoice/restyle';
 import { serverMessage } from '../api/errorMessage';
@@ -50,6 +51,7 @@ export default function PlantDetailScreen() {
   const { plantId } = route.params;
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
+  const navigation = useNavigation();
   const queryClient = useQueryClient();
   const [loggingType, setLoggingType] = useState<CareType | null>(null);
 
@@ -81,6 +83,60 @@ export default function PlantDetailScreen() {
     onError: () => Alert.alert('Error', 'Could not log care action.'),
     onSettled: () => setLoggingType(null),
   });
+
+  // Moving and removing. Both are rare, and one is irreversible, so they live
+  // at the bottom of the screen and the destructive one asks first.
+  const { data: environments = [] } = useQuery({
+    queryKey: ['environments'],
+    queryFn: fetchEnvironments,
+  });
+  const otherEnvironments = useMemo(
+    () => environments.filter((e) => e.id !== plant?.environment_id),
+    [environments, plant?.environment_id],
+  );
+  const [movingTo, setMovingTo] = useState<number | null>(null);
+
+  const transferMutation = useMutation({
+    mutationFn: (toEnvironmentId: number) => transferPlant(plantId, toEnvironmentId),
+    onSuccess: (_data, toEnvironmentId) => {
+      const dest = environments.find((e) => e.id === toEnvironmentId);
+      queryClient.invalidateQueries({ queryKey: ['plant', plantId] });
+      queryClient.invalidateQueries({ queryKey: ['plants'] });
+      queryClient.invalidateQueries({ queryKey: ['environments'] });
+      queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
+      setConfirmation(`🌍 Moved to ${dest?.name ?? 'its new home'} — history came along`);
+      void rescheduleAllReminders();
+    },
+    onError: (err) => Alert.alert(
+      'Could not move it',
+      serverMessage(err, 'That move didn’t go through. Please try again.'),
+    ),
+    onSettled: () => setMovingTo(null),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deletePlant(plantId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['plants'] });
+      queryClient.invalidateQueries({ queryKey: ['environments'] });
+      queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
+      void rescheduleAllReminders();
+      navigation.goBack();
+    },
+    onError: (err) => Alert.alert(
+      'Could not remove it',
+      serverMessage(err, 'That didn’t go through. Please try again.'),
+    ),
+  });
+
+  const confirmDelete = () => Alert.alert(
+    `Remove ${plant?.nickname ?? 'this plant'}?`,
+    'Its care log and history go too. This can’t be undone.',
+    [
+      { text: 'Keep it', style: 'cancel' },
+      { text: 'Remove', style: 'destructive', onPress: () => deleteMutation.mutate() },
+    ],
+  );
 
   const [symptoms, setSymptoms] = useState('');
   const [advice, setAdvice] = useState<(AdviceResponse & { gnomeStyled: boolean }) | null>(null);
@@ -386,6 +442,59 @@ export default function PlantDetailScreen() {
           )}
         </Card.Content>
       </Card>
+
+      {/* Moving and removing. Kept at the bottom, below everything a caretaker
+          reads day to day, because neither is a routine action. */}
+      <Card style={styles.card}>
+        <Card.Title title="Move or remove" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Content>
+          <Text style={styles.moveHint}>
+            Moving {plant.nickname} keeps its whole history — the same plant, in
+            a new place.
+          </Text>
+          <View style={styles.moveRow}>
+            {otherEnvironments.map((env) => (
+              <Button
+                key={env.id}
+                mode="outlined"
+                compact
+                loading={transferMutation.isPending && movingTo === env.id}
+                disabled={transferMutation.isPending}
+                onPress={() => {
+                  setMovingTo(env.id);
+                  transferMutation.mutate(env.id);
+                }}
+                style={styles.moveBtn}
+                labelStyle={styles.moveBtnLabel}
+              >
+                Move to {env.name}
+              </Button>
+            ))}
+            {otherEnvironments.length === 0 && (
+              <Text style={styles.empty}>
+                There&apos;s nowhere else to move it yet — add another
+                environment first.
+              </Text>
+            )}
+          </View>
+
+          <Divider style={styles.divider} />
+
+          <Button
+            mode="text"
+            icon="trash-can-outline"
+            textColor={palette.warn}
+            loading={deleteMutation.isPending}
+            disabled={deleteMutation.isPending}
+            onPress={confirmDelete}
+          >
+            Remove {plant.nickname}
+          </Button>
+          <Text style={styles.removeHint}>
+            This also removes its care log and history, and can&apos;t be undone.
+          </Text>
+        </Card.Content>
+      </Card>
     </ScrollView>
     <Snackbar
       visible={confirmation !== null}
@@ -434,6 +543,11 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
     padding: 10, lineHeight: 19,
   },
   logItem: { paddingVertical: 2 },
+  moveHint: { color: p.sub, lineHeight: 20, marginBottom: 10 },
+  moveRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  moveBtn: { marginBottom: 4 },
+  moveBtnLabel: { fontSize: 13 },
+  removeHint: { color: p.faint, fontSize: 12, lineHeight: 18, marginTop: 2 },
   empty: { color: p.faint, fontStyle: 'italic' },
   scroll: { flex: 1 },
   symptomsInput: { marginBottom: 12 },

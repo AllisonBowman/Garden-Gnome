@@ -30,6 +30,10 @@ public class PlantSpeechModule: Module {
   private var recognizer: SFSpeechRecognizer?
   private var request: SFSpeechAudioBufferRecognitionRequest?
   private var task: SFSpeechRecognitionTask?
+  /// Whether the caretaker still wants to be heard. Distinguishes a
+  /// hand-off between phrases from a real stop, so one doesn't look like
+  /// the other.
+  private var wantsToListen = false
   private let audioEngine = AVAudioEngine()
 
   public func definition() -> ModuleDefinition {
@@ -127,13 +131,8 @@ public class PlantSpeechModule: Module {
         message: "No microphone is available right now.")
     }
 
-    let request = SFSpeechAudioBufferRecognitionRequest()
-    // Keep the session open across pauses — someone walking a bed stops
-    // talking between plants, and that shouldn't end the recording.
-    request.shouldReportPartialResults = true
     let onDevice = recognizer.supportsOnDeviceRecognition
-    request.requiresOnDeviceRecognition = onDevice
-    self.request = request
+    self.wantsToListen = true
 
     let input = audioEngine.inputNode
     input.removeTap(onBus: 0)
@@ -154,36 +153,66 @@ public class PlantSpeechModule: Module {
         message: "This device isn't offering a usable microphone right now.")
     }
 
-    input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak request] buffer, _ in
-      request?.append(buffer)
+    // Feed whichever request is current rather than one captured here: a
+    // finished phrase swaps in a new request underneath, and a tap pinned to
+    // the old one would go on filling a request nobody is reading.
+    input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+      self?.request?.append(buffer)
     }
 
     try audioEngine.start()
-
-    self.task = recognizer.recognitionTask(with: request) { [weak self] result, error in
-      guard let self else { return }
-      if let result {
-        self.sendEvent("onTranscript", [
-          "text": result.bestTranscription.formattedString,
-          "isFinal": result.isFinal,
-        ])
-      }
-      if let error {
-        // A cancelled task is how stop() ends things; it isn't worth reporting.
-        let ns = error as NSError
-        let cancelled = ns.domain == "kLSRErrorDomain" || ns.code == 203 || ns.code == 216
-        if !cancelled {
-          self.sendEvent("onSpeechError", ["message": error.localizedDescription])
-        }
-        self.stopListening()
-      }
-    }
+    beginSegment(on: recognizer, onDevice: onDevice)
 
     return onDevice
     #endif
   }
 
+  /// Start one recognition segment.
+  ///
+  /// A recognition task ENDS when it reports a final result — it does not carry
+  /// on to the next sentence. Someone walking a bed naming plants pauses
+  /// constantly, and each pause finishes a phrase, so a single task would go
+  /// deaf after the first plant. Each finished phrase therefore starts a fresh
+  /// segment while the audio engine and its tap keep running underneath.
+  private func beginSegment(on recognizer: SFSpeechRecognizer, onDevice: Bool) {
+    let request = SFSpeechAudioBufferRecognitionRequest()
+    request.shouldReportPartialResults = true
+    request.requiresOnDeviceRecognition = onDevice
+    self.request = request
+
+    self.task = recognizer.recognitionTask(with: request) { [weak self] result, error in
+      guard let self else { return }
+
+      if let result {
+        self.sendEvent("onTranscript", [
+          "text": result.bestTranscription.formattedString,
+          "isFinal": result.isFinal,
+        ])
+        if result.isFinal, self.wantsToListen {
+          // Hand off to a new segment. The caller keeps the text of the phrase
+          // that just ended; this one starts empty.
+          self.task = nil
+          self.request = nil
+          self.beginSegment(on: recognizer, onDevice: onDevice)
+        }
+        return
+      }
+
+      if let error {
+        // Cancellation is how stop() and each hand-off end a task; it is not
+        // something the caretaker needs to hear about.
+        let ns = error as NSError
+        let cancelled = ns.domain == "kLSRErrorDomain" || ns.code == 203 || ns.code == 216
+        if self.wantsToListen && !cancelled {
+          self.sendEvent("onSpeechError", ["message": error.localizedDescription])
+          self.stopListening()
+        }
+      }
+    }
+  }
+
   private func stopListening() {
+    wantsToListen = false
     // Touching inputNode at all spins up the audio unit, which is exactly what
     // aborts on a simulator — so on that platform there is nothing to tear down
     // because nothing was ever started.
