@@ -12,7 +12,8 @@ from app.models.models import (
     Species, StewardshipRecord, User,
 )
 from app.models.schemas import (
-    AdviceRequest, CareLogCreate, PlantCreate, PlantRead, PlantTransferRequest,
+    AdviceRequest, CareLogCreate, PlantBulkCreate, PlantBulkResult, PlantCreate,
+    PlantRead, PlantSplitRequest, PlantTransferRequest,
     StewardshipRecordRead, TimelineEntry, CareTypeSummary, PlantTimelineSummary,
 )
 from app.services.advisor import PHOTO_DIAGNOSIS_PREFIX, get_care_advice, weather_applies
@@ -46,51 +47,70 @@ def _owned_environment(env_id: int, user: User, session: Session) -> Environment
     return env
 
 
-@router.post("/", response_model=PlantRead, status_code=201)
-def create_plant(
-    payload: PlantCreate,
-    user: User = Depends(get_current_user),
-    session: Session = Depends(get_session),
-):
-    if not session.get(Species, payload.species_id):
+def _default_nickname(species: Species, location: str) -> str:
+    """A readable stand-in when the caller supplies no nickname.
+
+    Every user-facing surface addresses a plant by name — notification bodies,
+    to-do rows, and both LLM prompts (persona.py instructs the model to refer to
+    the plant by its nickname) — so a blank would surface as a hole in a
+    sentence rather than as a missing field. A planting described as "twelve
+    tomatoes along the south fence" has no name of its own, so it borrows the
+    species and the place it lives."""
+    name = (species.common_name or species.scientific_name or "Plant").strip()
+    place = (location or "").strip()
+    return f"{name} — {place}" if place else name
+
+
+def _resolve_environment_id(
+    requested_id: Optional[int], user: User, session: Session,
+) -> Optional[int]:
+    """A provided id must belong to the caller; otherwise fall back to the
+    caller's default (oldest) environment, creating "My Home" if the account
+    somehow has none. NEVER "first environment in the DB" — that leaked across
+    accounts once environments became user-owned."""
+    if requested_id is not None:
+        _owned_environment(requested_id, user, session)
+        return requested_id
+    default_env = session.exec(
+        select(Environment)
+        .where(Environment.user_id == user.id)
+        .order_by(Environment.id.asc())
+    ).first()
+    if default_env is None:
+        default_env = Environment(
+            name="My Home", type=EnvironmentType.home, user_id=user.id)
+        session.add(default_env)
+        session.flush()
+    return default_env.id
+
+
+def _stage_plant(payload: PlantCreate, user: User, session: Session) -> Plant:
+    """Stage one plant, its opening stewardship record, and its intake log.
+
+    Flushes rather than commits, so the caller decides the transaction boundary
+    — that is what lets a bulk import be all-or-nothing instead of leaving a
+    half-built garden behind when the twentieth plant fails validation."""
+    species = session.get(Species, payload.species_id)
+    if species is None:
         raise HTTPException(status_code=400, detail="species_id does not exist")
 
-    # Resolve environment: a provided id must belong to the caller; otherwise
-    # fall back to the caller's default (oldest) environment, creating "My
-    # Home" if the account somehow has none. NEVER "first environment in the
-    # DB" — that leaked across accounts once environments became user-owned.
-    environment_id = payload.environment_id
-    if environment_id is not None:
-        _owned_environment(environment_id, user, session)
-    else:
-        default_env = session.exec(
-            select(Environment)
-            .where(Environment.user_id == user.id)
-            .order_by(Environment.id.asc())
-        ).first()
-        if default_env is None:
-            default_env = Environment(
-                name="My Home", type=EnvironmentType.home, user_id=user.id)
-            session.add(default_env)
-            session.flush()
-        environment_id = default_env.id
+    environment_id = _resolve_environment_id(payload.environment_id, user, session)
 
     data = payload.model_dump()
     data["environment_id"] = environment_id
+    if not (data.get("nickname") or "").strip():
+        data["nickname"] = _default_nickname(species, data.get("location", ""))
     # Stamp ownership; keeps plant.user_id == environment.user_id invariant
     plant = Plant(**data, user_id=user.id)
     session.add(plant)
-    session.commit()
-    session.refresh(plant)
+    session.flush()  # assigns plant.id without ending the transaction
 
-    # Open the first stewardship record for this plant
     if environment_id is not None:
         session.add(StewardshipRecord(
             plant_id=plant.id,
             environment_id=environment_id,
             installation_uuid=_installation_uuid(),
         ))
-        session.commit()
 
     # If any intake condition was captured, log it as the plant's first
     # timeline entry so the day-zero baseline shows up in its history.
@@ -115,9 +135,41 @@ def create_plant(
             notes="Intake condition: " + "; ".join(parts),
             logged_at=plant.created_at,
         ))
-        session.commit()
 
     return plant
+
+
+@router.post("/", response_model=PlantRead, status_code=201)
+def create_plant(
+    payload: PlantCreate,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    plant = _stage_plant(payload, user, session)
+    session.commit()
+    session.refresh(plant)
+    return plant
+
+
+@router.post("/bulk", response_model=PlantBulkResult, status_code=201)
+def create_plants_bulk(
+    payload: PlantBulkCreate,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Create many plants in one transaction.
+
+    This is how a captured garden lands: the walk-and-narrate flow queues
+    entries offline and flushes them together, and one round trip is the
+    difference between an import that completes and 300 requests timing out
+    against a machine that has to cold-start. All or nothing — a bad
+    species_id in the middle rolls the whole batch back rather than leaving a
+    half-imported garden nobody can reason about."""
+    plants = [_stage_plant(p, user, session) for p in payload.plants]
+    session.commit()
+    for plant in plants:
+        session.refresh(plant)
+    return PlantBulkResult(created=len(plants), plants=plants)
 
 
 @router.get("/", response_model=list[PlantRead])
@@ -208,6 +260,80 @@ def transfer_plant(
     session.commit()
     session.refresh(plant)
     return plant
+
+
+@router.post("/{plant_id}/split", response_model=PlantRead, status_code=201)
+def split_plant(
+    plant_id: int,
+    payload: PlantSplitRequest,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """Move part of a planting into its own row.
+
+    "Three of the twelve tomatoes went to the far bed" has no representation
+    otherwise: transfer moves the whole row, so the only alternative is minting
+    a fresh plant with a brand-new plant_uuid, which is exactly the
+    double-count plant_uuid exists to prevent — the census would see fifteen
+    tomatoes where there are twelve.
+
+    So the new row records `split_from_uuid`, and the original's quantity drops
+    by the same amount. The total is conserved, and an aggregator can recognise
+    the two rows as one original planting.
+
+    Splitting the entire planting is rejected: that is a transfer, and the
+    plant_uuid should be preserved rather than replaced."""
+    plant = _owned_plant(plant_id, user, session)
+
+    if payload.quantity >= plant.quantity:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Splitting the whole planting would replace its identity — "
+                "move it with /transfer instead."
+            ),
+        )
+
+    environment_id = (
+        _owned_environment(payload.to_environment_id, user, session).id
+        if payload.to_environment_id is not None
+        else plant.environment_id
+    )
+    location = payload.location if payload.location is not None else plant.location
+
+    plant.quantity -= payload.quantity
+    session.add(plant)
+
+    offshoot = Plant(
+        nickname=plant.nickname,
+        species_id=plant.species_id,
+        quantity=payload.quantity,
+        split_from_uuid=plant.plant_uuid,
+        environment_id=environment_id,
+        location=location,
+        maturity_stage=plant.maturity_stage,
+        acquired_on=plant.acquired_on,
+        user_id=user.id,
+    )
+    session.add(offshoot)
+    session.flush()
+
+    if environment_id is not None:
+        session.add(StewardshipRecord(
+            plant_id=offshoot.id,
+            environment_id=environment_id,
+            installation_uuid=_installation_uuid(),
+            transfer_notes=payload.notes,
+        ))
+
+    note = f"Split {payload.quantity} from this planting"
+    if payload.notes:
+        note += f"; {payload.notes}"
+    session.add(CareLog(plant_id=plant.id, action=CareType.other, notes=note))
+
+    session.commit()
+    session.refresh(offshoot)
+    return offshoot
 
 
 @router.get("/{plant_id}/stewardship", response_model=list[StewardshipRecordRead])

@@ -39,12 +39,26 @@ function useStreakBadges() {
     },
   });
 
-  if (!plants || !data) {
+  // Memoized because computeStreak walks up to a year of days against every
+  // plant × care type. On a shelf of five that is nothing; on a garden it is
+  // millions of operations, and without this it re-ran on every render —
+  // including the pure-UI one that fires when a badge is tapped.
+  const derived = useMemo(() => {
+    if (!plants || !data) return null;
+    const streak = computeStreak({ plants, ...data });
+    const badges = computeBadges(computeMetrics(plants, data.logsByPlant, streak.best));
+    return { streak, badges };
+  }, [plants, data]);
+
+  if (!plants || !derived) {
     return { loading: isLoading, hasPlants: !!plants?.length, streak: null, badges: [] as Badge[] };
   }
-  const streak = computeStreak({ plants, ...data });
-  const badges = computeBadges(computeMetrics(plants, data.logsByPlant, streak.best));
-  return { loading: false, hasPlants: plants.length > 0, streak, badges };
+  return {
+    loading: false,
+    hasPlants: plants.length > 0,
+    streak: derived.streak,
+    badges: derived.badges,
+  };
 }
 
 export default function StreakBadges() {
@@ -76,6 +90,22 @@ export default function StreakBadges() {
                   {streak.best > streak.current
                     ? `Your best is ${streak.best} days — keep it going.`
                     : 'Every plant is on track. Nice work.'}
+                </Text>
+              </>
+            ) : streak.behindCount > 0 && streak.trackedCount > 1 ? (
+              // With more than a couple of plants something is nearly always a
+              // day late, so "no streak" would be the permanent state and would
+              // read as a scolding. Show how much of the garden IS in hand —
+              // that number moves when the caretaker does something, which is
+              // the whole point of showing it.
+              <>
+                <Text style={styles.streakNum}>
+                  {streak.onTrackPct}% of your garden is on track
+                </Text>
+                <Text style={styles.streakSub}>
+                  {streak.behindCount === 1
+                    ? 'One planting is past its window — it’s in your to-dos.'
+                    : `${streak.behindCount} plantings are past their window — they’re in your to-dos.`}
                 </Text>
               </>
             ) : (

@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Optional
 
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 
 from app.models.models import (
     MaturityStage, CareType, LightNeed, SoilMoisture, LeafCondition, EnvironmentType,
@@ -100,8 +100,13 @@ class EnvironmentRead(SQLModel):
 # --- Plant ---
 
 class PlantCreate(SQLModel):
-    nickname: str
+    # Optional: a garden captured as plantings ("twelve tomatoes") has no
+    # natural nickname. The router fills one in from the species and place so
+    # notification bodies, to-do rows and the advisor prompts — all of which
+    # address the plant by name — never have to render an empty string.
+    nickname: str = ""
     species_id: int
+    quantity: int = Field(default=1, ge=1)
     environment_id: Optional[int] = None  # defaults to the installation's primary environment
     location: str = ""
     maturity_stage: MaturityStage = MaturityStage.juvenile
@@ -134,6 +139,8 @@ class PlantRead(SQLModel):
     plant_uuid: str
     nickname: str
     species_id: int
+    quantity: int = 1
+    split_from_uuid: Optional[str] = None
     environment_id: Optional[int]
     location: str
     maturity_stage: MaturityStage
@@ -144,6 +151,33 @@ class PlantRead(SQLModel):
     intake_notes: str
     # Embedded so clients don't need a second request per plant
     species: Optional[SpeciesRead] = None
+
+
+class PlantBulkCreate(SQLModel):
+    """Create many plants in one transaction.
+
+    A garden captured in one pass is a batch by nature: the offline queue
+    flushes as a batch, and 300 single POSTs against a machine that has to
+    cold-start reliably time out. Either every plant lands or none do, so a
+    failure halfway through can't leave a half-imported garden."""
+    plants: list[PlantCreate] = Field(min_length=1, max_length=200)
+
+
+class PlantBulkResult(SQLModel):
+    created: int
+    plants: list["PlantRead"]
+
+
+class PlantSplitRequest(SQLModel):
+    """Move part of a planting out into its own row.
+
+    Splitting is the only operation that gives a second plant_uuid to plants
+    previously counted under one, so the new row records where it came from and
+    the original's count drops by the same amount — the total is conserved."""
+    quantity: int = Field(ge=1)
+    to_environment_id: Optional[int] = None
+    location: Optional[str] = None
+    notes: str = ""
 
 
 class PlantTransferRequest(SQLModel):

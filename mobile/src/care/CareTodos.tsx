@@ -19,6 +19,9 @@ import { CARE_PRESENTATION } from './labels';
 // deep-links into the plant. Upcoming care is intentionally NOT shown here —
 // that lives on the environment calendar; this list stays a short, honest
 // "do these today".
+/** How many to-do rows this header renders before summarising the rest. */
+const MAX_VISIBLE_TODOS = 8;
+
 export default function CareTodos({
   onOpenPlant,
 }: {
@@ -29,7 +32,9 @@ export default function CareTodos({
   const queryClient = useQueryClient();
   const { tasks, isLoading } = useCareTasks();
   const [doneMsg, setDoneMsg] = useState<string | null>(null);
-  const [pendingKey, setPendingKey] = useState<string | null>(null);
+  // A set, not a single key: several rows can be in flight at once now that
+  // ticking one no longer freezes the others.
+  const [pendingKeys, setPendingKeys] = useState<Set<string>>(new Set());
 
   const todos = useMemo(
     () => tasks
@@ -38,10 +43,18 @@ export default function CareTodos({
     [tasks],
   );
 
+  // This card is a FlatList *header*, and headers are not virtualized — every
+  // row here renders eagerly. A garden with a real backlog would mount
+  // hundreds of them at once and lock the screen. Show the most overdue and
+  // say plainly how many more there are, rather than rendering the whole
+  // backlog or silently pretending it is only this long.
+  const visible = todos.slice(0, MAX_VISIBLE_TODOS);
+  const hiddenCount = todos.length - visible.length;
+
   const logMutation = useMutation({
     mutationFn: ({ plantId, careType }: { plantId: number; careType: CareType; key: string }) =>
       logCare(plantId, careType),
-    onMutate: ({ key }) => setPendingKey(key),
+    onMutate: ({ key }) => setPendingKeys((prev) => new Set(prev).add(key)),
     onSuccess: (_data, { careType, plantId }) => {
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });
@@ -51,7 +64,11 @@ export default function CareTodos({
       void rescheduleAllReminders(); // keep notifications in step with the log
     },
     onError: () => Alert.alert('Error', 'Could not log that care action.'),
-    onSettled: () => setPendingKey(null),
+    onSettled: (_data, _err, { key }) => setPendingKeys((prev) => {
+      const next = new Set(prev);
+      next.delete(key);
+      return next;
+    }),
   });
 
   // While the first load is in flight, render nothing — StreakBadges sits above
@@ -86,10 +103,10 @@ export default function CareTodos({
           )}
         />
         <Card.Content style={styles.list}>
-          {todos.map((t) => {
+          {visible.map((t) => {
             const key = `${t.plantId}-${t.careType}`;
             const p = CARE_PRESENTATION[t.careType];
-            const busy = pendingKey === key;
+            const busy = pendingKeys.has(key);
             return (
               <View key={key} style={styles.row}>
                 <TouchableOpacity
@@ -116,7 +133,10 @@ export default function CareTodos({
                     size={26}
                     iconColor={palette.good}
                     style={styles.rowCheck}
-                    disabled={pendingKey !== null}
+                    // Only the row being logged is busy. Disabling every
+                    // checkbox meant clearing a backlog was strictly one
+                    // round-trip at a time — fine for three plants, unusable
+                    // for a garden.
                     onPress={() => logMutation.mutate({ plantId: t.plantId, careType: t.careType, key })}
                     accessibilityLabel={`Mark ${p.verb} ${t.nickname} done`}
                   />
@@ -124,6 +144,13 @@ export default function CareTodos({
               </View>
             );
           })}
+          {hiddenCount > 0 && (
+            <Text style={styles.moreNote}>
+              {hiddenCount === 1
+                ? '1 more waiting — tick a few off and it’ll appear.'
+                : `${hiddenCount} more waiting — tick a few off and they’ll appear.`}
+            </Text>
+          )}
         </Card.Content>
       </Card>
       <Snackbar
@@ -155,6 +182,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   rowTitle: { fontSize: 15, color: p.ink },
   rowWhen: { fontSize: 12, color: p.sub, marginTop: 1, fontWeight: '600' },
   rowCheck: { margin: 0 },
+  moreNote: {
+    color: p.sub, fontSize: 13, fontStyle: 'italic',
+    paddingTop: 10, paddingBottom: 2,
+  },
 
   countPill: {
     backgroundColor: p.acc, borderRadius: 999,

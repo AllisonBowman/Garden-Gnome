@@ -16,16 +16,42 @@ export async function fetchPlant(id: number): Promise<Plant> {
   return data;
 }
 
-export async function createPlant(payload: {
-  nickname: string;
+export interface PlantDraft {
+  /** Optional — the server generates "Tomatoes — south fence" when it's blank,
+   *  because a planting has no name of its own but every surface that talks
+   *  about a plant still needs something to call it. */
+  nickname?: string;
   species_id: number;
+  /** How many physical plants this row stands for. Omit for an individual. */
+  quantity?: number;
   environment_id?: number;
   location?: string;
   intake_notes?: string;
   acquired_on?: string;
-}): Promise<Plant> {
+}
+
+export async function createPlant(payload: PlantDraft): Promise<Plant> {
   const client = await apiClient();
   const { data } = await client.post<Plant>('/plants/', payload);
+  return data;
+}
+
+export interface BulkCreateResult {
+  created: number;
+  plants: Plant[];
+}
+
+/**
+ * Create many plants in one transaction — all or nothing.
+ *
+ * This is how a captured garden lands. Posting them one at a time means a
+ * failure halfway through leaves a half-imported garden the caretaker can't
+ * tell the shape of, and hundreds of requests against a backend that has to
+ * cold-start reliably time out before they finish.
+ */
+export async function createPlantsBulk(plants: PlantDraft[]): Promise<BulkCreateResult> {
+  const client = await apiClient();
+  const { data } = await client.post<BulkCreateResult>('/plants/bulk', { plants });
   return data;
 }
 
