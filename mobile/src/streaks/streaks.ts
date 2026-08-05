@@ -12,7 +12,9 @@ const DAY = 86_400_000;
 export const GRACE_DAYS = 3;
 
 // Only these care types have species schedules / can fall behind.
-const SCHEDULED: CareType[] = ['water', 'fertilize', 'mist', 'prune', 'repot', 'rotate'];
+// Mist is absent on purpose — see the note in notifications/plan.ts. It can no
+// longer earn a reminder, so it must not be able to break a streak either.
+const SCHEDULED: CareType[] = ['water', 'fertilize', 'prune', 'repot', 'rotate'];
 
 export interface StreakResult {
   /** Consecutive "good-standing" days ending today (no plant left behind). */

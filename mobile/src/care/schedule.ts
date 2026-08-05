@@ -1,5 +1,6 @@
 import { CareLog, CareType, Plant, Species } from '../types';
-import { REMINDER_CARE_TYPES } from '../notifications/plan';
+import { REMINDER_CARE_TYPES, isInSeason } from '../notifications/plan';
+import { GRACE_DAYS } from '../streaks/streaks';
 
 // One "next due" per plant × scheduled care-type, surfaced for the calendar and
 // the Plants to-do list. This is the same anchor math the reminder planner uses
@@ -27,8 +28,14 @@ export interface CareTask {
   windowEndDate: Date;
   /** Most recent log of this care type, or null when there's no history. */
   lastCareDate: Date | null;
-  /** Whole calendar days from today to the due date; negative = overdue. */
+  /** Whole calendar days from today to the START of the care window. */
   daysUntilDue: number;
+  /** Days past the END of the window; negative means still inside it. */
+  daysPastWindow: number;
+  /** Whole days since this care was last done, or null with no history.
+   *  Computed here rather than in the label so the label stays pure and the
+   *  injected clock is honoured. */
+  daysSinceLastCare: number | null;
   status: CareTaskStatus;
 }
 
@@ -71,6 +78,9 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
     for (const schedule of species.care_schedules) {
       const careType = schedule.care_type;
       if (!REMINDER_CARE_TYPES.includes(careType)) continue;
+      // Out-of-season care isn't a task. Feeding in December isn't "overdue" —
+      // it's something the plant shouldn't have at all until the light returns.
+      if (!isInSeason(careType, now)) continue;
 
       let anchorMs = 0;
       for (const log of logs) {
@@ -85,13 +95,24 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
           : now.getTime();
       }
 
+      // The species record gives a WINDOW, not a deadline: "every 7–10 days"
+      // means anywhere in that span is right. Day 10 of a 7–10 window is the
+      // plant behaving exactly as documented, so calling it overdue is simply
+      // wrong — and it pushed people to water early, which is the direction
+      // that kills plants. `dueDate` opens the window; nothing is late until
+      // the window has closed and the same grace the streak allows has passed.
       const dueDate = new Date(anchorMs + schedule.interval_days_min * DAY_MS);
       const windowEndDate = new Date(anchorMs + schedule.interval_days_max * DAY_MS);
       const daysUntilDue = Math.round(
         (startOfDay(dueDate).getTime() - todayMs) / DAY_MS,
       );
+      const daysPastWindow = Math.round(
+        (todayMs - startOfDay(windowEndDate).getTime()) / DAY_MS,
+      );
       const status: CareTaskStatus =
-        daysUntilDue < 0 ? 'overdue' : daysUntilDue === 0 ? 'due' : 'upcoming';
+        daysPastWindow > GRACE_DAYS ? 'overdue'
+          : daysUntilDue <= 0 ? 'due'
+            : 'upcoming';
 
       tasks.push({
         plantId: plant.id,
@@ -102,6 +123,10 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
         windowEndDate,
         lastCareDate,
         daysUntilDue,
+        daysPastWindow,
+        daysSinceLastCare: lastCareDate
+          ? Math.round((todayMs - startOfDay(lastCareDate).getTime()) / DAY_MS)
+          : null,
         status,
       });
     }
@@ -110,11 +135,25 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
   return tasks.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
 }
 
-/** Human phrasing of a task's timing: "3 days overdue", "Due today", … */
+/**
+ * Human phrasing of a task's timing.
+ *
+ * Care is a window, so most of the time the honest thing to say is how long
+ * it has been — not how late you are. "Overdue" is reserved for genuinely past
+ * the far end of the window plus the grace period; inside the window the
+ * caretaker is doing it right, and the copy should not imply otherwise.
+ */
 export function careTaskDueLabel(task: CareTask): string {
+  if (task.status === 'overdue') {
+    const n = task.daysPastWindow;
+    return n === 1 ? '1 day past due' : `${n} days past due`;
+  }
+  if (task.status === 'due') {
+    const since = task.daysSinceLastCare;
+    if (since === null) return 'Worth a check';
+    return since === 1 ? 'Last done 1 day ago' : `Last done ${since} days ago`;
+  }
   const n = task.daysUntilDue;
-  if (n < 0) return n === -1 ? '1 day overdue' : `${-n} days overdue`;
-  if (n === 0) return 'Due today';
-  if (n === 1) return 'Due tomorrow';
-  return `Due in ${n} days`;
+  if (n === 1) return 'Check tomorrow';
+  return `Check in ${n} days`;
 }

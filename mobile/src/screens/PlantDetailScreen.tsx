@@ -34,7 +34,6 @@ type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 const CARE_ACTIONS: { type: CareType; icon: string; label: string }[] = [
   { type: 'water',     icon: '💧', label: 'Watered'    },
   { type: 'fertilize', icon: '🌿', label: 'Fertilized' },
-  { type: 'mist',      icon: '💨', label: 'Misted'     },
   { type: 'prune',     icon: '✂️', label: 'Pruned'     },
   { type: 'repot',     icon: '🪴', label: 'Repotted'   },
   { type: 'rotate',    icon: '🔄', label: 'Rotated'    },

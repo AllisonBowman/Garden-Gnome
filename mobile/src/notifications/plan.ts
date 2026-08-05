@@ -2,12 +2,41 @@ import { CareLog, CareType, Plant, Species } from '../types';
 
 // Care types that can have reminders (matches the quick-log actions on
 // PlantDetailScreen; 'clean'/'other' have no species schedules).
+//
+// 'mist' is deliberately absent. Misting doesn't do what people think: the
+// humidity it adds lasts only until the water evaporates, which Penn State
+// Extension puts at a matter of minutes, so even daily misting changes nothing
+// about ambient humidity. Minnesota Extension adds that it "increases the
+// likelihood of foliar leaf spot diseases," and Clemson tells begonia growers
+// outright that misting is not recommended. A notification is an instruction to
+// act, so a misting reminder is the app asking someone to do something useless
+// at best and harmful at worst. Leaf-wiping ('clean') is separately endorsed
+// and stays.
 export const REMINDER_CARE_TYPES: CareType[] = [
-  'water', 'fertilize', 'mist', 'prune', 'repot', 'rotate',
+  'water', 'fertilize', 'prune', 'repot', 'rotate',
 ];
 
+// Months (1-12) in which a care type should be prompted at all. Absent means
+// all year.
+//
+// Feeding is gated to the growing season because every extension source agrees
+// on this and several are emphatic: NC State says "do not fertilize from
+// November to February," and Maryland warns that feeding then "could harm some
+// plants." Growth slows with the light, so the fertiliser isn't taken up — it
+// accumulates as salts. A December reminder was the app telling people to do
+// the one thing the literature says not to.
+export const CARE_SEASON_MONTHS: Partial<Record<CareType, number[]>> = {
+  fertilize: [3, 4, 5, 6, 7, 8, 9, 10],
+};
+
+/** Whether this care type should be prompted at all in the given month. */
+export function isInSeason(careType: CareType, date: Date): boolean {
+  const months = CARE_SEASON_MONTHS[careType];
+  return !months || months.includes(date.getMonth() + 1);
+}
+
 export const CARE_VERBS: Record<string, string> = {
-  water: 'water', fertilize: 'fertilize', mist: 'mist',
+  water: 'water', fertilize: 'fertilize',
   prune: 'prune', repot: 'repot', rotate: 'rotate',
 };
 
@@ -120,6 +149,9 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
       due.setHours(deliveryHour, 0, 0, 0);
       const slot = due <= nextSlot ? nextSlot : due;
       if (slot > horizonEnd) continue;
+      // Checked against the slot, not today: a feeding reminder that would land
+      // in December is dropped even when it was computed in October.
+      if (!isInSeason(careType, slot)) continue;
 
       const key = `${slot.getFullYear()}-${slot.getMonth()}-${slot.getDate()}`;
       let batch = byDay.get(key);
