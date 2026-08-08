@@ -10,7 +10,7 @@ export const CARE_PRESENTATION: Record<CareType, { icon: string; verb: string; d
   fertilize: { icon: '🌿', verb: 'Fertilize', done: 'Fertilized' },
   mist:      { icon: '💨', verb: 'Mist',      done: 'Misted'     },
   prune:     { icon: '✂️', verb: 'Prune',     done: 'Pruned'     },
-  repot:     { icon: '🪴', verb: 'Repot',     done: 'Repotted'   },
+  repot:     { icon: '🪴', verb: 'Inspect',   done: 'Repotted'   },
   rotate:    { icon: '🔄', verb: 'Rotate',    done: 'Rotated'    },
   clean:     { icon: '🧽', verb: 'Clean',     done: 'Cleaned'    },
   other:     { icon: '🌱', verb: 'Care for',  done: 'Cared for'  },

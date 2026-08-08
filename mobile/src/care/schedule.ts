@@ -1,5 +1,7 @@
 import { CareLog, CareType, Plant, Species } from '../types';
-import { REMINDER_CARE_TYPES, isInSeason } from '../notifications/plan';
+import {
+  REMINDER_CARE_TYPES, REPOT_INSPECTION_MONTH, isInSeason,
+} from '../notifications/plan';
 import { GRACE_DAYS } from '../streaks/streaks';
 
 // One "next due" per plant × scheduled care-type, surfaced for the calendar and
@@ -93,6 +95,39 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
         anchorMs = plant.acquired_on
           ? new Date(plant.acquired_on).getTime()
           : now.getTime();
+      }
+
+      // Repotting is a February inspection, not an interval (plan 1.3). The
+      // task exists only during the inspection month, only when no
+      // repot-family log has been made this calendar year, and it is never
+      // overdue — March simply closes the window until next spring.
+      if (careType === 'repot') {
+        if (now.getMonth() + 1 !== REPOT_INSPECTION_MONTH) continue;
+        if (lastCareDate
+          && lastCareDate.getFullYear() === now.getFullYear()) continue;
+        const dueDate = new Date(
+          now.getFullYear(), REPOT_INSPECTION_MONTH - 1, 1);
+        const windowEndDate = new Date(
+          now.getFullYear(), REPOT_INSPECTION_MONTH, 1);
+        tasks.push({
+          plantId: plant.id,
+          nickname: plant.nickname,
+          environmentId: plant.environment_id,
+          careType,
+          dueDate,
+          windowEndDate,
+          lastCareDate,
+          daysUntilDue: Math.round(
+            (startOfDay(dueDate).getTime() - todayMs) / DAY_MS),
+          daysPastWindow: Math.round(
+            (todayMs - startOfDay(windowEndDate).getTime()) / DAY_MS),
+          daysSinceLastCare: lastCareDate
+            ? Math.round(
+              (todayMs - startOfDay(lastCareDate).getTime()) / DAY_MS)
+            : null,
+          status: 'due',
+        });
+        continue;
       }
 
       // The species record gives a WINDOW, not a deadline: "every 7–10 days"

@@ -37,10 +37,31 @@ export function isInSeason(careType: CareType, date: Date): boolean {
 
 // 'check', not 'water': the interval is a prior on when a check will probably
 // come back positive, not an instruction to pour. The finger test decides.
+// 'inspect', not 'repot', for the same reason: the February check-up asks you
+// to look at the roots; repotting is one of three ways the look can end.
 export const CARE_VERBS: Record<string, string> = {
   water: 'check', fertilize: 'fertilize',
-  prune: 'prune', repot: 'repot', rotate: 'rotate',
+  prune: 'prune', repot: 'inspect', rotate: 'rotate',
 };
+
+/**
+ * The repot inspection month (1-12). NC State: repotting is "best done in the
+ * early spring, before plants start actively growing" — so the check-up lands
+ * in February, device clock, same hemisphere assumption as the fertilize gate.
+ */
+export const REPOT_INSPECTION_MONTH = 2;
+
+/** First delivery slot on or after `after` that falls in the inspection
+ *  month. `after` must already carry the delivery hour. */
+export function nextInspectionSlot(after: Date): Date {
+  if (after.getMonth() + 1 === REPOT_INSPECTION_MONTH) return new Date(after);
+  const year = after.getMonth() + 1 < REPOT_INSPECTION_MONTH
+    ? after.getFullYear()
+    : after.getFullYear() + 1;
+  const slot = new Date(year, REPOT_INSPECTION_MONTH - 1, 1);
+  slot.setHours(after.getHours(), 0, 0, 0);
+  return slot;
+}
 
 export type ReminderPrefs = Partial<Record<CareType, boolean>>;
 
@@ -130,10 +151,37 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
         const t = new Date(log.logged_at).getTime();
         if (t > anchorMs) anchorMs = t;
       }
+      const lastLogMs = anchorMs;
       if (!anchorMs) {
         anchorMs = plant.acquired_on
           ? new Date(plant.acquired_on).getTime()
           : now.getTime();
+      }
+
+      // Repotting left the interval model (plan 1.3). Every source gives
+      // condition signs plus a season — never a due date — and firing on day
+      // 365 regardless of root condition prompts over-potting and root rot.
+      // The inspection is anchored to the calendar: once in February, cleared
+      // by any repot-family log (repotted, top-dressed, or checked-fine) made
+      // in the same calendar year.
+      if (careType === 'repot') {
+        const slot = nextInspectionSlot(nextSlot);
+        if (slot > horizonEnd) continue;
+        if (lastLogMs && new Date(lastLogMs).getFullYear() === slot.getFullYear()) continue;
+        const key = `${slot.getFullYear()}-${slot.getMonth()}-${slot.getDate()}`;
+        let batch = byDay.get(key);
+        if (!batch) {
+          batch = { date: new Date(slot), items: [] };
+          byDay.set(key, batch);
+        }
+        batch.items.push({
+          plantId: plant.id,
+          nickname: plant.nickname,
+          careType,
+          daysSinceCare: Math.max(
+            0, Math.round((slot.getTime() - anchorMs) / 86_400_000)),
+        });
+        continue;
       }
 
       // Due when the plant enters its care window ("every 7–10 days" → day 7)
@@ -182,6 +230,18 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
 function composeMessage(items: ReminderItem[]): { title: string; body: string } {
   if (items.length === 1) {
     const [it] = items;
+    if (it.careType === 'repot') {
+      // NC State's four pot-bound signs, asked as questions; repotting is a
+      // conditional answer, and top-dressing is the lighter one their
+      // annual-fresh-mix rationale supports.
+      return {
+        title: `🪴 ${it.nickname}'s spring check-up`,
+        body: `Have a look at ${it.nickname}: roots pushing out of the pot? `
+          + 'Crown or roots showing at the surface? Wilting again soon after '
+          + 'you water, or growth stalled? Repot if so — or just top-dress '
+          + 'with fresh mix.',
+      };
+    }
     if (it.careType === 'water') {
       // The check copy: elapsed time as context, the finger test as the
       // instruction, watering only as its consequence. Never "time to water" —

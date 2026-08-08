@@ -61,10 +61,17 @@ export default function CareTodos({
       queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       const p = CARE_PRESENTATION[careType];
-      // "Still damp" is a success, not a skipped chore — say so.
-      setDoneMsg(outcome === 'checked_not_needed'
-        ? '💧 Checked, still damp — the wait was the right call'
-        : `${p.icon} ${p.done} — logged and rescheduled`);
+      // A check that ends in "leave it be" is a success, not a skipped
+      // chore — the confirmation should say so.
+      setDoneMsg(
+        outcome === 'checked_not_needed'
+          ? '💧 Checked, still damp — the wait was the right call'
+          : outcome === 'checked_fine'
+            ? '🪴 Checked — happy in its pot for now'
+            : outcome === 'top_dressed'
+              ? '🪴 Top-dressed — fresh mix, same home'
+              : `${p.icon} ${p.done} — logged and rescheduled`,
+      );
       void rescheduleAllReminders(); // keep notifications in step with the log
     },
     onError: () => Alert.alert('Error', 'Could not log that care action.'),
@@ -131,6 +138,43 @@ export default function CareTodos({
                 </TouchableOpacity>
                 {busy ? (
                   <ActivityIndicator style={styles.rowCheck} size={20} color={palette.acc} />
+                ) : t.careType === 'repot' ? (
+                  // The February inspection's three honest endings. "All fine"
+                  // logs a repot-family action, which is what clears the
+                  // inspection for the year — looking and deciding not to
+                  // disturb the roots is the inspection done right.
+                  <View style={styles.outcomeRow}>
+                    <TouchableOpacity
+                      style={styles.outcomePill}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'repotted', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} repotted`}
+                    >
+                      <Text style={styles.outcomePillText}>Repotted</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.outcomePill, styles.outcomePillQuiet]}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'top_dressed', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} top-dressed with fresh mix`}
+                    >
+                      <Text style={styles.outcomePillQuietText}>Top-dressed</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.outcomePill, styles.outcomePillQuiet]}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'checked_fine', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} checked — all fine`}
+                    >
+                      <Text style={styles.outcomePillQuietText}>All fine</Text>
+                    </TouchableOpacity>
+                  </View>
                 ) : t.careType === 'water' ? (
                   // A water to-do is a *check*, and a check has two honest
                   // endings. "Still damp" logs and re-anchors exactly like
@@ -212,7 +256,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   rowTitle: { fontSize: 15, color: p.ink },
   rowWhen: { fontSize: 12, color: p.sub, marginTop: 1, fontWeight: '600' },
   rowCheck: { margin: 0 },
-  outcomeRow: { flexDirection: 'row', gap: 6, marginLeft: 6 },
+  outcomeRow: {
+    flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginLeft: 6,
+    justifyContent: 'flex-end', maxWidth: 200,
+  },
   outcomePill: {
     backgroundColor: p.acc, borderRadius: 999,
     paddingHorizontal: 10, paddingVertical: 5,

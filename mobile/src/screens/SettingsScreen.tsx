@@ -31,7 +31,7 @@ const REMINDER_TOGGLES: { type: CareType; icon: string; label: string }[] = [
   { type: 'water',     icon: '💧', label: 'Watering'    },
   { type: 'fertilize', icon: '🌿', label: 'Fertilizing' },
   { type: 'prune',     icon: '✂️', label: 'Pruning'     },
-  { type: 'repot',     icon: '🪴', label: 'Repotting'   },
+  { type: 'repot',     icon: '🪴', label: 'Spring repot check' },
   { type: 'rotate',    icon: '🔄', label: 'Rotating'    },
 ];
 
