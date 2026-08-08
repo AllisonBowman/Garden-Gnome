@@ -211,7 +211,7 @@ SEED_DATA = [
     {
         "species": dict(
             common_name="Aloe Vera",
-            scientific_name="Aloe barbadensis miller",
+            scientific_name="Aloe vera",
             light_need=LightNeed.direct,
             humidity_pct_min=20, humidity_pct_max=40,
             temp_f_min=55, temp_f_max=80,

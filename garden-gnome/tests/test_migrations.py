@@ -166,3 +166,62 @@ def test_shade_genus_loses_direct_on_upgrade(tmp_path: Path):
     assert lights["Philodendron"] == "bright_indirect"
     assert lights["Ocimum basilicum"] == "direct"
     conn.close()
+
+
+def test_aloe_rename_applies_unless_it_would_collide(tmp_path: Path):
+    """0009: the misnamed Aloe row is renamed to the accepted name, but never
+    into a collision with an existing Aloe vera row."""
+    import os
+
+    from alembic import command
+    from alembic.config import Config
+
+    def build(db, extra_rows):
+        url = f"sqlite:///{db.as_posix()}"
+        cfg = Config(str(ROOT / "alembic.ini"))
+        cfg.set_main_option("script_location", str(ROOT / "alembic"))
+        cfg.set_main_option("sqlalchemy.url", url)
+        prev = os.environ.get("DATABASE_URL")
+        os.environ["DATABASE_URL"] = url
+        try:
+            command.upgrade(cfg, "0001_baseline")
+            conn = sqlite3.connect(db)
+            for common, sci in extra_rows:
+                conn.execute(
+                    "INSERT INTO species (common_name, scientific_name, "
+                    "light_need, humidity_pct_min, humidity_pct_max, "
+                    "temp_f_min, temp_f_max, soil_type, toxic_to_pets, "
+                    "care_notes, source, source_ref, review_status, "
+                    "review_note) VALUES (?, ?, 'direct', 20, 40, 55, 80, "
+                    "'cactus mix', 0, '', 'CURATED', '', 'APPROVED', '')",
+                    (common, sci))
+            conn.commit()
+            conn.close()
+            command.upgrade(cfg, "head")
+        finally:
+            if prev is None:
+                os.environ.pop("DATABASE_URL", None)
+            else:
+                os.environ["DATABASE_URL"] = prev
+
+    # Normal case: the misnamed row is renamed.
+    db = tmp_path / "aloe.db"
+    build(db, [("Aloe Vera", "Aloe barbadensis miller")])
+    conn = sqlite3.connect(db)
+    names = [r[0] for r in conn.execute(
+        "SELECT scientific_name FROM species WHERE scientific_name LIKE 'Aloe%'")]
+    assert names == ["Aloe vera"]
+    conn.close()
+
+    # Collision case: an Aloe vera row already exists — the misnamed row is
+    # left alone rather than minting the ambiguity apply_review refuses.
+    db2 = tmp_path / "aloe-collision.db"
+    build(db2, [
+        ("Aloe Vera", "Aloe barbadensis miller"),
+        ("True Aloe", "Aloe vera"),
+    ])
+    conn = sqlite3.connect(db2)
+    names = sorted(r[0] for r in conn.execute(
+        "SELECT scientific_name FROM species WHERE scientific_name LIKE 'Aloe%'"))
+    assert names == ["Aloe barbadensis miller", "Aloe vera"]
+    conn.close()
