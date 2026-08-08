@@ -214,6 +214,22 @@ class Species(SQLModel, table=True):
     traits: list["SpeciesTrait"] = Relationship(back_populates="species")
 
     @property
+    def humidity_sourced(self) -> bool:
+        """Whether this row's humidity numbers came from a real source.
+
+        The Perenual import had no humidity field; every imported row derives
+        its percentages from a watering category and carries a
+        `humidity_source` trait saying so (present on all imports, absent on
+        all curated rows). Numbers derived that way are not facts, and no
+        surface should present them as facts — the advisor omits them, the
+        detail screen hides the stat, and the Almanac stops sorting on them.
+
+        Touching `self.traits` lazy-loads when the relation isn't already in
+        memory — fine for single-species paths; the list endpoint computes
+        this in one query instead (see `list_species`)."""
+        return all(t.trait != "humidity_source" for t in self.traits)
+
+    @property
     def toxicity_description(self) -> str:
         """A plain-language toxicity sentence, generated from what we know.
 

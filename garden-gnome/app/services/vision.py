@@ -210,12 +210,18 @@ async def _anthropic_vision_chat(
 def _build_context(
     species: Species, plant: Plant, care_schedules: list[CareSchedule]
 ) -> str:
+    # Same rule as the advisor: derived humidity (imported rows) never enters
+    # a block headed "authoritative".
+    humidity_line = (
+        f"- Humidity: {species.humidity_pct_min}-{species.humidity_pct_max}%\n"
+        if species.humidity_sourced else ""
+    )
     facts = (
         f"SPECIES CARE FACTS (authoritative):\n"
         f"- Common name: {species.common_name}\n"
         f"- Scientific name: {species.scientific_name}\n"
         f"- Light need: {species.light_need.value}\n"
-        f"- Humidity: {species.humidity_pct_min}-{species.humidity_pct_max}%\n"
+        f"{humidity_line}"
         f"- Temperature: {species.temp_f_min}-{species.temp_f_max} F\n"
         f"- Soil: {species.soil_type}\n"
         f"- Toxic to pets: {'yes' if species.toxic_to_pets else 'no'}\n"

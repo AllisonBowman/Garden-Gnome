@@ -131,6 +131,10 @@ class SpeciesRead(SQLModel):
     # Derived on the model — the sentence a person should read. toxic_to_pets
     # remains the raw flag for filtering.
     toxicity_description: str = ""
+    # False when the humidity numbers were derived from a watering category
+    # rather than a source (imported rows). Clients hide the stat and stop
+    # sorting on it; the advisor omits it from the fact block.
+    humidity_sourced: bool = True
     care_notes: str
 
 
@@ -290,6 +294,7 @@ class SpeciesDetail(SQLModel):
     soil_type: str
     toxic_to_pets: bool
     toxicity_description: str = ""
+    humidity_sourced: bool = True
     care_notes: str
     source: SpeciesSource = SpeciesSource.curated
     source_ref: str = ""

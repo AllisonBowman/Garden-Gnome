@@ -41,6 +41,10 @@ export interface Species {
    *  to anyone who eats tomatoes, and a lily and a pothos are not the same
    *  risk. Empty on older API versions, so always fall back to the flag. */
   toxicity_description?: string;
+  /** False when the humidity percentages were derived from a watering
+   *  category (imported rows) rather than a source. Hide the stat and don't
+   *  sort on it. Absent on older API versions — treat as sourced. */
+  humidity_sourced?: boolean;
   care_notes: string;
   /** How trustworthy this row's care data is, when a caller happens to know.
    *  Deliberately NOT sent by `GET /species/`: review status, notes and source

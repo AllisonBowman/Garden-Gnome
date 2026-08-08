@@ -80,6 +80,44 @@ test('missing watering schedule degrades to a dash, not a crash', () => {
   expect(fingerprint(sp()).water).toBe('💧 —');
 });
 
+// --- fabricated humidity (plan 1.6) -----------------------------------------
+// Imported rows derive their humidity percentages from a watering category and
+// arrive with humidity_sourced=false. Numbers nobody measured must not decide
+// a tier or appear in a fingerprint.
+
+test('derived humidity is not scored; real signals are re-weighted', () => {
+  const asIfMeasured = sp({
+    humidity_pct_min: 70, humidity_pct_max: 85,
+    temp_f_min: 65, temp_f_max: 80,
+    light_need: 'bright_indirect',
+  });
+  const honest = { ...asIfMeasured, humidity_sourced: false } as Species;
+  // measured: humidity (+3) + narrow-ish temp (+2) → fussy
+  expect(tierOf(asIfMeasured)).toBe('fussy');
+  // derived: humidity contributes nothing; temp carries fallback weight (+3)
+  expect(difficultyScore(honest)).toBe(3);
+  expect(tierOf(honest)).toBe('intermediate');
+});
+
+test('an absent flag is curated-era data and scores as sourced', () => {
+  expect(difficultyScore(sp({ humidity_sourced: undefined })))
+    .toBe(difficultyScore(sp()));
+});
+
+test('direct sun weighs heavier when humidity is unknowable', () => {
+  const wideAndSunny = {
+    humidity_pct_min: 40, humidity_pct_max: 70,
+    temp_f_min: 50, temp_f_max: 90,
+    light_need: 'direct' as const,
+  };
+  expect(difficultyScore(sp(wideAndSunny))).toBe(1);
+  expect(difficultyScore(sp({ ...wideAndSunny, humidity_sourced: false }))).toBe(2);
+});
+
+test('the fingerprint shows a dash for derived humidity — that is what missing data looks like', () => {
+  expect(fingerprint(sp({ humidity_sourced: false })).humidity).toBe('💦 —');
+});
+
 // --- search -----------------------------------------------------------------
 
 test('search matches common and scientific names, case-insensitively', () => {

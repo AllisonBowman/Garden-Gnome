@@ -71,7 +71,11 @@ export default function SpeciesDetailScreen() {
         <Card.Content>
           <View style={styles.statRow}>
             <Stat label="Light"    value={species.light_need.replace(/_/g, ' ')} />
-            <Stat label="Humidity" value={`${species.humidity_pct_min}–${species.humidity_pct_max}%`} />
+            {/* Derived humidity (imported rows) is not a fact — show nothing
+                rather than a number nobody measured. */}
+            {species.humidity_sourced !== false && (
+              <Stat label="Humidity" value={`${species.humidity_pct_min}–${species.humidity_pct_max}%`} />
+            )}
             <Stat label="Temp"     value={`${species.temp_f_min}–${species.temp_f_max}°F`} />
           </View>
           <Divider style={styles.divider} />
@@ -109,12 +113,14 @@ export default function SpeciesDetailScreen() {
         </Card>
       )}
 
-      {/* Traits */}
-      {species.traits && species.traits.length > 0 && (
+      {/* Traits. humidity_source is pipeline provenance ("derived from
+          watering category…"), not a plant trait — rendering it verbatim was
+          a developer-text leak. */}
+      {species.traits && species.traits.filter((t) => t.trait !== 'humidity_source').length > 0 && (
         <Card style={styles.card}>
           <Card.Title title="Plant traits" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
-            {species.traits.map((t) => (
+            {species.traits.filter((t) => t.trait !== 'humidity_source').map((t) => (
               <View key={t.id} style={styles.traitRow}>
                 <Text variant="labelMedium" style={styles.traitKey}>
                   {t.trait.replace(/_/g, ' ')}
