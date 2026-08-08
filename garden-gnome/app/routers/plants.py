@@ -362,12 +362,13 @@ def add_care_log(
     if payload.outcome is not None:
         allowed = OUTCOMES_BY_ACTION.get(payload.action, set())
         if payload.outcome not in allowed:
+            # Plain language, no enum literals: serverMessage() surfaces
+            # detail strings verbatim elsewhere in the app, so every detail
+            # must read as something a caretaker could be shown.
             raise HTTPException(
                 status_code=422,
-                detail=(
-                    f"'{payload.outcome.value}' is not an outcome of "
-                    f"'{payload.action.value}'"
-                ),
+                detail="That result doesn't go with that care action — "
+                       "log the action on its own instead.",
             )
     log = CareLog(plant_id=plant_id, **payload.model_dump())
     session.add(log)
