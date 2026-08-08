@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { apiClient } from './client';
 import {
-  Plant, CareLog, CareType, StewardshipRecord, WeatherAttribution,
+  Plant, CareLog, CareOutcome, CareType, StewardshipRecord, WeatherAttribution,
 } from '../types';
 
 export async function fetchPlants(): Promise<Plant[]> {
@@ -59,11 +59,13 @@ export async function logCare(
   plantId: number,
   action: CareType,
   notes = '',
+  outcome?: CareOutcome,
 ): Promise<CareLog> {
   const client = await apiClient();
   const { data } = await client.post<CareLog>(`/plants/${plantId}/logs`, {
     action,
     notes,
+    ...(outcome ? { outcome } : {}),
   });
   return data;
 }

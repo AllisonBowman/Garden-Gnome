@@ -32,6 +32,33 @@ class CareType(str, Enum):
     other = "other"
 
 
+class CareOutcome(str, Enum):
+    """What a care to-do actually ended in.
+
+    The reminder's verb is *check*, not *do* — so "I looked and it didn't
+    need doing" is a first-class result, not a dismissal. A null outcome on
+    old rows means the log predates outcomes; the action was done.
+    """
+
+    watered = "watered"
+    checked_not_needed = "checked_not_needed"
+    repotted = "repotted"
+    top_dressed = "top_dressed"
+    checked_fine = "checked_fine"
+
+
+# Which outcomes make sense for which action. Actions absent here take no
+# outcome at all — a pruning is just a pruning.
+OUTCOMES_BY_ACTION: dict[CareType, set[CareOutcome]] = {
+    CareType.water: {CareOutcome.watered, CareOutcome.checked_not_needed},
+    CareType.repot: {
+        CareOutcome.repotted,
+        CareOutcome.top_dressed,
+        CareOutcome.checked_fine,
+    },
+}
+
+
 class SoilMoisture(str, Enum):
     dry = "dry"
     moist = "moist"
@@ -310,6 +337,9 @@ class CareLog(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     plant_id: int = Field(foreign_key="plant.id")
     action: CareType
+    # Null = the log predates outcomes; the action was done. Never backfilled —
+    # we don't invent records about what someone found in the soil.
+    outcome: Optional[CareOutcome] = None
     notes: str = ""
     logged_at: datetime = Field(default_factory=datetime.utcnow)
 

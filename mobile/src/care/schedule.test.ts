@@ -52,12 +52,14 @@ describe('computeCareTasks', () => {
 
   it('calls a plant late only once the window has closed and the grace has passed', () => {
     // watered Jun 30 → window Jul 7–10; today Jul 15 is 5 days past, over the
-    // 3-day grace the streak already allows.
+    // 3-day grace the streak already allows. The STATUS is overdue (sorting,
+    // warning colour) but the COPY stays elapsed time — a count-up from "you
+    // failed" nagged people into watering damp soil.
     const logs = { 1: [{ id: 1, plant_id: 1, action: 'water' as const, notes: '', logged_at: '2026-06-30T09:00:00' }] };
     const [task] = run({ logsByPlant: logs });
     expect(task.status).toBe('overdue');
     expect(task.daysPastWindow).toBe(5);
-    expect(careTaskDueLabel(task)).toBe('5 days past due');
+    expect(careTaskDueLabel(task)).toBe('Last done 15 days ago');
   });
 
   it('agrees with the streak: inside the window plus grace is not behind', () => {

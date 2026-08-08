@@ -8,8 +8,8 @@ from sqlmodel import Session, select
 from app.db.database import get_session
 from app.deps import get_current_user
 from app.models.models import (
-    CareLog, CareSchedule, CareType, Environment, EnvironmentType, Plant,
-    Species, StewardshipRecord, User,
+    OUTCOMES_BY_ACTION, CareLog, CareSchedule, CareType, Environment,
+    EnvironmentType, Plant, Species, StewardshipRecord, User,
 )
 from app.models.schemas import (
     AdviceRequest, CareLogCreate, PlantBulkCreate, PlantBulkResult, PlantCreate,
@@ -359,6 +359,16 @@ def add_care_log(
     session: Session = Depends(get_session),
 ):
     _owned_plant(plant_id, user, session)
+    if payload.outcome is not None:
+        allowed = OUTCOMES_BY_ACTION.get(payload.action, set())
+        if payload.outcome not in allowed:
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    f"'{payload.outcome.value}' is not an outcome of "
+                    f"'{payload.action.value}'"
+                ),
+            )
     log = CareLog(plant_id=plant_id, **payload.model_dump())
     session.add(log)
     session.commit()

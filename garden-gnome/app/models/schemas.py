@@ -4,7 +4,7 @@ from typing import Optional
 from sqlmodel import Field, SQLModel
 
 from app.models.models import (
-    MaturityStage, CareType, LightNeed, SoilMoisture, LeafCondition, EnvironmentType,
+    MaturityStage, CareOutcome, CareType, LightNeed, SoilMoisture, LeafCondition, EnvironmentType,
     ReviewStatus, SpeciesSource, Shelter, TempExposure, SunExposure,
 )
 
@@ -193,6 +193,10 @@ class PlantTransferRequest(SQLModel):
 
 class CareLogCreate(SQLModel):
     action: CareType
+    # What the check ended in (watered / checked_not_needed, repotted /
+    # top_dressed / checked_fine). Optional: quick-logs may omit it, and
+    # actions outside OUTCOMES_BY_ACTION never carry one.
+    outcome: Optional[CareOutcome] = None
     notes: str = ""
 
 

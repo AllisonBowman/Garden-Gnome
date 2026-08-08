@@ -35,8 +35,10 @@ export function isInSeason(careType: CareType, date: Date): boolean {
   return !months || months.includes(date.getMonth() + 1);
 }
 
+// 'check', not 'water': the interval is a prior on when a check will probably
+// come back positive, not an instruction to pour. The finger test decides.
 export const CARE_VERBS: Record<string, string> = {
-  water: 'water', fertilize: 'fertilize',
+  water: 'check', fertilize: 'fertilize',
   prune: 'prune', repot: 'repot', rotate: 'rotate',
 };
 
@@ -59,6 +61,9 @@ export interface ReminderItem {
   plantId: number;
   nickname: string;
   careType: CareType;
+  /** Whole days between the last care of this type (or acquisition) and the
+   *  delivery slot — "it's been 7 days" in the check copy. */
+  daysSinceCare?: number;
 }
 
 export interface ReminderBatch {
@@ -159,7 +164,13 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
         batch = { date: new Date(slot), items: [] };
         byDay.set(key, batch);
       }
-      batch.items.push({ plantId: plant.id, nickname: plant.nickname, careType });
+      batch.items.push({
+        plantId: plant.id,
+        nickname: plant.nickname,
+        careType,
+        daysSinceCare: Math.max(
+          0, Math.round((slot.getTime() - anchorMs) / 86_400_000)),
+      });
     }
   }
 
@@ -171,6 +182,18 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
 function composeMessage(items: ReminderItem[]): { title: string; body: string } {
   if (items.length === 1) {
     const [it] = items;
+    if (it.careType === 'water') {
+      // The check copy: elapsed time as context, the finger test as the
+      // instruction, watering only as its consequence. Never "time to water" —
+      // that's the sentence that made people pour on damp soil.
+      const days = it.daysSinceCare ?? 0;
+      const been = days === 1 ? "it's been 1 day" : `it's been ${days} days`;
+      return {
+        title: `🪴 ${it.nickname} could use a look`,
+        body: `Check ${it.nickname} — ${been}. Push a finger 2 inches in; `
+          + 'water thoroughly only if it\'s dry down there.',
+      };
+    }
     return {
       title: `🪴 ${it.nickname} needs some care`,
       body: `Time to ${CARE_VERBS[it.careType] ?? it.careType} ${it.nickname}.`,

@@ -138,17 +138,14 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
 /**
  * Human phrasing of a task's timing.
  *
- * Care is a window, so most of the time the honest thing to say is how long
- * it has been — not how late you are. "Overdue" is reserved for genuinely past
- * the far end of the window plus the grace period; inside the window the
- * caretaker is doing it right, and the copy should not imply otherwise.
+ * Care is a window, so the honest thing to say is how long it has been — not
+ * how late you are. Even past the window the copy stays elapsed time ("Last
+ * done 12 days ago"): the `overdue` status still exists for sorting and the
+ * warning colour, but a number counting up from "you failed" pushed people to
+ * pour water on damp soil, which is the wrong direction to nag in.
  */
 export function careTaskDueLabel(task: CareTask): string {
-  if (task.status === 'overdue') {
-    const n = task.daysPastWindow;
-    return n === 1 ? '1 day past due' : `${n} days past due`;
-  }
-  if (task.status === 'due') {
+  if (task.status === 'overdue' || task.status === 'due') {
     const since = task.daysSinceLastCare;
     if (since === null) return 'Worth a check';
     return since === 1 ? 'Last done 1 day ago' : `Last done ${since} days ago`;

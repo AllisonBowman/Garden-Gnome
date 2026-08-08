@@ -1,6 +1,10 @@
 export type LightNeed = 'low' | 'medium' | 'bright_indirect' | 'direct';
 export type ReviewStatus = 'approved' | 'needs_review' | 'verified';
 export type CareType = 'water' | 'fertilize' | 'mist' | 'prune' | 'repot' | 'rotate' | 'clean' | 'other';
+/** What a care to-do ended in. The reminder verb is *check*, so "looked and it
+ *  didn't need doing" is a first-class result. Only water and repot take
+ *  outcomes; the server refuses mismatched pairs. */
+export type CareOutcome = 'watered' | 'checked_not_needed' | 'repotted' | 'top_dressed' | 'checked_fine';
 export type EnvironmentType = 'home' | 'nursery' | 'community_garden' | 'conservation' | 'research';
 
 export interface CareSchedule {
@@ -53,6 +57,8 @@ export interface CareLog {
   id: number;
   plant_id: number;
   action: CareType;
+  /** Null on rows that predate outcomes — the action was simply done. */
+  outcome?: CareOutcome | null;
   notes: string;
   logged_at: string;
 }
