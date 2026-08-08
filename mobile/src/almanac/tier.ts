@@ -33,18 +33,28 @@ const NARROW_HUMIDITY_BAND = 20;
 export function difficultyScore(s: Species): number {
   let score = 0;
 
-  if (s.humidity_pct_min >= HIGH_HUMIDITY) score += 2;      // needs a humidifier
-  else if (s.humidity_pct_min >= 50) score += 1;
+  // humidity_sourced === false means the percentages were derived from a
+  // watering category (imported rows) — not facts, so not scorable. Those
+  // rows are scored on light and temperature with heavier weights, so the
+  // scale stays comparable instead of every import drifting to "beginner".
+  // An absent flag (older API) is curated-era data and counts as sourced.
+  const humiditySourced = s.humidity_sourced !== false;
 
-  const humidityBand = s.humidity_pct_max - s.humidity_pct_min;
-  if (humidityBand > 0 && humidityBand < NARROW_HUMIDITY_BAND) score += 1;
+  if (humiditySourced) {
+    if (s.humidity_pct_min >= HIGH_HUMIDITY) score += 2;    // needs a humidifier
+    else if (s.humidity_pct_min >= 50) score += 1;
+
+    const humidityBand = s.humidity_pct_max - s.humidity_pct_min;
+    if (humidityBand > 0 && humidityBand < NARROW_HUMIDITY_BAND) score += 1;
+  }
 
   const tempBand = s.temp_f_max - s.temp_f_min;
-  if (tempBand > 0 && tempBand < NARROW_TEMP_BAND) score += 2;
-  else if (tempBand > 0 && tempBand < NARROW_TEMP_BAND + 10) score += 1;
+  const tempWeight = humiditySourced ? [2, 1] : [3, 2];
+  if (tempBand > 0 && tempBand < NARROW_TEMP_BAND) score += tempWeight[0];
+  else if (tempBand > 0 && tempBand < NARROW_TEMP_BAND + 10) score += tempWeight[1];
 
   // Direct sun indoors is genuinely hard to supply; low light is forgiving.
-  if (s.light_need === 'direct') score += 1;
+  if (s.light_need === 'direct') score += humiditySourced ? 1 : 2;
   if (s.light_need === 'low') score -= 1;
 
   return score;
@@ -81,7 +91,11 @@ export function fingerprint(s: Species): Fingerprint {
       ? `💧 every ${water.interval_days_min}–${water.interval_days_max}d`
       : '💧 —',
     light: LIGHT_GLYPH[s.light_need] ?? `☀ ${s.light_need}`,
-    humidity: `💦 ${s.humidity_pct_min}–${s.humidity_pct_max}%`,
+    // Derived humidity (imports) shows the same honest dash as missing data —
+    // because that's what it is.
+    humidity: s.humidity_sourced !== false
+      ? `💦 ${s.humidity_pct_min}–${s.humidity_pct_max}%`
+      : '💦 —',
   };
 }
 

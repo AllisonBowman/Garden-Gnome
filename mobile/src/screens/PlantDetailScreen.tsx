@@ -21,7 +21,7 @@ import { ensureCameraPermission } from '../photoPermissions';
 import { ensurePhotoUploadConsent } from '../consent/photoUpload';
 import WeatherCredit from '../components/WeatherCredit';
 import ReportResult from '../components/ReportResult';
-import { CareType } from '../types';
+import { CareOutcome, CareType } from '../types';
 import { PlantsStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -31,12 +31,16 @@ import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 
-const CARE_ACTIONS: { type: CareType; icon: string; label: string }[] = [
-  { type: 'water',     icon: '💧', label: 'Watered'    },
+// Quick-logs state what happened, so the ones that map to a check outcome
+// carry it: "Watered" is a check that ended in watering; "Repotted" is an
+// inspection that ended in a repot. Actions without outcomes send none.
+const CARE_ACTIONS: {
+  type: CareType; icon: string; label: string; outcome?: CareOutcome;
+}[] = [
+  { type: 'water',     icon: '💧', label: 'Watered',    outcome: 'watered'  },
   { type: 'fertilize', icon: '🌿', label: 'Fertilized' },
-  { type: 'mist',      icon: '💨', label: 'Misted'     },
   { type: 'prune',     icon: '✂️', label: 'Pruned'     },
-  { type: 'repot',     icon: '🪴', label: 'Repotted'   },
+  { type: 'repot',     icon: '🪴', label: 'Repotted',   outcome: 'repotted' },
   { type: 'rotate',    icon: '🔄', label: 'Rotated'    },
 ];
 
@@ -67,7 +71,8 @@ export default function PlantDetailScreen() {
 
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const logMutation = useMutation({
-    mutationFn: ({ type }: { type: CareType }) => logCare(plantId, type),
+    mutationFn: ({ type }: { type: CareType }) => logCare(
+      plantId, type, '', CARE_ACTIONS.find((a) => a.type === type)?.outcome),
     onMutate: ({ type }) => setLoggingType(type),
     onSuccess: (_data, { type }) => {
       queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });

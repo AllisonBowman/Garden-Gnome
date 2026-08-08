@@ -1,17 +1,19 @@
 import { CareType } from '../types';
 
-// Presentation for a care action on the calendar and the to-do list. Emoji and
-// imperative verbs match the quick-log buttons on PlantDetailScreen so a
-// "💧 Water" to-do reads the same as the "💧 Watered" button that clears it.
-export const CARE_PRESENTATION: Record<CareType, { icon: string; verb: string }> = {
-  water:     { icon: '💧', verb: 'Water'     },
-  fertilize: { icon: '🌿', verb: 'Fertilize' },
-  mist:      { icon: '💨', verb: 'Mist'      },
-  prune:     { icon: '✂️', verb: 'Prune'     },
-  repot:     { icon: '🪴', verb: 'Repot'     },
-  rotate:    { icon: '🔄', verb: 'Rotate'    },
-  clean:     { icon: '🧽', verb: 'Clean'     },
-  other:     { icon: '🌱', verb: 'Care for'  },
+// Presentation for a care action on the calendar and the to-do list.
+// `verb` is the imperative on a to-do row; `done` is the past tense a
+// confirmation uses. Water's verb is *Check*, not *Water*: the to-do asks for
+// the finger test, and the "💧 Watered" quick-log button is one of the ways a
+// check can end.
+export const CARE_PRESENTATION: Record<CareType, { icon: string; verb: string; done: string }> = {
+  water:     { icon: '💧', verb: 'Check',    done: 'Watered'    },
+  fertilize: { icon: '🌿', verb: 'Fertilize', done: 'Fertilized' },
+  mist:      { icon: '💨', verb: 'Mist',      done: 'Misted'     },
+  prune:     { icon: '✂️', verb: 'Prune',     done: 'Pruned'     },
+  repot:     { icon: '🪴', verb: 'Inspect',   done: 'Repotted'   },
+  rotate:    { icon: '🔄', verb: 'Rotate',    done: 'Rotated'    },
+  clean:     { icon: '🧽', verb: 'Clean',     done: 'Cleaned'    },
+  other:     { icon: '🌱', verb: 'Care for',  done: 'Cared for'  },
 };
 
 /** "💧 Water Ferny" — the action phrase for a to-do row or calendar entry. */

@@ -32,6 +32,33 @@ class CareType(str, Enum):
     other = "other"
 
 
+class CareOutcome(str, Enum):
+    """What a care to-do actually ended in.
+
+    The reminder's verb is *check*, not *do* — so "I looked and it didn't
+    need doing" is a first-class result, not a dismissal. A null outcome on
+    old rows means the log predates outcomes; the action was done.
+    """
+
+    watered = "watered"
+    checked_not_needed = "checked_not_needed"
+    repotted = "repotted"
+    top_dressed = "top_dressed"
+    checked_fine = "checked_fine"
+
+
+# Which outcomes make sense for which action. Actions absent here take no
+# outcome at all — a pruning is just a pruning.
+OUTCOMES_BY_ACTION: dict[CareType, set[CareOutcome]] = {
+    CareType.water: {CareOutcome.watered, CareOutcome.checked_not_needed},
+    CareType.repot: {
+        CareOutcome.repotted,
+        CareOutcome.top_dressed,
+        CareOutcome.checked_fine,
+    },
+}
+
+
 class SoilMoisture(str, Enum):
     dry = "dry"
     moist = "moist"
@@ -187,6 +214,22 @@ class Species(SQLModel, table=True):
     traits: list["SpeciesTrait"] = Relationship(back_populates="species")
 
     @property
+    def humidity_sourced(self) -> bool:
+        """Whether this row's humidity numbers came from a real source.
+
+        The Perenual import had no humidity field; every imported row derives
+        its percentages from a watering category and carries a
+        `humidity_source` trait saying so (present on all imports, absent on
+        all curated rows). Numbers derived that way are not facts, and no
+        surface should present them as facts — the advisor omits them, the
+        detail screen hides the stat, and the Almanac stops sorting on them.
+
+        Touching `self.traits` lazy-loads when the relation isn't already in
+        memory — fine for single-species paths; the list endpoint computes
+        this in one query instead (see `list_species`)."""
+        return all(t.trait != "humidity_source" for t in self.traits)
+
+    @property
     def toxicity_description(self) -> str:
         """A plain-language toxicity sentence, generated from what we know.
 
@@ -310,6 +353,9 @@ class CareLog(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     plant_id: int = Field(foreign_key="plant.id")
     action: CareType
+    # Null = the log predates outcomes; the action was done. Never backfilled —
+    # we don't invent records about what someone found in the soil.
+    outcome: Optional[CareOutcome] = None
     notes: str = ""
     logged_at: datetime = Field(default_factory=datetime.utcnow)
 

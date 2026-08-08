@@ -1,0 +1,781 @@
+{
+  "batch": "b5-edible-and-garden",
+  "records": [
+    {
+      "common_name": "Tomato",
+      "scientific_name_given": "Solanum lycopersicum",
+      "scientific_name_accepted": "Solanum lycopersicum",
+      "name_note": "",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 5.8,
+      "soil_ph_max": 6.8,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Do not let the root zone swing between wet and dry; NC State ties inconsistent moisture to blossom end rot and fruit splitting.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": 50,
+      "cool_rest_note": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": "Foliage only, not the ripe fruit. NC State lists the poison parts as leaves and stems, toxic principle the alkaloids tomatine and solanine, severity Medium, and tags the plant a problem for cats, dogs and horses. The ripe fruit is the ordinary edible crop and is not implicated. NC State also records that, according to a Carolinas Poison Center clinical toxicologist, since that database began in 1997 there has been only one reference to a child having a reaction related to consuming tomato leaves or stems. The realistic risk is therefore from large quantities of foliage, e.g. a browsing animal, rather than an incidental nibble.",
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "soil_ph_min 5.8 / soil_ph_max 6.8",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/",
+          "quote": "pH of 5.8 to 6.8"
+        },
+        {
+          "claim": "water_regime = keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/",
+          "quote": "Keep the soil consistently watered to avoid blossom end rot and splitting fruit"
+        },
+        {
+          "claim": "toxic_to_pets = true; poison parts leaves and stems, principle tomatine and solanine",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/",
+          "quote": "Leaves and stems cause headaches, abdominal pain, dilated pupils, vomiting, diarrhea, hypersalivation, severe gastrointestinal upset, circulatory and respiratory depression, and loss of sensation if eaten in large quantities."
+        },
+        {
+          "claim": "toxic_to_pets = true (animal-specific tags)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/",
+          "quote": "#problem for cats"
+        },
+        {
+          "claim": "toxicity_detail: documented human-exposure record",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/",
+          "quote": "According to Dr. Anna Dulaney, Clinical Toxicologist and Assistant Director of Education for the Carolinas Poison Center, since their database began in 1997 there has been only one reference to a child having a reaction related to consuming tomato leaves or stems."
+        },
+        {
+          "claim": "chill_damage_f = 50",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/catfacing-tomatoes/",
+          "quote": "The cause is exposure to cool temperatures- below 50° F.- after transplanting."
+        }
+      ],
+      "unknowns": [
+        "REMOVED BY AUDIT — soil_drainage was recorded as 'moderate' with no citation at all, and the NC State page tags 'Good Drainage' and 'Moist', neither of which is moderate. The value was uncited and contradicted by its own source page, so it is now null.",
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array while every other unknown used null. An empty array reads as 'this plant is never fertilized', which is care advice no source supports, and tomato is a heavy feeder. Now null, meaning unknown.",
+        "CORRECTED BY AUDIT — the previous unknowns text claimed no approved source gives a per-species air temperature figure for tomato. That was false: the cited NC State page states 'They also prefer temperatures between 70 to 75 degrees Fahrenheit.' day_f_min/day_f_max remain null because that is a single preference figure, not a day/night band, but the earlier reason was untrue and has been replaced.",
+        "chill_damage_f = 50 is upheld and verbatim, but its scope is narrower than the field name suggests: the University of Maryland sentence describes catfacing (misshapen, scarred fruit) caused by cool exposure after transplanting, not a general chilling-injury threshold. Direction and number are right for a cold warning; do not present it as a general damage point.",
+        "All indoor light fields (light_fc_min, light_fc_good, direct_sun_hours_max) null: this is a garden crop and no source publishes indoor intensity for it. Converting the outdoor full-sun rating into an indoor value would be a category error.",
+        "soil_ph_min/max are NC State's stated numeric preference for tomato, not a hard tolerance limit.",
+        "humidity_need and percentages null: outdoor crop at ambient humidity; no extension source states a species humidity category.",
+        "fertilize_interval_days and fertilize_strength null: no approved source consulted gave a schedule, interval or strength for tomato.",
+        "water_growing_days_est, water_dormant_days_est, water_estimate_basis, water_check_depth_cm null: in-ground garden crop, so interval is driven by weather and soil, not a pot/medium assumption we can state. water_regime carries the real fact.",
+        "toxic_to_pets = true is asserted for FOLIAGE. If the app renders a single boolean it will read as 'tomato is toxic', which is wrong about the fruit. toxicity_detail must be shown alongside it.",
+        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts. No citation supports them and none was claimed."
+      ]
+    },
+    {
+      "common_name": "Kale",
+      "scientific_name_given": "Brassica oleracea var. sabellica",
+      "scientific_name_accepted": "Brassica oleracea var. sabellica",
+      "name_note": "NC State Extension files this plant under 'Brassica oleracea Kale Group', a cultivar-group name for the same plants rather than a taxonomic correction, so the stored name is kept.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 6.5,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Keep the bed evenly moist; Clemson directs watering deeply when necessary to encourage sufficient root growth.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": "Cold is beneficial, not harmful. NC State states kale tolerates frost and light freezes, can be grown all winter in the South, and that frost improves the flavor. Do not warn users away from cold for this species.",
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kale-group/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "soil_ph_min 6.0 / soil_ph_max 6.5",
+          "source": "Clemson Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/arugula-kale-mesclun-mustard-and-swiss-chard/",
+          "quote": "Maintain a soil pH of 6.0 to 6.5"
+        },
+        {
+          "claim": "water_dry_down_target: water deeply",
+          "source": "Clemson Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/arugula-kale-mesclun-mustard-and-swiss-chard/",
+          "quote": "Water deeply when necessary to encourage sufficient root growth."
+        },
+        {
+          "claim": "water_regime = keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kale-group/",
+          "quote": "amended well-drained moist garden soil"
+        },
+        {
+          "claim": "cool_rest_note: cold tolerance is a feature, not a hazard",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kale-group/",
+          "quote": "They tolerate frost and light freezes"
+        },
+        {
+          "claim": "cool_rest_note: flavor improves with frost",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kale-group/",
+          "quote": "Frost improves the flavor."
+        }
+      ],
+      "unknowns": [
+        "REMOVED BY AUDIT — soil_drainage was 'moderate' while the citation attached to it claimed 'good drainage' and quoted 'amended well-drained moist garden soil'. The stored value contradicted its own citation, so it is now null.",
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
+        "TRIMMED BY AUDIT — name_note previously asserted POWO and World Flora Online rankings and a Missouri Botanical Garden filing with no citation to any of the three. Those uncited nomenclatural claims were removed; only the NC State 'Kale Group' observation, which the cited URL supports, remains.",
+        "CORRECTED BY AUDIT — water_dry_down_target previously attributed to Clemson a contrast ('rather than lightly and often') that Clemson did not write. It now uses Clemson's actual sentence, which is cited.",
+        "All indoor light fields null: garden crop; no source publishes indoor intensity for kale.",
+        "chill_damage_f null: kale is cold-hardy, so a chilling-damage threshold is the wrong concept. A '20 F' leaf-hardiness figure appeared in a search summary of a Clemson page but I could not confirm it verbatim on the page itself, so I did not record it.",
+        "day_f_min/max and night_f_min/max null: a '50 F' growing figure and a '40 to 85 F' germination soil-temperature range surfaced only in search-engine summaries, not in verbatim page text. Germination soil temperature is also not an air-temperature comfort range.",
+        "humidity_need and percentages null: outdoor crop at ambient humidity.",
+        "fertilize_interval_days and fertilize_strength null: Clemson mentions a light nitrogen side dressing after cropping but gives no interval, strength or month range, and writes it for leafy greens generally rather than kale.",
+        "water_* day estimates and water_estimate_basis null: in-ground crop, no defensible pot/medium assumption.",
+        "toxic_to_pets null: neither NC State nor Clemson makes any statement about toxicity or non-toxicity to pets for kale, in either direction. Silence is not evidence of safety, so this stays null rather than false. ASPCA's list may not be reproduced.",
+        "soil_ph values come from Clemson's opening paragraph covering arugula, kale, mesclun, mustard and Swiss chard collectively, not a kale-only figure.",
+        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts."
+      ]
+    },
+    {
+      "common_name": "Mint",
+      "scientific_name_given": "Mentha spicata",
+      "scientific_name_accepted": "Mentha spicata",
+      "name_note": "",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Do not let it dry out. NC State says it does not do well in dry soils; its native habitat is moist fields and pond or lake margins.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": "NC State rates poison severity Low, names the toxic principle as essential oils, gives symptoms as vomiting and diarrhea with large ingestions, and tags the plant a problem for cats, dogs and horses. The page names no poison part. This is a large-ingestion GI upset, not a serious poisoning, and spearmint is a normal culinary herb for people. Present it as 'may upset a pet's stomach if a lot is eaten', not as a danger.",
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun (tolerates part shade)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mentha-spicata/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "soil_ph_min 6.0 / soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mentha-spicata/",
+          "quote": "Neutral (6.0-8.0)"
+        },
+        {
+          "claim": "water_regime = keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mentha-spicata/",
+          "quote": "It does tolerate partial shade and a wide range of soil types, but does not do well in dry soils."
+        },
+        {
+          "claim": "toxic_to_pets = true, severity low, symptoms",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mentha-spicata/",
+          "quote": "Vomiting and diarrhea with large ingestions"
+        },
+        {
+          "claim": "toxic principle is essential oils",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mentha-spicata/",
+          "quote": "Essential Oils"
+        }
+      ],
+      "unknowns": [
+        "REMOVED BY AUDIT — soil_drainage was 'moderate' with no citation. The NC State page's soil tags are 'Good Drainage', 'Moist', 'Occasionally Dry' and 'Occasionally Wet', which is a breadth-of-tolerance list rather than a moderate rating. Now null.",
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
+        "toxic_to_pets = true here is a LOW-severity, large-ingestion stomach upset and shares one boolean with genuinely dangerous plants. As with tomato, a bare boolean will overstate this; toxicity_detail must be shown with it.",
+        "All indoor light fields null: NC State treats spearmint as a garden herb/groundcover. Mint is very commonly grown on a windowsill, but no approved source publishes an indoor foot-candle figure for it, and deriving one from the outdoor full-sun rating is not permitted.",
+        "is_houseplant set false on the strength of how the sources treat it (garden herb). This is a product classification, not a sourced fact.",
+        "soil_ph range is NC State's category label 'Neutral (6.0-8.0)' rather than a mint-specific measured optimum; treat it as a tolerance band.",
+        "day/night temperature fields and chill_damage_f null: no approved source gave temperature numbers. NC State lists hardiness zones 4a-9b, a winter-survival rating that is not the same quantity as a chill-damage threshold.",
+        "humidity_need and percentages null: outdoor plant at ambient humidity.",
+        "fertilize_interval_days and fertilize_strength null: no schedule found in an approved source.",
+        "water_* day estimates and water_estimate_basis null: no pot/medium assumption is stated by any source and mint is described in-ground.",
+        "soil_base = garden_bed is a product classification, not a sourced fact."
+      ]
+    },
+    {
+      "common_name": "Melon (Armenian cucumber / snake melon)",
+      "scientific_name_given": "Cucumis melo var. flexuosus",
+      "scientific_name_accepted": "Cucumis melo",
+      "name_note": "The species is Cucumis melo L. NC State Extension treats 'flexuosus' not as a botanical variety but as a horticultural cultivar group within the species, listing 'Flexuosus group (American cucumber)' among the informal groupings of C. melo alongside Cantalupensis, Inodorus and others. The accepted name is therefore recorded as Cucumis melo, with 'var. flexuosus' / 'Flexuosus Group' treated as an infraspecific cultivar designation. POWO's ranking of the varietal name was not independently confirmed (the POWO page returned HTTP 403), so this reflects extension usage rather than a checked nomenclatural database entry. Note also that NC State labels the group 'American cucumber' while this record's common name says 'Armenian cucumber'; the two labels should not be conflated in UI copy.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Keep the root zone moist while the vines run and the fruit sizes; Clemson states melons need a lot of water and directs wetting the soil to at least 6 inches deep.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": false,
+      "toxicity_detail": "NC State tags Cucumis melo non-toxic for cats, dogs and horses. Separately, and for humans rather than pets, NC State cautions against eating the seeds because the sprouting seed produces a toxic substance in its embryo — this concerns germinating seed, not the ripe flesh, which is an ordinary edible.",
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "name_note: flexuosus treated as a cultivar group within C. melo",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+          "quote": "Flexuosus group (American cucumber)"
+        },
+        {
+          "claim": "water_regime = keep_moist",
+          "source": "Clemson Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/cantaloupe-honeydew-melons/",
+          "quote": "Melons need a lot of water"
+        },
+        {
+          "claim": "toxic_to_pets = false",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+          "quote": "#non-toxic for cats"
+        },
+        {
+          "claim": "toxicity_detail: human seed caution",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+          "quote": "Avoid the seeds as the sprouting seed produces a toxic substance in its embryo."
+        }
+      ],
+      "unknowns": [
+        "REMOVED BY AUDIT — day_f_min 65 / day_f_max 75 are gone. Both auditors refuted them on the same grounds: Clemson's quote says 'average air temperatures between 65 and 75 °F', a seasonal MEAN that folds day and night together, which is a different physical quantity from a daytime band. Stored as a day band it would cap day_f_max at 75 F for a heat-loving cucurbit and make ideal melon weather read as too hot. Clemson publishes no day/night band. The underlying fact survives only as this note: melons grow best where the seasonal average air temperature is 65-75 F.",
+        "REMOVED BY AUDIT — soil_drainage was 'moderate' with no citation; NC State tags 'Good Drainage' and 'Moist' and Clemson states no drainage rating. Now null.",
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
+        "water_dry_down_target now says 'while the vines run and the fruit sizes' rather than 'through fruit development', because the earlier wording could be read as instructing continued heavy watering through ripening. Standard practice eases off as fruit matures, but no approved source in this record states that, so it is flagged here rather than recorded as guidance.",
+        "All indoor light fields null: garden crop.",
+        "soil_ph_min/max null: NC State only gives the coarse category labels 'Acid (<6.0)' and 'Neutral (6.0-8.0)', which together span too wide a range to be actionable, and the Clemson melon factsheet states no pH.",
+        "night_f_min/max null: no source gave a night band.",
+        "chill_damage_f null: Clemson's '60 to 65 F' figure is a minimum SOIL temperature for planting, a different quantity from an air chilling-damage threshold. Clemson does say the plants are very tender and should be planted after the last chance of frost, but attaches no number.",
+        "humidity_need and percentages null: outdoor crop at ambient humidity.",
+        "fertilize_interval_days and fertilize_strength null: no schedule captured from an approved source.",
+        "water_check_depth_cm left null even though Clemson mentions 6 inches — that figure is how deep to WET the soil when irrigating, not how deep to probe before deciding to water.",
+        "water_* day estimates and water_estimate_basis null: in-ground crop, no stated pot/medium assumptions.",
+        "toxic_to_pets false rests on NC State's explicit non-toxic tags for cats, dogs and horses, not on absence of evidence.",
+        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts."
+      ]
+    },
+    {
+      "common_name": "Sunflower",
+      "scientific_name_given": "Helianthus annuus",
+      "scientific_name_accepted": "Helianthus annuus",
+      "name_note": "",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": "dry_surface_between",
+      "water_dry_down_target": "Let the surface dry between waterings once the plant is established; NC State lists it as tolerating occasionally dry soil and describes it as drought-tolerant once established. Water young plants more attentively.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": 70,
+      "day_f_max": 85,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/helianthus-annuus/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "soil_ph_min 6.0 / soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/helianthus-annuus/",
+          "quote": "Neutral (6.0-8.0)"
+        },
+        {
+          "claim": "water_regime = dry_surface_between",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/helianthus-annuus/",
+          "quote": "drought-tolerant once established"
+        },
+        {
+          "claim": "day_f_min 70 / day_f_max 85",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/helianthus-annuus/",
+          "quote": "It is best grown in temperatures between 70 and 85 degrees Fahrenheit and is not frost-tolerant."
+        }
+      ],
+      "unknowns": [
+        "ADDED BY AUDIT — day_f_min 70 / day_f_max 85 were previously null on the false ground that 'no approved source gave temperature numbers for sunflower'. The record's own cited NC State page states the range verbatim, and the auditor confirmed it is an air-temperature growing range rather than a germination soil temperature. The value is now recorded with that quote.",
+        "REMOVED BY AUDIT — soil_drainage was 'moderate' with no citation; NC State tags 'Good Drainage', 'Moist' and 'Occasionally Dry'. Now null.",
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
+        "All indoor light fields null: garden annual. The outdoor full-sun rating must not be turned into an indoor intensity.",
+        "soil_ph_max 8.0 is the top of NC State's 'Neutral (6.0-8.0)' category label. NC State ALSO tags the plant 'Alkaline (>8.0)', so the recorded max is a conservative edge of the well-documented band, not a hard ceiling.",
+        "night_f_min/max and chill_damage_f null: the NC State sentence says the plant is not frost-tolerant but attaches no number, and no approved source gives a night band or a chilling threshold.",
+        "humidity_need and percentages null: outdoor annual at ambient humidity.",
+        "fertilize_interval_days and fertilize_strength null: no schedule found in an approved source.",
+        "water_* day estimates and water_estimate_basis null: no pot/medium assumption available; the regime is the real fact.",
+        "toxic_to_pets null: the NC State page carries NO animal toxicity tags in either direction — neither 'problem for' nor 'non-toxic for'. Both directions were checked, independently confirmed by audit. Silence is not a safety claim, so this stays null rather than false, even though sunflower seed is a common food.",
+        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts."
+      ]
+    },
+    {
+      "common_name": "Pumpkin",
+      "scientific_name_given": "Cucurbita maxima",
+      "scientific_name_accepted": "Cucurbita maxima",
+      "name_note": "Cucurbita maxima is the giant-pumpkin and winter-squash species (Atlantic Giant, Hubbard, buttercup). Most jack-o-lantern and pie pumpkins sold under the name 'pumpkin' are Cucurbita pepo or Cucurbita moschata. The care recorded here is C. maxima's; all three are frost-tender warm-season cucurbits, so it is close but not identical for a user holding a different species.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Keep the bed moist; NC State tags the plant's soil moisture requirement as Moist.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": false,
+      "toxicity_detail": "NC State explicitly tags Cucurbita maxima non-toxic for cats, non-toxic for dogs and non-toxic for horses. This is an affirmative non-toxicity statement, not an absence of data.",
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-maxima/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "soil_ph_min 6.0 / soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-maxima/",
+          "quote": "Neutral (6.0-8.0)"
+        },
+        {
+          "claim": "water_regime = keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-maxima/",
+          "quote": "Moist"
+        },
+        {
+          "claim": "toxic_to_pets = false",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-maxima/",
+          "quote": "non-toxic for cats"
+        }
+      ],
+      "unknowns": [
+        "REMOVED BY AUDIT — soil_drainage was 'moderate' while the only quote offered on the subject was NC State's literal 'Good Drainage' tag. The stored value contradicted its own citation, so it is now null. This matters in practice: squash and pumpkin rot on heavy wet ground, so understating drainage here would be the removal with the most real-world consequence in this batch.",
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Pumpkins are heavy feeders, so a rendered 'Fertilizing: none' would be actively wrong. Now null, meaning unknown.",
+        "RE-CITED BY AUDIT — water_regime keep_moist was previously supported only by a quote of the 'Good Drainage' tag, which is a drainage property and cannot carry a moisture value. The value stands, now cited to the page's 'Moist' soil-moisture tag.",
+        "ADDED BY AUDIT — name_note was empty; it now discloses the C. maxima vs C. pepo / C. moschata species ambiguity behind the common name 'pumpkin'.",
+        "All indoor light fields null: garden crop.",
+        "soil_ph values are NC State's category label 'Neutral (6.0-8.0)', a tolerance band rather than a measured optimum. It is the only pH tag on the page, so the range is not cherry-picked from a wider tolerance.",
+        "day/night temperature fields and chill_damage_f null: no approved source consulted gave temperature numbers for C. maxima. It is a frost-tender warm-season crop, but there is no citable number and the melon figures from a different genus were not borrowed.",
+        "humidity_need and percentages null: outdoor crop at ambient humidity.",
+        "fertilize_interval_days and fertilize_strength null: no schedule found in an approved source.",
+        "water_* day estimates and water_estimate_basis null: in-ground crop, no defensible pot/medium assumption.",
+        "water_check_depth_cm null: no source stated a probe depth.",
+        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts."
+      ]
+    },
+    {
+      "common_name": "Common Peony",
+      "scientific_name_given": "Paeonia officinalis",
+      "scientific_name_accepted": "Paeonia officinalis",
+      "name_note": "",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Do not let the root zone dry down. NC State notes demand is highest early in the season while leaves and flower buds are forming, so front-load watering in spring; the crown is shallow and a dry spell during that one short push shows up as blasted buds rather than as visible wilt.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": "NC State tags herbaceous Paeonia a problem for cats, a problem for dogs and a problem for horses. The page carries NO poison-part, severity, symptom or toxic-principle detail, so all that can be confirmed is that an extension service flags it as a hazard to these animals — not which parts, how severe, or what the toxic principle is. Do not let the app imply more specificity than this.",
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/paeonia-herbaceous-types/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "water_regime = keep_moist; spring demand is highest",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/paeonia-herbaceous-types/",
+          "quote": "will require quite a bit of water in the early part of the growing season to establish their leaves and flower buds."
+        },
+        {
+          "claim": "toxic_to_pets = true",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/paeonia-herbaceous-types/",
+          "quote": "Problem for Cats"
+        }
+      ],
+      "unknowns": [
+        "REVISED BY AUDIT — water_regime was 'dry_surface_between' and both auditors refuted it. Both cited sources say the opposite, and the record's own water_dry_down_target text said 'moist' while the regime field said dry down. It is now keep_moist, supported by the NC State sentence about high early-season water demand. Note the enum cannot express the seasonality: demand is strongly front-loaded to spring.",
+        "REMOVED BY AUDIT — soil_drainage was 'moderate' with no citation, and NC State's only soil tag for herbaceous peony is 'Good Drainage'. Crown rot in wet soil makes an understated drainage value actively risky, so this is null rather than guessed.",
+        "REMOVED BY AUDIT — cool_rest_note is gone. It asserted, uncited, that peonies 'are widely reported to languish' without winter chilling and that NC State's culture notes say herbaceous types perform best in zones 5-7. Neither assertion was backed by a quote in this record. One auditor thought the claim re-sourceable and the other found it unsupported; the conservative outcome was taken. The horticultural understanding may well be correct, but it is not recorded here as fact.",
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
+        "REMOVED BY AUDIT — the Missouri Botanical Garden citation (plantfinder.mobot.org taxonid=286230) has been dropped entirely. That page states 'Winter hardy to USDA Zones 8-10' for Paeonia officinalis, which is irreconcilable with NC State's 3a-8b and biologically implausible for a cold-winter southern European mountain perennial. Re-fetching the same URL twice cannot distinguish 'this page is wrong' from 'this URL is a different plant', and the Myrtus communis record in this same batch quotes the identical zone-8-10 string where it is correct. Until the page identity is verified, nothing from it is used — including the sun-and-soil quote it previously supported.",
+        "All indoor light fields null: outdoor garden perennial.",
+        "soil_ph_min/max null: NC State's only pH tag for herbaceous peony is 'Acid (<6.0)', which gives no lower bound. An unbounded 'below 6.0' is not actionable. The NC State publication 'Peonies for the Home Landscape' returned HTTP 403.",
+        "chill_damage_f null: peony is cold-hardy, so a chilling-damage threshold does not apply. No numeric chill-hour requirement is recorded either: figures of '500 to 1,000 hours between 32 and 40 F' and '30-40 days below 40 F' appeared only in search-engine summaries citing work on Paeonia lactiflora, a different species.",
+        "day/night temperature fields null: no approved source gave a day/night band.",
+        "humidity_need and percentages null: outdoor perennial at ambient humidity.",
+        "fertilize_interval_days and fertilize_strength null: the NC State peony publication that would carry fertilizer timing was inaccessible (403).",
+        "water_* day estimates and water_estimate_basis null: in-ground perennial with a strongly seasonal demand curve; a fixed day interval would misrepresent it.",
+        "SCOPE DISCLOSURE: all NC State data in this record comes from a group page for herbaceous Paeonia types, not a Paeonia officinalis page. Defensible, but group-level rather than species-level.",
+        "toxicity_detail is thin by necessity: NC State flags the animal hazard but publishes no parts, severity, symptoms or toxic principle for herbaceous Paeonia, and ASPCA's list may not be reproduced.",
+        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts.",
+        "outdoor_sun_exposure: the 'part shade tolerated' parenthetical had no surviving citation (the MOBOT quote carrying it was dropped in audit), so as of 2026-08-08 the field records full_sun only."
+      ]
+    },
+    {
+      "common_name": "Myrtle",
+      "scientific_name_given": "Myrtus communis",
+      "scientific_name_accepted": "Myrtus communis",
+      "name_note": "",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": "fast",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "dry_surface_between",
+      "water_dry_down_target": "Medium moisture in sharply drained soil; let the surface dry between waterings. Missouri Botanical notes established plants have some drought tolerance, so err dry rather than wet — this is a Mediterranean shrub and sharp drainage is called out as important. Note that MOBOT's own water rating is Medium, not Low, so do not render this as a drought-plant instruction.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": "No pet-toxicity determination available. For humans the picture is the opposite of toxic: NC State states the fruits are edible and that fruits, flowers and leaves when dried are used as a food flavoring. That is a statement about human culinary use and must NOT be read as a pet-safety clearance.",
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure = full_sun (part shade tolerated); well-drained soils",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282870&isprofile=0",
+          "quote": "Winter hardy to USDA Zones 8-10 where it is best grown in moderately fertile, medium moisture, well-drained soils in full sun to part shade."
+        },
+        {
+          "claim": "soil_drainage = fast",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282870&isprofile=0",
+          "quote": "Sharply drained soils are important."
+        },
+        {
+          "claim": "water_regime = dry_surface_between",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282870&isprofile=0",
+          "quote": "Established plants have some drought tolerance."
+        },
+        {
+          "claim": "outdoor_sun_exposure corroboration",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/myrtus-communis/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "toxicity_detail: human edibility (NOT a pet-safety claim)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/myrtus-communis/",
+          "quote": "The fruits are edible."
+        }
+      ],
+      "unknowns": [
+        "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
+        "soil_drainage = fast is the only drainage value in this batch that survived audit: 'sharply drained' genuinely means fast, and it is both cited and correctly matched to its quote.",
+        "is_houseplant set false, which is a judgement call worth surfacing. Both sources treat myrtle as an outdoor broadleaf evergreen shrub (NC State zones 8a-9b; MOBOT zones 8-10), and MOBOT notes that in St. Louis it is grown in containers overwintered indoors. That is seasonal indoor shelter, not houseplant culture. Because is_houseplant is false, every indoor light field is null by rule — correctly so, since no approved source publishes an indoor foot-candle figure for it. Indoor overwintering guidance must be sourced separately, never derived from the outdoor full-sun rating.",
+        "soil_ph_min/max null: NC State tags Myrtus communis as tolerating ALL THREE pH categories — 'Acid (<6.0)', 'Neutral (6.0-8.0)' and 'Alkaline (>8.0)'. That is broad tolerance, not a range, and recording 6.0-8.0 from the middle label would misrepresent it. MOBOT states no pH.",
+        "day/night temperature fields and chill_damage_f null: no approved source gave temperature numbers. The zone 8-10 rating is a winter-survival rating, a different quantity from a chilling-damage threshold. This matters because users overwintering a container plant indoors will want a real cold threshold and a fabricated one would be worse than none.",
+        "humidity_need and percentages null: neither source states a humidity category. Mediterranean origin suggests it is not a high-humidity plant, but that is inference, not a citation.",
+        "fertilize_interval_days and fertilize_strength null: MOBOT rates maintenance 'Low' but publishes no fertilizer schedule, interval or strength. 'Low maintenance' is not a feeding regime.",
+        "water_* day estimates and water_estimate_basis null: sources describe in-ground shrub culture. A container-overwintering interval would need pot material, size, light and medium assumptions that no source supplies.",
+        "toxic_to_pets null: the NC State page was checked for both 'problem for cats/dogs/horses' and 'non-toxic for cats/dogs/horses' tags and NEITHER is present, independently confirmed by audit; MOBOT makes no toxicity statement. Human edibility of the berries says nothing about cats, dogs or horses. ASPCA's list may not be reproduced.",
+        "soil_base = garden_bed is a product classification, not a sourced fact."
+      ]
+    }
+  ],
+  "audit_summary": {
+    "fields_proposed": 111,
+    "fields_removed_by_audit": 20,
+    "removals": [
+      {
+        "scientific_name": "Solanum lycopersicum",
+        "field": "soil_drainage",
+        "reason": "Uncited 'moderate' contradicted by the source page's own 'Good Drainage' and 'Moist' tags."
+      },
+      {
+        "scientific_name": "Solanum lycopersicum",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize' rather than 'unknown'; no source supports a no-feeding regime for a heavy feeder."
+      },
+      {
+        "scientific_name": "Brassica oleracea var. sabellica",
+        "field": "soil_drainage",
+        "reason": "Stored 'moderate' contradicted its own citation, which claimed good drainage and quoted 'amended well-drained moist garden soil'."
+      },
+      {
+        "scientific_name": "Brassica oleracea var. sabellica",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize' rather than 'unknown'."
+      },
+      {
+        "scientific_name": "Brassica oleracea var. sabellica",
+        "field": "name_note (POWO / World Flora Online / MOBOT assertions)",
+        "reason": "Three nomenclatural sourcing claims with no citation to any of the three databases; trimmed to the NC State observation the cited URL supports."
+      },
+      {
+        "scientific_name": "Mentha spicata",
+        "field": "soil_drainage",
+        "reason": "Uncited 'moderate'; the page's soil tags are a breadth-of-tolerance list, not a moderate rating."
+      },
+      {
+        "scientific_name": "Mentha spicata",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize' rather than 'unknown'."
+      },
+      {
+        "scientific_name": "Cucumis melo",
+        "field": "day_f_min",
+        "reason": "Clemson's 65-75 F is a seasonal AVERAGE air temperature, not a daytime band; both auditors refuted the quantity conflation."
+      },
+      {
+        "scientific_name": "Cucumis melo",
+        "field": "day_f_max",
+        "reason": "Same average-vs-daytime error; a 75 F daytime ceiling would flag ideal melon weather as too hot for a heat-loving cucurbit."
+      },
+      {
+        "scientific_name": "Cucumis melo",
+        "field": "soil_drainage",
+        "reason": "Uncited 'moderate'; NC State tags 'Good Drainage' and 'Moist' and Clemson states no drainage rating."
+      },
+      {
+        "scientific_name": "Cucumis melo",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize' rather than 'unknown'."
+      },
+      {
+        "scientific_name": "Helianthus annuus",
+        "field": "soil_drainage",
+        "reason": "Uncited 'moderate'; the page tags 'Good Drainage', 'Moist' and 'Occasionally Dry'."
+      },
+      {
+        "scientific_name": "Helianthus annuus",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize' rather than 'unknown'."
+      },
+      {
+        "scientific_name": "Cucurbita maxima",
+        "field": "soil_drainage",
+        "reason": "Stored 'moderate' directly contradicted the only quote offered, NC State's literal 'Good Drainage' tag; pumpkins rot on heavy wet ground, so the understatement was risky."
+      },
+      {
+        "scientific_name": "Cucurbita maxima",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize'; pumpkin is a heavy feeder, so a rendered 'Fertilizing: none' would be actively wrong."
+      },
+      {
+        "scientific_name": "Paeonia officinalis",
+        "field": "soil_drainage",
+        "reason": "Uncited 'moderate' while NC State's only soil tag is 'Good Drainage'; crown rot risk makes an understated value dangerous."
+      },
+      {
+        "scientific_name": "Paeonia officinalis",
+        "field": "cool_rest_note",
+        "reason": "Asserted a chilling requirement as 'widely reported' and attributed a zones 5-7 optimum to NC State with no quote supporting either; auditors split between re-sourceable and unsupported, so the conservative null was taken."
+      },
+      {
+        "scientific_name": "Paeonia officinalis",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize' rather than 'unknown'."
+      },
+      {
+        "scientific_name": "Paeonia officinalis",
+        "field": "citations (Missouri Botanical Garden, taxonid=286230)",
+        "reason": "Page states zones 8-10 for a cold-winter perennial; two fetches of one URL cannot rule out that the URL resolves to a different plant, so the whole citation is dropped until page identity is verified."
+      },
+      {
+        "scientific_name": "Myrtus communis",
+        "field": "fertilize_active_months",
+        "reason": "Empty array reads as 'never fertilize' rather than 'unknown'."
+      }
+    ]
+  },
+  "normalizations": [
+    "2026-08-08: light_dli_min/opt_low/opt_high dropped from the schema — 0 of 40 records could source a DLI value; unknowns entries edited to match.",
+    "2026-08-08: Clemson Medium-band readings normalised to one convention — fc_min = top of the minimum sub-range (150), fc_good = bottom of the preferred sub-range (200). Low-band records were already uniform (100/200) and were left alone.",
+    "2026-08-08: High-band floors (Aloe, Crassula, Hoya) nulled — the audit killed their companion fc_good as class-floor artifacts, and a floor read off the bottom of Clemson's 150-1000 band understates a high-light plant. Re-source in the verification pass.",
+    "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
+    "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
+    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus)."
+  ]
+}

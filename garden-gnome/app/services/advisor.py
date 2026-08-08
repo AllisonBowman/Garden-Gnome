@@ -178,12 +178,19 @@ def _build_prompt(
     environment: Environment | None = None,
     weather: dict | None = None,
 ) -> str:
+    # The humidity line exists only when the numbers came from a source. On
+    # imported rows they were derived from a watering category, and a block
+    # headed "authoritative" must not hand the model derived numbers as facts.
+    humidity_line = (
+        f"- Humidity: {species.humidity_pct_min}-{species.humidity_pct_max}%\n"
+        if species.humidity_sourced else ""
+    )
     facts = (
         f"SPECIES CARE FACTS (authoritative):\n"
         f"- Common name: {species.common_name}\n"
         f"- Scientific name: {species.scientific_name}\n"
         f"- Light need: {species.light_need.value}\n"
-        f"- Humidity: {species.humidity_pct_min}-{species.humidity_pct_max}%\n"
+        f"{humidity_line}"
         f"- Temperature: {species.temp_f_min}-{species.temp_f_max} F\n"
         f"- Soil: {species.soil_type}\n"
         f"- Toxic to pets: {'yes' if species.toxic_to_pets else 'no'}\n"

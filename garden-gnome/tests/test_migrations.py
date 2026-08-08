@@ -98,3 +98,130 @@ def test_preauth_db_backfills_dev_user(tmp_path: Path):
         "SELECT user_id FROM plant WHERE nickname = 'Old Plant'").fetchone()[0]
     assert owner == users[0][0]
     conn.close()
+
+
+def test_shade_genus_loses_direct_on_upgrade(tmp_path: Path):
+    """Plan 1.7 acceptance: after 0007_shade_light, no shade-adapted genus
+    carries `direct`. Sun-hungry species outside those genera are untouched."""
+    import os
+
+    from alembic import command
+    from alembic.config import Config
+
+    db = tmp_path / "shade.db"
+    url = f"sqlite:///{db.as_posix()}"
+
+    cfg = Config(str(ROOT / "alembic.ini"))
+    cfg.set_main_option("script_location", str(ROOT / "alembic"))
+    cfg.set_main_option("sqlalchemy.url", url)
+
+    def _insert_species(conn, common, scientific, light):
+        conn.execute(
+            "INSERT INTO species (common_name, scientific_name, light_need, "
+            "humidity_pct_min, humidity_pct_max, temp_f_min, temp_f_max, "
+            "soil_type, toxic_to_pets, care_notes, source, source_ref, "
+            "review_status, review_note) VALUES (?, ?, ?, 40, 60, 60, 80, "
+            "'mix', 0, '', 'CURATED', '', 'APPROVED', '')",
+            (common, scientific, light))
+
+    prev = os.environ.get("DATABASE_URL")
+    os.environ["DATABASE_URL"] = url
+    try:
+        command.upgrade(cfg, "0001_baseline")
+        conn = sqlite3.connect(db)
+        # The import's mistake: understorey plants marked direct
+        _insert_species(conn, "Monstera", "Monstera deliciosa", "direct")
+        _insert_species(conn, "Pothos", "Epipremnum aureum", "DIRECT")
+        # A genus-only row, as genus_fill can leave behind
+        _insert_species(conn, "Philodendron", "Philodendron", "direct")
+        # Genuinely sun-hungry, outside the shade genera: must survive
+        _insert_species(conn, "Basil", "Ocimum basilicum", "direct")
+        conn.commit()
+        conn.close()
+
+        command.upgrade(cfg, "head")
+    finally:
+        if prev is None:
+            os.environ.pop("DATABASE_URL", None)
+        else:
+            os.environ["DATABASE_URL"] = prev
+
+    from alembic.script import ScriptDirectory
+    script = ScriptDirectory.from_config(cfg)
+    module = script.get_revision("0007_shade_light").module
+
+    conn = sqlite3.connect(db)
+    for genus in module.SHADE_GENERA:
+        stragglers = conn.execute(
+            "SELECT scientific_name FROM species WHERE "
+            "(scientific_name = ? OR scientific_name LIKE ?) "
+            "AND lower(light_need) = 'direct'",
+            (genus, f"{genus} %")).fetchall()
+        assert stragglers == [], f"{genus} still carries direct: {stragglers}"
+
+    lights = dict(conn.execute(
+        "SELECT scientific_name, light_need FROM species"))
+    assert lights["Monstera deliciosa"] == "bright_indirect"
+    assert lights["Epipremnum aureum"] == "bright_indirect"
+    assert lights["Philodendron"] == "bright_indirect"
+    assert lights["Ocimum basilicum"] == "direct"
+    conn.close()
+
+
+def test_aloe_rename_applies_unless_it_would_collide(tmp_path: Path):
+    """0009: the misnamed Aloe row is renamed to the accepted name, but never
+    into a collision with an existing Aloe vera row."""
+    import os
+
+    from alembic import command
+    from alembic.config import Config
+
+    def build(db, extra_rows):
+        url = f"sqlite:///{db.as_posix()}"
+        cfg = Config(str(ROOT / "alembic.ini"))
+        cfg.set_main_option("script_location", str(ROOT / "alembic"))
+        cfg.set_main_option("sqlalchemy.url", url)
+        prev = os.environ.get("DATABASE_URL")
+        os.environ["DATABASE_URL"] = url
+        try:
+            command.upgrade(cfg, "0001_baseline")
+            conn = sqlite3.connect(db)
+            for common, sci in extra_rows:
+                conn.execute(
+                    "INSERT INTO species (common_name, scientific_name, "
+                    "light_need, humidity_pct_min, humidity_pct_max, "
+                    "temp_f_min, temp_f_max, soil_type, toxic_to_pets, "
+                    "care_notes, source, source_ref, review_status, "
+                    "review_note) VALUES (?, ?, 'direct', 20, 40, 55, 80, "
+                    "'cactus mix', 0, '', 'CURATED', '', 'APPROVED', '')",
+                    (common, sci))
+            conn.commit()
+            conn.close()
+            command.upgrade(cfg, "head")
+        finally:
+            if prev is None:
+                os.environ.pop("DATABASE_URL", None)
+            else:
+                os.environ["DATABASE_URL"] = prev
+
+    # Normal case: the misnamed row is renamed.
+    db = tmp_path / "aloe.db"
+    build(db, [("Aloe Vera", "Aloe barbadensis miller")])
+    conn = sqlite3.connect(db)
+    names = [r[0] for r in conn.execute(
+        "SELECT scientific_name FROM species WHERE scientific_name LIKE 'Aloe%'")]
+    assert names == ["Aloe vera"]
+    conn.close()
+
+    # Collision case: an Aloe vera row already exists — the misnamed row is
+    # left alone rather than minting the ambiguity apply_review refuses.
+    db2 = tmp_path / "aloe-collision.db"
+    build(db2, [
+        ("Aloe Vera", "Aloe barbadensis miller"),
+        ("True Aloe", "Aloe vera"),
+    ])
+    conn = sqlite3.connect(db2)
+    names = sorted(r[0] for r in conn.execute(
+        "SELECT scientific_name FROM species WHERE scientific_name LIKE 'Aloe%'"))
+    assert names == ["Aloe barbadensis miller", "Aloe vera"]
+    conn.close()

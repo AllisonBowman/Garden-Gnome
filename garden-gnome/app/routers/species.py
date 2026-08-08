@@ -53,8 +53,20 @@ def list_species(session: Session = Depends(get_session)):
     internal review trail (review_status, review_note, source, source_ref),
     which is operator state and no business of a client. SpeciesRead also
     carries the derived toxicity_description, so a list view can show the
-    nuanced sentence rather than a flat 'toxic' flag."""
-    return session.exec(select(Species)).all()
+    nuanced sentence rather than a flat 'toxic' flag.
+
+    humidity_sourced is computed here with one trait query rather than via
+    the model property — the property walks `species.traits`, which would
+    lazy-load per row across the whole catalog."""
+    derived_ids = set(session.exec(
+        select(SpeciesTrait.species_id)
+        .where(SpeciesTrait.trait == "humidity_source")
+    ).all())
+    return [
+        SpeciesRead.model_validate(
+            sp, update={"humidity_sourced": sp.id not in derived_ids})
+        for sp in session.exec(select(Species)).all()
+    ]
 
 
 @router.post("/", response_model=SpeciesDetail, status_code=201)

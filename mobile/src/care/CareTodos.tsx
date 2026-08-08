@@ -5,7 +5,7 @@ import {
 } from 'react-native-paper';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { logCare } from '../api/plants';
-import { CareType } from '../types';
+import { CareOutcome, CareType } from '../types';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -52,15 +52,26 @@ export default function CareTodos({
   const hiddenCount = todos.length - visible.length;
 
   const logMutation = useMutation({
-    mutationFn: ({ plantId, careType }: { plantId: number; careType: CareType; key: string }) =>
-      logCare(plantId, careType),
+    mutationFn: ({ plantId, careType, outcome }: {
+      plantId: number; careType: CareType; outcome?: CareOutcome; key: string;
+    }) => logCare(plantId, careType, '', outcome),
     onMutate: ({ key }) => setPendingKeys((prev) => new Set(prev).add(key)),
-    onSuccess: (_data, { careType, plantId }) => {
+    onSuccess: (_data, { careType, plantId, outcome }) => {
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: ['careLogs', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       const p = CARE_PRESENTATION[careType];
-      setDoneMsg(`${p.icon} ${p.verb}ed — logged and rescheduled`);
+      // A check that ends in "leave it be" is a success, not a skipped
+      // chore — the confirmation should say so.
+      setDoneMsg(
+        outcome === 'checked_not_needed'
+          ? '💧 Checked, still damp — the wait was the right call'
+          : outcome === 'checked_fine'
+            ? '🪴 Checked — happy in its pot for now'
+            : outcome === 'top_dressed'
+              ? '🪴 Top-dressed — fresh mix, same home'
+              : `${p.icon} ${p.done} — logged and rescheduled`,
+      );
       void rescheduleAllReminders(); // keep notifications in step with the log
     },
     onError: () => Alert.alert('Error', 'Could not log that care action.'),
@@ -127,6 +138,69 @@ export default function CareTodos({
                 </TouchableOpacity>
                 {busy ? (
                   <ActivityIndicator style={styles.rowCheck} size={20} color={palette.acc} />
+                ) : t.careType === 'repot' ? (
+                  // The February inspection's three honest endings. "All fine"
+                  // logs a repot-family action, which is what clears the
+                  // inspection for the year — looking and deciding not to
+                  // disturb the roots is the inspection done right.
+                  <View style={styles.outcomeRow}>
+                    <TouchableOpacity
+                      style={styles.outcomePill}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'repotted', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} repotted`}
+                    >
+                      <Text style={styles.outcomePillText}>Repotted</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.outcomePill, styles.outcomePillQuiet]}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'top_dressed', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} top-dressed with fresh mix`}
+                    >
+                      <Text style={styles.outcomePillQuietText}>Top-dressed</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.outcomePill, styles.outcomePillQuiet]}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'checked_fine', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} checked — all fine`}
+                    >
+                      <Text style={styles.outcomePillQuietText}>All fine</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : t.careType === 'water' ? (
+                  // A water to-do is a *check*, and a check has two honest
+                  // endings. "Still damp" logs and re-anchors exactly like
+                  // watering does — waiting is care, and the streak agrees.
+                  <View style={styles.outcomeRow}>
+                    <TouchableOpacity
+                      style={styles.outcomePill}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'watered', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} watered`}
+                    >
+                      <Text style={styles.outcomePillText}>Watered</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.outcomePill, styles.outcomePillQuiet]}
+                      onPress={() => logMutation.mutate({
+                        plantId: t.plantId, careType: t.careType,
+                        outcome: 'checked_not_needed', key,
+                      })}
+                      accessibilityLabel={`Log ${t.nickname} checked — still damp`}
+                    >
+                      <Text style={styles.outcomePillQuietText}>Still damp</Text>
+                    </TouchableOpacity>
+                  </View>
                 ) : (
                   <IconButton
                     icon="check-circle-outline"
@@ -182,6 +256,20 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   rowTitle: { fontSize: 15, color: p.ink },
   rowWhen: { fontSize: 12, color: p.sub, marginTop: 1, fontWeight: '600' },
   rowCheck: { margin: 0 },
+  outcomeRow: {
+    flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginLeft: 6,
+    justifyContent: 'flex-end', maxWidth: 200,
+  },
+  outcomePill: {
+    backgroundColor: p.acc, borderRadius: 999,
+    paddingHorizontal: 10, paddingVertical: 5,
+  },
+  outcomePillText: { color: p.btnInk, fontSize: 12, fontWeight: '700' },
+  outcomePillQuiet: {
+    backgroundColor: 'transparent',
+    borderWidth: 1, borderColor: p.acc,
+  },
+  outcomePillQuietText: { color: p.acc, fontSize: 12, fontWeight: '700' },
   moreNote: {
     color: p.sub, fontSize: 13, fontStyle: 'italic',
     paddingTop: 10, paddingBottom: 2,

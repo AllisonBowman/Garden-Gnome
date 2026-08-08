@@ -2,14 +2,66 @@ import { CareLog, CareType, Plant, Species } from '../types';
 
 // Care types that can have reminders (matches the quick-log actions on
 // PlantDetailScreen; 'clean'/'other' have no species schedules).
+//
+// 'mist' is deliberately absent. Misting doesn't do what people think: the
+// humidity it adds lasts only until the water evaporates, which Penn State
+// Extension puts at a matter of minutes, so even daily misting changes nothing
+// about ambient humidity. Minnesota Extension adds that it "increases the
+// likelihood of foliar leaf spot diseases," and Clemson tells begonia growers
+// outright that misting is not recommended. A notification is an instruction to
+// act, so a misting reminder is the app asking someone to do something useless
+// at best and harmful at worst. Leaf-wiping ('clean') is separately endorsed
+// and stays.
 export const REMINDER_CARE_TYPES: CareType[] = [
-  'water', 'fertilize', 'mist', 'prune', 'repot', 'rotate',
+  'water', 'fertilize', 'prune', 'repot', 'rotate',
 ];
 
-export const CARE_VERBS: Record<string, string> = {
-  water: 'water', fertilize: 'fertilize', mist: 'mist',
-  prune: 'prune', repot: 'repot', rotate: 'rotate',
+// Months (1-12) in which a care type should be prompted at all. Absent means
+// all year.
+//
+// Feeding is gated to the growing season because every extension source agrees
+// on this and several are emphatic: NC State says "do not fertilize from
+// November to February," and Maryland warns that feeding then "could harm some
+// plants." Growth slows with the light, so the fertiliser isn't taken up — it
+// accumulates as salts. A December reminder was the app telling people to do
+// the one thing the literature says not to.
+export const CARE_SEASON_MONTHS: Partial<Record<CareType, number[]>> = {
+  fertilize: [3, 4, 5, 6, 7, 8, 9, 10],
 };
+
+/** Whether this care type should be prompted at all in the given month. */
+export function isInSeason(careType: CareType, date: Date): boolean {
+  const months = CARE_SEASON_MONTHS[careType];
+  return !months || months.includes(date.getMonth() + 1);
+}
+
+// 'check', not 'water': the interval is a prior on when a check will probably
+// come back positive, not an instruction to pour. The finger test decides.
+// 'inspect', not 'repot', for the same reason: the February check-up asks you
+// to look at the roots; repotting is one of three ways the look can end.
+export const CARE_VERBS: Record<string, string> = {
+  water: 'check', fertilize: 'fertilize',
+  prune: 'prune', repot: 'inspect', rotate: 'rotate',
+};
+
+/**
+ * The repot inspection month (1-12). NC State: repotting is "best done in the
+ * early spring, before plants start actively growing" — so the check-up lands
+ * in February, device clock, same hemisphere assumption as the fertilize gate.
+ */
+export const REPOT_INSPECTION_MONTH = 2;
+
+/** First delivery slot on or after `after` that falls in the inspection
+ *  month. `after` must already carry the delivery hour. */
+export function nextInspectionSlot(after: Date): Date {
+  if (after.getMonth() + 1 === REPOT_INSPECTION_MONTH) return new Date(after);
+  const year = after.getMonth() + 1 < REPOT_INSPECTION_MONTH
+    ? after.getFullYear()
+    : after.getFullYear() + 1;
+  const slot = new Date(year, REPOT_INSPECTION_MONTH - 1, 1);
+  slot.setHours(after.getHours(), 0, 0, 0);
+  return slot;
+}
 
 export type ReminderPrefs = Partial<Record<CareType, boolean>>;
 
@@ -30,6 +82,9 @@ export interface ReminderItem {
   plantId: number;
   nickname: string;
   careType: CareType;
+  /** Whole days between the last care of this type (or acquisition) and the
+   *  delivery slot — "it's been 7 days" in the check copy. */
+  daysSinceCare?: number;
 }
 
 export interface ReminderBatch {
@@ -96,10 +151,37 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
         const t = new Date(log.logged_at).getTime();
         if (t > anchorMs) anchorMs = t;
       }
+      const lastLogMs = anchorMs;
       if (!anchorMs) {
         anchorMs = plant.acquired_on
           ? new Date(plant.acquired_on).getTime()
           : now.getTime();
+      }
+
+      // Repotting left the interval model (plan 1.3). Every source gives
+      // condition signs plus a season — never a due date — and firing on day
+      // 365 regardless of root condition prompts over-potting and root rot.
+      // The inspection is anchored to the calendar: once in February, cleared
+      // by any repot-family log (repotted, top-dressed, or checked-fine) made
+      // in the same calendar year.
+      if (careType === 'repot') {
+        const slot = nextInspectionSlot(nextSlot);
+        if (slot > horizonEnd) continue;
+        if (lastLogMs && new Date(lastLogMs).getFullYear() === slot.getFullYear()) continue;
+        const key = `${slot.getFullYear()}-${slot.getMonth()}-${slot.getDate()}`;
+        let batch = byDay.get(key);
+        if (!batch) {
+          batch = { date: new Date(slot), items: [] };
+          byDay.set(key, batch);
+        }
+        batch.items.push({
+          plantId: plant.id,
+          nickname: plant.nickname,
+          careType,
+          daysSinceCare: Math.max(
+            0, Math.round((slot.getTime() - anchorMs) / 86_400_000)),
+        });
+        continue;
       }
 
       // Due when the plant enters its care window ("every 7–10 days" → day 7)
@@ -120,6 +202,9 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
       due.setHours(deliveryHour, 0, 0, 0);
       const slot = due <= nextSlot ? nextSlot : due;
       if (slot > horizonEnd) continue;
+      // Checked against the slot, not today: a feeding reminder that would land
+      // in December is dropped even when it was computed in October.
+      if (!isInSeason(careType, slot)) continue;
 
       const key = `${slot.getFullYear()}-${slot.getMonth()}-${slot.getDate()}`;
       let batch = byDay.get(key);
@@ -127,7 +212,13 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
         batch = { date: new Date(slot), items: [] };
         byDay.set(key, batch);
       }
-      batch.items.push({ plantId: plant.id, nickname: plant.nickname, careType });
+      batch.items.push({
+        plantId: plant.id,
+        nickname: plant.nickname,
+        careType,
+        daysSinceCare: Math.max(
+          0, Math.round((slot.getTime() - anchorMs) / 86_400_000)),
+      });
     }
   }
 
@@ -139,6 +230,30 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
 function composeMessage(items: ReminderItem[]): { title: string; body: string } {
   if (items.length === 1) {
     const [it] = items;
+    if (it.careType === 'repot') {
+      // NC State's four pot-bound signs, asked as questions; repotting is a
+      // conditional answer, and top-dressing is the lighter one their
+      // annual-fresh-mix rationale supports.
+      return {
+        title: `🪴 ${it.nickname}'s spring check-up`,
+        body: `Have a look at ${it.nickname}: roots pushing out of the pot? `
+          + 'Crown or roots showing at the surface? Wilting again soon after '
+          + 'you water, or growth stalled? Repot if so — or just top-dress '
+          + 'with fresh mix.',
+      };
+    }
+    if (it.careType === 'water') {
+      // The check copy: elapsed time as context, the finger test as the
+      // instruction, watering only as its consequence. Never "time to water" —
+      // that's the sentence that made people pour on damp soil.
+      const days = it.daysSinceCare ?? 0;
+      const been = days === 1 ? "it's been 1 day" : `it's been ${days} days`;
+      return {
+        title: `🪴 ${it.nickname} could use a look`,
+        body: `Check ${it.nickname} — ${been}. Push a finger 2 inches in; `
+          + 'water thoroughly only if it\'s dry down there.',
+      };
+    }
     return {
       title: `🪴 ${it.nickname} needs some care`,
       body: `Time to ${CARE_VERBS[it.careType] ?? it.careType} ${it.nickname}.`,
