@@ -276,7 +276,8 @@ Depending on how Step 1 goes:
 
 ## Reference — PowerShell commands on the dev machine
 
-Backend tests (expect `89 passed`):
+Backend tests (expect exit 0 — zero failures; the passing count grows as tests
+are added, so don't treat any literal number as the target):
 
 ```powershell
 Set-Location C:\Users\14439\Garden-Gnome\garden-gnome

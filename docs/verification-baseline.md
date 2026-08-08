@@ -1,8 +1,9 @@
 # Verification baseline — 2026-07-21
 
-> **STATUS: SUPERSEDED (2026-07-25).** The recorded numbers are stale. Current
-> baseline on master: backend **146 passed**, mobile **37 passed**, `tsc
-> --noEmit` clean. Kept as the historical first run of the acceptance gates.
+> **STATUS: SUPERSEDED (2026-07-25).** Every count recorded in this file is a
+> historical snapshot — the suites keep growing, so no literal passing count is
+> the contract. The gate is exit code 0 (zero failures) for both suites. Kept
+> as the historical first run of the acceptance gates.
 
 First run of both acceptance gates against released code. Every plan in this
 repo (`plantadvocate-1.0.1-plan.md`, `plantadvocate-alignment-plan.md`, the
@@ -135,7 +136,7 @@ photo UI, that copy must not be shown to a caretaker verbatim.
 ## How to re-run
 
 ```bash
-cd garden-gnome && .venv-win/Scripts/python.exe -m pytest   # expect 87 passed
+cd garden-gnome && .venv-win/Scripts/python.exe -m pytest   # expect exit 0, zero failures
 cd mobile && npm run typecheck                              # expect exit 0
 ```
 
