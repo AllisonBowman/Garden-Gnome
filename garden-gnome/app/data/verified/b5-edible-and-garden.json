@@ -7,12 +7,11 @@
       "scientific_name_accepted": "Solanum lycopersicum",
       "name_note": "",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": null,
@@ -87,7 +86,7 @@
         "REMOVED BY AUDIT — fertilize_active_months was an empty array while every other unknown used null. An empty array reads as 'this plant is never fertilized', which is care advice no source supports, and tomato is a heavy feeder. Now null, meaning unknown.",
         "CORRECTED BY AUDIT — the previous unknowns text claimed no approved source gives a per-species air temperature figure for tomato. That was false: the cited NC State page states 'They also prefer temperatures between 70 to 75 degrees Fahrenheit.' day_f_min/day_f_max remain null because that is a single preference figure, not a day/night band, but the earlier reason was untrue and has been replaced.",
         "chill_damage_f = 50 is upheld and verbatim, but its scope is narrower than the field name suggests: the University of Maryland sentence describes catfacing (misshapen, scarred fruit) caused by cool exposure after transplanting, not a general chilling-injury threshold. Direction and number are right for a cold warning; do not present it as a general damage point.",
-        "All indoor light fields (light_fc_min, light_fc_good, light_dli_*, direct_sun_hours_max) null: this is a garden crop and no source publishes indoor intensity for it. Converting the outdoor full-sun rating into an indoor value would be a category error.",
+        "All indoor light fields (light_fc_min, light_fc_good, direct_sun_hours_max) null: this is a garden crop and no source publishes indoor intensity for it. Converting the outdoor full-sun rating into an indoor value would be a category error.",
         "soil_ph_min/max are NC State's stated numeric preference for tomato, not a hard tolerance limit.",
         "humidity_need and percentages null: outdoor crop at ambient humidity; no extension source states a species humidity category.",
         "fertilize_interval_days and fertilize_strength null: no approved source consulted gave a schedule, interval or strength for tomato.",
@@ -102,12 +101,11 @@
       "scientific_name_accepted": "Brassica oleracea var. sabellica",
       "name_note": "NC State Extension files this plant under 'Brassica oleracea Kale Group', a cultivar-group name for the same plants rather than a taxonomic correction, so the stored name is kept.",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": null,
@@ -193,12 +191,12 @@
       "scientific_name_accepted": "Mentha spicata",
       "name_note": "",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": null,
@@ -260,7 +258,7 @@
         "REMOVED BY AUDIT — soil_drainage was 'moderate' with no citation. The NC State page's soil tags are 'Good Drainage', 'Moist', 'Occasionally Dry' and 'Occasionally Wet', which is a breadth-of-tolerance list rather than a moderate rating. Now null.",
         "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
         "toxic_to_pets = true here is a LOW-severity, large-ingestion stomach upset and shares one boolean with genuinely dangerous plants. As with tomato, a bare boolean will overstate this; toxicity_detail must be shown with it.",
-        "All indoor light fields null: NC State treats spearmint as a garden herb/groundcover. Mint is very commonly grown on a windowsill, but no approved source publishes an indoor DLI or foot-candle figure for it, and deriving one from the outdoor full-sun rating is not permitted.",
+        "All indoor light fields null: NC State treats spearmint as a garden herb/groundcover. Mint is very commonly grown on a windowsill, but no approved source publishes an indoor foot-candle figure for it, and deriving one from the outdoor full-sun rating is not permitted.",
         "is_houseplant set false on the strength of how the sources treat it (garden herb). This is a product classification, not a sourced fact.",
         "soil_ph range is NC State's category label 'Neutral (6.0-8.0)' rather than a mint-specific measured optimum; treat it as a tolerance band.",
         "day/night temperature fields and chill_damage_f null: no approved source gave temperature numbers. NC State lists hardiness zones 4a-9b, a winter-survival rating that is not the same quantity as a chill-damage threshold.",
@@ -276,12 +274,11 @@
       "scientific_name_accepted": "Cucumis melo",
       "name_note": "The species is Cucumis melo L. NC State Extension treats 'flexuosus' not as a botanical variety but as a horticultural cultivar group within the species, listing 'Flexuosus group (American cucumber)' among the informal groupings of C. melo alongside Cantalupensis, Inodorus and others. The accepted name is therefore recorded as Cucumis melo, with 'var. flexuosus' / 'Flexuosus Group' treated as an infraspecific cultivar designation. POWO's ranking of the varietal name was not independently confirmed (the POWO page returned HTTP 403), so this reflects extension usage rather than a checked nomenclatural database entry. Note also that NC State labels the group 'American cucumber' while this record's common name says 'Armenian cucumber'; the two labels should not be conflated in UI copy.",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": null,
@@ -362,12 +359,11 @@
       "scientific_name_accepted": "Helianthus annuus",
       "name_note": "",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": null,
@@ -439,12 +435,11 @@
       "scientific_name_accepted": "Cucurbita maxima",
       "name_note": "Cucurbita maxima is the giant-pumpkin and winter-squash species (Atlantic Giant, Hubbard, buttercup). Most jack-o-lantern and pie pumpkins sold under the name 'pumpkin' are Cucurbita pepo or Cucurbita moschata. The care recorded here is C. maxima's; all three are frost-tender warm-season cucurbits, so it is close but not identical for a user holding a different species.",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": null,
@@ -517,12 +512,11 @@
       "scientific_name_accepted": "Paeonia officinalis",
       "name_note": "",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": null,
@@ -550,7 +544,7 @@
       "toxicity_detail": "NC State tags herbaceous Paeonia a problem for cats, a problem for dogs and a problem for horses. The page carries NO poison-part, severity, symptom or toxic-principle detail, so all that can be confirmed is that an extension service flags it as a hazard to these animals — not which parts, how severe, or what the toxic principle is. Do not let the app imply more specificity than this.",
       "citations": [
         {
-          "claim": "outdoor_sun_exposure = full_sun (part shade tolerated)",
+          "claim": "outdoor_sun_exposure = full_sun",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/paeonia-herbaceous-types/",
           "quote": "Full sun (6 or more hours of direct sunlight a day)"
@@ -583,7 +577,8 @@
         "water_* day estimates and water_estimate_basis null: in-ground perennial with a strongly seasonal demand curve; a fixed day interval would misrepresent it.",
         "SCOPE DISCLOSURE: all NC State data in this record comes from a group page for herbaceous Paeonia types, not a Paeonia officinalis page. Defensible, but group-level rather than species-level.",
         "toxicity_detail is thin by necessity: NC State flags the animal hazard but publishes no parts, severity, symptoms or toxic principle for herbaceous Paeonia, and ASPCA's list may not be reproduced.",
-        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts."
+        "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts.",
+        "outdoor_sun_exposure: the 'part shade tolerated' parenthetical had no surviving citation (the MOBOT quote carrying it was dropped in audit), so as of 2026-08-08 the field records full_sun only."
       ]
     },
     {
@@ -592,12 +587,12 @@
       "scientific_name_accepted": "Myrtus communis",
       "name_note": "",
       "is_houseplant": false,
-      "outdoor_sun_exposure": "full_sun",
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
       "light_fc_min": null,
       "light_fc_good": null,
-      "light_dli_min": null,
-      "light_dli_opt_low": null,
-      "light_dli_opt_high": null,
       "direct_sun_hours_max": null,
       "soil_base": "garden_bed",
       "soil_drainage": "fast",
@@ -658,7 +653,7 @@
       "unknowns": [
         "REMOVED BY AUDIT — fertilize_active_months was an empty array, which reads as 'never fertilize'. Now null, meaning unknown.",
         "soil_drainage = fast is the only drainage value in this batch that survived audit: 'sharply drained' genuinely means fast, and it is both cited and correctly matched to its quote.",
-        "is_houseplant set false, which is a judgement call worth surfacing. Both sources treat myrtle as an outdoor broadleaf evergreen shrub (NC State zones 8a-9b; MOBOT zones 8-10), and MOBOT notes that in St. Louis it is grown in containers overwintered indoors. That is seasonal indoor shelter, not houseplant culture. Because is_houseplant is false, every indoor light field is null by rule — correctly so, since no approved source publishes an indoor DLI or foot-candle figure for it. Indoor overwintering guidance must be sourced separately, never derived from the outdoor full-sun rating.",
+        "is_houseplant set false, which is a judgement call worth surfacing. Both sources treat myrtle as an outdoor broadleaf evergreen shrub (NC State zones 8a-9b; MOBOT zones 8-10), and MOBOT notes that in St. Louis it is grown in containers overwintered indoors. That is seasonal indoor shelter, not houseplant culture. Because is_houseplant is false, every indoor light field is null by rule — correctly so, since no approved source publishes an indoor foot-candle figure for it. Indoor overwintering guidance must be sourced separately, never derived from the outdoor full-sun rating.",
         "soil_ph_min/max null: NC State tags Myrtus communis as tolerating ALL THREE pH categories — 'Acid (<6.0)', 'Neutral (6.0-8.0)' and 'Alkaline (>8.0)'. That is broad tolerance, not a range, and recording 6.0-8.0 from the middle label would misrepresent it. MOBOT states no pH.",
         "day/night temperature fields and chill_damage_f null: no approved source gave temperature numbers. The zone 8-10 rating is a winter-survival rating, a different quantity from a chilling-damage threshold. This matters because users overwintering a container plant indoors will want a real cold threshold and a fabricated one would be worse than none.",
         "humidity_need and percentages null: neither source states a humidity category. Mediterranean origin suggests it is not a high-humidity plant, but that is inference, not a citation.",
@@ -774,5 +769,13 @@
         "reason": "Empty array reads as 'never fertilize' rather than 'unknown'."
       }
     ]
-  }
+  },
+  "normalizations": [
+    "2026-08-08: light_dli_min/opt_low/opt_high dropped from the schema — 0 of 40 records could source a DLI value; unknowns entries edited to match.",
+    "2026-08-08: Clemson Medium-band readings normalised to one convention — fc_min = top of the minimum sub-range (150), fc_good = bottom of the preferred sub-range (200). Low-band records were already uniform (100/200) and were left alone.",
+    "2026-08-08: High-band floors (Aloe, Crassula, Hoya) nulled — the audit killed their companion fc_good as class-floor artifacts, and a floor read off the bottom of Clemson's 150-1000 band understates a high-light plant. Re-source in the verification pass.",
+    "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
+    "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
+    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus)."
+  ]
 }
