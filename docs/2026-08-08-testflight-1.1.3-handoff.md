@@ -97,10 +97,15 @@ to see two green checks and one red one on the merge commit in
 manual, human step, exactly as `docs/deploys.md`'s opening banner says.
 
 Production is currently on **v31**, deployed Aug 1 — before every migration in
-this PR. This deploy carries three: `0007` (shade-genera light fix), `0008`
-(adds `care_log.outcome`), `0009` (Aloe vera rename, guarded). All three are
-additive; none drop a column or delete rows outright. They run automatically
-at container boot, before `uvicorn` binds.
+this PR. This deploy carries four: `0007` (shade-genera light fix), `0008`
+(adds `care_log.outcome`), `0009` (Aloe vera rename, guarded), and `0010`
+(adds the `authority` and `claim` tables). All four are additive; none drop a
+column or delete rows outright. They run automatically at container boot,
+before `uvicorn` binds.
+
+`0010` landed after this document was first written. It creates two empty
+tables and touches nothing existing, so it changes nothing you will see in the
+app — but it is in the chain, so a deploy that stops at `0009` is now behind.
 
 ```powershell
 Set-Location C:\Users\14439\Garden-Gnome
@@ -342,7 +347,7 @@ Still expected, not bugs:
 | 1. Merge | Merges cleanly, `$HEAD` shows up in `origin/master` | Working as expected — no explanation was ever found for the earlier failed attempt, but nothing here suggests one is needed | Continue to Step 2 |
 | 2. Deploy | CI's `Deploy to Fly` job goes red on the merge commit | Expected — no `FLY_API_TOKEN` secret exists yet, every push to master has failed this job the same way | Ignore it, deploy by hand as written above |
 | 2. Deploy | `fly deploy` fails during build (Docker/pip step) | A real backend problem, unrelated to whether tests passed — CI's Python is 3.12, matching the Dockerfile, so this would be a new finding | Send the full `fly deploy` log; don't attempt to patch it live |
-| 2. Deploy | `fly deploy` completes, but `/` never returns 200 within a couple minutes | Migration boot loop — `0007`/`0008`/`0009` run before `uvicorn` binds, so a broken one shows up exactly here | `fly logs -a garden-gnome-api`, look for the migration name in the traceback; do not roll back before reading the log, since rollback restores the image, not the schema |
+| 2. Deploy | `fly deploy` completes, but `/` never returns 200 within a couple minutes | Migration boot loop — `0007` through `0010` run before `uvicorn` binds, so a broken one shows up exactly here | `fly logs -a garden-gnome-api`, look for the migration name in the traceback; do not roll back before reading the log, since rollback restores the image, not the schema |
 | 2. Deploy | `/` returns 200, `fly releases` shows a new `complete` version | Deploy succeeded, migrations applied | Continue to Step 3 |
 | 3. Build | Build succeeds, `Commit` in `eas build:list` matches `$HEAD` | The Phase 1 changes compiled clean on the exact commit that's now on master. Nothing here touched native code, so a compile regression was never expected — but "shouldn't regress" and "did build" are different claims | Continue to submit |
 | 3. Build | Build fails in a Swift compile phase naming `PlantIdModule.swift` or `FoundationModels` | A real, new regression in the native photo-ID module, unrelated to anything in this PR | Send the full log URL, don't patch live — this is worth taking seriously precisely because that module has compiled clean before |
