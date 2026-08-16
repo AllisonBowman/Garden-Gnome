@@ -266,6 +266,48 @@ class SpeciesTrait(SQLModel, table=True):
     species: Optional[Species] = Relationship(back_populates="traits")
 
 
+class Authority(SQLModel, table=True):
+    """An organisation whose publications count as evidence.
+
+    Distinct from `SpeciesSource`, which says which pipeline produced a row and
+    nothing about whether anyone checked it. Tier drives precedence when claims
+    conflict; licence exists so a source that turns out to be unusable can be
+    withdrawn by query rather than by archaeology (ADR 0001).
+    """
+    __table_args__ = (UniqueConstraint("name"),)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(index=True)
+    tier: int = Field(default=2)
+    licence: str = ""
+    homepage_url: str = ""
+
+    claims: list["Claim"] = Relationship(back_populates="authority")
+
+
+class Claim(SQLModel, table=True):
+    """One field's value for one subject, as asserted by one citation.
+
+    `subject` is a name, not a foreign key: genus-level claims have no species
+    row to point at, and evidence may be collected before the species exists in
+    the catalog. Resolution matches on the name (see resolve.py).
+
+    `quote` is audit evidence and never leaves the server — ADR 0003.
+    """
+    __table_args__ = (UniqueConstraint("subject", "field", "citation_url"),)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    subject: str = Field(index=True)
+    field: str = Field(index=True)
+    # JSON-encoded so a bool stays a bool and 100 does not come back "100".
+    value_json: str
+    authority_id: int = Field(foreign_key="authority.id")
+    citation_title: str = ""
+    citation_url: str = ""
+    quote: str = ""
+    collected_at: datetime = Field(default_factory=datetime.utcnow)
+
+    authority: Optional[Authority] = Relationship(back_populates="claims")
+
+
 class Environment(SQLModel, table=True):
     """A physical place where plants are kept and stewarded.
 
