@@ -8,7 +8,13 @@ citation that supports it (ADR 0001).
 A value the citations do not actually support is reported, never invented. That
 case is the whole reason this runs as code instead of a bulk insert.
 """
+import glob
+import json
+from pathlib import Path
+
 from app.data.claims.tranche import claims_from_record
+
+VERIFIED = Path(__file__).resolve().parents[1] / "app" / "data" / "verified"
 
 
 CLEMSON_URL = "https://hgic.clemson.edu/factsheet/indoor-plants"
@@ -128,3 +134,40 @@ def test_the_accepted_name_is_the_subject_not_the_one_we_were_given():
     claims, _ = claims_from_record(RECORD)
 
     assert {c.subject for c in claims} == {"Dracaena trifasciata"}
+
+
+def _coverage(path):
+    supported = total = 0
+    for record in json.loads(Path(path).read_text())["records"]:
+        claims, unsupported = claims_from_record(record)
+        supported += len(claims)
+        total += len(claims) + len(unsupported)
+    return supported, total
+
+
+def test_every_batch_is_readable_by_the_loader():
+    """Guards the citation-label convention across all five batches.
+
+    b3 and b4 were originally written in prose and loaded at 0% and 2% — the
+    convention is load-bearing, not cosmetic, so a batch drifting back to prose
+    must fail here rather than quietly halving the catalog's evidence.
+    """
+    for path in sorted(glob.glob(str(VERIFIED / "b*.json"))):
+        supported, total = _coverage(path)
+        assert total > 0, path
+        assert supported / total >= 0.70, (
+            f"{Path(path).name} only pairs {supported}/{total} values to a "
+            f"citation — check its citation labels lead with field names")
+
+
+def test_the_whole_tranche_still_pairs_most_values_to_a_citation():
+    supported = total = 0
+    for path in glob.glob(str(VERIFIED / "b*.json")):
+        s, t = _coverage(path)
+        supported += s
+        total += t
+    # 349/392 at the time of writing. The shortfall is understood: soil_base
+    # carries an uncited `standard_potting` default on 18 records, and b4's
+    # water_*_days_est values are explicitly "ESTIMATE, not a rule" with no
+    # source behind them. Both should stay unsupported.
+    assert supported / total >= 0.85
