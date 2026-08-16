@@ -57,7 +57,10 @@ def test_each_value_becomes_a_claim_carrying_the_citation_that_supports_it():
 
     assert by_field["humidity_need"].value == "low"
     assert by_field["humidity_need"].citation_url == NCSU_URL
-    assert by_field["humidity_need"].authority_name == (
+    # The organisation, resolved from the URL — not the per-citation title.
+    assert by_field["humidity_need"].authority.name == "NC State Extension"
+    assert by_field["humidity_need"].authority.tier == 2
+    assert by_field["humidity_need"].citation_title == (
         "NC State Extension Gardener Plant Toolbox")
 
     # One citation can support more than one field, and does here.
@@ -134,6 +137,36 @@ def test_the_accepted_name_is_the_subject_not_the_one_we_were_given():
     claims, _ = claims_from_record(RECORD)
 
     assert {c.subject for c in claims} == {"Dracaena trifasciata"}
+
+
+def test_a_citation_from_an_unvetted_publisher_does_not_become_a_claim():
+    # A blog may well be right, but it has no tier to weigh it by and no
+    # licence on record. Reported alongside the genuinely uncited, so it shows
+    # up in a review rather than in the catalog.
+    record = {
+        "scientific_name_accepted": "Dracaena trifasciata",
+        "humidity_need": "low",
+        "citations": [{"claim": "humidity_need low", "source": "A Plant Blog",
+                       "url": "https://some-plant-blog.example/snake-plant",
+                       "quote": "likes it dry"}],
+    }
+
+    claims, unsupported = claims_from_record(record)
+
+    assert claims == []
+    assert "humidity_need" in unsupported
+
+
+def test_every_citation_in_the_tranche_resolves_to_a_known_authority():
+    """No claim in the loaded tranche comes from a publisher we cannot weigh."""
+    tiers = set()
+    for path in glob.glob(str(VERIFIED / "b*.json")):
+        for record in json.loads(Path(path).read_text())["records"]:
+            for claim in claims_from_record(record)[0]:
+                assert claim.authority is not None, claim.citation_url
+                tiers.add(claim.authority.tier)
+
+    assert tiers == {2}
 
 
 def _coverage(path):

@@ -12,6 +12,9 @@ water_dormant_days_est 45"), and some cite a range once for a pair of columns
 from dataclasses import dataclass
 from typing import Any
 
+from .authorities import authority_for
+from .resolve import Authority
+
 # Bookkeeping on the record, not claims about the plant.
 NOT_A_FIELD = frozenset({
     "common_name", "scientific_name_given", "scientific_name_accepted",
@@ -41,11 +44,16 @@ STEMS = {
 
 @dataclass(frozen=True)
 class ExtractedClaim:
-    """One field's value with the citation that supports it, ready to store."""
+    """One field's value with the citation that supports it, ready to store.
+
+    `authority` is the organisation, resolved from the citation's URL;
+    `citation_title` is the individual document. Keeping them apart is what
+    lets tier mean something — see authorities.py.
+    """
     subject: str
     field: str
     value: Any
-    authority_name: str
+    authority: Authority
     citation_title: str
     citation_url: str
     quote: str
@@ -75,8 +83,14 @@ def claims_from_record(record: dict) -> tuple[list[ExtractedClaim], list[str]]:
     for field, value in record.items():
         if field in NOT_A_FIELD or value in (None, "", []):
             continue
+        # Only citations from a vetted publisher can support a value. One from
+        # an unknown domain has no tier to weigh it by and no licence on
+        # record, so it is passed over here and the field is reported.
         support = next(
-            (c for c in citations if _supports(c.get("claim", ""), field)), None)
+            (c for c in citations
+             if _supports(c.get("claim", ""), field)
+             and authority_for(c.get("url"), c.get("source", "")) is not None),
+            None)
         if support is None:
             unsupported.append(field)
             continue
@@ -84,7 +98,7 @@ def claims_from_record(record: dict) -> tuple[list[ExtractedClaim], list[str]]:
             subject=subject,
             field=field,
             value=value,
-            authority_name=support.get("source", ""),
+            authority=authority_for(support.get("url"), support.get("source", "")),
             citation_title=support.get("source", ""),
             citation_url=support.get("url", ""),
             quote=support.get("quote", ""),
