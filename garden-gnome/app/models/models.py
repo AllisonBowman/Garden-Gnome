@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional
 from uuid import uuid4
 
-from sqlalchemy import UniqueConstraint
+from sqlalchemy import JSON, Column, UniqueConstraint
 from sqlmodel import SQLModel, Field, Relationship
 
 
@@ -112,6 +112,66 @@ class AuthProvider(str, Enum):
     google = "google"
 
 
+class WaterRegime(str, Enum):
+    """How a species wants its medium managed — the species-level fact.
+
+    This is the unit horticultural authorities actually publish. A day count is
+    an estimate over pot, medium and light, which is why it lives beside this
+    rather than instead of it (plan 2.1).
+    """
+    keep_moist = "keep_moist"
+    keep_barely_moist = "keep_barely_moist"
+    dry_surface_between = "dry_surface_between"
+    dry_thoroughly_between = "dry_thoroughly_between"
+
+
+class HumidityNeed(str, Enum):
+    """UGA's bands: below 20% low, 40-50% average, above 50% high.
+
+    A category, not a percentage — sources that publish a per-species number
+    disagree by up to 40 points, and no user can act on the difference.
+    """
+    low = "low"
+    average = "average"
+    high = "high"
+
+
+class SoilBase(str, Enum):
+    standard_potting = "standard_potting"
+    chunky_aroid = "chunky_aroid"
+    cactus_succulent = "cactus_succulent"
+    ericaceous = "ericaceous"
+    orchid_bark = "orchid_bark"
+    african_violet = "african_violet"
+    semi_hydro = "semi_hydro"
+    garden_bed = "garden_bed"
+
+
+class SoilDrainage(str, Enum):
+    fast = "fast"
+    moderate = "moderate"
+    moisture_retentive = "moisture_retentive"
+
+
+class FertilizeStrength(str, Enum):
+    full = "full"
+    half = "half"
+    quarter = "quarter"
+
+
+class OutdoorSunExposure(str, Enum):
+    """The outdoor duration scale, kept strictly separate from indoor intensity.
+
+    There is no valid transformation from hours of direct sun to interior light
+    level; mapping one onto the other is what made 77% of the imported catalog
+    claim `direct`. Stored so it is never mapped inward (plan 2.3).
+    """
+    full_sun = "full_sun"
+    part_sun = "part_sun"
+    part_shade = "part_shade"
+    full_shade = "full_shade"
+
+
 class SpeciesSource(str, Enum):
     curated = "curated"            # hand-written original catalog
     perenual = "perenual"          # mapped from the Perenual API
@@ -202,6 +262,59 @@ class Species(SQLModel, table=True):
     soil_type: str
     toxic_to_pets: bool = False
     care_notes: str = ""
+
+    # --- Phase 2 care fields (plan 2.1-2.7) ------------------------------
+    # Every one is Optional, and that is the point: the tranche fills them
+    # sparsely (night_f_max on 3 of 40 researched species) because that is how
+    # much the sources actually say. A NOT NULL here would reintroduce exactly
+    # the fabrication Phase 1 removed.
+    #
+    # The legacy columns above (light_need, humidity_pct_*, temp_f_*, soil_type)
+    # are deliberately left in place: 1,900 rows carry them and the app reads
+    # them today. Retiring them is the catalog-shrink pass, plan 3.4.
+
+    # Light as two independent axes — ambient intensity in footcandles, and
+    # direct-beam tolerance. Pothos and Peace Lily share an intensity need and
+    # differ on beam hours, and that difference is what scorches leaves.
+    light_fc_min: Optional[int] = None
+    light_fc_good: Optional[int] = None
+    direct_sun_hours_max: Optional[float] = None
+    outdoor_sun_exposure: Optional[list[str]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+
+    # Water: the regime is the fact, the day counts are an estimate that
+    # carries its own assumptions in water_estimate_basis.
+    water_regime: Optional[WaterRegime] = None
+    water_dry_down_target: Optional[str] = None
+    water_check_depth_cm: Optional[float] = None
+    water_growing_days_est: Optional[int] = None
+    water_dormant_days_est: Optional[int] = None
+    water_estimate_basis: Optional[str] = None
+
+    humidity_need: Optional[HumidityNeed] = None
+
+    # Temperature as four separate concepts. One flat band silently instructs
+    # the user to prevent flowering in anything needing a cool rest.
+    day_f_min: Optional[int] = None
+    day_f_max: Optional[int] = None
+    night_f_min: Optional[int] = None
+    night_f_max: Optional[int] = None
+    chill_damage_f: Optional[int] = None
+    cool_rest_note: Optional[str] = None
+
+    soil_base: Optional[SoilBase] = None
+    soil_drainage: Optional[SoilDrainage] = None
+    soil_ph_min: Optional[float] = None
+    soil_ph_max: Optional[float] = None
+
+    # Interval without a season is how a reminder ends up firing in December.
+    fertilize_active_months: Optional[list[int]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    fertilize_interval_days: Optional[int] = None
+    fertilize_strength: Optional[FertilizeStrength] = None
+
+    # The sentence a person should read. `toxic_to_pets` stays the raw flag.
+    toxicity_detail: Optional[str] = None
 
     # Provenance + review trail for catalog expansion
     source: SpeciesSource = SpeciesSource.curated
