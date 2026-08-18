@@ -159,6 +159,18 @@ class FertilizeStrength(str, Enum):
     quarter = "quarter"
 
 
+class CareDataStatus(str, Enum):
+    """How well-backed a species' care values are.
+
+    A property of the data, and deliberately not the same thing as
+    `ReviewStatus`, which is where a row sits in the operator's workflow. A row
+    can be `approved` by validation and still `inferred`.
+    """
+    sourced = "sourced"      # at least one value cited to this species
+    inferred = "inferred"    # has values, but every one is borrowed from genus
+    none = "none"            # nothing to say
+
+
 class OutdoorSunExposure(str, Enum):
     """The outdoor duration scale, kept strictly separate from indoor intensity.
 
@@ -315,6 +327,15 @@ class Species(SQLModel, table=True):
 
     # The sentence a person should read. `toxic_to_pets` stays the raw flag.
     toxicity_detail: Optional[str] = None
+
+    # Derived by the recompute, never typed in. `care_provenance` maps each
+    # resolved field to "sourced" or "genus_inferred" -- ADR 0002 requires an
+    # inherited value to be labelled wherever it is shown. `resolver_version`
+    # makes staleness a query when the rules change.
+    care_data_status: Optional[CareDataStatus] = None
+    care_provenance: Optional[dict] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    resolver_version: Optional[str] = None
 
     # Provenance + review trail for catalog expansion
     source: SpeciesSource = SpeciesSource.curated
