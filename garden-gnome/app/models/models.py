@@ -337,6 +337,13 @@ class Species(SQLModel, table=True):
         default=None, sa_column=Column(JSON, nullable=True))
     resolver_version: Optional[str] = None
 
+    # USDA hardiness zones this species tolerates outdoors, e.g. [7, 8, 9, 10].
+    # Only USDA PLANTS Database may claim this field (authorities.py); most of
+    # the catalog is grown indoors and will carry null here, which is correct
+    # -- a windowsill Monstera has no outdoor hardiness zone to speak of.
+    hardiness_zones: Optional[list[int]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+
     # Provenance + review trail for catalog expansion
     source: SpeciesSource = SpeciesSource.curated
     source_ref: str = ""           # e.g. Perenual species id, for traceability
@@ -414,6 +421,16 @@ class Authority(SQLModel, table=True):
     tier: int = Field(default=2)
     licence: str = ""
     homepage_url: str = ""
+    # Null means unrestricted -- vetted for the whole care schema, like every
+    # extension service. A non-null list scopes the authority to exactly those
+    # fields (USDA PLANTS Database and ["hardiness_zones"] is the one that
+    # exists today). Set once when the row is minted, from authorities.py's
+    # registry, and read from here rather than the registry thereafter -- the
+    # same "stored, not recalled" rule tier and licence already follow, so a
+    # later registry edit cannot silently change what an existing row may
+    # assert.
+    allowed_fields: Optional[list[str]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
 
     claims: list["Claim"] = Relationship(back_populates="authority")
 

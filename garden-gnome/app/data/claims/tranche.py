@@ -12,7 +12,7 @@ water_dormant_days_est 45"), and some cite a range once for a pair of columns
 from dataclasses import dataclass
 from typing import Any
 
-from .authorities import authority_for
+from .authorities import authority_for, authority_may_claim
 from .resolve import Authority
 
 # Bookkeeping on the record, not claims about the plant.
@@ -83,14 +83,20 @@ def claims_from_record(record: dict) -> tuple[list[ExtractedClaim], list[str]]:
     for field, value in record.items():
         if field in NOT_A_FIELD or value in (None, "", []):
             continue
-        # Only citations from a vetted publisher can support a value. One from
-        # an unknown domain has no tier to weigh it by and no licence on
-        # record, so it is passed over here and the field is reported.
-        support = next(
-            (c for c in citations
-             if _supports(c.get("claim", ""), field)
-             and authority_for(c.get("url"), c.get("source", "")) is not None),
-            None)
+        # Only citations from a vetted publisher can support a value, and only
+        # for the fields that publisher is trusted on. One from an unknown
+        # domain has no tier to weigh it by and no licence on record; one from
+        # a scoped authority (USDA PLANTS, trusted for names and hardiness
+        # zones only) is not a general care-data source just because its URL
+        # resolves. Either way the field is reported, not silently dropped.
+        support = None
+        for c in citations:
+            authority = authority_for(c.get("url"), c.get("source", ""))
+            if (authority is not None
+                    and _supports(c.get("claim", ""), field)
+                    and authority_may_claim(authority.name, field)):
+                support = c
+                break
         if support is None:
             unsupported.append(field)
             continue

@@ -26,9 +26,17 @@ def _to_claim(row: ClaimRow, authority: AuthorityRow) -> Claim:
 def load_claims(session: Session, subject: str) -> list[Claim]:
     """Every stored Claim that could bear on `subject` — its own and its genus'.
 
-    Nothing else is fetched. A family-level claim is not filtered out
-    downstream; it is never loaded, which is how ADR 0002's limit on inference
-    survives someone editing the resolver.
+    Two admissions are decided here, not downstream. A family-level claim is
+    never loaded, which is how ADR 0002's limit on inference survives someone
+    editing the resolver. And a claim naming a field outside its authority's
+    scope is excluded the same way — read off `Authority.allowed_fields`,
+    which was set once when the row was created (ingest.py) rather than
+    re-derived from the live registry here. That keeps this in step with how
+    tier and licence already work: a fact stored on the row, not recalled
+    (ADR 0001). `claims_from_record` already refuses to write an out-of-scope
+    claim, but a row that reaches `claim` by any other path -- a future
+    ingestion source, a manual repair -- must not silently resolve just
+    because it is sitting in the table.
     """
     subjects = {subject, genus_of(subject)}
     rows = session.exec(
@@ -36,7 +44,9 @@ def load_claims(session: Session, subject: str) -> list[Claim]:
         .join(AuthorityRow, ClaimRow.authority_id == AuthorityRow.id)  # type: ignore[arg-type]
         .where(ClaimRow.subject.in_(subjects))  # type: ignore[attr-defined]
     ).all()
-    return [_to_claim(claim_row, authority) for claim_row, authority in rows]
+    return [_to_claim(claim_row, authority) for claim_row, authority in rows
+            if authority.allowed_fields is None
+            or claim_row.field in authority.allowed_fields]
 
 
 def resolve_from_db(session: Session, subject: str) -> Resolution:

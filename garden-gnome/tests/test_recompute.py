@@ -216,3 +216,21 @@ def test_dry_run_reports_without_writing(session):
 
     assert report.species_updated == 1
     assert reload(session, "Dracaena trifasciata").humidity_need is None
+
+
+def test_a_usda_hardiness_claim_resolves_onto_the_species_row(session):
+    """The scoped tier-1 authority feeds the same pipeline as everyone else.
+
+    USDA PLANTS was investigated as a general care-data source and rejected --
+    this is the one field it actually earned: hardiness zones, and only that.
+    """
+    make_species(session, "Salvia rosmarinus", "Rosemary")
+    add_claim(session, "Salvia rosmarinus", "hardiness_zones", [7, 8, 9, 10],
+              url="https://plants.usda.gov/plant-profile/SALRO2",
+              name="USDA PLANTS Database")
+
+    recompute_all(session)
+
+    sp = reload(session, "Salvia rosmarinus")
+    assert sp.hardiness_zones == [7, 8, 9, 10]
+    assert sp.care_provenance["hardiness_zones"] == "sourced"

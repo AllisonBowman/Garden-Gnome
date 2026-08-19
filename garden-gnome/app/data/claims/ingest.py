@@ -17,7 +17,7 @@ from sqlmodel import Session, select
 from app.models.models import Authority as AuthorityRow
 from app.models.models import Claim as ClaimRow
 
-from .authorities import licence_of
+from .authorities import allowed_fields_of, licence_of
 from .tranche import claims_from_record
 
 
@@ -39,7 +39,10 @@ def _authority_row(session: Session, name: str, tier: int,
     row = session.exec(
         select(AuthorityRow).where(AuthorityRow.name == name)).first()
     if row is None:
-        row = AuthorityRow(name=name, tier=tier, licence=licence_of(name))
+        allowed = allowed_fields_of(name)
+        row = AuthorityRow(
+            name=name, tier=tier, licence=licence_of(name),
+            allowed_fields=list(allowed) if allowed is not None else None)
         session.add(row)
         session.flush()
         report.authorities_created += 1

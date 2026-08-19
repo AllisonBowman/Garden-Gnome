@@ -76,3 +76,46 @@ def test_every_authority_carries_a_licence_on_the_record():
 
 def test_an_unregistered_name_has_no_licence_to_report():
     assert licence_of("A Plant Blog") == ""
+
+
+def test_usda_plants_resolves_at_tier_one():
+    # 17 U.S.C. § 105 -- a federal work, public domain, no copyright to
+    # attribute-and-not-redistribute the way the extension services need.
+    # It joins WFO/WCVP as the open bulk-taxonomic tier the module docstring
+    # has reserved since the registry was first built.
+    a = authority_for("https://plants.usda.gov/plant-profile/MODE", "")
+    assert a.name == "USDA PLANTS Database"
+    assert a.tier == 1
+
+
+def test_usda_plants_and_its_redirect_domain_are_one_authority():
+    # plants.usda.gov 301s to plants.sc.egov.usda.gov, and a citation could
+    # carry either -- they must not become two rows for the same publisher.
+    a = authority_for("https://plants.usda.gov/plant-profile/MODE", "")
+    b = authority_for(
+        "https://plants.sc.egov.usda.gov/plant-profile/MODE", "")
+    assert a == b
+
+
+def test_usda_plants_may_only_claim_hardiness_zones():
+    # It was investigated and rejected as a houseplant-care source: it does
+    # not track most of the catalog's species, and where it does, its
+    # Characteristics schema measures rangeland establishment, not potted
+    # care. It earns tier 1 for names and zones only -- not a blank cheque
+    # to outrank Clemson on humidity because a URL happened to resolve.
+    from app.data.claims.authorities import authority_may_claim
+    assert authority_may_claim("USDA PLANTS Database", "hardiness_zones")
+    assert not authority_may_claim("USDA PLANTS Database", "humidity_need")
+    assert not authority_may_claim("USDA PLANTS Database", "toxic_to_pets")
+
+
+def test_an_unrestricted_authority_may_claim_anything():
+    # The extension services stay the general care-data basis -- registering
+    # a scoped authority must not narrow the ones that already exist.
+    from app.data.claims.authorities import authority_may_claim
+    assert authority_may_claim("NC State Extension", "humidity_need")
+    assert authority_may_claim("NC State Extension", "hardiness_zones")
+
+
+def test_usda_plants_carries_a_public_domain_licence():
+    assert "public domain" in licence_of("USDA PLANTS Database").lower()

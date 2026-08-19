@@ -38,6 +38,10 @@ RESOLVED_FIELDS = frozenset({
     "soil_base", "soil_drainage", "soil_ph_min", "soil_ph_max",
     "fertilize_active_months", "fertilize_interval_days", "fertilize_strength",
     "toxic_to_pets", "toxicity_detail",
+    # Scoped to USDA PLANTS Database alone (authorities.py) -- the one field
+    # that source is trusted on, and the outcome of the investigation into
+    # whether it could ground the rest of the catalog. It could not.
+    "hardiness_zones",
 })
 
 #: Fields this recompute may set from a claim but must never clear.

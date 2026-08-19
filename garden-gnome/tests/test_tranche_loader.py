@@ -204,3 +204,30 @@ def test_the_whole_tranche_still_pairs_most_values_to_a_citation():
     # water_*_days_est values are explicitly "ESTIMATE, not a rule" with no
     # source behind them. Both should stay unsupported.
     assert supported / total >= 0.85
+
+
+def test_a_scoped_authority_cannot_claim_a_field_outside_its_scope():
+    # USDA PLANTS is tier 1, but only for names and hardiness zones -- not a
+    # general care-data authority. A citation from it naming a care field must
+    # not become a claim just because the domain is vetted.
+    record = {
+        "scientific_name_accepted": "Salvia rosmarinus",
+        "hardiness_zones": [7, 8, 9, 10],
+        "humidity_need": "low",
+        "citations": [
+            {"claim": "hardiness_zones 7-10", "source": "USDA PLANTS Database",
+             "url": "https://plants.usda.gov/plant-profile/SALRO2",
+             "quote": "USDA Hardiness Zone: 7-10"},
+            {"claim": "humidity_need low", "source": "USDA PLANTS Database",
+             "url": "https://plants.usda.gov/plant-profile/SALRO2",
+             "quote": "Moisture Use: Low"},
+        ],
+    }
+
+    claims, unsupported = claims_from_record(record)
+    by_field = {c.field: c for c in claims}
+
+    assert by_field["hardiness_zones"].authority.name == "USDA PLANTS Database"
+    assert by_field["hardiness_zones"].authority.tier == 1
+    assert "humidity_need" not in by_field
+    assert "humidity_need" in unsupported

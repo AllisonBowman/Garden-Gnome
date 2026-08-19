@@ -30,8 +30,10 @@ def empty_evidence(session):
     yield
 
 
-def add_authority(session: Session, name: str, tier: int, licence: str = "") -> Authority:
-    row = Authority(name=name, tier=tier, licence=licence)
+def add_authority(session: Session, name: str, tier: int, licence: str = "",
+                  allowed_fields=None) -> Authority:
+    row = Authority(name=name, tier=tier, licence=licence,
+                    allowed_fields=list(allowed_fields) if allowed_fields else None)
     session.add(row)
     session.commit()
     session.refresh(row)
@@ -105,3 +107,34 @@ def test_withdrawing_the_only_authority_leaves_no_value_at_all(session):
 
     assert "soil_ph_min" not in resolve_from_db(
         session, "Dracaena trifasciata").values
+
+
+def test_a_claim_outside_its_authoritys_scope_is_never_loaded(session):
+    """The gate has to survive however a Claim reaches the table.
+
+    tranche.py enforces authority_may_claim at write time, but a row that
+    gets into `claim` any other way -- a future ingestion path, a manual
+    repair, a bug -- must not silently resolve. USDA PLANTS Database is
+    tier 1 and scoped to hardiness_zones alone; a humidity_need claim under
+    its name would otherwise outrank Clemson and NC State by tier, on a
+    field it was explicitly found not to be authoritative on.
+    """
+    usda = add_authority(session, "USDA PLANTS Database", tier=1, licence="pd",
+                        allowed_fields=["hardiness_zones"])
+    add_claim(session, usda, "Dracaena trifasciata", "humidity_need", "average",
+              url="https://plants.usda.gov/plant-profile/x")
+
+    result = resolve_from_db(session, "Dracaena trifasciata")
+
+    assert "humidity_need" not in result.values
+
+
+def test_a_claim_inside_its_authoritys_scope_still_loads(session):
+    usda = add_authority(session, "USDA PLANTS Database", tier=1, licence="pd",
+                        allowed_fields=["hardiness_zones"])
+    add_claim(session, usda, "Salvia rosmarinus", "hardiness_zones", [7, 8, 9],
+              url="https://plants.usda.gov/plant-profile/y")
+
+    result = resolve_from_db(session, "Salvia rosmarinus")
+
+    assert result.values["hardiness_zones"] == [7, 8, 9]
