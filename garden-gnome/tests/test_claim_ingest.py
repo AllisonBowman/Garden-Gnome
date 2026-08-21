@@ -106,16 +106,16 @@ def test_dry_run_leaves_the_database_exactly_as_it_found_it(session):
 
 
 def test_the_whole_verified_tranche_lands_and_resolves(session):
-    """End to end: 48 researched species become queryable, cited evidence."""
+    """End to end: 56 researched species become queryable, cited evidence."""
     from app.data.claims.ingest import ingest_tranche
     from app.data.claims.store import resolve_from_db
 
     report = ingest_tranche(session)
 
-    # 349 from b1-b5, 81 from b6 -- landed once its two loader-found defects
-    # were fixed (missing common_name; a claim resolving to a citation whose
-    # quote didn't actually contain the value).
-    assert report.claims_written == 430
+    # 349 from b1-b5, 81 from b6 (two loader-found defects fixed first), 42
+    # from b7 -- which landed with zero loader-found defects, after the
+    # research/audit prompts were tightened on what b6 found.
+    assert report.claims_written == 472
     assert len(session.exec(select(Authority)).all()) == 8
 
     # A species picked out of the batch resolves to its researched values,
