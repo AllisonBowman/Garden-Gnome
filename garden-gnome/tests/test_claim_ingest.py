@@ -106,7 +106,7 @@ def test_dry_run_leaves_the_database_exactly_as_it_found_it(session):
 
 
 def test_the_whole_verified_tranche_lands_and_resolves(session):
-    """End to end: 136 researched species become queryable, cited evidence."""
+    """End to end: every curated species in the catalog is now cited evidence."""
     from app.data.claims.ingest import ingest_tranche
     from app.data.claims.store import resolve_from_db
 
@@ -114,11 +114,14 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
 
     # 349 (b1-b5) + 81 (b6) + 42 (b7) + 41 (b8) + 54 (b9) + 47 (b10) + 51
     # (b11) + 39 (b12) + 35 (b13) + 34 (b14) + 37 (b15) + 34 (b16) + 24
-    # (b17) = 868. Batches land as part of an ongoing /loop run over the
-    # remaining curated catalog; each one is re-verified against the strict
-    # loader before landing here -- see each batch's own normalizations
-    # entry for what, if anything, that pass caught.
-    assert report.claims_written == 868
+    # (b17) + 5 (b18) = 873. b18 was the last batch in the collection queue
+    # built when this /loop run started -- 129 curated species minus the two
+    # name-mismatch cases still needing Phase 4.1 name resolution and the two
+    # "Various spp." mix entries that aren't single species. Every batch was
+    # re-verified against the strict loader before landing here -- see each
+    # batch's own normalizations entry for what, if anything, that pass
+    # caught.
+    assert report.claims_written == 873
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
