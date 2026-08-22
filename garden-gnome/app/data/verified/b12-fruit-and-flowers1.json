@@ -1,0 +1,1089 @@
+{
+  "batch": "b12-fruit-and-flowers1",
+  "records": [
+    {
+      "common_name": "Watermelon",
+      "scientific_name_given": "Citrullus lanatus",
+      "scientific_name_accepted": "Citrullus lanatus",
+      "name_note": "RHS lists \"Citrullus vulgaris\" as a synonym on its Citrullus lanatus profile page (Name Status: Correct for C. lanatus), so the accepted binomial matches the given name; no admissible source suggests a different accepted name.",
+      "is_houseplant": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": "keep_moist",
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: Clemson gives only an 'average air temperature' range (70-85°F), not split into day-specific and night-specific figures; mapping it to either would misrepresent the source.",
+        "chill_damage_f: sources describe frost sensitivity only qualitatively ('do not plant this crop until after the last chance of frost'); no specific damage-onset temperature is given.",
+        "toxic_to_pets/toxicity_detail: no admissible source (NC State Plant Toolbox, Clemson HGIC, Missouri Botanical Garden, RHS, UMD Extension) discusses toxicity of watermelon to pets, other animals, or humans; NC State's Plant Toolbox profile carries no 'Poison' attribute for this species.",
+        "direct_sun_hours_max: NC State states a floor of '6 or more hours of direct sunlight a day', which is a minimum, not a maximum; left null rather than force a minimum into a max-labeled field.",
+        "fertilize_interval_days/fertilize_active_months/fertilize_strength: Clemson gives a growth-stage-based fertilizer schedule (pre-plant application, then side-dress when vines begin running and again after flowering), not a day-interval or calendar-month schedule the schema fields expect.",
+        "water_growing_days_est/water_dormant_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: no admissible source gives a watering frequency in days or a soil moisture-check depth; Clemson describes need via fruit water content (92%) and root depth (top 12in of soil), and UGA via crop-coefficient/evapotranspiration math, neither of which is a day interval.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: not addressed by any admissible source; watermelon is treated purely as an outdoor field/garden crop.",
+        "light_fc_min/light_fc_good: no admissible source gives a footcandle value; only a sun-exposure duration category (full sun) is given, captured instead in outdoor_sun_exposure.",
+        "cool_rest_note: not applicable/not addressed; watermelon is grown as an annual in these sources, with no winter-chill requirement discussed (unlike a fruiting perennial).",
+        "soil_drainage — removed on audit: Value 'moderate' is not stated by either cited source. Live-fetched NC State page shows the literal tags 'Good Drainage' and 'Moist' (matching the quote used), and MOBOT's quote says 'well-drained loams' and 'Intolerant of wet soils.' Neither source uses 'moderate' or a synonym for it; NC State's 'Good Drainage' is its favorable/top drainage category, not obviously 'moderate.' This is an uncredited categorical translation, not a value the sources actually state.",
+        "soil_base — removed on audit: The primary citation attached to this claim (NC State: 'Soil Texture: Loam (Silt) ... Soil Drainage: Good Drainage Moist') says nothing about planting location or bed type -- it only describes soil composition/drainage. The only textual support for 'garden_bed' is the secondary MOBOT citation's mention of planting 'in hills' 6-8' apart, so the citation presented as primary support for this field does not actually address it.",
+        "is_houseplant — removed on audit: The MOBOT quote ('Seed can also be started indoors about 3 weeks before the last spring frost date, with young plants set out after last frost date') describes seed-starting logistics, not whether the mature plant is or isn't grown as a houseplant. It does not actually state that watermelon is not a houseplant -- the false value is inferred by the researcher, not asserted by the source, even though the researcher's own annotation frames it as if directly supported."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Watermelon",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279562&isprofile=1&basic=citrullus+lanatus",
+          "quote": "Common Name: watermelon"
+        },
+        {
+          "claim": "scientific_name_given Citrullus lanatus and scientific_name_accepted Citrullus lanatus (synonym Citrullus vulgaris)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/157831/citrullus-lanatus/details",
+          "quote": "Synonyms Citrullus vulgaris"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (supporting)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279562&isprofile=1&basic=citrullus+lanatus",
+          "quote": "Sun: Full sun ... It is best grown in fertile, organically rich, consistently moist, well-drained loams in full sun."
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Soil pH: Neutral (6.0-8.0)"
+        },
+        {
+          "claim": "soil_drainage moderate and soil_base garden_bed",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Soil Texture: Loam (Silt) ... Soil Drainage: Good Drainage Moist"
+        },
+        {
+          "claim": "soil_drainage moderate (supporting) and soil_base garden_bed (supporting)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279562&isprofile=1&basic=citrullus+lanatus",
+          "quote": "It is best grown in fertile, organically rich, consistently moist, well-drained loams in full sun. Thrives in long hot summers. Intolerant of wet soils. Avoid compacted soils. ... Plant several seeds (up to six) together in hills that are 6-8' apart and thin later."
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Keep the soil moist but not soggy."
+        },
+        {
+          "claim": "water_regime keep_moist (supporting)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279562&isprofile=1&basic=citrullus+lanatus",
+          "quote": "consistently moist, well-drained loams ... Intolerant of wet soils."
+        },
+        {
+          "claim": "is_houseplant false (seed may be started indoors only for later outdoor transplant, not grown indoors long-term)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279562&isprofile=1&basic=citrullus+lanatus",
+          "quote": "Seed can also be started indoors about 3 weeks before the last spring frost date, with young plants set out after last frost date."
+        },
+        {
+          "claim": "greenhouse or polytunnel cultivation needed for a UK climate (no value taken)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/fruit/melons/grow-your-own",
+          "quote": "It's also possible to grow watermelons (Citrullus lanatus) in the UK. For the best chance of success, grow watermelon plants in a greenhouse or polytunnel and select a variety suited to cooler climates, or a compact variety such as 'Little Darling'."
+        },
+        {
+          "claim": "air temperature qualitative: average range given, not split by day/night (no value taken)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/watermelons/",
+          "quote": "Watermelons (Citrullus lanatus) are warm-season crops that grow best at average air temperatures between 70 and 85 °F."
+        },
+        {
+          "claim": "frost sensitivity qualitative: plant after last frost date, no specific damage temperature given (no value taken)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/watermelons/",
+          "quote": "In the spring, do not plant this crop until after the last chance of frost."
+        },
+        {
+          "claim": "fertilizer schedule qualitative: stage-based pre-plant and side-dress application (no value taken)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/watermelons/",
+          "quote": "If a soil test has not been taken, apply 5-10-10 at 30 pounds per 1,000 square feet before planting. ... Side-dress with 34-0-0 at 1 pound per 100 feet of row or calcium nitrate (15.5-0-0) at 2 pounds per 100 feet of row."
+        },
+        {
+          "claim": "water need qualitative: fruit is 92 percent water, irrigation critical near fruit set (no value taken)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/watermelons/",
+          "quote": "Watermelons need a lot of water. In fact, water comprises 92 percent of the watermelon fruit."
+        }
+      ]
+    },
+    {
+      "common_name": "Blackberry",
+      "scientific_name_given": "Rubus allegheniensis",
+      "scientific_name_accepted": "Rubus allegheniensis",
+      "name_note": "NC State Extension's Plant Toolbox entry for this binomial lists several common names used interchangeably: \"Allegheny Blackberry, Blackberry, Common Blackberry, Dewberry, Graves' blackberry.\" No admissible source indicated Rubus allegheniensis is a synonym for a different accepted binomial, so the accepted name is given as identical to the name provided.",
+      "is_houseplant": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": 6,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "scientific_name_given Rubus allegheniensis and scientific_name_accepted Rubus allegheniensis (common names Allegheny Blackberry, Blackberry, Common Blackberry, Graves' blackberry)",
+          "quote": "Rubus allegheniensis (Allegheny Blackberry, Blackberry, Common Blackberry, Dewberry, Graves' blackberry)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "is_houseplant false (plant type is an outdoor woody shrub; no container or indoor cultivation listed on the species page)",
+          "quote": "Shrub, Woody Plant, Native Plant, Edible, Deciduous",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "soil_ph_max 6.0 (acid soil preference; no lower bound given)",
+          "quote": "Acid (<6.0)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "soil_base garden_bed (grown in-ground in native soil types, not a container medium)",
+          "quote": "Clay, High Organic Matter, Loam (Silt), Shallow Rocky",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "qualitative only, no field taken: hardiness zone range 3a-8b (a survival zone, not a frost-damage-onset temperature, so not mapped to chill_damage_f)",
+          "quote": "USDA Plant Hardiness Zone: 3a, 3b, 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "qualitative only, no field taken: drought tolerance and mixed drainage tags don't map cleanly to a single soil_drainage category",
+          "quote": "Good Drainage, Moist, Occasionally Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/"
+        },
+        {
+          "claim": "qualitative only, no field taken: a different species (Rubus fruticosus), so its pH/sun/spacing/fertilizing values were not applied to this Rubus allegheniensis record",
+          "quote": "Blackberries (Rubus fruticosus) are native to the Southeastern United States",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/blackberry/"
+        }
+      ],
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: no admissible source addresses pet or animal toxicity for Rubus allegheniensis specifically; the NC State Plant Toolbox species page has no toxicity/poison section at all, and no other admissible source discusses this species' toxicity.",
+        "chill_damage_f: no admissible source states a frost/cold damage-onset temperature for this species; the only cold-related figure found was a USDA hardiness zone range (3a-8b), which is a survival zone, not a damage-onset temperature, so it was not mapped to this field.",
+        "cool_rest_note (winter chill-hour requirement to break dormancy): not found for Rubus allegheniensis on any admissible source. A UGA CAES Field Report search surfaced chill-hour figures for named commercial cultivars (e.g. Arapaho, Kiowa) but those are different cultivated selections, not this species, so they were excluded rather than presented as this species' requirement.",
+        "day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max: not addressed by any admissible source for this species.",
+        "light_fc_min, light_fc_good, direct_sun_hours_max: the source gives only a sun-exposure duration category (full sun / partial shade), not a footcandle value or an hours-maximum figure.",
+        "fertilize_interval_days, fertilize_active_months, fertilize_strength: not addressed for Rubus allegheniensis by any admissible source. Generic 'blackberry' fertilizing guidance exists at University of Maryland Extension and UGA CAES Field Report, but neither names a species, and the guidance (spacing/trellising language for 'erect' and 'trailing' types, tissue-culture-propagated stock) appears to describe cultivated hybrid selections rather than the wild species, so it was not applied here.",
+        "water_regime, water_growing_days_est, water_dormant_days_est, water_estimate_basis, water_check_depth_cm: no admissible source gives a species-specific watering regime for Rubus allegheniensis. The species page notes 'Drought tolerant' and lists overlapping drainage tags ('Good Drainage', 'Moist', 'Occasionally Dry') but does not state a regime category or day-count basis.",
+        "soil_drainage: left null rather than force-map the source's overlapping drainage tags ('Good Drainage', 'Moist', 'Occasionally Dry') onto a single fast/moderate/moisture_retentive value.",
+        "soil_ph_min: the source gives only an upper-bound category ('Acid (<6.0)'), with no lower pH bound stated.",
+        "Penn State Extension's raspberry/blackberry production page returned a 404 and could not be checked. UF/IFAS's blackberry cultivar publication (edis.ifas.ufl.edu/hs1352) redirected off the admissible edis.ifas.ufl.edu domain to ask.ifas.ufl.edu, which is not on the admissible list, so it was not used. Missouri Botanical Garden's Plant Finder has entries for several other Rubus species but no dedicated entry for Rubus allegheniensis, so it could not be used either.",
+        "is_houseplant — removed on audit: The cited quote ('Shrub, Woody Plant, Native Plant, Edible, Deciduous') is a plant-type tag list; it never states the plant is not grown as a houseplant. The claim's parenthetical ('no container or indoor cultivation listed on the species page') infers absence-of-mention as the basis for the value, which is the same category of reasoning error the audit brief flags for toxicity (silence isn't evidence). Practically very likely correct for a native bramble, but not literally sourced.",
+        "soil_base — removed on audit: The cited quote ('Clay, High Organic Matter, Loam (Silt), Shallow Rocky') is a soil-texture tolerance list, not a statement about cultivation method. The claim's added gloss ('grown in-ground in native soil types, not a container medium') asserts a container-vs-bed distinction the quote never addresses -- it 'sounds related' but doesn't state the value."
+      ]
+    },
+    {
+      "chill_damage_f": null,
+      "citations": [
+        {
+          "claim": "common_name Highbush Blueberry and scientific_name_given Vaccinium corymbosum",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+          "quote": "Vaccinium corymbosum (Highbush Blueberry, Rabbit-eye Blueberry, Rabbiteye Blueberry, Smooth Highbush Blueberry)"
+        },
+        {
+          "claim": "name_note: NC State's entry for this species page states it was previously known as a different binomial (no value taken for scientific_name_accepted from this alone)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+          "quote": "Previously known as: Vaccinium virgatum"
+        },
+        {
+          "claim": "name_note: Clemson uses Vaccinium virgatum as the name for rabbiteye blueberry, a type distinct from northern highbush (V. corymbosum), which conflicts with NC State's synonym note above",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/blueberry/",
+          "quote": "In general, rabbiteye blueberries (Vaccinium virgatum) are the most adaptable, productive and pest-tolerant of the three types of blueberries."
+        },
+        {
+          "claim": "scientific_name_accepted Vaccinium corymbosum",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/18670/vaccinium-corymbosum-(f)/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "is_houseplant true (grown in containers) and soil_base ericaceous",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/18670/vaccinium-corymbosum-(f)/details",
+          "quote": "Alternatively grow in containers or raised beds filled with peat-free, ericaceous compost"
+        },
+        {
+          "claim": "is_houseplant true (compact cultivars bred for container growing)",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-blueberries-home-garden",
+          "quote": "There are many compact cultivars for container blueberry growing, including Peach Sorbet, Tophat, a high-bush/low-bush cross that grows to 2-3 ft. in height, and several half-high cultivars, like Northsky, that reaches 4 ft. in height."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day); Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (best) with tolerance of part_shade",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-blueberries-home-garden",
+          "quote": "Blueberries grow and fruit best in full sun (a minimum of 8 hours per day in summer) but can tolerate some shade."
+        },
+        {
+          "claim": "soil_ph_min 4.5 and soil_ph_max 5.5, and soil_drainage moisture_retentive",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/18670/vaccinium-corymbosum-(f)/details",
+          "quote": "Plant in a sheltered site in well-drained, moisture-retentive, acidic soil, (pH 4.5-5.5) in sun or part shade."
+        },
+        {
+          "claim": "soil_ph_min 4.5 and soil_ph_max 5.5",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-blueberries-home-garden",
+          "quote": "Blueberry is an “acid-loving” plant requiring a soil pH in the 4.5-5.5 range."
+        },
+        {
+          "claim": "water_regime keep_moist (constant moisture needed, shallow fibrous roots)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279992",
+          "quote": "Shallow, fibrous roots need constant moisture and good drainage."
+        },
+        {
+          "claim": "water_growing_days_est 3 (estimate derived from a stated watering frequency)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/blueberry/",
+          "quote": "water thoroughly two to three times per week during dry spells in the summer and early fall"
+        },
+        {
+          "claim": "cool_rest_note: winter chilling-hour dormancy requirement below 45F (not a frost-damage temperature)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/blueberry/",
+          "quote": "this requirement means that the blueberry plants need to be exposed to a sufficient number of hours of winter temperatures below 45 °F in order to produce flowers. The chilling hours in SC range between 1000 to 1200 hours in the upper Piedmont to as low as 400 to 600 hours near the coast."
+        }
+      ],
+      "common_name": "Highbush Blueberry",
+      "cool_rest_note": null,
+      "day_f_max": null,
+      "day_f_min": null,
+      "direct_sun_hours_max": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_max": null,
+      "humidity_pct_min": null,
+      "is_houseplant": null,
+      "light_fc_good": null,
+      "light_fc_min": null,
+      "name_note": "NC State's Plant Toolbox entry for this exact species page states \"Previously known as: Vaccinium virgatum,\" but Clemson HGIC's blueberry factsheet uses Vaccinium virgatum as the name for rabbiteye blueberry -- a type it treats as distinct from northern highbush, which it identifies as V. corymbosum. RHS lists this binomial's Name Status as \"Correct.\" Given the RHS confirmation and the apparent internal inconsistency in NC State's synonym note (it does not match how any other admissible source uses V. virgatum), scientific_name_accepted is kept as the given binomial, Vaccinium corymbosum.",
+      "night_f_max": null,
+      "night_f_min": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "scientific_name_accepted": "Vaccinium corymbosum",
+      "scientific_name_given": "Vaccinium corymbosum",
+      "soil_base": "ericaceous",
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_max": 5.5,
+      "soil_ph_min": 4.5,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "chill_damage_f: no admissible source gives a specific frost/cold damage-onset temperature for Vaccinium corymbosum tissue; UF/IFAS's freeze-protection publications (HS216/HS968, mg359) now 301-redirect off the admissible edis.ifas.ufl.edu domain to ask.ifas.ufl.edu, so their frost-stage temperature data could not be cited from an admissible URL.",
+        "day_f_min / day_f_max / night_f_min / night_f_max: no admissible source states a specific daytime or nighttime ambient air temperature range for this species.",
+        "direct_sun_hours_max: UMD states a minimum of 8 hours/day of full sun in summer, not a maximum, and no admissible source gives an upper bound, so it could not be mapped to this max-only field.",
+        "fertilize_active_months / fertilize_interval_days / fertilize_strength: Clemson and UMD both give detailed fertilizer programs (amounts by planting year, a six-week reapplication interval in year one only, calendar cutoffs like 'until mid-August'), but the schedule is keyed to plant age and regional cutoff dates rather than a clean recurring interval or start/end month range, so it was not force-fit into these fields.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no admissible source discusses ambient air humidity requirements for this outdoor fruit shrub.",
+        "light_fc_min / light_fc_good: all admissible sources treat this as an outdoor garden/landscape shrub and give sun-exposure duration categories (full sun / part shade), not indoor footcandle light values.",
+        "toxic_to_pets / toxicity_detail: none of the admissible sources (NC State, Clemson, Missouri Botanical Garden, RHS, UMD) address toxicity of Vaccinium corymbosum to cats or dogs in any part of the plant.",
+        "water_check_depth_cm: UMD instructs checking soil moisture by 'feeling the soil several inches deep' without giving an exact depth number.",
+        "water_dormant_days_est / water_dry_down_target: no admissible source describes a dormant-season watering interval or a specific dry-down target (e.g., top-inch-dry) for this species.",
+        "cool_rest_note — removed on audit: Clemson HGIC's own text says 'This fact sheet focuses on the rabbiteye and Southern highbush types, as they are more adapted to the South Carolina climate and soils.' Northern highbush (Vaccinium corymbosum, the species under audit) is named only once as one of three types and is then excluded from the rest of the page. The 400-600/1000-1200 chilling-hour figures the record cites sit in the section introducing rabbiteye cultivar tables (Climax, etc.) and Southern highbush, not Northern highbush -- a sibling-species/cultivar mismatch per audit check #2. Rabbiteye and Southern highbush chill requirements are known to run lower than typical Northern highbush requirements, so applying this range to V. corymbosum risks understating its real dormancy needs. The dormancy-vs-frost-damage concept separation itself was handled correctly; the numeric range attributed to this species is not what the cited source actually gives for it.",
+        "is_houseplant — removed on audit: Both citations supporting is_houseplant=true describe OUTDOOR container/raised-bed cultivation (RHS: 'containers or raised beds filled with peat-free, ericaceous compost' as an alternative to in-ground planting for a full-sun, winter-chill-dormant fruiting shrub; UMD: 'compact cultivars for container blueberry growing' on a patio), not indoor houseplant cultivation. Neither source calls this a houseplant. This is internally contradicted by the record's own unknowns entries for light_fc_min/light_fc_good and humidity_need, which state that 'all admissible sources treat this as an outdoor garden/landscape shrub' -- the opposite conclusion from is_houseplant=true elsewhere in the same record. 'Grown in a container' was conflated with 'grown indoors as a houseplant.'"
+      ],
+      "water_check_depth_cm": null,
+      "water_dormant_days_est": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": "Estimate derived from Clemson HGIC's guidance to water raised-bed/mound-planted blueberries thoroughly two to three times per week during dry spells in summer and early fall, under South Carolina growing conditions; this is an estimate, and actual frequency depends on rainfall, mulch, and soil type.",
+      "water_growing_days_est": 3,
+      "water_regime": "keep_moist"
+    },
+    {
+      "common_name": "American Cranberry",
+      "scientific_name_given": "Vaccinium macrocarpon",
+      "scientific_name_accepted": "Vaccinium macrocarpon",
+      "is_houseplant": false,
+      "name_note": "The given binomial matches the accepted name. NC State Extension lists it as \"Previously known as: Oxycoccus macrocarpus\" (a synonym, not the accepted name), and RHS's plant profile records \"Name Status: Correct\" for Vaccinium macrocarpon, confirming macrocarpon itself (not the older Oxycoccus name) is the accepted binomial. No source suggested a different currently-accepted name.",
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_ph_min": 4,
+      "soil_ph_max": 5.2,
+      "soil_drainage": "moisture_retentive",
+      "water_regime": "keep_moist",
+      "soil_base": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "fertilize_active_months": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "common_name American Cranberry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Common Name(s): American Cranberry Bearberry Cranberry Large Cranberry"
+        },
+        {
+          "claim": "scientific_name_accepted Vaccinium macrocarpon",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/18694/vaccinium-macrocarpon-(f)/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating)",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/18694/vaccinium-macrocarpon-(f)/details",
+          "quote": "Position: Full sun, Partial shade"
+        },
+        {
+          "claim": "soil_ph_min 4.0 and soil_ph_max 5.2",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Soil pH needs to be 4.0-5.2."
+        },
+        {
+          "claim": "soil_ph_min 4.0 and soil_ph_max 5.2 and soil_drainage moisture_retentive (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279943",
+          "quote": "Best grown in damp to boggy, acidic (pH 4.0-5.2), organically rich, well-drained soil in full sun."
+        },
+        {
+          "claim": "soil_drainage moisture_retentive and water_regime keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Requirements are full sun and moist but well-drained soils and they can tolerate periodic flooding."
+        },
+        {
+          "claim": "soil_drainage moisture_retentive and water_regime keep_moist (corroborating)",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/18694/vaccinium-macrocarpon-(f)/details",
+          "quote": "Grow in full sun to partial shade in moist but well drained acidic soil. Suited to boggy conditions, keep moist all year."
+        },
+        {
+          "claim": "qualitative: intolerant of heat and drought, grown in wet bog conditions outdoors (no field value taken; informs is_houseplant=false)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Large Cranberry is native low-growing vine, ground cover or trailing evergreen shrub and is usually grown in wet bog conditions. ... This plant is intolerant of heat and drought."
+        },
+        {
+          "claim": "qualitative: outdoor container growing note, not indoor/houseplant (no field value taken; this feature article covers two species, Vaccinium oxycoccos and V. macrocarpon, together)",
+          "source": "RHS Grow Your Own",
+          "url": "https://www.rhs.org.uk/advice/grow-your-own/features/fascinating-facts-cranberries",
+          "quote": "They prefer a sunny site and thrive beside a river or pond but can also grow well in pots. ... Good for containers: Yes, particularly the 'Pilgrim' and 'Redstar' varieties."
+        }
+      ],
+      "unknowns": [
+        "day_f_min, day_f_max, night_f_min, night_f_max: no admissible source gives day/night temperature ranges for cranberry; only USDA hardiness zone (NC State 3a-7b) / RHS hardiness rating (H6) / MOBOT zone (3-7) are given, and those describe winter survival zones, not day/night temperatures.",
+        "chill_damage_f: no admissible source states a frost/cold damage-onset temperature; only survival hardiness ratings are given (see above), which per instructions should not be mapped onto this field.",
+        "cool_rest_note: no admissible source states an explicit winter-chill-hours requirement for breaking dormancy or triggering flowering in cranberry.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: cranberry is grown outdoors in bog conditions; none of the admissible extension/garden sources give an ambient humidity percentage or category.",
+        "light_fc_min, light_fc_good, direct_sun_hours_max: NC State and RHS give only categorical full-sun/partial-shade duration classes (captured in outdoor_sun_exposure), not footcandle numbers or a bounded maximum-hours figure; NC State's 'full sun' category is defined as '6 or more hours' with no upper bound, so no max could be taken.",
+        "soil_base: no admissible source names a specific soil-mix category (e.g. an 'ericaceous' mix or 'garden bed'); sources describe the medium qualitatively as acidic, organically rich, and damp-to-boggy/well-drained rather than naming a mix type.",
+        "fertilize_interval_days, fertilize_strength, fertilize_active_months: none of the admissible sources address fertilizing practices for cranberry.",
+        "water_growing_days_est, water_dormant_days_est, water_check_depth_cm, water_dry_down_target, water_estimate_basis: no admissible source gives a watering frequency, check depth, or dry-down target in days; only the qualitative regime (moist/boggy, tolerates periodic flooding) is stated, captured in water_regime.",
+        "toxic_to_pets, toxicity_detail: no source among the admissible extension/garden domains addresses toxicity of Vaccinium macrocarpon to pets or humans. Notably, the RHS plant profile format includes a 'Potentially harmful' field on some species pages (e.g. it flags Vitis vinifera as harmful to dogs), but no such field appears on the Vaccinium macrocarpon (F) profile page, and no other admissible source discusses toxicity at all, so the field is left null rather than inferred as safe.",
+        "is_houseplant: no admissible source describes indoor/houseplant cultivation. NC State and RHS both describe an outdoor boggy-garden/bog shrub that is 'intolerant of heat and drought' (NC State); a separate RHS feature article mentions cranberries can 'grow well in pots,' but describes outdoor container growing beside a river or pond (not indoor use), and that article covers two species (Vaccinium oxycoccos and V. macrocarpon) jointly, so it was treated as a descriptive note rather than grounds for setting is_houseplant true."
+      ]
+    },
+    {
+      "common_name": "Grape",
+      "scientific_name_given": "Vitis vinifera",
+      "scientific_name_accepted": "Vitis vinifera",
+      "name_note": "NC State Extension lists common names \"Common Grape, Common Grape Vine, European Wine Grape, Grape, Purpleleaf Grape, Vine, Wine Grape\"; RHS calls it \"grape vine\" (other names: cultivated grape, European grape, wine grape). RHS's structured \"Name Status\" field for Vitis vinifera reads \"Correct,\" and no admissible source suggests a different accepted binomial or a synonym relationship, so scientific_name_accepted is copied over unchanged from scientific_name_given.",
+      "is_houseplant": false,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "fertilize_active_months": [
+        3
+      ],
+      "toxic_to_pets": true,
+      "toxicity_detail": "RHS lists Vitis vinifera under \"Potentially harmful\" for pets: dogs — harmful if eaten, whether the fruit is from an edible or an ornamental cultivar. No toxic compound, mechanism, or specific affected plant part is identified in the source, and no other admissible source addresses pet toxicity for this species (so there is no cross-source conflict to adjudicate, just one source with a claim and others that are silent).",
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source gives day/night ambient growing-temperature ranges; only winter cold-hardiness/dormancy figures were found.",
+        "chill_damage_f: genuine conflict between two admissible sources on the same harm-capable field. UMD Extension: cold damage to vinifera grapevines 'typically begins to occur when minimum temperature extremes of -5 F are experienced in mid-winter' (vinifera listed at < -5F). Penn State Extension: 'Minimum low winter temperature for vinifera grapes is 0F.' These are different numbers for the same practical question (vinifera winter cold-damage threshold), so per policy the field is left null rather than picking a side.",
+        "soil_ph_min/soil_ph_max: four admissible sources disagree materially - Clemson gives pH 5.8-6.5, Penn State gives pH 5.5-7.0, NC State categorizes soil pH as 'Acid (<6.0)', and RHS categorizes it as 'Alkaline or Neutral'. No single range is safely supportable, so left null.",
+        "water_regime: no admissible source states an explicit dry-down/moisture regime. RHS's free-text cultivation note says to 'mulch to keep soil moist,' but RHS's own structured Moisture field for this species reads 'Well-drained' (not 'moist'), and Clemson's only watering mention is first-year establishment watering/mulching for weed suppression, and Missouri Botanical Garden gives just a vague 'Water: Medium' rating with no regime detail. Too ambiguous and partly self-conflicting to assign a category.",
+        "direct_sun_hours_max: NC State states full sun as '6 or more hours,' which is a floor, not a ceiling; no source gives a maximum.",
+        "light_fc_min/light_fc_good: no footcandle values from any admissible source; this is an outdoor garden/vineyard crop and all sources describe sun only by duration category (full sun/part shade), not intensity.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: not addressed by any admissible source.",
+        "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: not addressed by any admissible source; sources describe garden/vineyard establishment watering only in general terms ('keep watered,' 'well-watered and mulched') with no depth, day-count, or dry-down detail to build an estimate from.",
+        "fertilize_interval_days/fertilize_strength: Clemson gives different fertilizing programs for young vines (six-week repeat intervals through years 1-2) versus bearing/mature vines (a single March application, optionally topped up in May 'if growth is poor'), and all rates are granular NPK amounts (10-10-10, 33-0-0 in ounces/pounds) rather than a liquid dilution 'strength' that the full/half/quarter scale describes. No single defensible interval or strength value could be taken; only the March timing for bearing vines was populated (fertilize_active_months).",
+        "soil_drainage: no admissible source uses the schema's exact categories (fast/moderate/moisture_retentive); 'moderate' is inferred from consistently repeated 'well-drained' language (RHS, Clemson, Penn State, NC State) combined with Missouri Botanical Garden's more specific 'medium moisture, well-drained soil' phrasing, which reads closer to moderate than to a fast/gritty-draining mix.",
+        "soil_base: no source uses the term 'garden bed'; 'garden_bed' is inferred from every admissible source uniformly describing outdoor, in-ground vineyard/garden cultivation (spacing, planting depth, trellising/support systems) with no source mentioning container growing.",
+        "is_houseplant: set false because every admissible source frames Vitis vinifera exclusively as an outdoor vine requiring full sun, structural support, and vineyard/garden-style pruning; none mentions container or indoor growing.",
+        "cool_rest_note — removed on audit: The UMD 'Grape 100-600' chilling-hours figure is not Vitis-vinifera-specific. I fetched extension.umd.edu/resource/starting-home-fruit-garden directly: its own species table lists 'Grape | Vitis labrusca, Vitis vinifera | North America, Europe, SW Asia | Various hybrids' as one combined row, and the page separately notes Muscadine (Vitis rotundifolia) is 'too cold-sensitive for most of Maryland' — signaling the home-garden 'Grape' entries on this Maryland extension page are dominated by American/hybrid cultivars typically grown in that climate, not European wine grapes specifically. The cited '100-600' range is a blended figure spanning multiple species/hybrids under one common-name row, not a Vitis-vinifera-derived number, so presenting it in cool_rest_note as 'the chilling requirement...for grape' (in a record specifically about Vitis vinifera) overstates how specific this source is to the species being profiled — this is the genus/common-name-vs-species conflation the audit brief warns about. (The record does correctly keep this separate from chill_damage_f, and the 32-45°F parenthetical is genuinely sourced from the same UMD page's definition of chilling hours, so those parts are sound — only the species-specificity of the 100-600 figure is the issue.)"
+      ],
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vitis-vinifera/"
+        },
+        {
+          "claim": "common_name Grape (also listed: Common Grape, Common Grape Vine, European Wine Grape, Purpleleaf Grape, Vine, Wine Grape)",
+          "quote": "Vitis vinifera (Common Grape, Common Grape Vine, European Wine Grape, Grape, Purpleleaf Grape, Vine, Wine Grape) | North Carolina Extension Gardener Plant Toolbox",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vitis-vinifera/"
+        },
+        {
+          "claim": "soil pH qualitative: NC State categorizes soil pH as Acid (<6.0) (conflicts with Clemson, Penn State, and RHS pH statements; no soil_ph value taken)",
+          "quote": "Acid (<6.0)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vitis-vinifera/"
+        },
+        {
+          "claim": "soil pH qualitative: Clemson states preferred pH 5.8-6.5 (conflicts with NC State, Penn State, and RHS; no soil_ph value taken)",
+          "quote": "Grapes prefer a soil pH of 5.8 to 6.5.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bunch-grapes/"
+        },
+        {
+          "claim": "fertilize_active_months 3 (March, for bearing/mature vines; granular 10-10-10 rate given, not a liquid dilution strength, so fertilize_strength not set)",
+          "quote": "Bearing vines will need 2½ pounds of 10-10-10 per plant applied in March.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bunch-grapes/"
+        },
+        {
+          "claim": "water qualitative: Clemson only describes watering/mulching during first-year establishment for weed suppression, not a species-level moisture regime; no water_regime value taken",
+          "quote": "Keep the vines well-watered and mulched to suppress weeds.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bunch-grapes/"
+        },
+        {
+          "claim": "toxic_to_pets true (dogs; harmful if eaten, fruit whether from an edible or ornamental cultivar)",
+          "quote": "Pets (dogs): Harmful if eaten whether fruits are edible or ornamental",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/134401/i-vitis-vinifera-i/details"
+        },
+        {
+          "claim": "scientific_name_accepted Vitis vinifera (RHS Name Status field)",
+          "quote": "Correct",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/134401/i-vitis-vinifera-i/details"
+        },
+        {
+          "claim": "soil pH qualitative: RHS categorizes as Alkaline or Neutral (conflicts with NC State, Clemson, Penn State; no soil_ph value taken)",
+          "quote": "Alkaline or Neutral",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/134401/i-vitis-vinifera-i/details"
+        },
+        {
+          "claim": "water qualitative: RHS cultivation note says to mulch to keep soil moist, but RHS's own structured Moisture field for this species is 'Well-drained' (not 'moist'); ambiguous, no water_regime value taken",
+          "quote": "Grow outdoors in full sun, in well-drained, humus-rich soil, preferably neutral to slightly alkaline, mulch to keep soil moist, and provide support",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/134401/i-vitis-vinifera-i/details"
+        },
+        {
+          "claim": "chill_damage_f qualitative: Penn State states minimum low winter temperature for vinifera grapes is 0F (conflicts with UMD Extension's -5F cold-damage-onset figure for vinifera; genuine conflict, no chill_damage_f value taken)",
+          "quote": "Minimum low winter temperature for vinifera grapes is 0°F and -5°F for hybrids.",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/backyard-grape-growing"
+        },
+        {
+          "claim": "soil pH qualitative: Penn State states maintain pH 5.5-7.0 (conflicts with NC State, Clemson, RHS; no soil_ph value taken)",
+          "quote": "maintain soil pH between 5.5 and 7.0",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/backyard-grape-growing"
+        },
+        {
+          "claim": "chill_damage_f qualitative: UMD Extension states cold damage to vinifera grapevines typically begins below -5F (conflicts with Penn State's 0F minimum-tolerance figure for vinifera; genuine conflict, no chill_damage_f value taken)",
+          "quote": "In general, damage typically begins to occur when minimum temperature extremes of -5o F are experienced in mid-winter. ... American cvs. (< -15° F) > French Hybrids (< -10° F) > vinifera (< -5° F)",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/understanding-grapevine-bud-damage"
+        },
+        {
+          "claim": "cool_rest_note chilling requirement about 100-600 hours (winter chill hours needed to break dormancy and fruit properly; distinct from a frost-damage temperature)",
+          "quote": "Grape 100 - 600 (Chilling hours requirement for fruit plants table, row \"Grape\" under column \"Chilling Hours\")",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/starting-home-fruit-garden"
+        },
+        {
+          "claim": "soil_drainage moderate and soil_base garden_bed (medium moisture, well-drained soil; in-ground vineyard/garden cultivation, no container growing mentioned)",
+          "quote": "Best grown in deep, loamy, humus-rich, medium moisture, well-drained soil in full sun.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287551"
+        },
+        {
+          "claim": "water qualitative: Missouri Botanical Garden rates general water need as 'Medium' with no dry-down/moisture regime specified; no water_regime value taken",
+          "quote": "Water: Medium",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287551"
+        },
+        {
+          "claim": "is_houseplant false (outdoor vineyard/garden cultivation requiring structural support and pruning; no container or indoor growing mentioned by any admissible source)",
+          "quote": "Grapes are high maintenance plants that require regular pruning, structural support, and pesticide treatments to produce significant yields.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287551"
+        }
+      ]
+    },
+    {
+      "chill_damage_f": null,
+      "citations": [
+        {
+          "claim": "scientific_name_accepted Fragaria x ananassa",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Strawberry - Fragaria x ananassa"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day); Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (corroborating)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/growing-strawberries/",
+          "quote": "Light: Full sun"
+        },
+        {
+          "claim": "is_houseplant true (grown in pots/containers)",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-strawberries-home-garden",
+          "quote": "Strawberry plants are low-growing perennials that can be cultivated successfully in rows, beds, or even pots and make an attractive groundcover when not fruiting."
+        },
+        {
+          "claim": "is_houseplant true (corroborating container use)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Container, Hanging Baskets"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/growing-strawberries/",
+          "quote": "Strawberries are shallow-rooted and grow best in sandy loam soils that drain well, at a pH between 6.0 and 6.5."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Good Drainage, Moist"
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Clay, High Organic Matter, Loam (Silt)"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/growing-strawberries/",
+          "quote": "Strawberries need 1 to 1½ inches of water per week."
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating)",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-strawberries-home-garden",
+          "quote": "Strawberry plants have a shallow, fibrous root system, making it somewhat more vulnerable to very dry or wet soil conditions."
+        },
+        {
+          "claim": "water_growing_days_est 7 (estimate from per-week water rate)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/growing-strawberries/",
+          "quote": "Strawberries need 1 to 1½ inches of water per week."
+        },
+        {
+          "claim": "chill_damage_f 28",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/news/strawberries-strong-enough-to-withstand-cold/",
+          "quote": "Ice forms at 32 degrees, but strawberry blossoms don't freeze until 28 degrees."
+        },
+        {
+          "claim": "toxic_to_pets false (non-toxic to cats, dogs, horses)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "#non-toxic for cats; #non-toxic for horses; #non-toxic for dogs"
+        }
+      ],
+      "common_name": "Strawberry",
+      "cool_rest_note": null,
+      "day_f_max": null,
+      "day_f_min": null,
+      "direct_sun_hours_max": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_max": null,
+      "humidity_pct_min": null,
+      "is_houseplant": null,
+      "light_fc_good": null,
+      "light_fc_min": null,
+      "name_note": null,
+      "night_f_max": null,
+      "night_f_min": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "scientific_name_accepted": "Fragaria x ananassa",
+      "scientific_name_given": "Fragaria x ananassa",
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_max": 6.5,
+      "soil_ph_min": 6,
+      "toxic_to_pets": false,
+      "toxicity_detail": "NC State Extension Plant Toolbox tags Fragaria x ananassa as non-toxic to cats, dogs, and horses. The source does not specify which plant part was assessed (fruit vs. foliage) or name any compound, and no other admissible source addressed pet toxicity for this species, so there is no cross-source conflict.",
+      "unknowns": [
+        "light_fc_min / light_fc_good: no admissible source gives a footcandle value for strawberry; only qualitative full-sun/part-shade duration tags were found.",
+        "direct_sun_hours_max: sources state a minimum for full sun (6 or more hours) but no source states a maximum.",
+        "day_f_min / day_f_max / night_f_min / night_f_max: no admissible source gives a general day- or night-specific ambient growing temperature range. The only degree figures found were a narrow transplanting-temperature note (40-50°F, Clemson, specific to setting out new plants) and the blossom frost-damage figure used for chill_damage_f (28°F, UGA) -- neither is a day/night operating range, so both were left out of these fields.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no admissible source discusses ambient humidity requirements for outdoor-grown strawberry.",
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: sources give fertilizing schedules that differ by cultivar type and growing method -- UMD: day-neutral cultivars fed once a month May through September, but June-bearing cultivars fed only after harvest; Clemson: nitrogen side-dress about one month after planting, then a separate late-winter broadcast feeding in subsequent years; RHS: container-grown plants fed fortnightly with a different feed than in-ground plants. No single species-level interval, month set, or strength could be extracted without conflating these distinct regimes, so all three fields were left null.",
+        "cool_rest_note: no admissible source states a winter-chill-hour requirement (hours below a threshold needed to break dormancy) specific to strawberry, as distinct from the frost-damage temperature captured in chill_damage_f.",
+        "water_dormant_days_est / water_check_depth_cm / water_dry_down_target: no admissible source gives a dormant-season watering interval, a soil-check depth, or a dry-down target for strawberry.",
+        "day_f/night_f for the 40-50°F Clemson figure specifically: that number describes the ambient air temperature recommended when transplanting strawberries into the ground, not a general daytime growing range or a cold-damage threshold, so it was not mapped to any temperature field.",
+        "soil_base — removed on audit: The cited quote ('Clay, High Organic Matter, Loam (Silt)') is NC State's Soil Texture tag list -- it describes soil composition the plant tolerates, not a growing location/medium ('garden_bed' vs. container vs. raised bed). Nothing in the quote says or implies 'garden bed.' This is a field/concept mismatch: a soil-texture citation was used to justify a soil-base (location) value it never addresses.",
+        "soil_drainage — removed on audit: The quote literally says 'Good Drainage, Moist' -- an NC State Soil Drainage tag reading 'Good,' not 'moderate.' The record silently downgrades a stated 'Good Drainage' rating to 'moderate' with no citation or reasoning bridging that gap, and also folds in a separate 'Moist' moisture tag as if it supported the drainage rating. The label doesn't survive re-derivation from its own quote.",
+        "is_houseplant — removed on audit: Both citations only establish that strawberries can be grown in outdoor pots/hanging baskets (patio containers, groundcover use) -- neither UMD nor NC State's 'Container, Hanging Baskets' tag says or implies indoor houseplant cultivation. This is reinforced by internal inconsistency: the record's own outdoor_sun_exposure requires 6+ hours of direct sunlight (full_sun) with no light_fc/humidity data populated for indoor conditions, which is inconsistent with true houseplant status. Container-capable outdoors is not the same claim as 'is_houseplant.'",
+        "chill_damage_f — removed on audit: The UGA quote states a threshold for open BLOSSOMS specifically ('strawberry blossoms don't freeze until 28 degrees') during spring bloom, not a general whole-plant cold-damage floor. Dormant strawberry crowns are considerably more cold-hardy than open flowers; collapsing a bloom-stage, flower-specific frost point into a general chill_damage_f field risks misapplying it outside the bloom window (e.g., implying the whole plant is damaged at 28°F when only exposed blossoms are at that specific risk). The number (28) is accurately quoted, but the scope of what it measures is narrower than what the field name implies.",
+        "name_note — removed on audit: The note asserts a specific factual claim -- 'Per Clemson HGIC, the species arose as a hybrid cross of Fragaria virginiana ... and Fragaria chiloensis' -- that is attributed to a named source but has no corresponding entry in the citations array (no URL, no quote). None of the actual Clemson HGIC citations in the record mention virginiana or chiloensis. This is an unverifiable, uncited assertion smuggled into a supposedly source-grounded field."
+      ],
+      "water_check_depth_cm": null,
+      "water_dormant_days_est": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": "Estimate for an outdoor garden-bed strawberry planting in full sun during the active growing season, based on Clemson HGIC's stated rate of 1 to 1.5 inches of water per week (that weekly figure is converted here to an approximate 7-day check interval); this is an estimate, not a source-stated watering interval in days.",
+      "water_growing_days_est": 7,
+      "water_regime": "keep_moist"
+    },
+    {
+      "common_name": "Ageratum",
+      "scientific_name_given": "Ageratum houstonianum",
+      "scientific_name_accepted": "Ageratum houstonianum",
+      "name_note": "RHS lists \"Name Status: Correct\" for Ageratum houstonianum, i.e. it is the accepted name rather than a synonym, and gives synonyms Ageratum caeruleum hort., Ageratum mexicanum, and Ageratum wendlandii hort. ex P.L. Vilm. No admissible source indicates a different accepted binomial. Other common names found: Blue Billygoatweed, Bluemink, Floss Flower, Mexican Ageratum (NC State); floss flower (Missouri Botanical Garden); Mexican paintbrush, flossflower (RHS).",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "fertilize_active_months": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "common_name Ageratum, and common names Blue Billygoatweed, Bluemink, Floss Flower, Mexican Ageratum",
+          "quote": "(Ageratum, Blue Billygoatweed, Bluemink, Floss Flower, Mexican Ageratum)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/"
+        },
+        {
+          "claim": "scientific_name_accepted Ageratum houstonianum (Name Status: Correct)",
+          "quote": "Name Status Correct",
+          "source": "RHS Plant Profile: Ageratum houstonianum",
+          "url": "https://www.rhs.org.uk/plants/156126/ageratum-houstonianum/details"
+        },
+        {
+          "claim": "name_note synonyms: Ageratum caeruleum hort., Ageratum mexicanum, Ageratum wendlandii hort. ex P.L. Vilm.",
+          "quote": "Synonyms Ageratum caeruleum hort., Ageratum mexicanum, Ageratum wendlandii hort. ex P.L. Vilm.",
+          "source": "RHS Plant Profile: Ageratum houstonianum",
+          "url": "https://www.rhs.org.uk/plants/156126/ageratum-houstonianum/details"
+        },
+        {
+          "claim": "is_houseplant false (outdoor bedding/container annual, frost-tender)",
+          "quote": "Ageratum houstonianum, commonly called floss flower, is a frost-tender annual of the aster family that provides continuous bloom for beds, gardens or containers from late spring to frost.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a557"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Sun: Full sun to part shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a557"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/"
+        },
+        {
+          "claim": "qualitative table row for ageratum: exposure 'Sun to Semi-shade', hardiness class 'Tender' (not frost-tolerant) -- no numeric temperature value taken",
+          "quote": "ageratum 6-24 12 WB Tender Sun to Semi-shade",
+          "source": "UGA Cooperative Extension, CAES Field Report Bulletin 954 (Flowering Annuals for Georgia Gardens)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B954/flowering-annuals-for-georgia-gardens/"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "Prefers rich soils with good drainage and consistent moisture throughout the growing season. Plants tend to wilt quickly if soils are allowed to dry out.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a557"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (good drainage, kept moist)",
+          "quote": "Soil Drainage: Good Drainage Moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/"
+        },
+        {
+          "claim": "soil_base garden_bed (high organic matter garden soil)",
+          "quote": "Soil Texture: High Organic Matter",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/"
+        }
+      ],
+      "unknowns": [
+        "chill_damage_f: sources call it a 'frost-tender annual' that is killed by the first frost and classify it 'Tender' (not frost-tolerant), but none give a specific damage-onset temperature -- only kill-by-frost/survival-type statements -- so left null per the damage-onset vs. survival-floor distinction.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source gives specific day or night temperature ranges; NC State's USDA zone 2a-11b listing reflects the zones it can be planted as a seasonal annual, not a temperature-tolerance figure.",
+        "light_fc_min/light_fc_good: no footcandle values given anywhere; sources use only full-sun/part-shade categories, captured instead in outdoor_sun_exposure.",
+        "direct_sun_hours_max: NC State's '6 or more hours' full-sun definition is standard boilerplate reused across NC State Plant Toolbox entries generally, not data specific to this species, so it was not taken as a value.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: not addressed by any admissible source.",
+        "soil_ph_min/soil_ph_max: not given numerically on any species-level admissible page; a pH range ('Acid or Alkaline or Neutral') appears only on an RHS cultivar-specific page for 'Blue Horizon', not the species profile, so it was not used for the species record.",
+        "toxic_to_pets/toxicity_detail: no admissible source discusses toxicity to dogs or cats for Ageratum houstonianum.",
+        "fertilize_interval_days/fertilize_strength/fertilize_active_months: no admissible source gives fertilizing guidance for this species.",
+        "water_growing_days_est/water_dormant_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: no source gives a specific watering interval or check depth; only the qualitative 'keep moist, don't let dry out' guidance was found, captured in water_regime.",
+        "cool_rest_note: not applicable/no source; this is a warm-season bedding annual, not a fruiting perennial with a winter-chill requirement.",
+        "water_regime — removed on audit: Record sets water_regime='keep_moist' citing only MOBOT ('Plants tend to wilt quickly if soils are allowed to dry out'), but NC State Extension -- an admissible source already cited elsewhere in this same record (for soil_drainage and soil_base) -- states on that same page 'This plant is moderately drought tolerance but prefers rich, moist, well-drained soil', tags it '#drought tolerant', and lists it as 'Particularly Resistant To ... drought.' This is a genuine opposing claim on a harm-capable field (over- vs under-watering guidance) from a source the researcher demonstrably already read; per the audit's structural check 1, the record should have reconciled or nulled the field rather than silently adopting the stricter MOBOT value while omitting NC State's contrary drought-tolerance language from the citations/unknowns."
+      ]
+    },
+    {
+      "common_name": "Sweet Alyssum",
+      "scientific_name_given": "Lobularia maritima",
+      "scientific_name_accepted": "Lobularia maritima",
+      "name_note": "Given binomial is already the accepted name. NC State Extension's Plant Toolbox lists Lobularia maritima as the current name and gives Alyssum halimifolium, Alyssum maritimum, and Alyssum minimum as prior names; Missouri Botanical Garden's Plant Finder separately confirms it is \"Synonymous with Alyssum maritimum.\"",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "soil_base": null,
+      "soil_drainage": "fast",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "dry_surface_between",
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "fertilize_active_months": null,
+      "toxic_to_pets": false,
+      "toxicity_detail": "NC State Extension's Plant Toolbox tags Lobularia maritima \"#non-toxic for cats\", \"#non-toxic for horses\", and \"#non-toxic for dogs.\" No other admissible source addresses pet toxicity for this species, and no opposing claim was found, so this is treated as single-source-supported rather than a genuine conflict.",
+      "citations": [
+        {
+          "claim": "scientific_name_accepted Lobularia maritima (previously known as Alyssum halimifolium, Alyssum maritimum, Alyssum minimum)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lobularia-maritima/",
+          "quote": "Previously known as: Alyssum halimifolium Alyssum maritimum Alyssum minimum"
+        },
+        {
+          "claim": "toxic_to_pets false (non-toxic for cats, dogs, and horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lobularia-maritima/",
+          "quote": "#non-toxic for cats | #non-toxic for horses | #non-toxic for dogs"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lobularia-maritima/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) | Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "soil_drainage fast (very good drainage required)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lobularia-maritima/",
+          "quote": "Very good soil drainage is a must if alyssum is to perform well in the garden."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (with some afternoon shade)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/sweet-alyssum/",
+          "quote": "Plant sweet alyssum in a sunny location that receives some afternoon shade."
+        },
+        {
+          "claim": "soil_drainage fast (well-drained soil)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/sweet-alyssum/",
+          "quote": "It grows best in well-drained soil."
+        },
+        {
+          "claim": "fertilize_interval_days 30 (fertilize monthly)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/sweet-alyssum/",
+          "quote": "Fertilize monthly with an all-purpose fertilizer throughout the growing season."
+        },
+        {
+          "claim": "water qualitative: water regularly (no dry-down interval or depth specified, so not used for water_regime)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/sweet-alyssum/",
+          "quote": "Be sure to water regularly."
+        },
+        {
+          "claim": "scientific_name_accepted Lobularia maritima (synonymous with Alyssum maritimum)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a103",
+          "quote": "Synonymous with Alyssum maritimum."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a103",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "water_regime dry_surface_between (dry to medium water needs; tolerates dryish soils)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a103",
+          "quote": "Water: Dry to medium ... Tolerates dryish soils."
+        },
+        {
+          "claim": "soil_drainage fast (well-drained soils, tolerates dryish soils)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a103",
+          "quote": "Easily grown from seed in average, medium moisture, well-drained soils in full sun to part shade... Tolerates dryish soils."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (south- or west-facing aspect)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/124133/lobularia-maritima/details",
+          "quote": "Position Full sun | Aspect South–facing or West–facing | Exposure Exposed or Sheltered"
+        },
+        {
+          "claim": "soil_drainage fast (well-drained)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/124133/lobularia-maritima/details",
+          "quote": "Moisture | Well–drained"
+        },
+        {
+          "claim": "cold hardiness qualitative: RHS rates it H3, a survival-tolerance category, not a frost-damage-onset temperature (no value taken for chill_damage_f)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/124133/lobularia-maritima/details",
+          "quote": "H3: hardy in coastal and relatively mild parts of the UK (-5 to 1)"
+        },
+        {
+          "claim": "cold hardiness qualitative: classified as a 'Hardy Annual' that can withstand light frost, a survival category with no specific temperature given (no value taken for chill_damage_f)",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/how-hardy-are-your-annuals",
+          "quote": "We define annuals as hardy if they can withstand light frost in winter and spring... Sweet alyssum (Lobularia maritima)"
+        }
+      ],
+      "unknowns": [
+        "chill_damage_f: no admissible source states a specific frost-damage-onset temperature; RHS's H3 rating (-5 to 1C) and PSU's 'hardy annual/withstands light frost' label are survival-tolerance categories, not damage-onset numbers, so left null per the field's definition.",
+        "soil_ph_min / soil_ph_max: NC State and RHS both list Acid/Neutral/Alkaline as tolerated categories with no numeric bounds beyond the category cutoffs themselves, so no specific pH range was extracted.",
+        "direct_sun_hours_max: only open-ended 'full sun (6+ hours)' vs 'partial shade (2-6 hours)' categories were found; no source states a maximum hours value for the species.",
+        "light_fc_min / light_fc_good: all admissible sources are outdoor garden references giving a sun-exposure category, not a footcandle intensity value.",
+        "day_f_min/max, night_f_min/max: no admissible source gives species-specific day or night temperature preferences in Fahrenheit.",
+        "humidity_need, humidity_pct_min/max: no admissible source discusses humidity preference for this species.",
+        "water_check_depth_cm, water_dry_down_target, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no source gives a specific check-depth or day-interval watering schedule beyond the qualitative water_regime citation from Missouri Botanical Garden.",
+        "soil_base: sources describe tolerated soil textures (clay, loam, sand) but none recommend a specific soil-mix formulation (e.g. standard potting vs. garden bed), so left null to avoid over-specifying.",
+        "fertilize_active_months, fertilize_strength: Clemson gives only 'monthly... throughout the growing season' with no specific calendar months or product-strength/dilution guidance.",
+        "cool_rest_note: not applicable/not discussed by any admissible source — this is an annual/short-lived bedding perennial and no source describes a winter-chill dormancy requirement for it.",
+        "fertilize_interval_days — removed on audit: Claim label states 'fertilize_interval_days 30 (fertilize monthly)' but the Clemson HGIC quote only says 'Fertilize monthly with an all-purpose fertilizer throughout the growing season' -- the digit 30 (or any spelled-out number) never appears in the quote. Verified against the live page: no numeric interval is stated anywhere on hgic.clemson.edu/sweet-alyssum/. The 30-day figure is a silent month-to-days conversion, not a value literally present in the source. Per the audit's own rule, a number in the claim label that isn't literally in the quote is a refutable defect on its own, even though the real-world risk of this particular rounding is negligible."
+      ]
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Citrullus lanatus",
+      "fields_removed": 4
+    },
+    {
+      "species": "Rubus allegheniensis",
+      "fields_removed": 2
+    },
+    {
+      "species": "Vaccinium corymbosum",
+      "fields_removed": 2
+    },
+    {
+      "species": "Vaccinium macrocarpon",
+      "fields_removed": 0
+    },
+    {
+      "species": "Vitis vinifera",
+      "fields_removed": 2
+    },
+    {
+      "species": "Fragaria x ananassa",
+      "fields_removed": 5
+    },
+    {
+      "species": "Ageratum houstonianum",
+      "fields_removed": 1
+    },
+    {
+      "species": "Lobularia maritima",
+      "fields_removed": 1
+    }
+  ],
+  "normalizations": [
+    "2026-08-21: landed with zero manual fixes. First batch to run after the conflict-resolution and always-populate-scientific_name_accepted fixes from b10/b11 -- both held, and a batch-wide scan for the conflict pattern specifically found nothing. Watermelon's audit caught a subtler variant of source-overreach than seen before: is_houseplant was set false on a citation that only described seed-starting-indoors-for-later-outdoor-transplant, which the source never actually used to assert the plant isn't grown indoors -- the researcher's own annotation framed an absence of evidence as a stated fact. Grape's toxicity call is correctly captured (RHS: potentially harmful to dogs) despite being a common food crop, and correctly distinguished from a genuine conflict: the other sources are silent on pet toxicity, not contradicting, so nothing was nulled. This was the first successful run after a mid-run account-wide weekly usage limit forced a retry; the batch's 8 species were restored to the front of the collection queue and re-run in full once the limit cleared, rather than silently dropped."
+  ]
+}
