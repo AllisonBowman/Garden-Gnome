@@ -119,3 +119,15 @@ def test_an_unrestricted_authority_may_claim_anything():
 
 def test_usda_plants_carries_a_public_domain_licence():
     assert "public domain" in licence_of("USDA PLANTS Database").lower()
+
+
+def test_ask_ifas_and_edis_are_one_authority():
+    # UF/IFAS Extension serves the same documents from two of its own
+    # domains -- b15's Black-Eyed Susan record cites ask.ifas.ufl.edu/fp512
+    # as "UF/IFAS Extension (EDIS FPS512/FP512)", the identical document EDIS
+    # itself hosts. Same organisation, same document, different URL.
+    a = authority_for("https://edis.ifas.ufl.edu/fp512", "")
+    b = authority_for("https://ask.ifas.ufl.edu/fp512", "")
+    assert a == b
+    assert a.name == "UF/IFAS Extension"
+    assert a.tier == 2

@@ -54,6 +54,10 @@ REGISTRY: dict[str, tuple[str, int, str, frozenset[str] | None]] = {
     "www.missouribotanicalgarden.org": (
         "Missouri Botanical Garden", 2, EXTENSION_LICENCE, None),
     "edis.ifas.ufl.edu": ("UF/IFAS Extension", 2, EXTENSION_LICENCE, None),
+    # Ask IFAS serves the same EDIS documents from a second domain -- caught
+    # when a citation for FP512 turned up under ask.ifas.ufl.edu, attributed
+    # to "UF/IFAS Extension (EDIS FPS512/FP512)", the identical publication.
+    "ask.ifas.ufl.edu": ("UF/IFAS Extension", 2, EXTENSION_LICENCE, None),
     "www.rhs.org.uk": (
         "Royal Horticultural Society", 2, EXTENSION_LICENCE, None),
     "extension.psu.edu": ("Penn State Extension", 2, EXTENSION_LICENCE, None),
