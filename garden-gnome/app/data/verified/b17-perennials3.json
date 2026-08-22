@@ -1,0 +1,961 @@
+{
+  "batch": "b17-perennials3",
+  "records": [
+    {
+      "common_name": "Hardy Geranium",
+      "scientific_name_given": "Geranium sanguineum",
+      "scientific_name_accepted": "Geranium sanguineum",
+      "name_note": "Every admissible source treats \"Geranium sanguineum\" as the correct, currently accepted binomial — RHS explicitly lists \"Name Status: Correct\" for it, with no synonym flagged. None of the sources use \"hardy geranium\" as the plant's own common name; they call it \"bloody cranesbill,\" \"bloodred geranium,\" or \"bloody geranium.\" \"Hardy geranium\" is a generic nursery-trade term for perennial Geranium species as a group, carried over from the task's naming rather than sourced.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: no admissible source addresses Geranium sanguineum toxicity to pets specifically; the 'toxic houseplant' lists that turned up in search on Clemson/UGA domains cover Pelargonium (the common bedding plant popularly nicknamed 'geranium'), a different genus, so they were not used per the no-genus-inference rule.",
+        "chill_damage_f: RHS assigns an H7 cold-hardiness rating (\"hardy in the severest European continental climates, < -20C\"), but that is a mature-plant winter survival floor, not the temperature at which frost/cold damage begins, so it was not mapped to this field.",
+        "water_regime and its day-count fields (water_growing_days_est, water_dormant_days_est, water_estimate_basis, water_check_depth_cm, water_dry_down_target): sources give only a categorical 'Water: Medium' tag and a general 'moist but well-drained soil' preference for this in-ground garden perennial; none frame watering as a container dry-down cycle matching the regime options, and none give any interval or estimate basis, so all were left null rather than invented.",
+        "day_f_min/day_f_max, night_f_min/night_f_max: no source gives day or night operating temperature ranges; only a winter cold-hardiness zone/rating exists, which doesn't convert to a day- or night-specific figure.",
+        "light_fc_min, light_fc_good, direct_sun_hours_max: sources give only a categorical sun-exposure tag (full sun / part shade); NC State's 'Full sun (6 or more hours...)' wording is that site's standard boilerplate definition of the category, reused across many unrelated plant pages, not a species-specific hour count, so it was captured via outdoor_sun_exposure instead of direct_sun_hours_max.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: no source addresses ambient humidity for this outdoor garden perennial.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: no source addresses a fertilizing schedule or strength for this species.",
+        "cool_rest_note: no source discusses a dormancy or cool-rest period requirement.",
+        "soil_drainage — removed on audit: Record set soil_drainage=\"moderate\" citing only NC State's paraphrased prose (\"moist but well-drained soil ... tolerates ... some drought\"). But NC State's own STRUCTURED attribute field on that same page, literally labeled 'Soil Drainage:', lists this species as 'Good Drainage' and 'Moist' -- not 'moderate'. RHS's structured 'Moisture' field (also categorical, not prose) independently confirms 'Moist but well-drained or Well-drained'. All three admissible sources' own categorical data indicate a well-drained/good-drainage requirement; none support a distinct 'moderate' drainage tier. The record picked a value from a prose paraphrase that contradicts the cited source's own structured field of the same name -- exactly the failure mode structural check #1 warns about."
+      ],
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/geranium-sanguineum/",
+          "quote": "Bloody cranesbill prefers moist but well-drained soil in full sun but tolerates part shade and some drought once established."
+        },
+        {
+          "claim": "soil_drainage moderate (moist but well-drained, tolerates some drought once established)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/geranium-sanguineum/",
+          "quote": "Bloody cranesbill prefers moist but well-drained soil in full sun but tolerates part shade and some drought once established."
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/geranium-sanguineum/",
+          "quote": "Soil pH: Neutral (6.0-8.0)"
+        },
+        {
+          "claim": "soil_base garden_bed (grown in outdoor garden soil as groundcover/border/rock-garden plant)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/geranium-sanguineum/",
+          "quote": "Use as a groundcover, in a border, a rock garden or a pollinator garden."
+        },
+        {
+          "claim": "is_houseplant false (outdoor garden groundcover/border/rock-garden plant only, no indoor or container culture described)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/geranium-sanguineum/",
+          "quote": "Use as a groundcover, in a border, a rock garden or a pollinator garden."
+        },
+        {
+          "claim": "common name: bloody geranium (Missouri Botanical Garden's primary common name for this species)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280851&isprofile=0&bt=5",
+          "quote": "Common Name: bloody geranium"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280851&isprofile=0&bt=5",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "water qualitative: Medium (categorical garden water-need tag, not mapped to a specific water_regime value)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280851&isprofile=0&bt=5",
+          "quote": "Water: Medium"
+        },
+        {
+          "claim": "soil_drainage moderate (well-drained soil, most vigorous in moist humusy soil with good drainage)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280851&isprofile=0&bt=5",
+          "quote": "Easily grown in average, medium moisture, well-drained soil in full sun to part shade. Tolerates some drought, but produces most vigorous growth in moist, humusy soils with good drainage."
+        },
+        {
+          "claim": "scientific_name_accepted Geranium sanguineum (RHS Name Status confirms this is not a synonym)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/7926/geranium-sanguineum/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/7926/geranium-sanguineum/details",
+          "quote": "Position Full sun, Partial shade"
+        },
+        {
+          "claim": "soil pH qualitative: Acid or Alkaline or Neutral (no numeric value taken; broader than NC State's numeric range, kept as a separate qualitative note rather than a conflict)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/7926/geranium-sanguineum/details",
+          "quote": "pH Acid or Alkaline or Neutral"
+        },
+        {
+          "claim": "cold hardiness qualitative: species is rated H7 (survives below -20C); this is a mature-plant survival floor, not a frost-damage-onset value, so it was not used for chill_damage_f",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/7926/geranium-sanguineum/details",
+          "quote": "H7: hardy in the severest European continental climates (< -20)"
+        }
+      ]
+    },
+    {
+      "common_name": "Siebold's Plantain Lily",
+      "scientific_name_given": "Hosta sieboldiana",
+      "scientific_name_accepted": null,
+      "name_note": "Both Missouri Botanical Garden's Plant Finder and RHS treat \"Hosta sieboldiana\" as the current accepted binomial for this species (no straight-species page uses a different name). RHS's page for this species lists \"Hosta sieboldiana green\" as a synonym of this entry, not the reverse, so there is no accepted-name change to record.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "part_shade",
+        "full_shade"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "water_regime": null,
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "soil_base": null,
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: left null. The only admissible source discussing pet toxicity (NC State Extension's genus-level 'Hosta' overview page) explicitly covers all '22 species and over 2000 cultivars' and never names Hosta sieboldiana specifically; the species-specific profiles checked (Missouri Botanical Garden Plant Finder, RHS) carry no toxicity section at all, and two UGA CAES pet-toxic-plant list articles do not mention Hosta. Per instructions not to infer species-level toxicity from a genus-level statement, this is left null rather than asserted true.",
+        "chill_damage_f: no source states an explicit cold-damage-onset temperature for this species; only a USDA hardiness zone (MOBOT: Zone 3 to 8) and an RHS H7 rating were found, both describing survival hardiness for an established plant rather than the temperature at which damage begins, so not used.",
+        "light_fc_min / light_fc_good / direct_sun_hours_max: MOBOT and RHS both give only a qualitative sun-exposure category ('part shade to full shade' / 'Partial shade'), captured in outdoor_sun_exposure; neither gives a footcandle figure or an hour count for this species.",
+        "soil_base / soil_ph_min / soil_ph_max: RHS gives soil type as 'Clay, Loam' and pH as 'Acid or Neutral', but these are qualitative categories rather than a numeric pH range or a match to the catalog's potting/bed-mix options, so left null rather than converted.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: not addressed by any admissible source; Hosta sieboldiana is an outdoor garden perennial and none of the species-specific pages discuss ambient humidity.",
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: no species-specific source gives a fertilizing schedule. Clemson HGIC's 'Hosta' factsheet mentions applying 'a well-balanced, slow-release fertilizer' in early spring, but that page is genus-level and never names Hosta sieboldiana, so it was not used to populate these fields.",
+        "water_growing_days_est / water_dormant_days_est / water_estimate_basis: no source gave a watering-frequency figure specific to this species (e.g. inches per week) to convert into a day estimate; MOBOT's species page gives only a qualitative 'Water: Medium' rating, so left null rather than estimated.",
+        "day_f_min / day_f_max / night_f_min / night_f_max / cool_rest_note: not addressed. Hosta sieboldiana is a USDA Zone 3-8 hardy perennial that overwinters in the ground rather than a plant with an indoor day/night temperature target or a container cool-rest period, and no source gave such figures.",
+        "water_regime — removed on audit: The record sets water_regime='keep_moist' citing only one clause of MOBOT's Culture paragraph ('preference for consistent moisture during the growing season'). But MOBOT's own STRUCTURED summary field for this exact page rates the plant 'Water: Medium' (verified in raw page fetch, alongside Sun/Maintenance/etc. structured fields) — a milder categorical rating than 'keep_moist' implies. The same Culture paragraph the record quotes from also immediately states 'Plants have tolerance for some dry shade once established,' which the citation omits. This is the structured-field-vs-selectively-quoted-prose pattern the audit flags: the record picked the stronger-sounding prose clause and ignored both the source's own structured 'Medium' rating and the drought-tolerance sentence sitting in the same paragraph.",
+        "scientific_name_accepted — removed on audit: Lower-severity citation defect: the quote used to support this claim is 'Hosta sieboldiana green' — RHS's listed synonym string — which does not itself assert that 'Hosta sieboldiana' is the accepted name; it only sounds related. The raw RHS page actually contains a directly on-point structured field the record didn't cite: 'Name Status: Correct.' The underlying value (accepted name unchanged from given name) still checks out against both MOBOT and RHS, so this is a citation-support weakness rather than a wrong value."
+      ],
+      "citations": [
+        {
+          "claim": "scientific_name_given Hosta sieboldiana",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=248944&isprofile=0&basic=hosta",
+          "quote": "Hosta sieboldiana is a large hosta native to Japan."
+        },
+        {
+          "claim": "scientific_name_accepted Hosta sieboldiana",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/8824/hosta-sieboldiana/details",
+          "quote": "Hosta sieboldiana green"
+        },
+        {
+          "claim": "common_name Siebold's Plantain Lily",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/8824/hosta-sieboldiana/details",
+          "quote": "Hosta sieboldiana | Siebold's plantain lily"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade and full_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=248944&isprofile=0&basic=hosta",
+          "quote": "Sun: Part shade to full shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/8824/hosta-sieboldiana/details",
+          "quote": "Partial shade"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=248944&isprofile=0&basic=hosta",
+          "quote": "Performs best in rich, moist, organic soils with a preference for consistent moisture during the growing season."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=248944&isprofile=0&basic=hosta",
+          "quote": "Easily grown in average, medium moisture, well-drained soils in part shade to full shade."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/8824/hosta-sieboldiana/details",
+          "quote": "Moist but well–drained"
+        },
+        {
+          "claim": "is_houseplant false (hardy outdoor herbaceous perennial, USDA Zone 3 to 8)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=248944&isprofile=0&basic=hosta",
+          "quote": "Zone: 3 to 8"
+        },
+        {
+          "claim": "toxicity, genus-level only, no value taken: NC State Extension states 'Hosta' broadly is toxic to pets but this page never names Hosta sieboldiana specifically",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hosta/",
+          "quote": "Hostas are a popular ornamental herbaceous perennial in the United States and are in the asparagus family (Asparagaceae)...comprise 22 species and over 2000 cultivars...All parts of these plants are toxic to cats, dogs, and horses."
+        }
+      ]
+    },
+    {
+      "common_name": "Hollyhock",
+      "scientific_name_given": "Alcea rosea",
+      "scientific_name_accepted": "Alcea rosea",
+      "name_note": "Alcea rosea is the currently accepted binomial for hollyhock; every admissible source used here (NC State Extension, Missouri Botanical Garden, RHS, UGA Extension) cites it under this name. NC State Extension's Plant Toolbox lists Althaea mexicana Kunze, Althaea rosea (L.) Cav., and Althaea sinensis Cav. as previous synonyms, but no cited source currently treats any Althaea name as accepted, so no name change was made.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "toxic_to_pets": false,
+      "toxicity_detail": "NC State Extension tags Alcea rosea as non-toxic for cats, dogs, and horses. No other cited source addresses toxicity, and no poisonous-parts or symptom information is given.",
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "water_regime": null,
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "citations": [
+        {
+          "claim": "common_name Hollyhock and scientific_name_accepted Alcea rosea (Althaea rosea listed as a previous synonym, not the current name)",
+          "quote": "Common Name(s): Hollyhock, Hollyhocks. Previously known as: Althaea mexicana Kunze, Althaea rosea (L.) Cav., Althaea sinensis Cav.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alcea-rosea/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade; soil_base garden_bed",
+          "quote": "The plant prefers full sun to light shade in moist well-drained sandy to clay loams rich in organic matter. They will grow 5 to 8 feet tall and 1 to 2 feet wide. ... Light: Full sun (6 or more hours of direct sunlight a day)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alcea-rosea/"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "quote": "Soil Drainage: Good Drainage, Moist, Occasionally Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alcea-rosea/"
+        },
+        {
+          "claim": "toxic_to_pets false (non-toxic for cats, dogs, horses)",
+          "quote": "#non-toxic for cats, #non-toxic for horses, #non-toxic for dogs",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alcea-rosea/"
+        },
+        {
+          "claim": "is_houseplant false (outdoor garden/border plant; no indoor culture described)",
+          "quote": "Use hollyhocks in groups or borders in pollinator, cottage and English gardens.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alcea-rosea/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade; soil_drainage moderate",
+          "quote": "Sun: Full sun. ... Grow in average, medium moisture, well-drained soil in full sun. Tolerates a wide range of soil conditions and some light shade, but will not tolerate wet winter soils.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=j240"
+        },
+        {
+          "claim": "water qualitative: Medium (categorical tag only; no water_regime value taken because the category does not map cleanly to the schema's dry-down options)",
+          "quote": "Water: Medium",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=j240"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun; soil_drainage moderate",
+          "quote": "Sun: Full sun. Soil type: Chalk, Loam, Sand. Moisture: Well–drained. pH: Acid or Alkaline or Neutral.",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/57087/alcea-rosea/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun; soil_base garden_bed",
+          "quote": "They grow best in full sun in deep, rich, well-drained soils.",
+          "source": "UGA Cooperative Extension, CAES Field Report (Bulletin 977, Flowering Perennials for Georgia Gardens)",
+          "url": "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/B-944_7.pdf"
+        },
+        {
+          "claim": "soil qualitative: rich, well-drained soil with ample moisture (corroborating context only, no new field value taken from this source)",
+          "quote": "Plants typically grow from three to six feet tall, but eight-foot-tall giants are not unusual, especially if grown in rich, well-drained soil with ample moisture.",
+          "source": "Clemson Cooperative Extension, Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/hibiscus/"
+        }
+      ],
+      "unknowns": [
+        "day_f_min, day_f_max, night_f_min, night_f_max: no cited source gives specific daytime or nighttime growing-temperature values for this species.",
+        "chill_damage_f: RHS gives an H5 hardiness rating, a winter-survival category for the mature plant in the ground, not a frost damage-onset temperature; no source states an actual damage-onset value, so this was left null rather than derived from the survival rating.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: no cited source discusses humidity requirements for this outdoor garden plant.",
+        "light_fc_min, light_fc_good, direct_sun_hours_max: sources give only a full-sun/light-shade duration category, not footcandle or hour-count values; NC State's '6 or more hours' defines the minimum threshold for its 'full sun' label, not an upper bound, so it could not be used as direct_sun_hours_max.",
+        "soil_ph_min, soil_ph_max: NC State and RHS give open-ended pH categories ('Acid (<6.0)', 'Alkaline (>8.0)', 'Acid or Alkaline or Neutral') without a bounded numeric range to record.",
+        "fertilize_interval_days, fertilize_active_months, fertilize_strength: no cited source addresses fertilizer needs for hollyhock.",
+        "water_regime: Missouri Botanical Garden gives only a categorical 'Water: Medium' tag and general 'well-drained, medium moisture' culture text; no source uses dry-down language that maps cleanly to one of the schema's water-regime categories, so it was left null instead of guessed.",
+        "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_dry_down_target, water_estimate_basis: no source provides concrete data to ground even a documented estimate.",
+        "cool_rest_note: no cited source discusses a dormancy or cool-rest period for this species.",
+        "outdoor_sun_exposure — removed on audit: The record includes \"part_shade\" based on prose from NC State (\"prefers full sun to light shade\") and Missouri Botanical Garden (\"Tolerates ... some light shade\"). But on both of those same pages, the source's own STRUCTURED cultural-conditions field disagrees with its own prose: NC State's structured 'Light:' field (a controlled-vocabulary dt/dd pair separate from the free-text 'Description' paragraph) contains only a single value -- 'Full sun (6 or more hours of direct sunlight a day)' -- with no Part Shade/Partial Shade tag present anywhere on the page (verified directly against the page's raw HTML; the word 'shade' appears only inside the unstructured Description paragraph). Likewise MOBOT's structured 'Sun:' row reads only 'Full sun', with the shade-tolerance language confined to the separate prose 'Culture' note. RHS and UGA -- the record's other two admissible sources for sun exposure -- state 'Full sun' with no shade mention at all. So every admissible source's own structured/controlled-vocabulary sun-exposure field says full sun only; 'part_shade' rests solely on softer narrative asides on two of those same pages that their own structured fields do not corroborate. This is the exact 'source's own structured fields contradict the prose quote' pattern that should have triggered caution (and at minimum a note of the conflict) rather than a clean two-source part_shade addition."
+      ]
+    },
+    {
+      "chill_damage_f": null,
+      "citations": [
+        {
+          "claim": "common_name Bigleaf lupin",
+          "quote": "Lupinus polyphyllus | bigleaf lupin",
+          "source": "Royal Horticultural Society (RHS) Plants",
+          "url": "https://www.rhs.org.uk/plants/10573/lupinus-polyphyllus/details"
+        },
+        {
+          "claim": "scientific_name_accepted Lupinus polyphyllus (Name Status: Correct)",
+          "quote": "Name Status Correct",
+          "source": "Royal Horticultural Society (RHS) Plants",
+          "url": "https://www.rhs.org.uk/plants/10573/lupinus-polyphyllus/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun Partial shade",
+          "source": "Royal Horticultural Society (RHS) Plants",
+          "url": "https://www.rhs.org.uk/plants/10573/lupinus-polyphyllus/details"
+        },
+        {
+          "claim": "soil_base garden_bed and is_houseplant false (border/bed perennial, not a container/indoor plant)",
+          "quote": "Suggested planting locations and garden types Cottage and informal garden Flower borders and beds",
+          "source": "Royal Horticultural Society (RHS) Plants",
+          "url": "https://www.rhs.org.uk/plants/10573/lupinus-polyphyllus/details"
+        },
+        {
+          "claim": "toxic_to_pets true (dogs, cats, rabbits, tortoises) and toxicity_detail toxic to pets if eaten (dogs, cats, rabbits, tortoises)",
+          "quote": "Harmful if eaten. Wear gloves and other protective equipment when handling. TOXIC to pets if eaten (dogs, cats, rabbits, tortoises) - see the HTA guide to potentially harmful plants for further information and useful contact numbers",
+          "source": "Royal Horticultural Society (RHS) Plants",
+          "url": "https://www.rhs.org.uk/plants/10573/lupinus-polyphyllus/details"
+        }
+      ],
+      "common_name": "Bigleaf lupin",
+      "cool_rest_note": null,
+      "day_f_max": null,
+      "day_f_min": null,
+      "direct_sun_hours_max": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_max": null,
+      "humidity_pct_min": null,
+      "is_houseplant": null,
+      "light_fc_good": null,
+      "light_fc_min": null,
+      "name_note": "RHS's own taxon record for \"Lupinus polyphyllus\" carries \"Name Status: Correct,\" confirming it as the accepted binomial. No admissible source (RHS species page, or the 'Witchet' and var. burkei cultivar pages checked for corroboration) flagged a synonym or alternate accepted name, so scientific_name_accepted matches scientific_name_given exactly.",
+      "night_f_max": null,
+      "night_f_min": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "scientific_name_accepted": "Lupinus polyphyllus",
+      "scientific_name_given": "Lupinus polyphyllus",
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_max": null,
+      "soil_ph_min": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": "TOXIC to pets if eaten (dogs, cats, rabbits, tortoises)",
+      "unknowns": [
+        "chill_damage_f: RHS gives only an H6 hardiness rating ('hardy in all of UK and northern Europe', -20 to -15C) for this species, which is a mature-plant survival/tolerance floor, not a stated frost-damage-onset temperature, so left null per instructions.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source states an outdoor daytime or nighttime temperature range for this species.",
+        "direct_sun_hours_max: RHS gives only categorical sun-exposure tags (Full sun, Partial shade), not an hours-of-direct-sun figure.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: no fertilizer schedule or feeding guidance was found on the RHS species or cultivar pages consulted.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: not addressed by any admissible source for this outdoor garden perennial.",
+        "light_fc_min/light_fc_good: RHS gives a sun-duration category (full sun/partial shade) rather than an indoor footcandle intensity value; per field notes, the duration axis (outdoor_sun_exposure) was used instead.",
+        "soil_drainage: RHS states soil moisture as an either/or checkbox ('Moist but well-drained or Well-drained') and separately tags 'Drought Resistance: Yes' -- genuinely ambiguous between the fast and moderate drainage categories, so left null rather than picking one.",
+        "soil_ph_min/soil_ph_max: RHS gives only the qualitative tag 'Acid or Neutral' for pH, with no numeric range stated.",
+        "water_regime (and dependent fields water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_dry_down_target, water_estimate_basis): RHS states moisture as an either/or checkbox ('Moist but well-drained or Well-drained') alongside a separate 'Drought Resistance: Yes' tag, with no explicit watering-frequency instruction -- too ambiguous to map onto the regime enum, so left null along with all estimates that would depend on it.",
+        "cool_rest_note: no dormancy or winter-rest cultivation note was found in the admissible sources consulted.",
+        "toxicity part-specific detail: the species note asked specifically whether seeds/pods vs. foliage are called out -- RHS's toxicity text ('Harmful if eaten... TOXIC to pets if eaten') gives no such part-specific distinction for this species, so toxicity_detail reflects only the whole-plant statement actually given.",
+        "Only plants.ces.ncsu.edu, hgic.clemson.edu, and extension.umd.edu had any content reachable during this search that mentioned Lupinus, but none of it was specific to Lupinus polyphyllus (NC State and Clemson pages covered other Lupinus species only; UMD documents covered 'Lupinus spp.'/'Lupinus (perennial)' at genus level in a deer-damage list and a commercial cut-flower nutrient table) so none of it was used. Missouri Botanical Garden's Plant Finder had no page for the straight species, only for the hybrid 'Lupinus x hybrida' and a cultivar, which were excluded as a different taxon. UF/IFAS and UGA CAES had no page on this species at all.",
+        "is_houseplant — removed on audit: The value (false) is almost certainly correct, but it is over-cited: the RHS source never states anything about houseplant/indoor suitability -- 'is_houseplant: false' is an inference from the plant being a hardy border/bed perennial, not a fact the quote 'Suggested planting locations and garden types... Flower borders and beds' actually asserts. The citation is shared with soil_base and its claim label leads with 'soil_base', not 'is_houseplant', so it fails the citation-labeling requirement (check 4) and presents an inferred field as if it were directly sourced rather than listing it under unknowns/inferred-field caveats."
+      ]
+    },
+    {
+      "common_name": "Foxglove Beardtongue",
+      "scientific_name_given": "Penstemon digitalis",
+      "scientific_name_accepted": "Penstemon digitalis",
+      "name_note": "All admissible sources consulted (NC State Extension, Missouri Botanical Garden, Penn State Extension, University of Maryland Extension, RHS) use \"Penstemon digitalis\" without indicating any synonym or accepted-name change. No composite or hybrid name was constructed.",
+      "is_houseplant": false,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "common_name Foxglove Beardtongue and scientific_name_given/scientific_name_accepted Penstemon digitalis",
+          "quote": "Foxglove Beardtongue Penstemon digitalis",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/penstemon-digitalis/common-name/foxglove-beardtongue/"
+        },
+        {
+          "claim": "scientific_name_accepted corroboration Penstemon digitalis (no synonym indicated)",
+          "quote": "Penstemon digitalis , commonly called foxglove beardtongue or tall white beardtongue, is a clump-forming, Missouri-native perennial",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=g590"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/penstemon-digitalis/common-name/foxglove-beardtongue/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade corroboration",
+          "quote": "Sun: full sun to light shade",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/foxglove-beardtongue"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade corroboration",
+          "quote": "Sun : Sun/partial shade",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/rain-garden-plants-beardtongue"
+        },
+        {
+          "claim": "soil_base garden_bed (grown outdoors in garden borders/beds, not containers)",
+          "quote": "This plant adapts easily to cultivation and prefers well-drained, moist to dry loamy soils and tolerates clay soil if it is well-drained. Plant in full sun to light shade in small groups in the native/pollinator garden, naturalized areas or borders.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/penstemon-digitalis/common-name/foxglove-beardtongue/"
+        },
+        {
+          "claim": "soil_base garden_bed corroboration",
+          "quote": "Mass in sunny borders, rain gardens, wild gardens, native plant gardens or naturalized areas.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=g590"
+        },
+        {
+          "claim": "toxicity context, not pet-specific (no value taken for toxic_to_pets)",
+          "quote": "Despite the specific epithet, this plant is not foxglove ( Digitalis spp.) and lacks the toxicity associated with foxglove.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/penstemon-digitalis/common-name/foxglove-beardtongue/"
+        },
+        {
+          "claim": "soil pH context, conflicts with Penn State Extension (no value taken for soil_ph_max)",
+          "quote": "Soil pH: Acid (<6.0)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/penstemon-digitalis/common-name/foxglove-beardtongue/"
+        },
+        {
+          "claim": "soil pH context, conflicts with NC State Extension (no value taken for soil_ph_max)",
+          "quote": "Soil : Acidic (pH < 6.8), well-drained loams, clay loams, sand",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/rain-garden-plants-beardtongue"
+        },
+        {
+          "claim": "water_regime context, conflicts with Penn State Extension (no value taken)",
+          "quote": "Best grown in average, dry to medium moisture, well-drained soil in full sun. Tolerant of occasional drought and inundation once established. Can be grown in clay soils but avoid overly wet, poorly drained conditions.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=g590"
+        },
+        {
+          "claim": "water_regime context, conflicts with Missouri Botanical Garden (no value taken)",
+          "quote": "Hydrologic zone : Moist/dry, not tolerant of inundation",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/rain-garden-plants-beardtongue"
+        },
+        {
+          "claim": "chill_damage_f context: survival floor not damage-onset temperature (no value taken)",
+          "quote": "H5: hardy in most places throughout the UK even in severe winters (-15 to -10)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/12449/penstemon-digitalis/details"
+        }
+      ],
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source states day- or night-specific temperature ranges for this species.",
+        "chill_damage_f: no admissible source states a frost/cold damage-onset temperature; RHS gives an H5 hardiness rating (-15 to -10 C) but that is a mature-plant winter-survival floor, not damage onset, so it was not used.",
+        "cool_rest_note: no admissible source discusses a cool/dormancy rest period.",
+        "light_fc_min/light_fc_good: no admissible source gives footcandle values; all describe sun exposure only as a duration/category (full sun / partial shade).",
+        "direct_sun_hours_max: NC State gives a minimum-hours threshold for its 'full sun' category (6+ hours) but no source states an upper bound on sun tolerance.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source addresses ambient humidity for this outdoor perennial.",
+        "fertilize_interval_days/fertilize_active_months/fertilize_strength: no admissible source addresses fertilizing this species.",
+        "soil_drainage: sources describe soil only qualitatively as 'well-drained' (Missouri Botanical Garden, Penn State) without language that maps confidently to the fast/moderate/moisture_retentive categories; NC State's own Soil Drainage tags mix 'Good Drainage' with 'Moist' and 'Occasionally Dry', so no single category was chosen.",
+        "soil_ph_min/soil_ph_max: NC State tags this species 'Acid (<6.0)' while Penn State Extension states 'Acidic (pH < 6.8)' -- two different numeric cutoffs for 'acidic' from two admissible sources, so left null rather than picking a side.",
+        "water_regime: Missouri Botanical Garden says the plant is 'Tolerant of occasional drought and inundation once established,' while Penn State Extension's Hydrologic zone field says 'Moist/dry, not tolerant of inundation' -- a direct conflict on inundation tolerance, so left null.",
+        "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a watering schedule, check depth, or day-count estimate for this species.",
+        "toxic_to_pets/toxicity_detail: NC State states the species 'lacks the toxicity associated with foxglove' but does not name pets (or humans) as the specific target of that statement, so it was not used to populate a pet-specific toxicity field; no other admissible source addresses toxicity to pets at all."
+      ]
+    },
+    {
+      "common_name": "Garden Phlox",
+      "scientific_name_given": "Phlox paniculata",
+      "scientific_name_accepted": "Phlox paniculata",
+      "name_note": "All four admissible sources consulted (NC State, Missouri Botanical Garden, RHS, Clemson HGIC) use Phlox paniculata as the current name with no synonym or replacement name proposed; RHS's own structured \"Name Status\" field for this taxon reads \"Correct,\" so scientific_name_accepted matches scientific_name_given.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "common_name Garden Phlox",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=f193",
+          "quote": "Common Name: garden phlox"
+        },
+        {
+          "claim": "scientific_name_given Phlox paniculata and scientific_name_accepted Phlox paniculata",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/12736/phlox-paniculata/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "is_houseplant false (herbaceous perennial grown in garden borders, not described as a container or indoor plant)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=f193",
+          "quote": "Garden phlox is a staple of the perennial border. Mixes well with other perennials and provides long summer bloom."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=f193",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (at least 6 hours of direct sun needed for best flowering)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/phlox/",
+          "quote": "Garden phlox prefers fertile, moist, well drained soil, in sun to some afternoon shade. At least 6 hours of sun is needed for best flowering."
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=f193",
+          "quote": "Grow in moderately fertile, medium moisture, well-drained soil in full sun to light shade."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "North Carolina State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phlox-paniculata/",
+          "quote": "Garden phlox prefers sun to partial shade and moist, fertile, and well-drained soils."
+        },
+        {
+          "claim": "soil_drainage moderate (moist but well-drained)",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/12736/phlox-paniculata/details",
+          "quote": "Moist but well–drained"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "North Carolina State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phlox-paniculata/",
+          "quote": "Overhead watering should be avoided. Phlox needs to be watered in dry summers and mulched to keep the root zone cool."
+        },
+        {
+          "claim": "water_regime keep_moist (drought intolerant)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=f193",
+          "quote": "Intolerant of drought and needs to be watered in dry spells."
+        }
+      ],
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: none of the admissible sources (NC State, Missouri Botanical Garden, RHS, Clemson HGIC) address toxicity of Phlox paniculata to pets or humans anywhere on their pages, so left null rather than assumed non-toxic.",
+        "chill_damage_f: sources give a USDA Hardiness Zone range (4-8, per NC State and Penn State Extension) describing mature-plant winter survival, not a stated frost/cold damage-onset temperature, so left null per field notes distinguishing damage-onset from a survival floor.",
+        "day_f_min / day_f_max / night_f_min / night_f_max: no admissible source gives degree-Fahrenheit day or night temperature targets for this outdoor garden perennial.",
+        "soil_ph_min / soil_ph_max: NC State's structured tags list acid (<6.0), neutral (6.0-8.0), and alkaline (>8.0) as all tolerated - a broad tolerance list, not a stated optimal range, so no defensible min/max number could be extracted.",
+        "light_fc_min / light_fc_good: sources describe sun exposure only as a duration category (full sun / part shade), never as footcandle intensity, consistent with this being an outdoor garden plant rather than a houseplant.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: not addressed by any admissible source for this species.",
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: no admissible source gives a fertilizing schedule specific to Phlox paniculata.",
+        "water_growing_days_est / water_dormant_days_est / water_check_depth_cm / water_dry_down_target / water_estimate_basis: sources state the species-level regime (keep evenly moist, water during dry summers, avoid letting it dry out/drought) but give no day-interval, check-depth, or dry-down figures to estimate from.",
+        "cool_rest_note: not addressed; sources describe cutting the plant back to the ground in winter as routine garden maintenance and disease prevention, not a dormancy/cool-rest care requirement.",
+        "direct_sun_hours_max: sources (Clemson) state a minimum of 6+ hours of sun is needed for best flowering, not a maximum tolerated, so this field (framed as a ceiling) does not match the evidence and was left null.",
+        "water_regime — removed on audit: The record set water_regime to \"keep_moist\" using two prose fragments (NC State: \"Phlox needs to be watered in dry summers...\"; MoBot: \"Intolerant of drought and needs to be watered in dry spells\"), but it ignored the Missouri Botanical Garden source's own STRUCTURED field for this exact page, which reads \"Water: Medium\" (verified directly in the live page HTML: \"Sun: Full sun to part shade Water: Medium Maintenance: Medium\"). MoBot's structured Water tag uses a scale (Dry / Medium / Medium to wet / Wet) where \"Medium\" denotes average garden watering, not the elevated, don't-let-it-dry-out regime \"keep_moist\" implies -- MoBot did not tag this plant Wet or Medium-to-wet despite writing 'intolerant of drought' in prose. NC State's own watering sentence is similarly mild ('needs to be watered in dry summers', i.e. supplemental water only during dry spells against a backdrop of otherwise-sufficient rainfall), not a statement that the plant must be kept continuously moist. Additionally, the NC State citation's quote splices in 'Overhead watering should be avoided,' which on the source page is advice about avoiding wet foliage to prevent powdery mildew, not a statement about soil moisture level, padding the citation with irrelevant text. This is exactly the pattern flagged by structural check #1: a cited source's own structured field (MoBot's 'Water: Medium') contradicts the more demanding prose-derived value the record actually selected, and the record picked a value anyway instead of settling on a more conservative/lower category or leaving water_regime null."
+      ]
+    },
+    {
+      "chill_damage_f": null,
+      "citations": [
+        {
+          "claim": "common_name Corn Poppy",
+          "quote": "Corn Poppy",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/papaver-rhoeas/"
+        },
+        {
+          "claim": "scientific_name_given Papaver rhoeas; scientific_name_accepted Papaver rhoeas",
+          "quote": "Papaver rhoeas",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/papaver-rhoeas/"
+        },
+        {
+          "claim": "scientific_name_accepted Papaver rhoeas",
+          "quote": "Papaver rhoeas",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/56687/papaver-rhoeas/details"
+        },
+        {
+          "claim": "is_houseplant false (grown outdoors in full sun; suggested for wildlife gardens, wildflower meadows, cottage gardens, gravel gardens, borders, and as cut flowers)",
+          "quote": "Wildlife gardens, Wildflower meadow, Coastal, Cottage and informal garden, Gravel garden, Flower borders and beds, Cut flowers",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/56687/papaver-rhoeas/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/papaver-rhoeas/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/56687/papaver-rhoeas/details"
+        },
+        {
+          "claim": "soil_base garden_bed (grown directly in outdoor garden soil rather than a container or specialty mix)",
+          "quote": "Corn Poppy is best grown in fertile, medium moist, well-drained soils in full sun.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/papaver-rhoeas/"
+        },
+        {
+          "claim": "soil_drainage fast",
+          "quote": "Good Drainage",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/papaver-rhoeas/"
+        },
+        {
+          "claim": "soil_drainage fast",
+          "quote": "Well–drained",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/56687/papaver-rhoeas/details"
+        }
+      ],
+      "common_name": "Corn Poppy",
+      "cool_rest_note": null,
+      "day_f_max": null,
+      "day_f_min": null,
+      "direct_sun_hours_max": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_max": null,
+      "humidity_pct_min": null,
+      "is_houseplant": false,
+      "light_fc_good": null,
+      "light_fc_min": null,
+      "name_note": "This record is for Papaver rhoeas (corn poppy / field poppy / Flanders poppy), confirmed by binomial in every cited source. It is a different species from opium poppy (Papaver somniferum); none of the admissible citations here address P. somniferum.",
+      "night_f_max": null,
+      "night_f_min": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "scientific_name_accepted": "Papaver rhoeas",
+      "scientific_name_given": "Papaver rhoeas",
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_max": null,
+      "soil_ph_min": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: none of the admissible sources (RHS, NC State Extension, Clemson HGIC) address toxicity of P. rhoeas to pets or humans; non-admissible sites claim toxicity from isoquinoline alkaloids but cannot be used per the source-domain restriction.",
+        "direct_sun_hours_max: NC State defines full sun as '6 or more hours of direct sunlight a day' — an open-ended minimum, not an upper bound, so no max value can be recorded.",
+        "soil_ph_min / soil_ph_max: NC State lists all three pH categories (Acid <6.0, Neutral 6.0-8.0, Alkaline >8.0) as acceptable and RHS says 'Acid or Alkaline or Neutral' — both indicate broad tolerance rather than a specific recommended numeric range.",
+        "water_regime: no source phrases watering in terms of a dry-down/moisture regime; NC State's 'fertile, medium moist, well-drained soils' describes a preferred planting site, not a watering schedule instruction.",
+        "water_check_depth_cm / water_dry_down_target / water_estimate_basis / water_growing_days_est / water_dormant_days_est: no admissible source gives watering frequency, depth, or schedule data for this outdoor annual.",
+        "day_f_min/max, night_f_min/max: no admissible source gives daytime/nighttime temperature ranges; RHS only gives a winter cold-hardiness rating (H7, hardy to below -20C), which is a different kind of data.",
+        "chill_damage_f: no source gives a chill-injury threshold temperature; RHS's H7 hardiness rating describes extreme winter cold tolerance of the species as a whole, not a chill-damage threshold, so it is not used for this field.",
+        "cool_rest_note: no admissible source discusses a cool-rest or dormancy care note.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no admissible source discusses humidity requirements for this outdoor garden annual.",
+        "light_fc_min / light_fc_good: no source gives light levels in foot-candles; only 'full sun' position/hours language is given.",
+        "fertilize_active_months / fertilize_interval_days / fertilize_strength: no admissible source discusses a fertilizing schedule or strength for corn poppy.",
+        "soil_base — removed on audit: Live-fetched the NC State page: the cited quote ('Corn Poppy is best grown in fertile, medium moist, well-drained soils in full sun') describes soil composition and sun exposure only — it says nothing about garden bed vs. container cultivation. The claim's parenthetical ('grown directly in outdoor garden soil rather than a container or specialty mix') is an unsupported inference not derivable from that quote; corn poppy is in fact commonly grown in containers/window boxes as a bedding annual, so the explicit exclusion of containers is an over-reach beyond the cited source.",
+        "soil_drainage — removed on audit: Live-fetched both pages: NC State's structured value is literally 'Good Drainage' and RHS's is 'Well–drained' — both are qualitative descriptors meaning 'not waterlogged,' not statements about drainage rate/speed. Mapping either to a 'fast' drainage category is an interpretive leap the quotes don't establish; neither source uses language about quick/sandy-type drainage, so 'fast' over-specifies what the citations actually say."
+      ],
+      "water_check_depth_cm": null,
+      "water_dormant_days_est": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "water_growing_days_est": null,
+      "water_regime": null
+    },
+    {
+      "chill_damage_f": null,
+      "citations": [
+        {
+          "claim": "common_name Primrose",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Common Name(s): Primrose"
+        },
+        {
+          "claim": "scientific_name_given Primula vulgaris",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Primula vulgaris (Primrose)"
+        },
+        {
+          "claim": "scientific_name_accepted Primula vulgaris (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/13901/primula-vulgaris-(pr-prim)/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "name_note previously-known-as Primula acaulis",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Previously known as: Primula acaulis"
+        },
+        {
+          "claim": "name_note synonyms Primula acaulis, Primula grandiflora, Primula uniflora Gmelin, Primula vernalis",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/13901/primula-vulgaris-(pr-prim)/details",
+          "quote": "Synonyms Primula acaulis, Primula grandiflora, Primula uniflora Gmelin, Primula vernalis"
+        },
+        {
+          "claim": "is_houseplant false (outdoor garden use: ponds/streams, woodland gardens, borders, outdoor containers)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "They can be used along ponds or streams, in woodland gardens, borders or in containers."
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Plant in humusy, moist, well-drained soils in partial shade. Maintain consistent moisture."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/13901/primula-vulgaris-(pr-prim)/details",
+          "quote": "Moisture Moist but well–drained"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Soil Drainage: Good Drainage Moist"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Soil pH: Neutral (6.0-8.0)"
+        },
+        {
+          "claim": "outdoor_sun_exposure dappled_shade and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Dappled Sunlight (Shade through upper canopy all day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/13901/primula-vulgaris-(pr-prim)/details",
+          "quote": "Position Full sun, Partial shade"
+        },
+        {
+          "claim": "toxic_to_pets true (listed as a problem for cats, dogs, and horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/primula-vulgaris",
+          "quote": "Problems: Problem for Cats Problem for Dogs Problem for Horses"
+        }
+      ],
+      "common_name": "Primrose",
+      "cool_rest_note": null,
+      "day_f_max": null,
+      "day_f_min": null,
+      "direct_sun_hours_max": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_max": null,
+      "humidity_pct_min": null,
+      "is_houseplant": false,
+      "light_fc_good": null,
+      "light_fc_min": null,
+      "name_note": "Primula vulgaris is the currently accepted name (RHS lists its \"Name Status\" as \"Correct\"). NC State notes it was \"previously known as\" Primula acaulis; RHS lists Primula acaulis, Primula grandiflora, Primula uniflora Gmelin, and Primula vernalis as synonyms.",
+      "night_f_max": null,
+      "night_f_min": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade",
+        "dappled_shade"
+      ],
+      "scientific_name_accepted": "Primula vulgaris",
+      "scientific_name_given": "Primula vulgaris",
+      "soil_base": null,
+      "soil_drainage": "moderate",
+      "soil_ph_max": null,
+      "soil_ph_min": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": null,
+      "unknowns": [
+        "chill_damage_f: null — RHS gives an H7 hardiness rating ('hardy in the severest European continental climates', below -20C), which is a mature-plant survival floor, not the actionable temperature at which frost/cold damage begins; no source states a damage-onset threshold.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: null — NC State only says the plant 'prefers cool summers,' a qualitative note with no numeric day or night temperature given.",
+        "direct_sun_hours_max: null — NC State's '2-6 hours' figure is the site's standardized legend text defining its 'Partial Shade' tag (used across many species in their toolbox), not a measurement specific to Primula vulgaris, so it was not used as a species-specific hour value.",
+        "light_fc_min/light_fc_good: null — neither source gives a footcandle value; only qualitative sun-exposure categories (full sun, partial shade, dappled sunlight) are stated, captured instead in outdoor_sun_exposure.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: null — no source addresses humidity for this species.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: null — no source addresses fertilizing for this species.",
+        "soil_base: null — sources describe soil texture components (clay, loam, sand, chalk, high organic matter) but neither names a specific growing-medium category matching the available options.",
+        "toxicity_detail: null — NC State's severity/symptom detail ('Poison Severity: Low', 'Poison Symptoms: Mild vomiting') is nested under a 'Poisonous to Humans:' section header on the page, separate from the pet-specific 'Problems: Problem for Cats/Dogs/Horses' tags that support toxic_to_pets=true; the human-toxicity detail was not carried over to describe pet toxicity.",
+        "water_growing_days_est/water_dormant_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: null — no source gives a watering-interval, check-depth, or dry-down estimate; only the qualitative regime ('maintain consistent moisture') is stated.",
+        "cool_rest_note: null — no source describes a dormancy/rest-period requirement; NC State's note about needing protection from hot afternoon sun in summer is a heat-avoidance note, not a dormancy/rest note, so it was not used here.",
+        "is_houseplant is recorded false based on NC State's outdoor-only landscape uses; RHS's genus-level Horticultural Classification note says Primrose-group primulas may be 'grown as biennial container plants in greenhouses or indoors,' but this is a conditional, group-level remark (not specific to Primula vulgaris or to long-term indoor culture), so it was not treated as evidence of houseplant suitability.",
+        "soil_ph: NC State gives a specific numeric range ('Neutral (6.0-8.0)'), used for soil_ph_min/max. RHS separately gives a broader, non-numeric categorical range ('Acid or Alkaline or Neutral') for the same species — noted here as additional context since it has no number to reconcile against, not treated as a conflicting numeric claim.",
+        "Mature size/plant dimensions were not captured: NC State's structured height field ('0 ft. 3 in. - 6 ft. 0 in.') and RHS's ('Up to 10 cm' / description 'about 20cm tall') differ by roughly two orders of magnitude for what appears to be the same low rosette-forming species; there is no mature-size field in this schema, so this conflict did not need to be resolved, but it is flagged in case it matters elsewhere.",
+        "soil_ph_min — removed on audit: The record sets soil_ph_min=6.0 using only NC State's 'Neutral (6.0-8.0)' quote, but the record's own second cited source for this exact species page — RHS (https://www.rhs.org.uk/plants/13901/primula-vulgaris-(pr-prim)/details) — directly fetched and confirmed states 'Soil pH: Acid or Alkaline or Neutral', i.e. RHS says P. vulgaris tolerates acidic and alkaline soil, not just the neutral 6.0-8.0 band NC State gives. This is a genuine cross-source disagreement on a harm-capable field (wrong pH guidance risks nutrient lockout/poor establishment). The record acknowledges the conflict in its own unknowns text but dismisses it as 'additional context... not treated as a conflicting numeric claim, since it has no number to reconcile against' and keeps NC State's narrower number anyway — this is exactly the 'conflict resolved by preference, not left null' defect pattern; RHS's categorical claim does conflict with the implied bounds of NC State's numeric claim and the field should have been left null or widened, not silently resolved in NC State's favor.",
+        "soil_ph_max — removed on audit: Same defect as soil_ph_min: soil_ph_max=8.0 is taken solely from NC State's 'Neutral (6.0-8.0)' while RHS's own page for the same species (fetched directly, not just the source proposing NC State's number) states the plant tolerates 'Acid or Alkaline or Neutral' soil pH, a materially broader/conflicting claim about the same harm-capable field that was downgraded to a footnote instead of causing the field to be nulled."
+      ],
+      "water_check_depth_cm": null,
+      "water_dormant_days_est": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "water_growing_days_est": null,
+      "water_regime": "keep_moist"
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Geranium sanguineum",
+      "fields_removed": 1
+    },
+    {
+      "species": "Hosta sieboldiana",
+      "fields_removed": 4
+    },
+    {
+      "species": "Alcea rosea",
+      "fields_removed": 1
+    },
+    {
+      "species": "Lupinus polyphyllus",
+      "fields_removed": 1
+    },
+    {
+      "species": "Penstemon digitalis",
+      "fields_removed": 0
+    },
+    {
+      "species": "Phlox paniculata",
+      "fields_removed": 1
+    },
+    {
+      "species": "Papaver rhoeas",
+      "fields_removed": 2
+    },
+    {
+      "species": "Primula vulgaris",
+      "fields_removed": 2
+    }
+  ],
+  "normalizations": [
+    "2026-08-21: Papaver rhoeas (Corn Poppy) was re-run as a small single-species retry before landing. Its first pass returned citations=null instead of an array -- a genuine schema violation the tool-calling validation didn't catch -- while still asserting two non-null field values (outdoor_sun_exposure, soil_drainage) with zero supporting evidence attached. The loader's own null-safety would have refused both silently and correctly, but reading the discarded record's 13 unknowns entries showed genuinely careful reasoning underneath (including the same correct genus-vs-species toxicity exclusion Hosta's record made), so a cheap 2-agent retry (139K tokens against the batch's usual ~1.7M) recovered the work properly rather than losing it or landing an evidence-less record. The retry's own audit caught two further overreaches: soil_base wrongly excluded container growing, which corn poppy is commonly grown in; soil_drainage over-specified 'fast' from qualitative 'well-drained'/'Good Drainage' language neither source actually ties to drainage rate.",
+    "Hosta correctly left toxic_to_pets null despite being flagged in advance as commonly known toxic to cats -- the only admissible source discussing pet toxicity was a genus-level 'Hosta' overview covering all 22 species and 2000+ cultivars, never naming Hosta sieboldiana specifically, so the no-genus-inference rule held even against a flagged expectation. Hardy Geranium's own record explicitly recognized and excluded a genus mismatch: toxic-houseplant lists it found were about Pelargonium, the different genus popularly also nicknamed 'geranium', not Geranium sanguineum."
+  ]
+}
