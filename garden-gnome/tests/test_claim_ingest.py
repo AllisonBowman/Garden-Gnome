@@ -121,7 +121,7 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # + 78 (b43) + 76 (b44) + 72 (b45) - 1 (b14's Common Morning Glory
     # soil_drainage, nulled 2026-09-02 when a corpus-wide quote check found
     # its only citation quoted NC State drainage tags the page does not
-    # carry) + 65 (b46) + 39 (b47) + 27 (b48) = 2216. b18 was the
+    # carry) + 65 (b46) + 39 (b47) + 27 (b48) + 27 (b49) = 2243. b18 was the
     # last batch of the original 129-curated-species collection run.
     # b19-b34 are batches of a follow-on "blind spots" pass -- species
     # chosen by direct inspection of coverage gaps (b19: no true lilies --
@@ -208,10 +208,13 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # Japanese Aucuba, Japanese Aralia, and Japanese Skimmia; b48 added two
     # Ilex companions to American Holly (Japanese Holly, Yaupon Holly),
     # Sasanqua Camellia, Red-osier Dogwood, Fragrant Water Lily, and
-    # Doghobble). Every batch was re-verified against the strict loader
-    # before landing here -- see each batch's own normalizations entry for
-    # what, if anything, that pass caught.
-    assert report.claims_written == 2216
+    # Doghobble; b49 added Japanese Persimmon (a companion to American
+    # Persimmon), White Mulberry, Mandarin Orange (a third Citrus), Bee
+    # Balm, Canada Goldenrod, and New England Aster). Every batch was
+    # re-verified against the strict loader before landing here -- see each
+    # batch's own normalizations entry for what, if anything, that pass
+    # caught.
+    assert report.claims_written == 2243
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
