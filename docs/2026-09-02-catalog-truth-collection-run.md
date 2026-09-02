@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **51 batches, 2,297 claims, 391 species, 8 authorities** (b47–b51 landed
+- **52 batches, 2,322 claims, 397 species, 8 authorities** (b47–b52 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -67,13 +67,26 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    agents refused → empty batch; `land_check.py` now exits 1 on zero
    records) and b51's verify stage (four of six audits refused; the fix is
    a resume, which replays the cached research and re-runs only the failed
-   audits). The recurring defect themes across b47–b50, each now guarded in
+   audits). b52's verify stage then failed on a DNS outage rather than a
+   limit, and the null-verdict guard added to that batch's script did its
+   job: every record came back flagged UNVERIFIED in the output's
+   `unverified` list instead of the pipeline throwing, and a plain resume
+   re-ran only the six audits. Keep that guard in every script from here.
+   The recurring defect themes across b47–b52, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
    conditional clause or a UK-calibrated RHS tag that both North American
-   structured fields exclude; and an open-ended NC State pH band read as a
-   ceiling.
+   structured fields exclude; an open-ended NC State pH band read as a
+   ceiling; a name_note that calls RHS's botanical-name H1 a common-name
+   lead, or MoBot's displayed Common Name field "single" when a longer
+   list sits behind it; and — found by the mechanical check, missed by the
+   Opus auditor — raw `</dt> <dd><span class=…>` markup pasted into quotes
+   around NC State field values (b52, six quotes). Landing review also
+   has to check common_name collisions across batches: b52's Dicentra
+   eximia came back as "Bleeding-heart", which b36 already uses for
+   Lamprocapnos spectabilis, and landed as "Fringed Bleeding Heart"
+   (RHS's lead name, attested by all three sources).
 
 ## Defect classes found and closed (each now guarded in the prompts or tests)
 
@@ -91,6 +104,10 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   by the verifier.
 - Freeze-survival threshold conflated with chill-damage onset (b43) —
   prompts now state the distinction; Pomegranate in b45 is the model record.
+- HTML markup pasted into quotes (b52) — the verifier catches it (the
+  page's rendered text never contains the tags); prompts now forbid it.
+- A label+value concatenation quoted as if contiguous ("Name Status
+  Correct", b52) — the value alone is the quote; prompts now say so.
 
 ## Do next, in order
 

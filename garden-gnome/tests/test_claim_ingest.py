@@ -122,7 +122,7 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # soil_drainage, nulled 2026-09-02 when a corpus-wide quote check found
     # its only citation quoted NC State drainage tags the page does not
     # carry) + 65 (b46) + 39 (b47) + 27 (b48) + 27 (b49) + 27 (b50)
-    # + 27 (b51) = 2297. b18 was the
+    # + 27 (b51) = 2297. + 25 (b52) = 2322. b18 was the
     # last batch of the original 129-curated-species collection run.
     # b19-b34 are batches of a follow-on "blind spots" pass -- species
     # chosen by direct inspection of coverage gaps (b19: no true lilies --
@@ -216,11 +216,15 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # Virginia Bluebells, Lady Fern, and Northern Sea Oats; b51 added a
     # second woodland set: Mayapple, Black Cohosh, Great White Trillium,
     # Wild Geranium, Woodland Phlox, and Eastern Bluestar -- its verify
-    # stage hit a usage limit mid-run and was finished by a resume). Every
+    # stage hit a usage limit mid-run and was finished by a resume; b52
+    # added a third woodland set: Goat's Beard, Fringed Bleeding Heart
+    # (named to avoid colliding with b36's Bleeding Heart), Dwarf Crested
+    # Iris, Cinnamon Fern, Goldenseal, and Blue Cohosh -- its verify stage
+    # died on a DNS outage and was finished by a resume). Every
     # batch was re-verified against the strict loader before landing here
     # -- see each batch's own normalizations entry for what, if anything,
     # that pass caught.
-    assert report.claims_written == 2297
+    assert report.claims_written == 2322
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
