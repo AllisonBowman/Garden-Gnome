@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **53 batches, 2,349 claims, 403 species, 8 authorities** (b47–b53 landed
+- **54 batches, 2,372 claims, 409 species, 8 authorities** (b47–b54 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -72,7 +72,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    job: every record came back flagged UNVERIFIED in the output's
    `unverified` list instead of the pipeline throwing, and a plain resume
    re-ran only the six audits. Keep that guard in every script from here.
-   The recurring defect themes across b47–b53, each now guarded in
+   The recurring defect themes across b47–b54, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -97,7 +97,13 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    Status" is a label/value pair — quote the value "Correct" alone, or
    the H1 binomial. Note that the mechanical verifier cannot catch a
    label+value concatenation (the normalized page text is contiguous), so
-   the auditor is the only check for that class.
+   the auditor is the only check for that class. b54 confirmed those
+   guards took (every record quoted "Correct" alone and stacked NC
+   State's lists) and added the drainage lesson: a Penn State rain-garden
+   "Soil:" label is a stormwater-basin siting field, not cultivation
+   drainage — both of b54's `moisture_retentive` tokens landed as
+   `moderate` on the sources' own cultivation sentences. Landing also
+   title-cases common names, since MoBot and RHS render them lower-case.
 
 ## Defect classes found and closed (each now guarded in the prompts or tests)
 
@@ -125,6 +131,14 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 - A pH floor or ceiling applied asymmetrically against RHS's pH field
   (b53: RHS "Acid or Alkaline or Neutral" was used to refuse the 8.0
   ceiling but not the 6.0 floor) — both directions, always.
+- A rain-garden siting label read as cultivation drainage (b54, Swamp
+  Milkweed) — the species page's cultivation sentence wins.
+- NC State `<dt>` labels joined to their `<dd>` values ("USDA Plant
+  Hardiness Zone: 4a, …", b54) — the RHS Name Status defect in NC State
+  form; quote values only, newline-stacked.
+- "A longer list was not found" asserted about a MoBot tooltip the
+  researcher could not open (b54) — say "not inspected", never "not
+  present".
 
 ## Do next, in order
 
