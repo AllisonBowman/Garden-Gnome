@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **52 batches, 2,322 claims, 397 species, 8 authorities** (b47–b52 landed
+- **53 batches, 2,349 claims, 403 species, 8 authorities** (b47–b53 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -72,7 +72,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    job: every record came back flagged UNVERIFIED in the output's
    `unverified` list instead of the pipeline throwing, and a plain resume
    re-ran only the six audits. Keep that guard in every script from here.
-   The recurring defect themes across b47–b52, each now guarded in
+   The recurring defect themes across b47–b53, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -86,7 +86,18 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    has to check common_name collisions across batches: b52's Dicentra
    eximia came back as "Bleeding-heart", which b36 already uses for
    Lamprocapnos spectabilis, and landed as "Fringed Bleeding Heart"
-   (RHS's lead name, attested by all three sources).
+   (RHS's lead name, attested by all three sources). b53 added the
+   naming lesson that decides most of these: NC State's Common Name(s)
+   field is strictly alphabetical and marks no primary (b53's Eutrochium
+   purpureum came back as "Gravel Weed", the list's first entry, and
+   landed as MoBot's designated "Joe Pye Weed"); MoBot's `Common Name:`
+   field is the one affirmative primacy designation among the three
+   sources, with a tooltip list behind it; RHS's H1 is the botanical
+   name and its common name is the plant-profile subtitle. RHS's "Name
+   Status" is a label/value pair — quote the value "Correct" alone, or
+   the H1 binomial. Note that the mechanical verifier cannot catch a
+   label+value concatenation (the normalized page text is contiguous), so
+   the auditor is the only check for that class.
 
 ## Defect classes found and closed (each now guarded in the prompts or tests)
 
@@ -107,7 +118,13 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 - HTML markup pasted into quotes (b52) — the verifier catches it (the
   page's rendered text never contains the tags); prompts now forbid it.
 - A label+value concatenation quoted as if contiguous ("Name Status
-  Correct", b52) — the value alone is the quote; prompts now say so.
+  Correct", b52; four more in b53) — the value alone is the quote; the
+  research prompt says so from b54, not just the auditor's.
+- The first entry of an alphabetized NC State Common Name(s) list taken
+  as the lead name (b53) — prompts now say the list marks no primary.
+- A pH floor or ceiling applied asymmetrically against RHS's pH field
+  (b53: RHS "Acid or Alkaline or Neutral" was used to refuse the 8.0
+  ceiling but not the 6.0 floor) — both directions, always.
 
 ## Do next, in order
 
