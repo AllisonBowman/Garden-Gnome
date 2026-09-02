@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **54 batches, 2,372 claims, 409 species, 8 authorities** (b47–b54 landed
+- **55 batches, 2,392 claims, 415 species, 8 authorities** (b47–b55 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -72,7 +72,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    job: every record came back flagged UNVERIFIED in the output's
    `unverified` list instead of the pipeline throwing, and a plain resume
    re-ran only the six audits. Keep that guard in every script from here.
-   The recurring defect themes across b47–b54, each now guarded in
+   The recurring defect themes across b47–b55, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -104,6 +104,13 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    drainage — both of b54's `moisture_retentive` tokens landed as
    `moderate` on the sources' own cultivation sentences. Landing also
    title-cases common names, since MoBot and RHS render them lower-case.
+   b55 refined the naming rule: NC State auto-generates one alias page
+   per Common Name(s) entry (none carries primacy), and a two-entry NC
+   State list whose order matches the page-title parenthetical IS a lead
+   (Senna hebecarpa: American Senna) — "alphabetized, no primary" only
+   holds for longer lists. It also left one open safety item: Sneezeweed
+   (Helenium autumnale) is tagged Poisonous by NC State but its Poison
+   block was never captured; the record's toxicity_detail says so.
 
 ## Defect classes found and closed (each now guarded in the prompts or tests)
 
@@ -139,6 +146,12 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 - "A longer list was not found" asserted about a MoBot tooltip the
   researcher could not open (b54) — say "not inspected", never "not
   present".
+- A multi-name string quoted from a UMD page that carries no such string
+  (b55, False Aster) — caught by the verifier, removed; the page's real
+  caption is cited instead.
+- A safety tag dropped from a recital of a structured list (b55,
+  Sneezeweed's Plant Type "Poisonous") — the record also shipped
+  toxicity null; now flagged for follow-up in the record itself.
 
 ## Do next, in order
 
@@ -154,7 +167,10 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    PLANTS actually publishes — still open from the previous handoff.
 4. **Phase 4.1 name resolution** for the 2 skipped curated-catalog mismatches
    — still open.
-5. **Then plan the next TestFlight build** — see
+5. **Re-research Sneezeweed's Poison block** (Helenium autumnale, b55):
+   NC State tags it Poisonous; the severity, symptoms, toxic principle
+   and poison parts were never captured. Its toxicity_detail flags this.
+6. **Then plan the next TestFlight build** — see
    `docs/2026-08-08-testflight-1.1.3-handoff.md` for the ship sequence; 1.1.3
    was never built or submitted.
 
