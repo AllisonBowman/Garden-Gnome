@@ -144,7 +144,7 @@
       "outdoor_sun_exposure": [
         "full_sun",
         "part_shade",
-        "shade"
+        "full_shade"
       ],
       "direct_sun_hours_max": null,
       "light_fc_min": null,
@@ -1124,6 +1124,7 @@
   ],
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Both species flagged in advance -- Foxglove (cardiac glycosides, one of the best-documented genuinely dangerous garden plants) and Delphinium (toxic alkaloids) -- correctly resolved toxic_to_pets=true, each grounded in genuinely pet-inclusive language (RHS's explicit 'TOXIC to pets' for Foxglove; RHS's 'Humans/Pets: Harmful if eaten' for Delphinium) rather than borrowed from a human-only section. Foxglove's audit went a level deeper than seen before: even the toxic-principle/plant-parts detail that looked properly structured turned out, on raw HTML inspection, to be nested entirely under a 'Poisonous to Humans' group header on the source page -- correctly stripped from toxicity_detail despite reading as legitimate mechanism data at a glance.",
-    "Candytuft's audit caught two costed-consequence errors: water_regime was set to a drier category than Clemson's own 'moist to slightly dry' phrasing supports, with Missouri Botanical Garden's structured 'Water: Medium' tag sitting right next to the prose the record actually quoted and never reconciled against it. soil_drainage was softened to 'moderate' against a unanimous well-drained-required signal across all four sources, with Missouri Botanical Garden and Clemson both naming the specific failure mode (crown/root rot) that following the softer reading risks causing."
+    "Candytuft's audit caught two costed-consequence errors: water_regime was set to a drier category than Clemson's own 'moist to slightly dry' phrasing supports, with Missouri Botanical Garden's structured 'Water: Medium' tag sitting right next to the prose the record actually quoted and never reconciled against it. soil_drainage was softened to 'moderate' against a unanimous well-drained-required signal across all four sources, with Missouri Botanical Garden and Clemson both naming the specific failure mode (crown/root rot) that following the softer reading risks causing.",
+    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched."
   ]
 }

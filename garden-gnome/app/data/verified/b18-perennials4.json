@@ -23,7 +23,7 @@
       "direct_sun_hours_max": null,
       "outdoor_sun_exposure": [
         "full_sun",
-        "partial_shade"
+        "part_shade"
       ],
       "soil_base": null,
       "soil_drainage": null,
@@ -394,6 +394,7 @@
   "normalizations": [
     "2026-08-21: the final batch of this collection run. Two fixes before landing. Horned Violet's first pass returned an empty citations array while still asserting four field values -- the same defect class as b17's Poppy -- recovered with a cheap single-species retry (299K tokens) rather than losing the work; the retry additionally caught a source-attribution ambiguity worth keeping in mind for future batches: Clemson's watering/fertilizing schedule was written under a 'Pansies' heading on a page that separately covers Viola cornuta under 'Johnny-Jump-Ups', and the record correctly declined to assume data under one species heading on a shared page applies to a different heading on the same page.",
     "Tansy's toxicity_detail was nulled on landing review -- it held substantial human/livestock toxicology content (NC State's 'Poisonous to Humans' block, horse/cow toxicity, contact dermatitis) even though the record had correctly left toxic_to_pets null for lacking any cat/dog-specific evidence. Same human/pet blending pattern the b14 rule targets, just moved into the detail field instead of the boolean; the underlying reasoning is preserved in unknowns.",
-    "Rudbeckia's audit caught something more serious than the usual prose-vs-structured-data overreach: a fabricated citation attribution. The record's name_note claimed 'glowing coneflower' was used by both Missouri Botanical Garden and RHS; the audit fetched the cited RHS page directly and found zero occurrences of 'glowing' or 'coneflower' anywhere on it. Only MOBOT actually uses that name. Caught by direct verification against the live page rather than trusting the researcher's claim about what a source says -- which is the discipline this whole pipeline depends on."
+    "Rudbeckia's audit caught something more serious than the usual prose-vs-structured-data overreach: a fabricated citation attribution. The record's name_note claimed 'glowing coneflower' was used by both Missouri Botanical Garden and RHS; the audit fetched the cited RHS page directly and found zero occurrences of 'glowing' or 'coneflower' anywhere on it. Only MOBOT actually uses that name. Caught by direct verification against the live page rather than trusting the researcher's claim about what a source says -- which is the discipline this whole pipeline depends on.",
+    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched."
   ]
 }

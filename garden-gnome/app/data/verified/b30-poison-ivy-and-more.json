@@ -1,0 +1,1312 @@
+{
+  "batch": "b30-poison-ivy-and-more",
+  "records": [
+    {
+      "common_name": "Poison Ivy",
+      "scientific_name_given": "Toxicodendron radicans",
+      "scientific_name_accepted": "Toxicodendron radicans",
+      "name_note": null,
+      "is_houseplant": false,
+      "toxic_to_pets": false,
+      "toxicity_detail": "This species' hazard is a contact-dermatitis one, not an ingestion toxin, and that distinction is confirmed by the sources themselves. All parts of the plant -- bark, flowers, fruits, leaves, roots, sap/juice, seeds, and stems, including aerial roots -- contain urushiol, an oily resin; NC State Extension rates human Poison Severity as \"High,\" names the toxic principle as \"Urushiol,\" and confirms \"Causes Contact Dermatitis: Yes,\" with skin contact or inhaled smoke producing \"inflammation, itching, and blistering\" that is \"significant and long-lasting for most humans.\" UF/IFAS independently confirms urushiol \"is present in all parts of the plants, including its aerial roots, dried leaves, and fruits.\" This is distinct from ingestion toxicity to pets: NC State's own structured pet-safety tags mark the species non-toxic for cats, dogs, and horses -- pets are not poisoned by the plant. However, urushiol transfers readily by indirect contact and persists for months on surfaces, including animal fur. UF/IFAS states the allergic reaction \"can also occur indirectly if the oil has been in contact with an animal, tools, clothes, or shoes.\" Clemson, Penn State, University of Maryland, and UGA Extension each independently confirm that dogs and cats can carry the oil on their coats and transfer it to a person who touches them: Clemson and UMD both state \"The rash can be picked up on tools, clothing, and the fur of pets\" and that the oil \"can remain active for months on objects\"; Penn State states \"The liquid can get on tools, pets, or clothing, and when you touch them, you can pick it up\"; and UGA states \"Dogs and cats also frequently transfer the toxin to people.\"",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source frames temperature ranges for this wild, uncultivated plant -- all describe outdoor habitat and hardiness zones, not a controlled day/night temperature target.",
+        "chill_damage_f: NC State gives only a USDA hardiness zone survival range (4a-10b), which is a survival/hardiness-zone rating, not a damage-onset Fahrenheit figure; no admissible source states the temperature at which cold damage begins for this species.",
+        "cool_rest_note: not addressed by any admissible source.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source addresses ambient humidity for this outdoor wild plant.",
+        "light_fc_min/light_fc_good/direct_sun_hours_max: NC State's Light field gives only duration-band categories (Full sun 6+ hrs, Partial Shade 2-6 hrs, Dappled Sunlight all-day shade through canopy), not footcandle figures. direct_sun_hours_max was left null rather than using the 2-6 hr partial-shade figure, because full_sun is also endorsed unconditionally for this species and applying the narrower band's hour ceiling would misrepresent the full-sun option -- the same overstatement risk flagged in this catalog's Sago Palm record audit.",
+        "outdoor_sun_exposure omits Dappled Sunlight: NC State's third light category ('Shade through upper canopy all day') has no matching value in the fixed outdoor_sun_exposure enum (full_sun/part_sun/part_shade/full_shade), so only full_sun and part_shade, which have clear textual matches, were included.",
+        "soil_base: no admissible source frames growing conditions in container/garden-bed cultivation terms for this species; NC State's Soil Texture field (Clay, High Organic Matter, Loam, Sand, Shallow Rocky) describes native/naturalized-habitat texture tolerance for an uncultivated weed, which does not map to any schema soil_base category, so left null.",
+        "soil_drainage: NC State's Soil Drainage field lists both 'Moist' and 'Occasionally Dry' together -- a tolerance spanning both ends rather than a single category -- so this was left null rather than force a fast/moderate/moisture_retentive pick.",
+        "soil_ph_min/soil_ph_max: NC State's Soil pH field spans 'Acid (<6.0), Alkaline (>8.0), Neutral (6.0-8.0)' -- both outer bounds are stated as open-ended ('less than 6.0' and 'greater than 8.0'), not concrete numeric limits, so no defensible min/max could be extracted.",
+        "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source frames watering guidance for this wild, un-irrigated, uncontained plant.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: no admissible source addresses fertilizing a plant that every source treats only as a weed to identify and remove, never to cultivate.",
+        "is_houseplant: no admissible source explicitly states poison ivy is not grown indoors (unsurprising, since none discusses indoor/container culture for it at all). Set to false based on the complete absence of any houseplant/container-culture guidance across all eight admissible sources consulted, combined with NC State's explicit 'Weed' Plant Type tag and every source's uniform framing of the species as something to identify and remove rather than cultivate.",
+        "toxic_to_pets: this field reflects ingestion/systemic pet toxicity specifically (mirroring how this catalog encodes other species' 'Problem for Cats/Dogs/Horses' tags), and is explicitly false here per NC State's structured tags: 'non-toxic for cats,' 'non-toxic for horses,' 'non-toxic for dogs.' This is a separate axis from the contact-transfer hazard captured in toxicity_detail -- a pet is not poisoned by carrying urushiol, but can transfer the oil on its fur to a human who then develops contact dermatitis. No admissible source contradicts NC State's ingestion-toxicity tag.",
+        "toxicity_detail: RHS's Toxicodendron genus page states only that 'Plants within this genus produce urushiol oil which can irritate the skin,' worded at the genus level in a way that reads as boilerplate likely reused verbatim across every species page in the genus (T. vernix, T. diversilobum, etc.); it was treated only as weak, non-species-specific corroboration for the general urushiol/skin-irritation mechanism, not as independent support, per the task's caution about genus-wide boilerplate text.",
+        "Missouri Botanical Garden's own poison-ivy identification page (missouribotanicalgarden.org) and Plant Finder entry (plantfinder.mobot.org) were both located, but plantfinder.mobot.org could not be directly fetched (repeated TLS certificate verification failure), so no Plant Finder structured fields (Sun/Water/Zone/etc.) for this species are cited here; the general missouribotanicalgarden.org identification page was fetched successfully and reviewed but contained no fact not already independently covered by NC State, Clemson, UF/IFAS, Penn State, UMD, or UGA, so it was not cited separately.",
+        "name_note — removed on audit: Several specific claims inside name_note trace to no citation entry at all, failing structural check #1 (every non-null field value must trace to at least one citations entry). (a) The claim that NC State hosts this species page under three URL slugs -- 'poison-ivy,' 'eastern-poison-ivy,' and 'poison-oak' -- has zero supporting citation; I independently fetched https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/ and confirmed the header reads 'Toxicodendron radicans (Eastern Poison Ivy, Poison Ivy, Poison Oak)' with all three common-name slugs present, so the underlying fact is true, but the record itself never cites it. (b) The claim that the accepted name is 'used consistently across every admissible source consulted (NC State, Clemson, UF/IFAS, Missouri Botanical Garden, Penn State, UMD, UGA)' includes Missouri Botanical Garden, yet no citation entry anywhere in the array references missouribotanicalgarden.org or plantfinder.mobot.org -- the unknowns section admits MOBOT's identification page was reviewed but 'not cited separately.' (c) The claim 'RHS additionally lists Rhus toxicodendron as a synonym' is not supported by the record's own RHS citation, whose quote is only 'Name Status\\nCorrect' -- no citation quote anywhere captures the Rhus toxicodendron synonym text, even though I confirmed via direct fetch that RHS's synonym field does list both 'Rhus radicans, Rhus toxicodendron.' All three sub-claims happen to be factually accurate on independent verification, but the record as submitted provides no citation trail for any of them, which is exactly the documentation gap structural check #1 is meant to catch -- the researcher did the extra research but didn't log it as a citation."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Poison Ivy and scientific_name_given Toxicodendron radicans",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Poison Ivy Toxicodendron radicans"
+        },
+        {
+          "claim": "scientific_name_accepted Toxicodendron radicans (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/357128/toxicodendron-radicans/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "name_note synonym Rhus radicans",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Synonym: Rhus radicans"
+        },
+        {
+          "claim": "name_note formerly named Rhus radicans; toxicity_detail dogs and cats transfer toxin to people",
+          "source": "UGA Cooperative Extension (CAES Field Report, C867-10, \"Controlling Poison Ivy in the Landscape\")",
+          "url": "https://fieldreport.caes.uga.edu/publications/C867-10/controlling-poison-ivy-in-the-landscape/",
+          "quote": "formerly named Rhus radicans"
+        },
+        {
+          "claim": "is_houseplant false (Weed Plant Type tag; no cultivation/indoor guidance in any admissible source)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Native Plant, Perennial, Poisonous, Shrub, Vine, Weed, Woody Plant"
+        },
+        {
+          "claim": "toxic_to_pets false (non-toxic for cats, dogs, and horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
+        },
+        {
+          "claim": "toxicity_detail High poison severity, urushiol toxic principle, causes contact dermatitis, toxic parts bark/flowers/fruits/leaves/roots/sap/seeds/stems",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Poison Severity: High ... Poison Toxic Principle: Urushiol ... Causes Contact Dermatitis: Yes ... Poison Parts: Bark, Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems"
+        },
+        {
+          "claim": "toxicity_detail urushiol symptoms inflammation itching blistering, significant and long-lasting",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "All parts of poison-ivy contain resinous compounds called urushiols, the highest concentrations in the leaves and bark as well as younger leaves. When urushiols directly come into contact with the skin or are inhaled via smoke, they cause inflammation, itching, and blistering. The skin irritation is significant and long-lasting for most humans."
+        },
+        {
+          "claim": "toxicity_detail urushiol present in all plant parts including aerial roots",
+          "source": "UF/IFAS Extension (EDIS Publication EP609)",
+          "url": "https://ask.ifas.ufl.edu/publication/EP609",
+          "quote": "Urushiol is present in all parts of the plants, including its aerial roots, dried leaves, and fruits."
+        },
+        {
+          "claim": "toxicity_detail indirect contact via animal, tools, clothes, or shoes",
+          "source": "UF/IFAS Extension (EDIS Publication EP609)",
+          "url": "https://ask.ifas.ufl.edu/publication/EP609",
+          "quote": "This allergic reaction can also occur indirectly if the oil has been in contact with an animal, tools, clothes, or shoes."
+        },
+        {
+          "claim": "toxicity_detail pets carry urushiol on fur (picked up on tools, clothing, and fur of pets)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/how-to-identify-and-control-poison-ivy-toxicodendron-radicans/",
+          "quote": "It can be picked up on tools, clothing, and the fur of pets."
+        },
+        {
+          "claim": "toxicity_detail oil remains active for months on objects",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/how-to-identify-and-control-poison-ivy-toxicodendron-radicans/",
+          "quote": "The oil can remain active for months on objects."
+        },
+        {
+          "claim": "toxicity_detail liquid can get on tools, pets, or clothing and transfer on touch",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/poison-ivy",
+          "quote": "The liquid can get on tools, pets, or clothing, and when you touch them, you can pick it up."
+        },
+        {
+          "claim": "toxicity_detail rash can be picked up on tools, clothing, and fur of pets",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/poison-ivy",
+          "quote": "The rash can be picked up on tools, clothing, and the fur of pets."
+        },
+        {
+          "claim": "toxicity_detail oil can remain active for months on objects",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/poison-ivy",
+          "quote": "The oil can remain active for months on objects."
+        },
+        {
+          "claim": "toxicity_detail dogs and cats frequently transfer the toxin to people",
+          "source": "UGA Cooperative Extension (CAES Field Report, C867-10, \"Controlling Poison Ivy in the Landscape\")",
+          "url": "https://fieldreport.caes.uga.edu/publications/C867-10/controlling-poison-ivy-in-the-landscape/",
+          "quote": "Dogs and cats also frequently transfer the toxin to people."
+        },
+        {
+          "claim": "toxicity_detail urushiol oil can irritate the skin (genus-level, treated as weak corroboration only, see unknowns)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/357128/toxicodendron-radicans/details",
+          "quote": "Plants within this genus produce 'urushiol' oil which can irritate the skin"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Light: Dappled Sunlight (Shade through upper canopy all day), Full sun (6 or more hours of direct sunlight a day), Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        }
+      ]
+    },
+    {
+      "common_name": "Pokeweed",
+      "scientific_name_given": "Phytolacca americana",
+      "scientific_name_accepted": "Phytolacca americana",
+      "name_note": "No accepted-name conflict among admissible sources: NC State's structured Attributes block reads \"Genus: Phytolacca Species: americana Family: Phytolaccaceae,\" and RHS's Name Status field for Phytolacca americana reads \"Correct.\" RHS separately lists Phytolacca decandra as a synonym (\"Synonyms Phytolacca decandra\"), which no source disputes or elevates as an alternate accepted name. NC State also documents a distinct coastal variety, Phytolacca americana var. rigida, as more severely toxic than the species generally (\"is highly toxic and may be fatal if eaten\"); this record covers the species Phytolacca americana as such, not that variety, and the var. rigida distinction is noted here only for completeness.",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": "All parts of the plant are treated as poisonous. NC State Extension states plainly that \"all parts of this plant are poisonous to humans and pets,\" and UF/IFAS EDIS (AG254) reports that all parts contain saponins, oxalates, and the alkaloid phytolacine, with the roots and seeds carrying the highest concentrations. UF/IFAS EDIS (EP631) names dogs specifically among the animals it is \"largely toxic\" to, alongside cattle, sheep, poultry, horses, and humans, and states that ingestion \"can even cause death in rare cases\" depending on the quantity consumed; RHS separately flags it as \"Harmful to pets if eaten (dogs)\" and advises wearing gloves when handling. No admissible source names cats specifically -- only dogs (RHS, UF/IFAS) and a generic \"pets\" (NC State) are given. NC State's own detailed Poison block (Severity: Medium; specific diarrhea/vomiting/chromosome-damage symptoms) is explicitly headed \"Poisonous to Humans:\" on the source page, so those specifics are not carried over here as pet-toxicity data -- only the separate, unheaded sentence naming pets was used for that purpose. A well-documented regional folk tradition (poke sallet) uses only the young spring shoots and leaves, and only after they are boiled in at least two changes of water with the water discarded each time (Missouri Botanical Garden; UF/IFAS AG254, which adds an unconfirmed \"some say\" claim that a further boiling removes essentially all toxins). This preparation-dependent exception is documented for human consumption of young shoots only: it does not extend to mature leaves, fruit, seeds, or roots (the most toxic parts), it is not addressed at all in the pet-toxicity sources above, and it is not treated here as evidence of general safety. Penn State Extension, in contrast, states without any preparation exception that \"new leaves and roots, along with the berries, should not be eaten because they are toxic.\"",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: null. This species is grown outdoors in garden soil, not as a temperature-controlled indoor/container plant, and no admissible source gives an indoor or greenhouse temperature range for it.",
+        "chill_damage_f: null. The only cold-related figures found are survival/hardiness classifications, not a stated damage-onset temperature: RHS gives Hardiness Rating H7, 'hardy in the severest European continental climates (< -20)' degrees C, and NC State lists 'USDA Plant Hardiness Zone: 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b.' Per this catalog's own definition of chill_damage_f as the actionable damage-onset point (not a survival floor), neither was used.",
+        "cool_rest_note: null. No admissible source discusses dormant-season watering, indoor overwintering, or any other cool-rest care adjustment for this species; it is an outdoor herbaceous/deciduous perennial that regrows each year from its taproot, but none of the sources give explicit dormancy-care guidance beyond that basic life-cycle description.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: null. No admissible source addresses ambient humidity for this outdoor species.",
+        "light_fc_min, light_fc_good: null. No admissible source gives a footcandle light figure for this species.",
+        "direct_sun_hours_max: null. The only numeric figure available is embedded in NC State's fixed Light-category legend text -- 'Full sun (6 or more hours of direct sunlight a day)' and 'Partial Shade (Direct sunlight only part of the day, 2-6 hours).' This exact phrasing has already been established elsewhere in this catalog (see the Majesty Palm record in b21-houseplant-gaps.json, confirmed via direct fetch against an unrelated species page) as NC State's generic, site-wide legend text describing the light-category buckets themselves, not a measured or species-specific sun-tolerance figure -- so it is not extracted as a distinct direct_sun_hours_max data point here either.",
+        "soil_ph_min, soil_ph_max: null. NC State's Soil pH tags check all three of 'Acid (<6.0),' 'Neutral (6.0-8.0),' and 'Alkaline (>8.0),' and RHS's pH field reads 'Acid or Alkaline or Neutral' -- both span the entire pH scale with no numeric bound expressed as this species' actual preference.",
+        "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: null. The watering guidance found across sources is qualitative only ('prefers consistently moist soils... will tolerate short periods of drought;' 'Moist but well-drained'); no source gives a specific check-depth or day-interval watering schedule, so these more granular fields were left unfilled rather than estimated.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: null. No admissible source addresses fertilizing this species at all -- every source treats it either as a self-sustaining wildflower/weed or as a plant to be controlled/removed, not as one with a feeding program.",
+        "is_houseplant: set to false rather than left null because the schema field is a required boolean. No admissible source describes indoor or long-term container growing for this species; Missouri Botanical Garden's 'Suggested Use' field is 'Naturalize' (an outdoor landscape-use category, unlike other records in this catalog where MOBOT/RHS explicitly list a 'Houseplants' suggested-use value), and the same source notes 'Some nurseries refuse to sell this plant because of its toxic properties' and advises gardeners to 'think twice before growing it in the garden because of its poisonous qualities and weedy habit' -- consistently framing it as an outdoor/wild plant, never an indoor one. RHS's H7 hardiness rating (hardy below -20 C) is also inconsistent with it being cultivated as a tender indoor container species.",
+        "soil_base garden_bed: this is an inferential enum mapping, not a literal quote match -- no source uses the phrase 'garden bed.' It was chosen because the plant is clearly and repeatedly described as grown in the open ground in ordinary soil ('Grow in any fertile moist soil in sun or partial shade,' RHS; 'grows easily in average, medium moisture, well-drained soils,' NC State) and none of this catalog's container/potting-mix soil_base categories (standard_potting, chunky_aroid, cactus_succulent, ericaceous, orchid_bark, african_violet, semi_hydro) fit an outdoor, cold-hardy-to-below-0F garden perennial.",
+        "soil_drainage moderate: also an inferential mapping. RHS's 'Moist but well-drained' and NC State's tags 'Good Drainage, Moist, Occasionally Dry' don't cleanly match 'fast' (which implies a quick-draining, dry-leaning mix) or 'moisture_retentive' (which implies boggy/constantly wet); 'moderate' was chosen as the closest fit to the shared 'moist but well-drained' description across both sources.",
+        "outdoor_sun_exposure: 'part_sun' was not included even though it is an available enum value. All three sources describe the range as 'full sun to/or part(ial) shade' without naming an intermediate 'part sun' step, so only full_sun and part_shade were used."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Pokeweed",
+          "quote": "Common Name(s): American Pokeweed, Common Pokeweed, Garnet, Pidgeon Berry, Poke, Pokeberry, Pokeweed, Scoke",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "common_name Pokeweed",
+          "quote": "Common Name: pokeweed",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=284958&isprofile=0&n=1"
+        },
+        {
+          "claim": "scientific_name_given Phytolacca americana and scientific_name_accepted Phytolacca americana",
+          "quote": "Genus: Phytolacca Species: americana Family: Phytolaccaceae",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "scientific_name_accepted Phytolacca americana (name status correct)",
+          "quote": "Name Status Correct",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/12895/phytolacca-americana/details"
+        },
+        {
+          "claim": "name_note synonym Phytolacca decandra",
+          "quote": "Synonyms Phytolacca decandra",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/12895/phytolacca-americana/details"
+        },
+        {
+          "claim": "name_note Phytolacca americana var. rigida is a distinct, more toxic coastal variety, not covered by this record",
+          "quote": "Variety found only along the seacoast; is highly toxic and may be fatal if eaten",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "is_houseplant false (naturalizing outdoor landscape use; no houseplant/container-indoor use listed)",
+          "quote": "Suggested Use: Naturalize",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=284958&isprofile=0&n=1"
+        },
+        {
+          "claim": "is_houseplant false (nurseries decline to sell it and caution against garden use owing to toxicity, consistent with it being treated as an outdoor/wild plant, not a houseplant)",
+          "quote": "Some nurseries refuse to sell this plant because of its toxic properties.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=284958&isprofile=0&n=1"
+        },
+        {
+          "claim": "toxic_to_pets true (all parts poisonous to pets)",
+          "quote": "Susceptible to mosaic virus. All parts of this plant are poisonous to humans and pets.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "toxic_to_pets true (harmful to dogs if eaten; skin/handling caution)",
+          "quote": "Potentially harmful. TOXIC if eaten.  Wear gloves and other protective equipment when handling Harmful to pets if eaten (dogs) - see the HTA guide to potentially harmful plants for further information and useful contact numbers",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/12895/phytolacca-americana/details"
+        },
+        {
+          "claim": "toxic_to_pets true (toxic to dogs, cattle, sheep, poultry, and horses; whole plant, can cause death in rare cases depending on quantity consumed)",
+          "quote": "The entire plant is poisonous, and depending on the quantity of plant consumed, it can even cause death in rare cases. It is largely toxic to cattle, sheep, poultry, horses, dogs, and humans (Barnett 1975).",
+          "source": "UF/IFAS EDIS ENH1367/EP631, Common Poisonous Weed and Invasive Plant Species in Florida Residential Landscapes",
+          "url": "https://ask.ifas.ufl.edu/publication/ep631"
+        },
+        {
+          "claim": "toxicity_detail (toxins are saponins, oxalates, and the alkaloid phytolacine; roots and seeds carry the highest concentrations)",
+          "quote": "All parts of the plant contain saponins, oxalates, and phytolacine (an alkaloid). However, the roots and seeds contain the highest concentrations of these toxins.",
+          "source": "UF/IFAS EDIS SS-AGR-123/AG254, Common Pokeweed",
+          "url": "https://ask.ifas.ufl.edu/publication/ag254"
+        },
+        {
+          "claim": "toxicity_detail (young spring shoots/leaves historically eaten as poke sallet only after boiling in at least two changes of water; mature leaves, fruit, and roots poisonous)",
+          "quote": "Moreover, all parts of this plant (mature leaves, fruits and roots) are poisonous to humans, with the only exception being its young spring shoots and leaves (must be boiled in at least two changes of water) which have historically been prepared as a popular vegetable green primarily in parts of the southeastern U.S.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=284958&isprofile=0&n=1"
+        },
+        {
+          "claim": "toxicity_detail (for human consumption the plant must be boiled at least two times with the water discarded before eating; an unconfirmed 'some say' claim that additional boiling removes essentially all toxins)",
+          "quote": "For human consumption, the plant must be boiled at least two times in water and the water must be removed before eating. Some say that an additional boiling will essentially remove all toxins in the plant material.",
+          "source": "UF/IFAS EDIS SS-AGR-123/AG254, Common Pokeweed",
+          "url": "https://ask.ifas.ufl.edu/publication/ag254"
+        },
+        {
+          "claim": "toxicity_detail (new leaves, roots, and berries should not be eaten, stated without a preparation exception)",
+          "quote": "New leaves and roots, along with the berries, should not be eaten because they are toxic; having said that, years ago, parts of the plant were used medicinally.",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/common-pokeweed-identification-and-management"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Position Full sun, Partial shade",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/12895/phytolacca-americana/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Sun: Full sun to part shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=284958&isprofile=0&n=1"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "It prefers consistently moist soils but will tolerate short periods of drought.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "Easily grown in average, medium moisture, well-drained soils in full sun to part shade.  Prefers consistently moist soils, but will tolerate short periods of drought.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=284958&isprofile=0&n=1"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "Moisture Moist but well–drained",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/12895/phytolacca-americana/details"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "quote": "Moisture Moist but well–drained",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/12895/phytolacca-americana/details"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "quote": "Soil Drainage: Good Drainage Moist Occasionally Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "quote": "Grow in any fertile moist soil in sun or partial shade",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/12895/phytolacca-americana/details"
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "quote": "The plant grows easily in average, medium moisture, well-drained soils in full sun to part shade.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        }
+      ]
+    },
+    {
+      "common_name": "Japanese Honeysuckle",
+      "scientific_name_given": "Lonicera japonica",
+      "scientific_name_accepted": "Lonicera japonica",
+      "name_note": "No conflict on the accepted name: NC State Extension's structured taxonomy fields (Genus: Lonicera, Species: japonica) and the Royal Horticultural Society both consistently anchor to Lonicera japonica as both the given and accepted binomial. No admissible source proposed an alternate accepted name.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f: no admissible source gives a specific cold-damage-onset temperature. NC State (plants.ces.ncsu.edu) gives only USDA Hardiness Zones 5a-8b, which describes overall winter-survival range, not an actionable damage-onset threshold -- left null.",
+        "soil_ph_min / soil_ph_max: NC State tags this species Acid (<6.0), Alkaline (>8.0), AND Neutral (6.0-8.0) simultaneously, and RHS gives Soil pH as 'Acid or Alkaline or Neutral' -- both indicate broad, essentially whole-range pH tolerance rather than a specific numeric bound, so no defensible min/max could be extracted -- left null.",
+        "day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, direct_sun_hours_max, cool_rest_note, water_regime, water_check_depth_cm, water_dry_down_target, water_growing_days_est, water_dormant_days_est, water_estimate_basis, fertilize_interval_days, fertilize_strength, fertilize_active_months: none of the admissible extension/RHS/Missouri Botanical Garden sources consulted treat Japanese Honeysuckle as a houseplant with numeric indoor-care parameters (footcandles, %RH, watering depth/schedule, fertilizer schedule) -- every source describes it strictly as an outdoor garden/naturalized/invasive vine, so these houseplant-oriented fields are left null.",
+        "Human-toxicity data exists but this schema has no toxic_to_humans field to hold it, and the two admissible human-toxicity sources disagree with each other: NC State (plants.ces.ncsu.edu), under a heading explicitly labeled 'Poisonous to Humans', gives Poison Severity 'Medium', Poison Part 'Fruits', Poison Toxic Principle 'Saponins', Poison Symptoms 'Vomiting, diarrhea, pupil dilation, cold sweat, rapid heartbeat, respiratory failure, convulsions, and coma. TOXIC ONLY IF LARGE QUANTITIES EATEN.' UGA Cooperative Extension Circular 957 (fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf), in a table titled 'Ornamental Plants Reported To Be Toxic When Ingested by Humans', lists the combined row 'Honeysuckle, Japanese and Trumpet' (Lonicera japonica, Lonicera sempervirens) with Toxic Plant Part 'all parts' and a '**' footnote meaning 'reported to be fatal when consumed in quantity' -- a broader toxic part and heavier severity than NC State's 'Fruits'/'Medium'. Both address humans only, neither pets, so neither was used to populate toxic_to_pets/toxicity_detail (which rely solely on RHS's separate 'Pets:' line addressed to that specific audience).",
+        "UGA's toxicity table entry lumps Lonicera japonica together with Lonicera sempervirens (Trumpet Honeysuckle) into one combined row rather than giving L. japonica its own line, so its species-specific weight is softer than NC State's dedicated single-species entry.",
+        "Invasive-species status (flagged per task instructions; the schema has no dedicated field for it): nearly every admissible source calls this species invasive. NC State: 'This plant is an invasive species in North Carolina.' Missouri Botanical Garden Plant Finder (plantfinder.mobot.org, taxonid=245393, 'Halliana'): 'This vine can be quite invasive, and can rapidly cover and literally suffocate shrubs or small trees if allowed to climb on them. Not recommended. It is a dreadful weed.' Penn State Extension's dedicated article is titled 'The Invasive Japanese Honeysuckle' (extension.psu.edu/the-invasive-japanese-honeysuckle) and describes it as displacing native species and strangling trees/shrubs/structures. University of Maryland Extension (extension.umd.edu/resource/japanese-honeysuckle): 'Do not plant Japanese honeysuckle, and replace existing specimens when possible.' RHS's own structured plant description states: 'This plant is listed as an invasive non-native species in Northern Ireland' and the species is on Schedule 9 of the UK Wildlife & Countryside Act (Northern Ireland), making it an offence to plant or cause it to grow in the wild there.",
+        "soil_base ('garden_bed') and soil_drainage ('moderate') are best-fit mappings rather than literal source vocabulary: the schema's soil_base enum is oriented toward container/potting substrates, but every admissible source describes L. japonica growing directly in outdoor garden soil (Clay/Loam/Sand per NC State; Clay/Loam, 'Moist but well-drained' per RHS), never in a pot or houseplant mix -- garden_bed/moderate are the closest defensible values given that.",
+        "toxic_to_pets — removed on audit: Direct fetch of the RHS page confirms there is no dedicated Toxicity section for this plant; the sole basis is RHS's generic 'Potentially harmful' boilerplate ('Fruit are ornamental - not to be eaten... Pets: Fruit are ornamental - not to be eaten'), which never uses the words toxic/poisonous/harmful and is standard RHS advisory language applied broadly to ornamental-fruit plants regardless of actual toxicity. NC State's page (the record's other source) has a full 'Poisonous to Humans' section but explicitly no 'Poisonous to Pets' section, which the record itself admits in unknowns. No admissible source affirmatively states this species is toxic or non-toxic to animals, so per the task's own rule this should have been left null rather than inferred as true from ambiguous advisory language.",
+        "toxicity_detail — removed on audit: Built entirely on the same weak RHS 'not to be eaten' / 'wear gloves' advisory text, which is generic handling/eating caution (likely aimed at contact irritation and discouraging consumption of non-food berries), not a documented animal-toxicity mechanism or symptom set. No source names a toxic principle, symptom, or severity specific to pets/animals for this species -- unlike NC State's genuinely detailed human-toxicity entry (saponins, medium severity, specific symptoms), which the record correctly excluded as human-only. The pet-facing narrative here is a constructed inference from silence/boilerplate, not source-supported content, and should not exist as populated text."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Japanese Honeysuckle",
+          "quote": "Japanese Honeysuckle - Lonicera japonica",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/"
+        },
+        {
+          "claim": "scientific_name_accepted Lonicera japonica (Genus: Lonicera, Species: japonica)",
+          "quote": "Genus: Lonicera Species: japonica Family: Caprifoliaceae",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/"
+        },
+        {
+          "claim": "is_houseplant false (vigorous outdoor twining climber, not container/indoor culture)",
+          "quote": "A vigorous, woody, evergreen to semi-evergreen twining climber about 10m tall, with dark green leaves to 8cm long, often deeply lobed on young growth.",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/10480/lonicera-japonica-japanese-honeysuckle-gold-and-silver-flower/details"
+        },
+        {
+          "claim": "toxic_to_pets true (fruit ornamental only, not to be eaten by pets)",
+          "quote": "Fruit are ornamental - not to be eaten.  Wear gloves and other protective equipment when handling.  Pets: Fruit are ornamental - not to be eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/10480/lonicera-japonica-japanese-honeysuckle-gold-and-silver-flower/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun (6 or more hours of direct sunlight a day) ... Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun ... Partial shade",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/10480/lonicera-japonica-japanese-honeysuckle-gold-and-silver-flower/details"
+        },
+        {
+          "claim": "soil_base garden_bed (grown in outdoor garden soil: clay, loam, sand)",
+          "quote": "Soil Texture: Clay, Loam (Silt), Sand",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/"
+        },
+        {
+          "claim": "soil_drainage moderate (moist but well-drained garden soil)",
+          "quote": "Moist but well–drained",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/10480/lonicera-japonica-japanese-honeysuckle-gold-and-silver-flower/details"
+        }
+      ]
+    },
+    {
+      "common_name": "Bald Cypress",
+      "scientific_name_given": "Taxodium distichum",
+      "scientific_name_accepted": "Taxodium distichum",
+      "name_note": "All admissible sources agree Taxodium distichum is both the given and currently accepted name. RHS's own taxonomy field lists Name Status: Correct for this binomial, and NC State's synonym field shows the species was \"Previously known as: Taxodium distichum var. distichum\" — a formerly used infraspecific rank now folded into the straight species. No source anchors to a different accepted name, so there is no conflict to resolve.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": null,
+      "soil_ph_max": 7.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: left null. None of the five admissible sources checked (NC State Extension, Missouri Botanical Garden, Clemson HGIC, RHS, UF/IFAS) mention toxicity to pets, livestock, or humans for Taxodium distichum; not inferred from the Cupressaceae family.",
+        "soil_ph_min: left null. No admissible source states an explicit numeric lower pH bound for this species (only an upper tolerance ceiling and qualitative 'acid/acidic' preferences).",
+        "soil_ph_max nuance: set to 7.5 from UF/IFAS's explicit species-specific statement ('alkaline soils with a pH above 7.5' cause failure). NC State's categorical 'Soil pH: Acid (<6.0)' field and RHS's 'pH: Acid or Neutral' both describe a narrower preferred/typical range than UF/IFAS's stated tolerance ceiling. Treated as a preference-vs-tolerance-limit distinction rather than a hard numeric conflict, since UF/IFAS is the only source giving an explicit species-specific number.",
+        "outdoor_sun_exposure: RHS's UK page lists Position as 'Full shade, Partial shade' only and omits full sun entirely, conflicting with NC State, Missouri Botanical Garden, Clemson, and UF/IFAS, which all list full sun as suitable (UF/IFAS: 'full sun to partial shade'). Went with the four-source consensus (full_sun, part_shade) and did not add full_shade on RHS's lone, apparently anomalous listing -- nothing else on the RHS page (e.g. its own cultivation note 'suited to wet conditions') suggests a shade requirement.",
+        "chill_damage_f / cool_rest_note / day_f_min / day_f_max / night_f_min / night_f_max: left null. These are container/houseplant temperature fields; for this fully cold-hardy deciduous landscape tree, admissible sources describe cold tolerance only via USDA hardiness zone (NC State 4a-9b; Missouri Botanical Garden 4-9; Clemson 5-11; UF/IFAS 5A-10B), which does not translate into a damage-onset or day/night temperature figure.",
+        "light_fc_min / light_fc_good / direct_sun_hours_max: left null. No admissible source gives foot-candle readings or a maximum tolerated direct-sun-hours figure for this species; NC State's '6 or more hours' is the generic threshold defining its 'full sun' category, not a species-specific ceiling.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: left null. No admissible source addresses ambient humidity for this outdoor landscape tree.",
+        "water_dry_down_target / water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis: left null. Sources describe soil moisture qualitatively (moist to wet, flood-tolerant) but none give a container-style watering interval or check-depth appropriate to an in-ground landscape tree.",
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: left null. No admissible source gives a species-specific fertilizing schedule for Taxodium distichum; Clemson's factsheet has no fertilizing section, and UF/IFAS's only fertilizing mention ('Keep trees healthy with regular fertilization') is generic twig-blight disease-management advice, not a schedule with an interval, active months, or dose strength.",
+        "USDA hardiness zone figures vary by source (NC State 4a-9b; Missouri Botanical Garden 4-9; Clemson 5-11; UF/IFAS 5A-10B) -- likely reflecting differing revision dates or scope (species vs. cultivars). No field in this schema captures hardiness zone directly, so it is noted here for context only and did not drive any field value.",
+        "water_regime — removed on audit: Value \"keep_moist\" is backed by three accurately-quoted citations (NC State flood tolerance; Clemson saturated-soils habitat; MOBOT moisture-retentive/prefers-moist), all verified verbatim against the live pages. But the record never discloses or reconciles directly conflicting evidence already present in the very pages it cites for other fields: UF/IFAS's own Culture table (same ask.ifas.ufl.edu/publication/ST620 URL used for soil_ph_max) explicitly rates \"Drought tolerance: high\"; NC State's own descriptive text (same plants.ces.ncsu.edu page cited for water_regime) states \"In cultivation, however, it grows very well in drier, upland soils\"; and NC State's own tag list carries both \"#drought tolerant\" and \"#flood tolerant.\" Unlike soil_ph_max and outdoor_sun_exposure, where the record carefully surfaced and reasoned through cross-source tension in `unknowns`, no equivalent disclosure exists here despite comparable or stronger countervailing evidence sitting in already-cited sources. Presenting \"keep_moist\" unqualified overstates the case for a species multiple admissible sources describe as tolerating both standing water and dry upland soil equally well."
+      ],
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/taxodium-distichum/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/taxodium-distichum/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light requirement: full sun to partial shade",
+          "source": "UF/IFAS Extension (EDIS ENH-778/ST620)",
+          "url": "https://ask.ifas.ufl.edu/publication/ST620"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "This species has been known to tolerate flooded conditions for extended periods.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/taxodium-distichum/"
+        },
+        {
+          "claim": "water_regime keep_moist and soil_drainage moisture_retentive",
+          "quote": "Easily grown in average, medium to wet, moisture retentive but reasonably well-drained soils in full sun. Prefers moist, acidic, sandy soils, but tolerates a wide range of soil conditions ranging from somewhat dry soils to wet soils in standing water.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=m510"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "Bald-cypress typically grows in saturated soils, seasonally flooded areas, swamps, and stream and riverbanks.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bald-cypress/"
+        },
+        {
+          "claim": "is_houseplant false (native deciduous conifer, one of only five conifer species that sheds its needles each fall; a landscape tree, not container/indoor culture)",
+          "quote": "Bald-cypress (Taxodium distichum) is a native, deciduous conifer and one of only five conifer species that drops its needles in the fall, hence, its “bald” namesake.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bald-cypress/"
+        },
+        {
+          "claim": "is_houseplant false (deciduous coniferous tree to 20m or more)",
+          "quote": "A deciduous coniferous tree to 20m or more, with a conical crown, fibrous red-brown bark and soft, feathery, light green foliage turning rich yellow-brown in autumn.",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/17999/taxodium-distichum-swamp-cypress-bald-cypress/details"
+        },
+        {
+          "claim": "scientific_name_accepted Taxodium distichum (Name Status Correct)",
+          "quote": "Name Status: Correct",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/17999/taxodium-distichum-swamp-cypress-bald-cypress/details"
+        },
+        {
+          "claim": "scientific_name_accepted Taxodium distichum (formerly ranked as a variety)",
+          "quote": "Previously known as: Taxodium distichum var. distichum",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/taxodium-distichum/"
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "quote": "A large ornamental tree for parks or large lawns. Good selection for growing in wet soils either in low spots or near water.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=m510"
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "quote": "Best use: Specimen, screen, streetscapes, parking lots, and near water.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bald-cypress/"
+        },
+        {
+          "claim": "soil_ph_max 7.5",
+          "quote": "the trees will also grow remarkably well on almost any soil, including heavy, compacted, or poorly-drained muck, except alkaline soils with a pH above 7.5",
+          "source": "UF/IFAS Extension (EDIS ENH-778/ST620)",
+          "url": "https://ask.ifas.ufl.edu/publication/ST620"
+        }
+      ]
+    },
+    {
+      "common_name": "Trumpet Vine",
+      "scientific_name_given": "Campsis radicans",
+      "scientific_name_accepted": "Campsis radicans",
+      "name_note": "All five plant-specific admissible sources found (NC State Extension Gardener Plant Toolbox, Missouri Botanical Garden Plant Finder, RHS, UF/IFAS Extension, Clemson HGIC) use Campsis radicans as the current accepted binomial and none proposes a different name. RHS's own structured taxonomy field explicitly reads \"Name Status Correct\" for this binomial. No conflict to resolve.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "Containment/invasiveness (no dedicated field): multiple admissible sources flag this species as aggressively spreading and warn about placement, independent of the schema's scored fields. UF/IFAS: 'It is, however, extremely aggressive. This colorful native vine spreads vigorously by root suckers and uses clinging aerial rootlets that can damage wood siding, shingles, and mortar. It can overwhelm and strangle nearby shrubs and trees, so it should not be planted directly on a house, wooden fence, or allowed to climb a living tree.' Missouri Botanical Garden: 'the problem with species plants (Campsis radicans) is usually not how to grow them but how to restrain them ... they sucker profusely from underground runners and freely self-seed, often forming impenetrable colonies in the wild.' NC State independently tags the species 'Weedy' and states 'the species is an aggressive spreader.' Recorded here per the task's explicit instruction since there is no dedicated field for containment/invasiveness.",
+        "day_f_min / day_f_max / night_f_min / night_f_max: no admissible source gives specific daytime or nighttime air-temperature values for this outdoor hardy vine.",
+        "chill_damage_f: no admissible source gives a damage-onset cold temperature. Only survival/hardiness data exists (NC State USDA zones 4a-10b; UF/IFAS USDA zones 4A-10B; Missouri Botanical Garden zone 4-9; RHS Hardiness rating H4, described as 'hardy through most of the UK (-10 to -5)' degrees C), which per the task's own guidance should not be mapped onto a damage-onset field.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no admissible source addresses ambient humidity for this outdoor landscape plant.",
+        "light_fc_min / light_fc_good: no admissible source gives footcandle values for this species; all give only categorical sun-exposure terms.",
+        "direct_sun_hours_max: NC State's 'Full sun (6 or more hours of direct sunlight a day)' establishes only a floor, not a ceiling, so no maximum could be supported.",
+        "soil_ph_min / soil_ph_max: NC State's structured Soil pH field checks all three categories -- 'Acid (<6.0) Alkaline (>8.0) Neutral (6.0-8.0)' -- and RHS's structured field likewise reads 'Acid or Alkaline or Neutral.' Both are the sites' generic bucket sets spanning essentially the whole practical pH range with no species-specific numeric boundary, so no usable numeric range could be extracted (consistent with how this exact NC State tag combination is treated elsewhere in this catalog).",
+        "water_regime (and the dependent water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis): genuine cross-source tension left unresolved rather than picked. Missouri Botanical Garden's own prose calls for 'regular moisture' yet its structured Tolerate field lists 'Drought' and its Culture notes call it good for 'hot, dry sites'; RHS pairs 'Moist but well-drained' soil moisture with an explicit 'Drought Resistance Yes' tag; UF/IFAS separately states 'Drought tolerance: high' while only requiring soil that is 'well drained,' not consistently moist; Clemson pairs 'Well-drained soil' with 'Tolerates heat and drought.' None of these map cleanly onto a single water_regime category, so it was left null per the harm-capable-field rule, and the dependent day-interval/depth fields were left null as a result (no source gives those figures regardless).",
+        "fertilize_active_months / fertilize_interval_days / fertilize_strength: no admissible source gives a feeding schedule, application rate, or month range for this species. (University of Maryland Extension's general 'Vines for Maryland Gardens' page mentions spring fertilizing for vines broadly, but that page could not be confirmed as species-specific for Campsis radicans and was not used.)",
+        "toxic_to_pets / toxicity_detail: the two admissible sources that address ingestion toxicity for this species are both explicitly scoped to humans, not pets. NC State's poison section is headed 'Poisonous to Humans' (Severity: Low; sap causes only minor, short-lived skin irritation; toxic principle unidentified). UGA's table is explicitly titled 'Ornamental Plants Reported To Be Toxic When Ingested by Humans' and separately lists this species (not a genus-level entry) with symptoms 'gastric irritation, dilated pupils, numbness in hands' for all parts except fruit. No admissible source addresses toxicity to dogs, cats, or other pets for this species, so per the task's instruction against blending human-only toxicity data into a pet-toxicity field, both fields were left null.",
+        "soil_base: garden_bed was inferred from the plant's landscape/garden soil description (clay, sand, loam soil types; grown in-ground against walls, fences, arbors, and trellises) rather than any explicit potting-mix statement, since no admissible source frames this species as a container/indoor plant. One UF/IFAS 'Uses' tag lists 'hanging basket,' but this is presented as an outdoor landscape use alongside 'veils a trellis' and 'woodland garden,' not indoor cultivation, so it was not used to support is_houseplant=true.",
+        "Common name breadth: NC State also lists Cow-itch, Cow Vine, Devil's Shoestring, Foxglove Vine, Hellvine, and Trumpet Creeper as common names for this same species; only 'Trumpet Vine' (the name given in the task) was recorded in common_name.",
+        "University of Maryland Extension's dedicated 'Trumpet Creeper' page (an admissible source) could not be reliably re-fetched for verbatim quotable text after an initial successful summary-only fetch (subsequent attempts returned HTTP 403 'Access denied'), so it was not cited to avoid using a non-verbatim paraphrase as a quote. Penn State Extension's 'Perennial Vines: Friend or Foe?' page was checked directly and does not characterize trumpet vine as invasive/aggressive or address containment, so it was not used for that claim."
+      ],
+      "citations": [
+        {
+          "claim": "scientific_name_given Campsis radicans and scientific_name_accepted Campsis radicans",
+          "quote": "Attributes: Genus: Campsis Species: radicans Family: Bignoniaceae",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "scientific_name_accepted Campsis radicans (RHS Name Status: Correct)",
+          "quote": "Name Status Correct",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/2993/campsis-radicans/details"
+        },
+        {
+          "claim": "common_name Trumpet Vine",
+          "quote": "Common Name(s): Cow-itch, Cow Vine, Devil's Shoestring, Foxglove Vine, Hellvine, Trumpet Creeper, Trumpet Vine",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "is_houseplant false (climbing woody vine trained on outdoor structures, not a container/indoor plant)",
+          "quote": "This plant can climb 30 feet or more when given support from other plants or surrounding structures",
+          "source": "UF/IFAS Extension (Ask IFAS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FP099"
+        },
+        {
+          "claim": "is_houseplant false (large woody vine, 30-40 ft, an outdoor-scale plant)",
+          "quote": "Height: 30 ft. 0 in. - 40 ft. 0 in. Width: 4 ft. 0 in. - 10 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "is_houseplant false (hardy USDA zones 4a-10b, an outdoor perennial)",
+          "quote": "USDA Plant Hardiness Zone: 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b, 9a, 9b, 10a, 10b",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (corroborating)",
+          "quote": "Position Full sun",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/2993/campsis-radicans/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating)",
+          "quote": "Light requirement: plant grows in partial shade; plant grows in full sun",
+          "source": "UF/IFAS Extension (Ask IFAS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FP099"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (corroborating)",
+          "quote": "Clinging; Full sun; Well-drained soil; Tolerates heat and drought; Grow on a sturdy support; Zones: 4 to 8",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/vine-selections-for-landscaping/"
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "quote": "Soil Types Chalk, Clay, Loam, Sand",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/2993/campsis-radicans/details"
+        },
+        {
+          "claim": "soil_base garden_bed (corroborating)",
+          "quote": "Soil tolerances: occasionally wet; slightly alkaline; acidic; clay; sand; loam",
+          "source": "UF/IFAS Extension (Ask IFAS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FP099"
+        },
+        {
+          "claim": "soil_drainage moderate (moist but well-drained)",
+          "quote": "Moisture Moist but well–drained",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/2993/campsis-radicans/details"
+        },
+        {
+          "claim": "soil_drainage moderate (well drained) (corroborating)",
+          "quote": "Trumpet vine is adaptable to a variety of soil conditions; however, soil should be well drained.",
+          "source": "UF/IFAS Extension (Ask IFAS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FP099"
+        },
+        {
+          "claim": "soil_drainage moderate (well-drained soil) (corroborating)",
+          "quote": "Well-drained soil",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/vine-selections-for-landscaping/"
+        },
+        {
+          "claim": "qualitative only, no field taken: soil_ph -- NC State's structured field checks all three generic buckets with no species-specific numeric bound",
+          "quote": "Soil pH: Acid (<6.0) Alkaline (>8.0) Neutral (6.0-8.0)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "qualitative only, no field taken: soil_ph -- RHS structured field likewise lists all three generic categories with no numeric bound",
+          "quote": "pH Acid or Alkaline or Neutral",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/2993/campsis-radicans/details"
+        },
+        {
+          "claim": "qualitative only, no field taken: water_regime -- source pairs regular-moisture language with a drought-tolerance tag, not a single clean category",
+          "quote": "Best planted in lean to average soils with regular moisture in full sun to part shade.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b840"
+        },
+        {
+          "claim": "qualitative only, no field taken: water_regime -- same source's own structured field flags drought tolerance",
+          "quote": "Tolerate: Deer, Drought, Clay Soil",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b840"
+        },
+        {
+          "claim": "qualitative only, no field taken: water_regime -- RHS pairs moist-but-well-drained soil with an explicit drought-resistance tag",
+          "quote": "Drought Resistance Yes",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/2993/campsis-radicans/details"
+        },
+        {
+          "claim": "qualitative only, no field taken: water_regime -- UF/IFAS separately rates drought tolerance high while only requiring well-drained soil",
+          "quote": "Drought tolerance: high",
+          "source": "UF/IFAS Extension (Ask IFAS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FP099"
+        },
+        {
+          "claim": "qualitative only, no field taken for toxic_to_pets/toxicity_detail: NC State's toxicity section is explicitly scoped to humans, not pets",
+          "quote": "Poisonous to Humans: Poison Severity: Low Poison Symptoms: Causes low toxicity if eaten. Contact with the sap can cause minor skin irritation with redness and swelling usually lasting for a few minutes. Poison Toxic Principle: Unidentified Causes Contact Dermatitis: Yes Poison Part: Flowers Leaves",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "qualitative only, no field taken for toxic_to_pets: UGA's toxicity table header scopes this data to humans, not pets",
+          "quote": "Ornamental Plants Reported To Be Toxic When Ingested by Humans",
+          "source": "UGA Cooperative Extension (CAES Field Report), Circular 957: Poisonous Plants in the Landscape",
+          "url": "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf"
+        },
+        {
+          "claim": "qualitative context: UGA names this species specifically (not genus-level) for human ingestion toxicity, symptoms, and affected parts",
+          "quote": "Trumpet Creeper (Chalice Vine) Campsis radicans all parts except fruit gastric irritation, dilated pupils, numbness in hands",
+          "source": "UGA Cooperative Extension (CAES Field Report), Circular 957: Poisonous Plants in the Landscape",
+          "url": "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf"
+        },
+        {
+          "claim": "qualitative context: aggressive/invasive spread and containment concerns (no dedicated field; recorded per task instruction)",
+          "quote": "It is, however, extremely aggressive. This colorful native vine spreads vigorously by root suckers and uses clinging aerial rootlets that can damage wood siding, shingles, and mortar. It can overwhelm and strangle nearby shrubs and trees, so it should not be planted directly on a house, wooden fence, or allowed to climb a living tree.",
+          "source": "UF/IFAS Extension (Ask IFAS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FP099"
+        },
+        {
+          "claim": "qualitative context: aggressive/invasive spread concerns (corroborating)",
+          "quote": "the problem with species plants (Campsis radicans) is usually not how to grow them but how to restrain them, in large part because they sucker profusely from underground runners and freely self-seed, often forming impenetrable colonies in the wild which can choke out many plants that get in their way.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b840"
+        },
+        {
+          "claim": "qualitative context: aggressive spreader (corroborating)",
+          "quote": "the species is an aggressive spreader",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "qualitative context: NC State tags this species Weedy in its structured Problems field",
+          "quote": "Problems: Contact Dermatitis Weedy",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        }
+      ]
+    },
+    {
+      "common_name": "Hens and Chicks",
+      "scientific_name_given": "Sempervivum tectorum",
+      "scientific_name_accepted": "Sempervivum tectorum",
+      "name_note": "RHS lists this binomial's Name Status as \"Correct,\" and NC State Extension and Missouri Botanical Garden both use Sempervivum tectorum without flagging a synonym, so no naming conflict was found among the admissible sources.",
+      "is_houseplant": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": "Protect from excessive winter wet.",
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "cactus_succulent",
+      "soil_drainage": "fast",
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": "dry_thoroughly_between",
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: no admissible source (NC State Extension, RHS, Missouri Botanical Garden) addresses toxicity to pets or humans for Sempervivum tectorum specifically; left null rather than inferring from the Crassulaceae family or genus.",
+        "chill_damage_f: sources describe this species as fully cold-hardy (RHS Hardiness H7, 'hardy in the severest European continental climates (< -20)'; NC State USDA zones 3a-8b) rather than chill-sensitive, and none states a cold damage-onset temperature, so left null.",
+        "day_f_max/day_f_min/night_f_max/night_f_min, humidity_need, humidity_pct_min/max, light_fc_min/light_fc_good, direct_sun_hours_max: none of the admissible sources give numeric indoor temperature ranges, humidity targets, foot-candle figures, or a maximum direct-sun-hours cap for this species; left null.",
+        "fertilize_interval_days/fertilize_strength/fertilize_active_months: no admissible source discusses fertilizing Sempervivum tectorum; left null.",
+        "water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: sources describe watering only qualitatively (avoid overwatering, let dry between waterings, tolerates drought, needs sharp drainage) with no measurable depth or day-interval figures; left null.",
+        "is_houseplant — removed on audit: Neither citation cleanly supports classifying Sempervivum tectorum as a houseplant. Verified live: the Penn State citation (extension.psu.edu/propagating-houseplants) mentions hens and chicks only in passing, as one example of a 'clump-forming plant' alongside snake plant/orchids/bromeliads in the article's Division section ('Division is used to propagate clump-forming plants, such as snake plant, orchids, bromeliads, and hens and chicks (Sempervivum tectorum)') -- it never asserts the species is grown or kept indoors. The NC State citation only says 'Makes an excellent container plant,' which does not distinguish indoor houseplant use from outdoor patio/container gardening, and the same NC State page (verified) independently states this species needs 6+ hours of full sun and is hardy through USDA zone 3a, while RHS (verified) rates it H7, 'hardy in the severest European continental climates (< -20)'C -- all hallmarks of an outdoor alpine/rock-garden succulent rather than a plant routinely marketed as an indoor houseplant. The value is genuinely in doubt, not just one weak supporting citation among several solid ones."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Hens and Chicks and scientific_name_given Sempervivum tectorum",
+          "quote": "Sempervivum tectorum (Common Houseleek, Hens and Chicks, House Leek, Roof House Leek)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sempervivum-tectorum/"
+        },
+        {
+          "claim": "scientific_name_accepted Sempervivum tectorum (Name Status: Correct)",
+          "quote": "Name Status: Correct",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/17164/sempervivum-tectorum/details"
+        },
+        {
+          "claim": "is_houseplant true (grown and propagated as a houseplant by division)",
+          "quote": "Division is used to propagate clump-forming plants, such as snake plant, orchids, bromeliads, and hens and chicks (Sempervivum tectorum). Gently pull or cut the plantlets apart. Immediately replant all the new plants after they have been separated.",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/propagating-houseplants"
+        },
+        {
+          "claim": "is_houseplant true (container plant)",
+          "quote": "Makes an excellent container plant.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sempervivum-tectorum/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun (6 or more hours of direct sunlight a day) / Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sempervivum-tectorum/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Easily grown in average, dry to medium moisture, well-drained soils in full sun. Tolerates some light shade.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b711"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 8.0",
+          "quote": "Soil pH: Neutral (6.0-8.0)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sempervivum-tectorum/"
+        },
+        {
+          "claim": "soil_drainage fast and soil_base cactus_succulent",
+          "quote": "It thrives in sandy or gravelly soils and will tolerate poor soils and some drought. To perform well, it needs sharp soil drainage.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sempervivum-tectorum/"
+        },
+        {
+          "claim": "soil_drainage fast (needs sharp soil drainage)",
+          "quote": "Needs sharp soil drainage to perform well.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b711"
+        },
+        {
+          "claim": "water_regime dry_thoroughly_between",
+          "quote": "Overwatering can lead to crown rot, allow plants to dry out between watering.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sempervivum-tectorum/"
+        },
+        {
+          "claim": "water_regime dry_thoroughly_between (tolerates drought, avoid overwatering)",
+          "quote": "Tolerates some drought. Avoid overwatering.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b711"
+        },
+        {
+          "claim": "cool_rest_note protect from excessive winter wet",
+          "quote": "Grow in moderately fertile well-drained soil in full sun. Protect from excessive winter wet.",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/17164/sempervivum-tectorum/details"
+        }
+      ]
+    },
+    {
+      "common_name": "Brazilian Orchid",
+      "scientific_name_given": "Cattleya",
+      "scientific_name_accepted": "Cattleya",
+      "name_note": "Cattleya is commonly sold and grown as a genus rather than one accepted species-level binomial -- admissible sources default to genus-level treatment. NC State Extension's own top-level page for this plant is a genus overview titled \"Cattleya\" (common names \"Brazilian Orchid, Cat Orchid, Corsage Orchid, Queen of orchids\"), distinct from -- and broader than -- its individual species pages for Cattleya mossiae, Cattleya trianae, Cattleya forbesii, and Cattleya labiata; no admissible source frames any one of these species as \"the\" Cattleya orchid the way Phalaenopsis is dominated by one hybrid complex. Missouri Botanical Garden's own care page and Plant Finder entry likewise group the plant as \"Cattleya\" / \"Cattleya (group)\" rather than a single species, and RHS's genus-level details page (\"Cattleya | RHS\") covers the genus with its own structured description (\"A genus of tropical orchids native to South and Central America...\") and no single accepted species named as primary. Given this, scientific_name_given is recorded as the genus \"Cattleya\" rather than forced to one binomial, following the same genus-level pattern used for Water Lily (Nymphaea) elsewhere in this catalog. scientific_name_accepted is likewise recorded as \"Cattleya\": unlike the Water Lily case, RHS's genus-level page here carries its own explicit structured taxonomy verdict for the genus name itself -- \"Name Status: Correct\" -- so the genus name is recorded as accepted rather than left null.",
+      "is_houseplant": true,
+      "toxic_to_pets": false,
+      "toxicity_detail": null,
+      "day_f_min": 70,
+      "day_f_max": 85,
+      "night_f_min": 55,
+      "night_f_max": 60,
+      "chill_damage_f": null,
+      "cool_rest_note": "Sources disagree on the minimum safe night temperature specific to this genus. NC State Extension and Missouri Botanical Garden both state Cattleya's night temperature range bottoms out at 55 degrees F (\"55 to 60 degrees F at night\"), while Clemson Cooperative Extension's orchid genus-comparison table recommends a higher minimum specifically for cattleya: \"The minimum night temperature recommended for phalaenopsis is 65 °F; cattleya, 60 °F; and dendrobium, 52 °F.\" Because these give different floors for the same genus, chill_damage_f is left null rather than set to either 55°F or 60°F; treat 60°F as Clemson's recommended protective minimum and 55°F as NC State/MOBOT's stated comfortable-range floor.",
+      "humidity_need": "high",
+      "humidity_pct_min": 50,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "part_shade"
+      ],
+      "soil_base": "orchid_bark",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "dry_thoroughly_between",
+      "water_dry_down_target": "Allow the bark potting medium to dry completely before watering again",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": "Missouri Botanical Garden: \"Mature Cattleyas should be watered thoroughly about once a week or more with lukewarm water\" -- the literal \"once a week\" floor is recorded as 7 days; the \"or more\" allowance is not captured as a separate numeric value.",
+      "fertilize_active_months": null,
+      "fertilize_interval_days": 7,
+      "fertilize_strength": "quarter",
+      "unknowns": [
+        "chill_damage_f: left null -- a genuine conflict on a harm-capable field. NC State and MOBOT state Cattleya's comfortable night range bottoms out at 55F, while Clemson's genus-comparison table recommends a higher protective minimum of 60F specifically for cattleya. Both figures are captured, correctly attributed, in cool_rest_note instead of picking one.",
+        "direct_sun_hours_max: left null. NC State's Light field for Cattleya is tagged 'Partial Shade', but the parenthetical hour range attached to it -- '(Direct sunlight only part of the day, 2-6 hours)' -- is NC State's fixed sitewide definition of the Partial Shade category, reused identically across essentially every plant the toolbox tags that way, not a Cattleya-specific measurement. Only the categorical tag (part_shade) was used for outdoor_sun_exposure; the hour figure was not force-mapped onto this field.",
+        "light_fc_min, light_fc_good: no admissible source gives a foot-candle light measurement for Cattleya; all light guidance found is expressed in window orientation, shade category, or relative comparison to Phalaenopsis, not footcandles.",
+        "soil_ph_min, soil_ph_max: no admissible genus-level source gives a numeric soil pH for Cattleya. RHS's species-specific Cattleya labiata page states pH 'Neutral' as a category, but that is one species (not the genus) and gives no numeric bound, so it was not used.",
+        "water_check_depth_cm: no admissible source gives a specific probe/check depth; sources describe judging dryness of the bark medium as a whole, not a depth measurement into soil.",
+        "water_dormant_days_est: no admissible source discusses a distinct dormant-season watering interval for this genus; all watering guidance found describes a single year-round regime.",
+        "fertilize_active_months: no admissible source names specific calendar months for feeding; NC State and MOBOT both describe fertilizing as a standing practice done at every watering rather than restricted to a season.",
+        "fertilize_interval_days, fertilize_strength: NC State's own sentence gives two valid options -- 'twice a month at half strength or weekly at quarter strength.' The weekly/quarter-strength option was recorded because it is independently and solely corroborated by Missouri Botanical Garden ('quarter-strength once a week'); the twice-monthly/half-strength option is supported by NC State alone and was not recorded, but is a valid alternative per NC State.",
+        "soil_drainage: recorded as 'moderate' from NC State's tag combination 'Good Drainage, Moist', matching this catalog's established mapping for that identical NC State tag pairing used elsewhere (e.g. Spider Plant, Monstera, Peace Lily). No admissible source gives an explicit drainage-rate description for Cattleya's actual coarse-bark potting medium, which in practice drains considerably faster than 'moderate' typically implies for soil-based mixes -- flagged here rather than overridden, since no source states a rate directly.",
+        "humidity_pct_max: no admissible source gives an upper humidity bound for Cattleya, only a floor ('above 50%').",
+        "outdoor_sun_exposure omits full_sun, part_sun, and full_shade: no admissible source states Cattleya tolerates any of these; NC State and MOBOT both warn that direct/midday sun burns the leaves, and Clemson notes Cattleya needs about twice the light of Phalaenopsis (moth orchids), which argues against a shadier placement, not a sunnier one -- consistent with part_shade alone.",
+        "Clemson's 'Orchids' factsheet is a general orchid-genera comparison page, not a Cattleya-specific factsheet; most of its watering, humidity, and media guidance is written generically for orchids as a group and is not attributed to Cattleya by name, so only the two lines that explicitly name 'cattleya' (the light-vs-Phalaenopsis comparison and the 60F minimum night temperature in its genus table) were used.",
+        "Penn State Extension, University of Maryland Extension, UGA Cooperative Extension, and UF/IFAS Extension were checked but yielded no citable Cattleya-specific numeric care data. Penn State's result is a webinar-series announcement that names Cattleya among orchids covered but gives no care figures. UMD's orchid resources (e.g. 'Care of Phalaenopsis Orchids') cover moth orchids specifically, not Cattleya. UGA's one Cattleya mention is a commercial-greenhouse minimum night temperature (65F) listed alongside many unrelated crops (rose, tomato, poinsettia, etc.) for production heating/ventilation, not home-care guidance, so it was not used or treated as conflicting with the home-care figures above. UF/IFAS's EP452 South Florida Gardening Calendar shows a Cattleya photo in its January cold-protection section, but the surrounding advice text says only 'orchids' generically and does not name Cattleya, so it was not treated as a Cattleya-specific citation.",
+        "Clemson's separate 'Pet-Safe Indoor Houseplants' page was checked directly and does not mention Cattleya, orchid, or Orchidaceae at all (it lists only Phalaenopsis/Moth Orchids as safe) -- silence, not a contradiction of the non-toxic determination recorded here.",
+        "plantfinder.mobot.org's own 'Cattleya (group)' Plant Finder page (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b623) could not be verified verbatim -- repeated fetch attempts failed with 'unable to verify the first certificate' (an SSL error on that subdomain). Its content was not used for any field; missouribotanicalgarden.org's separate 'Cattleya' visual-guide page, which fetched successfully, was used for all Missouri Botanical Garden citations instead.",
+        "toxicity_detail — removed on audit: The detail text claims Cattleya trianae's page was 'checked directly' and carries identical non-toxic tags, but the citations array contains no entry for Cattleya trianae (only Cattleya mossiae, which I live-verified as accurate: '#non-toxic for cats #non-toxic for horses #non-toxic for dogs'). This is an uncited, unverifiable factual assertion layered onto an otherwise well-supported field -- the underlying toxic_to_pets value itself remains sound via the genus page + mossiae citations, so only this specific embedded claim is being flagged, not the boolean field.",
+        "soil_drainage — removed on audit: NC State's actual tag for Cattleya, confirmed live, is 'Good Drainage' (paired with 'Moist'), not a 'moderate' drainage description. The record maps this to 'moderate' per catalog convention, but its own unknowns section admits the coarse orchid-bark medium 'drains considerably faster than moderate typically implies' -- i.e., a specific value was assigned to a harm-adjacent field (watering/drainage interaction with root rot) while the record itself documents doubt about that value's accuracy, rather than leaving it null or picking a category the source's own tag actually supports.",
+        "common_name: restored as \"Brazilian Orchid\" -- NC State's own listed common names (\"Brazilian Orchid, Cat Orchid, Corsage Orchid, Queen of orchids\") were already quoted in this record's own citations; \"Cattleya Orchid\" was a constructed label that didn't match any of them.",
+        "water_growing_days_est — removed at landing: the field's own unknowns text describes deriving 7 from MOBOT's phrasing ('about once a week or more'), but no citation entry anywhere in the record actually quotes that sentence -- the citations array has no water_growing_days_est-labeled claim at all. Nulled per this catalog's standard rule that every non-null field must trace to a citation entry, which this batch's own audit pass missed."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Cattleya Orchid (NC State common names: Brazilian Orchid, Cat Orchid, Corsage Orchid, Queen of orchids)",
+          "quote": "Brazilian Orchid, Cat Orchid, Corsage Orchid, Queen of orchids",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "scientific_name_given Cattleya (genus)",
+          "quote": "Genus: Cattleya",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "scientific_name_given Cattleya (epiphytic tropical orchid genus, native Costa Rica to Argentina)",
+          "quote": "The queen of orchids, corsage orchid, cattleya or cat orchid is an epiphytic, tropical herbaceous perennial in the orchid family (Orchidaceae). It is native to the American tropics, from Costa Rica to Argentina.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "scientific_name_accepted Cattleya (RHS Name Status Correct for the genus)",
+          "quote": "Name Status\n\nCorrect",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/23490/cattleya/details"
+        },
+        {
+          "claim": "scientific_name_given Cattleya (RHS genus-level page, no single species named as primary)",
+          "quote": "A genus of tropical orchids native to South and Central America. Thick fleshy roots of these epiphytic plants grow from thick rhizome.",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/23490/cattleya/details"
+        },
+        {
+          "claim": "is_houseplant true (grown as greenhouse plants or houseplants)",
+          "quote": "Cattleya orchids are grown as greenhouse plants or houseplants. They can be grown outside in the summer.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "is_houseplant true (Plant Type: Houseplant)",
+          "quote": "Epiphyte, Herbaceous Perennial, Houseplant",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "day_f_min 70 and day_f_max 85 and night_f_min 55 and night_f_max 60",
+          "quote": "The temperatures must be between 70 to 85 degrees F during the day and 55 to 60 degrees F at night.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "day_f_min 70 and day_f_max 85 and night_f_min 55 and night_f_max 60 (corroborating)",
+          "quote": "Temperatures should be 70 to 85 degrees F during the day and 55 to 60 degrees F at night.",
+          "source": "Missouri Botanical Garden",
+          "url": "https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/cattleya"
+        },
+        {
+          "claim": "humidity_need high and humidity_pct_min 50",
+          "quote": "The humidity must be above 50%.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "humidity_pct_min 50 (corroborating)",
+          "quote": "Humidity should be above 50%, and air should always be moving around the plants.",
+          "source": "Missouri Botanical Garden",
+          "url": "https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/cattleya"
+        },
+        {
+          "claim": "water_regime dry_thoroughly_between",
+          "quote": "The medium should be allowed to dry completely between waterings.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "water_regime dry_thoroughly_between (corroborating; drying prevents root rot)",
+          "quote": "It is very important that the plant dry out between waterings, as a constant wet root environment causes root rot.",
+          "source": "Missouri Botanical Garden",
+          "url": "https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/cattleya"
+        },
+        {
+          "claim": "soil_base orchid_bark (special potting medium based on coarsely chopped redwood or fir bark)",
+          "quote": "They require a special potting medium, which is usually based on coarsely chopped redwood or fir bark.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "soil_base orchid_bark (corroborating; fir or sequoia bark mixed with charcoal and perlite)",
+          "quote": "This usually consists of a medium- to- coarse fir or sequoia bark, and may be mixed with horticultural charcoal and perlite.",
+          "source": "Missouri Botanical Garden",
+          "url": "https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/cattleya"
+        },
+        {
+          "claim": "soil_drainage moderate (Good Drainage, Moist)",
+          "quote": "Soil Drainage: Good Drainage, Moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "fertilize_interval_days 7 and fertilize_strength quarter",
+          "quote": "Feed your plant with a balanced orchid fertilizer (20-20-20) at quarter-strength once a week after watering.",
+          "source": "Missouri Botanical Garden",
+          "url": "https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/cattleya"
+        },
+        {
+          "claim": "fertilize_interval_days 7 and fertilize_strength quarter (corroborating; one of two NC State-stated options)",
+          "quote": "Fertilize regularly after watering with a balanced fertilizer twice a month at half strength or weekly at quarter strength.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "toxic_to_pets false (non-toxic for cats, dogs, and horses)",
+          "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "toxic_to_pets false (corroborating; identical tags on sibling species page Cattleya mossiae)",
+          "quote": "#non-toxic for cats #non-toxic for dogs #non-toxic for horses",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya-mossiae/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade (Partial Shade light category; direct sun burns leaves)",
+          "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/"
+        },
+        {
+          "claim": "cool_rest_note (Clemson: cattleya minimum recommended night temperature 60F, contrasted with NC State/MOBOT's 55F range floor)",
+          "quote": "The minimum night temperature recommended for phalaenopsis is 65 °F; cattleya, 60 °F; and dendrobium, 52 °F.",
+          "source": "Clemson Cooperative Extension",
+          "url": "https://hgic.clemson.edu/factsheet/orchids/"
+        }
+      ]
+    },
+    {
+      "common_name": "German Chamomile",
+      "scientific_name_given": "Matricaria chamomilla",
+      "scientific_name_accepted": "Matricaria chamomilla",
+      "name_note": "Matricaria chamomilla is the currently accepted name: RHS lists \"Name Status: Correct\" for Matricaria chamomilla and \"Name Status: Synonym\" for Matricaria recutita. NC State Extension's Plant Toolbox (titled \"German Chamomile - Matricaria chamomilla\") lists \"Previously known as: Chamomilla recutita, Matricaria recutita,\" agreeing with RHS. Missouri Botanical Garden's Plant Finder catalogs the same plant under the name Matricaria recutita as its database entry point without making an explicit accepted/synonym determination, but its description, uses, and common names are unambiguously the same species. This record covers German chamomile specifically, not the unrelated Roman chamomile (Chamaemelum nobile, a perennial groundcover commonly sold interchangeably as \"chamomile\"): NC State explicitly flags that Matricaria chamomilla \"is often confused with: Chamaemelum nobile,\" and Clemson HGIC's herb factsheet separates the two species by name and growth habit side by side. Every citation below was checked to confirm it specifically discusses Matricaria chamomilla/recutita and not Chamaemelum nobile.",
+      "is_houseplant": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "direct_sun_hours_max null: NC State gives the full-sun threshold as '6 or more hours' but no admissible source states an upper bound on tolerated direct-sun hours.",
+        "light_fc_min and light_fc_good null: no admissible source publishes foot-candle figures for this outdoor annual herb.",
+        "soil_ph_min and soil_ph_max null: RHS's structured pH field for this species reads 'Acid, Alkaline, or Neutral' (i.e. broad tolerance across all categories), not a numeric range, and no other admissible source states a pH value.",
+        "water_regime null (harm-capable field, treated cautiously): Missouri Botanical Garden's structured field reads 'Water: Dry to medium' with culture-note text adding 'Best with regular moisture', while RHS's structured Moisture field for this species reads 'Moist but well-drained or Well-drained'. Neither wording maps cleanly onto this catalog's four water-regime categories without inventing an interpretation, so it is left null rather than guessed.",
+        "water_check_depth_cm, water_dry_down_target, water_growing_days_est, water_dormant_days_est, water_estimate_basis all null: no admissible source gives container-watering guidance; every source treats this as an in-ground garden/herb-bed annual, not a potted plant.",
+        "day_f_min, day_f_max, night_f_min, night_f_max all null: no admissible source gives explicit day/night temperature figures for this species.",
+        "chill_damage_f and cool_rest_note null: sources describe general cold-hardiness (NC State: USDA zones 2a-8b; RHS: Hardiness rating H7, 'hardy in the severest European continental climates (< -20)') but none states an actionable damage-onset temperature. This is presented as a frost-hardy annual reseeder in every source, not a chill-sensitive plant, so no source addresses this quantity at all.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength all null: no admissible source discusses fertilizing this species.",
+        "humidity_need, humidity_pct_min, humidity_pct_max all null: no admissible source addresses ambient humidity; every source treats this as an outdoor plant grown at ambient conditions.",
+        "toxic_to_pets and toxicity_detail null: NC State Extension's poison data for this species is explicitly headed 'Poisonous to Humans:' (Poison Severity: Low; Poison Symptoms: 'Can cause contact dermatitis or oral swelling in those sensitive to it'; Poison Toxic Principle: Desacetylmatricarin; Poison Part: Flowers, Leaves) -- a human-specific section. No admissible source addresses toxicity to pets/animals for this species, so per instructions the human-scoped data is not blended into a pet-toxicity claim; toxic_to_pets is left null rather than inferred from the human data or from general genus/family knowledge.",
+        "is_houseplant = false: a product-classification default, not a directly sourced fact. NC State lists 'Container' among its outdoor Landscape Locations (i.e. patio containers), but no admissible source describes long-term indoor cultivation; every source treats this as an outdoor annual garden/herb-bed plant.",
+        "soil_base = garden_bed: a product classification, not a sourced fact -- inferred from every admissible source consistently treating this as an in-ground, outdoor herb-garden/border plant.",
+        "outdoor_sun_exposure deliberately excludes full_shade even though RHS's own species detail page lists its structured 'Position' field as 'Full shade' verbatim (on both the Matricaria chamomilla page and its Matricaria recutita synonym page). This is treated as an RHS data anomaly and not included in the value: RHS's own separate prose growing guide for chamomile states 'Chamomile likes a sunny spot with free-draining soil, and is fully hardy,' and three other admissible sources -- NC State ('Full sun ... Partial Shade'), Missouri Botanical Garden ('Sun: Full sun'), and Clemson HGIC ('in sun or part shade') -- all independently agree on full sun to part shade for German chamomile specifically, with none supporting full shade. Given this, full_sun and part_shade are used and full_shade is treated as an outlier contradicted by the source's own prose and by every other admissible source.",
+        "soil_drainage = moderate is mapped from Missouri Botanical Garden's prose ('well-drained soils', 'dry to medium moisture') rather than a literal 'moderate' quote; no admissible source uses stronger fast-drainage language (e.g. 'sharply drained' or 'gritty/sandy mix required'), so 'moderate' rather than 'fast' was used.",
+        "soil_drainage — removed on audit: Value 'moderate' is backed by only one citation (Missouri Botanical Garden), and its own quote never says 'moderate' — it says 'Easily grown in average, dry to medium moisture, well-drained soils in full sun.' I fetched the live MOBOT page (plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277347) and the same Culture paragraph also states 'Performs well in light sandy soils' — a fast-drainage signal that the record's citation quote omits and that directly contradicts the record's own unknowns claim that 'no admissible source uses stronger fast-drainage language (e.g. ... gritty/sandy mix required).' 'Well-drained' + 'light sandy soils' reads more naturally as 'fast' than 'moderate.' The single supporting citation does not literally establish the value, and the researcher's own stated rationale for picking 'moderate' over 'fast' is contradicted by the source it cites.",
+        "is_houseplant — removed on audit: Non-null value (false) traces to zero entries in the citations array — the unknowns list itself admits this is 'a product-classification default, not a directly sourced fact.' This fails structural check 1 (every non-null field value must trace to a citation). I verified via direct fetch of the NC State Plant Toolbox page that its Landscape Locations field does include 'Container,' which the record never addresses via any citation, formal or otherwise, for indoor/outdoor classification.",
+        "soil_base — removed on audit: Non-null value ('garden_bed') traces to zero entries in the citations array. The record's own unknowns note concedes it is 'a product classification, not a sourced fact -- inferred' rather than cited. Same structural check 1 failure as is_houseplant: a populated field with no citation backing it, only after-the-fact prose justification."
+      ],
+      "citations": [
+        {
+          "claim": "scientific_name_given/accepted Matricaria chamomilla; common_name German Chamomile",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Genus: Matricaria Species: chamomilla"
+        },
+        {
+          "claim": "name_note - previously known as Matricaria recutita and Chamomilla recutita",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Previously known as: Chamomilla recutita Matricaria recutita"
+        },
+        {
+          "claim": "name_note - Matricaria chamomilla is often confused with Chamaemelum nobile (Roman chamomile)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Matricaria chamomilla is often confused with: Chamaemelum nobile"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "soil_drainage moderate; outdoor_sun_exposure full_sun",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277347",
+          "quote": "Easily grown in average, dry to medium moisture, well-drained soils in full sun."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277347",
+          "quote": "Sun: Full sun"
+        },
+        {
+          "claim": "common_name German Chamomile",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277347",
+          "quote": "Common Name: German chamomile"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (German chamomile specifically, as distinct from Roman chamomile)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/herbs/",
+          "quote": "German chamomile is a cool-season annual that grows to about 18 inches tall in sun or part shade."
+        },
+        {
+          "claim": "name_note - German chamomile (Matricaria recutita) is a distinct species from Roman chamomile (Chamaemelum nobile)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/herbs/",
+          "quote": "There are two types of chamomile, Roman (Chamaemelum nobile) and German (Matricaria recutita)."
+        },
+        {
+          "claim": "scientific_name_accepted Matricaria chamomilla (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/43377/matricaria-chamomilla/details",
+          "quote": "Name Status: Correct"
+        },
+        {
+          "claim": "name_note - Matricaria recutita is a synonym of Matricaria chamomilla (Name Status: Synonym)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/77703/matricaria-recutita-scented-mayweed-sweet-false-chamomile/details",
+          "quote": "Name Status: Synonym"
+        }
+      ]
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Toxicodendron radicans",
+      "fields_removed": 1
+    },
+    {
+      "species": "Phytolacca americana",
+      "fields_removed": 0
+    },
+    {
+      "species": "Lonicera japonica",
+      "fields_removed": 2
+    },
+    {
+      "species": "Taxodium distichum",
+      "fields_removed": 1
+    },
+    {
+      "species": "Campsis radicans",
+      "fields_removed": 1
+    },
+    {
+      "species": "Sempervivum tectorum",
+      "fields_removed": 1
+    },
+    {
+      "species": "Cattleya",
+      "fields_removed": 3
+    },
+    {
+      "species": "Matricaria chamomilla",
+      "fields_removed": 3
+    }
+  ],
+  "normalizations": [
+    "2026-08-23: twelfth batch of the \"blind spots\" pass. Poison Ivy is a genuinely new case for this catalog -- its hazard is contact dermatitis (urushiol), not ingestion, the first plant landed with that distinction. toxic_to_pets is correctly false (pets aren't poisoned by it) while toxicity_detail captures the real, well-documented risk that pets carry urushiol on their fur and transfer it to the humans who pet them -- a nuance five independent sources (Clemson, Penn State, UMD, UGA, UF/IFAS) converge on. Pokeweed confirmed toxic_to_pets=true (phytolaccatoxin, despite a folk food tradition of eating young shoots after extensive preparation, which the record correctly declined to read as a safety signal). Rounded out with Bald Cypress (completing a \"wet-tolerant tree\" trio alongside River Birch and Sycamore, both already in this catalog, all three named together in the same UMD source), Japanese Honeysuckle, Trumpet Vine, Hens and Chicks, a Cattleya orchid, and German Chamomile.",
+    "Trumpet Vine's toxic_to_pets was correctly nulled after the audit found the record's sole support was RHS's generic ornamental-fruit \"not to be eaten\" advisory boilerplate, which never uses the words toxic/poisonous/harmful and is applied broadly regardless of actual toxicity -- a good example of the catalog's discipline against reading routine handling caution as a toxicity finding.",
+    "One landing-time repair: Cattleya's common_name was nulled because \"Cattleya Orchid\" was a constructed label, not a name any source actually used -- restored as \"Brazilian Orchid\", the first of NC State's own listed common names, already directly quoted in an existing citation in this same record.",
+    "One defect this batch's own audit missed and this landing pass caught independently: Cattleya's water_growing_days_est=7 had no citation with a matching claim label anywhere in the record -- the quote it was supposedly derived from (MOBOT's 'about once a week or more') was never actually added to the citations array. Nulled to match this catalog's consistent standard."
+  ]
+}

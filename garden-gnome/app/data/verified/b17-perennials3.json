@@ -884,8 +884,7 @@
       "night_f_min": null,
       "outdoor_sun_exposure": [
         "full_sun",
-        "part_shade",
-        "dappled_shade"
+        "part_shade"
       ],
       "scientific_name_accepted": "Primula vulgaris",
       "scientific_name_given": "Primula vulgaris",
@@ -956,6 +955,7 @@
   ],
   "normalizations": [
     "2026-08-21: Papaver rhoeas (Corn Poppy) was re-run as a small single-species retry before landing. Its first pass returned citations=null instead of an array -- a genuine schema violation the tool-calling validation didn't catch -- while still asserting two non-null field values (outdoor_sun_exposure, soil_drainage) with zero supporting evidence attached. The loader's own null-safety would have refused both silently and correctly, but reading the discarded record's 13 unknowns entries showed genuinely careful reasoning underneath (including the same correct genus-vs-species toxicity exclusion Hosta's record made), so a cheap 2-agent retry (139K tokens against the batch's usual ~1.7M) recovered the work properly rather than losing it or landing an evidence-less record. The retry's own audit caught two further overreaches: soil_base wrongly excluded container growing, which corn poppy is commonly grown in; soil_drainage over-specified 'fast' from qualitative 'well-drained'/'Good Drainage' language neither source actually ties to drainage rate.",
-    "Hosta correctly left toxic_to_pets null despite being flagged in advance as commonly known toxic to cats -- the only admissible source discussing pet toxicity was a genus-level 'Hosta' overview covering all 22 species and 2000+ cultivars, never naming Hosta sieboldiana specifically, so the no-genus-inference rule held even against a flagged expectation. Hardy Geranium's own record explicitly recognized and excluded a genus mismatch: toxic-houseplant lists it found were about Pelargonium, the different genus popularly also nicknamed 'geranium', not Geranium sanguineum."
+    "Hosta correctly left toxic_to_pets null despite being flagged in advance as commonly known toxic to cats -- the only admissible source discussing pet toxicity was a genus-level 'Hosta' overview covering all 22 species and 2000+ cultivars, never naming Hosta sieboldiana specifically, so the no-genus-inference rule held even against a flagged expectation. Hardy Geranium's own record explicitly recognized and excluded a genus mismatch: toxic-houseplant lists it found were about Pelargonium, the different genus popularly also nicknamed 'geranium', not Geranium sanguineum.",
+    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched."
   ]
 }

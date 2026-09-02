@@ -114,14 +114,99 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
 
     # 349 (b1-b5) + 81 (b6) + 42 (b7) + 41 (b8) + 54 (b9) + 47 (b10) + 51
     # (b11) + 39 (b12) + 35 (b13) + 34 (b14) + 37 (b15) + 34 (b16) + 24
-    # (b17) + 5 (b18) = 873. b18 was the last batch in the collection queue
-    # built when this /loop run started -- 129 curated species minus the two
-    # name-mismatch cases still needing Phase 4.1 name resolution and the two
-    # "Various spp." mix entries that aren't single species. Every batch was
-    # re-verified against the strict loader before landing here -- see each
-    # batch's own normalizations entry for what, if anything, that pass
-    # caught.
-    assert report.claims_written == 873
+    # (b17) + 5 (b18) + 41 (b19) + 42 (b20) + 59 (b21) + 28 (b22) + 42 (b23)
+    # + 50 (b24) + 46 (b25) + 37 (b26) + 32 (b27) + 34 (b28) + 35 (b29) + 39
+    # (b30) + 34 (b31) + 42 (b32) + 38 (b33) + 34 (b34) + 40 (b35) + 51 (b36)
+    # + 42 (b37) + 39 (b38) + 38 (b39) + 65 (b40) + 36 (b41) + 43 (b42)
+    # + 78 (b43) + 76 (b44) + 72 (b45) - 1 (b14's Common Morning Glory
+    # soil_drainage, nulled 2026-09-02 when a corpus-wide quote check found
+    # its only citation quoted NC State drainage tags the page does not
+    # carry) + 65 (b46) = 2150. b18 was the
+    # last batch of the original 129-curated-species collection run.
+    # b19-b34 are batches of a follow-on "blind spots" pass -- species
+    # chosen by direct inspection of coverage gaps (b19: no true lilies --
+    # the single highest-priority pet-safety gap in the catalog, lily
+    # kidney failure in cats -- no azalea, oleander, sago palm, hydrangea;
+    # b20: rose, tulip, daffodil, poinsettia, cyclamen), then by
+    # cross-referencing every species researched against anchors in the
+    # app's own code: sample.py::TOP_HOUSEPLANTS (b21 -- African Violet,
+    # Schefflera, and String of Pearls turned out to already be covered
+    # under reclassified taxonomic names and were dropped before landing),
+    # toxicity.py::AROID_GENERA (b22, one representative species per
+    # uncovered genus), and toxicity.py::SPECIES_SPECIFIC_RISK (b23 --
+    # Hemerocallis/Daylily shares true lilies' severe cat-specific
+    # kidney-failure pattern and was a real gap), plus more species
+    # confirmed missing by direct grep (b23 tail, b24-b34 -- b24 introduced
+    # this catalog's first large landscape trees; b25 added more
+    # trees/shrubs plus the first tree-form fruit crops, apple and fig;
+    # b26 added three more severe safety gaps -- castor bean, lily of the
+    # valley, English yew -- plus more trees; b27 added more toxic bulbs --
+    # hyacinth, amaryllis, angel's trumpet -- the true Crocus as a
+    # deliberate companion to Autumn Crocus/Colchicum, and this catalog's
+    # first true aquatic pond plant; b28 added American Holly plus more
+    # fruit/nut trees and two new ornamental categories, grasses and
+    # groundcovers; b29 added three more severe safety gaps -- mistletoe,
+    # monkshood, common milkweed -- plus this catalog's first hemiparasitic
+    # species and more trees; b30 added poison ivy -- the first plant
+    # landed with a contact-dermatitis rather than ingestion hazard --
+    # plus pokeweed and more vines/trees; b31 added avocado and jimsonweed,
+    # a deliberate companion to Angel's Trumpet already in the catalog,
+    # plus more trees and houseplants; b32 added a common indoor tree, a
+    # cactus, a toxic native wildflower, and more shrubs, the first batch
+    # built to explicitly guard against b31's non-cat/dog toxicity-scope
+    # defect; b33 added belladonna and bittersweet nightshade, plus a
+    # second hydrangea and dogwood species as deliberate companions to ones
+    # already in the catalog; b34 added poison hemlock plus deliberate
+    # companion species for hibiscus, magnolia, and citrus already in the
+    # catalog; b35 added Ginkgo, Nandina, Bougainvillea, Purple Passionflower,
+    # Buttercup, a third Hydrangea species (Climbing Hydrangea) as a deliberate
+    # companion to the two already in the catalog, Crown of Thorns, and
+    # Lantana; b36 added Bleeding Heart, Japanese Barberry, Weigela, Arrowwood
+    # Viburnum, a deliberate two-species Jasmine companion test (Jasminum
+    # officinale vs. Trachelospermum jasminoides), Bearded Iris, and
+    # Gladiolus; b37 added Sweetgum, Butterfly Bush, Coral Bells, Russian Sage
+    # (resolved to its reclassified accepted name Salvia yangii), Astilbe,
+    # Blue False Indigo, Lenten Rose, and Bugleweed; b38 added Virginia
+    # Creeper (a deliberate identification-confusion companion to Poison
+    # Ivy), American Beech, Eastern Cottonwood, and five common Southern
+    # landscape shrubs -- Red Tip Photinia, Chinese Fringe Flower, Tea Olive,
+    # Japanese Pittosporum, Thorny Elaeagnus; b39 added Cherry Laurel, a
+    # deliberate Cotoneaster/Firethorn identification-confusion companion
+    # pair, Red-twig Dogwood/Tatarian Dogwood (a companion to the tree-form
+    # dogwoods already covered), St. John's Wort, Virginia Sweetspire,
+    # Summersweet, and Dwarf Fothergilla; b40 added Gasteria bicolor, a
+    # Gesneriad houseplant cluster (Florist's Gloxinia, Lipstick Plant,
+    # Goldfish Plant), Stromanthe sanguinea (a companion to Calathea and
+    # Maranta already covered, resolved to its reclassified name Stromanthe
+    # thalia), and three common annuals -- Edging Lobelia, Flowering Tobacco,
+    # Wishbone Flower; b41 added five ornamental grasses (Maiden Grass,
+    # Switchgrass, Pink Muhly Grass, Japanese Sedge, Blue Fescue), Hardy Ice
+    # Plant, Moss Phlox (a companion to the taller border Phlox already
+    # covered), and Rose Moss; b42 added three privacy-hedge conifers
+    # (American Arborvitae, Leyland Cypress -- resolved to its reclassified
+    # name x Hesperotropsis leylandii, Eastern Redcedar), Slender Deutzia
+    # (corrected to Japanese Snow Flower), Glossy Abelia, and two more
+    # deliberate companion species -- Tea Plant vs. Camellia japonica, Star
+    # Magnolia vs. Saucer/Southern Magnolia; b43 added Elephant Bush (checked
+    # against Jade Plant already covered), a fern cluster (Bird's Nest Fern,
+    # Rabbit's Foot Fern, Autumn Fern), three toxic caudiciform/succulent
+    # species (Firestick, Desert Rose, Madagascar Palm), and Umbrella Plant;
+    # b44 added three houseplant palms (Lady Palm, Pygmy Date Palm, Cat
+    # Palm), Watermelon Peperomia (a companion to Peperomia obtusifolia),
+    # Dwarf Banana, Freesia, and two epiphytic cacti -- Orchid Cactus and
+    # Mistletoe Cactus -- the first batch landed through the corpus-wide
+    # invariant test and the mechanical citation verifier; b45 added four
+    # fruit crops (Pomegranate, Olive, Kiwifruit, Blackberry -- a companion
+    # to Red Raspberry), Sweetheart Hoya (a companion to Hoya carnosa), and
+    # the first carnivorous-plant cluster -- Purple Pitcher Plant, Winged
+    # Tropical Pitcher Plant, Cape Sundew; b46 -- the first batch researched
+    # on Sonnet and audited on Opus -- added Tarragon, Fennel, Sacred Lotus,
+    # Satin Pothos, Monstera adansonii (landed as Swiss Cheese Vine after
+    # the audit caught the sibling species' name), Pineapple, Papaya, and
+    # Apricot). Every batch was re-verified against the strict loader
+    # before landing here -- see each batch's own normalizations entry for
+    # what, if anything, that pass caught.
+    assert report.claims_written == 2150
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

@@ -1,0 +1,1274 @@
+{
+  "batch": "b32-weeping-fig-and-more",
+  "records": [
+    {
+      "common_name": "Weeping Fig",
+      "scientific_name_given": "Ficus benjamina",
+      "scientific_name_accepted": "Ficus benjamina",
+      "name_note": null,
+      "is_houseplant": true,
+      "toxic_to_pets": true,
+      "toxicity_detail": "Toxic compounds are ficin and ficusin; symptoms are gastrointestinal upset, skin irritation, and blistering. All parts of the plant are irritating or potentially toxic, especially the white, milky sap. NC State Extension separately flags the species as a documented problem specifically for cats and dogs (also horses).",
+      "day_f_min": 75,
+      "day_f_max": 85,
+      "night_f_min": 65,
+      "night_f_max": 70,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": "high",
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": null,
+      "soil_base": "standard_potting",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f: NC State (\"Intolerant to cold\", \"Very frost sensitive\") and UF/IFAS (\"Plants are very frost-sensitive\") both describe cold sensitivity only qualitatively; no admissible source gives an actionable damage-onset temperature in °F, so this is left null rather than inferring a number.",
+        "humidity_pct_min / humidity_pct_max: Clemson states the humidity preference only qualitatively (\"prefer high humidity levels\") with no percentage figure given by any admissible source.",
+        "light_fc_min / light_fc_good / direct_sun_hours_max: no admissible source gives foot-candle light intensity figures or a maximum direct-sun-hours figure for this species specifically.",
+        "soil_drainage: NC State's structured \"Soil Drainage: Very Dry\" attribute describes landscape drought tolerance, while Clemson's houseplant guidance (\"keep the soil evenly moist\" in active growth) describes a watering routine — these speak to different things and neither maps cleanly onto the fast/moderate/moisture_retentive enum, so this is left null rather than forcing a fit.",
+        "soil_ph_min / soil_ph_max: NC State and RHS both give only categorical soil pH tolerance (Acid, Alkaline, Neutral); no admissible source gives a numeric pH range.",
+        "water_check_depth_cm / water_dry_down_target / water_estimate_basis / water_growing_days_est / water_dormant_days_est: no admissible source gives a specific check-depth, day-interval, or dry-down target for this species; guidance found (Clemson) is qualitative only.",
+        "water_regime is set to keep_moist based on Clemson's active-growth guidance (\"keep the soil evenly moist\"); the same source also states watering should be reduced (\"allowed to dry slightly between waterings\") during winter/low-growth periods, a seasonal nuance the single enum value does not fully capture.",
+        "cool_rest_note: no admissible source describes a distinct cool/dormant rest period with specific parameters for this species.",
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: Clemson only says plants should be \"fed every month or two during the growing season with a liquid fertilizer\" — no exact day interval, no named months, and no dilution/strength is given, so none of these were converted into numbers.",
+        "RHS's \"Potentially harmful\" field reads \"Humans/Pets (dogs): Skin allergen; harmful if eaten\", explicitly scoped to dogs (and humans) rather than a generic \"pets\" claim; this narrower RHS wording was not used to support toxic_to_pets on its own — that field instead rests on NC State's structured attribute list, which separately and explicitly names both \"Problem for Cats\" and \"Problem for Dogs\".",
+        "name_note — removed on audit: This non-null field has no citation in the array whose claim label contains 'name_note' (violates structural check 1), but more substantively it asserts as fact that 'Missouri Botanical Garden and UF/IFAS' independently 'use the same binomial with no source proposing an alternative accepted name' — yet neither Missouri Botanical Garden (plantfinder.mobot.org / missouribotanicalgarden.org) nor UF/IFAS appears anywhere in the citations array for this record. This is an uncited corroboration claim about sources the record never actually shows was consulted for this specific point; it should either be dropped or backed by an actual citation entry.",
+        "outdoor_sun_exposure — removed on audit: The citation's quote from NC State literally lists 'Dappled Sunlight, Deep shade, Full sun, Partial Shade' (confirmed live) — there is no 'Partial Sun' tag among NC State's categories for this species. The record's claim label asserts 'full_sun, part_sun, part_shade, and full_shade,' silently mapping NC State's distinct 'Dappled Sunlight' category (continuous filtered/canopy light) onto 'part_sun' (conventionally 4-6 hrs of direct sun) — a value the quote does not literally support and which is a debatable horticultural equivalence (dappled light is arguably closer to light shade than to partial sun). This is exactly the kind of 'asserting a category the quote doesn't literally support' the audit calls out in check 4."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Weeping Fig",
+          "quote": "Ficus benjamina (Benjamin Tree, Chinese Banyan, Fig, Indian Rubber Plant, Java Fig, Small-leaved Rubber Plant, Weeping Fig)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-benjamina/"
+        },
+        {
+          "claim": "scientific_name_given Ficus benjamina",
+          "quote": "Ficus benjamina (Benjamin Tree, Chinese Banyan, Fig, Indian Rubber Plant, Java Fig, Small-leaved Rubber Plant, Weeping Fig)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-benjamina/"
+        },
+        {
+          "claim": "scientific_name_accepted Ficus benjamina",
+          "quote": "Genus: Ficus, Species: benjamina, Name Status: Correct",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/7197/ficus-benjamina/details"
+        },
+        {
+          "claim": "is_houseplant true (grown as houseplant indoors)",
+          "quote": "Weeping ficus or fig (Ficus benjamina) is popular as houseplants, in offices and interior landscaping.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/weeping-ficus/"
+        },
+        {
+          "claim": "day_f_min 75 and day_f_max 85 and night_f_min 65 and night_f_max 70",
+          "quote": "Night temperatures of 65 to 70 °F and day temperatures of 75 to 85 °F are ideal.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/weeping-ficus/"
+        },
+        {
+          "claim": "humidity_need high",
+          "quote": "Weeping figs prefer high humidity levels.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/weeping-ficus/"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "During periods of active growth, keep the soil evenly moist.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/weeping-ficus/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun, part_sun, part_shade, and full_shade",
+          "quote": "Dappled Sunlight, Deep shade, Full sun, Partial Shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-benjamina/"
+        },
+        {
+          "claim": "soil_base standard_potting (general-purpose potting soil)",
+          "quote": "Repot in late winter or early spring, using a general-purpose potting soil.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/weeping-ficus/"
+        },
+        {
+          "claim": "toxic_to_pets true (problem for cats and dogs)",
+          "quote": "Problem for Cats, Problem for Dogs, Problem for Horses",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-benjamina/"
+        },
+        {
+          "claim": "toxicity_detail toxic compounds and symptoms in pets",
+          "quote": "Toxic compounds: Ficin and ficusin. Symptoms: Gastrointestinal upset, skin irritation, blistering. ... All parts are irritating or potentially toxic, especially the white, milky sap.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/"
+        }
+      ]
+    },
+    {
+      "common_name": "Prickly Pear",
+      "scientific_name_given": "Opuntia ficus-indica",
+      "scientific_name_accepted": "Opuntia ficus-indica",
+      "name_note": "RHS lists \"Name Status: Correct\" for Opuntia ficus-indica, and lists synonyms (O. bonaerensis, O. joconostle, O. megacantha, O. paraguayensis, O. undulata) rather than a different accepted name. RHS was the only admissible source located for this species (see unknowns), so there is no cross-source name conflict to reconcile.",
+      "is_houseplant": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": "RHS gives a species-specific \"Pets (dogs)\" toxicity entry: skin/eye irritant. This sits alongside a human-toxicity note (\"Skin/eye irritant. Wear gloves and other protective equipment when handling\") but the dog-specific line is separate and explicit. Only dogs are named -- no admissible source addresses toxicity to cats for this species -- and the mechanism described is contact/mechanical irritation (consistent with the plant's spines and glochids), not documented systemic poisoning.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": "RHS: after fertilizing three or four times with a balanced liquid feed and allowing the compost to dry between waterings through the spring-summer-early-autumn growth period, \"withhold water and fertiliser in winter when dormant.\"",
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "soil_base": "cactus_succulent",
+      "soil_drainage": "fast",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "dry_thoroughly_between",
+      "water_dry_down_target": "RHS: \"allow compost to dry before watering during growth period in spring, summer and early autumn\"; water is withheld entirely in winter dormancy.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source splits temperature guidance into day- vs. night-specific figures for this species; RHS's only temperature data is the H2 hardiness category (see chill_damage_f note below).",
+        "chill_damage_f: RHS assigns this species an 'H2' hardiness rating, defined as 'tolerant of low temperatures, but not surviving being frozen' (1 to 5°C). That is a class-level survival/tolerance floor for the H2 category as a whole, not a stated species-specific damage-onset temperature, so it was not converted to a Fahrenheit number -- consistent with how this catalog has treated the same RHS H2 boilerplate text on other species.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source addresses ambient humidity requirements for this species.",
+        "light_fc_min/light_fc_good: no admissible source gives footcandle light-intensity values.",
+        "direct_sun_hours_max: RHS states only a 'Full sun' position category with no numeric hour range or ceiling.",
+        "soil_ph_min/soil_ph_max: RHS gives only a categorical pH tolerance ('Acid or Alkaline or Neutral') with no numeric bounds, so no min/max figure could be taken.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: RHS ties fertilizing to the general 'spring, summer and early autumn' growth period and says to apply 'a balanced liquid fertiliser three or four times' during that period, but names no specific calendar months, no day-count interval, and no dilution strength (e.g. half/quarter strength), so none of these three fields could be populated.",
+        "water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a soil-check depth or a day-interval watering schedule for this species; RHS's guidance is condition-based ('allow compost to dry before watering') rather than a day count.",
+        "is_houseplant: set false. RHS's only cultivation note is 'Under glass, grow in sharply-draining, peat-free, loam-based compost...' -- greenhouse/conservatory container cultivation -- for a plant that reaches 4-8 metres in height and spread at maturity. No admissible source describes sustained indoor/household houseplant use, so 'under glass' was read as protected/greenhouse growing rather than houseplant status (matching how this catalog has treated similar RHS 'under glass' language elsewhere: it supports houseplant status only when paired with an explicit 'indoor'/'houseplant' claim, which is absent here).",
+        "toxic_to_pets/toxicity_detail scope: only dogs are named by RHS ('Pets (dogs): Skin/eye irritant'); no admissible source addresses toxicity to cats specifically for this species, so the true/detail values should be read as dog-specific, not confirmed for cats.",
+        "Coverage gap across the rest of the admissible domain list: NC State Extension's genus-level 'Opuntia' Plant Toolbox page (plants.ces.ncsu.edu/plants/opuntia/) and UF/IFAS's 'Opuntia spp. Prickly Pear Cactus' factsheet (FP448, ask.ifas.ufl.edu/publication/fp448) both discuss the genus broadly ('Opuntia spp.') but never name Opuntia ficus-indica specifically, so their content was excluded as genus-wide boilerplate rather than species-specific evidence. No page was found addressing this species by name on hgic.clemson.edu, extension.psu.edu, extension.umd.edu, fieldreport.caes.uga.edu, or plantfinder.mobot.org/missouribotanicalgarden.org. RHS is the only admissible source located that names Opuntia ficus-indica directly.",
+        "is_houseplant — removed on audit: Neither cited quote actually states houseplant status: citation 9 (\"Max Height 4-8 metres... Time to Maturity 10-20 years\") is size data, and citation 10 (\"Under glass, grow in sharply-draining... cactus compost\") is a cultivation-medium note -- neither contains any statement about indoor/houseplant suitability, so 'false' is an inference, not a literal quote match. Worse, a live fetch of the same cited RHS URL (rhs.org.uk/plants/11871/opuntia-ficus-indica/details) shows the page carries 'Conservatory' and 'Greenhouse' category tags AND a direct link reading 'See houseplant cacti and succulent cultivation for further advice' -- confirmed verbatim on two independent fetches. This directly contradicts the record's own unknowns note, which asserts 'No admissible source describes sustained indoor/household houseplant use' from the very same source. The record over-reached into a confident 'false' while omitting contrary evidence sitting on the page it cites; this should at minimum be null, not a confident false."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Prickly Pear",
+          "quote": "Indian fig, Barbary fig, edible prickly pear, tuna",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "scientific_name_given Opuntia ficus-indica and scientific_name_accepted Opuntia ficus-indica",
+          "quote": "Name Status: Correct",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "soil_base cactus_succulent and soil_drainage fast",
+          "quote": "Under glass, grow in sharply-draining, peat-free, loam-based compost with added sharp sand, or a proprietary peat-free cactus compost.",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "soil_drainage fast",
+          "quote": "Well-drained",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "water_regime dry_thoroughly_between and water_dry_down_target",
+          "quote": "allow compost to dry before watering during growth period in spring, summer and early autumn",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "cool_rest_note",
+          "quote": "withhold water and fertiliser in winter when dormant",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail",
+          "quote": "Skin/eye irritant. Wear gloves and other protective equipment when handling Pets (dogs): Skin/eye irritant.",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "is_houseplant false",
+          "quote": "Max Height 4-8 metres Max Spread 4-8 metres Time to Maturity 10–20 years",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "is_houseplant false",
+          "quote": "Under glass, grow in sharply-draining, peat-free, loam-based compost with added sharp sand, or a proprietary peat-free cactus compost.",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        }
+      ]
+    },
+    {
+      "common_name": "Catawba Rhododendron",
+      "scientific_name_given": "Rhododendron catawbiense",
+      "scientific_name_accepted": "Rhododendron catawbiense",
+      "name_note": "The given name matches the accepted name. RHS lists Rhododendron catawbiense with an explicit \"Name Status: Correct\" tag, and no admissible source (NC State Extension, Clemson HGIC, Missouri Botanical Garden Plant Finder) proposes a different accepted binomial for this species. This is the true species Rhododendron catawbiense (Ericaceae), distinct from the already-catalogued Rhododendron simsii (Indian Azalea); every citation below was pulled from a page whose own title, header, or URL names \"Rhododendron catawbiense\" specifically, not a generic \"Rhododendron\"/\"azalea\" genus page — with one narrow exception noted under toxicity_detail in unknowns (an NC State poison-symptoms sentence that itself names \"azalea\" rather than catawbiense, which was excluded for that reason).",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade",
+        "full_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source states day- or night-specific temperature targets; this is a cold-hardy outdoor landscape shrub, not grown under a controlled ambient-temperature regime.",
+        "chill_damage_f: only survival/hardiness-class figures were found — RHS's Hardiness Rating is 'H7' (defined by RHS as 'hardy in the severest European continental climates (< -20)' °C) and NC State lists USDA Plant Hardiness Zones '4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b' — both are survival/hardiness-zone classifications, not a specific damage-onset Fahrenheit figure, so per field notes neither was mapped onto chill_damage_f.",
+        "cool_rest_note: not addressed by any admissible source; no source frames this species' winter dormancy as a deliberate temperature-based rest period.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: not addressed by any admissible source for this outdoor landscape shrub.",
+        "light_fc_min/light_fc_good: no source gives an indoor footcandle figure; the species is not documented as grown under measured indoor light.",
+        "direct_sun_hours_max: NC State's own Light field tags this single species under three simultaneous categories — 'Deep shade (Less than 2 hours to no direct sunlight)', 'Full sun (6 or more hours of direct sunlight a day)', and 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' — so the '2-6 hours' figure belongs only to the narrower Partial Shade category. Presenting it as a species-wide sun-hours ceiling would misrepresent the co-listed Full sun tolerance (the same failure mode flagged in this catalog's own Sago Palm audit), so it was left null.",
+        "soil_ph_min: NC State tags this species under only the single 'Acid (<6.0)' pH category, which gives no lower numeric bound. Clemson's numeric pH range ('a soil pH between 4.5 and 6.0') is explicitly genus-wide — its own sentence begins 'Rhododendrons have a few requirements' rather than naming catawbiense — so it was not used to fill soil_ph_min per the instruction against presenting a genus-level figure as this species' own value.",
+        "soil_ph_max: set to 6.0 using the upper bound NC State's own species-specific 'Acid (<6.0)' category tag defines, consistent with how this catalog's Sago Palm record derived a pH ceiling from an identically structured NC State category tag. This is a category ceiling from NC State's per-species database field, not a numeric range sentence stated in prose.",
+        "water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a watering-interval figure in days, a moisture check-depth, or a dormant-season watering schedule for this species; sources give only qualitative 'never let roots dry out' guidance.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: Clemson's only fertilizing note ('very little fertilizer is necessary – particularly for older, established plants') is both non-numeric (no interval, calendar month, or dilution/strength figure) and explicitly genus-wide (its lead sentence is 'With proper soil preparation and mulching...' inside a page about 'Rhododendrons' generally, in a table that separately lists catawbiense as one of several species), so none of the fertilize_* fields were filled.",
+        "toxicity_detail: left null despite toxic_to_pets=true being well supported. I fetched NC State's raw page HTML directly and confirmed its only detailed poison text (Poison Severity: Low; Poison Symptoms: 'While the plants are known to contain toxins, ingestion of moderate amounts of azalea (nectar or leaves) poses little toxic hazard.'; Poison Toxic Principle: Grayanotoxins; Causes Contact Dermatitis: No; Poison Part: Bark/Flowers/Fruits/Leaves/Roots/Seeds/Stems) is nested entirely inside a group literally headed 'Poisonous to Humans:' on the live page — structurally separate from the sibling 'Problem for Cats'/'Problem for Dogs' tags (in a different 'Problems:' list) that toxic_to_pets itself relies on. Per this catalog's own rule against blending a human-scoped toxicity section into a pet-scoped field, none of that severity/symptom/toxic-principle text was used for toxicity_detail. The Poison Symptoms sentence also names 'azalea' specifically rather than catawbiense — a second, independent reason to distrust it as catawbiense-specific pet-toxicity detail; it reads as boilerplate likely shared across sibling Rhododendron/Azalea pages on NC State's site. RHS's toxicity line ('Harmful if eaten... Pets (dogs, cats, rabbits, tortoises) Harmful if eaten') and MOBOT's ('All parts of this plant are highly toxic if ingested.') both support toxic_to_pets but are bare severity statements with no named toxin, symptom, or affected-part detail scoped to pets. No admissible source ties a specific toxin name or symptom list to pets (as opposed to humans) for this species, so toxicity_detail was left null rather than assembled from the human-scoped or unscoped fragments available.",
+        "outdoor_sun_exposure: the 'part_sun' enum value was not used — no admissible source uses that specific gradation for this species; only full-sun, partial-shade/part-shade, and deep/full-shade categories appear across NC State, RHS, and MOBOT.",
+        "soil_ph_max — removed on audit: soil_ph_max=6 rests on exactly one citation: NC State's 'Soil pH: Acid (<6.0)' -- a coarse checkbox/category tag from the structured plant-database UI, not a continuous numeric range stated in prose for this species. I independently re-fetched plants.ces.ncsu.edu/plants/rhododendron-catawbiense/ and confirmed the tag reads exactly that (a single bucket, not a min-max sentence). No second, independent admissible source supplies a numeric ceiling to corroborate it: RHS's cultivation text (re-fetched, confirmed verbatim) says only 'acidic soil' qualitatively with no figure, and the one prose source that does give an actual numeric range -- Clemson's 'a soil pH between 4.5 and 6.0' -- was itself excluded by the record's own stated logic as genus-wide rather than species-specific. Since this field has no second, unproblematic citation to fall back on (unlike the catalog's check-2 escape hatch for fields with multiple supporting sources), converting a '<6.0' category boundary into a precise species-specific ceiling of exactly 6.0 pH units asserts more numeric precision than the single supporting citation actually states, so the value itself -- not just one citation among several -- is in doubt."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Catawba Rhododendron and scientific_name_given Rhododendron catawbiense",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Rhododendron catawbiense (Catawba Rhododendron, Mountain Rosebay, Purple Rhododendron, Rose Bay)"
+        },
+        {
+          "claim": "scientific_name_accepted Rhododendron catawbiense (Name Status: Correct) and name_note",
+          "source": "Royal Horticultural Society (RHS) — Rhododendron catawbiense plant profile",
+          "url": "https://www.rhs.org.uk/plants/15058/rhododendron-catawbiense/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "is_houseplant false (suggested planting locations are all outdoor garden settings)",
+          "source": "Royal Horticultural Society (RHS) — Rhododendron catawbiense plant profile",
+          "url": "https://www.rhs.org.uk/plants/15058/rhododendron-catawbiense/details",
+          "quote": "Suggested planting locations and garden types\nCottage and informal garden\nFlower borders and beds\nWall side borders"
+        },
+        {
+          "claim": "is_houseplant false and soil_base garden_bed (outdoor landscape location tags)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Landscape Location:\nNaturalized Area\nWoodland"
+        },
+        {
+          "claim": "soil_base garden_bed (landscape/garden uses)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
+          "quote": "Shrub borders. Woodland gardens. Shady locations. Naturalized areas. Wood margins. Accent/specimen, groups or mass plantings."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun, part_shade, and full_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Light:\nDeep shade (Less than 2 hours to no direct sunlight)\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society (RHS) — Rhododendron catawbiense plant profile",
+          "url": "https://www.rhs.org.uk/plants/15058/rhododendron-catawbiense/details",
+          "quote": "Full sun, Partial shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society (RHS) — Rhododendron catawbiense plant profile",
+          "url": "https://www.rhs.org.uk/plants/15058/rhododendron-catawbiense/details",
+          "quote": "Grow in moist but well-drained, humus rich, acidic soil, in sun or light shade."
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
+          "quote": "Sun: Part shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_shade (tolerates close to full shade)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
+          "quote": "Tolerates close to full shade."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Dry"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "Royal Horticultural Society (RHS) — Rhododendron catawbiense plant profile",
+          "url": "https://www.rhs.org.uk/plants/15058/rhododendron-catawbiense/details",
+          "quote": "Moisture\nMoist but well–drained"
+        },
+        {
+          "claim": "soil_drainage moderate (moisture-retentive but well-drained soils)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
+          "quote": "evenly moist, moisture-retentive but well-drained soils in part shade."
+        },
+        {
+          "claim": "soil_drainage moderate (good soil drainage essential)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
+          "quote": "Good soil drainage is essential (doesn’t like “wet feet”)."
+        },
+        {
+          "claim": "soil_ph_max 6.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Soil pH:\nAcid (<6.0)"
+        },
+        {
+          "claim": "water_regime keep_moist (do not let soil dry out completely)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "It is important not to let the soil dry out completely or this will damage the roots."
+        },
+        {
+          "claim": "water_regime keep_moist (roots must never be allowed to dry out)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
+          "quote": "Roots must never be allowed to dry out."
+        },
+        {
+          "claim": "toxic_to_pets true (Problem for Cats, Problem for Dogs)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Problems:\nPoisonous to Humans\nProblem for Cats\nProblem for Dogs\nProblem for Horses"
+        },
+        {
+          "claim": "toxic_to_pets true (Pets: dogs, cats, rabbits, tortoises — harmful if eaten)",
+          "source": "Royal Horticultural Society (RHS) — Rhododendron catawbiense plant profile",
+          "url": "https://www.rhs.org.uk/plants/15058/rhododendron-catawbiense/details",
+          "quote": "Harmful if eaten. Wear gloves and other protective equipment when handling. Pets (dogs, cats, rabbits, tortoises) Harmful if eaten - for further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants"
+        },
+        {
+          "claim": "toxic_to_pets true (general corroboration: all parts highly toxic if ingested)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
+          "quote": "All parts of this plant are highly toxic if ingested."
+        }
+      ]
+    },
+    {
+      "common_name": "Japanese Privet",
+      "scientific_name_given": "Ligustrum japonicum",
+      "scientific_name_accepted": "Ligustrum japonicum",
+      "name_note": null,
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": "RHS scopes its toxicity note specifically to dogs: under \"Potentially harmful\" it states \"Harmful if eaten. Wear gloves and other protective equipment when handling Pets (dogs): Harmful if eaten.\" NC State's tag list separately flags the species with \"#problem for dogs#problem for horses#problem for cats,\" naming both dogs and cats. NC State also carries a detailed poison-severity/toxic-principle/symptom table (Poison Severity: Medium; toxic principle glycosides including syringin and shikimic acid; Poison Part: Fruits, Leaves; symptoms including gastrointestinal upset, incoordination, and rare death) -- but that table is explicitly headed \"Poisonous to Humans,\" not pets, so none of that severity/symptom/toxic-principle detail is used here; only the pet-scoped tag and RHS's dog-specific note support this field.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "Invasive species status -- no dedicated field exists for this in the schema, so it is recorded here per the species note, since it materially affects whether a home gardener should plant this species. Admissible sources genuinely disagree by geography and are not reconciled here: NC State Extension flags it directly and repeatedly for North Carolina -- \"This plant is an invasive species in North Carolina,\" \"Japanese privet is weedy in disturbed areas around buildings and has escaped and naturalized in moist areas,\" and lists it as invasive per five named bodies including the North Carolina Native Plant Society's \"Significant Threat\" rating; NC State's own page recommends native/less-problematic alternatives instead. Penn State Extension's Privet fact sheet covers Japanese privet (Ligustrum japonicum) by name as one of four privet species found in Pennsylvania and opens \"Privet (Ligustrum spp.) consists of several species of invasive shrubs\" -- a genus-level framing that explicitly includes this species. University of Maryland Extension devotes a full page to this species specifically (\"Invasives in Your Woodland: Japanese Privet\"), stating it \"can outcompete native species for resources and take over a small area in just a few years,\" while noting the Maryland Tier 2 invasive-plant retail-disclosure designation applies at the genus (\"family of plants\") level rather than being stated species-specifically. By contrast, UF/IFAS's own species-specific assessment for Florida is not currently a problem-species finding: \"UF/IFAS Invasive Assessment Status: not considered a problem species at this time, may be (North, Central, South).\" Clemson HGIC's factsheet describes the species with no invasive framing at all, calling it 'excellent for use as a hedge or screen.' No single value is asserted; the geographic split is preserved above.",
+        "toxic_to_pets / toxicity_detail: toxic_to_pets is supported for both dogs (RHS's scoped 'Pets (dogs)' note and NC State's '#problem for dogs' tag) and cats (NC State's '#problem for cats' tag), but cat-specific risk is corroborated by only one admissible source (NC State's tag alone -- RHS's structured toxicity note names only dogs, not cats). NC State's detailed toxic-principle/severity/symptom table (glycosides syringin and shikimic acid; Poison Severity Medium; Fruits and Leaves; GI upset, incoordination, rare death) is deliberately excluded from toxicity_detail because it is headed 'Poisonous to Humans' on the source page, not pets -- per the human/pet blending rule, this human-scoped detail is documented here rather than folded into the pet-facing field.",
+        "chill_damage_f: left null. All admissible sources give only survival hardiness-zone data (NC State: USDA Plant Hardiness Zone 7a-10b; UF/IFAS: USDA hardiness zones 7B through 10A; RHS: Hardiness H5, 'hardy in most places throughout the UK even in severe winters (-15 to -10)' degrees C), not a stated point where sublethal chill/cold damage to foliage begins, so no actionable damage-onset figure could be extracted.",
+        "day_f_min/day_f_max and night_f_min/night_f_max: left null. No admissible source gives temperature comfort/tolerance ranges split into day vs. night figures for this outdoor landscape species.",
+        "soil_ph_min/soil_ph_max: left null. NC State tags only a single category, 'Soil pH: Alkaline (>8.0),' with no lower bound given, while RHS's pH field reads 'Alkaline or Neutral or Acid' -- effectively the whole scale -- so neither source yields a specific numeric preferred range.",
+        "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. Sources give only qualitative drought/wet-soil tolerance language -- Clemson: 'adapted to adverse conditions of drought, heat, cold, many soil types and salt spray' and 'The only soils this shrub does not grow in well are those that are permanently wet'; UF/IFAS: tolerant of a wide range of soils 'as long as water is not allowed to stand in the root zone' -- with no explicit dry-down schedule, check-depth, or day-interval figure of the kind this schema's water fields require.",
+        "humidity_need, humidity_pct_min/max, light_fc_min/light_fc_good, direct_sun_hours_max, cool_rest_note, fertilize_active_months/interval_days/strength: left null. No admissible source treats this species as a houseplant or gives greenhouse/indoor-style figures (footcandles, percent humidity, fertilizer interval, or a specific sun-hours ceiling) -- every admissible source documents it strictly as an outdoor hardy landscape/hedge shrub, consistent with is_houseplant being set false.",
+        "is_houseplant: set false based on this species' outdoor cold-hardiness data (NC State: USDA zones 7a-10b; UF/IFAS: 7B-10A; RHS: Hardiness H5) and its landscape/hedge framing across every admissible source. UF/IFAS's Uses list does include 'container or planter' and 'Bonsai' among many clearly outdoor landscape-design uses (parking lot islands, highway median, street tree, tree lawn) -- this reads as outdoor container/patio and bonsai culture, not sustained indoor houseplant cultivation, so it was documented here rather than read as houseplant support.",
+        "name_note — removed on audit: Structural check #1 fails: name_note is non-null but no citation's claim label literally contains the string 'name_note.' The only citations touching this content (RHS 'Name Status Correct', NC State Genus/Species attributes) are labeled 'scientific_name_accepted' and 'scientific_name_given', not 'name_note' -- so the field, while factually accurate, is untraceable by the required literal-label test."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Japanese Privet",
+          "quote": "Common Name(s): Japanese Privet Privet Wax-leaf Privet",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "scientific_name_given Ligustrum japonicum and scientific_name_accepted Ligustrum japonicum (Genus Ligustrum, Species japonicum)",
+          "quote": "Attributes: Genus: Ligustrum Species: japonicum Family: Oleaceae",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "scientific_name_accepted Ligustrum japonicum (Name Status Correct)",
+          "quote": "Ligustrum japonicum RHS Plant Profile Japanese privet ... Name Status Correct",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/77548/ligustrum-japonicum/details"
+        },
+        {
+          "claim": "is_houseplant false (Plant Type: Shrub, Tree, Woody Plant; USDA Plant Hardiness Zone 7a-10b, an outdoor hardiness range)",
+          "quote": "Plant Type: Perennial Poisonous Shrub Tree Woody Plant ... USDA Plant Hardiness Zone: 7a, 7b, 8a, 8b, 9a, 9b, 10a, 10b",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "is_houseplant false (Habit: Bushy; Hardiness H5, hardy outdoors in the UK even in severe winters)",
+          "quote": "Habit Bushy ... H5: hardy in most places throughout the UK even in severe winters (-15 to -10)",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/77548/ligustrum-japonicum/details"
+        },
+        {
+          "claim": "soil_base garden_bed (planted around buildings, pruned as landscape shrub/small tree)",
+          "quote": "It has dark green foliage and is frequently planted around buildings and pruned to a \"giant meatball\" shape or small tree.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "soil_base garden_bed (corroborating: hedge/screen landscape shrub)",
+          "quote": "This shrub is excellent for use as a hedge or screen or for shaping into a small tree.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/ligustrum/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating)",
+          "quote": "It is easily transplanted and prefers partial shade to full sun.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/ligustrum/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating) and soil_drainage moderate",
+          "quote": "Japanese Privet grows in full sun or partial shade and is tolerant of a wide range of soil types, including calcarious clay as long as water is not allowed to stand in the root zone.",
+          "source": "UF/IFAS Extension",
+          "url": "https://ask.ifas.ufl.edu/publication/ST352"
+        },
+        {
+          "claim": "soil_drainage moderate (Soil Drainage: Good Drainage, Occasionally Dry)",
+          "quote": "Soil Drainage: Good Drainage Occasionally Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "soil_drainage moderate (Moisture: Moist but well-drained)",
+          "quote": "Moisture Moist but well–drained",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/77548/ligustrum-japonicum/details"
+        },
+        {
+          "claim": "soil_drainage moderate (corroborating: intolerant of permanently wet soil)",
+          "quote": "The only soils this shrub does not grow in well are those that are permanently wet.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/ligustrum/"
+        },
+        {
+          "claim": "toxic_to_pets true (Pets (dogs): harmful if eaten)",
+          "quote": "Harmful if eaten. Wear gloves and other protective equipment when handling Pets (dogs): Harmful if eaten. For further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/77548/ligustrum-japonicum/details"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (tagged #problem for dogs, #problem for horses, #problem for cats)",
+          "quote": "#dry soils tolerant#problem for dogs#problem for horses#problem for cats#salt spray tolerant",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "toxicity qualitative, humans only (deliberately NOT used for toxic_to_pets/toxicity_detail): Poisonous to Humans, Poison Severity Medium, toxic principle glycosides (syringin, shikimic acid), Poison Part Fruits and Leaves",
+          "quote": "Poisonous to Humans: Poison Severity: Medium ... Poison Toxic Principle: Glycosides: syringin (ligustrin), a glycoside; shikimic acid (lowest toxic dose 4,000mg); and others ... Poison Part: Fruits Leaves",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "unknowns note: invasive species status (no dedicated field)",
+          "quote": "This plant is an invasive species in North Carolina ... Japanese privet is weedy in disturbed areas around buildings and has escaped and naturalized in moist areas.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "unknowns note: invasive species status (no dedicated field)",
+          "quote": "Listed as invasive in North Carolina by: Invasive Plant Atlas of the MidSouth. Invasive Plant Atlas of the United States. North Carolina Forest Service. North Carolina Invasive Plant Council. North Carolina Native Plant Society, \"Significant Threat\"",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/"
+        },
+        {
+          "claim": "unknowns note: invasive species status (no dedicated field)",
+          "quote": "UF/IFAS Invasive Assessment Status: not considered a problem species at this time, may be (North, Central, South)",
+          "source": "UF/IFAS Extension",
+          "url": "https://ask.ifas.ufl.edu/publication/ST352"
+        },
+        {
+          "claim": "unknowns note: invasive species status (no dedicated field)",
+          "quote": "Privet (Ligustrum spp.) consists of several species of invasive shrubs.",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/privet"
+        },
+        {
+          "claim": "unknowns note: invasive species status (no dedicated field)",
+          "quote": "other Mid-Atlantic states are a gradient of four different species: border (L. obtusifolium), common (L. vulgare), Japanese (L. japonicum), and Chinese (L. sinense).",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/privet"
+        },
+        {
+          "claim": "unknowns note: invasive species status (no dedicated field)",
+          "quote": "It can thrive in floodplains, fields, and woodland edges. ... it can outcompete native species for resources and take over a small area in just a few years. Privets in general are considered invasive in many parts of the United States. In Maryland, the family of plants is considered a Tier 2 invasive plant, which requires retail outlets to prominently display the plant’s status.",
+          "source": "University of Maryland Extension — Invasives in Your Woodland: Japanese Privet",
+          "url": "https://extension.umd.edu/resource/invasives-your-woodland-japanese-privet"
+        }
+      ]
+    },
+    {
+      "common_name": "Bloodroot",
+      "scientific_name_given": "Sanguinaria canadensis",
+      "scientific_name_accepted": "Sanguinaria canadensis",
+      "name_note": "RHS records Sanguinaria canadensis's Name Status as \"Correct,\" and NC State Extension's own structured taxonomy fields list Genus: Sanguinaria and Species: canadensis with no prior/synonym name given. No admissible source proposes a different accepted binomial, so scientific_name_accepted is unchanged from scientific_name_given. Admissible sources also give other common names not used as this catalog's common_name: \"Red Puccoon\" (NC State) and \"Canada Puccoon\" (RHS).",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": 6,
+      "outdoor_sun_exposure": [
+        "part_shade",
+        "full_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min / day_f_max / night_f_min / night_f_max: no admissible source gives ambient air day/night temperature ranges for bloodroot; only USDA cold-hardiness zone data (a winter-survival rating) was found.",
+        "chill_damage_f: Clemson gives 'USDA Cold Hardiness Zones 3 – 8,' a winter-survival hardiness rating, not a damage-onset cold temperature, so per the task's guidance it was not converted into a chill_damage_f figure.",
+        "cool_rest_note: no admissible source describes a specific chilling/vernalization requirement for bloodroot (unlike a forced bulb such as Easter lily); this is a garden perennial and no source documents a measured cold-rest period for it.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no admissible source addresses ambient humidity for this outdoor woodland species.",
+        "light_fc_min / light_fc_good: no admissible source gives footcandle values; only NC State's categorical Light tags (Deep shade, Partial Shade) were found, captured instead via outdoor_sun_exposure and direct_sun_hours_max.",
+        "outdoor_sun_exposure: RHS's Position field lists 'Full sun, Partial shade' for this species, but NC State Extension's Light field (the authoritative U.S. native-range source) lists only 'Deep shade' and 'Partial Shade' with no full-sun option, and Clemson independently describes native habitat as growing 'in partly sunny sites' and garden culture as preferring 'a shady to partly shaded site' with 'morning sun...along with afternoon shade.' Given this disagreement and the two U.S. sources' consistent shade-first framing for actual outdoor cultivation, full_sun was not added to the enum list; only part_shade and full_shade were recorded.",
+        "soil_ph: Clemson's 'approximately 6.0' figure is a single-point recommendation, not a stated range, so soil_ph_min and soil_ph_max were both set to that value rather than inventing bounds. RHS separately describes broader tolerance ('Acid or Alkaline or Neutral') but that is a qualitative tolerance tag, not a specific target, so it was not used to override Clemson's number.",
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: Clemson only advises mixing organic fertilizer into the soil before planting and scattering fertilizer/compost 'in the early spring' in subsequent years -- 'early spring' is not a named calendar month, and no interval-day figure or full/half/quarter strength designation is given by any admissible source.",
+        "water_check_depth_cm / water_dry_down_target / water_growing_days_est / water_dormant_days_est / water_estimate_basis: no admissible source gives a numeric watering-interval, check-depth, or dormancy-duration figure for bloodroot; only the qualitative moisture preference captured in water_regime was found.",
+        "toxic_to_pets / toxicity_detail: no admissible source names cats, dogs, or horses specifically for this species -- unlike NC State's usual tagging convention for other species (e.g. 'Problem for Cats'/'Problem for Dogs'), bloodroot's NC State page carries no such animal tags at all, only a human-scoped 'Poisonous to Humans' poison section (confirmed by direct fetch: 'Problems: Poisonous to Humans' with no parallel Problem-for-Cats/Dogs/Horses tags). Penn State Extension's general advisory to keep the plant 'safely away from children and pets,' printed in the same article alongside 'All parts of bloodroot are poisonous and may be fatal if ingested,' is treated as sufficient support for toxic_to_pets=true under this catalog's existing convention of accepting a source's generic, unscoped 'toxic to pets' language (e.g. other records accept NC State's 'toxic to pets and humans' caution notes) without requiring the words 'cats' or 'dogs' by name. No admissible source gives a conflicting non-toxic claim for pets. NC State's detailed mechanism/severity/symptom data is human-scoped only and was kept out of toxicity_detail's pet-specific framing accordingly (reported as corroborating context instead).",
+        "water_regime: Clemson describes the species' native habitat as growing in 'moist to dry, acidic soils' and instructs garden watering only 'weekly during dry periods or as needed depending upon rainfall,' which is lighter than 'keep_moist' might suggest on its own. keep_moist was chosen because RHS's structured Moisture field ('Moist but well-drained'), Penn State's cultivation note ('thrives in average to moist soils'), and NC State's 'Moist' drainage tag all converge on a moist-soil preference for garden cultivation specifically, while Clemson's 'moist to dry' phrase describes the range of habitats where the species grows wild in nature rather than a recommended garden-watering instruction. This was treated as a difference in description type (habitat range vs. cultivation guidance), not a genuine cross-source conflict on the same claim, so the field was not nulled.",
+        "toxic_to_pets — removed on audit: The only pet-relevant support is Penn State Extension's generic advisory 'kept safely away from children and pets' (extension.psu.edu/spooktacular-flora-and-fungi) -- verified by direct fetch of the raw page: the article never names cats, dogs, or any specific animal, it's a seasonal 'spooky plants' listicle, not a toxicology assessment, and its only concrete danger statement ('All parts of bloodroot are poisonous and may be fatal if ingested') is unscoped as to species. NC State's page -- the one admissible source with structured, species-level Poison data and (per this catalog's own established convention referenced in the record's unknowns) a track record of adding explicit Problem-for-Cats/Problem-for-Dogs tags when applicable -- carries no animal-specific tag at all for bloodroot, only 'Poisonous to Humans' (confirmed by direct fetch). I also targeted a re-search of the admissible domains specifically for pet-toxicity content: UGA CAES's fieldreport.caes.uga.edu (admissible) hosts a purpose-built article, 'These 25+ plants are toxic to pets,' plus a companion 'Keep Your Pets Safe Around Plants' guide -- neither lists bloodroot/Sanguinaria canadensis among the enumerated toxic plants, and the researcher's citation list shows no evidence this resource was ever checked. This is structurally the same over-generalization flagged in the Avocado batch: a non-species-specific, non-cat/dog-naming caution line inflated into a flat toxic_to_pets=true, only here the source used is even weaker (a general 'pets' mention in a listicle) rather than a narrow-animal RHS tag.",
+        "toxicity_detail — removed on audit: The field's own text correctly concedes that NC State's detailed mechanism/severity/symptom data (isoquinoline alkaloids, Poison Severity High, roots) is filed only under 'Poisonous to Humans' and is reported as human-toxicity context rather than pet-specific data. Once that concession is taken seriously, nothing pet-specific remains to justify the field: Clemson's contribution ('sap is caustic to the skin and poisonous if ingested,' verified) is also unscoped as to animal, and Penn State's line never names an animal illness, mechanism, or symptom for pets at all -- just a generic keep-away caution. A toxicity_detail field built to substantiate pet risk is resting on human-scoped mechanism data plus one non-specific caution sentence, which is not adequate grounding for the claim it's attached to.",
+        "soil_ph_min — removed on audit: The citation quote is a truncated fragment. I fetched the Clemson page directly and the full sentence reads: 'Although bloodroot may tolerate various soil types and grow over a relatively wide soil pH range, many woodland wildflowers may excel in growth if the soil pH is adjusted to approximately 6.0.' The record dropped the first clause, which explicitly states bloodroot itself tolerates a WIDE soil pH range -- the opposite of a fixed 6.0 point value -- and the 6.0 figure is attributed to 'woodland wildflowers' as a category (classic reused-boilerplate framing per audit check 2/4), not to bloodroot specifically. Collapsing this into soil_ph_min=6 misrepresents both the species-specificity and the shape of the source's own claim.",
+        "soil_ph_max — removed on audit: Same defect and same single citation as soil_ph_min: Clemson's full sentence ('bloodroot may tolerate various soil types and grow over a relatively wide soil pH range... many woodland wildflowers may excel... at approximately 6.0') explicitly rejects the idea of a single tight pH figure for bloodroot and attributes 6.0 to woodland wildflowers generally. Pinning soil_ph_max to exactly 6.0 (identical to soil_ph_min) converts a generic, hedged, category-level suggestion into a false precise species-level range.",
+        "2026-09-02 corpus-wide quote verification: the Penn State 'thrives in average to moist soils' corroborating quote for water_regime could not be found on the cited page and was removed; keep_moist still rests on RHS ('Moist but well-drained') and Clemson."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Bloodroot and scientific_name_given Sanguinaria canadensis",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "Bloodroot (Sanguinaria canadensis) is a spring blooming wildflower that is native to the Eastern United States."
+        },
+        {
+          "claim": "scientific_name_given Sanguinaria canadensis (Genus: Sanguinaria Species: canadensis)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sanguinaria-canadensis/",
+          "quote": "Genus: Sanguinaria Species: canadensis"
+        },
+        {
+          "claim": "scientific_name_accepted Sanguinaria canadensis (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/16398/sanguinaria-canadensis/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "name_note scientific_name_accepted unchanged, no conflicting accepted name found",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/16398/sanguinaria-canadensis/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "is_houseplant false (grown outdoors in the shady woodland garden, not described as indoor/container culture)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "As an early spring bloomer, bloodroot combines well in the shady woodland garden with other spring flowering, native perennials"
+        },
+        {
+          "claim": "toxic_to_pets true (kept safely away from children and pets)",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/spooktacular-flora-and-fungi",
+          "quote": "Bloodroot makes a wonderful addition to the home garden when kept safely away from children and pets."
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (all parts poisonous, may be fatal if ingested)",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/spooktacular-flora-and-fungi",
+          "quote": "All parts of bloodroot are poisonous and may be fatal if ingested."
+        },
+        {
+          "claim": "toxicity_detail human-poisoning mechanism context (isoquinoline alkaloids, roots, Poison Severity High) -- filed under Poisonous to Humans, not a pet-specific tag",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sanguinaria-canadensis/",
+          "quote": "Problems: Poisonous to Humans. Poison Severity: High. Poison Symptoms: Nausea, vomiting, faintness, dizziness, dilated pupils, fainting, diarrhea, heart failure. Poison Toxic Principle: Isoquinoline alkaloids. Poison Part: Roots."
+        },
+        {
+          "claim": "toxicity_detail corroborating (sap caustic to skin, poisonous if ingested)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "This sap is caustic to the skin and poisonous if ingested."
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade and full_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sanguinaria-canadensis/",
+          "quote": "Light: Deep shade (Less than 2 hours to no direct sunlight), Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade (corroborating)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "Bloodroot grows well in USDA Cold Hardiness Zones 3 – 8, and prefers a shady to partly shaded site with well-drained soil."
+        },
+        {
+          "claim": "direct_sun_hours_max 6 (Partial Shade defined as direct sunlight 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sanguinaria-canadensis/",
+          "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "soil_base garden_bed (woodland garden cultivation)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/16398/sanguinaria-canadensis/details",
+          "quote": "Grow in sun or semi-shade in humus-rich, well-drained soil, such as a woodland garden"
+        },
+        {
+          "claim": "soil_base garden_bed (corroborating, shady woodland garden)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "bloodroot combines well in the shady woodland garden with other spring flowering, native perennials"
+        },
+        {
+          "claim": "soil_drainage moderate (Good Drainage, Moist)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sanguinaria-canadensis/",
+          "quote": "Soil Drainage: Good Drainage, Moist"
+        },
+        {
+          "claim": "soil_drainage moderate (Moist but well-drained)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/16398/sanguinaria-canadensis/details",
+          "quote": "Moist but well–drained"
+        },
+        {
+          "claim": "soil_drainage moderate (corroborating, prefers well-drained soil)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "prefers a shady to partly shaded site with well-drained soil"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.0",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "Many woodland wildflowers may excel in growth if the soil pH is adjusted to approximately 6.0."
+        },
+        {
+          "claim": "water_regime keep_moist (Moist but well-drained)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/16398/sanguinaria-canadensis/details",
+          "quote": "Moist but well–drained"
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating, water weekly during dry periods)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
+          "quote": "Water plants weekly during dry periods or as needed depending upon rainfall."
+        }
+      ]
+    },
+    {
+      "common_name": "Bay Laurel",
+      "scientific_name_given": "Laurus nobilis",
+      "scientific_name_accepted": "Laurus nobilis",
+      "name_note": "NC State Extension's structured Attributes field reads \"Genus: Laurus Species: nobilis Family: Lauraceae,\" and RHS's own plant-profile Name Status field reads \"Correct\" for Laurus nobilis. Both admissible sources anchor to the same binomial with no competing accepted name proposed anywhere else, so there is no naming conflict to resolve.",
+      "is_houseplant": true,
+      "toxic_to_pets": true,
+      "toxicity_detail": "NC State Extension's structured \"Problems:\" tag list (a section separate from any human-only heading) flags Laurus nobilis as a \"Problem for Cats\" and \"Problem for Dogs\" (also \"Problem for Horses\"). UGA Cooperative Extension's pet-safety publication, whose own page description states \"House and garden plants may be toxic to cats and dogs,\" separately carries the entry \"Bay Laurel (Sweet Bay) Laurus nobilis Toxicity class: Minor Toxicity.\" NC State's page also carries a detailed Poison Severity / Poison Symptoms / Poison Toxic Principle block (\"Low\" severity; \"Vomiting and diarrhea; Large ingestion of whole leaves can cause obstruction\"; \"Eugenol, and other essential oils\"), but that block is filed on the page under the heading \"Poisonous to Humans:\" rather than a pets-specific heading, so it was not used to describe pet symptoms here. No admissible source gives pet-specific symptom or mechanism detail beyond the \"Minor Toxicity\" classification and the cats/dogs problem tags.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": 23,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "standard_potting",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "water_regime and its dependent fields (water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis): genuine cross-source conflict on a harm-adjacent field. Clemson (\"Bay laurel thrives in sun to partial shade and moist soil\") and Missouri Botanical Garden (\"best grown in rich, moist, well-drained soils\") both describe consistently moist soil, while RHS's container growing guide instructs \"Water container-grown bay moderately. Over-watering can cause root damage,\" implying a regime that allows drying between waterings. Per this task's guidance on harm-capable fields, left null with both sides documented rather than picking one.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source frames temperature specifically by day vs. night for this species; only frost/cold-hardiness thresholds were given (see chill_damage_f).",
+        "humidity_need/humidity_pct_min/humidity_pct_max: not addressed by any admissible source.",
+        "light_fc_min/light_fc_good: no source gives a footcandle figure; only categorical sun-position descriptions (full sun/partial shade) were found.",
+        "direct_sun_hours_max: NC State's Partial Shade category upper bound (6 hours) is defined only for that category, while its Full Sun category is explicitly open-ended (\"6 or more hours of direct sunlight a day\"); applying the partial-shade ceiling to a plant independently documented as tolerating full sun would misleadingly cap it, so left null.",
+        "soil_ph_min/soil_ph_max: RHS's structured Soil pH field lists \"Acid or Alkaline or Neutral\" together, describing broad qualitative tolerance rather than a bounded numeric range, so no defensible numeric min/max exists.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: RHS's growing guide gives the feeding window as \"mid-spring to late summer\" (not named calendar months) and the interval as \"every two weeks\" (a frequency phrase, not a literal day-count). Per this task's citation rules, only a named-month-to-calendar-number translation is permitted for fertilize_active_months, not a frequency-word-to-day-count translation, so both were left null. No admissible source states a fertilizer dose/strength (full/half/quarter) either.",
+        "soil_base: RHS's container-cultivation compost recipe (\"soil-based, peat-free compost... with extra grit added to improve stability and drainage\") was mapped to standard_potting. NC State's general Soil Texture field (Clay/High Organic Matter/Loam (Silt)/Sand) instead reflects in-ground/garden-bed growing conditions for this species -- which sources document as grown both ways (in-ground in zones 8b-10b, containerized farther north) -- so the container-specific RHS description was preferred as the more specific, unambiguous match to a single soil_base category.",
+        "toxicity_detail: NC State's detailed Poison Severity/Poison Symptoms/Poison Toxic Principle fields (\"Low\" severity; vomiting and diarrhea; eugenol) are filed on the page under a heading reading \"Poisonous to Humans:\", not a pets-specific heading, so they were not used to describe pet-specific symptoms; only NC State's separate \"Problem for Cats\"/\"Problem for Dogs\" tags and UGA's \"Minor Toxicity\" classification were used for toxic_to_pets/toxicity_detail.",
+        "chill_damage_f: RHS's growing guide gives the actionable numeric threshold (\"Bay can withstand temperatures down to -5°C (23°F), but frost and cold winter winds can damage the foliage\"). NC State corroborates only categorically (\"brought indoors in the winter in areas colder than zone 8b to prevent frost damage\") without a literal Fahrenheit figure, so it was not used for the numeric claim itself.",
+        "soil_drainage — removed on audit: Value 'moderate' is not stated anywhere in its sole supporting citation. The quote is NC State's structured attribute line 'Soil Drainage: Good Drainage Occasionally Dry Occasionally Wet' (verified by direct fetch of https://plants.ces.ncsu.edu/plants/laurus-nobilis/, which reproduces this exact text) -- the word 'moderate' never appears, and 'Good Drainage' as the lead/primary tag is the source's own signal that the plant needs well-drained soil, which in this catalog's own three-value schema (fast / moderate / moisture_retentive, confirmed by grepping app/data/verified/*.json) more naturally corresponds to 'fast' than 'moderate'. There is no second, independent citation for soil_drainage in this record, so rule 2's carve-out (another unproblematic citation independently supports the value) does not apply -- the field itself is unsupported. Critically, this exact quote-to-'moderate' mapping is not a novel judgment call: it is verbatim boilerplate already used elsewhere in this same catalog (app/data/verified/b14-annual-flowers2.json, 'Common Morning Glory' entry: identical claim text 'soil_drainage moderate (Good Drainage; also tolerates Occasionally Dry and Occasionally Wet)' with the identical NC State quote), and that same file's own audit trail explicitly flags this precise pattern as a defect twice over ('Value \"moderate\" is not stated anywhere... \"Good Drainage\" does not map to \"moderate\"; the record invented an intermediate value that contradicts... the source's own structured field' and again '\"moderate\" never appears in that quote... a cited source's own structured field was not checked before a value was picked'), and self-flags it a third time as a non-literal inferred reading even where retained. Bay Laurel's record reproduces the exact defect this catalog has already identified and removed elsewhere.",
+        "2026-09-02 corpus-wide quote verification: the UGA C1245 'House and garden plants may be toxic to cats and dogs...' guide-scope quote is not on the cited page (the page says 'it is important to know which plants are safe, as even common plants can be deadly') and was removed; toxic_to_pets=true still rests on NC State's explicit 'Problem for Cats' and 'Problem for Dogs' tags, which satisfy the cat/dog scoping rule on their own."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Bay Laurel and scientific_name_given Laurus nobilis (Genus: Laurus Species: nobilis Family: Lauraceae)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/laurus-nobilis/",
+          "quote": "Genus: Laurus Species: nobilis Family: Lauraceae"
+        },
+        {
+          "claim": "scientific_name_accepted Laurus nobilis (Name Status Correct)",
+          "source": "Royal Horticultural Society (RHS) — Laurus nobilis plant profile",
+          "url": "https://www.rhs.org.uk/plants/9876/laurus-nobilis-bay-tree-bay/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "is_houseplant true (grown in containers as a houseplant north of Zone 8)",
+          "source": "Missouri Botanical Garden — Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d418",
+          "quote": "Winter hardy to USDA Zones 8-10 where it is best grown in rich, moist, well-drained soils in full sun to part shade. North of Zone 8, it may be grown in containers as a houseplant."
+        },
+        {
+          "claim": "is_houseplant true (generally grown in a container as a patio or houseplant)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/laurus-nobilis/",
+          "quote": "It needs to be brought indoors in the winter in areas colder than zone 8b to prevent frost damage. In its native habitat, it can reach up to 60 feet tall. In NC, it is generally grown in a container as a patio or houseplant and is much smaller."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/laurus-nobilis/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (Aspect - Full sun or partial shade)",
+          "source": "Royal Horticultural Society (RHS) — Bay tree growing guide",
+          "url": "https://www.rhs.org.uk/plants/bay-tree/growing-guide",
+          "quote": "Aspect - Full sun or partial shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (Sun: Full sun to part shade)",
+          "source": "Missouri Botanical Garden — Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d418",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "soil_drainage moderate (Good Drainage; also tolerates Occasionally Dry and Occasionally Wet)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/laurus-nobilis/",
+          "quote": "Soil Drainage: Good Drainage Occasionally Dry Occasionally Wet"
+        },
+        {
+          "claim": "soil_base standard_potting (soil-based peat-free compost with added grit for container cultivation)",
+          "source": "Royal Horticultural Society (RHS) — Bay tree growing guide",
+          "url": "https://www.rhs.org.uk/plants/bay-tree/growing-guide",
+          "quote": "Use a soil-based, peat-free compost, such as peat-free John Innes No 2 or a soilless compost, with extra grit added to improve stability and drainage"
+        },
+        {
+          "claim": "chill_damage_f 23 (frost and cold winter winds can damage foliage below this threshold)",
+          "source": "Royal Horticultural Society (RHS) — Bay tree growing guide",
+          "url": "https://www.rhs.org.uk/plants/bay-tree/growing-guide",
+          "quote": "Bay can withstand temperatures down to -5°C (23°F), but frost and cold winter winds can damage the foliage."
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (Problem for Cats and Problem for Dogs tags)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/laurus-nobilis/",
+          "quote": "Problems: Messy Problem for Cats Problem for Dogs Problem for Horses"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (Minor Toxicity classification)",
+          "source": "University of Georgia Cooperative Extension — CAES Field Report (Publication C1245, Keep Your Pets Safe Around Plants)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1245/keep-your-pets-safe-around-plants/",
+          "quote": "Bay Laurel (Sweet Bay) Laurus nobilis Toxicity class: Minor Toxicity"
+        },
+        {
+          "claim": "water_regime moist-soil evidence (documented, not adopted due to conflict with RHS)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/herbs/",
+          "quote": "Bay laurel thrives in sun to partial shade and moist soil."
+        },
+        {
+          "claim": "water_regime moist-soil evidence (documented, not adopted due to conflict with RHS)",
+          "source": "Missouri Botanical Garden — Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d418",
+          "quote": "Winter hardy to USDA Zones 8-10 where it is best grown in rich, moist, well-drained soils in full sun to part shade."
+        },
+        {
+          "claim": "water_regime moderate/avoid-overwatering evidence (documented, not adopted due to conflict with Clemson and MOBOT)",
+          "source": "Royal Horticultural Society (RHS) — Bay tree growing guide",
+          "url": "https://www.rhs.org.uk/plants/bay-tree/growing-guide",
+          "quote": "Water container-grown bay moderately. Over-watering can cause root damage"
+        }
+      ]
+    },
+    {
+      "common_name": "Eastern Columbine",
+      "scientific_name_given": "Aquilegia canadensis",
+      "scientific_name_accepted": "Aquilegia canadensis",
+      "name_note": "The given name Aquilegia canadensis is the currently accepted binomial. RHS explicitly lists \"Name Status: Correct\" for it, and all six admissible sources consulted (NC State Extension, Clemson Cooperative Extension HGIC, Missouri Botanical Garden Plant Finder, RHS, University of Maryland Extension, and Penn State Extension) use Aquilegia canadensis consistently, with no competing accepted binomial found. RHS separately lists Aquilegia elegans as a synonym of this species (a name that resolves into Aquilegia canadensis, not a rival accepted name), so this is not treated as a naming conflict.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: no admissible source addresses toxicity to pets, humans, or livestock for this species at all -- not even a 'not known to be toxic' statement. NC State's Plant Toolbox page (which for many other species carries a 'Poison'/'Problem for Cats/Dogs/Horses' section) has no such section anywhere on this species' page, confirmed by direct fetch of the full page attributes list. RHS's page (which for many species carries an explicit 'TOXIC to pets if eaten' notice) likewise has no toxicity section at all, confirmed by direct fetch. Clemson, Missouri Botanical Garden, UMD, and Penn State factsheets are silent on toxicity as well. Left null rather than inferring non-toxicity from silence.",
+        "day_f_min / day_f_max / night_f_min / night_f_max: no admissible source gives a general day or night temperature target for this outdoor perennial. Clemson's note that the cultivar 'Corbett' 'Prefers cool night temperatures' is scoped to that one named cultivar, not the species as a whole, so it was not used for a species-level night temperature field.",
+        "chill_damage_f: only hardiness-zone / winter-survival data exists (NC State USDA zones 3a-8b; Clemson zones 3-8; Missouri Botanical Garden zone 3-8; RHS Hardiness H5, -15 to -10°C / roughly 5 to 14°F), which is a survival classification, not a damage-onset temperature, so per field guidance this was not mapped onto chill_damage_f.",
+        "cool_rest_note: no admissible source frames this species' winter dormancy as an actionable cool-rest care step; sources describe it only as an herbaceous perennial whose foliage dies back in autumn or persists semi-evergreen in milder climates.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: not addressed by any admissible source -- all describe outdoor garden/woodland growing conditions, not ambient humidity.",
+        "light_fc_min / light_fc_good: no admissible source gives an indoor or outdoor footcandle figure for this species.",
+        "direct_sun_hours_max: NC State's 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' category gives an hours figure, but it is scoped only to the partial-shade band; NC State's own paired 'Full sun' category is defined as '6 or more hours' with no ceiling. Because outdoor_sun_exposure here includes full_sun (independently supported by NC State, Missouri Botanical Garden, RHS, and Clemson), presenting 6 as a general sun-hours maximum would misrepresent full-sun exposure as capped at 6 hours, a claim no source makes -- so this field was left null rather than applying the narrower partial-shade figure to the whole exposure range.",
+        "water_regime: left null on a genuine conflict between two admissible sources on a harm-capable field. Missouri Botanical Garden gives a structured 'Water: Medium' rating and instructs to 'Keep soils uniformly moist after bloom to prolong attractive foliage appearance,' leaning toward a keep-moist approach. Clemson Cooperative Extension HGIC instead states the species 'Tolerates dry to moderately moist soils' and separately warns 'To keep red columbine healthy, be careful not to overwater during summer, as crowns are relatively susceptible to rot in hot weather' -- an explicit overwatering/crown-rot risk that leans toward a drier regime. Since these two sources point in different directions on whether to keep this species consistently moist or let it run drier, no single categorical value was picked.",
+        "water_dry_down_target / water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis: no admissible source gives a numeric watering-interval, soil moisture-check depth, or dormancy-duration figure for this species.",
+        "fertilize_active_months / fertilize_interval_days / fertilize_strength: no admissible source discusses fertilizing this species at all -- care guidance across all six consulted sources covers light, soil, moisture, and deadheading/pruning only, with no fertilizer schedule.",
+        "is_houseplant: set false because none of the six admissible sources consulted (NC State, Clemson, Missouri Botanical Garden, RHS, UMD, Penn State) describe indoor or long-term container culture for this species -- all describe it exclusively in outdoor garden, woodland, or naturalized settings (e.g. NC State's landscape-uses list, RHS's suggested planting locations, Missouri Botanical Garden's 'Uses' list, none of which mention containers or indoor growing).",
+        "soil_ph_max: only NC State gives an explicit numeric upper bound (8.0, via its 'Neutral (6.0-8.0)' structured field). UMD's 'slightly acid (pH 6.0) to alkaline' corroborates only the 6.0 lower bound -- 'alkaline' is not given a specific number in UMD's text, so that citation supports soil_ph_min but was not used to independently corroborate the 8.0 upper figure.",
+        "UF/IFAS Extension (edis.ifas.ufl.edu / ask.ifas.ufl.edu) was searched but no dedicated Aquilegia canadensis profile could be found on that domain, so it contributes no citations to this record. A UGA CAES Field Report article was found, but it is a general hummingbird-garden piece with only a brief passing mention of the species (used narrowly above for common name/bloom-timing corroboration), not a dedicated species profile."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Eastern Columbine and scientific_name_given Aquilegia canadensis",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Aquilegia canadensis\n(Canadian Columbine, Columbine, Eastern Columbine, Eastern Red Columbine, Jack-In-Trousers, Red Columbine, Turks Cap, Wild Columbine)"
+        },
+        {
+          "claim": "common_name Eastern Columbine",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/eastern-columbine",
+          "quote": "About Eastern columbine\nAquilegia canadensis"
+        },
+        {
+          "claim": "common_name columbine / native columbine",
+          "source": "University of Georgia Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/news/make-your-garden-a-hummingbird-paradise/",
+          "quote": "An easy choice is _Aquilegia canadensis_ (native columbine). This plant is easily grown from seed and blooms very early in March or April, weather permitting."
+        },
+        {
+          "claim": "scientific_name_accepted Aquilegia canadensis (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/1402/aquilegia-canadensis/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "name_note Aquilegia elegans listed as a synonym of Aquilegia canadensis",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/1402/aquilegia-canadensis/details",
+          "quote": "Synonyms\nAquilegia\nelegans"
+        },
+        {
+          "claim": "is_houseplant false (grown outdoors in woodland, naturalized, and garden border settings, not described as an indoor plant)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Use this plant in woodland habitats, naturalized areas, shady garden borders, native gardens, or pollinator gardens. It is deer resistant."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b400",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/1402/aquilegia-canadensis/details",
+          "quote": "Position\nFull sun, Partial shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (tolerates full sun if not too hot)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/rain-garden-plants-aquilegia-canadensis-eastern-red-columbine/",
+          "quote": "Light:\nLight shade, but tolerates full sun if daylight temperatures not too hot."
+        },
+        {
+          "claim": "outdoor_sun_exposure part_sun and part_shade",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/eastern-columbine",
+          "quote": "Sun:\nPart shade to part sun"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade (light shade)",
+          "source": "Penn State Extension (Adams County Master Gardener)",
+          "url": "https://extension.psu.edu/programs/master-gardener/counties/adams/news/native-red-columbine",
+          "quote": "They not only moved themselves with no help from me, they knew right where to go -- light shade and semi-moist soil."
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Soil pH:\nNeutral (6.0-8.0)"
+        },
+        {
+          "claim": "soil_ph_min 6.0",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/eastern-columbine",
+          "quote": "Well-drained, often over limestone bedrock, slightly acid (pH 6.0) to alkaline"
+        },
+        {
+          "claim": "soil_drainage moderate (well-drained)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Dry"
+        },
+        {
+          "claim": "soil_drainage moderate (well-drained)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/rain-garden-plants-aquilegia-canadensis-eastern-red-columbine/",
+          "quote": "Well-drained, loose, slightly acid. Prefers sandy loam with organic matter, but tolerates a range of soil types – even clay if adequate organic matter present."
+        },
+        {
+          "claim": "soil_drainage moderate (well-drained)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b400",
+          "quote": "Easily grown in average, medium, well-drained soil in full sun to part shade. Wide range of soil tolerance as long as drainage is good."
+        },
+        {
+          "claim": "soil_base garden_bed (woodland habitats, naturalized areas, garden borders, native and pollinator gardens)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Use this plant in woodland habitats, naturalized areas, shady garden borders, native gardens, or pollinator gardens."
+        },
+        {
+          "claim": "soil_base garden_bed (borders, cottage gardens, woodland gardens, naturalized areas)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b400",
+          "quote": "Borders, cottage gardens, open shade gardens, woodland gardens or naturalized areas. Also a good selection for a hummingbird garden."
+        },
+        {
+          "claim": "soil_base garden_bed (suggested planting locations: cottage gardens, flower borders and beds, wildlife gardens)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/1402/aquilegia-canadensis/details",
+          "quote": "Suggested planting locations and garden types\nCity and courtyard gardens\nCottage and informal garden\nWildlife gardens\nFlower borders and beds\nUnderplanting of roses and shrubs"
+        }
+      ]
+    },
+    {
+      "common_name": "Burning Bush",
+      "scientific_name_given": "Euonymus alatus",
+      "scientific_name_accepted": "Euonymus alatus",
+      "name_note": "No naming conflict among admissible sources. NC State's Plant Toolbox and Missouri Botanical Garden's Plant Finder both use \"Euonymus alatus\" with no \"Previously known as\" or synonym section suggesting an alternate current name, and RHS's own structured Name Status field independently marks \"Euonymus alatus\" as \"Correct.\"",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "Invasive/regulatory status materially affects whether a home gardener should plant this species, but the schema has no dedicated field for it, so it's captured here. Multiple admissible extension sources flag Burning Bush as invasive and, in some states, illegal to sell or plant: NC State -- \"It is listed as invasive by the NC Invasive Plant Council\" and \"Its invasive tendency has been noted in multiple midwestern and eastern states from Connecticut to South Carolina and west to Wisconsin\" (the NC State page also carries a site-wide banner: \"This plant is problematic and alternatives should be considered\"). Missouri Botanical Garden's Plant Finder carries a \"Midwest Noxious Weed: Do Not Plant\" banner and states \"This plant is listed as a noxious weed in one or more Midwestern states outside Missouri and should not be moved or grown under conditions that would involve danger of dissemination,\" adding that it \"has escaped plantings and naturalized in at least 21 eastern and mid-western states.\" University of Maryland Extension states \"Burning bush is a prohibited species under Maryland law\" and that it \"can form dense thickets and compete with native vegetation in forests, fields, and coastal habitats,\" recommending \"Do not plant burning bush, and replace existing specimens when possible.\" Penn State Extension states it has been \"declared a noxious weed by the Pennsylvania Department of Agriculture\" and \"It is now illegal to purchase, intentionally plant, or propagate this species within the state,\" ranked a \"significant threat\" by PA DCNR, and specifically ties its shade tolerance to its invasive success: \"Burning bush's tolerance of deep shade is at the core of its success in invading woodlands... they thrive in forest interiors where there is less competition from other invasive shrubs.\"",
+        "toxic_to_pets / toxicity_detail: only RHS addresses pet toxicity for this species, under a combined \"Potentially harmful\" field reading \"Humans/Pets: Harmful if eaten; wear gloves and other protective equipment when handling.\" This is RHS's generic 'Pets' scope (not narrowed in the source text to a specific non-cat/dog animal like rabbits or horses), so it was used to support toxic_to_pets=true per this catalog's own scoping rule. No other admissible source (NC State, MOBOT, Clemson, UF/IFAS, Penn State, UMD, UGA) addresses pet toxicity for this species in either direction.",
+        "soil_ph_min / soil_ph_max: left null. NC State's structured Soil pH field checks all three categories at once (\"Acid (<6.0)\", \"Alkaline (>8.0)\", \"Neutral (6.0-8.0)\"), meaning the species is shown tolerating the full range with no stated floor or ceiling specific to this species; no admissible source gives a narrower numeric range.",
+        "day_f_min, day_f_max, night_f_min, night_f_max, humidity_need, humidity_pct_min, humidity_pct_max, light_fc_min, light_fc_good, direct_sun_hours_max: no admissible source discusses ambient day/night temperature, humidity percentage, or foot-candle/sun-hour light measurements for this outdoor landscape shrub; sources describe light only in categorical sun/shade terms (captured in outdoor_sun_exposure) and cold tolerance only via USDA hardiness zone (NC State: 4a-8b; MOBOT: zone 4-8; RHS: H6, hardy in all of UK and northern Europe).",
+        "chill_damage_f: left null. Only USDA hardiness-zone survival data is given across sources, not an actionable cold-damage-onset temperature; expected for a hardy zone-4 shrub, not under-research.",
+        "cool_rest_note: left null. No admissible source describes a distinct dormancy/cool-rest regimen beyond the species being winter-deciduous and cold-hardy within its rated zone.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: left null. None of the eight admissible publishers checked give a fertilizing schedule, interval, or dilution strength for this species.",
+        "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. MOBOT's Plant Finder gives only a bare categorical tag (\"Water: Medium\") with no operational detail, and its Culture text describes moisture only qualitatively (\"average, medium moisture, well-drained soil... Plants appreciate consistent moisture, particularly when grown in full sun locations\"); this doesn't map cleanly onto the container-oriented water_regime enum (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist) without forcing an awkward fit, and no source gives a watering-frequency interval or soil-check depth for this in-ground shrub.",
+        "is_houseplant / container culture: no admissible source describes growing Euonymus alatus indoors or in containers long-term; all sources describe it exclusively as an outdoor landscape/naturalizing shrub (hedges, foundation plantings, woodland edges), consistent with is_houseplant=false.",
+        "outdoor_sun_exposure omits part_sun: NC State's own bucketed Light field for this species lists only \"Full sun\" and \"Partial Shade\" (not a separate \"Partial Sun\" category), and no other admissible source draws a distinct part_sun line for this species, so that enum value was not used despite being available.",
+        "toxic_to_pets — removed on audit: The only citation supporting toxic_to_pets=true is RHS's combined 'Humans/Pets: Harmful if eaten; wear gloves and other protective equipment when handling.' I fetched the live RHS page directly and confirmed it never names cats or dogs and is not scoped to any specific animal at all -- it's a bare, unqualified 'Pets' tag. This is exactly the over-generalization pattern flagged as the Avocado-batch defect: non-cat/dog-specific evidence being turned into a flat toxic_to_pets=true. The record's own unknowns note admits the reasoning ('RHS's generic Pets scope... was used to support toxic_to_pets=true per this catalog's own scoping rule'), i.e. it applied a more permissive rule than the audit calls for. I also fetched NC State, Penn State, and Clemson directly: none of them address pet toxicity in either direction (NC State's toxicity content is explicitly human-only, under a 'Poisonous to Humans' heading with detailed human symptoms and no pet section). With the sole supporting citation never naming cats or dogs, and no corroboration elsewhere, this should be null rather than true.",
+        "toxicity_detail — removed on audit: Downstream of the toxic_to_pets problem: the clause 'Harmful if eaten, to both humans and pets' rests on RHS's unqualified 'Pets' tag, which (confirmed via direct fetch of the RHS page) never specifies which animals it covers. The parenthetical about NC State's human-only poisoning data is accurately scoped (confirmed via fetch -- NC State's toxicity section really is nested under 'Poisonous to Humans' with no parallel pet section), but the pet half of the field's main sentence has no species-specific support and should not be asserted as fact.",
+        "outdoor_sun_exposure — removed on audit: The full_shade element is unsound. NC State's own structured Light field for this species -- the same source used to establish full_sun and part_shade -- lists only 'Full sun' and 'Partial Shade' (confirmed via direct fetch: no Full Shade option is checked), and the record's own unknowns entry even acknowledges NC State's Light field is limited to those two buckets. Yet full_shade was added anyway, sourced from Penn State's passage about deep-shade tolerance driving the plant's success as a forest invader (framed as an invasion-ecology observation, not cultivation guidance) and MOBOT's own hedge, 'Tolerates close to full shade... but usually at the expense of diminished fall color quality' (confirmed close paraphrase pattern consistent with the rest of the record; note it says 'close to full shade,' not full shade). This is a case where the most authoritative structured source for exactly this field disagrees with the chosen value, and that disagreement was not resolved by leaving the category out or flagging it -- it was silently overridden by narrative text from other sources."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Burning Bush (listed first among Corky Spindletree, Corky spindle tree, Winged Euonymus, Winged Spindle Tree)",
+          "quote": "Common Name(s):\nBurning Bush\nCorky Spindletree\nCorky spindle tree\nWinged Euonymus\nWinged Spindle Tree",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/"
+        },
+        {
+          "claim": "scientific_name_given Euonymus alatus (Genus Euonymus, Species alatus, Family Celastraceae)",
+          "quote": "Genus:\nEuonymus\nSpecies:\nalatus\nFamily:\nCelastraceae",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/"
+        },
+        {
+          "claim": "scientific_name_accepted Euonymus alatus and name_note (RHS Name Status: Correct)",
+          "quote": "Name Status\nCorrect",
+          "source": "Royal Horticultural Society (RHS), Euonymus alatus plant profile",
+          "url": "https://www.rhs.org.uk/plants/6969/euonymus-alatus/details"
+        },
+        {
+          "claim": "is_houseplant false (outdoor deciduous shrub, USDA Plant Hardiness Zone 4a-8b)",
+          "quote": "USDA Plant Hardiness Zone:\n4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/"
+        },
+        {
+          "claim": "is_houseplant false (Type: Deciduous shrub, Zone 4 to 8)",
+          "quote": "Type: Deciduous shrub\nFamily: Celastraceae\nNative Range: Northeastern Asia to Middle China\nZone: 4 to 8",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279120"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Sun: Full sun to part shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279120"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "likes partial shade to full sun",
+          "source": "Clemson Cooperative Extension HGIC, Euonymus factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/euonymus/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_shade (thrives in deep shade)",
+          "quote": "Burning bush's tolerance of deep shade is at the core of its success in invading woodlands. Though they can also grow in full or partial sun, they thrive in forest interiors where there is less competition from other invasive shrubs.",
+          "source": "Penn State Extension, \"Burning Bush\"",
+          "url": "https://extension.psu.edu/burning-bush"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_shade (tolerates close to full shade)",
+          "quote": "Tolerates close to full shade, but usually at the expense of diminished fall color quality.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279120"
+        },
+        {
+          "claim": "soil_drainage moderate (average, medium moisture, well-drained soil; consistent moisture appreciated)",
+          "quote": "Easily grown in average, medium moisture, well-drained soil in full sun to part shade... This is an adaptable shrub that tolerates a wide range of soils except for wet, poorly-drained ones. Plants appreciate consistent moisture, particularly when grown in full sun locations.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279120"
+        },
+        {
+          "claim": "soil_drainage moderate (Good Drainage and Moist both listed as tolerated Soil Drainage categories)",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/"
+        },
+        {
+          "claim": "soil_base garden_bed (landscape hedge, foundation, and border use, not container culture)",
+          "quote": "Suggested Use: Hedge, Naturalize... Specimen/accent, group or mass. Foundations, shrub borders, screen or hedge.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279120"
+        },
+        {
+          "claim": "soil_base garden_bed (excellent foundation plant in the landscape)",
+          "quote": "makes an excellent foundation plant because of horizontal lines and clean foliage",
+          "source": "Clemson Cooperative Extension HGIC, Euonymus factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/euonymus/"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (Humans/Pets: harmful if eaten; wear gloves and protective equipment when handling)",
+          "quote": "Humans/Pets: Harmful if eaten; wear gloves and other protective equipment when handling. For further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants",
+          "source": "Royal Horticultural Society (RHS), Euonymus alatus plant profile",
+          "url": "https://www.rhs.org.uk/plants/6969/euonymus-alatus/details"
+        }
+      ]
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Ficus benjamina",
+      "fields_removed": 3
+    },
+    {
+      "species": "Opuntia ficus-indica",
+      "fields_removed": 1
+    },
+    {
+      "species": "Rhododendron catawbiense",
+      "fields_removed": 1
+    },
+    {
+      "species": "Ligustrum japonicum",
+      "fields_removed": 1
+    },
+    {
+      "species": "Sanguinaria canadensis",
+      "fields_removed": 4
+    },
+    {
+      "species": "Laurus nobilis",
+      "fields_removed": 1
+    },
+    {
+      "species": "Aquilegia canadensis",
+      "fields_removed": 1
+    },
+    {
+      "species": "Euonymus alatus",
+      "fields_removed": 3
+    }
+  ],
+  "normalizations": [
+    "2026-08-23: fourteenth batch of the \"blind spots\" pass, and the first to explicitly prompt-guard against b31's non-cat/dog toxicity-scope defect (RHS \"Pets (rabbits/birds/horses)\" tags generalized into a flat toxic_to_pets=true). It worked on the research side for Weeping Fig -- the record correctly declined to rely on RHS's dogs-only tag alone and used NC State's explicit cats+dogs evidence instead -- but the SAME defect still slipped through the research pass on two other records (Burning Bush: an RHS unscoped \"Pets\" tag that never names any animal; Bloodroot: a Penn State \"keep away from pets\" listicle line, also unscoped) and was only caught by the verify pass's new explicit check. Confirms the guard needs to live in verification, not just the research prompt, since even an explicitly warned researcher can still make the mistake under a different citation's wording.",
+    "Weeping Fig, Prickly Pear (dogs-specific, cats undocumented -- correctly reported as dog-scoped rather than generalized to both), Catawba Rhododendron, and Bay Laurel all confirmed toxic_to_pets=true with clean, properly-scoped cat and/or dog evidence. Bloodroot and Burning Bush both correctly landed toxic_to_pets=null after the audit found their only pet-relevant citations named no animal or the wrong one -- notably for Bloodroot, NC State (the source that normally adds explicit Problem-for-Cats/Dogs tags when warranted) carries no animal tag for this species at all, only human-scoped poison data, which the audit treated as a meaningful negative signal rather than mere silence.",
+    "Prickly Pear's is_houseplant catch shows the audit checking a record against the very page it cites: the record asserted false with a claim that \"no admissible source describes indoor houseplant use,\" but the audit re-fetched the same cited RHS URL and found it carries a direct link reading \"See houseplant cacti and succulent cultivation for further advice\" -- contradicting the record's own claim about its own source.",
+    "Bay Laurel's soil_drainage catch is another example of the audit enforcing established cross-batch precedent by name: the same NC State \"Good Drainage / Occasionally Dry / Occasionally Wet\" tag mapped to 'moderate' here was already flagged as a defect twice over on the Common Morning Glory record in b14, and this record reproduced the identical mapping."
+  ]
+}

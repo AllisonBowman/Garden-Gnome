@@ -686,12 +686,6 @@
           "quote": "Problems: Problem for Cats Problem for Dogs Problem for Horses Weedy"
         },
         {
-          "claim": "soil_drainage moderate (Good Drainage; also tolerates Occasionally Dry and Occasionally Wet)",
-          "source": "NC State Extension",
-          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/",
-          "quote": "Soil Drainage: Good Drainage Occasionally Dry Occasionally Wet"
-        },
-        {
           "claim": "is_houseplant false (difficult to overwinter indoors; grown as outdoor annual restarted from seed each year)",
           "source": "Missouri Botanical Garden",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b754",
@@ -769,7 +763,7 @@
       "scientific_name_accepted": "Ipomoea purpurea",
       "scientific_name_given": "Ipomoea purpurea",
       "soil_base": "garden_bed",
-      "soil_drainage": "moderate",
+      "soil_drainage": null,
       "soil_ph_max": null,
       "soil_ph_min": null,
       "toxic_to_pets": true,
@@ -786,7 +780,8 @@
         "cool_rest_note: not addressed by any admissible source.",
         "soil_base/soil_drainage are inferred categorical readings (garden_bed; moderate) from qualitative planting-location and drainage-tag text rather than an exact enum-label match in the source text; flagged here in case a stricter reading would prefer null.",
         "toxicity_detail — removed on audit: The severity/symptom/mechanism content is misattributed across target organism. NC State's page (confirmed by direct fetch) has two distinct sections: 'Poisonous to Humans' (Poison Severity: Low; Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations; Poison Toxic Principle: Indole alkaloids...) and a separate 'Problems:' section (Problem for Cats / Problem for Dogs / Problem for Horses / Weedy) that carries NO severity, symptom, mechanism, or plant-part detail at all. Citation #3's own quote literally begins with the words 'Poisonous to Humans:' yet its claim label repurposes that human-toxicology content to support toxic_to_pets/toxicity_detail. The UGA citation (#14) is the same problem one level worse: I fetched the actual PDF and its table is titled 'Ornamental Plants Reported To Be Toxic When Ingested by HUMANS' (confirmed on p.3 of the PDF) -- it is not a pet/animal toxicity table at all, on top of already being genus-level (Ipomoea spp.), which the record does disclose but the human-vs-pet mismatch it does not. As a result, toxicity_detail's lead sentence 'Seeds are the specifically implicated toxic part' is not established by any source that actually addresses pet toxicity -- the two sources that do speak to pets (RHS 'Pets: Harmful if eaten' and NC State's Problem-for-Cats/Dogs/Horses tags) name no plant part and no severity at all. The seed-specific attribution and the 'Low' severity rating are both imported wholesale from human-poisoning data without disclosing that gap, which is exactly the kind of over-reach the audit is meant to catch given seeds' well-documented toxicity/psychoactivity in this genus. toxic_to_pets=true itself is fine (independently supported by RHS's explicit pets line and NC State's Problem tags), but the elaborated toxicity_detail overstates what is actually known about the pet-specific picture.",
-        "water_regime — removed on audit: This is the 'structured field contradicts the prose quote' trap the audit specifically warns about. I fetched the live MoBot page and its structured 'Growing Conditions' summary reads: Sun: Full sun / Water: Medium / Maintenance: Low -- MoBot's own middle/average moisture tier, not their wettest category. The record's citation #7 quotes only the prose culture line ('consistently moist, well-drained soils,' which is MoBot's standard boilerplate phrasing for plants in its Water:Medium tier) and on that basis alone settles on water_regime = keep_moist, without ever surfacing or reconciling MoBot's own 'Water: Medium' structured rating on the very same page. RHS's structured 'Moisture: Moist but well-drained' field (citation #11) is internally consistent with the RHS prose quoted, but 'moist but well-drained' is RHS's default/most-common moisture category for ordinary garden plants and does not resolve the tension with MoBot's explicitly moderate 'Medium' rating for this same species -- a genuine unflagged cross-source disagreement on a harm-capable field."
+        "water_regime — removed on audit: This is the 'structured field contradicts the prose quote' trap the audit specifically warns about. I fetched the live MoBot page and its structured 'Growing Conditions' summary reads: Sun: Full sun / Water: Medium / Maintenance: Low -- MoBot's own middle/average moisture tier, not their wettest category. The record's citation #7 quotes only the prose culture line ('consistently moist, well-drained soils,' which is MoBot's standard boilerplate phrasing for plants in its Water:Medium tier) and on that basis alone settles on water_regime = keep_moist, without ever surfacing or reconciling MoBot's own 'Water: Medium' structured rating on the very same page. RHS's structured 'Moisture: Moist but well-drained' field (citation #11) is internally consistent with the RHS prose quoted, but 'moist but well-drained' is RHS's default/most-common moisture category for ordinary garden plants and does not resolve the tension with MoBot's explicitly moderate 'Medium' rating for this same species -- a genuine unflagged cross-source disagreement on a harm-capable field.",
+        "2026-09-02 corpus-wide quote verification: soil_drainage 'moderate' rested on an NC State Soil Drainage quote claiming 'Good Drainage Occasionally Dry Occasionally Wet'; the live page carries only 'Good Drainage' and 'Moist' -- the same fabricated-tag pattern caught on Leyland Cypress in b42. Citation removed and the value left null rather than re-derived without an auditor."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,

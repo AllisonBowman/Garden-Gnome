@@ -11,10 +11,9 @@
       "light_fc_good": null,
       "direct_sun_hours_max": null,
       "outdoor_sun_exposure": [
-        "full sun (6 or more hours of direct sunlight a day)",
-        "partial shade (direct sunlight only part of the day, 2-6 hours)",
-        "dappled sunlight (shade through upper canopy all day)",
-        "deep shade (less than 2 hours to no direct sunlight)"
+        "full_sun",
+        "part_shade",
+        "full_shade"
       ],
       "day_f_min": 50,
       "day_f_max": null,
@@ -232,7 +231,8 @@
         "fertilize_interval_days — removed on audit: 28 is a point estimate manufactured from a range. The UGA quote is verbatim but says \"Most violet hobbyists prefer to use liquid or water-soluble fertilizers such as 20-20-20 every four to six weeks\" — reported hobbyist practice, not an extension recommendation, and nothing in it privileges the 4-week end over the 6-week end. The record chose the shortest interval, i.e. the most fertilizer, for a plant the immediately adjacent sentence of that same source calls \"very sensitive to a build-up of soluble salt which can damage plant roots.\" It also conflicts irreconcilably with admissible UF/IFAS MG028, which prescribes a categorically different regime (\"Mix the fertilizer in water at one-fourth the recommended rate and apply it each time you water\"); the record acknowledges the conflict and resolves it by fiat with no reason given.",
         "fertilize_strength — removed on audit: \"half\" sits literally inside UGA's \"one-third to one-half the recommended amount of fertilizer,\" but it is the top of that range, and the only other admissible source on dosing, UF/IFAS MG028, specifies \"one-fourth the recommended rate.\" Across the corpus the sourced range is one-fourth to one-half and the record selected the maximum, with no rationale offered, for a plant UGA warns is \"very sensitive to a build-up of soluble salt which can damage plant roots.\" Combined with fertilize_interval_days 28 — also the maximum-feeding end of its range — both fertilizer fields land on the highest-dose corner of the evidence, which is the harm-increasing direction for this species.",
         "humidity_pct_min — removed on audit: The only humidity percentage anywhere in the corpus comes from UF/IFAS EP360, whose \"Saintpaulia grows well at 50% to 70% relative humidity\" I confirmed verbatim — but EP360 is \"Cultural Guidelines for Commercial Production,\" a greenhouse crop specification. Its surrounding text is explicitly facility guidance (\"Maintain high humidity with mist or fogging\"; \"Humidity may be raised by wetting walkways and underneath benches with a hose\"). Every admissible source that addresses African violets as a houseplant — MG028, NC State, Penn State — treats humidity only qualitatively and gives no number at all. The record converts a greenhouse production target into a home-care numeric floor without flagging the context shift, and NC State's own species page is self-contradictory on the point, tagging the plant \"#dry air tolerant\" while its body text says \"It is intolerant of dry air.\"",
-        "humidity_pct_max — removed on audit: Same defect as humidity_pct_min: the 70% figure exists only in UF/IFAS EP360's commercial greenhouse production guideline, in a passage about mist and fog systems, and is presented in the record as a home-care requirement for the species. No admissible houseplant-oriented source in the corpus states any relative-humidity percentage, so the precision here is imported from a production context rather than established for indoor culture."
+        "humidity_pct_max — removed on audit: Same defect as humidity_pct_min: the 70% figure exists only in UF/IFAS EP360's commercial greenhouse production guideline, in a passage about mist and fog systems, and is presented in the record as a home-care requirement for the species. No admissible houseplant-oriented source in the corpus states any relative-humidity percentage, so the precision here is imported from a production context rather than established for indoor culture.",
+        "2026-09-02 corpus-wide quote verification: the Penn State 'Bright light is needed, but it cannot be direct sunlight...' quote could not be found on the cited page and was removed; direct_sun_hours_max=0 still rests on UF/IFAS MG028 ('bright light ... but no direct sunlight')."
       ],
       "citations": [
         {
@@ -264,12 +264,6 @@
           "source": "UF/IFAS Extension ENH17/MG028 — African Violets",
           "url": "https://edis.ifas.ufl.edu/publication/MG028",
           "quote": "For best growth and flowering, African violets require bright light (~1000 foot candles), but no direct sunlight (Figure 2). This is the amount of light within 3 feet of a southeast- or west-facing window."
-        },
-        {
-          "claim": "direct_sun_hours_max 0",
-          "source": "Penn State Extension — African Violet Care",
-          "url": "https://extension.psu.edu/african-violet-care",
-          "quote": "One particularly important requirement is proper lighting. Bright light is needed, but it cannot be direct sunlight. African violets like a north, northwest, or northeast-facing window."
         },
         {
           "claim": "night_f_min 65; night_f_max 70",
@@ -571,8 +565,8 @@
       "name_note": "The given name is already the accepted binomial: RHS lists Name Status \"Correct\" for Echeveria elegans and gives Echeveria potosina as a synonym. NC State adds that it was previously known as Echeveria perelegans. UGA Table 3 lists it under the common name \"Mexican Snowball\"; NC State lists Mexican Gem, Mexican Ghost Plant, Mexican Hens and Chicks, Mexican Snow Ball and White Mexican Rose.",
       "is_houseplant": true,
       "outdoor_sun_exposure": [
-        "full sun",
-        "partial shade"
+        "full_sun",
+        "part_shade"
       ],
       "direct_sun_hours_max": null,
       "light_fc_min": null,
@@ -887,9 +881,8 @@
       "light_fc_good": 200,
       "direct_sun_hours_max": null,
       "outdoor_sun_exposure": [
-        "full sun",
-        "partial shade",
-        "dappled sunlight"
+        "full_sun",
+        "part_shade"
       ],
       "day_f_min": 75,
       "day_f_max": 85,
@@ -1031,8 +1024,7 @@
       "light_fc_good": 200,
       "direct_sun_hours_max": null,
       "outdoor_sun_exposure": [
-        "dappled sunlight",
-        "partial shade"
+        "part_shade"
       ],
       "day_f_min": null,
       "day_f_max": null,
@@ -1407,6 +1399,7 @@
     }
   ],
   "normalizations": [
-    "2026-08-19: two defects fixed before landing, found by re-running the strict loader over the workflow's raw output rather than trusting the adversarial audit's pass alone. Haworthiopsis attenuata was missing common_name (a schema-required field the audit doesn't check); set to \"Zebra Plant\", the name NC State's own cited quote uses for it. Lucky Bamboo's light_fc_good=200 claim resolved to a citation quoting only \"100 to 150 ft-c\" -- the loader picks the first matching citation in array order, and the incomplete one came first; a second, genuine citation for the same claim already in the record quotes the full \"200 to 500 preferred\" legend, so this was a reorder, not a rewrite."
+    "2026-08-19: two defects fixed before landing, found by re-running the strict loader over the workflow's raw output rather than trusting the adversarial audit's pass alone. Haworthiopsis attenuata was missing common_name (a schema-required field the audit doesn't check); set to \"Zebra Plant\", the name NC State's own cited quote uses for it. Lucky Bamboo's light_fc_good=200 claim resolved to a citation quoting only \"100 to 150 ft-c\" -- the loader picks the first matching citation in array order, and the incomplete one came first; a second, genuine citation for the same claim already in the record quotes the full \"200 to 500 preferred\" legend, so this was a reorder, not a rewrite.",
+    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched."
   ]
 }

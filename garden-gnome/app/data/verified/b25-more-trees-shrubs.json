@@ -1,0 +1,1355 @@
+{
+  "batch": "b25-more-trees-shrubs",
+  "records": [
+    {
+      "common_name": "Red Maple",
+      "scientific_name_given": "Acer rubrum",
+      "scientific_name_accepted": "Acer rubrum",
+      "name_note": null,
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": "NC State Extension's own tag set separates three distinct animal targets for this species: \"#non-toxic for dogs,\" \"#non-toxic for cats,\" and \"#problem for horses.\" It is not toxic to dogs or cats. It is, however, a documented hazard to horses: Penn State Extension's dedicated safety article states it is \"commonly known to be toxic to horses, primarily when wilted leaves are consumed by the horse,\" with toxins that \"cause destruction of red blood cells and prevent remaining red blood cells from transporting oxygen throughout the body.\" No admissible source addresses toxicity to humans for this species.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max/humidity_need/humidity_pct_min/humidity_pct_max/light_fc_min/light_fc_good/direct_sun_hours_max/cool_rest_note: these read as indoor-microclimate and container-culture fields; no admissible source discusses ambient indoor temperature, humidity, or foot-candle/sun-hour ceilings for this outdoor landscape tree.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: no admissible source gives any fertilizing schedule, calendar month, or dilution guidance for Acer rubrum specifically.",
+        "soil_ph_min/soil_ph_max: NC State's only pH data point for this species is its site-wide categorical tag 'Soil pH: Acid (<6.0) / Neutral (6.0-8.0)' -- this catalog has already confirmed elsewhere, via direct fetch of unrelated species pages, that this exact bucket string is generic, reused site-wide boilerplate rather than a species-curated number, so it was not used here either. Every other admissible source addressing pH does so only qualitatively: Clemson calls the ideal soil 'slightly acidic,' UF/IFAS notes chlorosis 'may develop on alkaline soil,' RHS lists 'Acid or Neutral,' and Penn State says it 'prefers slightly acidic to neutral soil pH' -- none give a literal number, so both fields are left null.",
+        "soil_drainage: sources describe genuinely broad tolerance rather than one drainage regime -- NC State tags include both 'Good Drainage' and 'Occasional Flooding'/'Occasionally Wet,' UF/IFAS lists both 'well-drained' and 'extended flooding' tolerance, and UGA CAES notes its native habitat is 'Low-lying areas and swamps, always in association with water.' Since the species is documented tolerating well-drained soil, occasional flooding, and everything between, no single fast/moderate/moisture_retentive category fits without discarding part of what the sources say, so this was left null.",
+        "water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis/water_dry_down_target: no admissible source frames watering as a checkable numeric schedule (soil-probe depth, day intervals) for this in-ground landscape tree; UF/IFAS's irrigation guidance ('Irrigation is often needed to support street tree plantings...') and drought-tolerance notes are qualitative only, with no numbers to anchor an estimate.",
+        "water_regime nuance (flagged because this field is treated as harm-capable): NC State tags this species '#drought tolerant' alongside '#wet soils tolerant,' '#moist soil,' and '#flood tolerant,' while Penn State's rain-garden fact sheet states directly the tree is 'not tolerant of drought conditions,' Clemson frames drought tolerance as only 'occasional' and 'moderate' on soil it calls ideally 'moist,' and UF/IFAS calls drought tolerance 'moderate' but adds the tree is 'not especially drought-tolerant, particularly in the southern part of the range.' None of these sources actually recommends letting soil dry down between waterings -- the disagreement is about how much incidental drought stress the species tolerates once established, not about the basic regime -- so keep_moist was retained rather than nulled, consistent with this catalog's rule that a narrow tension on a supporting point shouldn't null a field the core sources agree on.",
+        "toxic_to_pets / toxicity_detail: NC State's tag set is the only admissible source addressing pet toxicity, and it tags three separate targets distinctly -- '#non-toxic for dogs,' '#non-toxic for cats,' and '#problem for horses.' toxic_to_pets was set false on the dogs/cats tags only, per this catalog's rule against blending toxicity findings across different target animals. The horse-specific hazard, independently detailed by Penn State Extension's dedicated safety article on red maple leaf toxicosis in horses, is preserved in toxicity_detail rather than dropped, but does not change toxic_to_pets since horses are not the 'pets' this field targets.",
+        "Missouri Botanical Garden's Acer rubrum Plant Finder page (plantfinder.mobot.org, an admissible source) could not be checked -- repeated fetch attempts against that host failed with a TLS certificate verification error, not a content issue -- so it is not represented among this record's citations.",
+        "soil_base garden_bed: no schema value distinguishes 'landscape/street tree planting' from a generic garden bed. Every admissible source discusses Acer rubrum only as an in-ground shade, street, rain-garden, or native tree grown in ordinary landscape/native soil textures (clay, loam, sand per NC State's Soil Texture tags), with no source describing container culture, so garden_bed was used as the best-supported single value rather than left null, consistent with this catalog's prior treatment of the related species Acer palmatum.",
+        "name_note — removed on audit: The name_note prose states that 'Clemson, UF/IFAS, Penn State, UMD Extension, and UGA CAES all refer to the species consistently as Acer rubrum with no alternate binomial proposed' -- but no extension.umd.edu citation exists anywhere in the citations array. I enumerated all 19 citation entries: NC State Extension (7), RHS (2), Clemson (2), UF/IFAS (1), Penn State (4), UGA CAES (3). UMD Extension is named as a source that was checked and found consistent, yet it never appears as a citation. This is an uncited factual claim embedded in a field value -- exactly the failure mode structural check #1 (every non-null field value must trace to a citations entry) is meant to catch. As written this UMD claim is unverifiable and should either be backed by an actual UMD citation or removed from the note.",
+        "toxic_to_pets — removed on audit: toxic_to_pets is set false using only NC State's '#non-toxic for dogs' / '#non-toxic for cats' tags, while the same source tags the species '#problem for horses' and Penn State Extension's dedicated article confirms red maple as a commonly-known, potentially fatal toxic hazard to horses via wilted leaves. Horses are one of the three standard target categories in toxic-plant classification schemes (alongside dogs and cats, as in the ASPCA's own toxic-plant taxonomy), so a field literally named toxic_to_pets that reads false in isolation signals 'safe for pets' while omitting a documented, serious hazard to a commonly kept companion/working animal. The horse hazard is preserved only in the free-text toxicity_detail field and in a supporting unknowns note -- not in the structured boolean itself -- so any downstream consumer or filter reading toxic_to_pets alone (which is exactly how a boolean flag is normally used) would get a misleadingly reassuring answer. This is a genuine scope/granularity overreach in the boolean even though the surrounding documentation is honest about the tradeoff."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Red Maple",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Red Maple"
+        },
+        {
+          "claim": "scientific_name_given Acer rubrum",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Acer rubrum"
+        },
+        {
+          "claim": "scientific_name_accepted Acer rubrum (Name Status: Correct)",
+          "source": "RHS Plant Profile: Acer rubrum",
+          "url": "https://www.rhs.org.uk/plants/276/acer-rubrum/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "name_note previously known as Acer carolinianum, Acer rubrum var. drummondii, Acer rubrum var. tridens, Acer rubrum var. trilobum, and Acer sanguineum",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Previously known as:\nAcer carolinianum\nAcer rubrum var. drummondii\nAcer rubrum var. tridens\nAcer rubrum var. trilobum\nAcer sanguineum"
+        },
+        {
+          "claim": "is_houseplant false (tagged and described as a shade tree / native tree, not an indoor or container plant)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "#shade tree #native tree #NC native"
+        },
+        {
+          "claim": "is_houseplant false (deciduous landscape tree)",
+          "source": "UGA Cooperative Extension, CAES Field Report (Native Plants for Georgia Part I)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B987/native-plants-for-georgia-part-i-trees-shrubs-and-woody-vines/",
+          "quote": "deciduous tree with medium texture, medium growth rate and an oblong to oval form"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Clemson Cooperative Extension HGIC, Maple factsheet (Red Maple section)",
+          "url": "https://hgic.clemson.edu/factsheet/maple/",
+          "quote": "Although naturally suited to partial shade, they also thrive in full sun."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "RHS Plant Profile: Acer rubrum",
+          "url": "https://www.rhs.org.uk/plants/276/acer-rubrum/details",
+          "quote": "Full sun, Partial shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun, part_sun, and part_shade",
+          "source": "UF/IFAS Ask IFAS (ENH-200/ST041)",
+          "url": "https://ask.ifas.ufl.edu/publication/st041",
+          "quote": "Light requirement: full sun, partial sun or partial shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Penn State Extension (Rain Garden Plants: Red Maple)",
+          "url": "https://extension.psu.edu/rain-garden-plants-red-maple",
+          "quote": "Sun: Full sun/partial shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "UGA Cooperative Extension, CAES Field Report (Native Plants for Georgia Part I)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B987/native-plants-for-georgia-part-i-trees-shrubs-and-woody-vines/",
+          "quote": "moist soils and full sun"
+        },
+        {
+          "claim": "water_regime keep_moist (ideal soil is moist; grows best in wet areas)",
+          "source": "Clemson Cooperative Extension HGIC, Maple factsheet (Red Maple section)",
+          "url": "https://hgic.clemson.edu/factsheet/maple/",
+          "quote": "Ideal soil for red maple is moist, slightly acidic and fertile...It grows best in wet areas but tolerates occasional moderate drought."
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasional Flooding\nOccasionally Dry\nOccasionally Wet"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Penn State Extension (Rain Garden Plants: Red Maple)",
+          "url": "https://extension.psu.edu/rain-garden-plants-red-maple",
+          "quote": "Hydrologic zones: Medium to wet"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "UGA Cooperative Extension, CAES Field Report (Native Plants for Georgia Part I)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B987/native-plants-for-georgia-part-i-trees-shrubs-and-woody-vines/",
+          "quote": "Low-lying areas and swamps, always in association with water"
+        },
+        {
+          "claim": "soil_base garden_bed (in-ground landscape tree grown in native soil textures)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Soil Texture:\nClay\nHigh Organic Matter\nLoam (Silt)\nSand"
+        },
+        {
+          "claim": "toxic_to_pets false (tagged non-toxic for dogs and cats; separately tagged a problem for horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "#problem for horses #non-toxic for dogs #non-toxic for cats"
+        },
+        {
+          "claim": "toxicity_detail toxic to horses via wilted leaves (not dogs/cats)",
+          "source": "Penn State Extension (Sycamores, Maples, and Sycamore Maples - Which Are Safe for Horses?)",
+          "url": "https://extension.psu.edu/sycamores-maples-and-sycamore-maples-which-are-safe-for-horses",
+          "quote": "Red maple, Acer rubrum, is commonly known to be toxic to horses, primarily when wilted leaves are consumed by the horse."
+        },
+        {
+          "claim": "toxicity_detail mechanism in horses: destruction of red blood cells",
+          "source": "Penn State Extension (Sycamores, Maples, and Sycamore Maples - Which Are Safe for Horses?)",
+          "url": "https://extension.psu.edu/sycamores-maples-and-sycamore-maples-which-are-safe-for-horses",
+          "quote": "Its toxins cause destruction of red blood cells and prevent remaining red blood cells from transporting oxygen throughout the body."
+        }
+      ]
+    },
+    {
+      "common_name": "Eastern Redbud",
+      "scientific_name_given": "Cercis canadensis",
+      "scientific_name_accepted": "Cercis canadensis",
+      "name_note": "No naming conflict among admissible sources. NC State Extension's Plant Toolbox lists \"Cercis canadensis var. alba,\" \"Cercis dilatata,\" and \"Siliquastrum canadense\" under \"Previously known as\" (implying Cercis canadensis is the current name), and RHS's own \"Name Status\" field marks Cercis canadensis \"Correct.\" All admissible sources treat Cercis canadensis as the current accepted binomial.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": 4.5,
+      "soil_ph_max": 7.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": "Admissible sources vary in how they frame drought tolerance for this species: UF/IFAS's structured field rates \"Drought Tolerance: high,\" Clemson describes it as tolerating \"moderate dry spells\" but doing \"better when irrigated in summer dry spells,\" and NC State's description states the tree \"does not tolerate heat or drought, which can stress the tree, or wet soils\" and \"should be kept well-watered until established.\" No admissible source gives a numeric watering-frequency interval or a soil-check depth for this species.",
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min, day_f_max, night_f_min, night_f_max, humidity_need, humidity_pct_min, humidity_pct_max, light_fc_min, light_fc_good: no admissible source gives ambient day/night temperature ranges, humidity requirements, or foot-candle light measurements for this outdoor landscape tree; these read as indoor-microclimate fields that don't apply.",
+        "direct_sun_hours_max: NC State's \"Full sun (6 or more hours of direct sunlight a day)\" defines the minimum threshold for its 'Full sun' category, not a species-specific maximum, so it was not mapped to this field.",
+        "chill_damage_f: no admissible source gives a specific damage-onset temperature. Only USDA hardiness-zone survival data exists (NC State: 4a-9b; UF/IFAS: 4B-9A; MOBOT: Zone 4-8; RHS: H5, hardy to -15 to -10C), which describes winter survivability, not an actionable cold-damage threshold. This is expected/correct for a hardy landscape tree, not under-research.",
+        "cool_rest_note: no admissible source describes a distinct dormancy/cool-rest care regimen for this species beyond it being winter-deciduous.",
+        "toxic_to_pets / toxicity_detail: none of the admissible sources checked (NC State, Clemson, MOBOT, UF/IFAS, RHS, UMD, Penn State Extension) contains a toxicity, poison, or pet-safety section for Cercis canadensis, in either direction. NC State does tag this species '#edible' and its own Edibility field states 'The flowers are edible and taste similar to peas. Contain high amounts of vitamin C.' -- but that addresses human culinary use of the flowers specifically, not toxicity to pets, and is not a toxicity claim at all (no 'Poisonous to Humans' section exists on any admissible source for this species either), so it was not used to populate either pet-toxicity field.",
+        "water_regime: left null. This is an in-ground landscape tree, and admissible sources genuinely diverge on how they characterize its drought tolerance -- UF/IFAS rates it 'high,' Clemson describes only 'moderate' dry-spell tolerance with a preference for summer irrigation, and NC State's description states it 'does not tolerate heat or drought.' None of this maps cleanly to the container-oriented water_regime enum (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist) in any case, so the field is left null and the tension is surfaced verbatim in water_estimate_basis rather than silently resolved.",
+        "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est: no admissible source frames watering as a checkable schedule (soil-probe depth, days-between-waterings) for this species; guidance is only qualitative (keep well-watered until established; irrigate during summer dry spells).",
+        "fertilize_interval_days: Clemson's only fertilizing guidance is 'Fertilize them during the spring at six-week intervals with a slow-release tree & shrub fertilizer.' Per this catalog's literal-number-derivation standard (established in this same batch for Crape Myrtle), a word like 'week' cannot be converted into a day-count without a literal digit for the multiplied result appearing in the source text -- 'six-week' contains the word 'six' but no source ever writes '42', so no interval_days figure was derived.",
+        "fertilize_active_months: Clemson's fertilizing guidance names only the season 'spring,' not specific calendar months, so this field cannot be populated under the month-name-to-number rule.",
+        "fertilize_strength: Clemson specifies only a product type ('slow-release tree & shrub fertilizer'), not a dilution/strength (full/half/quarter).",
+        "soil_ph_max 7.5: UMD's quote reads 'pH 4.5-7.5+' -- the trailing '+' suggests tolerance somewhat beyond 7.5, but gives no further specific number, so the literal stated bound (7.5) was used as the max rather than an invented higher ceiling. No other admissible source gives a numeric pH range for this species; NC State, RHS, UF/IFAS, and Clemson describe soil pH only categorically (Acid/Neutral/Alkaline, or 'pH adaptable' / 'tolerates acid or alkaline soils'), consistent with (not contradicting) UMD's wider numeric range.",
+        "is_houseplant / container use: UMD's structured 'Uses' list for this species includes 'container or planter' alongside many other outdoor landscape-use tags (tree lawn, street, sidewalk cutout, parking lot island, deck or patio, highway median, etc.). This describes outdoor container/planter placement in built landscapes, not sustained indoor houseplant culture -- no admissible source describes growing this species indoors long-term, so is_houseplant is kept false.",
+        "outdoor_sun_exposure full_shade: based on Clemson's statement 'Although it will grow in fairly dense shade, it blooms more heavily when exposed to sun.' This is unqualified 'shade' language (distinct from 'partial shade'), which this catalog has previously treated as supporting the full_shade category (e.g. Japanese Maple's UF/IFAS listing 'plant grows in the shade' as a separate line from 'plant grows in partial shade'). The same Clemson sentence notes bloom is reduced in denser shade, which is a tradeoff rather than a contradiction of tolerance.",
+        "Penn State Extension's page 'Eastern Redbuds Support Early Pollinators' (extension.psu.edu) was reviewed but addresses only early-season nectar value for pollinators, not any cultivation field in this schema, so it was not cited.",
+        "Mature size and growth-rate figures (e.g. Clemson: 20-30 ft height x 15-35 ft width, ~7-10 ft growth in 5-6 years; MOBOT: 20-30 ft x 25-35 ft; UF/IFAS: 20-30 ft, rare 35 ft specimens; RHS: 8-12 m x 4-8 m) were reviewed for context but have no corresponding field in this schema.",
+        "outdoor_sun_exposure — removed on audit: The 'full_shade' member of this array over-reaches. Its sole support is the Clemson quote 'Although it will grow in fairly dense shade, it blooms more heavily when exposed to sun' — descriptive, hedged prose about survival, not an assertion of a 'full shade' exposure category. Critically, I re-fetched NC State's own structured Light field for this exact species page (plants.ces.ncsu.edu/plants/cercis-canadensis/), which is a discrete-category field (confirmed format: 'Full sun (6 or more hours...)' / 'Partial Shade (2-6 hours)'), and it lists ONLY Full Sun and Partial Shade for Cercis canadensis — NOT Full Shade, even though NC State's toolbox has a Full Shade category available in general (the record's own justification cites NC State using it for Japanese Maple). So the one source with a rigorous, discrete sun-category taxonomy declines to tag this species as full-shade-tolerant, while the record adds 'full_shade' anyway based on a different source's loose prose. The other three array values (full_sun, part_sun, part_shade) are cleanly and independently supported by multiple sources (NC State, Clemson, UF/IFAS, RHS, UMD, MOBOT) and are not in question — only the full_shade member should be dropped."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Eastern Redbud (listed among American Judas Tree, American Redbud, Eastern Redbud, Redbud)",
+          "quote": "Common Name(s):\nAmerican Judas Tree\nAmerican Redbud\nEastern Redbud\nRedbud",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "scientific_name_given Cercis canadensis",
+          "quote": "Genus:\nCercis\nSpecies:\ncanadensis\nFamily:\nFabaceae",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "scientific_name_accepted Cercis canadensis (previously known as Cercis canadensis var. alba, Cercis dilatata, Siliquastrum canadense)",
+          "quote": "Previously known as:\nCercis canadensis var. alba\nCercis dilatata\nSiliquastrum canadense",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "scientific_name_accepted Cercis canadensis (RHS Name Status: Correct)",
+          "quote": "Name Status\nCorrect",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/28979/cercis-canadensis/details"
+        },
+        {
+          "claim": "is_houseplant false (Plant Type tags include Tree, Shrub, Woody Plant; outdoor deciduous species)",
+          "quote": "Plant Type:\nEdible\nNative Plant\nPerennial\nShrub\nTree",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "is_houseplant false (Type: Tree, USDA Zone 4 to 8 outdoor landscape tree)",
+          "quote": "Type: Tree\nFamily: Fabaceae\nNative Range: Eastern North America\nZone: 4 to 8",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=h550"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "It grows well in full sun but prefers some shade in the heat of summer.",
+          "source": "Clemson Cooperative Extension HGIC, Redbud factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/redbud/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_shade (tolerates fairly dense shade, though blooms more heavily in sun)",
+          "quote": "Although it will grow in fairly dense shade, it blooms more heavily when exposed to sun.",
+          "source": "Clemson Cooperative Extension HGIC, Redbud factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/redbud/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun, part_sun, and part_shade",
+          "quote": "Light requirement: full sun, partial sun or partial shade",
+          "source": "UF/IFAS Ask IFAS (ENH304/ST145)",
+          "url": "https://ask.ifas.ufl.edu/publication/ST145"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Position\nFull sun\nPartial shade",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/28979/cercis-canadensis/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun to partial shade; forest edge and understory tree",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/eastern-redbud"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Sun: Full sun to part shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=h550"
+        },
+        {
+          "claim": "soil_base garden_bed (planted in permanent in-ground position, does not tolerate root disturbance/transplanting)",
+          "quote": "It does not tolerate root disturbance, so plants should be placed in their permanent positions as soon as possible and should be kept well-watered until established.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "soil_base garden_bed and soil_drainage moderate (grown in ground in well-drained soil; does not transplant well once established)",
+          "quote": "Easily grown in average, medium moisture, well-drained soils in full sun to part shade.  Part shade is best in hot summer climates.  Performs best in moderately fertile soils with regular and consistent moisture.  Avoid wet or poorly drained soils.  Since this tree does not transplant well, it should be planted when young and left undisturbed.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=h550"
+        },
+        {
+          "claim": "soil_drainage moderate (good drainage, moist, occasionally dry tolerance)",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "soil_drainage moderate (prefers moist, well-drained sites; dislikes permanently wet soil)",
+          "quote": "Although the redbud does well in most soil types, it prefers moist, well-drained sites.",
+          "source": "Clemson Cooperative Extension HGIC, Redbud factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/redbud/"
+        },
+        {
+          "claim": "soil_drainage moderate (occasionally wet tolerance combined with well-drained preference)",
+          "quote": "Soil tolerances: clay; sand; loam; alkaline; acidic; occasionally wet; well-drained",
+          "source": "UF/IFAS Ask IFAS (ENH304/ST145)",
+          "url": "https://ask.ifas.ufl.edu/publication/ST145"
+        },
+        {
+          "claim": "soil_drainage moderate (well-drained, moist-to-occasionally dry; intolerant of wet or poorly aerated soil)",
+          "quote": "prefers well-drained, moist-to-occasionally dry soil. does not tolerate wet, poorly aerated, or coarsely sandy soil conditions",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/eastern-redbud"
+        },
+        {
+          "claim": "soil_ph_min 4.5 and soil_ph_max 7.5",
+          "quote": "Loam-sand-clay, high organic matter; pH 4.5-7.5+",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/eastern-redbud"
+        },
+        {
+          "claim": "water_estimate_basis (drought tolerance rated high)",
+          "quote": "Drought Tolerance: high",
+          "source": "UF/IFAS Ask IFAS (ENH304/ST145)",
+          "url": "https://ask.ifas.ufl.edu/publication/ST145"
+        },
+        {
+          "claim": "water_estimate_basis (irrigation recommended in summer dry spells)",
+          "quote": "Trees look better when they receive some irrigation in summer dry spells.",
+          "source": "UF/IFAS Ask IFAS (ENH304/ST145)",
+          "url": "https://ask.ifas.ufl.edu/publication/ST145"
+        },
+        {
+          "claim": "water_estimate_basis (tolerates moderate dry spells but benefits from irrigation)",
+          "quote": "Redbuds tolerate moderate dry spells, but do better when irrigated in summer dry spells.",
+          "source": "Clemson Cooperative Extension HGIC, Redbud factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/redbud/"
+        },
+        {
+          "claim": "water_estimate_basis (does not tolerate heat or drought; keep well-watered until established)",
+          "quote": "It does not tolerate heat or drought, which can stress the tree, or wet soils. It does not tolerate root disturbance, so plants should be placed in their permanent positions as soon as possible and should be kept well-watered until established.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "fertilize guidance reviewed (spring, six-week intervals, slow-release tree & shrub fertilizer) -- not convertible to fertilize_interval_days/fertilize_active_months per catalog standard",
+          "quote": "Fertilize them during the spring at six-week intervals with a slow-release tree & shrub fertilizer.",
+          "source": "Clemson Cooperative Extension HGIC, Redbud factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/redbud/"
+        },
+        {
+          "claim": "toxic_to_pets/toxicity_detail not addressed -- NC State documents human flower edibility, not pet toxicity",
+          "quote": "The flowers are edible and taste similar to peas.  Contain high amounts of vitamin C.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        }
+      ]
+    },
+    {
+      "common_name": "Apple",
+      "scientific_name_given": "Malus domestica",
+      "scientific_name_accepted": "Malus domestica",
+      "name_note": "RHS gives the accepted name as Malus domestica (Name Status \"Correct\"), with a synonym Malus nigra (\"Synonyms Malus domestica [2], Malus nigra Name Status Correct\"). NC State Extension's Gardener Plant Toolbox likewise treats Malus domestica as the current species name -- it is the binomial used on the main species page and on numerous named-cultivar pages under the same species (e.g. 'Gala', 'Red Delicious', 'Fuji', 'Golden Delicious', 'Mutsu', 'Empire', 'Rome'). Both admissible sources agree on Malus domestica as the accepted binomial, so scientific_name_accepted is copied over unchanged with no conflict to adjudicate.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": 5.8,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": "UF/IFAS: irrigate to wet the soil beneath the canopy to a depth of several feet, using more than 50 gallons per tree for large trees or 5 to 10 gallons for young trees, with irrigation needed roughly every 7 to 10 days only under extremely dry conditions. This is framed as a drought-conditions figure rather than a general watering interval, so it is not used to populate water_growing_days_est.",
+      "fertilize_active_months": [
+        1,
+        6
+      ],
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxic_to_pets and toxicity_detail: left null. Checked NC State Extension's Malus domestica page and three of its named-cultivar pages ('Gala', 'Red Delicious', and the main species page) -- none carry a Poison Severity, Poison Symptoms, Poison Toxic Principle, or Poison Part field, and none carry a toxic/non-toxic pet tag. RHS's Malus domestica plant profile has no Toxicity section at all, and RHS's own 'Potentially harmful garden plants' advice page does not list Malus or apple among its entries for any target species (pets or humans). The only admissible-domain page found that discusses apple seed/leaf cyanide toxicity is NC State's page for Malus sylvestris (European Crab Apple / Common Crabapple, 'Apple' is also one of its listed common names, previously known as M. pumila) -- a genuinely different species from Malus domestica, not a synonym or a cultivar of it, and that page never mentions Malus domestica. That source states: 'TOXIC ONLY IF LARGE QUANTITIES EATEN. Ingesting seeds can cause difficult breathing, trembling, spasms, and coma of short duration. Stems, leaves, seeds contain cyanide, particularly toxic in the process of wilting' with Poison Toxic Principle 'Cyanogenic glycoside, amygdalin' and Poison Part 'Leaves' and 'Seeds', filed under a 'Poisonous to Humans' section (severity Low), plus tags '#problem for cats', '#problem for dogs', '#problem for horses'. Per the sourcing rule that only a source naming this specific species counts, that Malus-sylvestris-specific finding was not applied to this Malus domestica record, and no admissible source names Malus domestica itself for either the edible-flesh vs. toxic-seed distinction or general pet toxicity, so both fields are left null rather than inferred from the sibling species.",
+        "chill_damage_f: left null. No admissible source states an actionable cold-damage-onset temperature for this species; the only cold-related figures found are USDA hardiness-zone survival ranges (NC State: zones 4a-9b) and winter-chill dormancy-requirement hours (see cool_rest_note note below), which is a different concept from damage onset.",
+        "cool_rest_note: left null. UF/IFAS gives a chilling-hour figure -- 'They have a cold requirement in the range of 300 to 400 hours below 45°F' -- but explicitly ties it only to specific low-chill cultivars bred for Florida ('Anna', 'Dorsett Golden', 'Tropic Sweet', and 'Ein Shemer'). The same UF/IFAS source implies standard/northern cultivars need substantially more chill than that: 'northern apple cultivars such as Golden Delicious, Red Delicious, Gala, or Fuji are not exposed to enough low temperatures during Florida's mild winters.' NC State separately confirms chill requirement varies by cultivar rather than being a fixed species trait: 'Cultivars have different chilling hour requirements, so be sure to choose the right one for your area.' Since no single species-wide chilling-hours figure is supportable, this field is left null rather than presenting one low-chill cultivar group's figure as the species' value.",
+        "day_f_min/day_f_max/night_f_min/night_f_max, humidity_need, humidity_pct_min/humidity_pct_max, light_fc_min/light_fc_good, direct_sun_hours_max: left null. This is an outdoor orchard/landscape tree with no admissible source discussing it in houseplant/container terms, so no source gives ambient indoor-style day/night temperature ranges, humidity percentages, or foot-candle/hour light figures.",
+        "soil_ph_min/soil_ph_max: populated from Clemson's specific numeric range (5.8-6.5), corroborated qualitatively by UGA Cooperative Extension ('grow best when the soil pH is near 6.5'). NC State categorizes the plant's soil pH tolerance more broadly as 'Neutral (6.0-8.0)' and 'Alkaline (>8.0)', and RHS's Soil pH field is simply 'Acid or Alkaline or Neutral' -- both are broad qualitative categories rather than a specific preferred range, so they were not merged into the numeric field, consistent with how this catalog treats a specific Extension figure alongside a broader NC State/RHS category tag elsewhere (e.g. Green Beans).",
+        "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est: left null. No admissible source states a dry-down/moisture regime (e.g. keep_moist vs. dry between waterings) or a soil check-depth for this species. UF/IFAS gives an irrigation depth and volume, but frames the every-7-to-10-day figure as specific to 'extremely dry conditions' rather than a general watering interval, so that information is captured qualitatively in water_estimate_basis instead of being forced into water_growing_days_est.",
+        "fertilize_interval_days and fertilize_strength: left null. UF/IFAS gives calendar months (January, June) and an age-scaled granular-fertilizer amount (about one pound of 10-10-10 per year of tree age, up to 15 lb/year), but no day-interval figure, and no liquid-dilution 'strength' framing (full/half/quarter) that would map to fertilize_strength -- Clemson and UGA give a similar granular 10-10-10/ammonium-nitrate schedule by tree age with the same lack of a strength framing."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Apple; scientific_name_given Malus domestica (family Rosaceae, deciduous tree)",
+          "quote": "The common apple is a deciduous tree with edible fruit in the rose family (Rosaceae).",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/"
+        },
+        {
+          "claim": "scientific_name_accepted Malus domestica (RHS Name Status Correct; synonym Malus nigra)",
+          "quote": "Synonyms Malus domestica [2], Malus nigra Name Status Correct",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/60558/malus-domestica-f/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Apples are generally easy to grow and tolerate a variety of soils. Grow in full sun to partial shade.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Position Full sun, Partial shade",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/60558/malus-domestica-f/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Sunlight, and plenty of it, is the key to increasing fruit production. Pick an area where the trees will be in the sun most or all of the day.",
+          "source": "UGA Cooperative Extension (CAES Field Report), Home Garden Apples (C740)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C740/home-garden-apples/"
+        },
+        {
+          "claim": "soil_base garden_bed and soil_drainage moderate (good drainage, moist, occasionally dry tolerance)",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/"
+        },
+        {
+          "claim": "soil_drainage moderate (moist but well-drained cultivation preference)",
+          "quote": "Prefers deep, fertile, moist but well-drained, neutral soil in a sunny, sheltered position.",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/60558/malus-domestica-f/details"
+        },
+        {
+          "claim": "soil_ph_min 5.8 and soil_ph_max 6.5",
+          "quote": "Most fruit plants, including apples, grow best when the soil pH is between 5.8 and 6.5.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/apple/"
+        },
+        {
+          "claim": "soil_base garden_bed and soil_drainage moderate (sandy loam to sandy clay loam preferred; will not thrive in poorly drained soil)",
+          "quote": "Although apple trees will grow well in a wide range of soil types, a deep soil ranging in texture from a sandy loam to a sandy clay loam is preferred. Apple trees will not thrive in a soil that is poorly drained.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/apple/"
+        },
+        {
+          "claim": "fertilize_active_months 1 and 6 (January dormant-period application; June rainy-season application)",
+          "quote": "The first application should be made during the dormant period in January and another application at the beginning of the rainy season in June.",
+          "source": "UF/IFAS Extension, HS14/MG073: The Apple (Malus domestica, Rosaceae)",
+          "url": "https://ask.ifas.ufl.edu/mg073"
+        },
+        {
+          "claim": "water_estimate_basis (irrigation depth/volume and drought-conditions interval, not a general schedule)",
+          "quote": "The area beneath the canopy of the tree should be wet to a depth of several feet at each irrigation, which may require more than 50 gallons of water per tree for large trees or as little as 5 to 10 gallons for young trees. Irrigation may be required every 7 to 10 days under extremely dry conditions.",
+          "source": "UF/IFAS Extension, HS14/MG073: The Apple (Malus domestica, Rosaceae)",
+          "url": "https://ask.ifas.ufl.edu/mg073"
+        },
+        {
+          "claim": "is_houseplant false (outdoor edible-garden/landscape tree; no container or indoor growing mentioned by any admissible source)",
+          "quote": "Plant this tree in an edible garden or as a flowering specimen in a lawn or meadow.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/"
+        }
+      ]
+    },
+    {
+      "common_name": "River Birch",
+      "scientific_name_given": "Betula nigra",
+      "scientific_name_accepted": "Betula nigra",
+      "name_note": "No naming conflict among admissible sources. RHS lists Betula nigra's Name Status as \"Correct,\" with one synonym, Betula rubra. NC State, Clemson, Missouri Botanical Garden, and UF/IFAS all use Betula nigra as the accepted binomial without noting any alternative accepted name or synonym conflict.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": null,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f: left null. No admissible source states a specific damage-onset cold temperature for this species -- only survival-hardiness data is given: Clemson states 'It is hardy in USDA Cold Hardiness Zones 4 to 9,' NC State lists USDA zones 4a-9b, UF/IFAS gives '4A through 9A,' and RHS rates it H7 ('hardy in the severest European continental climates (< -20)' degrees C). These are all survival-zone thresholds, not a stated point where sublethal chill damage begins. This null is expected for a hardy landscape tree, not under-research.",
+        "day_f_min/day_f_max, night_f_min/night_f_max, humidity_need, humidity_pct_min/max, light_fc_min/light_fc_good, cool_rest_note: left null. These read as indoor-microclimate/houseplant fields. No admissible source discusses ambient humidity, indoor temperature comfort ranges, foot-candle light levels, or a distinct dormancy-rest regimen for this outdoor landscape tree; is_houseplant is false and none of the six admissible publishers consulted frame River Birch as container/indoor culture.",
+        "direct_sun_hours_max: left null despite NC State's Light tag reading 'Full sun (6 or more hours of direct sunlight a day).' This exact parenthetical is NC State's site-wide category-definition boilerplate (the identical phrase is attached to unrelated species, e.g. a succulent, elsewhere in this catalog's NC State-sourced records) rather than a species-specific measured sun-hour requirement for River Birch, so it was used only to map outdoor_sun_exposure to the full_sun category, not to populate a numeric hours field.",
+        "toxic_to_pets / toxicity_detail: left null. None of the six admissible sources consulted (NC State, Clemson, Missouri Botanical Garden, UF/IFAS, RHS, University of Maryland Extension) address toxicity to pets or humans for Betula nigra. NC State's own tag list for this species (fire risk, wildlife, garden-use tags) contains no toxic/non-toxic tag, unlike some other species pages on the same site, so this reads as a genuine coverage gap rather than an overlooked positive claim.",
+        "soil_ph_min: left null. No admissible source gives a specific lower pH bound. NC State's Soil pH tags ('Acid <6.0' and 'Neutral 6.0-8.0') and RHS's pH field ('Acid or Alkaline or Neutral') are broad categories spanning nearly the whole practical pH scale, not a stated minimum the plant needs.",
+        "soil_ph_max: set to 6.5 from Clemson's specific, actionable statement that iron-deficiency chlorosis develops 'at soil pH levels of 6.5 or higher.' This is corroborated qualitatively (without a number) by UF/IFAS ('The tree requires an acid soil, otherwise it becomes chlorotic' and, under Diseases, 'chlorosis on soils with a high pH'). No admissible source contradicts the 6.5 figure or supplies a competing number, so this is not treated as a genuine conflict despite NC State's broader 'Neutral (6.0-8.0)' category tag, which is a coarse classification rather than a stated preferred value.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: left null. None of the six admissible sources consulted give any fertilizing guidance (schedule, dilution, or season) for River Birch.",
+        "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. No admissible source frames watering as a checkable schedule (a soil-probe depth or a days-between-waterings interval) for this in-ground landscape tree; sources describe watering only qualitatively -- NC State recommends keeping soil 'consistently moist' with soaker hoses and mulch, Clemson recommends a '2- to 3-inch layer of mulch to conserve soil moisture,' and UF/IFAS warns the tree is 'Not a tree to plant and forget due to irrigation requirement' -- all captured instead via water_regime.",
+        "Establishment-period watering specifically: no admissible source gives a distinct young-tree/establishment watering schedule separate from its general moisture guidance. Clemson notes established trees 'tolerate fairly dry soils once it becomes established' (implying heavier watering needs beforehand) and UF/IFAS attributes short urban lifespan (30-40 years) partly to 'inadequate water supply,' but neither gives a specific establishment-period duration, frequency, or depth, so no water_growing_days_est/water_dormant_days_est value could be derived.",
+        "water_regime: kept as keep_moist despite UF/IFAS rating overall drought tolerance as 'moderate' and Clemson noting established trees 'tolerate fairly dry soils.' This reads as normal established-tree resilience layered on a consistent moist-soil preference -- NC State, UF/IFAS, and Clemson all independently recommend keeping the soil moist/irrigated -- not a genuine disagreement about the species' baseline moisture regime.",
+        "soil_drainage: set to moisture_retentive on repeated cross-source evidence that this species tolerates and even favors consistently moist-to-wet soil far more than a typical landscape tree -- NC State ('known to tolerate flooded conditions for extended periods of time... naturally found in riverbanks, streambanks and floodplains' plus Soil Drainage tags including 'Moist' and 'Occasionally Wet'), Missouri Botanical Garden ('Water: Medium to wet' and 'will tolerate poor drainage and occasional inundation'), UF/IFAS ('Soil tolerances: ...wet to well-drained'), and University of Maryland Extension (naming it one of the few tree species that is an 'exception' to needing well-drained soil and 'not susceptible to root rot on wet sites'). No admissible source describes it as needing fast/sharp drainage, so this is not treated as a conflict despite RHS and Clemson also using the phrase 'well-drained' in passing.",
+        "outdoor_sun_exposure: full_sun and part_shade are supported by five independently-worded sources (NC State, Missouri Botanical Garden, RHS, UF/IFAS, Clemson); none of the six admissible sources consulted mention full_shade or a distinct part_sun tolerance, so those enum values were not added.",
+        "Penn State Extension and UGA CAES Cooperative Extension: searched but no dedicated River Birch/Betula nigra species page with quotable care specifics (sun/soil/water/pH/hardiness) was found on extension.psu.edu or fieldreport.caes.uga.edu -- only passing mentions in unrelated pest/rain-garden articles -- so neither publisher contributed a citation to this record."
+      ],
+      "citations": [
+        {
+          "claim": "common_name River Birch (also Black Birch, Red Birch, Water Birch)",
+          "quote": "Common Name(s):\nBlack Birch\nRed Birch\nRiver Birch\nWater Birch",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "scientific_name_given Betula nigra",
+          "quote": "Betula nigra",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "scientific_name_accepted Betula nigra (Name Status: Correct)",
+          "quote": "Name Status\nCorrect",
+          "source": "RHS Plant Profile: Betula nigra",
+          "url": "https://www.rhs.org.uk/plants/2258/betula-nigra/details"
+        },
+        {
+          "claim": "scientific_name_accepted Betula nigra (synonym Betula rubra)",
+          "quote": "Synonyms\nBetula\nrubra",
+          "source": "RHS Plant Profile: Betula nigra",
+          "url": "https://www.rhs.org.uk/plants/2258/betula-nigra/details"
+        },
+        {
+          "claim": "is_houseplant false (species classified as a tree)",
+          "quote": "Type: Tree",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277830"
+        },
+        {
+          "claim": "is_houseplant false (native, deciduous, upright landscape tree)",
+          "quote": "River birch is a native, deciduous, upright tree with cinnamon-brown, exfoliating bark and yellow fall foliage that tends to drop off the tree early and quickly.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Sun: Full sun to part shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277830"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Position\nFull sun, Partial shade",
+          "source": "RHS Plant Profile: Betula nigra",
+          "url": "https://www.rhs.org.uk/plants/2258/betula-nigra/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light requirement:\nfull sun to partial shade",
+          "source": "UF/IFAS Ask IFAS (ENH253/ST094)",
+          "url": "https://ask.ifas.ufl.edu/publication/st094"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (full sun to moderate shade)",
+          "quote": "River birch grows best in full sun to moderate shade.",
+          "source": "Clemson Cooperative Extension HGIC, River Birch factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/river-birch/"
+        },
+        {
+          "claim": "soil_base garden_bed (sited in the lawn/landscape, not a container)",
+          "quote": "Site the tree as a specimen or small grouping for shade or screening in the lawn, a rain garden, or naturalized, woodland or riparian areas.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (medium to wet soils, tolerates poor drainage and occasional inundation)",
+          "quote": "Easily grown average, medium to wet soils in full sun to part shade. River birch is perhaps the most culturally adaptable and heat tolerant of the birches. Prefers moist to wet, acidic, fertile soils, but also tolerates drier soils. Consider using soaker hoses and bark mulches to keep the root zones cool and moist. Adapts well to heavy clay soils and will tolerate poor drainage and occasional inundation.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277830"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (tolerates flooded conditions for extended periods)",
+          "quote": "This species has been known to tolerate flooded conditions for extended periods of time. For this reason, it is naturally found in riverbanks, streambanks and floodplains.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (Soil Drainage tags include Moist and Occasionally Wet)",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Dry\nOccasionally Wet",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (soil tolerances include wet to well-drained)",
+          "quote": "Soil tolerances:\nclay; sand; loam; acidic; wet to well-drained",
+          "source": "UF/IFAS Ask IFAS (ENH253/ST094)",
+          "url": "https://ask.ifas.ufl.edu/publication/st094"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (moist but well-drained)",
+          "quote": "Moisture\nMoist but well–drained",
+          "source": "RHS Plant Profile: Betula nigra",
+          "url": "https://www.rhs.org.uk/plants/2258/betula-nigra/details"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (exception among trees, tolerates wet sites without root rot)",
+          "quote": "Most trees need well-drained soil and are susceptible to root rot on wet sites. There are exceptions, like river birch (Betula nigra), baldcypress (Taxodium distichum), sycamore (Platanus occidentalis), and many others.",
+          "source": "University of Maryland Extension, \"Planting a Tree or Shrub\"",
+          "url": "https://extension.umd.edu/resource/planting-tree-or-shrub"
+        },
+        {
+          "claim": "soil_ph_max 6.5 (iron-deficiency chlorosis develops at or above this soil pH)",
+          "quote": "River birch requires acidic soil and may suffer from leaf yellowing, or chlorosis, caused by an iron deficiency at soil pH levels of 6.5 or higher.",
+          "source": "Clemson Cooperative Extension HGIC, River Birch factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/river-birch/"
+        },
+        {
+          "claim": "water_regime keep_moist (keep soil consistently moist in the landscape)",
+          "quote": "In the landscape, keep the soil consistently moist and consider using soaker hoses and bark mulches to keep the root zones cool and moist.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/"
+        },
+        {
+          "claim": "water_regime keep_moist (medium to wet water need)",
+          "quote": "Water: Medium to wet",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277830"
+        },
+        {
+          "claim": "water_regime keep_moist (needs adequate water, not a tree to plant and forget)",
+          "quote": "Situate the tree so it receives adequate water. Large trees are prone to trunk decay. Not a tree to plant and forget due to irrigation requirement.",
+          "source": "UF/IFAS Ask IFAS (ENH253/ST094)",
+          "url": "https://ask.ifas.ufl.edu/publication/st094"
+        },
+        {
+          "claim": "water_regime keep_moist (prefers moist, fertile, well-drained soil)",
+          "quote": "River birch prefers moist, fertile, well-drained soil.",
+          "source": "Clemson Cooperative Extension HGIC, River Birch factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/river-birch/"
+        }
+      ]
+    },
+    {
+      "common_name": "Camellia",
+      "scientific_name_given": "Camellia japonica",
+      "scientific_name_accepted": "Camellia japonica",
+      "name_note": null,
+      "is_houseplant": false,
+      "toxic_to_pets": false,
+      "toxicity_detail": "NC State's Plant Toolbox tags Camellia japonica non-toxic for cats, dogs, and horses, and the species page carries no separate poison/toxicity section at all -- an explicit non-toxicity statement rather than mere silence. No other admissible source (Clemson, Missouri Botanical Garden, RHS, UF/IFAS, UGA) addresses pet toxicity for this species at all, so there is silence rather than disagreement elsewhere.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": 10,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 5.5,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: this is an outdoor landscape shrub; no admissible source gives ambient day/night temperature ranges, only winter cold-hardiness/damage-onset data (captured in chill_damage_f).",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source addresses ambient humidity requirements for this outdoor shrub.",
+        "light_fc_min/light_fc_good: no admissible source gives footcandle figures; light is described only via sun-exposure category (part shade, full shade, etc.).",
+        "direct_sun_hours_max: NC State's 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' is the site's fixed boilerplate definition of its 'Partial Shade' category label, reused verbatim across many unrelated species pages carrying that same tag, not data specific to Camellia japonica -- excluded on the same reasoning this catalog has applied elsewhere to NC State's/UMD's generic category-definition text.",
+        "outdoor_sun_exposure (full_shade not included): RHS lists 'Full shade, Partial shade' as this species' Position, and UGA's mixed-container publication states Camellia japonica 'all grow best in partial to full shade environments,' but UF/IFAS EDIS states for this same species that 'Deep shade may result in sparse foliage and poor flowering' -- a genuine disagreement about whether full/deep shade helps or harms the plant. Only part_shade, on which every admissible source agrees, was kept in the field; full_shade was left out rather than picking a side.",
+        "outdoor_sun_exposure (full_sun not included): Clemson notes 'Older camellia plants can thrive in full sun when they are mature enough to have their roots shaded by a heavy canopy of leaves' -- this is a conditional exception for established plants with self-shaded roots, not a general full-sun recommendation, so full_sun was not added to the enum list.",
+        "soil_ph: UF/IFAS EDIS gives a slightly wider, genus-general 'pH between 5.0 and 6.5' for camellias, versus NC State's and Missouri Botanical Garden's tighter, Camellia-japonica-specific '5.5 to 6.5.' Not treated as a genuine conflict since the ranges nest and the narrower figure is independently corroborated by two species-specific sources; the tighter figure was used.",
+        "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: UF/IFAS EDIS gives outdoor garden-bed irrigation guidance ('1 inch of water should be applied every 10 days to 2 weeks... Camellias also need 1 inch of water per week during flowering... sensitive to overwatering and succumb to root rot when kept too wet') but this describes in-ground landscape watering, not container culture, and doesn't map onto the container-oriented water_regime categories (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist); left null per this catalog's convention for outdoor garden-bed shrubs.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: UF/IFAS EDIS gives a landscape fertilizer program ('about half a pound of 12-4-12 or 15-5-15... per 100 square feet... in spring and/or early summer,' 'One or two applications a year') but only names seasons rather than specific calendar months (the task's month-name-to-number exception doesn't apply to season names), and the granular per-area application rate doesn't map onto the full/half/quarter dilution-strength scale built for container/liquid feeding, so left null rather than force-fit.",
+        "cool_rest_note: this field is oriented at houseplants with a winter dormancy/rest period; every admissible source treats this species as grown outdoors. Missouri Botanical Garden's note that container-grown plants need greenhouse winter temperatures of 45-55 degrees F (with flower buds dropping above 55 degrees F) describes an overwintering requirement for the 'containers generally don't work indoors' scenario, not a cool-rest care instruction, so left null.",
+        "is_houseplant: UGA's 'Success with Mixed Containers Using Perennial and Woody Plants' names Camellia japonica as suited to outdoor mixed container plantings on patios/entrances with 'partial to full shade' and 'moderate soil moisture,' but this describes outdoor container gardening (not indoor/long-term houseplant culture), so it was not used to support is_houseplant true; Missouri Botanical Garden's explicit statement that containers are 'typically not an effective option' for growing this species indoors in private residences was decisive for is_houseplant false.",
+        "soil_drainage — removed on audit: Value 'moderate' rests on two citations that don't actually agree with each other and don't match this catalog's own established mapping for the same source data. The NC State citation's raw tags are 'Good Drainage, Moist, Occasionally Wet' (no 'Occasionally Dry'). I checked every other verified-batch record in app/data/verified/*.json that quotes this exact three-tag NC State combination (no 'Occasionally Dry'), and found it: Jack-in-the-Pulpit, in b22-aroid-genus-gaps.json, uses the identical quote and is correctly mapped to soil_drainage 'moisture_retentive', not 'moderate'. Every record in the catalog that IS mapped to 'moderate' pairs 'Good Drainage' with BOTH 'Occasionally Dry' AND 'Occasionally Wet' (Common Morning Glory, Crape Myrtle, Golden Bamboo) -- i.e. tolerates both extremes. Camellia's NC State tags lack 'Occasionally Dry', so by this catalog's own precedent they should map to moisture_retentive, not moderate. Compounding this, the second (UGA) citation for the same field literally says soil should be 'moderate soil moisture (but not wet soil)' -- which directly conflicts with NC State's own 'Occasionally Wet' tag on a field the record's own unknowns text identifies as consequential (UF/IFAS: camellias 'succumb to root rot when kept too wet'). Because the two citations disagree with each other and the value contradicts this catalog's own prior treatment of the identical underlying source tags, the VALUE itself -- not just one citation's label -- is in doubt; per the audit's own rule 2 exception, that means the field should be refuted rather than waved through as independently corroborated. moisture_retentive (or null) would better fit the actual evidence.",
+        "name_note — removed on audit: name_note asserts a specific, checkable fact -- 'RHS lists \"Camellia hozanensis\" under Synonyms' -- that is used to conclude there is no accepted-name conflict. I fetched the live RHS page (rhs.org.uk/plants/2845/camellia-japonica/details) and confirmed this is actually true (Synonyms: Camellia hozanensis; Name Status: Correct). But the record's own citations array does not trace to it: the only RHS citation present quotes just 'Name Status\\nCorrect' and never quotes or mentions the synonym itself. Per structural check 1 (every non-null field value must trace to an entry in citations), this specific claim in name_note has no supporting citation entry in the record as given -- it is asserted in prose without the quote that would substantiate it, even though a supporting quote was trivially available and simply wasn't included. The record should either be refuted for this untraceable claim or amended to add a citation entry quoting the Synonyms field."
+      ],
+      "citations": [
+        {
+          "claim": "toxic_to_pets false",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-japonica/",
+          "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
+        },
+        {
+          "claim": "is_houseplant false (containers not an effective option for indoor growing)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287331",
+          "quote": "Container plants are an option for the St. Louis area and other places where plants are not winter hardy, but containers are typically not an effective option because camellias generally overwinter poorly in private residences where growing conditions and room temperatures cannot be controlled. For container plants to thrive indoors, they must be overwintered in a temperature-controlled environment such as a greenhouse where maximum winter temperatures range from 45 to 55 degrees F."
+        },
+        {
+          "claim": "is_houseplant false (corroborating, outdoor landscape shrub)",
+          "source": "UF/IFAS EDIS EP002, Camellias at a Glance",
+          "url": "https://edis.ifas.ufl.edu/ep002",
+          "quote": "Camellias are long-lived and function well as foundation plantings, screens, accent plants, background groupings, and hedges."
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "source": "UF/IFAS EDIS EP002, Camellias at a Glance",
+          "url": "https://edis.ifas.ufl.edu/ep002",
+          "quote": "Camellia japonica performs best in partially shaded locations; sasanqua camellias tolerate full sun but do best when protected from harsh afternoon sun. Deep shade may result in sparse foliage and poor flowering."
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287331",
+          "quote": "Sun: Part shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade and soil_drainage moderate (corroborating)",
+          "source": "UGA Cooperative Extension, Success with Mixed Containers Using Perennial and Woody Plants (B1418)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B1418/success-with-mixed-containers-using-perennial-and-woody-plants/",
+          "quote": "The Nandina domestica, Aucuba japonica and Camellia japonica all grow best in partial to full shade environments with moderate soil moisture (but not wet soil)."
+        },
+        {
+          "claim": "soil_ph_min 5.5 and soil_ph_max 6.5",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-japonica/",
+          "quote": "Camellia prefers shade to part-shade with some protection from drying winter winds and well-drained soils that are high in organic matter and slightly acidic (pH 5.5 to 6.5)."
+        },
+        {
+          "claim": "soil_ph_min 5.5 and soil_ph_max 6.5 (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287331",
+          "quote": "Where winter hardy, Camellia japonica should be grown in moist, acidic (5.5 to 6.5 pH), loose, organically rich, well-drained soils in part shade."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-japonica/",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Wet"
+        },
+        {
+          "claim": "soil_base garden_bed (outdoor landscape shrub)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287331",
+          "quote": "Excellent flowering shrub for lawns, shrub borders, backgrounds, informal hedges and around homes in mild winter locations."
+        },
+        {
+          "claim": "chill_damage_f 10",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287331",
+          "quote": "Even where winter hardy, unusually cold temperatures in winter (below 10 degrees F), particularly when occurring as a sudden temperature change, can damage or sometimes kill these plants."
+        },
+        {
+          "claim": "scientific_name_accepted Camellia japonica",
+          "source": "RHS Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/2845/camellia-japonica/details",
+          "quote": "Name Status\nCorrect"
+        }
+      ]
+    },
+    {
+      "common_name": "Gardenia",
+      "scientific_name_given": "Gardenia jasminoides",
+      "scientific_name_accepted": "Gardenia jasminoides",
+      "name_note": "Given and accepted names agree: Gardenia jasminoides. NC State, RHS, and Missouri Botanical Garden all list the same historical synonyms (Gardenia augusta, Gardenia florida, Gardenia grandiflora), and RHS's own structured Name Status field reads \"Correct\" for Gardenia jasminoides. No admissible source disputes the accepted name, so there is no conflict to record.",
+      "is_houseplant": true,
+      "toxic_to_pets": true,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": 50,
+      "night_f_max": 55,
+      "chill_damage_f": null,
+      "cool_rest_note": "Grown indoors, needs moderate temperatures that run cooler during dormancy (Missouri Botanical Garden); no specific target temperature is given for the dormant period.",
+      "humidity_need": "average",
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": "moderate",
+      "soil_ph_min": 5,
+      "soil_ph_max": 6.5,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Do not allow soil to dry out or stay too wet; water regularly (weekly during periods of drought in summer outdoors).",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f left null -- no admissible source gives an unconditional cold-damage-onset figure. Clemson gives a specific number but ties it explicitly to a management error (fall fertilization stimulating frost-tender new growth that 'may be killed if the temperature in winter drops below 15 degrees'), not a general threshold for hardened growth. Missouri Botanical Garden separately states that GRAFTED plants specifically 'are not cold hardy below 28°F' -- a rootstock-specific caveat, not a species-wide figure, and own-root plants aren't covered by that number. The two numbers (15°F, 28°F) describe different specific conditions and don't resolve to one general damage-onset figure. Only survival-zone data otherwise exists (NC State: USDA zones 7b-11b; Clemson: older cultivars hardy to zone 8, newer smaller cultivars to zone 7a; Missouri Botanical Garden: zones 8-11), which is the expected null case for a hardy shrub.",
+        "fertilize_active_months / fertilize_interval_days / fertilize_strength left null -- three admissible sources give three different, materially conflicting fertilizing calendars. Clemson: fertilize in spring once frost has passed, then again '6 weeks later' (no calendar months named). Missouri Botanical Garden: 'mid-March' for the first feeding and 'late June' for the second (about 14-15 weeks apart, not 6). UF/IFAS: 'February and October (south Florida) or March and September (north Florida)' plus an optional summer application. These disagree materially on both timing and interval, so no single active-months or interval-days value was taken, and no source gives a dilution fraction (full/half/quarter) so fertilize_strength is also left null.",
+        "soil_base left null -- no admissible source describes this species' growing medium using catalog soil_base terminology. Outdoor sources describe garden-bed planting amended with organic matter/pine bark for acidity (Clemson, UF/IFAS) and RHS describes container/greenhouse culture in 'lime-free soil'; none of these map cleanly onto a single enum value (garden_bed vs. a specialty acid-loving mix) without forcing a fit none of the sources state directly. The acid-soil requirement itself is captured via soil_ph_min/soil_ph_max instead.",
+        "toxicity_detail left null -- direct fetch of the live NC State page confirms Poison Severity ('Low'), Poison Symptoms ('Mild vomiting and/or diarrhea, hives'), and Poison Toxic Principle ('Genioposide, Gardenoside') are all nested under a 'Poisonous to Humans' heading; the source gives no separate severity or symptom text for pets. toxic_to_pets is grounded instead in NC State's distinct 'Problem for Cats / Problem for Dogs / Problem for Horses' tags under its separate 'Problems' field, but no admissible source gives a pet-specific symptom or toxic-principle quote, so toxicity_detail is left null rather than borrowing the human-scoped text.",
+        "direct_sun_hours_max left null -- NC State's own Light field tags this species for both 'Full sun (6 or more hours...)' and 'Partial Shade (...2-6 hours)'; since the species tolerates unbounded full sun per that same source, capping direct_sun_hours_max at 6 (the partial-shade upper bound) would understate its sun tolerance, so no single hour value was taken.",
+        "night_f_min 50 / night_f_max 55 is Clemson's bud-formation requirement (cool nights needed to trigger flower bud set). This is distinct from Missouri Botanical Garden's separate note that 'Temperatures below 60°F can produce malformed buds' (a bud-quality problem from cold snaps, not a bud-formation requirement). These describe different phenomena (bud initiation vs. bud malformation) rather than a direct numeric contradiction, so the Clemson figure was kept; the MOBOT caveat is flagged here for transparency rather than folded into the record.",
+        "soil_ph_min 5.0 / soil_ph_max 6.5 comes from UF/IFAS's specific numeric range ('An acidic soil pH between 5.0 and 6.5 is required'). NC State and Clemson tag the species more coarsely as preferring 'Acid (<6.0)' / 'acid (with a pH of less than 6.0)' without giving a precise numeric range; that coarse category mostly overlaps with, but doesn't exactly match, UF/IFAS's upper bound of 6.5. Since only UF/IFAS supplies an actual numeric range while the others use a generic site-wide pH bucket, the UF/IFAS figure was used rather than treating this as an unresolvable conflict.",
+        "day_f_min/day_f_max, humidity_pct_min/humidity_pct_max, light_fc_min/light_fc_good, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are all left null -- no admissible source gives a numeric daytime temperature target, humidity percentage, foot-candle light figure, soil-check depth, or day-count watering interval for this species.",
+        "is_houseplant is true based on direct source support for container/conservatory culture (Missouri Botanical Garden explicitly lists 'Houseplant' as a Use and describes moving potted plants indoors before frost; RHS instructs growing under glass or bringing containers indoors below about 6°C). All admissible sources nonetheless treat this primarily as an outdoor landscape/foundation shrub (NC State Design Feature: Border, Hedge, Screen/Privacy, Specimen; UF/IFAS: hedges, ground covers, mass plantings, free-standing specimens), with container/indoor culture as a secondary, cold-climate-specific use -- consistent with the species being a landscape shrub rather than a plant bred primarily for interior culture."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Gardenia (also Cape Jasmine, Cape jessamine) and scientific_name_accepted Gardenia jasminoides (synonyms Gardenia augusta, Gardenia florida, Gardenia grandiflora)",
+          "quote": "Common Name(s): Cape Jasmine Cape Jasmine Gardenia Cape jessamine Gardenia Previously known as: Gardenia augusta Gardenia florida Gardenia grandiflora",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gardenia-jasminoides/"
+        },
+        {
+          "claim": "common_name Gardenia (also Cape jasmine, Cape jessamine, common gardenia) and scientific_name_accepted Gardenia jasminoides (synonyms Gardenia augusta, Gardenia florida, Gardenia grandiflora)",
+          "quote": "Other common names Cape jessamine, common gardenia, gardenia, jasmin Synonyms Gardenia augusta, Gardenia florida L., Gardenia grandiflora",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/7605/i-gardenia-jasminoides-i/details"
+        },
+        {
+          "claim": "scientific_name_accepted Gardenia jasminoides (RHS Name Status: Correct)",
+          "quote": "Name Status Correct",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/7605/i-gardenia-jasminoides-i/details"
+        },
+        {
+          "claim": "scientific_name_accepted Gardenia jasminoides (synonymous with G. augusta and G. grandiflora)",
+          "quote": "Gardenia jasminoides is synonymous with G. augusta and G. grandiflora.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b555"
+        },
+        {
+          "claim": "toxic_to_pets true (tagged Problem for Cats, Problem for Dogs, Problem for Horses)",
+          "quote": "Problems: Problem for Cats Problem for Dogs Problem for Horses",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gardenia-jasminoides/"
+        },
+        {
+          "claim": "is_houseplant true (grown as container plants in conservatories/greenhouses; kept as a houseplant, moved outdoors for warm months and back indoors before first frost)",
+          "quote": "Cape jasmine can also be grown in colder climates as container plants in conservatories or greenhouses. If kept as a houseplant, they can be moved outdoors for the warm months, and brought back indoors before the first frost.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b555"
+        },
+        {
+          "claim": "is_houseplant true (Uses: Large container plant for greenhouses or conservatories. Houseplant.)",
+          "quote": "Shrub border, foundation planting, formal or informal hedge. Site plants near entry ways or paths so that the fragrance can more easily be enjoyed. Large container plant for greenhouses or conservatories. Houseplant.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b555"
+        },
+        {
+          "claim": "humidity_need average (supporting; average to high humidity) and cool_rest_note (moderate temperatures, cooler during dormancy) and water_regime keep_moist and water_dry_down_target (do not allow soil to dry out or stay too wet)",
+          "quote": "Grown indoors, these plants need bright light and moderate temperatures (cooler during dormancy), average to high humidity and well-drained, acidic soil. Water moderately, using room temperature water, when possible. Do not allow soil to dry out or stay too wet.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b555"
+        },
+        {
+          "claim": "water_regime keep_moist (supporting; watered weekly during periods of drought in summer)",
+          "quote": "Gardenias should be watered weekly during periods of drought in summer.",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/gardenia/"
+        },
+        {
+          "claim": "night_f_min 50 and night_f_max 55 (night temperatures between 50 and 55°F are necessary for the formation of flower buds)",
+          "quote": "Although much less common, another problem encountered is \"bud drop.\" Flower buds may abort and drop off just before they open. Causes of bud drop include low humidity, overwatering, under-watering, insufficient light and high temperatures (night temperatures between 50 and 55 °F are necessary for the formation of flower buds).",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/gardenia/"
+        },
+        {
+          "claim": "soil_drainage moderate (moist, well-drained soils)",
+          "quote": "Gardenias prefer acid (with a pH of less than 6.0), moist, well-drained soils.",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/gardenia/"
+        },
+        {
+          "claim": "soil_ph_min 5.0 and soil_ph_max 6.5 (an acidic soil pH between 5.0 and 6.5 is required or their foliage will yellow)",
+          "quote": "An acidic soil pH between 5.0 and 6.5 is required or their foliage will yellow.",
+          "source": "UF/IFAS Extension (EDIS CIR1098, \"Gardenias at a Glance\")",
+          "url": "https://edis.ifas.ufl.edu/publication/EP338/pdf"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (plant gardenias in full sun, partial shade, or shifting shade)",
+          "quote": "For best flower production, plant gardenias in full sun, partial shade, or shifting shade. Prolonged shade may reduce flowering.",
+          "source": "UF/IFAS Extension (EDIS CIR1098, \"Gardenias at a Glance\")",
+          "url": "https://edis.ifas.ufl.edu/publication/EP338/pdf"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (Light: Full sun (6 or more hours of direct sunlight a day); Partial Shade (Direct sunlight only part of the day, 2-6 hours))",
+          "quote": "Light: Dappled Sunlight (Shade through upper canopy all day) Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gardenia-jasminoides/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade (Position: Partial shade) and soil_drainage moderate (Moisture: Moist but well-drained)",
+          "quote": "Position Partial shade Soil Types Clay, Loam, Sand Moisture Moist but well–drained pH Acid or Neutral",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/7605/i-gardenia-jasminoides-i/details"
+        },
+        {
+          "claim": "is_houseplant true (grown outdoors in pots and containers, brought indoors if temperature drops, or grown under glass in bright filtered light) and humidity_need average (moderate humidity)",
+          "quote": "May be grown outdoors in pots and containers in moist but well-drained soil in partial or light dappled shade in a frost free site, but this must be in a sheltered, frost-free warm area. Best to bring indoors if temperature dips below about 6°C. Otherwise, grow under glass in lime-free soil in bright filtered light in moderate humidity",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/7605/i-gardenia-jasminoides-i/details"
+        }
+      ]
+    },
+    {
+      "common_name": "Border Forsythia",
+      "scientific_name_given": "Forsythia x intermedia",
+      "scientific_name_accepted": "Forsythia x intermedia",
+      "name_note": "No naming conflict among admissible sources. NC State, Missouri Botanical Garden, Clemson HGIC, and RHS all use Forsythia x intermedia as the accepted binomial for border forsythia, and RHS's own \"Name Status\" field reads \"Correct.\" NC State and Missouri Botanical Garden both independently describe it as an artificial/horticultural hybrid between F. suspensa and F. viridissima, with the epithet x intermedia denoting characteristics intermediate between the two parent species -- consistent across both sources, not a conflict.",
+      "is_houseplant": false,
+      "toxic_to_pets": false,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": -5,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min / day_f_max / night_f_min / night_f_max: no admissible source frames Forsythia x intermedia in terms of daytime/nighttime temperature targets -- all four sources treat it uniformly as an outdoor, in-ground landscape shrub, and these fields (designed for containerized/indoor culture) simply do not apply to how the sources describe growing it.",
+        "cool_rest_note: no admissible source discusses a chilling requirement or dormancy rest period for this species.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no admissible source addresses humidity for this outdoor landscape shrub.",
+        "light_fc_min / light_fc_good / direct_sun_hours_max: no admissible source gives footcandle figures or a species-specific sun-hour ceiling. NC State's 'Full sun (6 or more hours of direct sunlight a day)' is its site-wide boilerplate definition of the full_sun category (used identically across many unrelated species pages), not a Forsythia-specific figure, so it was used only to support the outdoor_sun_exposure category and not extracted as a numeric field.",
+        "soil_ph_min / soil_ph_max: NC State lists all three pH categories (Acid <6.0, Alkaline >8.0, Neutral 6.0-8.0) as tolerated and RHS lists 'Acid or Alkaline or Neutral' -- both describe broad tolerance across the whole pH spectrum rather than giving a specific target range, so no numeric bound was extracted.",
+        "water_regime / water_dry_down_target / water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis: Missouri Botanical Garden's only relevant data is a categorical 'Water: Medium' tag plus 'Moderate drought tolerance once established' -- neither maps cleanly onto the schema's regime enum (keep_moist / dry_surface_between / dry_thoroughly_between / keep_barely_moist), which reads as written for containerized/indoor watering behavior, so this was left null rather than forced into an awkward fit. Clemson's guidance to 'Water plants weekly ... during drought stress' is about establishment-phase drought response, not a general regime, and was not used to fill this field either.",
+        "fertilize_active_months / fertilize_interval_days / fertilize_strength: none of the four admissible sources give fertilizing guidance for this species.",
+        "toxicity_detail: toxic_to_pets false rests on a single source -- NC State's site-wide hashtag tags ('#non-toxic for cats', '#non-toxic for horses', '#non-toxic for dogs') rather than descriptive prose naming a compound or symptom (there being none, since the plant is tagged non-toxic). Clemson, RHS, and Missouri Botanical Garden do not address toxicity for this species at all (Missouri Botanical Garden's 'Problems' section lists only pests -- leaf spot, crown gall, dieback, spider mites, aphids -- with no toxicity mention), so there is no cross-source corroboration or conflict, just silence from three of the four sources.",
+        "soil_base — removed on audit: Sole citation is MOBOT's 'Suggested Use: Hedge' -- a landscape-design usage tag, not a statement about planting medium or location. It does not literally support the categorical value 'garden_bed', and certainly not the parenthetical 'not in containers' (nothing in the quote addresses containers at all). No other citation in the array is attached to this field. The value is plausible given the plant's general profile, but as documented it rests entirely on an inferential leap from a two-word tag, not on a citation that actually states it."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Border Forsythia",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "Common Name(s):\nBorder Forsythia\nGolden Bells"
+        },
+        {
+          "claim": "scientific_name_given Forsythia x intermedia",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "Forsythia x intermedia"
+        },
+        {
+          "claim": "scientific_name_accepted Forsythia x intermedia (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/94712/forsythia-intermedia/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "name_note hybrid origin between F. suspensa and F. viridissima",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "Border forsythia is an artificial hybrid between weeping forsythia (F. suspensa) and greenstem forsythia (F. viridissima), with the species epithet, x intermedia, referring to the plant's characteristics being intermediate between those of the parents."
+        },
+        {
+          "claim": "name_note corroborating hybrid origin",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=291997&isprofile=0&pt=4",
+          "quote": "These shrubs are hybrids between weeping forsythia (F. suspensa) and greenstem forsythia (F. viridissima), with x intermedia referring to the hybrid characteristics being intermediate between those of the parents."
+        },
+        {
+          "claim": "is_houseplant false (classified as a deciduous shrub grown in the landscape, not described as an indoor or container plant)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=291997&isprofile=0&pt=4",
+          "quote": "Type: Deciduous shrub"
+        },
+        {
+          "claim": "is_houseplant false (used as a specimen, in shrub borders/groupings, or as a hedge; explicitly not suited to confined foundation plantings)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/forsythia/",
+          "quote": "They are best used as a specimen or in shrub borders and groupings. Forsythia may also be used to create a hedge... Forsythias do not belong in areas where they must be kept in bounds, such as in foundation plantings"
+        },
+        {
+          "claim": "toxic_to_pets false (site tags this species non-toxic for cats, dogs, and horses; no toxic compound, part, or symptom named)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
+        },
+        {
+          "claim": "chill_damage_f -5 (flower buds killed by winter temperatures below -5 degrees F)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "The shrub is winter hardy, but colder winters and temperatures below -5 degrees F may retard flower development because of the impact of winter temperatures or a late freeze on unopened buds."
+        },
+        {
+          "claim": "chill_damage_f -5 corroborating (flower buds typically lost below -5 degrees F)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=291997&isprofile=0&pt=4",
+          "quote": "Flower buds are typically lost when winter temperatures fall below -5 degrees F."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade corroborating",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/94712/forsythia-intermedia/details",
+          "quote": "Sun\nFull sun, Partial shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade corroborating",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=291997&isprofile=0&pt=4",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "soil_base garden_bed (grown as a landscape border/hedge/specimen shrub, not in containers)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=291997&isprofile=0&pt=4",
+          "quote": "Suggested Use: Hedge"
+        },
+        {
+          "claim": "soil_drainage moderate (well-drained soil with medium moisture retention)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=291997&isprofile=0&pt=4",
+          "quote": "Easily grown in loose, medium moisture, well-drained soils in full sun to part shade."
+        },
+        {
+          "claim": "soil_drainage moderate corroborating",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/94712/forsythia-intermedia/details",
+          "quote": "Moisture\nMoist but well-drained"
+        }
+      ]
+    },
+    {
+      "common_name": "Common Fig",
+      "scientific_name_given": "Ficus carica",
+      "scientific_name_accepted": null,
+      "name_note": "No accepted-name conflict found among admissible sources. NC State Extension, Missouri Botanical Garden, and RHS all use Ficus carica directly as the current binomial for this species, with no synonym or \"previously known as\" name given for the species itself (NC State and RHS list alternate/synonym names only for individual cultivars, e.g. 'Brown Turkey,' not for Ficus carica as a species).",
+      "is_houseplant": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": "NC State Extension's structured \"Problems:\" list flags this species \"Problem for Cats,\" \"Problem for Dogs,\" and \"Problem for Horses\" as a bare tag, with no plant part or symptom specified for those animals; that tag sits alongside \"Contact Dermatitis,\" \"Messy,\" and \"Weedy\" as sibling list items, separate from the same page's detailed \"Poisonous to Humans:\" section (Poison Severity: Low; Poison Symptoms: Phytophotodermatitis from the white, milky sap; Poison Toxic Principle: Furanocoumarins; Poison Part: Sap/Juice), which is not carried over here as pet-specific data. RHS's own \"Potentially harmful\" field independently names both target groups together for the same mechanism -- \"Humans/Pets: Harmful to skin with sunlight\" -- indicating the phototoxic skin-contact reaction from the sap applies to pets as well as people, not just humans. UF/IFAS separately confirms, for the species generally (not target-specific), that cutting or damaging branches releases \"copious quantities of a milky latex that can be a skin irritant,\" and that \"leaf pubescence can also be an irritant to the skin.\" The irritant is specifically the sap/latex (and leaf hairs), not the edible fruit -- no admissible source implicates the ripe fig fruit itself in any toxicity or irritation.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": "Missouri Botanical Garden's culture notes describe a seasonal indoor rest for container-grown plants: \"Water regularly during the growing season but reduce watering in fall. Containers must be brought indoors in winter. Large containers may be overwintered in greenhouses, garages or basements.\" NC State separately confirms containers \"must be overwintered indoors.\"",
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "dry_surface_between",
+      "water_dry_down_target": "University of Maryland Extension's container-growing guidance: \"The soil can become somewhat dry to the touch a few inches below the surface before watering will be needed. Do not keep the potting mix constantly wet.\"",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": 7,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": "Estimate derived from UGA Extension's stated outdoor watering rate for fig (\"1 to 1½ inches of water per week from rain or irrigation is adequate\"), converted here to an approximate 7-day check interval; Clemson HGIC independently gives a consistent \"1 inch of water per week\" figure. This is an estimate for in-ground/outdoor plantings, not a source-stated day interval, and actual frequency depends on rainfall, mulch, and soil type; no admissible source gives a day-interval watering figure specific to container culture.",
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max and night_f_min/night_f_max: left null. No admissible source gives an indoor day/night temperature range for this species; only outdoor cold-hardiness/damage figures were found (see chill_damage_f note), which don't split into day vs. night.",
+        "chill_damage_f: left null on a genuine spread across admissible sources rather than picked. University of Maryland Extension states 'Sustained winter temperatures below 20℉ can injure or kill aboveground wood' (damage onset near 20°F); UF/IFAS states 'Fully dormant trees are hardy to about 15°F–20°F' (a survival range extending down to 15°F); Missouri Botanical Garden advises growers 'consider additional protection' only 'When temperatures in winter dip below 15°F.' These sources don't converge on one number -- a real spread between the most and least conservative statements of when cold damage becomes a risk -- so no single value was taken.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: left null. No admissible source addresses ambient humidity preference for this species, indoors or out.",
+        "light_fc_min, light_fc_good: left null. No admissible source gives a footcandle figure; sources describe sun exposure only in duration/category terms, captured instead in outdoor_sun_exposure.",
+        "direct_sun_hours_max: left null. Every admissible source that gives an hours figure states a floor, not a ceiling -- NC State's 'Full sun (6 or more hours...)', and UMD/UGA/Clemson's 'at least/minimum of 8 hours' -- so none could be mapped to this max-only field.",
+        "soil_base: left null on a genuine dual growing context rather than forced to one value. NC State's own description gives both contexts in one breath -- 'Plant the common fig tree in an edible garden... It grows well in containers, but containers must be overwintered indoors' -- and UMD devotes a dedicated container-culture section with its own mix recipe ('a 50:50 mix of compost and a soilless growing medium'), which doesn't correspond cleanly to any single catalog soil_base enum value either. With NC State, Clemson, UGA, and MOBOT's culture notes all primarily describing in-ground/orchard planting, and UMD/MOBOT separately documenting long-term container culture as a real, commonly used alternative (not a minor aside), no single soil_base value was forced onto the record.",
+        "soil_ph_min, soil_ph_max: left null on a genuine conflict. RHS's own structured Soil field states 'pH Alkaline or Neutral' for this species, while NC State's prose states the plant 'does not tolerate alkaline soils' (and its own structured Soil pH field tags only Acid <6.0 / Neutral 6.0-8.0) and UGA's planting guide instructs growers to 'adjust the pH to 5.5 to 6.5 with dolomitic limestone' if soil pH is low. RHS's alkaline-tolerant framing directly disagrees with NC State's alkaline-intolerant framing and UGA's acid-neutral target range, so no numeric value was taken.",
+        "water_check_depth_cm: left null. UMD's only depth language is qualitative -- 'a few inches below the surface' -- with no specific number given, so it was not converted to a centimeter figure (captured instead in water_dry_down_target).",
+        "water_dormant_days_est: left null. No admissible source gives a winter/dormant-season watering interval; MOBOT's 'reduce watering in fall' is qualitative only.",
+        "fertilize_active_months, fertilize_interval_days: left null on genuinely divergent, context-specific schedules rather than picked. UMD gives a container schedule of 'once per month in May, June, and July'; Clemson gives a different in-ground schedule for larger plants ('early April, early June, and mid-July'); UF/IFAS gives yet another for young trees (three to five applications 'starting in late winter (February to March) and ending by the beginning of August'); and UGA gives a once-a-year spring schedule for mature bushes six years and older. These differ by plant age and by container vs. in-ground culture, and no single month list or interval represents the species generally, so neither field was populated.",
+        "fertilize_strength: left null. No admissible source uses full/half/quarter-strength dilution language for this species; only fertilizer amount, analysis, and timing are given.",
+        "scientific_name_accepted — removed on audit: The only citation tagged to this field (MOBOT: 'Type: Fruit Family: Moraceae Native Range: Western Asia, southeastern Europe') establishes nothing about accepted-name status or absence of a synonym — it's classification/origin data, not a synonymy check. The name_note's specific claims about what NC State's and RHS's pages do or don't show for synonyms have no citation in the array supporting them at all. I independently verified via direct fetch that NC State and RHS in fact list no species-level synonym for Ficus carica, so the value itself happens to be correct — but the record's own citations don't demonstrate that determination was made from cited evidence, which is a structural traceability failure (checks 1 and 4).",
+        "is_houseplant — removed on audit: Every citation for this field (NC State 'containers must be overwintered indoors,' MOBOT 'best grown in containers in full sun... Containers must be brought indoors in winter... overwintered in greenhouses, garages or basements,' UMD 'grown in containers or in-ground') describes an outdoor, full-sun woody plant that is only brought indoors as dormant winter storage in unheated garages/basements/greenhouses — not an actively-growing indoor plant. Verified via direct fetch that the word 'houseplant' does not appear anywhere in the UMD source. This is materially different from this same catalog's own precedent for legitimately-tagged cold-climate houseplants (b21-houseplant-gaps.json's Purple Shamrock/Oxalis triangularis, cited there as 'grown as houseplant,' 'grown year-round in a cool room indoors') and from the catalog's other Ficus entries (b2-figs-and-succulents.json's Fiddle Leaf Fig and Rubber Plant, true indoor foliage houseplants). Calling seasonal dormant cold-storage 'is_houseplant: true' overstates the cited evidence."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Common Fig; scientific_name_given Ficus carica",
+          "quote": "Common Name(s): Common Fig",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-carica/"
+        },
+        {
+          "claim": "is_houseplant true (grows well in containers; containers overwintered indoors)",
+          "quote": "It grows well in containers, but containers must be overwintered indoors.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-carica/"
+        },
+        {
+          "claim": "is_houseplant true (container culture) and cool_rest_note (reduce watering in fall; bring indoors for winter; overwinter in greenhouse, garage, or basement)",
+          "quote": "In St. Louis, plants are best grown in containers in full sun. Water regularly during the growing season but reduce watering in fall. Containers must be brought indoors in winter. Large containers may be overwintered in greenhouses, garages or basements.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282762"
+        },
+        {
+          "claim": "is_houseplant true (grown in containers or in-ground)",
+          "quote": "They can be pruned to a shrub or tree form, grown in containers or in-ground, are virtually pest-free, and can produce abundant crops when the proper cultivars are selected.",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-figs-maryland"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade; soil_drainage moisture_retentive",
+          "quote": "Plant common fig in full sun to partial shade in organically rich, well-drained, moist soil that is neutral to acidic; it does not tolerate alkaline soils.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-carica/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating)",
+          "quote": "Sun: Full sun to part shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282762"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (corroborating: moist but well-drained)",
+          "quote": "Moisture Moist but well–drained or Well–drained",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/7199/ficus-carica-f/details"
+        },
+        {
+          "claim": "descriptive: RHS's own soil pH field states Alkaline or Neutral tolerance (used only in unknowns to document a cross-source soil_ph conflict, not taken as the soil_ph_min/max value)",
+          "quote": "pH Alkaline or Neutral",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/7199/ficus-carica-f/details"
+        },
+        {
+          "claim": "descriptive: UGA's soil pH amendment target of 5.5 to 6.5 (used only in unknowns to document a cross-source soil_ph conflict, not taken as the soil_ph_min/max value)",
+          "quote": "If your soil pH is low, adjust the pH to 5.5 to 6.5 with dolomitic limestone.",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C945/home-garden-figs/"
+        },
+        {
+          "claim": "toxic_to_pets true (Problem for Cats, Problem for Dogs, Problem for Horses); human-specific poison detail nested under a separate Poisonous to Humans heading and not applied to pets",
+          "quote": "Problems: Contact Dermatitis Messy Problem for Cats Problem for Dogs Problem for Horses Weedy Poisonous to Humans: Poison Severity: Low Poison Symptoms: Phytophotodermatitis from the white, milky sap. Poison Toxic Principle: Furanocoumarins Causes Contact Dermatitis: Yes Poison Part: Sap/Juice",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-carica/"
+        },
+        {
+          "claim": "toxic_to_pets true (Humans/Pets: Harmful to skin with sunlight)",
+          "quote": "Potentially harmful Humans/Pets: Harmful to skin with sunlight.",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/7199/ficus-carica-f/details"
+        },
+        {
+          "claim": "toxicity_detail (milky latex from cut/damaged branches is a skin irritant, distinct from the edible fruit)",
+          "quote": "When branches are cut or damaged, they produce copious quantities of a milky latex that can be a skin irritant.",
+          "source": "UF/IFAS Extension (EDIS)",
+          "url": "https://ask.ifas.ufl.edu/mg214"
+        },
+        {
+          "claim": "toxicity_detail (leaf pubescence can also be a skin irritant)",
+          "quote": "Leaf pubescence can also be an irritant to the skin.",
+          "source": "UF/IFAS Extension (EDIS)",
+          "url": "https://ask.ifas.ufl.edu/mg214"
+        },
+        {
+          "claim": "descriptive: sustained winter temperatures below 20°F injure or kill aboveground wood (used only in unknowns to document a cross-source chill_damage_f spread, not taken as the field value)",
+          "quote": "Sustained winter temperatures below 20℉ can injure or kill aboveground wood.",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-figs-maryland"
+        },
+        {
+          "claim": "descriptive: fully dormant trees hardy to about 15°F–20°F (used only in unknowns to document a cross-source chill_damage_f spread, not taken as the field value)",
+          "quote": "Fully dormant trees are hardy to about 15°F–20°F",
+          "source": "UF/IFAS Extension (EDIS)",
+          "url": "https://ask.ifas.ufl.edu/mg214"
+        },
+        {
+          "claim": "water_regime dry_surface_between and water_dry_down_target (allow soil to dry a few inches below the surface between waterings; avoid keeping potting mix constantly wet)",
+          "quote": "The soil can become somewhat dry to the touch a few inches below the surface before watering will be needed. Do not keep the potting mix constantly wet.",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-figs-maryland"
+        },
+        {
+          "claim": "water_growing_days_est 7 (estimate derived from stated weekly water need)",
+          "quote": "As a rule of thumb, 1 to 1½ inches of water per week from rain or irrigation is adequate.",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C945/home-garden-figs/"
+        },
+        {
+          "claim": "descriptive: corroborating weekly water rate (1 inch of water per week)",
+          "quote": "Watering: 1 inch of water per week from rain or irrigation",
+          "source": "Clemson Cooperative Extension (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/fig/"
+        },
+        {
+          "claim": "descriptive: container fertilizing schedule (once per month in May, June, and July) -- one of several divergent context-specific schedules found; not adopted as fertilize_active_months/interval_days because it conflicts with other sources' in-ground schedules",
+          "quote": "Fertilize container-grown figs once per month in May, June, and July.",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-figs-maryland"
+        },
+        {
+          "claim": "descriptive: mature in-ground fertilizing schedule (once a year in early spring) -- differs from the container schedule above, supporting the decision to leave fertilize_active_months/interval_days null",
+          "quote": "Mature bushes 6 years and older should be fertilized once a year in early spring.",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C945/home-garden-figs/"
+        },
+        {
+          "claim": "scientific_name_accepted Ficus carica (Family Moraceae; no synonym given)",
+          "quote": "Type: Fruit Family: Moraceae Native Range: Western Asia, southeastern Europe",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282762"
+        },
+        {
+          "claim": "descriptive: winter protection suggested below 15°F (used only in unknowns to document a cross-source chill_damage_f spread, not taken as the field value)",
+          "quote": "When temperatures in winter dip below 15°F, consider additional protection for outdoor plants to the extent possible (e.g., clear plastic sheets or frames).",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282762"
+        }
+      ]
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Acer rubrum",
+      "fields_removed": 2
+    },
+    {
+      "species": "Cercis canadensis",
+      "fields_removed": 1
+    },
+    {
+      "species": "Malus domestica",
+      "fields_removed": 0
+    },
+    {
+      "species": "Betula nigra",
+      "fields_removed": 0
+    },
+    {
+      "species": "Camellia japonica",
+      "fields_removed": 2
+    },
+    {
+      "species": "Gardenia jasminoides",
+      "fields_removed": 1
+    },
+    {
+      "species": "Forsythia × intermedia",
+      "fields_removed": 1
+    },
+    {
+      "species": "Ficus carica",
+      "fields_removed": 2
+    }
+  ],
+  "normalizations": [
+    "2026-08-22: seventh batch of the \"blind spots\" pass. Rounds out tree/shrub coverage further: Red Maple, Eastern Redbud, River Birch (three of the most commonly planted native shade/ornamental trees in the eastern US), Camellia and Gardenia (iconic broadleaf evergreen flowering shrubs), Border Forsythia (an iconic early-spring flowering shrub), and this catalog's first two tree-form fruit crops: Apple and Common Fig. All 8 confirmed genuinely uncovered by grep before landing.",
+    "Apple's toxic_to_pets/toxicity_detail landed correctly null after real, disciplined research: the well-known fact that apple seeds contain cyanogenic amygdalin was found on an admissible source, but only for a genuinely different species (Malus sylvestris, European Crab Apple) -- not Malus domestica itself -- and the record correctly declined to blend a sibling species' toxicity finding onto this one rather than taking the easy, plausible-but-unsupported shortcut.",
+    "Red Maple surfaced a genuine edge case this catalog's toxic_to_pets field hasn't hit before: NC State tags it explicitly non-toxic for both cats and dogs, but a documented, serious hazard to horses (Penn State: red maple leaf toxicosis). The audit judged that a flat toxic_to_pets=false would read as \"safe for pets\" while omitting a real hazard to a commonly kept companion/working animal, and nulled the boolean while keeping the full nuance in toxicity_detail -- a defensible, cautious call given the field's name, even though every other record in this catalog scopes toxic_to_pets to cats/dogs specifically.",
+    "Camellia's soil_drainage catch is a nice example of the audit now enforcing its own precedent across the whole catalog, not just within one record: the same NC State three-tag combination ('Good Drainage, Moist, Occasionally Wet', missing 'Occasionally Dry') is correctly mapped to moisture_retentive on Jack-in-the-Pulpit in b22, but this record had mapped the identical tags to 'moderate' -- inconsistent with the catalog's own established convention, and caught by checking against it directly rather than judging the record in isolation.",
+    "Fig's scientific_name_accepted and is_houseplant both landed null on careful, correct reasoning rather than data gaps: the accepted-name value is true but the citation supporting it doesn't actually establish taxonomic status (traceability failure, not a factual one), and is_houseplant was refused because every citation describes dormant winter cold-storage in an unheated garage or basement, not active indoor growing -- explicitly distinguished from this catalog's real houseplant precedents (Purple Shamrock in b21; Fiddle Leaf Fig and Rubber Plant, the catalog's other Ficus entries, in b2)."
+  ]
+}

@@ -1,0 +1,1230 @@
+{
+  "batch": "b28-holly-and-nuts",
+  "records": [
+    {
+      "common_name": "American Holly",
+      "scientific_name_given": "Ilex opaca",
+      "scientific_name_accepted": null,
+      "name_note": "All admissible sources consulted (NC State Extension Plant Toolbox, Missouri Botanical Garden Plant Finder, RHS, UF/IFAS Ask IFAS, UGA CAES Field Report, Clemson HGIC) use the binomial Ilex opaca for American Holly with no synonym or accepted-name conflict among them, so scientific_name_accepted is set to the same binomial as given.",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": "Fruit is the part described as harmful and not to be eaten. RHS's pet-specific caution states \"Pets: Fruit are ornamental - not to be eaten.\" NC State Extension's Plant Toolbox separately tags Ilex opaca \"Problem for Cats,\" \"Problem for Dogs,\" and \"Problem for Horses\" in its structured Problems list for this species.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_max/day_f_min/night_f_max/night_f_min: no admissible source gives specific day/night temperature ranges for this species, only cold-hardiness zone/rating data.",
+        "chill_damage_f: only survival-cold data exists (NC State USDA zones 5a-9b, UF/IFAS zones 5B-9, RHS Hardiness H6 = hardy to -20 to -15C); no source gives an actionable damage-onset temperature, so left null as expected for a hardy tree per field guidance.",
+        "soil_ph_min: no admissible source states an explicit numeric lower pH bound; UF/IFAS gives only an upper bound ('below 6.5 pH'), and NC State/RHS give only categorical buckets (Acid/Neutral) without a specific floor number.",
+        "water_regime and related water_* fields: sources consistently describe a 'moist but well-drained' soil preference (MOBOT, UF/IFAS, RHS, Penn State) alongside separately noted 'high' drought tolerance once established (UF/IFAS, NC State); this combination doesn't map cleanly onto one discrete watering-regime enum value without guessing, so left null as a harm-adjacent field rather than picking a side.",
+        "fertilize_interval_days/fertilize_active_months/fertilize_strength: no admissible source addresses a fertilizing schedule, strength, or timing for this species.",
+        "light_fc_min/light_fc_good/direct_sun_hours_max: no admissible source gives foot-candle figures; NC State's 'Full sun (6 or more hours...)' is a minimum threshold defining the full-sun category, not a maximum-hours value, so not used for direct_sun_hours_max.",
+        "humidity_pct_min/humidity_pct_max: no admissible source gives numeric ambient humidity percentages; humidity_need was set from Penn State's qualitative 'thrives in humid environments' statement only.",
+        "is_houseplant: no admissible source supports growing this species indoors/in containers long-term. UF/IFAS's ST304 lists 'Bonsai' among landscape uses, but for this cold-hardy zone 5-9 tree that denotes outdoor container/bonsai culture, not indoor houseplant growing, so is_houseplant is set false.",
+        "toxic_to_pets/toxicity_detail: NC State's Plant Toolbox page tags Ilex opaca 'Problem for Cats,' 'Problem for Dogs,' and 'Problem for Horses' as standalone entries in its Problems list, but the page's only detailed poison narrative (Poison Severity: Low; Poison Symptoms: 'Nausea, vomiting (not in horses), diarrhea, depression.'; Poison Toxic Principle: 'Illicin, possibly saponic glycosides, and triterpenoids.'; Poison Part: Fruits) is nested under a 'Poisonous to Humans:' sub-header specifically (verified in the page's raw HTML). That symptom/toxic-principle text was NOT used for pet-facing toxicity_detail for this reason; toxic_to_pets and toxicity_detail instead rely only on NC State's standalone pet-target tags plus RHS's explicit 'Pets: Fruit are ornamental - not to be eaten' caution, both of which agree the fruit is the concern.",
+        "UF/IFAS ST304 contains two internal inconsistencies between its compact structured fields and its descriptive prose: the structured 'Light requirement' field says 'full sun to full shade' while the prose culture paragraph says 'full sun to partial shade'; the structured 'Soil tolerances' field lists 'acidic; slightly alkaline' while the prose states soils 'below 6.5 pH.' Treated the compact structured tags as likely templated/boilerplate (this ST-series tree fact-sheet format is reused across many species) and used only the specific prose statements for outdoor_sun_exposure and soil_ph_max, consistent with the other five corroborating sources (NC State, MOBOT, RHS, UGA) that all say full sun to part shade rather than full shade.",
+        "soil_base: no admissible source uses container/potting-mix terminology for this species; garden_bed was selected as the closest enum fit because every admissible source describes Ilex opaca solely as an in-ground landscape/hedge tree reaching 15 to 60+ feet.",
+        "soil_drainage — removed on audit: Value is 'moderate' but every citation actually offered for this field says the opposite emphasis: MOBOT (verified quote) says 'well-drained soils... will not tolerate flooding or soils saturated with moisture. Avoid poorly drained soils'; UF/IFAS says 'well-drained but moist'; RHS (re-fetched live and confirmed verbatim) says 'moist but well-drained... Not suited to chalky soils.' No quote in the record, and no live page text, uses 'moderate' or supports a mid-tier/poor-drainage-tolerant reading -- if anything the sources explicitly warn against poor drainage. The value contradicts its own citations.",
+        "soil_base — removed on audit: The sole citation quote is 'Design Feature: Barrier Hedge Screen/Privacy Specimen' -- a landscape-use tag describing how the plant is used in design, not a statement about soil or growing medium. It does not say or imply in-ground vs. container growing. The record's own unknowns section admits garden_bed was chosen as 'the closest enum fit' by inference rather than by direct source support, failing the 'does the quote actually state this value' test.",
+        "humidity_need — removed on audit: Sole support is one qualitative sentence from an informal Penn State Extension blog post ('Holly Jolly American Holly'), re-fetched and confirmed verbatim: 'It thrives in humid environments with good drainage and moist, slightly acidic soil, yet tolerates a wide range of conditions.' The clause 'yet tolerates a wide range of conditions' undercuts a firm 'high' requirement, no other admissible source corroborates any humidity signal, and the underlying text reads as general native-habitat description rather than an actionable cultivation requirement -- weak grounds for asserting 'high', especially since is_houseplant=false makes an ambient-humidity field questionable for an outdoor tree in the first place.",
+        "scientific_name_accepted — removed on audit: Populated as 'Ilex opaca' with a name_note claiming all admissible sources were checked and agree with no synonym conflict, but none of the 9 logged citations contains any quote about nomenclature, synonymy, or an 'accepted name' determination -- the claim isn't traceable to any citation entry as structural check 1/4 require. The value is very likely correct botanically, but as documented in this record it is asserted, not evidenced."
+      ],
+      "citations": [
+        {
+          "claim": "toxic_to_pets true (NC State Extension Plant Toolbox tags Ilex opaca as a problem for cats, dogs, and horses)",
+          "quote": "Poisonous to Humans Problem for Cats Problem for Dogs Problem for Horses",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (RHS pet-specific caution: fruit not to be eaten)",
+          "quote": "Fruit are ornamental - not to be eaten.  Wear gloves and other protective equipment when handling.  Pets: Fruit are ornamental - not to be eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers",
+          "url": "https://www.rhs.org.uk/plants/21251/ilex-opaca/details",
+          "source": "Royal Horticultural Society"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade; soil_drainage moderate",
+          "quote": "Easily grown in average, consistently moist, acidic, well-drained soils in full sun to part shade.  Leaves typically yellow in alkaline soils.  Tolerates a broad range of soil conditions, but will not tolerate flooding or soils saturated with moisture. Avoid poorly drained soils.",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=k640",
+          "source": "Missouri Botanical Garden Plant Finder"
+        },
+        {
+          "claim": "soil_ph_max 6.5; outdoor_sun_exposure full_sun and part_shade; soil_drainage moderate",
+          "quote": "Growing well in full sun to partial shade, American holly should be located on fertile, well-drained but moist, slightly acid soils below 6.5 pH. Berry production is highest in full sun on female trees. American holly foliage thins during drought but insect and disease infestations are usually minimal.",
+          "url": "https://ask.ifas.ufl.edu/publication/ST304",
+          "source": "UF/IFAS Ask IFAS (ENH463/ST304)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade; soil_drainage moderate",
+          "quote": "Grow in moist but well-drained, preferably neutral to acid soil in full sun or part shade. Not suited to chalky soils.",
+          "url": "https://www.rhs.org.uk/plants/21251/ilex-opaca/details",
+          "source": "Royal Horticultural Society"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "American holly (Ilex opaca) has a 15- to 30-foot height, 10- to 20-foot width and requires full sun to part shade. Winter wind may cause a problem with these hollies.",
+          "url": "https://fieldreport.caes.uga.edu/news/great-hedges-make-great-neighbors/",
+          "source": "UGA CAES Field Report"
+        },
+        {
+          "claim": "soil_base garden_bed (landscape/hedge design use, in-ground tree not container-grown)",
+          "quote": "Design Feature: Barrier Hedge Screen/Privacy Specimen",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "humidity_need high",
+          "quote": "It thrives in humid environments with good drainage and moist, slightly acidic soil, yet tolerates a wide range of conditions.",
+          "url": "https://extension.psu.edu/programs/master-gardener/counties/allegheny/news/holly-jolly-american-holly",
+          "source": "Penn State Extension"
+        }
+      ]
+    },
+    {
+      "common_name": "Peach",
+      "scientific_name_given": "Prunus persica",
+      "scientific_name_accepted": "Prunus persica",
+      "name_note": "NC State Extension's Gardener Plant Toolbox lists Prunus persica as previously known as Amygdalis persicus, Persica vulgaris, and Prunus persica var. nucipersica. RHS separately gives Prunus persica a Name Status of \"Correct\" and lists the synonym Amygdalus persica (a slightly different genus-spelling/gender of the same historical name NC State records as Amygdalis persicus). Both admissible sources agree Prunus persica is the current accepted binomial, so scientific_name_accepted is copied over unchanged with no conflict to adjudicate.",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "soil_base": null,
+      "soil_drainage": "moderate",
+      "soil_ph_min": 6,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max/humidity_need/humidity_pct_min/humidity_pct_max/light_fc_min/light_fc_good/direct_sun_hours_max: these read as indoor-microclimate and container-culture fields; no admissible source discusses ambient indoor temperature, humidity, or foot-candle/sun-hour ceilings for this outdoor orchard/landscape tree.",
+        "chill_damage_f: left null despite finding a detailed Penn State Extension frost-critical-temperature table for peach, because the data is genuinely stage-dependent rather than a single damage-onset figure -- 10%-kill temperatures range from 18°F at 'first swelling' up to 28°F at 'post bloom' (with 90%-kill temperatures ranging 1°F to 25°F across the same stages). Picking any single one of these seven values to represent 'the' damage-onset temperature would misrepresent a curve as a point, so the field is left null and the full table is preserved in citations instead.",
+        "cool_rest_note: left null. Peach has a real winter-chilling dormancy requirement, but no admissible source gives a single species-wide chill-hour figure -- UGA CAES describes the requirement only in relative terms across cultivars ('less than 600 hours to over 900 hours'), and UF/IFAS frames its numbers explicitly as cultivar- and Florida-region-specific (100 to 650+ chill units, with south-central Florida cultivars needing as few as 75-150 units versus 350-550 for north Florida). Presenting any one of these as the species' cool-rest requirement would misrepresent a range that exists specifically because of intentional low-chill cultivar breeding, so this was left null rather than picking one cultivar group's figure.",
+        "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est: left null. This is a harm-capable field and UF/IFAS's own irrigation guidance is stage-dependent in a way that would conflict if forced into one regime: soil water depletion 'should not exceed 25%' during flowering and fruit growth (i.e. keep fairly moist) but 'up to 50%' is allowable during vegetative growth and 'more than 50%... is acceptable' during dormancy (i.e. let it dry out substantially). RHS's potted-peach guidance ('aiming to keep the compost evenly moist') is container-specific and not comparable to in-ground orchard culture. Rather than pick one point on this seasonal curve and label it the species' regime, both the enum field and its numeric companions are left null, with the qualitative detail preserved in water_estimate_basis. UF/IFAS's soil-moisture-sensor check depths (4 and 8 inches, with deeper sensors to 60 inches) are commercial-orchard irrigation-monitoring infrastructure, not a home-gardener 'check by feel' depth, so they were not used to populate water_check_depth_cm either.",
+        "fertilize_interval_days/fertilize_strength: left null. UGA CAES gives a granular-fertilizer schedule by calendar month and tree age (pounds of 10-10-10 and calcium nitrate), not a day-interval figure or a liquid-dilution 'strength' (full/half/quarter) framing, so neither field maps cleanly to what the source actually states.",
+        "soil_ph_min/soil_ph_max: populated from UGA CAES's specific numeric range (6-6.5), corroborated qualitatively by Clemson ('near 6.5'). NC State's own soil pH tags for this species ('Acid (<6.0)' and 'Neutral (6.0-8.0)') and RHS's field ('Acid or Alkaline or Neutral') are broad site-wide categorical buckets rather than a species-curated number, so they were not merged into the numeric field, consistent with how this catalog has treated similar broad-tag-vs-specific-figure situations elsewhere (e.g. Apple, Red Maple).",
+        "is_houseplant: left false. RHS documents that 'compact varieties can also be grown in containers' and 'can also be grown in an unheated greenhouse for all or part of the year,' with potted trees only moved to 'a greenhouse, porch or other frost-free spot during flowering' for frost protection -- this is outdoor/greenhouse container culture for fruit production, not indoor long-term houseplant use, so is_houseplant was kept false rather than set true on the container-growing evidence, consistent with how this catalog has treated similar outdoor-container language for other landscape/orchard trees (e.g. Crape Myrtle).",
+        "toxic_to_pets/toxicity_detail: toxic_to_pets true is supported directly by NC State's own '#problem for dogs' and '#problem for cats' tags (a structured field distinct from, not blended with, the page's human-specific 'Poisonous to Humans' poison-severity block). NC State also tags '#problem for horses,' but per this catalog's established convention horses are not treated as within the 'toxic_to_pets' boolean's scope (they are, however, preserved in toxicity_detail via Penn State's peach-naming corroboration). No admissible source gives dog/cat-specific symptoms or a dog/cat-specific toxic dose for this species beyond the tag itself, so toxicity_detail describes the human-targeted poison data and the general wilted-leaf/seed hazard separately from the bare pet tags, rather than presenting the human symptom list as if it had been established for pets.",
+        "toxicity_detail — removed on audit: Two separate traceability failures. (1) The citation labeled 'toxicity_detail poison part Seeds, toxic principle cyanogenic glycoside/amygdalin, severity Medium (Poisonous to Humans section)' asserts 'severity Medium' in its claim, but its own quote text -- 'Poison Symptoms: Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure. Poison Toxic Principle: Cyanogenic glycoside, amygdalin. Poison Part: Seeds' -- contains no severity rating at all, so 'Medium' (which the toxicity_detail field text repeats verbatim) doesn't trace to any quote. (2) The toxicity_detail field text includes a direct quotation -- \"highest in both new growth and wilted leaves and branches\" -- attributed to the Penn State horse-pasture source, but no citation entry in the array contains this string; the only Penn State citation quotes just 'Apricot and peach trees are in the same genus (Prunus) and are thought to contain the same toxins in the leaves and seeds.' The field's own text further admits the wilted-leaf/new-growth detail describes 'related Prunus species,' not peach itself -- exactly the sibling-species-boilerplate problem the audit brief flags. On top of this, the field centers a full human-poisoning symptom list (gasping, pupil dilation, coma) inside what is supposed to be pet-toxicity detail, sourced explicitly from NC State's human-only 'Poisonous to Humans' section, with no animal-specific symptom data anywhere in the citations.",
+        "water_estimate_basis — removed on audit: The field presents 'up to 50%... is allowable' (vegetative growth) and 'more than 50%... is acceptable' (dormancy) as quoted soil-water-depletion targets from UF/IFAS HS1316, but the only citation supporting this claim quotes solely 'soil water depletion should not exceed 25% of the available soil water.' No citation in the array contains the 50% figures for either growth stage, so two of the three stage-specific numbers in this field are untraceable to any source quote and should be treated as unverified. This also undermines the stated rationale for leaving water_regime null, since that rationale leans on the same unsupported 50% figures to argue the guidance is stage-dependent.",
+        "fertilize_active_months — removed on audit: The sole supporting citation's quote is explicitly scoped to first-year trees: 'Do not fertilize newly planted, first year, peach trees until March... In May, broadcast... In July, broadcast...' The field generalizes this first-year-only fertilizer regimen into a blanket species-wide fertilize_active_months value with no age qualification, which would misapply a young-tree schedule to mature/bearing peach trees (extension sources typically differentiate fertilizer timing and amount by tree age).",
+        "soil_base — removed on audit: The citation backing 'garden_bed' quotes only 'Soil Drainage: Good Drainage / Moist' from NC State's structured data tags -- a drainage-rate characteristic, not any statement about whether the tree is grown in-ground, in a raised bed, or in a container. Nothing in that quote supports the claim label's parenthetical '(in-ground landscape/orchard tree).' No other citation in the array cleanly establishes in-ground growing as the primary substrate either -- one RHS citation used elsewhere in the record for is_houseplant even notes 'compact varieties can also be grown in containers,' which cuts against treating garden_bed as the uncontested default."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Peach; scientific_name_given Prunus persica (deciduous fruit tree, family Rosaceae)",
+          "quote": "The common peach is a deciduous fruit tree in the rose family that is native to Asia and has many cultivars that provide excellent peaches or nectarines.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "scientific_name_accepted Prunus persica (RHS Name Status Correct)",
+          "quote": "Name Status\nCorrect",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/156648/prunus-persica/details"
+        },
+        {
+          "claim": "name_note previously known as Amygdalis persicus, Persica vulgaris, and Prunus persica var. nucipersica",
+          "quote": "Previously known as:\nAmygdalis persicus\nPersica vulgaris\nPrunus persica var. nucipersica",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "name_note synonym Amygdalus persica",
+          "quote": "Amygdalus persica",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/156648/prunus-persica/details"
+        },
+        {
+          "claim": "toxic_to_pets true (#problem for dogs and #problem for cats tags)",
+          "quote": "#problem for dogs, #problem for horses, #problem for cats",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "toxicity_detail poison part Seeds, toxic principle cyanogenic glycoside/amygdalin, severity Medium (Poisonous to Humans section)",
+          "quote": "Poison Symptoms: Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure.\nPoison Toxic Principle: Cyanogenic glycoside, amygdalin\nPoison Part: Seeds",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "toxicity_detail pit/seed cyanide compounds, low risk from a couple of accidentally-swallowed pits",
+          "quote": "The pits contain cyanide compounds, which are poisonous. If a couple of pits are accidentally swallowed, it will not cause poisoning.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "toxicity_detail wilted leaves and seeds both documented as poisonous, especially in quantity",
+          "quote": "While the fruit is edible the seeds and wilted leaves are poisonous especially if eaten in quantity.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "toxicity_detail peach named specifically as sharing Prunus cyanogenic leaf/seed toxins relevant to horses",
+          "quote": "Apricot and peach trees are in the same genus (Prunus) and are thought to contain the same toxins in the leaves and seeds.",
+          "source": "Penn State Extension, Trees in Horse Pastures",
+          "url": "https://extension.psu.edu/trees-in-horse-pastures"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Sunlight, and plenty of it, is the key to maximizing fruit production. Pick an area where the trees will be in the sun most or all of the day.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/peaches-nectarines/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Peach trees need to have sun from 8 to 10 hours per day.",
+          "source": "UGA Cooperative Extension, CAES Field Report (Home Garden Peaches, C1063)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1063/home-garden-peaches/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Position\nFull sun",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/156648/prunus-persica/details"
+        },
+        {
+          "claim": "soil_base garden_bed (in-ground landscape/orchard tree)",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/"
+        },
+        {
+          "claim": "soil_drainage moderate (extremely sensitive to poor drainage; wants good drainage while tolerating moist soil)",
+          "quote": "Peach trees are extremely sensitive to poorly drained soils. In areas of poor drainage, roots will die, resulting in stunted growth and eventual death of the tree.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/peaches-nectarines/"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "quote": "Peach trees require a site with well-drained soil and ample sunlight. Poorly drained soils can lead to poor tree growth and often times tree death.",
+          "source": "UGA Cooperative Extension, CAES Field Report (Home Garden Peaches, C1063)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1063/home-garden-peaches/"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "quote": "Moist but well–drained",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/156648/prunus-persica/details"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "quote": "Soil pH for peach trees should be between 6 and 6.5.",
+          "source": "UGA Cooperative Extension, CAES Field Report (Home Garden Peaches, C1063)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1063/home-garden-peaches/"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5 (qualitative corroboration)",
+          "quote": "Most fruit trees, including peaches, grow best where the soil pH is near 6.5.",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/peaches-nectarines/"
+        },
+        {
+          "claim": "fertilize_active_months 3, 5, and 7 (March, May, July application schedule)",
+          "quote": "Do not fertilize newly planted, first year, peach trees until March. At that time, apply 1 lb of 10-10-10 fertilizer per tree, broadcasting evenly 4 to 5 in. away from the tree trunk. In May, broadcast 1 lb of calcium nitrate 6 in. away from the tree trunk. In July, broadcast 1 lb of calcium nitrate over a 6-in. diameter circle.",
+          "source": "UGA Cooperative Extension, CAES Field Report (Home Garden Peaches, C1063)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1063/home-garden-peaches/"
+        },
+        {
+          "claim": "is_houseplant false (outdoor fruiting tree; fruits well only outdoors)",
+          "quote": "Peach trees need a warm, sheltered location and lots of sunshine to fruit well and ripen fully outdoors in the UK.",
+          "source": "Royal Horticultural Society (RHS), How to grow peaches",
+          "url": "https://www.rhs.org.uk/fruit/peaches/grow-your-own"
+        },
+        {
+          "claim": "water_estimate_basis (soil-water-depletion targets vary by growth stage; irrigation frequency)",
+          "quote": "Growers in Florida commonly irrigate early in the morning to reduce losses due to evaporation or wind, with two or three irrigation events per week.",
+          "source": "UF/IFAS Extension (Ask IFAS, HS1316: Irrigation Practices for Peaches in Florida)",
+          "url": "https://ask.ifas.ufl.edu/hs1316"
+        },
+        {
+          "claim": "water_estimate_basis soil water depletion should not exceed 25% during flowering/fruit growth, up to 50% during vegetative growth, and more than 50% acceptable during dormancy",
+          "quote": "soil water depletion should not exceed 25% of the available soil water",
+          "source": "UF/IFAS Extension (Ask IFAS, HS1316: Irrigation Practices for Peaches in Florida)",
+          "url": "https://ask.ifas.ufl.edu/hs1316"
+        },
+        {
+          "claim": "chill_damage_f candidate data: peach frost-kill temperatures vary by bloom stage from 18°F (first swelling, 10% kill) to 28°F (post bloom, 10% kill)",
+          "quote": "First swelling | 18 | 1\nCalyx green | 21 | 5\nCalyx red | 23 | 9\nFirst pink | 25 | 15\nFirst bloom | 26 | 21\nFull bloom | 27 | 24\nPost bloom | 28 | 25",
+          "source": "Penn State Extension, Orchard Frost - Critical Temperatures for Various Fruits",
+          "url": "https://extension.psu.edu/orchard-frost-critical-temperatures-for-various-fruits"
+        },
+        {
+          "claim": "cool_rest_note candidate data: chilling-hour dormancy requirement varies by cultivar from under 600 to over 900 hours",
+          "quote": "A chill hour is the amount of time that the temperature is between 32 °F and 45 °F.",
+          "source": "UGA Cooperative Extension, CAES Field Report (Home Garden Peaches, C1063)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1063/home-garden-peaches/"
+        },
+        {
+          "claim": "cool_rest_note candidate data: UF/IFAS low-chill cultivars require as little as 75-150 chilling units in south central Florida versus 350-550 in north Florida",
+          "quote": "Before breeding efforts from researchers at the University of Florida in the 1950s, most peach cultivars required approximately 650+ chill units, but now growers have the option for low-chill cultivars with requirements as low as 100 chill units.",
+          "source": "UF/IFAS Extension EDIS",
+          "url": "https://edis.ifas.ufl.edu/publication/HS1492"
+        },
+        {
+          "claim": "is_houseplant candidate data: compact peach cultivars grown in outdoor containers or unheated greenhouse, not as an indoor houseplant",
+          "quote": "Compact varieties can also be grown in containers. They can also be grown in an unheated greenhouse for all or part of the year.",
+          "source": "Royal Horticultural Society (RHS), How to grow peaches",
+          "url": "https://www.rhs.org.uk/fruit/peaches/grow-your-own"
+        }
+      ]
+    },
+    {
+      "common_name": "Common Pear",
+      "scientific_name_given": "Pyrus communis",
+      "scientific_name_accepted": "Pyrus communis",
+      "name_note": "All admissible sources consulted (NC State Extension, Missouri Botanical Garden, RHS, UF/IFAS, Penn State Extension, UGA Extension) consistently use Pyrus communis as the current binomial for the common/European pear; no conflicting accepted name was found.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": 5.9,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f: left null. UF/IFAS states open blossoms are usually killed at 26°F or below; Penn State Extension states flowers can be killed and fruit set severely reduced below 28°F. These are two different damage-onset thresholds from admissible sources with no resolving source, so the field is left null per the harm-capable-field conflict rule rather than picking one.",
+        "toxic_to_pets / toxicity_detail: left null. No admissible source (NC State, MOBOT, RHS, UF/IFAS, Penn State, UGA, Clemson) addresses toxicity of Pyrus communis to pets or humans; not inferred from the Rosaceae family.",
+        "soil_ph: NC State's Plant Toolbox lists a standardized site-wide category 'Neutral (6.0-8.0)' for this field, which reads as a generic pH bucket applied broadly across their database rather than pear-specific research. The record instead uses UGA Extension's specific researched figure ('pH of 5.9 to 6.5') as the more reliable species-specific value; RHS's prose ('fairly neutral soil... will not thrive on very acid soils') is broadly consistent with both.",
+        "direct_sun_hours_max: left null. NC State gives only a full-sun minimum ('6 or more hours of direct sunlight a day'); no admissible source states an upper bound on sun hours.",
+        "humidity_need, humidity_pct_min, humidity_pct_max, light_fc_min, light_fc_good: left null. No admissible source quantifies humidity or light level (foot-candles) for this outdoor landscape/orchard tree.",
+        "day_f_min/max, night_f_min/max, cool_rest_note: left null. These read as houseplant comfort-range/dormancy fields; admissible sources instead describe Pyrus communis's cold tolerance only as USDA zones 4-8 (MOBOT, NC State) and as a blossom/frost-damage threshold (captured, in conflict, under chill_damage_f), not as day/night temperature preferences.",
+        "water_regime, water_check_depth_cm, water_dry_down_target, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. No admissible source frames watering for this in-ground orchard tree as a dry-down/moisture-check cycle. UF/IFAS gives Florida-specific sandy-soil irrigation amounts (mature trees 50+ gallons, young trees 2-3 gallons per application, every 7-10 days in dry seasons) but this is regional guidance tied to Florida soils/climate, not a general species watering regime, so it was not forced into these fields.",
+        "fertilize_interval_days, fertilize_strength: left null. Sources describe fertilizing as a twice-yearly split application tied either to growth stage (UGA: before growth begins / after fruit set) or to fixed months in Florida's climate (UF/IFAS: January and June, used for fertilize_active_months), not as a fixed day-interval or a diluted 'strength'.",
+        "UF/IFAS HS1393 ('The Pear (Pyrus spp.) in Florida Home Gardens') covers pear culture in Florida generally, spanning both Pyrus communis (European pear) and Asian pear types; its fertilizer-month recommendation was used for this record because the document explicitly names P. communis as one of the two pear groups in scope and gives no differing guidance by type, but it is Florida-climate-specific and may not generalize to all growing regions.",
+        "UF/IFAS 'Pyrus communis, Common Pear' (FOR293/FR361), a Florida forestry fact sheet found via search, returned HTTP 410 Gone on ask.ifas.ufl.edu at the time of research and could not be fetched or used as a citation despite being referenced in search-result summaries.",
+        "fertilize_active_months — removed on audit: I fetched the UF/IFAS HS1393 source directly. Its Fertilization section opens with: 'UF/IFAS has not researched fertilizer requirements for pear. Therefore, we suggest a general fertilizer like 6-6-6 or 8-8-8.' The January/June split-application timing used for this field is that same unresearched, generic suggestion — not species- or even genus-researched guidance — and the document explicitly covers both European and Asian pear without distinguishing the schedule by type. It is also Florida-climate-specific (assumes no hard winter dormancy in January), which is the identical defect the record itself correctly used to exclude this same document's irrigation-gallon figures from water_regime ('this is regional guidance tied to Florida soils/climate, not a general species watering regime, so it was not forced into these fields'). Applying stricter regional-specificity scrutiny to water than to fertilizer timing from the identical source is an internal inconsistency, and for pear's actual USDA zone 4-8 range (per MOBOT/NC State), a January fertilizer application would be inappropriate in most of that range.",
+        "scientific_name_accepted: restored using NC State's taxonomy block (Genus/Species/Family), which the audit itself located and confirmed on the live page -- the original citation quoted a descriptive sentence instead of this block, which is what actually states the binomial."
+      ],
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "is_houseplant false (40-50 ft outdoor landscape/orchard tree)",
+          "quote": "It grows 40 to 50 feet tall and 25 to 35 feet wide and produces the familiar, teardrop-shaped, edible fruit seen in stores.",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "soil_base garden_bed (planted in-ground in lawn, meadow, or edible garden settings)",
+          "quote": "Plant it in a lawn, meadow or edible garden.",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "scientific_name_accepted Pyrus communis",
+          "quote": "The common pear, native to a broad area from Europe to northern Iraq, is a deciduous tree in the rose family (Rosaceae).",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "soil_ph_min 5.9 and soil_ph_max 6.5",
+          "quote": "Pears do best in soils with a pH of 5.9 to 6.5.",
+          "url": "https://fieldreport.caes.uga.edu/publications/C742/home-garden-pears/",
+          "source": "UGA Cooperative Extension (CAES Field Report)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (sun most or all of the day)",
+          "quote": "As with all fruit trees, sunlight is a key to maximizing fruit production. Pick an area where the trees will be in the sun most or all of the day.",
+          "url": "https://fieldreport.caes.uga.edu/publications/C742/home-garden-pears/",
+          "source": "UGA Cooperative Extension (CAES Field Report)"
+        },
+        {
+          "claim": "soil_drainage moderate and outdoor_sun_exposure full_sun",
+          "quote": "Best grown in well-drained humusy loams with medium moisture in full sun.",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286400&isprofile=0&pt=7",
+          "source": "Missouri Botanical Garden Plant Finder"
+        },
+        {
+          "claim": "soil_drainage moderate (moist but well-drained soil) and outdoor_sun_exposure full_sun (sunny position)",
+          "quote": "Needs a deep, fertile, moist but well-drained, fairly neutral soil in a sheltered, sunny position. Will not thrive on very acid soils, shallow chalk soils or with shade for more than half the day.",
+          "url": "https://www.rhs.org.uk/plants/14227/pyrus-communis-(f)-common-pear-achras/details",
+          "source": "RHS"
+        },
+        {
+          "claim": "fertilize_active_months 1 and 6 (January and June split application)",
+          "quote": "Applications should be divided into one in January and one in June or made with a controlled-release fertilizer that will release over a time specified on the label.",
+          "url": "https://ask.ifas.ufl.edu/publication/hs1393",
+          "source": "UF/IFAS Extension"
+        },
+        {
+          "claim": "chill_damage_f 26 (open blossoms killed at 26°F or below) — conflicts with a different threshold from another admissible source below; field left null",
+          "quote": "Temperatures of 26°F or below will usually kill open blossoms (Figure 2), so select varieties that will flower when temperatures in your area will be above this for most years.",
+          "url": "https://ask.ifas.ufl.edu/publication/hs1393",
+          "source": "UF/IFAS Extension"
+        },
+        {
+          "claim": "chill_damage_f 28 (flowers killed and fruit set severely reduced below 28°F) — conflicts with UF/IFAS's 26°F threshold above; field left null",
+          "quote": "Pear trees usually bloom 7 to 10 days before apples and their flowers may be killed by spring frosts. Temperatures below 28°F can severely reduce the fruit set by killing the flowers.",
+          "url": "https://extension.psu.edu/pear-production-in-home-fruit-plantings",
+          "source": "Penn State Extension"
+        },
+        {
+          "claim": "scientific_name_accepted Pyrus communis (Genus Pyrus, Species communis)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/",
+          "quote": "Genus: Pyrus Species: communis Family: Rosaceae"
+        }
+      ]
+    },
+    {
+      "common_name": "Black Walnut",
+      "scientific_name_given": "Juglans nigra",
+      "scientific_name_accepted": "Juglans nigra",
+      "name_note": "All admissible sources checked (NC State, Missouri Botanical Garden, RHS, Penn State, UMD, UGA) consistently use Juglans nigra with no alternate accepted name or synonym raised by any source.",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": 8,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f: left null. Only USDA winter-hardiness/survival-zone data was found (NC State: zones 4a-9b; Missouri Botanical Garden: Zone 4 to 9; UGA: zones 5a through 9a; RHS: hardiness rating H6), not a specific damage-onset temperature -- expected for a hardy native forest tree rather than a research gap.",
+        "day_f_min/day_f_max, night_f_min/night_f_max, humidity_need, humidity_pct_min/max, light_fc_min/light_fc_good, cool_rest_note, water_check_depth_cm, water_dry_down_target, water_growing_days_est, water_dormant_days_est, water_estimate_basis, fertilize_active_months/fertilize_interval_days/fertilize_strength: all left null. No admissible source addresses indoor ambient temperature, humidity, foot-candle light levels, container-style watering checks/intervals, or a fertilizing schedule for this species -- expected since black walnut is documented exclusively as a large outdoor forest/landscape tree grown in-ground, never as a houseplant or in a controlled indoor/container setting. (UGA does give a young-tree establishment watering rate -- '10 to 15 gallons of water during the growing season at weekly intervals' -- but this is an irrigation volume for orchard establishment, not a soil-check depth or dry-down interval matching these fields, so it was not forced into them.)",
+        "direct_sun_hours_max: left null. Every admissible source that gives an hours figure states a floor, not a ceiling -- NC State's 'Full sun (6 or more hours of direct sunlight a day)' and UGA's 'at least six hours of sun' -- so none could be mapped to this max-only field.",
+        "soil_ph_min: left null. NC State's own Soil pH field lists only 'Acid (<6.0)' and 'Neutral (6.0-8.0)' as tolerated categories (not 'Alkaline'), giving an upper bound (8.0, used for soil_ph_max) but no defined floor for the 'Acid (<6.0)' category. RHS's own pH field is broader/unbounded ('Acid or Alkaline or Neutral') and was not used to override or extend NC State's narrower paired-category tag, consistent with this catalog's established precedent for the same unbounded-tag pattern in other tree species.",
+        "water_regime keep_moist reflects NC State's and Missouri Botanical Garden's explicit 'prefers moist... soils' language. Both sources also separately describe drought tolerance once established (NC State: 'particularly resistant to heat, drought and soil compaction'; MOBOT: 'Tolerate: Rabbit, Drought') -- treated as normal established-tree drought tolerance layered on a moist-soil preference, not a genuine contradiction, consistent with this catalog's handling of the same pattern in other landscape trees.",
+        "toxic_to_pets/toxicity_detail: NC State's 'Problem for Dogs' tag has no supporting mechanism in any admissible source checked (Clemson, MOBOT, RHS, Penn State, UMD, UGA); it is included in toxic_to_pets=true on the strength of NC State's own structured Problems field, matching this catalog's established precedent (e.g. Ficus carica) that an unexplained 'Problem for [animal]' structured tag is sufficient support for toxic_to_pets even without a separate prose detail, as long as it isn't a human-only heading being misapplied. The horse hazard, by contrast, does have a specific documented mechanism (Penn State: bedding-shavings-induced laminitis; leaf/pollen respiratory signs).",
+        "Juglone/allelopathy (toxicity to OTHER PLANTS, not pets): every admissible source addressing this (NC State, Missouri Botanical Garden, Penn State x2, UMD, UGA x2) describes it as harming nearby plants -- azaleas, peonies, tomatoes, apples, blueberries, rhododendrons, solanaceous crops -- via root/leaf/hull exudate. This is deliberately NOT folded into toxic_to_pets/toxicity_detail, which is scoped to animal harm; there is no dedicated allelopathy field in this schema, so the plant-hazard information itself has no field to populate. Two nuances worth flagging: UGA's 'Did You Know You Can Grow: Black Walnut' article makes one broader, unelaborated claim that 'Juglone can harm animals and humans' (used only as light corroboration for toxic_to_pets, not as a standalone basis); and UMD Extension separately notes the juglone-causes-poor-plant-growth link itself is scientifically disputed ('there is no conclusive, science-based evidence confirming juglone as the cause...'), a caveat about the allelopathy claim's strength that doesn't affect any field in this record.",
+        "Clemson Cooperative Extension (hgic.clemson.edu) has no dedicated Juglans nigra/black walnut fact sheet -- confirmed via site search and its Nuts category listing, which covers only pecan and general chill-hours content -- so Clemson could not be used as a citation source for this record. UF/IFAS's only black walnut publication (EDIS/Ask IFAS ENH479/ST320) returned HTTP 410 Gone on direct fetch as of this research (the URL redirects to an Ask IFAS 'no longer available' page) and likewise could not be used.",
+        "toxicity_detail — removed on audit: Two defects. (1) Citation-traceability gap: the clause 'not for cats -- a separate site tag reads \"non-toxic for cats\"' has zero supporting citation entry. I fetched the live NC State page and confirmed the '#non-toxic for cats' tag is real, but it lives in the page's general tag cloud, not in the structured 'Problems:' dt/dd list, and the only toxic_to_pets citation in the record quotes just 'Problems: Allelopathic / Problem for Dogs / Problem for Horses.' A true fact stated with no citation backing it still fails the 'every non-null field value traces to a citation entry' rule. (2) Mislabeled/blended citation: the UGA quote used as animal corroboration -- 'Juglone is a strong respiratory toxin and small amounts will damage other living creatures' -- is presented in the citation label as 'juglone is a respiratory toxin to other creatures' (i.e. animal-toxicity support). I fetched the full source article (fieldreport.caes.uga.edu/news/your-black-walnut-tree-is-out-to-get-you/) and found that sentence is immediately followed, in the same paragraph, by 'In the soil, juglone will damage many living things, including plant roots' -- it is the transition sentence into the article's plant-root/soil-allelopathy section, not a standalone animal-toxicity statement. In juglone allelopathy literature, 'respiratory toxin' is the standard term for juglone inhibiting cellular respiration in plant root cells (the core allelopathy mechanism), not an animal inhalation hazard -- Penn State's own horse-specific mechanism is bedding-contact laminitis and possible pollen/leaf respiratory irritation, never described this way. The citation's quote is truncated with an ellipsis exactly before the plant-transition sentence, making an allelopathy-context line read as clean animal corroboration. This is the specific plant-hazard-blended-into-toxicity_detail failure mode the audit brief asked to check for."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Black Walnut and scientific_name_given/scientific_name_accepted Juglans nigra",
+          "quote": "Juglans nigra, commonly called black walnut, is a large deciduous tree typically growing 75-100’ (less frequently to 125’) tall with and an oval to rounded crown.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a875"
+        },
+        {
+          "claim": "is_houseplant false (very deep taproot makes transplanting difficult; grown in-ground, never described as containerized or indoor)",
+          "quote": "It has a very deep taproot, making it difficult to transplant.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/"
+        },
+        {
+          "claim": "is_houseplant false (corroborating: large landscape tree, inappropriate as a street tree, difficult to transplant because of deep taproot)",
+          "quote": "Large deciduous tree for large landscapes. Inappropriate as a street tree.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a875"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade; soil_drainage moderate (well-drained); water_regime keep_moist (prefers moist soils)",
+          "quote": "Black walnut prefers moist, organically rich, well-drained soils. It prefers full sun and will tolerate partial shade. However, it is intolerant of full shade.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating, structured field)",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (corroborating) and water_regime keep_moist (corroborating)",
+          "quote": "Sun: Full sun ... Prefers moist, organically rich, well-drained soils in full sun. Intolerant of shade.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a875"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (corroborating) and soil_drainage moderate (corroborating: moist but well-drained)",
+          "quote": "Grow as a specimen tree in any well-drained or moist but well-drained soil in full sun",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/9503/juglans-nigra-(f)/details"
+        },
+        {
+          "claim": "soil_drainage moderate (structured field spans good drainage through occasional wet/dry, not narrow fast-drainage)",
+          "quote": "Good Drainage\nMoist\nOccasionally Dry\nOccasionally Wet\nVery Dry",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/"
+        },
+        {
+          "claim": "soil_ph_max 8.0 (soil_ph_min left null -- no lower bound stated by the paired 'Acid (<6.0)' category)",
+          "quote": "Soil pH:\nAcid (<6.0)\nNeutral (6.0-8.0)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/"
+        },
+        {
+          "claim": "descriptive: RHS's own soil pH field states unbounded Acid/Alkaline/Neutral tolerance (used only in unknowns to explain why NC State's narrower paired-category tag, not this broader one, was used for soil_ph_max)",
+          "quote": "pH Acid or Alkaline or Neutral",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/9503/juglans-nigra-(f)/details"
+        },
+        {
+          "claim": "soil_base garden_bed (grown in-ground as a landscape/shade tree, not in containers)",
+          "quote": "The black walnut works well as a shade tree in meadow and woodland locations. It also can be used in butterfly, edible, native and nighttime gardens.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/"
+        },
+        {
+          "claim": "toxic_to_pets true (Problem for Dogs, Problem for Horses; not flagged for cats)",
+          "quote": "Problems:\nAllelopathic\nProblem for Dogs\nProblem for Horses",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/"
+        },
+        {
+          "claim": "toxicity_detail: horses -- laminitis from black walnut wood shavings used as bedding (as little as 20% in a bedding mix), plus leaf/pollen respiratory signs and moldy-nut hazards; primarily a contact/bedding hazard, not ingestion",
+          "quote": "Black walnut (Juglans nigra). This tree is also common in horse pastures, and its primary danger is not from being consumed. Shavings from black walnut wood can cause laminitis when horses stand on them. As little as 20% black walnut shavings in a bedding mix can be enough to cause laminitis. If you remove a black walnut tree from a pasture, be aware of the danger from the sawdust that remains on the ground. It has also been suggested that pollen and leaves from black walnut can be toxic to horses, causing mild respiratory signs. The walnuts that fall on the ground may become moldy, which can cause health problems as well.",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/trees-in-horse-pastures"
+        },
+        {
+          "claim": "toxic_to_pets true (corroborating: juglone described as able to harm animals generally)",
+          "quote": "Juglone can harm animals and humans and inhibit the growth of other plants around the tree, so avoid planting gardens, fruit trees or sensitive ornamentals nearby.",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/features/did-you-know-you-can-grow-black-walnut/"
+        },
+        {
+          "claim": "toxicity_detail: corroborating (consuming leaves or using walnut sawdust as bedding causes problems with animals; juglone is a respiratory toxin to other creatures)",
+          "quote": "Some people and animals are susceptible to juglone damage. Consuming too many leaves or using walnut sawdust for bedding can cause a number of problems with animals. ... Juglone is a strong respiratory toxin and small amounts will damage other living creatures.",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/news/your-black-walnut-tree-is-out-to-get-you/"
+        },
+        {
+          "claim": "descriptive: juglone toxicity described as a hazard to PLANTS (allelopathy), not pets -- used only in unknowns to keep this separate from toxic_to_pets/toxicity_detail, not applied to that field",
+          "quote": "The most common symptoms of juglone sensitivity in landscape and garden plants are the yellowing and wilting of leaves, especially during the hot, dry periods during the growing season, ultimately resulting in wilting and death of the plant.",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/landscaping-and-gardening-around-walnuts-and-other-juglone-producing-plants"
+        },
+        {
+          "claim": "descriptive: UMD Extension notes the juglone-causation link for reduced nearby plant growth is itself scientifically disputed (used only in unknowns for transparency, not applied to any field value)",
+          "quote": "there is no conclusive, science-based evidence confirming juglone as the cause for the poor growth of plants growing near black walnut trees",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/walnut-toxicity-juglone"
+        }
+      ]
+    },
+    {
+      "common_name": "American Elderberry",
+      "scientific_name_given": "Sambucus canadensis",
+      "scientific_name_accepted": null,
+      "name_note": "Admissible sources give genuinely conflicting resolutions of the accepted name, so scientific_name_accepted is left null. NC State Extension's own dedicated species page uses \"Sambucus canadensis\" as the current name and explicitly lists \"Sambucus nigra subsp. canadensis\" under a \"Previously known as\" heading -- i.e., NC State treats the subspecies-of-nigra treatment as superseded. The Royal Horticultural Society resolves the identical pair in the opposite direction: its page for \"Sambucus nigra subsp. canadensis\" carries \"Name Status: Correct\" together with \"Synonym: Sambucus canadensis,\" while its separate page for the plain binomial \"Sambucus canadensis\" is itself marked \"Name Status: Synonym.\" UF/IFAS's EDIS/Ask IFAS publications (ENH-736/ST578 and FE1093) use \"Sambucus nigra ssp. canadensis\" as their working scientific name throughout (\"Scientific name: Sambucus nigra ssp. canadensis\"). Missouri Botanical Garden files its profile under \"Sambucus canadensis\" but flags the same unresolved split in its own text: \"Some authorities consider this plant to be a subspecies or variety of Sambucus nigra instead of a separate species.\" Because NC State and RHS actively resolve this in opposite directions, and MOBOT and UF/IFAS split the same way without resolving it themselves, no single accepted binomial is asserted here.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "scientific_name_accepted: left null -- NC State treats 'Sambucus canadensis' as current and 'Sambucus nigra subsp. canadensis' as a superseded synonym (\"Previously known as\"), while RHS resolves the identical pair the opposite way (its 'Sambucus nigra subsp. canadensis' page is \"Name Status: Correct\" with 'Sambucus canadensis' as the synonym); UF/IFAS uses the nigra-subspecies name throughout and MOBOT's own text flags the dispute without resolving it. See name_note.",
+        "toxicity_detail: left null even though toxic_to_pets is true -- every admissible source with detailed symptom/toxic-principle/plant-part text for this species is explicitly human-directed (NC State nests its symptom detail under a 'Poisonous to Humans:' header, listing 'Poison Part: Fruits Leaves Roots Stems' and 'Ingestion can cause nausea, vomiting, diarrhea, coma...' there; UGA's C-957 table is titled 'Ornamental Plants Reported To Be Toxic When Ingested by Humans'; UF/IFAS FE1093 discusses raw-berry risk in terms of 'consumers' and juice preparation; Penn State says 'poisonous to people'). None of these sources give pet- or animal-specific symptoms, so that human-only detail was not carried into a field paired with toxic_to_pets. toxic_to_pets itself is supported only by NC State's separate, undetailed 'Problem for Horses' tag, with no accompanying symptom text for that target.",
+        "soil_ph_min/soil_ph_max: left null due to a genuine numeric conflict between two admissible sources -- UGA's B992 gives a cultivation liming target of 'a pH of 6.0 to 6.5,' while Penn State's Rain Garden fact sheet gives a native/tolerance pH of 'Circumneutral (pH 6.8 to 7.2)'; the two ranges do not overlap and neither source addresses or supersedes the other, so no single range was asserted.",
+        "chill_damage_f: no admissible source gives a damage-onset temperature; sources describe only USDA hardiness-zone survivability (ranges given vary from zone 3-9 to 4A-10B depending on source), which is expected for a hardy deciduous shrub rather than under-research.",
+        "cool_rest_note: no admissible source states an explicit winter-chill or dormancy requirement for this species; sources describe general winter hardiness only ('winter hardy'), so this was left null rather than inferred.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source gives numeric ambient day or night temperature thresholds; all describe outdoor garden/landscape cultivation characterized only by USDA hardiness zone.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source addresses ambient humidity; all describe outdoor garden-bed cultivation, not container/houseplant culture.",
+        "light_fc_min/light_fc_good/direct_sun_hours_max: all admissible sources describe light only via the full-sun/partial-shade category (NC State's '6 or more hours' phrasing defines the lower bound of its own 'Full sun' category label rather than giving a species-specific hour ceiling), not footcandle values or a direct-sun-hours maximum for this species.",
+        "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: all admissible sources describe outdoor garden-bed cultivation (e.g., UMD: 'Shallow, fibrous roots make Elderberry susceptible to drought, especially in the first year after planting'; Penn State: soil that is 'average to somewhat wet... not dry or saturated') rather than the container/houseplant dry-down framework these fields assume, so they were left null rather than force-mapped.",
+        "fertilize_active_months/fertilize_interval_days/fertilize_strength: the only admissible fertilizing guidance (UGA) gives a once-per-'every spring' application of a fixed quantity ('scatter a small amount of fertilizer (1/2 lb of 10-10-10) evenly under each bush every spring') -- a season name rather than a named calendar month, no repeat interval in days, and a fixed dose rather than a full/half/quarter strength framework, so none of these fields could be populated.",
+        "is_houseplant: set false -- every admissible source describes exclusively outdoor cultivation (hardy shrub to roughly 5-12 ft across USDA zones 3/4 through 9/10, full-sun landscape/rain-garden/streambank use); UF/IFAS's 'Uses: container or planter... deck or patio' phrase was read as outdoor patio-container use (paired explicitly with 'deck or patio'), not indoor houseplant growing.",
+        "toxic_to_pets — removed on audit: The sole animal-toxicity evidence (NC State's 'Problem for Horses' tag, verified by direct fetch) is species-correct but target-mismatched: it names horses, not dogs/cats/general pets, and the word 'toxic'/'poisonous' is never applied to it -- that's the record's own inference. NC State's full Problems list for this page is 'Poisonous to Humans, Problem for Horses, Weak Wood, Weedy' with no dog/cat/pet tag, and its detailed Poison/symptom section is explicitly human-directed. I checked every other admissible source cited or discoverable (UF/IFAS ST578, UGA B992, both Penn State pages, UMD, Clemson) and none mentions pet or animal toxicity at all. Generalizing a horse-specific, undetailed tag into a general toxic_to_pets=true is an unsupported leap the record itself flags as thin in its own unknowns text; should have been left null."
+      ],
+      "citations": [
+        {
+          "claim": "common_name American Elderberry (American Elder, Common Elderberry, Elderberry) and scientific_name_given Sambucus canadensis",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Sambucus canadensis (American Elder, American Elderberry, Common Elderberry, Elderberry)"
+        },
+        {
+          "claim": "name_note: NC State lists Sambucus nigra subsp. canadensis as a previous/superseded name for this species",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Previously known as: Sambucus nigra subsp. canadensis"
+        },
+        {
+          "claim": "name_note: RHS marks Sambucus nigra subsp. canadensis as the correct name, with Sambucus canadensis as its synonym",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/202707/sambucus-nigra-subsp-canadensis/details",
+          "quote": "Name Status: Correct; Synonym: Sambucus canadensis"
+        },
+        {
+          "claim": "name_note: RHS's separate page for the plain binomial Sambucus canadensis is itself marked as a synonym rather than the correct name",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/16388/sambucus-canadensis/details",
+          "quote": "Name Status: Synonym"
+        },
+        {
+          "claim": "name_note: Missouri Botanical Garden flags the same nigra/canadensis rank dispute without resolving it",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=f470",
+          "quote": "American elder (Sambucus canadensis) and European elder (Sambucus nigra) are closely related plants. Some authorities consider this plant to be a subspecies or variety of Sambucus nigra instead of a separate species."
+        },
+        {
+          "claim": "name_note: UF/IFAS uses Sambucus nigra ssp. canadensis as its working scientific name",
+          "source": "UF/IFAS Ask IFAS (EDIS ENH-736/ST578)",
+          "url": "https://ask.ifas.ufl.edu/st578",
+          "quote": "Scientific name: Sambucus nigra ssp. canadensis"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=f470",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (Good Drainage, Moist, Occasionally Wet)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Soil Drainage: Good Drainage Moist Occasionally Wet"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (handles wet soil, but not saturated or dry)",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/native-plant-spotlights-for-wildlife-friendly-landscaping",
+          "quote": "It can handle average to somewhat wet soil, but won't do well in very dry or saturated soils."
+        },
+        {
+          "claim": "soil_base garden_bed (outdoor naturalized/landscape planting)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Use this plant in naturalized areas, as a hedge, in a woodland, or along streams and ponds. It is a good addition to butterfly, edible, native, pollinator, or rain gardens."
+        },
+        {
+          "claim": "is_houseplant false (documented only as an outdoor shrub, including outdoor deck/patio containers)",
+          "source": "UF/IFAS Ask IFAS (EDIS ENH-736/ST578)",
+          "url": "https://ask.ifas.ufl.edu/st578",
+          "quote": "Uses: container or planter; reclamation; trained as a standard; deck or patio; specimen"
+        },
+        {
+          "claim": "toxic_to_pets true (problem for horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Problems: Poisonous to Humans Problem for Horses Weak Wood Weedy"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5 conflicting evidence (UGA cultivation liming target) - contributes to leaving soil_ph null",
+          "source": "UGA Cooperative Extension (CAES Field Report, B992)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B992/minor-fruits-and-nuts-in-georgia/",
+          "quote": "Plant elderberries on well-drained or damp soil that has been limed to a pH of 6.0 to 6.5."
+        },
+        {
+          "claim": "soil_ph_min 6.8 and soil_ph_max 7.2 conflicting evidence (PSU native/rain-garden tolerance) - contributes to leaving soil_ph null",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/rain-garden-plants-elderberry",
+          "quote": "Circumneutral (pH 6.8 to 7.2)"
+        }
+      ]
+    },
+    {
+      "common_name": "Chinese Fountain Grass",
+      "scientific_name_given": "Pennisetum alopecuroides",
+      "scientific_name_accepted": null,
+      "name_note": "Left null on a genuine, unresolved conflict between admissible sources over which genus name is currently accepted. RHS's Pennisetum alopecuroides species page carries \"Name Status: Correct\" and lists \"Cenchrus alopecuroides\" as one of its own synonyms — i.e., RHS treats Pennisetum as accepted and Cenchrus as the synonym. Missouri Botanical Garden's Plant Finder likewise presents the species entirely under the binomial Pennisetum alopecuroides with no note of any name change. NC State Extension's Plant Toolbox takes the opposite position: its page is titled \"Chinese Fountain Grass - Cenchrus alopecuroides,\" lists Pennisetum alopecuroides under \"Previously known as,\" and states outright in its video-credit note, \"NOTE the plant currently known as Cenchrus alopecuroides was formerly known as Pennisetum alopecuroides.\" University of Maryland Extension's invasive-grasses resource independently sides with NC State, naming the plant primarily \"Cenchrus alopecuroides\" with \"Pennisetum alopecuroides\" given only as an alternate label. With two admissible sources anchored to each name and no admissible source resolving the conflict, scientific_name_accepted is left null rather than picking a side. (Note also, for transparency though it maps to no schema field: RHS's Foliage field reads \"Evergreen\" while NC State's Woody Plant Leaf Characteristics field reads \"Deciduous\" for this same species — a further sign these sources are not fully reconciled on this plant.)",
+      "is_houseplant": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "scientific_name_accepted: left null on a genuine, unresolved conflict between admissible sources over which genus is currently accepted for this species — see name_note for the full four-source breakdown (RHS and Missouri Botanical Garden both anchor to Pennisetum alopecuroides; NC State Extension and University of Maryland Extension both anchor to Cenchrus alopecuroides).",
+        "toxic_to_pets / toxicity_detail: no admissible source addresses pet toxicity for this species in either direction. NC State's Plant Toolbox pages were fetched directly (both the species page and the 'Hameln' cultivar page) and confirmed to carry no cats/dogs/horses/humans toxicity tag anywhere in the page text — the species page's Problems field reads only 'No significant problems. Weedy.' and the Hameln cultivar page's reads only 'No notable issues. Is deer and rabbit resistant.' RHS's species page, Missouri Botanical Garden's Plant Finder, and Clemson HGIC's ornamental-grasses factsheet likewise never mention pet or human toxicity for this plant anywhere. This is silence, not a documented non-toxicity finding (unlike, e.g., an explicit '#non-toxic for cats' tag seen on other species in this catalog), so left null rather than inferred as false.",
+        "day_f_min/day_f_max and night_f_min/night_f_max: not addressed by any admissible source; this is an outdoor landscape/garden ornamental grass, and no source frames its care around a controlled indoor day/night temperature range.",
+        "chill_damage_f: only survival-oriented hardiness-zone data exists, not a damage-onset temperature. RHS gives Hardiness rating H3 ('hardy in coastal and relatively mild parts of the UK', -5 to 1°C / 23-34°F); NC State gives USDA zones 6a-9b; Missouri Botanical Garden gives USDA zone 6 to 9. Per the task's own field guidance this hardiness-zone survival data should not be mapped onto a damage-onset figure, so left null.",
+        "cool_rest_note: not addressed by any admissible source.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: not addressed by any admissible source — this is an outdoor garden plant and none of the five admissible sources discuss ambient humidity for it.",
+        "light_fc_min / light_fc_good: not addressed; sources give only categorical sun-exposure terms (full sun / partial shade), never footcandle figures.",
+        "direct_sun_hours_max: NC State's structured Light field gives its standard categorical bin definitions ('Full sun (6 or more hours...)' / 'Partial Shade (2-6 hours)'), but these are generic definitions applied to any plant tagged with those categories, not a species-specific sun-hours ceiling. Because full sun is also unconditionally endorsed as the ideal exposure by RHS ('Position: Full sun'), Missouri Botanical Garden ('Best in full sun'), and NC State's own prose ('prefers a full sun position...flowering is best in full sun'), presenting 6 as a hard ceiling would misleadingly cap the full-sun exposure every source actually recommends. Left null.",
+        "soil_ph_min / soil_ph_max: no admissible source gives a numeric pH range for the species. RHS's species page gives only the broad, effectively unbounded categorical tolerance 'Acid or Alkaline or Neutral'; the only numeric-adjacent pH data found (NC State's 'Hameln' cultivar page: Acid <6.0, Neutral 6.0-8.0, Alkaline >8.0) is cultivar-specific rather than from the species page itself, and even that just spans all three unbounded bins rather than giving a defensible min/max. Left null.",
+        "soil_drainage: left null on a genuine tension between admissible sources' own structured fields. RHS's structured Moisture field reads 'Well-drained', and Clemson HGIC's dedicated Fountain Grass paragraph states 'It prefers sun and moisture, but needs well-drained soil.' — both frame well-drained soil as a requirement. But Missouri Botanical Garden's own structured Water field for this exact species reads 'Medium to wet' (not the drier reading a well-drained/moderate categorization implies), it separately lists 'Wet Soil' under Tolerate, and recommends the species for 'Rain Garden' use and 'moist locations such as peripheries of water gardens, ponds or streams.' This is the same kind of cross-source structured-field tension this catalog has previously nulled a field over (e.g. the Sago Palm record's audited water_regime removal), so rather than picking either the well-drained side or the wet-tolerant side, this field is left null.",
+        "water_regime and the water_* estimate fields: no admissible source frames this species' watering as a container/soil dry-down cycle matching the schema's regime categories. Sources instead describe outdoor landscape drought tolerance once established (NC State: 'drought-tolerant once established'; Missouri Botanical Garden: 'Tolerant of drought once established'; RHS: 'Drought Resistance: Yes') alongside separate wet-soil tolerance (see soil_drainage note above) — an outdoor in-ground moisture picture, not a soil-dry-down schedule — so left null rather than force-fit.",
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: not addressed by any admissible source for this species.",
+        "scientific_name_accepted — removed on audit: The value is serialized as the JSON string \"null\" (with quotes) rather than an actual null. Every other unresolved field in the record (toxic_to_pets, chill_damage_f, water_regime, etc.) uses a bare null. A string \"null\" is truthy/non-empty to virtually any downstream consumer, so this field would render as populated with garbage text instead of correctly signaling 'unknown/unresolved' -- silently defeating the careful genuine-conflict reasoning documented in name_note. The underlying decision to leave the field unresolved is itself well-supported (I verified all four name_note citations against the live RHS, NC State, and UMD pages and confirmed the quoted 'Name Status: Correct', synonym list, 'formerly known as', and 'may also be labeled as' text are all accurate) -- the defect is purely in how the null was encoded.",
+        "is_houseplant — removed on audit: The single supporting quote (NC State) only describes outdoor growing habit -- clump size, deer/salt tolerance, cutting foliage back in late winter. It never states or implies anything about indoor/houseplant culture. The claim label bolts on an unsupported global negative ('no admissible source describes indoor or container houseplant culture') that this one quote cannot establish by itself -- that would require checking the absence across all cited sources, which isn't shown. Per the audit's own test ('does the quote ACTUALLY state this value'), it does not; the label asserts a category (definitively not a houseplant) the quote doesn't literally support, even though the overall conclusion is plausibly still correct given the plant's outdoor-specific care details.",
+        "soil_base — removed on audit: The MOBOT quote ('Easily grown in average, medium to wet soils in full sun to part shade') describes soil type and sun tolerance only -- it says nothing about ground/bed versus container culture. The claim label infers 'garden_bed' from silence ('no container or potting-mix culture mentioned'), but ornamental grasses like Pennisetum alopecuroides are commonly sold and grown in decorative containers as well as beds, so an absence of a container mention in one MOBOT paragraph doesn't secure the categorical claim. The quote doesn't literally establish the value asserted.",
+        "common_name: restored as \"Chinese Fountain Grass\" -- 3 of the 5 sources actually used (RHS, NC State, UMD) call it that specifically, already quoted in this record's own citations; the plain \"Fountain Grass\" form the audit flagged as an undisclosed minority pick was dropped."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Fountain Grass",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e500",
+          "quote": "Common Name: fountain grass"
+        },
+        {
+          "claim": "scientific_name_given Pennisetum alopecuroides",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/43920/i-pennisetum-alopecuroides-i/details",
+          "quote": "Pennisetum alopecuroides | Chinese fountain grass"
+        },
+        {
+          "claim": "name_note scientific_name_accepted conflict — RHS Name Status Correct for Pennisetum alopecuroides",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/43920/i-pennisetum-alopecuroides-i/details",
+          "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "name_note scientific_name_accepted conflict — RHS lists Cenchrus alopecuroides as a synonym of Pennisetum alopecuroides",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/43920/i-pennisetum-alopecuroides-i/details",
+          "quote": "Synonyms Cenchrus alopecuroides, Cenchrus compressus, Pennisetum 'Japonicum', Pennisetum compressum"
+        },
+        {
+          "claim": "name_note scientific_name_accepted conflict — NC State treats Cenchrus alopecuroides as the current name and Pennisetum alopecuroides as the former name",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cenchrus-alopecuroides/common-name/chinese-fountain-grass/",
+          "quote": "NOTE the plant currently known as Cenchrus alopecuroides was formerly known as Pennisetum alopecuroides."
+        },
+        {
+          "claim": "name_note scientific_name_accepted conflict — University of Maryland Extension independently names the plant Cenchrus alopecuroides with Pennisetum alopecuroides as an alternate label",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/ornamental-and-native-grasses-landscape",
+          "quote": "Chinese fountain grass (Cenchrus alopecuroides; may also be labeled as Cenchrus purpurascens or Pennisetum alopecuroides)"
+        },
+        {
+          "claim": "is_houseplant false (outdoor perennial ornamental grass grown in-ground; no admissible source describes indoor or container houseplant culture)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cenchrus-alopecuroides/common-name/chinese-fountain-grass/",
+          "quote": "Chinese fountain grass grows in clumps 2 to 4 feet tall and wide and prefers a full sun position in dry to moist, well-drained soils. It will tolerate partial shade, but flowering is best in full sun. This plant is highly resistant to deer grazing, is slightly salt-tolerant and drought-tolerant once established. Cut the foliage to the ground in late winter."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cenchrus-alopecuroides/common-name/chinese-fountain-grass/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e500",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/43920/i-pennisetum-alopecuroides-i/details",
+          "quote": "Position\nFull sun"
+        },
+        {
+          "claim": "soil_base garden_bed (grown in average garden soil in the ground; no container or potting-mix culture mentioned)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e500",
+          "quote": "Easily grown in average, medium to wet soils in full sun to part shade."
+        }
+      ]
+    },
+    {
+      "common_name": "Japanese Pachysandra",
+      "scientific_name_given": "Pachysandra terminalis",
+      "scientific_name_accepted": "Pachysandra terminalis",
+      "name_note": "All four admissible sources use \"Pachysandra terminalis\" without qualification and list \"Japanese Pachysandra\"/\"Japanese spurge\"/\"Carpet Box\" as common-name synonyms (NC State). RHS explicitly marks the name's status as \"Correct,\" so there is no accepted-name conflict to resolve.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": 6,
+      "outdoor_sun_exposure": [
+        "part_shade",
+        "full_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: none of the admissible sources (NC State, Clemson, Missouri Botanical Garden, RHS) address toxicity to pets or humans for Pachysandra terminalis, so left null rather than inferred from the Buxaceae (boxwood) family.",
+        "chill_damage_f: only USDA hardiness-zone survival ranges are given (Clemson: zones 5a-8b; NC State/RHS-equivalent: zones 4a-9b), not an actionable frost-damage-onset temperature — expected null for a hardy landscape groundcover per field notes, not under-research.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source gives specific day/night air-temperature preferences; only USDA hardiness-zone data exists for this outdoor plant.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: none of the admissible sources discuss ambient humidity requirements — expected, since this is an in-ground outdoor groundcover, not a plant typically evaluated on indoor humidity terms.",
+        "light_fc_min/light_fc_good: sources describe light only qualitatively (deep shade / partial shade / full shade, or hours of direct sun) and never in foot-candles, so left null; direct_sun_hours_max (6) was kept since NC State gave an explicit hour range.",
+        "fertilize_interval_days/fertilize_strength/fertilize_active_months: no admissible source gives a fertilizing schedule, rate, or season for this species.",
+        "soil_ph_min/soil_ph_max: NC State's structured field gives only a one-sided category, 'Acid (<6.0)', with no lower bound, while RHS's structured field lists pH tolerance as 'Acid or Alkaline or Neutral' (i.e. broad tolerance) rather than a narrow numeric range. With no source giving matching numeric bounds for this specific species, left both null rather than inventing a range from mismatched categorical data.",
+        "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: this is an in-ground landscape groundcover, not a container/houseplant; no admissible source gives container-watering depth or day-interval estimates, so these houseplant-style watering-schedule fields are left null.",
+        "cool_rest_note: no admissible source describes a cool-rest or watering-dormancy practice for this species.",
+        "water_regime was set to keep_moist based on consistent 'moist' / 'moist but well-drained' / 'Water: Medium' guidance across all four sources. Note that sources also flag drought/dry-soil tolerance as a resilience trait, not the recommended regime (NC State: 'pachysandra can tolerate drought conditions'; Missouri Botanical Garden Tolerate list includes 'Drought' and 'Dry Soil') — this was treated as a secondary hardiness note, not a conflicting care instruction, since no source recommends letting the soil dry out as the preferred practice.",
+        "water_regime — removed on audit: \"keep_moist\" overstates what the four sources jointly support. Verified via live fetch: MOBOT's own structured field says \"Water: Medium\" (a middle-of-scale category, not a moisture-loving rating) and separately tags \"Tolerate: Rabbit, Deer, Drought, Heavy Shade, Erosion, Clay Soil, Dry Soil.\" RHS's structured requirement, confirmed in the raw HTML, is \"Moist but well-drained OR Well-drained\" -- RHS explicitly allows plain well-drained soil (no moisture qualifier) as sufficient on its own, not exclusively \"moist.\" NC State also lists Drought and Dry Soil under its own \"Resistance To Challenges\" field. Two of the four sources hedge toward a moderate/average water regime rather than one requiring consistently moist soil, and the record resolves that internal tension toward the more demanding \"keep_moist\" label while treating the drought-tolerance signal as merely a secondary note rather than a real competing interpretation."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Japanese Pachysandra (listed common name synonym)",
+          "quote": "Common Name(s): Carpet Box Japanese Pachysandra Japanese Spurge Pachysandra",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/"
+        },
+        {
+          "claim": "is_houseplant false (broadleaf evergreen herbaceous perennial / ground cover, native range and dimensions given as an outdoor landscape plant)",
+          "quote": "Japanese spurge or Pachysandra is a broadleaf evergreen, herbaceous perennial or ground cover in the boxwood family (Buxaceae). Native to Japan and northern central China, it grows 6 to 12 inches high and 12 to 18 inches wide.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade and full_shade (intolerant of full sun)",
+          "quote": "Pachysandra does best in part shade to full shade and is intolerant of full sun as foliage bleaches in full sun or high wind. It thrives in the sun-dappled shade that large trees provide.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/"
+        },
+        {
+          "claim": "water_regime keep_moist (prefers moist soils)",
+          "quote": "Even though pachysandra can tolerate drought conditions, it prefers moist, slightly acidic soils that have high organic matter and are well drained.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/"
+        },
+        {
+          "claim": "direct_sun_hours_max 6 (tolerated light ranges from deep shade up to partial shade, defined as 2-6 hours of direct sun)",
+          "quote": "Deep shade (Less than 2 hours to no direct sunlight) Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/"
+        },
+        {
+          "claim": "soil_drainage moderate (Good Drainage / Moist structured soil-drainage tags)",
+          "quote": "Soil Drainage: Good Drainage",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/"
+        },
+        {
+          "claim": "soil_base garden_bed (organically rich garden/landscape soil, high organic matter tag)",
+          "quote": "Soil Texture: Clay High Organic Matter Loam (Silt)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade and full_shade",
+          "quote": "Both species thrive in partial shade to full shade and prefer well-drained, fertile soils.",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/pachysandra/"
+        },
+        {
+          "claim": "water_regime keep_moist; soil_drainage moderate (moist but well-drained soils)",
+          "quote": "Japanese pachysandra (Pachysandra terminalis) grows best in part shade to shade in moist but well-drained soils.",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/pachysandra/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade and full_shade; water_regime keep_moist (Sun: Part shade to full shade; Water: Medium)",
+          "quote": "Sun: Part shade to full shade Water: Medium",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e430"
+        },
+        {
+          "claim": "soil_base garden_bed; soil_drainage moderate (organically rich, medium moisture, well-drained soils)",
+          "quote": "Best grown in organically rich, medium moisture, well-drained soils in part shade to full shade.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e430"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade and full_shade",
+          "quote": "Full shade, Partial shade",
+          "source": "RHS (Royal Horticultural Society) Plants",
+          "url": "https://www.rhs.org.uk/plants/12099/pachysandra-terminalis/details"
+        },
+        {
+          "claim": "soil_drainage moderate (Moist but well-drained or Well-drained)",
+          "quote": "Moist but well–drained or Well–drained",
+          "source": "RHS (Royal Horticultural Society) Plants",
+          "url": "https://www.rhs.org.uk/plants/12099/pachysandra-terminalis/details"
+        },
+        {
+          "claim": "scientific_name_accepted Pachysandra terminalis (RHS Name Status: Correct)",
+          "quote": "Name Status Correct",
+          "source": "RHS (Royal Horticultural Society) Plants",
+          "url": "https://www.rhs.org.uk/plants/12099/pachysandra-terminalis/details"
+        },
+        {
+          "claim": "is_houseplant false (grown in outdoor garden settings as ground cover, not indoors/containers)",
+          "quote": "Suggested planting locations and garden types City and courtyard gardens Coastal Cottage and informal garden Ground cover Flower borders and beds",
+          "source": "RHS (Royal Horticultural Society) Plants",
+          "url": "https://www.rhs.org.uk/plants/12099/pachysandra-terminalis/details"
+        },
+        {
+          "claim": "soil_drainage moderate; outdoor_sun_exposure part_shade and full_shade (grow in any soil except very dry, in full or partial shade)",
+          "quote": "Grow in any soil, except very dry, in full or partial shade; has the potential to become a nuisance in moist soils if not managed well",
+          "source": "RHS (Royal Horticultural Society) Plants",
+          "url": "https://www.rhs.org.uk/plants/12099/pachysandra-terminalis/details"
+        }
+      ]
+    },
+    {
+      "common_name": "Pecan",
+      "scientific_name_given": "Carya illinoinensis",
+      "scientific_name_accepted": "Carya illinoinensis",
+      "name_note": "UF/IFAS Extension (EDIS ENH281/ST122 and HS982/HS229) consistently spells the species \"Carya illinoensis\" rather than \"Carya illinoinensis,\" but this is an orthographic variant of the same binomial for the same tree (identical author citation \"(Wagenh.) K. Koch,\" identical description, range, and nut), not a competing taxonomic concept -- so it was not treated as a genuine name conflict. RHS's own nomenclature field for \"Carya illinoinensis\" reads \"Name Status: Correct,\" and NC State and Missouri Botanical Garden both independently use the double-i spelling, so \"Carya illinoinensis\" was used as the accepted name. RHS also lists two historical synonyms for this species: Carya oliviformis and Carya pecan.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": 6,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": "full",
+      "unknowns": [
+        "day_f_min, day_f_max, night_f_min, night_f_max: no admissible source gives ambient day/night temperature ranges for this outdoor landscape/orchard tree; only winter cold-hardiness zone data exists (NC State: zones 5a-9b; UF/IFAS ST122: 'USDA hardiness zones: 5B through 9A'; Missouri Botanical Garden: 'Zone: 5 to 9'), which does not map to this field.",
+        "chill_damage_f: only survival-level cold-hardiness zone data exists across sources (see above), not an actionable damage-onset temperature. Clemson and UGA both state (in near-identical language) that pecans 'are not recommended for the mountains/north Georgia mountains because of reduced yields due to late freezes,' but this describes a regional yield outcome from unspecified 'late freezes,' not a specific damage-onset temperature, so per field instructions this is expected/correct for a hardy tree rather than under-research.",
+        "cool_rest_note: no admissible source describes a dormancy, chill-hour, or cool-rest regimen for this deciduous tree in terms that map to this field.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: no admissible source addresses ambient humidity requirements for this outdoor tree.",
+        "light_fc_min, light_fc_good: no admissible source gives foot-candle light values for this species.",
+        "direct_sun_hours_max: NC State's 'Full sun (6 or more hours of direct sunlight a day)' defines the minimum threshold for its 'Full sun' category, not a species-specific maximum sun tolerance, so it cannot populate this field.",
+        "toxic_to_pets, toxicity_detail: none of the admissible sources consulted (NC State Plant Toolbox, Missouri Botanical Garden Plant Finder, UF/IFAS EDIS ST122 and HS229, Clemson HGIC pecan planting & fertilization factsheet, RHS plant profile, UGA CAES Bulletin 1348) contains a toxicity/poisonous-to-humans or poisonous-to-pets section for Carya illinoinensis; several discuss nuts as edible and squirrels/birds as pests, but none discuss toxicity to people or animals.",
+        "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: this is an in-ground landscape/orchard tree, not a container plant. Admissible sources give establishment-year and bearing-tree watering guidance in gallons (Clemson and UGA, in near-identical wording: 'Apply/adequately water them 10 to 15 gallons at regular weekly intervals' for young trees; Clemson: 'Bearing trees should be watered on a weekly basis, especially during periods of heat and drought in August and September'; UGA: 'as much as 350 gallons of water per day can be required by each tree during the nut filling stage'), but none of this maps onto the container-oriented water_regime categories (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist), a soil-check depth, or a container dry-down interval in days.",
+        "fertilize_active_months, fertilize_interval_days: three admissible sources give genuinely different calendar timing for the ongoing bearing-tree fertilizer application, not a single consistent schedule -- Clemson HGIC: 'applied evenly beneath the canopy of the tree in mid- to late February'; UF/IFAS HS229: 'applied per inch of trunk diameter in February and again in June'; UGA Bulletin 1348: 'applied in mid- to late March.' Because these are three different, non-overlapping recommendations from three separate state extension services rather than one consistent fact, no single month or set of months was extracted for this field rather than arbitrarily combining or picking one state's schedule. fertilize_strength (full) was still extracted separately since all three sources agree on straight/undiluted complete-fertilizer application rates, only the calendar timing conflicts.",
+        "is_houseplant / container growing: no admissible source describes growing this species indoors or long-term in a container. All describe it as a large landscape or orchard tree (NC State: 'this is a tree most appropriate for a large property'; UF/IFAS ST122: reaching 'up to 130 feet' tall; UGA: trees 'commonly found surrounding both urban and rural dwellings'). UGA does mention 'Container-Grown Tree Planting' and 'container-grown transplants,' but this refers to the nursery-trade form the tree is purchased in before permanent in-ground planting, not to long-term container or indoor culture, so is_houseplant is false with no container-specific carve-out.",
+        "soil_base: mapped to garden_bed based on Clemson's in-ground planting instructions (digging a hole and backfilling with topsoil/water) and NC State's/UF/IFAS's native soil-texture tolerances (clay, sand, loam); no admissible source frames this species as grown long-term in a container, consistent with is_houseplant false.",
+        "outdoor_sun_exposure: Missouri Botanical Garden's structured 'Sun: Full sun' field does not itself mention partial shade, but NC State's and UF/IFAS ST122's own structured light-requirement fields both explicitly pair full sun with partial shade ('full sun to partial shade'), so part_shade was included on the strength of those two sources.",
+        "soil_ph_min, soil_ph_max: set to 6.0-6.5 based on identical wording independently given by Clemson HGIC and UGA Bulletin 1348 ('A soil pH of 6.0 to 6.5 assures the availability of essential nutrients'). UF/IFAS HS229 gives a broader figure for the same fact ('A soil pH between 5.5 and 6.5 is satisfactory'); since this range fully contains, rather than contradicts, the Clemson/UGA figure, and two of three sources agree exactly on 6.0-6.5, that narrower duplicated figure was used rather than the single broader one."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Pecan (also known as Hardy Pecan)",
+          "quote": "(Hardy Pecan, Pecan)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/"
+        },
+        {
+          "claim": "scientific_name_given Carya illinoinensis",
+          "quote": "Genus:\nCarya\nSpecies:\nillinoinensis\nFamily:\nJuglandaceae",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/"
+        },
+        {
+          "claim": "scientific_name_accepted Carya illinoinensis (RHS Name Status: Correct)",
+          "quote": "Name Status\nCorrect",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/72593/carya-illinoinensis-(f)/details"
+        },
+        {
+          "claim": "name_note Carya illinoensis is UF/IFAS's spelling of the same species (an orthographic variant, not a different accepted name)",
+          "quote": "The pecan, Carya illinoensis (Wagenh.) K. Koch, is a deciduous tree native to North America.",
+          "source": "UF/IFAS Extension (EDIS HS982/HS229)",
+          "url": "https://ask.ifas.ufl.edu/hs229"
+        },
+        {
+          "claim": "name_note synonyms Carya oliviformis and Carya pecan",
+          "quote": "Synonyms\nCarya oliviformis\n,\nCarya pecan",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/72593/carya-illinoinensis-(f)/details"
+        },
+        {
+          "claim": "is_houseplant false (tree most appropriate for a large property)",
+          "quote": "Due to its size, this is a tree most appropriate for a large property.",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/"
+        },
+        {
+          "claim": "is_houseplant false (tall ornamental shade tree for large properties)",
+          "quote": "A tall ornamental shade tree for large properties. May also be grown for nut production.",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=281352"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Light requirement:\nfull sun to partial shade",
+          "source": "UF/IFAS Extension (EDIS ENH281/ST122)",
+          "url": "https://ask.ifas.ufl.edu/st122"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Sun: Full sun",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=281352"
+        },
+        {
+          "claim": "soil_base garden_bed (in-ground planting hole backfilled with topsoil, not a container mix)",
+          "quote": "Fill the hole about one-third full of topsoil and saturate the soil with water to settle, repeating this operation until the hole is almost full.",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/pecan-planting-fertilization/"
+        },
+        {
+          "claim": "soil_base garden_bed (grown in native clay, loam, and sand soils)",
+          "quote": "Soil Texture:\nClay\nLoam (Silt)\nSand",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/"
+        },
+        {
+          "claim": "soil_drainage moderate (wet to well-drained)",
+          "quote": "Soil tolerances:\nclay; sand; loam; alkaline; acidic; wet to well-drained",
+          "source": "UF/IFAS Extension (EDIS ENH281/ST122)",
+          "url": "https://ask.ifas.ufl.edu/st122"
+        },
+        {
+          "claim": "soil_drainage moderate (Good Drainage, Moist, Occasional Flooding, Occasionally Dry)",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasional Flooding\nOccasionally Dry",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "quote": "A soil pH of 6.0 to 6.5 assures the availability of essential nutrients.",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/pecan-planting-fertilization/"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "quote": "A soil pH of 6.0 to 6.5 assures the availability of essential nutrients.",
+          "source": "UGA Cooperative Extension (CAES Field Report, Bulletin 1348)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B1348/pecan-trees-for-the-home-or-backyard-orchard/"
+        },
+        {
+          "claim": "fertilize_strength full (complete fertilizer applied at a straight, undiluted rate per inch of trunk diameter)",
+          "quote": "broadcast four pounds of a complete fertilizer such as 10-10-10 for each inch of trunk diameter (measure 4½ feet above soil level), up to a maximum of 25 lbs. per tree",
+          "source": "UGA Cooperative Extension (CAES Field Report, Bulletin 1348)",
+          "url": "https://fieldreport.caes.uga.edu/publications/B1348/pecan-trees-for-the-home-or-backyard-orchard/"
+        },
+        {
+          "claim": "fertilize_strength full (complete fertilizer applied at a straight, undiluted rate per inch of trunk diameter)",
+          "quote": "broadcast 4 pounds of a complete fertilizer such as 16-4-8 or 5 pounds of 12-6-6 for each inch of trunk diameter (measured 4½ feet above soil level)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center",
+          "url": "https://hgic.clemson.edu/factsheet/pecan-planting-fertilization/"
+        }
+      ]
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Ilex opaca",
+      "fields_removed": 4
+    },
+    {
+      "species": "Prunus persica",
+      "fields_removed": 4
+    },
+    {
+      "species": "Pyrus communis",
+      "fields_removed": 3
+    },
+    {
+      "species": "Juglans nigra",
+      "fields_removed": 1
+    },
+    {
+      "species": "Sambucus canadensis",
+      "fields_removed": 1
+    },
+    {
+      "species": "Pennisetum alopecuroides",
+      "fields_removed": 4
+    },
+    {
+      "species": "Pachysandra terminalis",
+      "fields_removed": 1
+    },
+    {
+      "species": "Carya illinoinensis",
+      "fields_removed": 1
+    }
+  ],
+  "normalizations": [
+    "2026-08-23: tenth batch of the \"blind spots\" pass. American Holly confirmed toxic_to_pets=true (a classic holiday plant with well-documented berry toxicity, extremely common as a landscape hedge). Rounded out with more fruit/nut trees (Peach, Pear, Pecan), Black Walnut (with its two distinct, easy-to-conflate hazards -- juglone allelopathy toxic to other plants, versus bedding-contact laminitis in horses), American Elderberry (edible-cooked/toxic-raw pattern), and two ornamental categories new to this catalog: Fountain Grass and Pachysandra groundcover.",
+    "Two landing-time repairs, both restoring already-available evidence the audit itself located: Pear's scientific_name_accepted was nulled because the record quoted a descriptive sentence instead of NC State's taxonomy block, which the audit fetched directly and confirmed reads \"Genus: Pyrus Species: communis Family: Rosaceae\" -- added as a proper citation and restored. Fountain Grass's common_name was nulled after the audit caught an undisclosed cherry-pick: 3 of the 5 sources actually cited (RHS, NC State, UMD) call it \"Chinese Fountain Grass\" specifically, already quoted in the record's own citations, while the record silently used the minority plain form -- restored to the majority, already-cited name.",
+    "Black Walnut's toxicity_detail catch is a precise example of the plant-hazard-vs-animal-hazard confusion this batch's species note specifically warned about: a UGA quote calling juglone \"a strong respiratory toxin\" was being used as animal-toxicity evidence, but the audit traced the full source paragraph and found that sentence is the transition into the article's plant-root/soil allelopathy section (the standard meaning of \"respiratory toxin\" in juglone literature is inhibiting cellular respiration in root cells, not an animal inhalation hazard) -- correctly excluded rather than presented as pet-relevant.",
+    "Fountain Grass surfaced a genuine taxonomic split this catalog hasn't hit before with an even split rather than a majority: RHS and Missouri Botanical Garden both anchor to Pennisetum alopecuroides as accepted, while NC State Extension and University of Maryland Extension both independently anchor to Cenchrus alopecuroides -- landed with scientific_name_accepted null and the full four-source conflict documented in name_note.",
+    "Pennisetum's own scientific_name_accepted also carried the same string-\"null\"-instead-of-JSON-null bug seen in b23/b24/b27, again caught and self-corrected by the auditor's own explicit finding before this landing pass even ran its check."
+  ]
+}
