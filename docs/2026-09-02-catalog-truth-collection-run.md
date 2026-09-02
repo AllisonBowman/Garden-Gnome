@@ -11,7 +11,9 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **46 batches, 2,150 claims, 361 species, 8 authorities.** The running total
+- **51 batches, 2,297 claims, 391 species, 8 authorities** (b47–b51 landed
+  after this note was first written, at the overnight throttle described
+  below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
   `tests/test_claim_ingest.py::test_the_whole_verified_tranche_lands_and_resolves`,
   with a per-batch breakdown in the comment above it. (b1–b18 covered the
@@ -53,7 +55,25 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    in the "Verifier backfill" section below.
 3. **Model split** (from b46): research agents on Sonnet, verify agents on
    Opus, orchestration on Fable 5.1 — after b46's first attempt died on a
-   session limit with all eight research agents refused.
+   session limit with all eight research agents refused. From b47 the loop
+   ran at an overnight throttle the user asked for: six species per batch,
+   research at medium effort, one batch in flight at a time, a checkpoint
+   push every batch or two (`80e420e`, `51714e7`, `feb62e3`). Audit quality
+   went up, not down, on the split — the Opus auditor's findings come with
+   corrected wording and it caught a wrong-species common name (b46), a
+   truncated poison-part list on a plant people dig up as a ginger
+   substitute (b50), and several safety fields trimmed of a co-listed tag or
+   a dose sentence. Two usage-limit incidents: b46's research stage (all
+   agents refused → empty batch; `land_check.py` now exits 1 on zero
+   records) and b51's verify stage (four of six audits refused; the fix is
+   a resume, which replays the cached research and re-runs only the failed
+   audits). The recurring defect themes across b47–b50, each now guarded in
+   the prompts: "moist but well-drained" read as the wet end of the drainage
+   scale rather than the middle; a watering cadence read off a soil
+   adjective or a drought-tolerance trait; a shade token added from a
+   conditional clause or a UK-calibrated RHS tag that both North American
+   structured fields exclude; and an open-ended NC State pH band read as a
+   ceiling.
 
 ## Defect classes found and closed (each now guarded in the prompts or tests)
 
