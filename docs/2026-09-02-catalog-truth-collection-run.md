@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **56 batches, 2,416 claims, 421 species, 8 authorities** (b47–b56 landed
+- **57 batches, 2,437 claims, 427 species, 8 authorities** (b47–b57 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -72,7 +72,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    job: every record came back flagged UNVERIFIED in the output's
    `unverified` list instead of the pipeline throwing, and a plain resume
    re-ran only the six audits. Keep that guard in every script from here.
-   The recurring defect themes across b47–b56, each now guarded in
+   The recurring defect themes across b47–b57, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -122,13 +122,15 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    2024 placement NC State already carries, on the b11 garden-pea
    precedent that the catalog follows the reclassification, not a
    particular website; RHS's still-"Correct" entry is disclosed as lag.
-   **The loop is paused after b56.** To resume, b57 is pre-checked clean:
-   Sorghastrum nutans, Schizachyrium scoparium, Eryngium yuccifolium,
-   Dalea purpurea, Baptisia alba, Solidago rugosa (spares: Symphyotrichum
-   laeve, Andropogon gerardii, Bouteloua curtipendula, Parthenium
-   integrifolium, Liatris aspera). The batch script lives in the session
-   scratchpad; if it is gone, every rule it carries is listed in this
-   note and in each batch file's normalizations entry.
+   The loop paused after b56 and **resumed on 2026-09-03 at the same
+   throttle** ("throttle on cruise"). b57 landed the prairie set (Indian
+   Grass, Little Bluestem, Rattlesnake Master, Purple Prairie Clover,
+   White False Indigo, Rough Goldenrod); Baptisia alba's name changed at
+   landing because its only support was a synthesized heading from a
+   multi-species UGA publication while RHS's dedicated page, Clemson and
+   MoBot all lead with white false indigo. The batch script lives in the
+   session scratchpad; if it is gone, every rule it carries is listed in
+   this note and in each batch file's normalizations entry.
 
 ## Defect classes found and closed (each now guarded in the prompts or tests)
 
@@ -174,8 +176,13 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   the catalog (b56, "Blue Star" for Amsonia hubrichtii vs. Eastern
   Bluestar) — landing review checks collisions and umbrella names.
 - An editorial rule invented and attributed to a source (b56, "per its
-  own convention, marks no primary") — describe what the page shows;
-  never cite a convention the page does not state.
+  own convention, marks no primary"; auditors kept writing it in b57) —
+  describe what the page shows; never cite a convention the page does
+  not state. From b58 the verify prompt forbids it too.
+- A section heading inside a multi-species publication quoted as a
+  synthesized parenthetical and counted as a "dedicated page" (b57,
+  UGA's "White Wild Indigo / Baptisia alba …" heading) — quote it as it
+  renders, and a section is not a dedicated single-species page.
 
 ## Do next, in order
 
