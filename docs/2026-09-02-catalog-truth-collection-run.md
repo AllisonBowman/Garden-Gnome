@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **57 batches, 2,437 claims, 427 species, 8 authorities** (b47–b57 landed
+- **58 batches, 2,455 claims, 433 species, 8 authorities** (b47–b58 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -72,7 +72,14 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    job: every record came back flagged UNVERIFIED in the output's
    `unverified` list instead of the pipeline throwing, and a plain resume
    re-ran only the six audits. Keep that guard in every script from here.
-   The recurring defect themes across b47–b57, each now guarded in
+   b58 added a third infrastructure class: API 529 Overloaded on the Opus
+   verify tier, four attempts over about an hour with the research cached
+   throughout (five of six audits on the first run, all six with zero
+   tokens on three resumes). The loop stopped and reported; the user's
+   "resume" completed all six audits on the fifth attempt. Back off in
+   10/20/30-minute steps, never switch the verify model unasked, and stop
+   after about four tries with the one-call resume path written down.
+   The recurring defect themes across b47–b58, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -128,9 +135,15 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    White False Indigo, Rough Goldenrod); Baptisia alba's name changed at
    landing because its only support was a synthesized heading from a
    multi-species UGA publication while RHS's dedicated page, Clemson and
-   MoBot all lead with white false indigo. The batch script lives in the
-   session scratchpad; if it is gone, every rule it carries is listed in
-   this note and in each batch file's normalizations entry.
+   MoBot all lead with white false indigo. b58 landed the second prairie
+   set after the 529 stall (Big Bluestem, Sideoats Grama, Wild Quinine,
+   Canada Anemone, Prairie Smoke, Purple Poppy Mallow), with two value
+   changes on the sources' own sentences: a drainage token read from a
+   drought-tolerance tag list went from fast to moderate, and a
+   full_shade token read from a suggested-use plant list was dropped.
+   The batch script lives in the session scratchpad; if it is gone, every
+   rule it carries is listed in this note and in each batch file's
+   normalizations entry.
 
 ## Defect classes found and closed (each now guarded in the prompts or tests)
 
@@ -183,6 +196,17 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   synthesized parenthetical and counted as a "dedicated page" (b57,
   UGA's "White Wild Indigo / Baptisia alba …" heading) — quote it as it
   renders, and a section is not a dedicated single-species page.
+- A drainage token read from a drought-tolerance tag list or a dry-soil
+  preference (b58, Sideoats Grama "fast") — neither mentions drainage;
+  MoBot's own "sandy soils to heavy clays" sentence rules sharp drainage
+  out.
+- A light token read from a suggested-use plant list in a multi-species
+  article (b58, Canada Anemone full_shade from a "Dry Shade Perennials"
+  list) — not a species light rating; the species page's own warning
+  ("stems flop in too much shade") wins.
+- A table row that leads with the binomial counted as leading with a
+  common name (b58, Penn State's "Bouteloua curtipendula, (sideoats
+  grama)") — a parenthetical after the binomial is not a lead.
 
 ## Do next, in order
 
