@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **59 batches, 2,472 claims, 439 species, 8 authorities** (b47–b59 landed
+- **60 batches, 2,499 claims, 445 species, 8 authorities** (b47–b60 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -80,7 +80,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    10/20/30-minute steps, never switch the verify model unasked, and stop
    after about four tries with the one-call resume path written down.
    b59 hit a second DNS outage (two audits); one resume finished it.
-   The recurring defect themes across b47–b59, each now guarded in
+   The recurring defect themes across b47–b60, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -212,6 +212,20 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   from the page's `onmouseover` attribute: `&lt;/b&gt;`, `&bull;`,
   `<br/>`) — the plain-tag scan missed the encoded form; the landing
   dump now scans for entities too, and prompts forbid attribute text.
+  The prompt ban did not hold in b60 (four more reconstructed tooltip
+  lists); the auditor catches them, and the repair is MoBot's rendered
+  prose sentence, never the tooltip.
+- Citation-level audit findings never reaching the record (b60): the
+  batch script only acts on findings whose `field` is a schema field, so
+  an auditor finding filed as `citations[...]` (seven in b60 — stitched
+  RHS chrome, scraper newlines inside a binomial, an invented inner
+  quotation) was invisible in the record's unknowns. The landing dump now
+  reads every refuted finding from the run's `journal.jsonl` and repairs
+  those too.
+- A genus-level commercial crop page read as species care (b60, UMD's
+  alternative-crops Aronia page supplying a fertilizer schedule) — a
+  yield program for bred stock is not a species care source; none of the
+  four species pages prescribed fertilization.
 
 ## Do next, in order
 
