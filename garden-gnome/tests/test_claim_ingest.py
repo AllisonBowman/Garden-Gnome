@@ -122,7 +122,7 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # soil_drainage, nulled 2026-09-02 when a corpus-wide quote check found
     # its only citation quoted NC State drainage tags the page does not
     # carry) + 65 (b46) + 39 (b47) + 27 (b48) + 27 (b49) + 27 (b50)
-    # + 27 (b51) = 2297. + 25 (b52) = 2322. + 27 (b53) = 2349. + 23 (b54) = 2372. + 20 (b55) = 2392. + 24 (b56) = 2416. + 21 (b57) = 2437. + 18 (b58) = 2455. b18 was the
+    # + 27 (b51) = 2297. + 25 (b52) = 2322. + 27 (b53) = 2349. + 23 (b54) = 2372. + 20 (b55) = 2392. + 24 (b56) = 2416. + 21 (b57) = 2437. + 18 (b58) = 2455. + 17 (b59) = 2472. b18 was the
     # last batch of the original 129-curated-species collection run.
     # b19-b34 are batches of a follow-on "blind spots" pass -- species
     # chosen by direct inspection of coverage gaps (b19: no true lilies --
@@ -241,11 +241,14 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # Indigo, and Rough Goldenrod; b58 added a second prairie set: Big
     # Bluestem, Sideoats Grama, Wild Quinine, Canada Anemone, Prairie
     # Smoke, and Purple Poppy Mallow -- its verify stage stalled on API
-    # 529s for four attempts and finished on a user-directed resume). Every
+    # 529s for four attempts and finished on a user-directed resume; b59
+    # added a third prairie set: Lead Plant, New Jersey Tea, Royal
+    # Catchfly, Nodding Onion, Smooth Aster, and Rough Blazing Star -- two
+    # audits died on a DNS outage and a resume finished them). Every
     # batch was re-verified against the strict loader before landing here
     # -- see each batch's own normalizations entry for what, if anything,
     # that pass caught.
-    assert report.claims_written == 2455
+    assert report.claims_written == 2472
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
