@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **61 batches, 2,520 claims, 451 species, 8 authorities** (b47–b61 landed
+- **62 batches, 2,543 claims, 457 species, 8 authorities** (b47–b62 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -80,7 +80,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    10/20/30-minute steps, never switch the verify model unasked, and stop
    after about four tries with the one-call resume path written down.
    b59 hit a second DNS outage (two audits); one resume finished it.
-   The recurring defect themes across b47–b61, each now guarded in
+   The recurring defect themes across b47–b62, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -238,6 +238,20 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   well–drained", "H4: | hardy through…") — the same label/value class in
   a new form; the landing dump now scans quotes for " | " and the rule
   is the rendered value alone.
+- A structured-field quote that absorbs the next field's label (b62,
+  NC State Plant Type "Native Plant, Shrub, Woody Plant" where "Woody
+  Plant" is the start of "Woody Plant Leaf Characteristics:") — a naive
+  text extraction reproduces the error, so only the auditor's raw-markup
+  check catches it; quote each field's values newline-stacked and stop
+  at the next label.
+- A body-prose fragment relabelled as a structured field (b62, "Deciduous
+  shrub or small tree" cited as NC State's Plant Type) — the field's real
+  values were "Edible / Native Plant / Shrub / Tree / Woody Plant".
+- Sun tokens resting on tolerance-range tags against species-specific
+  scorch warnings (b62, Pinxterbloom Azalea full_sun) — the page's own
+  "protection from afternoon sun which can scorch the leaves" and MoBot's
+  "Prefers a sun dappled or high open shade" win; the token is disclosed,
+  not carried.
 
 ## Do next, in order
 
