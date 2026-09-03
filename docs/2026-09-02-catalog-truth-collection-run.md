@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **63 batches, 2,568 claims, 463 species, 8 authorities** (b47–b63 landed
+- **64 batches, 2,590 claims, 469 species, 8 authorities** (b47–b64 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -80,7 +80,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    10/20/30-minute steps, never switch the verify model unasked, and stop
    after about four tries with the one-call resume path written down.
    b59 hit a second DNS outage (two audits); one resume finished it.
-   The recurring defect themes across b47–b63, each now guarded in
+   The recurring defect themes across b47–b64, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -265,7 +265,20 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 - The common name written into `scientific_name_given` (b63, Sassafras)
   — the loader keys on that field; the landing dump now prints every
   record's given name, and the prompt says the field must equal the
-  binomial given.
+  binomial given. The b63 guards held in b64.
+- A wet drainage token set without citing NC State's own structured
+  Soil Drainage field (b64, Sweetbay Magnolia moisture_retentive; the
+  field reads Good Drainage / Moist / Occasionally Wet and every other
+  source reads moderate) — cite that field first; wet-tolerance
+  sentences are disclosed counterpoints, not the basis.
+- A single NC State shade tag carried on a canopy tree against both
+  other structured fields (b64, Common Hackberry full_shade, American
+  Yellowwood part_shade) — one structured tag excluded by the other two
+  is disclosed, not carried; and "shade-loving plants grow underneath
+  it" describes the tree casting shade, not growing in it.
+- The invented "three or more entries" convention migrating into
+  citation claim labels (b64) — the landing dump now greps claims for
+  it; prompts ban it in labels as well as notes.
 
 ## Do next, in order
 
