@@ -122,7 +122,7 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # soil_drainage, nulled 2026-09-02 when a corpus-wide quote check found
     # its only citation quoted NC State drainage tags the page does not
     # carry) + 65 (b46) + 39 (b47) + 27 (b48) + 27 (b49) + 27 (b50)
-    # + 27 (b51) = 2297. + 25 (b52) = 2322. + 27 (b53) = 2349. + 23 (b54) = 2372. + 20 (b55) = 2392. + 24 (b56) = 2416. + 21 (b57) = 2437. + 18 (b58) = 2455. + 17 (b59) = 2472. + 27 (b60) = 2499. + 21 (b61) = 2520. + 23 (b62) = 2543. b18 was the
+    # + 27 (b51) = 2297. + 25 (b52) = 2322. + 27 (b53) = 2349. + 23 (b54) = 2372. + 20 (b55) = 2392. + 24 (b56) = 2416. + 21 (b57) = 2437. + 18 (b58) = 2455. + 17 (b59) = 2472. + 27 (b60) = 2499. + 21 (b61) = 2520. + 23 (b62) = 2543. + 25 (b63) = 2568. b18 was the
     # last batch of the original 129-curated-species collection run.
     # b19-b34 are batches of a follow-on "blind spots" pass -- species
     # chosen by direct inspection of coverage gaps (b19: no true lilies --
@@ -250,11 +250,13 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # set: Ninebark, Fragrant Sumac, American Hazelnut, Sweet Fern, Bush
     # Honeysuckle, and Lowbush Blueberry; b62 added a third shrub set:
     # Common Witch Hazel, Mountain Laurel, Shadblow Serviceberry, Northern
-    # Bayberry, Blackhaw Viburnum, and Pinxterbloom Azalea). Every
+    # Bayberry, Blackhaw Viburnum, and Pinxterbloom Azalea; b63 added
+    # native trees: Sassafras, Black Gum, Sourwood, American Hornbeam,
+    # Fringe Tree, and Pawpaw). Every
     # batch was re-verified against the strict loader before landing here
     # -- see each batch's own normalizations entry for what, if anything,
     # that pass caught.
-    assert report.claims_written == 2543
+    assert report.claims_written == 2568
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

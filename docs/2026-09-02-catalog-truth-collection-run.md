@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **62 batches, 2,543 claims, 457 species, 8 authorities** (b47–b62 landed
+- **63 batches, 2,568 claims, 463 species, 8 authorities** (b47–b63 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -80,7 +80,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    10/20/30-minute steps, never switch the verify model unasked, and stop
    after about four tries with the one-call resume path written down.
    b59 hit a second DNS outage (two audits); one resume finished it.
-   The recurring defect themes across b47–b62, each now guarded in
+   The recurring defect themes across b47–b63, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -233,7 +233,11 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   for Rhus aromatica carries no sun data at all. The mechanical verifier
   cannot catch this (its cached copy may be the wrong page too). Rule:
   confirm the RHS response title names the species before using any of
-  its content; prompts say so from b62.
+  its content; prompts say so from b62. It happened again in b63:
+  Sourwood's six RHS citations pointed at `/plants/12060/wd/details`,
+  which is Populus tremula — the slug did not even contain the epithet.
+  From b64 the prompt requires the RHS URL slug to contain the species
+  epithet as well.
 - Pipe-joined label+value quotes (b61, "Moisture | | Moist but
   well–drained", "H4: | hardy through…") — the same label/value class in
   a new form; the landing dump now scans quotes for " | " and the rule
@@ -252,6 +256,16 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   "protection from afternoon sun which can scorch the leaves" and MoBot's
   "Prefers a sun dappled or high open shade" win; the token is disclosed,
   not carried.
+- A sun list built from the UK and Florida fields while both North
+  American structured fields said otherwise (b63, American Hornbeam
+  landed full_sun/part_shade; NC State's Light field carries only Deep
+  shade and Partial Shade and MoBot reads "Part shade to full shade") —
+  the list reversed to part_shade/full_shade at landing. Check every sun
+  list against both North American structured fields.
+- The common name written into `scientific_name_given` (b63, Sassafras)
+  — the loader keys on that field; the landing dump now prints every
+  record's given name, and the prompt says the field must equal the
+  binomial given.
 
 ## Do next, in order
 
