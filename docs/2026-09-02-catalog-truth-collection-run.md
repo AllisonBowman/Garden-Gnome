@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **60 batches, 2,499 claims, 445 species, 8 authorities** (b47–b60 landed
+- **61 batches, 2,520 claims, 451 species, 8 authorities** (b47–b61 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -80,7 +80,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    10/20/30-minute steps, never switch the verify model unasked, and stop
    after about four tries with the one-call resume path written down.
    b59 hit a second DNS outage (two audits); one resume finished it.
-   The recurring defect themes across b47–b60, each now guarded in
+   The recurring defect themes across b47–b61, each now guarded in
    the prompts: "moist but well-drained" read as the wet end of the drainage
    scale rather than the middle; a watering cadence read off a soil
    adjective or a drought-tolerance trait; a shade token added from a
@@ -226,6 +226,18 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   alternative-crops Aronia page supplying a fertilizer schedule) — a
   yield program for bred stock is not a species care source; none of the
   four species pages prescribed fertilization.
+- **An RHS URL serving a cached page for a different species** (b61):
+  the auditor found Rhus aromatica's RHS URL intermittently returns the
+  Corylus americana page to unauthenticated fetches, and a fabricated
+  "Full sun, Partial shade" sun citation was the result — the RHS page
+  for Rhus aromatica carries no sun data at all. The mechanical verifier
+  cannot catch this (its cached copy may be the wrong page too). Rule:
+  confirm the RHS response title names the species before using any of
+  its content; prompts say so from b62.
+- Pipe-joined label+value quotes (b61, "Moisture | | Moist but
+  well–drained", "H4: | hardy through…") — the same label/value class in
+  a new form; the landing dump now scans quotes for " | " and the rule
+  is the rendered value alone.
 
 ## Do next, in order
 
