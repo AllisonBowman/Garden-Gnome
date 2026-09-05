@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **65 batches, 2,617 claims, 475 species, 8 authorities** (b47–b65 landed
+- **66 batches, 2,641 claims, 481 species, 8 authorities** (b47–b66 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -293,6 +293,18 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   Nulled prose (toxicity_detail, name_note) is recovered from the research
   agents' own return values in the workflow journal and repaired with the
   auditor's verbatim additions, never re-authored.
+- **Abbreviated structured strings are synthesized quotes** (b66): 'Full sun (6+
+  hours)' and 'Partial Shade (2-6 hours)' compress NC State's rendered values
+  ('Full sun (6 or more hours of direct sunlight a day)', 'Partial Shade (Direct
+  sunlight only part of the day, 2-6 hours)') and fail the mechanical check even
+  when the auditor lets them pass; a semicolon-joined 'Habitat' string attributed
+  to a field the page does not have was a fabricated quote around a correct value.
+  The label is 'Light:', not 'Light Requirements'. A look-alike ('is often confused
+  with') module states confusion, not taxonomy — rest a not-a-true-ash point on the
+  Family field. Two structured sun fields outrank one omission (Hoptree keeps
+  full_sun with MoBot's omission disclosed); one structured tag against two
+  full-sun-only fields plus tolerance-only prose is dropped and disclosed (Black
+  Locust, Slippery Elm).
 
 ## Do next, in order
 
