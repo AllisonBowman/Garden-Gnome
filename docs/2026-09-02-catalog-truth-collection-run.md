@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **66 batches, 2,641 claims, 481 species, 8 authorities** (b47–b66 landed
+- **67 batches, 2,664 claims, 487 species, 8 authorities** (b47–b67 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -305,6 +305,17 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   full_sun with MoBot's omission disclosed); one structured tag against two
   full-sun-only fields plus tolerance-only prose is dropped and disclosed (Black
   Locust, Slippery Elm).
+- **A group name is not a common name, and the auditor's fetches are evidence**
+  (b67): 'Snakebark Maple' for Acer pensylvanicum was a section-level umbrella
+  all three pages describe as covering more than the species ('only species of
+  snakebark maple native to North America'), so the record landed as Moosewood,
+  RHS's subtitle lead; 'Sweet Crabapple' rested on one prose sentence against
+  a list/title/RHS lead of American Crabapple. When a researcher reports RHS or
+  MoBot unreachable, the Opus auditor usually reaches them — recover the exact
+  URLs from the auditor transcript's fetch calls (RHS 20902, MoBot c337) and cite
+  only text the auditor quoted verbatim. RHS Position/Growing-Conditions blocks
+  do not survive the mechanical quote check on every page; disclose rather than
+  cite when they miss.
 
 ## Do next, in order
 
