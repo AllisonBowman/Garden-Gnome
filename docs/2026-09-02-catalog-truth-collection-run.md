@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **64 batches, 2,590 claims, 469 species, 8 authorities** (b47–b64 landed
+- **65 batches, 2,617 claims, 475 species, 8 authorities** (b47–b65 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -279,6 +279,20 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 - The invented "three or more entries" convention migrating into
   citation claim labels (b64) — the landing dump now greps claims for
   it; prompts ban it in labels as well as notes.
+- **A weekly usage limit behaves like the session limit** (b46/b51), not like
+  DNS or a 529: b65 lost one research agent and four Opus audits to it mid-run
+  (2026-09-03), the null-verdict guard held four records as UNVERIFIED, nothing
+  was landed, and a plain `resumeFromRunId` two days later re-ran only the
+  refused agents. The only remedy is waiting for the stated reset.
+- **Species scorch warnings beat structured sun tags, both directions** (b65):
+  both buckeyes dropped `full_sun` on NC State's own species-specific leaf-scorch
+  sentences (corroborated by MoBot's Culture text) even though MoBot's and
+  RHS's structured fields list full sun unconditionally; the excluded value is
+  disclosed in unknowns, not carried. A one-word RHS `Correct` quote cannot
+  carry `scientific_name_accepted` on its own — pair it with the H1 binomial.
+  Nulled prose (toxicity_detail, name_note) is recovered from the research
+  agents' own return values in the workflow journal and repaired with the
+  auditor's verbatim additions, never re-authored.
 
 ## Do next, in order
 
