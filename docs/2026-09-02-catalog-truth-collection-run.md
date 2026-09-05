@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **67 batches, 2,664 claims, 487 species, 8 authorities** (b47–b67 landed
+- **68 batches, 2,690 claims, 493 species, 8 authorities** (b47–b68 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -316,6 +316,17 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   only text the auditor quoted verbatim. RHS Position/Growing-Conditions blocks
   do not survive the mechanical quote check on every page; disclose rather than
   cite when they miss.
+- **A placeholder RHS slug is the wrong-species shape** (b68): a researcher cited
+  rhs.org.uk/plants/91239/wd/details — the same '/wd/' slug that once returned
+  Populus for Sourwood. The page happened to be right; the URL is rewritten to the
+  epithet slug at landing (RHS resolves by id) so the guard is checkable. A
+  fabricated NC State Plant Type entry ('Woody Plant', really the head of the
+  next field's label 'Woody Plant Leaf Characteristics') recurred (Crossvine) —
+  a Plant Type list ending in 'Woody Plant' deserves a second look. A fruit
+  profile bled in from a berry crop ('Fruit Value To Gardener: Edible / Berry' on
+  American Wisteria) was a fabricated source conflict; the auditor's live fetch
+  is still the only defence. RHS's 'Pets (dogs, cats)' lines corroborate
+  toxic_to_pets; its unscoped 'Pets:' lines do not.
 
 ## Do next, in order
 
