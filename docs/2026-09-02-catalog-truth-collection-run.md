@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **69 batches, 2,709 claims, 499 species, 8 authorities** (b47–b69 landed
+- **70 batches, 2,731 claims, 505 species, 8 authorities** (b47–b70 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -337,6 +337,15 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   an instruction about watering; a regional-climate sentence ('hot and humid
   summers') is not a humidity requirement; and a Plant Type quote of a single
   tag ('Tree') truncates an enum-defining list.
+- **A floor read off an absent checkbox is not a floor** (b70): Water Tupelo's
+  soil_ph_min 6.0 came from NC State's Soil pH field not ticking Acid, while
+  RHS's pH field and both sources' prose say acidic soils. A bound needs a
+  stated limit. Also: when a researcher reports RHS or MoBot unreachable, the
+  auditor's transcript in the run directory usually has the fetch URL and the
+  verbatim fields — recover them there rather than re-crawling. MoBot Common
+  Names tooltips reconstructed from overlib markup appeared four more times;
+  the rendered Noteworthy Characteristics prose carries the same names and is
+  the citable text.
 
 ## Do next, in order
 
