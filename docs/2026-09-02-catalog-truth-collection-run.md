@@ -330,9 +330,27 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 
 ## Do next, in order
 
-1. **Wire the claim graph into the app.** `SpeciesRead`, the mobile `Species`
-   type, and the advice fact block should read resolved values with their
-   provenance. Until then the 2,000+ claims are review artifacts.
+1. ~~Wire the claim graph into the app.~~ **Done 2026-09-05** (ADR 0005,
+   migration 0015, `app/data/claims/sync.py`, `app/services/care_facts.py`,
+   `mobile/src/care/facts.ts`): the cold-start seed now ingests the tranche,
+   mints a row for every species the catalog lacked (legacy columns and
+   `toxic_to_pets` null, never defaulted), links rows held under older names
+   by `scientific_name_accepted`, and recomputes; `SpeciesRead`/`SpeciesDetail`
+   carry the resolved columns, `care_data_status`, per-field provenance and
+   `care_sources` (authority name + link + fields, never the quote); the
+   advisor, vision and stub read one shared fact block with genus-borrowed
+   values labelled; the mobile screens show a Care facts card, a status line,
+   captioned legacy stats only where nothing resolved replaces them, and a
+   Sources card. **Post-deploy check**: run
+   `flyctl ssh console -a garden-gnome-api -C "python -m app.data.claims.sync --dry-run"`
+   and read the `ambiguous:` lines — the ~1,900 Perenual rows on the volume
+   were never inspected locally, and a tranche subject matching two of them
+   links neither. Open policy question from review: `NEVER_INHERIT` holds
+   only `toxic_to_pets` while CONTEXT.md says every harm-capable field
+   refuses inferred values; today genus-borrowed `water_regime` /
+   `chill_damage_f` are shown labelled rather than refused. Also open: the
+   36 records with `toxic_to_pets` null but a cited `toxicity_detail` naming
+   harm need verdicts from the research loop.
 2. **Decide the verifier's home.** It lives in the session scratchpad
    (`verify_quotes.py`, `covered.py`, `land_check.py`), which is
    session-scoped. If the collection run continues, move them under

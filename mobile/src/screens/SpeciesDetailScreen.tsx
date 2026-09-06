@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import {
-  Text, Card, Chip, Divider, List, ActivityIndicator,
+  Text, Card, Chip, List, ActivityIndicator,
 } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -9,7 +9,10 @@ import { fetchSpecies } from '../api/species';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
-import Eyebrow from '../components/Eyebrow';
+import { careFactRows, legacyStats } from '../care/facts';
+import {
+  CareFactList, CareSourceRows, CareStatusLine, LegacyStatRow,
+} from '../components/CareFacts';
 
 type Route = RouteProp<SpeciesStackParamList, 'SpeciesDetail'>;
 
@@ -29,18 +32,17 @@ export default function SpeciesDetailScreen() {
     queryFn: () => fetchSpecies(speciesId),
   });
 
-  function Stat({ label, value }: { label: string; value: string }) {
-    return (
-      <View style={styles.stat}>
-        <Eyebrow style={styles.statLabel}>{label}</Eyebrow>
-        <Text variant="bodyMedium" style={styles.statValue}>{value}</Text>
-      </View>
-    );
-  }
-
   if (isLoading || !species) {
     return <ActivityIndicator style={styles.center} size="large" />;
   }
+
+  // Which cards have anything to say. A row minted from the claim tranche
+  // has facts and sources but no legacy stats; a legacy row the recompute
+  // never reached has the reverse. Neither gets an empty card.
+  const hasFacts = careFactRows(species).length > 0;
+  const hasLegacy = legacyStats(species).length > 0;
+  const sources = species.care_sources ?? [];
+  const traits = (species.traits ?? []).filter((t) => t.trait !== 'humidity_source');
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -52,6 +54,7 @@ export default function SpeciesDetailScreen() {
         <Text variant="bodyMedium" style={styles.scientific}>
           {species.scientific_name}
         </Text>
+        <CareStatusLine species={species} style={styles.status} />
         {/* The generated sentence when the API supplies one — it distinguishes
             which parts are toxic and to which animals. Falls back to the flat
             chip on older API versions. */}
@@ -66,31 +69,45 @@ export default function SpeciesDetailScreen() {
         ) : null}
       </View>
 
-      {/* Care summary stats */}
-      <Card style={styles.card}>
-        <Card.Content>
-          <View style={styles.statRow}>
-            <Stat label="Light"    value={species.light_need.replace(/_/g, ' ')} />
-            {/* Derived humidity (imported rows) is not a fact — show nothing
-                rather than a number nobody measured. */}
-            {species.humidity_sourced !== false && (
-              <Stat label="Humidity" value={`${species.humidity_pct_min}–${species.humidity_pct_max}%`} />
-            )}
-            <Stat label="Temp"     value={`${species.temp_f_min}–${species.temp_f_max}°F`} />
-          </View>
-          <Divider style={styles.divider} />
-          <Eyebrow style={styles.soilLabel}>Soil</Eyebrow>
-          <Text variant="bodySmall">{species.soil_type}</Text>
-        </Card.Content>
-      </Card>
+      {/* The resolved facts — what the claims settled, labelled where a value
+          was borrowed from the genus. */}
+      {hasFacts && (
+        <Card style={styles.card}>
+          <Card.Title title="Care facts" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Content>
+            <CareFactList species={species} />
+          </Card.Content>
+        </Card>
+      )}
+
+      {/* Legacy stats, only where no resolved fact replaces them. */}
+      {hasLegacy && (
+        <Card style={styles.card}>
+          <Card.Content>
+            <LegacyStatRow species={species} />
+          </Card.Content>
+        </Card>
+      )}
 
       {/* Care notes */}
-      <Card style={styles.card}>
-        <Card.Title title="Care notes" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
-        <Card.Content>
-          <Text variant="bodyMedium" style={styles.notes}>{species.care_notes}</Text>
-        </Card.Content>
-      </Card>
+      {species.care_notes ? (
+        <Card style={styles.card}>
+          <Card.Title title="Care notes" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Content>
+            <Text variant="bodyMedium" style={styles.notes}>{species.care_notes}</Text>
+          </Card.Content>
+        </Card>
+      ) : null}
+
+      {/* Where the facts came from: names and links, never the passage. */}
+      {sources.length > 0 && (
+        <Card style={styles.card}>
+          <Card.Title title="Sources" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Content>
+            <CareSourceRows sources={sources} />
+          </Card.Content>
+        </Card>
+      )}
 
       {/* Schedules */}
       {species.care_schedules && species.care_schedules.length > 0 && (
@@ -116,11 +133,11 @@ export default function SpeciesDetailScreen() {
       {/* Traits. humidity_source is pipeline provenance ("derived from
           watering category…"), not a plant trait — rendering it verbatim was
           a developer-text leak. */}
-      {species.traits && species.traits.filter((t) => t.trait !== 'humidity_source').length > 0 && (
+      {traits.length > 0 && (
         <Card style={styles.card}>
           <Card.Title title="Plant traits" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
-            {species.traits.filter((t) => t.trait !== 'humidity_source').map((t) => (
+            {traits.map((t) => (
               <View key={t.id} style={styles.traitRow}>
                 <Text variant="labelMedium" style={styles.traitKey}>
                   {t.trait.replace(/_/g, ' ')}
@@ -143,18 +160,13 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   header: { marginBottom: 12 },
   title: { color: p.acc, fontFamily: f.display },
-  scientific: { fontStyle: 'italic', color: p.sub, fontFamily: f.display, marginTop: 2, marginBottom: 8 },
+  scientific: { fontStyle: 'italic', color: p.sub, fontFamily: f.display, marginTop: 2, marginBottom: 6 },
+  status: { marginBottom: 6 },
   toxicChip: { backgroundColor: p.warnSoft, alignSelf: 'flex-start' },
   toxicChipText: { color: p.warn },
-  toxicityNote: { color: p.warn, marginTop: 8, lineHeight: 19 },
+  toxicityNote: { color: p.warn, marginTop: 4, lineHeight: 19 },
   card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
   cardTitle: { color: p.ink, fontFamily: f.display },
-  statRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  stat: { alignItems: 'center', flex: 1 },
-  statLabel: { marginBottom: 2 },
-  statValue: { fontFamily: f.numeric, fontWeight: '600', textTransform: 'capitalize' },
-  divider: { marginBottom: 12 },
-  soilLabel: { marginBottom: 4 },
   notes: { lineHeight: 22, color: p.ink },
   listItem: { paddingVertical: 4 },
   traitRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line2 },

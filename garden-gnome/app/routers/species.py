@@ -32,6 +32,12 @@ def _load_with_relations(species_id: int, session: Session) -> Species:
     ).first()
 
 
+def _detail(species: Species) -> SpeciesDetail:
+    """A never-recomputed row holds null where the schema promises a list."""
+    return SpeciesDetail.model_validate(
+        species, update={"care_sources": species.care_sources or []})
+
+
 def _create_one(entry: SpeciesCreate, session: Session) -> Species:
     """Insert a single species with its schedules and traits. Caller commits."""
     species_data = entry.model_dump(exclude={"schedules", "traits"})
@@ -45,7 +51,8 @@ def _create_one(entry: SpeciesCreate, session: Session) -> Species:
     return species
 
 
-@router.get("/", response_model=list[SpeciesRead])
+@router.get("/", response_model=list[SpeciesRead],
+            response_model_exclude_none=True)
 def list_species(session: Session = Depends(get_session)):
     """The catalog as clients should see it.
 
@@ -54,6 +61,10 @@ def list_species(session: Session = Depends(get_session)):
     which is operator state and no business of a client. SpeciesRead also
     carries the derived toxicity_description, so a list view can show the
     nuanced sentence rather than a flat 'toxic' flag.
+
+    Absent values are absent keys: most rows carry a handful of the resolved
+    columns and a claims-minted row carries no legacy ones, so nulls would
+    be most of the payload. The mobile type declares every one optional.
 
     humidity_sourced is computed here with one trait query rather than via
     the model property — the property walks `species.traits`, which would
@@ -86,7 +97,7 @@ def create_species(payload: SpeciesCreate, session: Session = Depends(get_sessio
         )
     species = _create_one(payload, session)
     session.commit()
-    return _load_with_relations(species.id, session)
+    return _detail(_load_with_relations(species.id, session))
 
 
 @router.post("/bulk", status_code=201)
@@ -193,4 +204,4 @@ def get_species(species_id: int, session: Session = Depends(get_session)):
     species = _load_with_relations(species_id, session)
     if not species:
         raise HTTPException(status_code=404, detail="Species not found")
-    return species
+    return _detail(species)

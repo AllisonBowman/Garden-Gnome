@@ -17,12 +17,16 @@ from app.models.models import CareDataStatus
 from app.models.models import Claim as ClaimRow
 from app.models.models import Species
 
-from .resolve import genus_of
+from .resolve import Resolution, genus_of
 from .store import resolve_from_db
 
 #: Bumped when the resolution rules change. Rows carrying an older version are
 #: stale, which makes finding them a query instead of a guess.
-RESOLVER_VERSION = "1"
+#:
+#: "2": rows now carry `care_sources` and resolve by their accepted name. Every
+#: row resolved under "1" is stale and is rewritten once, on the first sync
+#: after this deploys. That one-time churn is the cost of a bump and expected.
+RESOLVER_VERSION = "2"
 
 #: The only columns a Claim is allowed to set. An allowlist rather than a
 #: denylist: a claim naming `scientific_name` or `review_status` must not be
@@ -43,6 +47,15 @@ RESOLVED_FIELDS = frozenset({
     # whether it could ground the rest of the catalog. It could not.
     "hardiness_zones",
 })
+
+#: Resolved fields a client never sees: verbatim passages held as audit
+#: evidence (ADR 0003). They land on the row like any other resolved value,
+#: but a page is not credited for them -- a Sources entry with nothing visible
+#: behind it, or an authority named in "cited to ..." for a fact nobody can
+#: read, is attribution the reader would have to take on faith.
+SERVER_ONLY_FIELDS = frozenset({"toxicity_detail", "water_dry_down_target"})
+#: What a page can be credited for.
+ATTRIBUTABLE_FIELDS = RESOLVED_FIELDS - SERVER_ONLY_FIELDS
 
 #: Fields this recompute may set from a claim but must never clear.
 #:
@@ -72,10 +85,41 @@ def _status(provenance: dict[str, str]) -> CareDataStatus:
     return CareDataStatus.inferred
 
 
+def _care_sources(resolution: Resolution) -> list[dict] | None:
+    """Attribution for the resolved values, read off the claims that won.
+
+    One entry per (authority, page) with the fields it won, fields sorted and
+    the list sorted by (authority, url), so a re-run computes the identical
+    structure and writes nothing. `inferred` marks a page whose every winning
+    field came in at genus scope -- ADR 0002 wants that visible wherever the
+    source is. Name, link and field names only: the quote stays in `claim`,
+    and the per-citation title is researcher prose, not a document name
+    (ADR 0003). Only fields a client can see count (SERVER_ONLY_FIELDS), so a
+    page that settled nothing visible is not listed at all. None when nothing
+    won, so a never-cited row reads as such.
+    """
+    grouped: dict[tuple[str, str], list[str]] = {}
+    for field, claim in resolution.winners.items():
+        if field in ATTRIBUTABLE_FIELDS:
+            grouped.setdefault(
+                (claim.authority.name, claim.citation_url), []).append(field)
+    if not grouped:
+        return None
+    return [
+        {"authority": name, "url": url, "fields": sorted(fields),
+         "inferred": all(resolution.provenance[f] == "genus_inferred"
+                         for f in fields)}
+        for (name, url), fields in sorted(grouped.items())
+    ]
+
+
 def recompute_species(session: Session, species: Species,
                       report: RecomputeReport) -> bool:
     """Rewrite one species' resolved values. True if anything changed."""
-    resolution = resolve_from_db(session, species.scientific_name)
+    # Claims are keyed by the tranche's accepted name; a row the catalog held
+    # under an older name carries it beside `scientific_name` (sync.py).
+    resolution = resolve_from_db(
+        session, species.scientific_name_accepted or species.scientific_name)
 
     values = {f: v for f, v in resolution.values.items() if f in RESOLVED_FIELDS}
     provenance = {f: p for f, p in resolution.provenance.items()
@@ -100,6 +144,7 @@ def recompute_species(session: Session, species: Species,
     status = _status(provenance)
     for name, new in (("care_data_status", status),
                       ("care_provenance", provenance or None),
+                      ("care_sources", _care_sources(resolution)),
                       ("resolver_version", RESOLVER_VERSION)):
         if getattr(species, name) != new:
             setattr(species, name, new)
@@ -109,8 +154,14 @@ def recompute_species(session: Session, species: Species,
     return changed
 
 
-def recompute_all(session: Session, *, dry_run: bool = False) -> RecomputeReport:
-    """Recompute every species that has claims, or has had them before."""
+def recompute_all(session: Session, *, dry_run: bool = False,
+                  commit: bool = True) -> RecomputeReport:
+    """Recompute every species that has claims, or has had them before.
+
+    `commit=False` neither commits nor rolls back: the caller owns the
+    transaction, which is how the sync makes ingest, minting and recompute
+    one atomic step. `dry_run` keeps its meaning for the CLI.
+    """
     report = RecomputeReport()
 
     for species in session.exec(select(Species)).all():
@@ -121,7 +172,7 @@ def recompute_all(session: Session, *, dry_run: bool = False) -> RecomputeReport
 
     if dry_run:
         session.rollback()
-    else:
+    elif commit:
         session.commit()
     return report
 

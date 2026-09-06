@@ -47,7 +47,7 @@ from pathlib import Path
 from sqlmodel import Session, select
 
 from app.db.database import engine
-from app.models.models import Species
+from app.models.models import Species, SpeciesSource
 from app.data.expansion.research_review import CORRECTABLE, sanitize as _sanitize
 
 OUT_DIR = Path(__file__).parent / "output"
@@ -202,6 +202,22 @@ def derive_genus_fill(record: dict, siblings: list[dict]) -> dict:
 
 # --- driver -----------------------------------------------------------------
 
+# What the inference reads off a row: the correctable fields plus the review trail.
+FIELDS = CORRECTABLE + ["review_status", "review_note"]
+
+
+def catalog_records(rows) -> list[dict]:
+    """Project catalog rows into the dicts the inference reads.
+
+    A claims-minted row (ADR 0005) is left out entirely. It carries no legacy
+    care values, so as a sibling it would inflate the count that labels a
+    signal "strong" while adding nothing to the envelope, and as a target it
+    has nothing of this shape to fill.
+    """
+    return [{f: getattr(sp, f, None) for f in FIELDS}
+            for sp in rows if sp.source != SpeciesSource.claims]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Genus-level care inference (offline)")
     ap.add_argument("--limit", type=int, default=50)
@@ -212,21 +228,13 @@ def main() -> int:
     args = ap.parse_args()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    fields = CORRECTABLE + ["review_status", "review_note"]
 
     with Session(engine) as session:
-        pending = [
-            {f: getattr(sp, f, None) for f in fields}
-            for sp in session.exec(
-                select(Species).where(Species.review_status == args.status)
-            ).all()
-        ]
-        approved = [
-            {f: getattr(sp, f, None) for f in fields}
-            for sp in session.exec(
-                select(Species).where(Species.review_status == args.approved_status)
-            ).all()
-        ]
+        pending = catalog_records(session.exec(
+            select(Species).where(Species.review_status == args.status)).all())
+        approved = catalog_records(session.exec(
+            select(Species).where(
+                Species.review_status == args.approved_status)).all())
 
     # Index trusted siblings by genus once — the whole point is that this runs
     # offline and fast over the entire backlog.

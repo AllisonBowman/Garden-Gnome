@@ -225,3 +225,4 @@ def test_aloe_rename_applies_unless_it_would_collide(tmp_path: Path):
         "SELECT scientific_name FROM species WHERE scientific_name LIKE 'Aloe%'"))
     assert names == ["Aloe barbadensis miller", "Aloe vera"]
     conn.close()
+

@@ -23,6 +23,10 @@ from app.models.models import (
     Species, Plant, CareLog, CareSchedule, CareType, Environment,
     Shelter, TempExposure, SunExposure,
 )
+from app.services.care_facts import (
+    BORROWED_LABEL, is_genus_inferred, species_fact_lines,
+    water_regime_sentence,
+)
 from app.services.grounding import grounding_failures, log_rejection
 from app.services.persona import PERSONA_PREAMBLE
 
@@ -178,24 +182,11 @@ def _build_prompt(
     environment: Environment | None = None,
     weather: dict | None = None,
 ) -> str:
-    # The humidity line exists only when the numbers came from a source. On
-    # imported rows they were derived from a watering category, and a block
-    # headed "authoritative" must not hand the model derived numbers as facts.
-    humidity_line = (
-        f"- Humidity: {species.humidity_pct_min}-{species.humidity_pct_max}%\n"
-        if species.humidity_sourced else ""
-    )
-    facts = (
-        f"SPECIES CARE FACTS (authoritative):\n"
-        f"- Common name: {species.common_name}\n"
-        f"- Scientific name: {species.scientific_name}\n"
-        f"- Light need: {species.light_need.value}\n"
-        f"{humidity_line}"
-        f"- Temperature: {species.temp_f_min}-{species.temp_f_max} F\n"
-        f"- Soil: {species.soil_type}\n"
-        f"- Toxic to pets: {'yes' if species.toxic_to_pets else 'no'}\n"
-        f"- Curated notes: {species.care_notes or '(none)'}\n"
-    )
+    # One line per concept the row can back, resolved values first and
+    # genus-borrowed ones labelled -- shared with the vision prompt so the
+    # two never describe the same species differently (care_facts.py).
+    facts = ("SPECIES CARE FACTS (authoritative):\n"
+             + "\n".join(species_fact_lines(species)) + "\n")
 
     if care_schedules:
         lines = []
@@ -306,28 +297,36 @@ def _weather_nudges(
                 f"hold off watering; the sky may do it for you."
             )
 
-    # Heat spike above the species' comfort ceiling for an outdoor plant.
-    if outdoor and species.temp_f_max is not None:
+    # Heat spike above the species' comfort ceiling for an outdoor plant. The
+    # resolved daytime maximum outranks the legacy band when a claim set it.
+    ceiling, ceiling_label = _threshold(species, "day_f_max", "temp_f_max")
+    if outdoor and ceiling is not None:
         hot = next(
-            (d for d in days if d.get("high_f") is not None and d["high_f"] > species.temp_f_max),
+            (d for d in days if d.get("high_f") is not None and d["high_f"] > ceiling),
             None,
         )
         if hot:
             nudges.append(
                 f"🔥 Heat ahead (high {hot['high_f']}°F on {hot['date']}, above its "
-                f"{species.temp_f_max}°F comfort ceiling) — check soil sooner and add shade or water."
+                f"{ceiling}°F comfort ceiling) — check soil sooner and add shade or water."
+                + ceiling_label
             )
 
-    # Cold snap below the comfort floor for an outdoor plant.
-    if outdoor and species.temp_f_min is not None:
+    # Cold snap for an outdoor plant: below the cited cold-damage line when
+    # there is one, else the legacy comfort floor.
+    floor, floor_label = _threshold(species, "chill_damage_f", "temp_f_min")
+    if outdoor and floor is not None:
         cold = next(
-            (d for d in days if d.get("low_f") is not None and d["low_f"] < species.temp_f_min),
+            (d for d in days if d.get("low_f") is not None and d["low_f"] < floor),
             None,
         )
         if cold:
+            what = ("cold-damage line" if species.chill_damage_f is not None
+                    else "comfort floor")
             nudges.append(
                 f"❄️ Cold night ahead (low {cold['low_f']}°F on {cold['date']}, below its "
-                f"{species.temp_f_min}°F comfort floor) — bring it in or shelter it."
+                f"{floor}°F {what}) — bring it in or shelter it."
+                + floor_label
             )
 
     # Very high UV reaching a plant that's open to the sky and not in shade.
@@ -341,6 +340,16 @@ def _weather_nudges(
             )
 
     return nudges
+
+
+def _threshold(species: Species, resolved: str, legacy: str) -> tuple[int | None, str]:
+    """The resolved column when a claim set it, else the legacy one, with the
+    label a genus-borrowed value must carry (ADR 0002). A legacy value is
+    never labelled: it was typed in, not inferred."""
+    value = getattr(species, resolved)
+    if value is not None:
+        return value, BORROWED_LABEL if is_genus_inferred(species, resolved) else ""
+    return getattr(species, legacy), ""
 
 
 def _advise_stub(
@@ -388,6 +397,14 @@ def _advise_stub(
 
     if not lines:
         lines.append("No care schedules defined for this species yet.")
+
+    # What the sources say about watering, beside the schedule line and never
+    # in place of it: the regime is the species-level fact, the schedule is
+    # this plant's cadence. Labelled when the resolver borrowed it (ADR 0002).
+    regime = water_regime_sentence(species)
+    if regime:
+        label = BORROWED_LABEL if is_genus_inferred(species, "water_regime") else ""
+        lines.append(f"💧 From its sources: {regime}.{label}")
 
     # Weather-driven nudges for plants the forecast actually reaches.
     lines.extend(_weather_nudges(species, environment, weather))

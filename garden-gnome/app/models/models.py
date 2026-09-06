@@ -188,6 +188,7 @@ class SpeciesSource(str, Enum):
     curated = "curated"            # hand-written original catalog
     perenual = "perenual"          # mapped from the Perenual API
     llm_generated = "llm_generated"  # drafted by /species/generate — heavier review
+    claims = "claims"              # minted from the verified claim tranche (ADR 0005)
 
 
 class ReviewStatus(str, Enum):
@@ -265,14 +266,25 @@ class Species(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     common_name: str = Field(index=True)
     scientific_name: str = Field(index=True)
+    # The tranche's accepted name when it differs from `scientific_name`, so
+    # that `scientific_name_accepted or scientific_name` is always exactly a
+    # `Claim.subject` and the resolver can find a row's evidence. Never a
+    # rename: users' plants and toxicity.lookup key on `scientific_name`. Set
+    # only by the claim sync (sync.py).
+    scientific_name_accepted: Optional[str] = Field(default=None, index=True)
 
-    light_need: LightNeed
-    humidity_pct_min: int
-    humidity_pct_max: int
-    temp_f_min: int
-    temp_f_max: int
-    soil_type: str
-    toxic_to_pets: bool = False
+    # The legacy care columns. Nullable since 0015: a row minted from the
+    # claim tranche (ADR 0005) has nothing to put here, and a value invented
+    # to satisfy NOT NULL would be exactly the synthetic data plan 3.4
+    # retires. `toxic_to_pets` null means "no record" -- never "safe"
+    # (ADR 0002); the toxicity sentence already says so.
+    light_need: Optional[LightNeed] = None
+    humidity_pct_min: Optional[int] = None
+    humidity_pct_max: Optional[int] = None
+    temp_f_min: Optional[int] = None
+    temp_f_max: Optional[int] = None
+    soil_type: Optional[str] = None
+    toxic_to_pets: Optional[bool] = None
     care_notes: str = ""
 
     # --- Phase 2 care fields (plan 2.1-2.7) ------------------------------
@@ -336,6 +348,12 @@ class Species(SQLModel, table=True):
     care_provenance: Optional[dict] = Field(
         default=None, sa_column=Column(JSON, nullable=True))
     resolver_version: Optional[str] = None
+    # Who said so: one entry per (authority, page) whose claim won a resolved
+    # field -- `{"authority", "url", "fields", "inferred"}` -- materialised by
+    # the recompute from the winning claims. Name, link and field names only;
+    # the quote stays in `claim` (ADR 0003).
+    care_sources: Optional[list] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
 
     # USDA hardiness zones this species tolerates outdoors, e.g. [7, 8, 9, 10].
     # Only USDA PLANTS Database may claim this field (authorities.py); most of
@@ -378,9 +396,10 @@ class Species(SQLModel, table=True):
         nuance table does without a migration, and every endpoint that returns a
         Species picks it up automatically. `toxic_to_pets` stays as the raw flag
         for filtering; this is what a person should actually read."""
-        from app.services.toxicity import describe_for_species
+        from app.services.toxicity import cited_authority, describe_for_species
         return describe_for_species(
-            self.scientific_name, self.common_name, self.toxic_to_pets
+            self.scientific_name, self.common_name, self.toxic_to_pets,
+            cited_to=cited_authority(self.care_provenance, self.care_sources),
         )
 
 
@@ -457,6 +476,18 @@ class Claim(SQLModel, table=True):
     collected_at: datetime = Field(default_factory=datetime.utcnow)
 
     authority: Optional[Authority] = Relationship(back_populates="claims")
+
+
+class SyncState(SQLModel, table=True):
+    """A key/value row for idempotence gates.
+
+    One key today: `tranche_fingerprint`, written by the claim sync after a
+    successful run so the next cold start can tell an unchanged tranche from
+    one that needs re-syncing without walking it (sync.py).
+    """
+    __tablename__ = "sync_state"
+    key: str = Field(primary_key=True)
+    value: str
 
 
 class Environment(SQLModel, table=True):

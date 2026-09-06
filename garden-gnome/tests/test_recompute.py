@@ -11,13 +11,17 @@ from pathlib import Path
 import pytest
 from sqlmodel import Session, create_engine, select
 
-from app.data.claims.recompute import RESOLVED_FIELDS, recompute_all
+from app.data.claims.recompute import (
+    ATTRIBUTABLE_FIELDS, RESOLVED_FIELDS, RESOLVER_VERSION, SERVER_ONLY_FIELDS,
+    recompute_all,
+)
 from app.models.models import (
     Authority, CareDataStatus, CareLog, CareSchedule, Claim, Plant,
     Species, SpeciesTrait,
 )
 
 NCSU = "https://plants.ces.ncsu.edu/plants/x/"
+NCSU_GENUS = "https://plants.ces.ncsu.edu/plants/dracaena/"
 CLEMSON = "https://hgic.clemson.edu/factsheet/y/"
 
 
@@ -157,6 +161,10 @@ def test_running_it_twice_leaves_the_database_byte_identical(
     over unchanged evidence must be a no-op -- not merely produce equal values,
     but not write at all. Anything else means the catalog quietly churns every
     time this runs, and `resolver_version` stops meaning anything.
+
+    The species wins values from two authorities and from two NC State pages
+    (one about the genus), so `care_sources` has to group and sort the same
+    way every time for the second pass to write nothing.
     """
     work = tmp_path / "recompute2.db"
     shutil.copy(Path(migrated_db_url.removeprefix("sqlite:///")), work)
@@ -171,13 +179,27 @@ def test_running_it_twice_leaves_the_database_byte_identical(
         make_species(s, "Dracaena trifasciata", "Snake Plant")
         add_claim(s, "Dracaena trifasciata", "humidity_need", "low")
         add_claim(s, "Dracaena trifasciata", "chill_damage_f", 50)
-        add_claim(s, "Dracaena", "soil_drainage", "fast")
+        add_claim(s, "Dracaena trifasciata", "soil_ph_min", 6.0,
+                  url=CLEMSON, name="Clemson Cooperative Extension")
+        add_claim(s, "Dracaena", "soil_drainage", "fast", url=NCSU_GENUS)
         first = recompute_all(s)
 
     before = work.read_bytes()
 
     with Session(engine) as s:
         second = recompute_all(s)
+        sp = reload(s, "Dracaena trifasciata")
+        # One entry per (authority, page), fields sorted, list sorted, and the
+        # genus page marked as such -- never the quote, never a title.
+        assert sp.care_sources == [
+            {"authority": "Clemson Cooperative Extension", "url": CLEMSON,
+             "fields": ["soil_ph_min"], "inferred": False},
+            {"authority": "NC State Extension", "url": NCSU_GENUS,
+             "fields": ["soil_drainage"], "inferred": True},
+            {"authority": "NC State Extension", "url": NCSU,
+             "fields": ["chill_damage_f", "humidity_need"], "inferred": False},
+        ]
+        assert sp.resolver_version == RESOLVER_VERSION
     engine.dispose()
 
     assert first.species_updated == 1
@@ -234,3 +256,87 @@ def test_a_usda_hardiness_claim_resolves_onto_the_species_row(session):
     sp = reload(session, "Salvia rosmarinus")
     assert sp.hardiness_zones == [7, 8, 9, 10]
     assert sp.care_provenance["hardiness_zones"] == "sourced"
+
+
+def test_care_sources_are_null_when_nothing_won(session):
+    make_species(session, "Ignotus obscurus")
+
+    recompute_all(session)
+
+    assert reload(session, "Ignotus obscurus").care_sources is None
+
+
+def test_a_page_is_credited_only_for_fields_a_client_can_see(session):
+    """`toxicity_detail` and `water_dry_down_target` are verbatim passages,
+    held as audit evidence and never shipped (ADR 0003). A page that settled
+    only those would sit in the app's Sources card with nothing visible behind
+    it and be named in "cited to ..." for a fact nobody can read -- attribution
+    the reader has to take on faith. The value still lands on the row; the
+    page is credited for what a reader can check, and for nothing else."""
+    make_species(session, "Toxicodendron radicans", "Poison Ivy")
+    add_claim(session, "Toxicodendron radicans", "toxicity_detail",
+              "contact dermatitis prose", url=CLEMSON,
+              name="Clemson Cooperative Extension")
+    add_claim(session, "Toxicodendron radicans", "humidity_need", "average")
+    add_claim(session, "Toxicodendron radicans", "water_dry_down_target",
+              "verbatim passage")
+
+    recompute_all(session)
+
+    sp = reload(session, "Toxicodendron radicans")
+    assert sp.toxicity_detail == "contact dermatitis prose"
+    assert sp.water_dry_down_target == "verbatim passage"
+    assert sp.care_sources == [
+        {"authority": "NC State Extension", "url": NCSU,
+         "fields": ["humidity_need"], "inferred": False},
+    ]
+    assert SERVER_ONLY_FIELDS <= RESOLVED_FIELDS
+    assert not (SERVER_ONLY_FIELDS & ATTRIBUTABLE_FIELDS)
+
+
+def test_resolution_keys_on_the_accepted_name_when_the_row_carries_one(session):
+    """A catalog row keeps the name users and toxicity.lookup key on; the
+    tranche researched it under its accepted name. The claims are keyed by
+    the latter, and the row must still find them."""
+    sp = make_species(session, "Sansevieria trifasciata", "Snake Plant")
+    sp.scientific_name_accepted = "Dracaena trifasciata"
+    session.add(sp)
+    session.commit()
+    add_claim(session, "Dracaena trifasciata", "humidity_need", "low")
+
+    recompute_all(session)
+
+    sp = reload(session, "Sansevieria trifasciata")
+    assert sp.humidity_need == "low"
+    assert sp.care_data_status == CareDataStatus.sourced
+
+
+def test_an_unknown_toxicity_stays_unknown_rather_than_becoming_safe(session):
+    """A minted row starts with toxic_to_pets null. With no toxicity claim the
+    recompute must leave it null -- writing False there would be the invented
+    safety verdict ADR 0002 forbids."""
+    sp = Species(common_name="Minted", scientific_name="Testus mintus",
+                 toxic_to_pets=None, care_notes="")
+    session.add(sp)
+    session.commit()
+    add_claim(session, "Testus mintus", "humidity_need", "low")
+
+    recompute_all(session)
+
+    sp = reload(session, "Testus mintus")
+    assert sp.toxic_to_pets is None
+    assert sp.humidity_need == "low"
+    assert sp.light_need is None
+
+
+def test_commit_false_leaves_the_transaction_to_the_caller(session):
+    make_species(session, "Dracaena trifasciata")
+    add_claim(session, "Dracaena trifasciata", "humidity_need", "low")
+
+    report = recompute_all(session, commit=False)
+
+    assert report.species_updated == 1
+    assert session.exec(select(Species).where(
+        Species.scientific_name == "Dracaena trifasciata")).one().humidity_need == "low"
+    session.rollback()
+    assert reload(session, "Dracaena trifasciata").humidity_need is None

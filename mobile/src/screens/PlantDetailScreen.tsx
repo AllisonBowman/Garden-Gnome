@@ -27,6 +27,7 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
+import { CareFactList, CareStatusLine, LegacyStatRow } from '../components/CareFacts';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
@@ -397,18 +398,22 @@ export default function PlantDetailScreen() {
         </Card.Content>
       </Card>
 
-      {/* Species details */}
+      {/* Species details: the notes, how well-backed the facts are, the
+          resolved facts, and the legacy stats only where nothing resolved
+          replaces them (a synthetic number must not sit beside a cited one). */}
       {species && (
         <Card style={styles.card}>
           <Card.Title title="Care guide" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
-            <Text variant="bodyMedium" style={styles.careNotes}>{species.care_notes}</Text>
-            <Divider style={styles.divider} />
-            <View style={styles.statRow}>
-              <Stat label="Light"     value={species.light_need.replace('_', ' ')} />
-              <Stat label="Humidity"  value={`${species.humidity_pct_min}–${species.humidity_pct_max}%`} />
-              <Stat label="Temp (°F)" value={`${species.temp_f_min}–${species.temp_f_max}`} />
-            </View>
+            {species.care_notes ? (
+              <>
+                <Text variant="bodyMedium" style={styles.careNotes}>{species.care_notes}</Text>
+                <Divider style={styles.divider} />
+              </>
+            ) : null}
+            <CareStatusLine species={species} style={styles.careStatus} />
+            <CareFactList species={species} compact />
+            <LegacyStatRow species={species} />
             {/* Prefer the generated sentence: it names which parts are toxic
                 and to which animals, which a flat chip cannot. Falls back to
                 the chip when the API doesn't supply one. */}
@@ -513,17 +518,6 @@ export default function PlantDetailScreen() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  const { palette, fonts } = useAppTheme();
-  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
-  return (
-    <View style={styles.stat}>
-      <Text variant="labelSmall" style={styles.statLabel}>{label}</Text>
-      <Text variant="bodyMedium" style={styles.statValue}>{value}</Text>
-    </View>
-  );
-}
-
 const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 12, paddingBottom: 48 },
@@ -538,10 +532,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   careBtnLabel: { fontSize: 13 },
   careNotes: { lineHeight: 22, color: p.ink },
   divider: { marginVertical: 12 },
-  statRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  stat: { alignItems: 'center', flex: 1 },
-  statLabel: { color: p.faint, marginBottom: 2 },
-  statValue: { fontWeight: '600', fontFamily: f.numeric, color: p.ink },
+  careStatus: { marginBottom: 8 },
   toxicChip: { backgroundColor: p.warnSoft, alignSelf: 'flex-start' },
   toxicityNote: {
     color: p.warn, backgroundColor: p.warnSoft, borderRadius: 8,

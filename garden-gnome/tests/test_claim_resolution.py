@@ -18,8 +18,10 @@ CLEMSON = Authority(name="Clemson HGIC", tier=2)
 WIKIPEDIA = Authority(name="Wikipedia", tier=3)
 
 
-def claim(field, value, *, subject="Dracaena trifasciata", authority=NC_STATE):
-    return Claim(subject=subject, field=field, value=value, authority=authority)
+def claim(field, value, *, subject="Dracaena trifasciata", authority=NC_STATE,
+          citation_url=""):
+    return Claim(subject=subject, field=field, value=value, authority=authority,
+                 citation_url=citation_url)
 
 
 def test_a_single_claim_becomes_the_resolved_value():
@@ -145,3 +147,33 @@ def test_withdrawing_an_authority_re_derives_rather_than_leaving_a_stale_value()
     assert resolve("Dracaena trifasciata", surviving).values["soil_ph_min"] == 6.5
 
     assert "soil_ph_min" not in resolve("Dracaena trifasciata", []).values
+
+
+def test_the_winning_claim_is_recorded_so_attribution_is_never_guessed():
+    # ADR 0003 ships the authority's name and a link beside every value. That
+    # is only honest if the link is the one whose claim actually won -- so the
+    # resolver says which claim it took, species scope and genus scope alike.
+    ncsu = "https://plants.ces.ncsu.edu/plants/dracaena-trifasciata/"
+    clemson = "https://hgic.clemson.edu/factsheet/light/"
+    result = resolve("Dracaena trifasciata", [
+        claim("humidity_need", "low", citation_url=ncsu),
+        claim("light_fc_min", 100, subject="Dracaena", authority=CLEMSON,
+              citation_url=clemson),
+    ])
+
+    assert result.winners["humidity_need"].citation_url == ncsu
+    assert result.winners["light_fc_min"].authority == CLEMSON
+    assert result.winners["light_fc_min"].citation_url == clemson
+    assert set(result.winners) == set(result.values)
+
+
+def test_a_tie_on_tier_authority_and_value_breaks_on_the_citation():
+    # Two pages from one authority saying the same thing. Which page gets the
+    # credit is immaterial to the value, but it is written into care_sources,
+    # and a re-run must not shuffle it just because SELECT returned the rows
+    # the other way round.
+    a = claim("soil_ph_min", 6.0, citation_url="https://plants.ces.ncsu.edu/plants/a/")
+    b = claim("soil_ph_min", 6.0, citation_url="https://plants.ces.ncsu.edu/plants/b/")
+
+    assert resolve("Dracaena trifasciata", [a, b]).winners["soil_ph_min"] == a
+    assert resolve("Dracaena trifasciata", [b, a]).winners["soil_ph_min"] == a

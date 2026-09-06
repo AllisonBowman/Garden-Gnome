@@ -20,6 +20,7 @@ def _to_claim(row: ClaimRow, authority: AuthorityRow) -> Claim:
         field=row.field,
         value=json.loads(row.value_json),
         authority=Authority(name=authority.name, tier=authority.tier),
+        citation_url=row.citation_url,
     )
 
 

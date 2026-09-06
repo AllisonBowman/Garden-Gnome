@@ -29,6 +29,11 @@ class Claim:
     field: str
     value: Any
     authority: Authority
+    #: The page the claim came off. Carried so a winner can be attributed --
+    #: name and link, which is all ADR 0003 lets a client see -- and so a tie
+    #: between two pages of one authority breaks the same way on every run.
+    #: Keyword-default, so every positional construction still works.
+    citation_url: str = ""
 
 
 @dataclass(frozen=True)
@@ -43,6 +48,9 @@ class Resolution:
     values: dict[str, Any] = dc_field(default_factory=dict)
     provenance: dict[str, str] = dc_field(default_factory=dict)
     refusals: list[Refusal] = dc_field(default_factory=list)
+    #: The claim whose value each resolved field took, species scope or genus
+    #: scope alike. Attribution is read off this, never re-derived.
+    winners: dict[str, Claim] = dc_field(default_factory=dict)
 
 
 # Fields where a wrong value injures an animal or kills a plant. These never
@@ -101,6 +109,7 @@ def resolve(subject: str, claims) -> Resolution:
             continue  # the species spoke for itself, or we already refused
         result.values[field] = value
         result.provenance[field] = inherited.provenance[field]
+        result.winners[field] = inherited.winners[field]
     return result
 
 
@@ -122,10 +131,12 @@ def _resolve_scope(claims, provenance: str) -> Resolution:
             ))
             continue
         # Tier first. Ties break on authority name, then on the value itself,
-        # so the winner never depends on the order claims arrived in — a
-        # re-run must not quietly rewrite the catalog.
+        # then on the citation, so the winner never depends on the order
+        # claims arrived in — a re-run must not quietly rewrite the catalog,
+        # and since the winner is what gets credited, not even its attribution.
         winner = min(field_claims, key=lambda c: (
-            c.authority.tier, c.authority.name, str(c.value)))
+            c.authority.tier, c.authority.name, str(c.value), c.citation_url))
         result.values[field] = winner.value
         result.provenance[field] = provenance
+        result.winners[field] = winner
     return result

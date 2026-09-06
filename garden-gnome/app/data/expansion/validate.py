@@ -10,6 +10,8 @@ Records with any issue are routed to the review queue, never auto-approved.
 import re
 from difflib import SequenceMatcher
 
+from app.models.models import SpeciesSource
+
 VALID_LIGHT = {"low", "medium", "bright_indirect", "direct"}
 
 # Plausibility windows (days) per care type: (min allowed, max allowed)
@@ -31,6 +33,12 @@ _PLACEHOLDER = re.compile(
 
 def validate_record(rec: dict) -> list[str]:
     """Return a list of issues; empty list means the record passes."""
+    # A row minted from the claim tranche (ADR 0005) has no legacy care values
+    # by design: its values are resolved from citations, never typed in. The
+    # legacy-shape checks below would only report the absence they expect.
+    if rec.get("source") == SpeciesSource.claims:
+        return []
+
     issues: list[str] = []
 
     # -- Missing / placeholder fields ----------------------------------------

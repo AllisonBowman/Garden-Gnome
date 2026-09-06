@@ -50,12 +50,15 @@ def _authority_row(session: Session, name: str, tier: int,
 
 
 def ingest_records(session: Session, records, *,
-                   dry_run: bool = False) -> IngestReport:
+                   dry_run: bool = False, commit: bool = True) -> IngestReport:
     """Store every supported value in `records` as a Claim.
 
     Values no vetted citation supports are collected in the report rather than
     written -- an unsupported value is exactly what this pipeline exists to
     stop the catalog asserting.
+
+    `commit=False` neither commits nor rolls back: the caller owns the
+    transaction (the sync does). `dry_run` keeps its meaning for the CLI.
     """
     report = IngestReport()
 
@@ -92,7 +95,7 @@ def ingest_records(session: Session, records, *,
 
     if dry_run:
         session.rollback()
-    else:
+    elif commit:
         session.commit()
     return report
 
@@ -100,14 +103,21 @@ def ingest_records(session: Session, records, *,
 VERIFIED_DIR = Path(__file__).resolve().parents[1] / "verified"
 
 
-def ingest_tranche(session: Session, directory: Path | None = None, *,
-                   dry_run: bool = False) -> IngestReport:
-    """Ingest every verified batch file, in a stable order."""
+def tranche_records(directory: Path | None = None):
+    """Every record in the verified tranche with the batch file it came from,
+    in a stable order. The one reader of those files, so ingest and sync
+    cannot disagree about what is in them."""
     directory = directory or VERIFIED_DIR
-    records = []
     for path in sorted(directory.glob("b*.json")):
-        records.extend(json.loads(path.read_text())["records"])
-    return ingest_records(session, records, dry_run=dry_run)
+        for record in json.loads(path.read_text(encoding="utf-8"))["records"]:
+            yield path.name, record
+
+
+def ingest_tranche(session: Session, directory: Path | None = None, *,
+                   dry_run: bool = False, commit: bool = True) -> IngestReport:
+    """Ingest every verified batch file, in a stable order."""
+    records = [record for _batch, record in tranche_records(directory)]
+    return ingest_records(session, records, dry_run=dry_run, commit=commit)
 
 
 def main() -> None:

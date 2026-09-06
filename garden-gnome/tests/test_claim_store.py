@@ -138,3 +138,17 @@ def test_a_claim_inside_its_authoritys_scope_still_loads(session):
     result = resolve_from_db(session, "Salvia rosmarinus")
 
     assert result.values["hardiness_zones"] == [7, 8, 9]
+
+
+def test_the_citation_url_rides_with_the_claim_into_the_resolver(session):
+    # The link is what the client will be shown in place of the quote
+    # (ADR 0003), so it has to survive the trip from the row to the winner.
+    url = "https://plants.ces.ncsu.edu/plants/dracaena-trifasciata/"
+    nc_state = add_authority(session, "NC State Extension", tier=2)
+    add_claim(session, nc_state, "Dracaena trifasciata", "humidity_need", "low",
+              url=url)
+
+    result = resolve_from_db(session, "Dracaena trifasciata")
+
+    assert result.winners["humidity_need"].citation_url == url
+    assert result.winners["humidity_need"].authority.name == "NC State Extension"

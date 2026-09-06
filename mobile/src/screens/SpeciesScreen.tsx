@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { Species } from '../types';
+import { legacyStats, waterRegimeSentence } from '../care/facts';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -22,6 +23,16 @@ const LIGHT_ICON: Record<string, string> = {
 function SpeciesCard({ species, onPress }: { species: Species; onPress: () => void }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
+  // Legacy pills only where nothing resolved replaces them; the watering
+  // pill only when the regime was cited to this species itself — a borrowed
+  // regime is labelled on the detail screen, and a pill has no room for
+  // the label (ADR 0002).
+  const stats = legacyStats(species);
+  const light = stats.find((s) => s.key === 'light');
+  const temp = stats.find((s) => s.key === 'temperature');
+  const watering = species.care_provenance?.water_regime === 'sourced'
+    ? waterRegimeSentence(species) : null;
+  const lightIcon = species.light_need ? LIGHT_ICON[species.light_need] ?? '' : '';
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.85}>
       <Card style={styles.card} mode="elevated">
@@ -29,12 +40,21 @@ function SpeciesCard({ species, onPress }: { species: Species; onPress: () => vo
           <Text variant="titleSmall" style={styles.name}>{species.common_name}</Text>
           <Text variant="bodySmall" style={styles.scientific}>{species.scientific_name}</Text>
           <View style={styles.chipRow}>
-            <Pill>
-              {LIGHT_ICON[species.light_need]} {species.light_need.replace('_', ' ')}
-            </Pill>
-            <Pill>
-              🌡 {species.temp_f_min}–{species.temp_f_max}°F
-            </Pill>
+            {light && (
+              <Pill>{lightIcon} {light.value}</Pill>
+            )}
+            {temp && (
+              <Pill>🌡 {temp.value}</Pill>
+            )}
+            {watering && (
+              <Pill>💧 {watering}</Pill>
+            )}
+            {/* "cited" only beside a value that is. The light and temp pills
+                are catalog values, and a cited pill next to them alone would
+                lend them a citation no source gave. */}
+            {watering && species.care_data_status === 'sourced' && (
+              <Pill tone="good">cited</Pill>
+            )}
             {species.toxic_to_pets && (
               <Pill tone="warn" filled>Pet caution</Pill>
             )}

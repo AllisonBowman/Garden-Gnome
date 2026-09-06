@@ -9,6 +9,7 @@ Run via `python -m app.data.seed`.
 """
 import json
 import os
+import traceback
 from pathlib import Path
 
 from sqlmodel import Session, select
@@ -369,6 +370,26 @@ def seed() -> None:
         print("Species catalog already up to date.")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Everything a cold start needs: schema, catalog, environment, evidence.
+
+    The claim sync is fenced. It reads every tranche file and rewrites the
+    species table, and a defect in either must never become an API outage --
+    the catalog serving stale care data is recoverable, a container that will
+    not boot is not. So it logs and moves on, and this exits 0 regardless.
+    """
     seed()
     seed_default_environment()
+    try:
+        from app.data.claims.sync import describe, sync_catalog
+
+        with Session(engine) as session:
+            report = sync_catalog(session)
+        print(describe(report))
+    except Exception:  # noqa: BLE001 -- surviving it is the whole point
+        traceback.print_exc()
+        print("claim sync skipped")
+
+
+if __name__ == "__main__":
+    main()
