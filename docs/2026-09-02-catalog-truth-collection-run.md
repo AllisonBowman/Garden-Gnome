@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **72 batches, 2,783 claims, 517 species, 8 authorities** (b47–b72 landed
+- **73 batches, 2,807 claims, 523 species, 8 authorities** (b47–b73 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -373,6 +373,19 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   harmful field is now quoted to its end, with MoBot's rhizome and gloves
   warnings added); and NC State now titles Hibiscus moscheutos 'Muenchhusia
   moscheutos' — the accepted name follows RHS's Correct, split disclosed.
+- **A worry is not a source, and a scrape that merges labels invents
+  values** (b73): Cyrilla racemiflora was researched as Swamp Titi on an
+  unsourced concern that Leatherwood also names Dirca palustris; both
+  dedicated pages lead with leatherwood, so it lands as Leatherwood. The
+  auditor's own 'fifth Plant Type value' for Swamp Azalea ('Woody Plant') was
+  the start of the next NC State label — check the cached page (qc.py) before
+  applying a repair. Also: an RHS species page the researcher reported
+  missing (Aronia arbutifolia) was found live by the auditor and supplied an
+  accepted name and an 8.0 pH ceiling; two sun tolerances ('It tolerates
+  partial shade but will flower best...', 'Avoid afternoon sun which can
+  scorch the leaves.') pruned a value each; Swamp Rose's boggy-soil prose
+  moved to water_regime while the Good Drainage / Moist / Occasionally Wet
+  field kept drainage moderate, per the b64 rule.
 
 ## Do next, in order
 
