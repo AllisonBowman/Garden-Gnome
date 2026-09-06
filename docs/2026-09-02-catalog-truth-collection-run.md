@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **68 batches, 2,690 claims, 493 species, 8 authorities** (b47–b68 landed
+- **69 batches, 2,709 claims, 499 species, 8 authorities** (b47–b69 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -327,6 +327,16 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   American Wisteria) was a fabricated source conflict; the auditor's live fetch
   is still the only defence. RHS's 'Pets (dogs, cats)' lines corroborate
   toxic_to_pets; its unscoped 'Pets:' lines do not.
+- **Guard every agent() result before dereferencing it** (b69 / the wiring
+  workflow, 2026-09-05): a session limit returned null from one agent and a
+  `log('fix: ' + fix.summary)` crashed the whole orchestration after six of
+  seven agents had finished. The research scripts already degrade a null
+  verdict to an UNVERIFIED record; every workflow script must do the same.
+  Also from b69: a soil-preference sentence ('Prefers moist ... soils') is not
+  a watering statement even when the audit lets it pass — water_regime needs
+  an instruction about watering; a regional-climate sentence ('hot and humid
+  summers') is not a humidity requirement; and a Plant Type quote of a single
+  tag ('Tree') truncates an enum-defining list.
 
 ## Do next, in order
 
