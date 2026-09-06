@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **70 batches, 2,731 claims, 505 species, 8 authorities** (b47–b70 landed
+- **71 batches, 2,755 claims, 511 species, 8 authorities** (b47–b71 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -346,6 +346,19 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
   Names tooltips reconstructed from overlib markup appeared four more times;
   the rendered Noteworthy Characteristics prose carries the same names and is
   the citable text.
+- **An author abbreviation is not part of a name, and a third list entry is
+  not a lead** (b71): Northern Maidenhair Fern's accepted name arrived as
+  'Adiantum pedatum L.', copied from RHS's H1; a claim subject and a minted
+  species row must carry the bare binomial. Dryopteris marginalis was
+  researched as Marginal Shieldfern — NC State's third alphabetized entry,
+  propped up by the invented 'three or more entries marks no primary'
+  convention — while both dedicated pages lead with Evergreen Woodfern /
+  evergreen wood fern; landed as Evergreen Wood Fern. Also: a sentence scoped
+  out for one field (RHS's under-glass humidity line) cannot feed the next
+  field from the same run (fertilize_strength 'half'); RHS's hardiness legend
+  is site-wide text, so quote the page's bare rating ('H6'); and when MoBot is
+  unreachable from this machine at landing, say so in the batch note and lean
+  on the auditor's live fetches rather than re-crawling.
 
 ## Do next, in order
 
