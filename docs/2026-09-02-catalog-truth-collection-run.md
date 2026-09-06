@@ -351,11 +351,11 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    `chill_damage_f` are shown labelled rather than refused. Also open: the
    36 records with `toxic_to_pets` null but a cited `toxicity_detail` naming
    harm need verdicts from the research loop.
-2. **Decide the verifier's home.** It lives in the session scratchpad
-   (`verify_quotes.py`, `covered.py`, `land_check.py`), which is
-   session-scoped. If the collection run continues, move them under
-   `garden-gnome/evals/` or a `scripts/` dir so they survive; the invariant
-   test already holds the half that matters most.
+2. ~~Decide the verifier's home.~~ **Done 2026-09-05**: `covered.py`,
+   `land_check.py` and `verify_quotes.py` live in `garden-gnome/scripts/catalog/`
+   (README there; repo-relative paths, run from `garden-gnome/` with the
+   venv), with the verifier's raw-HTML cache gitignored beside them and a
+   smoke test in `tests/test_catalog_scripts.py`.
 3. **Rename `hardiness_zones`** (Species column, migration 0013) to what USDA
    PLANTS actually publishes — still open from the previous handoff.
 4. **Phase 4.1 name resolution** for the 2 skipped curated-catalog mismatches
