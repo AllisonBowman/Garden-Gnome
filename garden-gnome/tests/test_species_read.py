@@ -108,32 +108,37 @@ def test_detail_carries_values_provenance_and_named_sources_only(api):
         "Fuchsia sourcetest", "Sourcetest Fuchsia",
         water_regime="dry_surface_between", water_check_depth_cm=3.0,
         water_dry_down_target="verbatim passage from the page",
-        chill_damage_f=45, light_fc_min=100,
+        chill_damage_f=45, night_f_min=50, light_fc_min=100,
         outdoor_sun_exposure=["part_sun", "part_shade"],
         fertilize_active_months=[3, 4, 5], hardiness_zones=[7, 8],
         toxicity_detail="researcher prose naming harm",
         cool_rest_note="researcher prose", water_estimate_basis="assumptions",
         care_data_status=CareDataStatus.sourced,
+        # The borrowed field is one the resolver may borrow; a harm-capable
+        # one like chill_damage_f only ever arrives sourced (ADR 0007).
         care_provenance={"water_regime": "sourced",
                          "water_check_depth_cm": "sourced",
                          "light_fc_min": "sourced",
-                         "chill_damage_f": "genus_inferred",
+                         "chill_damage_f": "sourced",
+                         "night_f_min": "genus_inferred",
                          "toxicity_detail": "sourced",
                          "water_dry_down_target": "sourced"},
         care_sources=[
             {"authority": "NC State Extension", "url": NCSU,
-             "fields": ["light_fc_min", "water_check_depth_cm", "water_regime"],
+             "fields": ["chill_damage_f", "light_fc_min",
+                        "water_check_depth_cm", "water_regime"],
              "inferred": False},
             {"authority": "NC State Extension",
              "url": "https://plants.ces.ncsu.edu/plants/fuchsia/",
-             "fields": ["chill_damage_f"], "inferred": True},
+             "fields": ["night_f_min"], "inferred": True},
         ],
-        resolver_version="2"))
+        resolver_version="3"))
 
     detail = client.get(f"/species/{sid}", headers=headers).json()
     assert detail["water_regime"] == "dry_surface_between"
     assert detail["water_check_depth_cm"] == 3.0
     assert detail["chill_damage_f"] == 45
+    assert detail["night_f_min"] == 50
     assert detail["outdoor_sun_exposure"] == ["part_sun", "part_shade"]
     assert detail["fertilize_active_months"] == [3, 4, 5]
     assert detail["hardiness_zones"] == [7, 8]
@@ -142,14 +147,16 @@ def test_detail_carries_values_provenance_and_named_sources_only(api):
     # dropped rather than announced by name.
     assert detail["care_provenance"] == {
         "water_regime": "sourced", "water_check_depth_cm": "sourced",
-        "light_fc_min": "sourced", "chill_damage_f": "genus_inferred"}
+        "light_fc_min": "sourced", "chill_damage_f": "sourced",
+        "night_f_min": "genus_inferred"}
     assert detail["care_sources"] == [
         {"authority": "NC State Extension", "url": NCSU,
-         "fields": ["light_fc_min", "water_check_depth_cm", "water_regime"],
+         "fields": ["chill_damage_f", "light_fc_min",
+                    "water_check_depth_cm", "water_regime"],
          "inferred": False},
         {"authority": "NC State Extension",
          "url": "https://plants.ces.ncsu.edu/plants/fuchsia/",
-         "fields": ["chill_damage_f"], "inferred": True},
+         "fields": ["night_f_min"], "inferred": True},
     ]
     for key in SERVER_ONLY:
         assert key not in detail, key

@@ -24,7 +24,9 @@ export type OutdoorSunExposure = 'full_sun' | 'part_sun' | 'part_shade' | 'full_
  *  property of the data, deliberately not the review workflow's status. */
 export type CareDataStatus = 'sourced' | 'inferred' | 'none';
 /** Per field: cited to this species, or borrowed from its genus (ADR 0002,
- *  which wants the borrowed ones labelled wherever they show). */
+ *  which wants the borrowed ones labelled wherever they show). The
+ *  harm-capable fields — toxicity, cold damage, watering regime — only ever
+ *  arrive `sourced`: the resolver refuses to borrow them (ADR 0007). */
 export type CareProvenance = 'sourced' | 'genus_inferred';
 
 /** Who said so, as much as a client may see: the authority's name, the page,

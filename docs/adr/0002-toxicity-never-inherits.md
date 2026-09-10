@@ -1,5 +1,8 @@
 # Inference stops at the genus, and toxicity does not inherit at all
 
+Status: extended by ADR 0007 (2026-09-10), which bars every harm-capable
+field from inheritance, not only toxicity. The genus bound below still holds.
+
 Filling gaps from taxonomic neighbours is how the catalog reaches useful
 coverage without inventing numbers, and it works: the shade-adapted genera rule
 corrected most of an impossible light distribution with no research at all. But
