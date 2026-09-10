@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **73 batches, 2,807 claims, 523 species, 8 authorities** (b47–b73 landed
+- **73 batches, 2,809 claims, 523 species, 8 authorities** (b47–b73 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
@@ -430,12 +430,52 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    on and links to its evidence through `scientific_name_accepted`, which the
    cold-start sync has done for both since 2026-09-05. Pinned by
    `tests/test_claim_sync.py::test_the_two_curated_name_mismatches_link_by_accepted_name`.
-5. **Re-research Sneezeweed's Poison block** (Helenium autumnale, b55):
-   NC State tags it Poisonous; the severity, symptoms, toxic principle
-   and poison parts were never captured. Its toxicity_detail flags this.
+5. ~~Re-research Sneezeweed's Poison block.~~ **Done 2026-09-10** in the
+   toxicity verdict pass below: `toxicity_detail` rewritten from NC State's
+   live Poison block (severity Medium, full symptoms, sesquiterpene lactone,
+   flowers/leaves/seeds), one citation per sub-claim, audited live.
 6. **Then plan the next TestFlight build** — see
    `docs/2026-08-08-testflight-1.1.3-handoff.md` for the ship sequence; 1.1.3
    was never built or submitted.
+
+## Toxicity verdict pass (2026-09-10, every record null beside a cited toxicity_detail)
+
+Forty-three landed records held `toxic_to_pets` null with a `toxicity_detail`
+that cited a poison block, almost always NC State's human-scoped one. The
+wiring review (item 1 above) asked for verdicts. Each record went through a
+Workflow of its own: a Sonnet researcher asked one question, whether any
+admissible dedicated page carries a statement scoped to cats or dogs
+specifically (NC State's `#problem for cats` / `#non-toxic for dogs` tag
+chips, RHS's `Pets (dogs, cats)` line, extension prose naming either
+animal), and an Opus auditor re-fetched every page and every proposed
+quote. The landing script (`land_tox.py`, session scratchpad) applied only
+verdicts the audit did not refute, dropped any citation it did, and
+preserved each file's own JSON indentation and escaping.
+
+- **Two values changed.** Red Maple → false: NC State renders `#non-toxic
+  for dogs` and `#non-toxic for cats`; the b25 audit had nulled it over the
+  horse hazard, which the catalog rule set on that very record keeps in
+  `toxicity_detail`. Money Tree → true: NC State tags it `Problem for Cats`
+  and its Poison Symptoms name cats; the seeds-only, "houseplants never
+  produce seeds" caveat that had been used to keep it null now lives in the
+  prose, because the rule has no practical-risk carve-out.
+- **Forty stay null, now as searched-and-absent.** Each carries a dated
+  `unknowns` entry listing the pages checked, and each file a
+  `normalizations` entry, so a null reads as a verdict rather than a gap.
+  Buttonbush's audit hit a session limit on the first run and was re-run
+  alone: null, NC State tags it only a problem for horses.
+- **What the auditors caught, this time on the researcher's side:** a
+  MoBot taxon id that served a different species (Tagetes patula for Acer
+  rubrum), a UF/IFAS straight-species sheet the researcher missed, and
+  over-stated "all pages fetched" claims. None changed a verdict; the
+  landing note keeps only the URL list, not the researcher's prose.
+- **A landing-script lesson worth keeping:** the batch files are not one
+  format. b1–b45 were written with two-space indentation and escaped
+  Unicode, later batches with one space and raw UTF-8. A rewrite must read
+  each file's own indentation and `\u` usage back off the file, or the diff
+  is the whole file. And a workflow `resumeFromRunId` after a partial
+  failure re-ran the entire audit stage, not the one failed audit; stop it
+  and run the one item in a fresh script instead.
 
 ## Verifier backfill (2026-09-02, all batches through b45)
 
