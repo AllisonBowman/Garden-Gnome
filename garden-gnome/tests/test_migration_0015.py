@@ -266,3 +266,44 @@ def test_downgrade_refuses_before_touching_anything_while_minted_rows_exist(
     conn = sqlite3.connect(db)
     _assert_head_shape(conn)
     conn.close()
+
+
+def test_downgrade_refuses_a_curated_row_with_no_toxicity_record_too(
+        tmp_path: Path, monkeypatch):
+    """The minted rows are not the only ones the old schema cannot take
+    back. POST /species stores an omitted toxic_to_pets as null -- "no
+    record", never "safe" -- on a row whose source is 'curated', and a guard
+    that read the source label would wave it through into a batch rebuild
+    that fails on the NOT NULL halfway, leaving _alembic_tmp_species behind.
+    The guard has to ask about the nulls themselves."""
+    from alembic import command
+
+    db = tmp_path / "posted.db"
+    url = f"sqlite:///{db.as_posix()}"
+    monkeypatch.setenv("DATABASE_URL", url)
+    cfg = _config(url)
+    command.upgrade(cfg, "head")
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "INSERT INTO species (common_name, scientific_name, light_need, "
+        "humidity_pct_min, humidity_pct_max, temp_f_min, temp_f_max, "
+        "soil_type, toxic_to_pets, care_notes, source, source_ref, "
+        "review_status, review_note) VALUES ('Posted', 'Testus postus', 'low', "
+        "40, 60, 60, 80, 'mix', NULL, '', 'curated', '', 'approved', '')")
+    conn.execute("INSERT INTO sync_state (key, value) VALUES ('tranche_fingerprint', 'f')")
+    conn.commit()
+    conn.close()
+
+    with pytest.raises(RuntimeError, match="no toxicity record"):
+        command.downgrade(cfg, "0014_authority_scope")
+
+    conn = sqlite3.connect(db)
+    tables = {r[0] for r in conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'")}
+    assert "sync_state" in tables and "_alembic_tmp_species" not in tables
+    assert conn.execute("SELECT value FROM sync_state").fetchone() == ("f",)
+    assert conn.execute("SELECT version_num FROM alembic_version").fetchone() == (
+        "0015_species_claim_wiring",)
+    info = {r[1]: r for r in conn.execute("PRAGMA table_info(species)")}
+    assert info["toxic_to_pets"][3] == 0 and "care_sources" in info
+    conn.close()

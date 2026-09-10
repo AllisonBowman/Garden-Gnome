@@ -212,6 +212,47 @@ def test_provenance_that_names_only_server_side_columns_reads_as_absent():
     assert out.care_provenance is None
 
 
+def test_a_source_credited_for_a_server_only_field_ships_without_it(api):
+    """The recompute credits a page only for fields a client can see, but
+    the row is what ships, and the row is only as clean as the resolver that
+    last wrote it. So the door filters too, as it does for care_provenance:
+    a server-only name is dropped from `fields`, and a page left with
+    nothing a reader can check is not listed at all -- the recompute would
+    not have listed it either (ADR 0003)."""
+    client, headers, engine = api
+    (sid,) = store(engine, minted(
+        "Fuchsia staletest", "Staletest Fuchsia",
+        light_fc_min=100, toxicity_detail="researcher prose naming harm",
+        water_dry_down_target="verbatim passage from the page",
+        care_data_status=CareDataStatus.sourced,
+        care_provenance={"light_fc_min": "sourced",
+                         "toxicity_detail": "sourced",
+                         "water_dry_down_target": "sourced"},
+        care_sources=[
+            {"authority": "NC State Extension", "url": NCSU,
+             "fields": ["light_fc_min", "toxicity_detail"], "inferred": False},
+            {"authority": "Clemson Cooperative Extension",
+             "url": "https://hgic.clemson.edu/factsheet/fuchsia/",
+             "fields": ["water_dry_down_target"], "inferred": False},
+        ],
+        resolver_version="2"))
+
+    detail = client.get(f"/species/{sid}", headers=headers).json()
+    assert detail["care_sources"] == [
+        {"authority": "NC State Extension", "url": NCSU,
+         "fields": ["light_fc_min"], "inferred": False},
+    ]
+    for banned in ("verbatim", "researcher prose", "Clemson", *SERVER_ONLY_FIELDS):
+        assert banned not in resp_text(detail), banned
+
+    # The same at the schema, with nothing visible left on any page.
+    out = SpeciesDetail.model_validate(minted(
+        "Testus tectus", "Tectus", id=1,
+        care_sources=[{"authority": "NC State Extension", "url": NCSU,
+                       "fields": ["toxicity_detail"], "inferred": False}]))
+    assert out.care_sources == []
+
+
 def test_read_schemas_carry_every_resolved_column_and_nothing_server_side():
     shipped = RESOLVED_FIELDS - SERVER_ONLY_FIELDS
     for schema in (SpeciesRead, SpeciesDetail):

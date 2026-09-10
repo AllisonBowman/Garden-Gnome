@@ -259,3 +259,36 @@ test('the regime sentence is the wording the advisor uses, or nothing', () => {
     .toBe('keep the medium barely moist');
   expect(waterRegimeSentence(minted())).toBeNull();
 });
+
+// --- the screens ------------------------------------------------------------
+// Jest here has no React Native runtime to render a screen, so the screens
+// are read as text. The rule they must keep: a legacy stat reaches the page
+// only through LegacyStatRow, captioned and after the resolved facts. A
+// screen reading the legacy columns itself would put a synthetic number
+// under "cited to …" with nothing to say it is not.
+declare const require: (id: string) => any;
+declare const __dirname: string;
+const fs = require('fs');
+const path = require('path');
+const readSrc = (rel: string): string => fs.readFileSync(path.join(__dirname, rel), 'utf8');
+
+test('the legacy stats are captioned as catalog values, never as cited ones', () => {
+  expect(CATALOG_LINE).toBe('From the catalog — not yet cited');
+  const component = readSrc('../components/CareFacts.tsx');
+  const start = component.indexOf('export function LegacyStatRow');
+  const end = component.indexOf('export function', start + 1);
+  expect(component.slice(start, end)).toContain('{CATALOG_LINE}');
+});
+
+test('the detail screens show a legacy stat only through the captioned row, below the resolved facts', () => {
+  for (const screen of ['PlantDetailScreen', 'SpeciesDetailScreen']) {
+    const src = readSrc(`../screens/${screen}.tsx`);
+    expect(src).not.toMatch(/\b(light_need|humidity_pct_min|humidity_pct_max|temp_f_min|temp_f_max|soil_type)\b/);
+    const status = src.indexOf('<CareStatusLine');
+    const facts = src.indexOf('<CareFactList');
+    const legacy = src.indexOf('<LegacyStatRow');
+    expect(status).toBeGreaterThan(-1);
+    expect(facts).toBeGreaterThan(status);
+    expect(legacy).toBeGreaterThan(facts);
+  }
+});
