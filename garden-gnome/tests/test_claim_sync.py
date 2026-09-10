@@ -410,3 +410,38 @@ def test_ingest_with_commit_false_leaves_the_transaction_to_the_caller(session):
     assert len(session.exec(select(Claim)).all()) == 1
     session.rollback()
     assert session.exec(select(Claim)).all() == []
+
+
+def test_the_two_curated_name_mismatches_link_by_accepted_name(db):
+    """Phase 4.1, closed 2026-09-10 by deciding rather than renaming.
+
+    The b1-b18 run skipped two curated species as "name mismatches needing
+    Phase 4.1 resolution": Alocasia 'Polly', which NC State now files as the
+    hybrid Alocasia × mortfontanensis, and Dragon Tree, which NC State files
+    under Dracaena reflexa var. angustifolia while Missouri Botanical Garden
+    keeps Dracaena marginata. ADR 0005 already gives the answer: the curated
+    row keeps the name plants and the toxicity table key on, and is linked to
+    its evidence through `scientific_name_accepted`. This pins that both rows
+    are linked, not renamed and not minted twice, and that their claims resolve.
+    """
+    engine, _ = db
+    with Session(engine) as s:
+        _seed_curated_catalog(s)
+    with Session(engine) as s:
+        sync_catalog(s)
+        expected = {
+            "Alocasia x amazonica 'Polly'": "Alocasia × mortfontanensis 'Polly'",
+            "Dracaena marginata": "Dracaena reflexa var. angustifolia",
+        }
+        for curated, accepted in expected.items():
+            rows = s.exec(select(Species).where(
+                Species.scientific_name == curated)).all()
+            assert len(rows) == 1, curated
+            row = rows[0]
+            assert row.scientific_name_accepted == accepted
+            assert row.source != SpeciesSource.claims
+            assert s.exec(select(Species).where(
+                Species.scientific_name == accepted)).first() is None
+            assert s.exec(select(Claim).where(
+                Claim.subject == accepted)).first() is not None
+            assert row.care_data_status == "sourced", (curated, row.care_data_status)

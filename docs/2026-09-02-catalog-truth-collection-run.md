@@ -417,8 +417,17 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    smoke test in `tests/test_catalog_scripts.py`.
 3. **Rename `hardiness_zones`** (Species column, migration 0013) to what USDA
    PLANTS actually publishes — still open from the previous handoff.
-4. **Phase 4.1 name resolution** for the 2 skipped curated-catalog mismatches
-   — still open.
+4. ~~Phase 4.1 name resolution for the 2 skipped curated-catalog mismatches.~~
+   **Done 2026-09-10, by deciding rather than renaming.** The two were
+   Alocasia 'Polly' (curated `Alocasia x amazonica 'Polly'`, accepted
+   `Alocasia × mortfontanensis 'Polly'` per NC State) and Dragon Tree (curated
+   `Dracaena marginata`, accepted `Dracaena reflexa var. angustifolia` per NC
+   State, with Missouri Botanical Garden still publishing under the trade
+   name, so probable rather than verified). ADR 0005 already settles the
+   shape: the curated row keeps the name plants and the toxicity table key
+   on and links to its evidence through `scientific_name_accepted`, which the
+   cold-start sync has done for both since 2026-09-05. Pinned by
+   `tests/test_claim_sync.py::test_the_two_curated_name_mismatches_link_by_accepted_name`.
 5. **Re-research Sneezeweed's Poison block** (Helenium autumnale, b55):
    NC State tags it Poisonous; the severity, symptoms, toxic principle
    and poison parts were never captured. Its toxicity_detail flags this.
