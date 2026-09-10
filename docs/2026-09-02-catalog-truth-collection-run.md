@@ -415,8 +415,10 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    (README there; repo-relative paths, run from `garden-gnome/` with the
    venv), with the verifier's raw-HTML cache gitignored beside them and a
    smoke test in `tests/test_catalog_scripts.py`.
-3. **Rename `hardiness_zones`** (Species column, migration 0013) to what USDA
-   PLANTS actually publishes — still open from the previous handoff.
+3. ~~Rename `hardiness_zones` to what USDA PLANTS actually publishes.~~
+   **Done 2026-09-10** (ADR 0006, migration 0016): the column is
+   `outdoor_temp_min_f`, the "Temperature, Minimum (°F)" PLANTS states, kept
+   distinct from `chill_damage_f`.
 4. **Phase 4.1 name resolution** for the 2 skipped curated-catalog mismatches
    — still open.
 5. **Re-research Sneezeweed's Poison block** (Helenium autumnale, b55):

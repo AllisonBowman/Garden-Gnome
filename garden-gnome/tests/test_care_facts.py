@@ -33,7 +33,7 @@ RESOLVED = dict(
     fertilize_active_months=[3, 4, 5, 6, 7, 8, 9, 10],
     fertilize_interval_days=14, fertilize_strength="half",
     outdoor_sun_exposure=["part_sun", "part_shade"],
-    hardiness_zones=[7, 8, 9, 10],
+    outdoor_temp_min_f=-10,
 )
 ALL_SOURCED = {f: "sourced" for f in RESOLVED}
 SOURCES = [
@@ -232,10 +232,13 @@ def test_fertilize_months_read_as_a_span_only_when_contiguous():
     assert full == "- Fertilize: Mar-Oct; every 14 days; half strength"
 
 
-def test_outdoor_sun_and_hardiness_lines():
+def test_outdoor_sun_and_cold_lines():
     lines = species_fact_lines(sourced_species())
     assert "- Outdoor sun: part sun, part shade" in lines
-    assert "- Hardiness zones: 7, 8, 9, 10" in lines
+    # The survival floor stays on its own line: the temperature line's damage
+    # point is a different fact, and a model told both must not merge them.
+    assert "- Cold: survives to -10 F outdoors" in lines
+    assert "cold damage below 45 F" in line_starting(lines, "- Temperature:")
 
 
 # --- provenance is visible ---------------------------------------------------

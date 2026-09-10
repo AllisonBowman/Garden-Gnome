@@ -137,7 +137,10 @@ export interface Species {
   fertilize_active_months?: number[] | null;
   fertilize_interval_days?: number | null;
   fertilize_strength?: FertilizeStrength | null;
-  hardiness_zones?: number[] | null;
+  /** The lowest outdoor temperature the species is recorded as tolerating,
+   *  °F — USDA PLANTS' "Temperature, Minimum". A survival floor, not
+   *  `chill_damage_f`, which is where cold damage begins. */
+  outdoor_temp_min_f?: number | null;
 }
 
 export interface CareLog {

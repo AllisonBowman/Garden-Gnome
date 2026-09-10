@@ -115,12 +115,12 @@ def test_a_claim_outside_its_authoritys_scope_is_never_loaded(session):
     tranche.py enforces authority_may_claim at write time, but a row that
     gets into `claim` any other way -- a future ingestion path, a manual
     repair, a bug -- must not silently resolve. USDA PLANTS Database is
-    tier 1 and scoped to hardiness_zones alone; a humidity_need claim under
+    tier 1 and scoped to outdoor_temp_min_f alone; a humidity_need claim under
     its name would otherwise outrank Clemson and NC State by tier, on a
     field it was explicitly found not to be authoritative on.
     """
     usda = add_authority(session, "USDA PLANTS Database", tier=1, licence="pd",
-                        allowed_fields=["hardiness_zones"])
+                        allowed_fields=["outdoor_temp_min_f"])
     add_claim(session, usda, "Dracaena trifasciata", "humidity_need", "average",
               url="https://plants.usda.gov/plant-profile/x")
 
@@ -131,13 +131,13 @@ def test_a_claim_outside_its_authoritys_scope_is_never_loaded(session):
 
 def test_a_claim_inside_its_authoritys_scope_still_loads(session):
     usda = add_authority(session, "USDA PLANTS Database", tier=1, licence="pd",
-                        allowed_fields=["hardiness_zones"])
-    add_claim(session, usda, "Salvia rosmarinus", "hardiness_zones", [7, 8, 9],
+                        allowed_fields=["outdoor_temp_min_f"])
+    add_claim(session, usda, "Salvia rosmarinus", "outdoor_temp_min_f", -13,
               url="https://plants.usda.gov/plant-profile/y")
 
     result = resolve_from_db(session, "Salvia rosmarinus")
 
-    assert result.values["hardiness_zones"] == [7, 8, 9]
+    assert result.values["outdoor_temp_min_f"] == -13
 
 
 def test_the_citation_url_rides_with_the_claim_into_the_resolver(session):

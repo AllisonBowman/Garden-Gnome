@@ -26,7 +26,7 @@ const RESOLVED: Partial<Species> = {
   fertilize_active_months: [3, 4, 5, 6, 7, 8, 9, 10],
   fertilize_interval_days: 14, fertilize_strength: 'half',
   outdoor_sun_exposure: ['part_sun', 'part_shade'],
-  hardiness_zones: [7, 8, 9, 10],
+  outdoor_temp_min_f: -10,
 };
 const ALL_SOURCED = Object.fromEntries(
   Object.keys(RESOLVED).map((f) => [f, 'sourced' as const]));
@@ -63,7 +63,7 @@ const values = (s: Species) => careFactRows(s).map((r) => r.value).join('\n');
 test('one row per resolved concept, in the order a caretaker reads them', () => {
   expect(careFactRows(sourced()).map((r) => r.key)).toEqual([
     'water', 'light', 'humidity', 'temperature', 'soil',
-    'fertilize', 'outdoor_sun', 'hardiness',
+    'fertilize', 'outdoor_sun', 'cold',
   ]);
 });
 
@@ -81,7 +81,7 @@ test('light, humidity, temperature and soil read as sentences, not columns', () 
   expect(by.soil).toBe('Chunky aroid mix; fast-draining; pH 5.5–6.5');
   expect(by.fertilize).toBe('Mar–Oct; every 14 days; half strength');
   expect(by.outdoor_sun).toBe('Part sun, part shade');
-  expect(by.hardiness).toBe('Zones 7–10');
+  expect(by.cold).toBe('Survives to -10°F outdoors');
 });
 
 test('no column token ever reaches a row', () => {
@@ -118,8 +118,11 @@ test('a genus flag on a field the row did not use does not taint it', () => {
   expect(careFactRows(s)[0].inferred).toBe(false);
 });
 
-test('hardiness zones list when they skip', () => {
-  expect(values(minted({ hardiness_zones: [5, 7, 8] }))).toBe('Zones 5, 7, 8');
+test('the cold row is a survival floor, kept apart from the damage point', () => {
+  const s = minted({ chill_damage_f: 45, outdoor_temp_min_f: 0 });
+  const by = Object.fromEntries(careFactRows(s).map((r) => [r.key, r.value]));
+  expect(by.temperature).toBe('Cold damage below 45°F');
+  expect(by.cold).toBe('Survives to 0°F outdoors');
 });
 
 test('a leading unit symbol keeps its case: "pH", never "PH"', () => {

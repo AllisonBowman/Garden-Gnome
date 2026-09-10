@@ -207,17 +207,18 @@ def test_the_whole_tranche_still_pairs_most_values_to_a_citation():
 
 
 def test_a_scoped_authority_cannot_claim_a_field_outside_its_scope():
-    # USDA PLANTS is tier 1, but only for names and hardiness zones -- not a
-    # general care-data authority. A citation from it naming a care field must
-    # not become a claim just because the domain is vetted.
+    # USDA PLANTS is tier 1, but only for names and its minimum outdoor
+    # temperature -- not a general care-data authority. A citation from it
+    # naming a care field must not become a claim just because the domain is
+    # vetted.
     record = {
         "scientific_name_accepted": "Salvia rosmarinus",
-        "hardiness_zones": [7, 8, 9, 10],
+        "outdoor_temp_min_f": -13,
         "humidity_need": "low",
         "citations": [
-            {"claim": "hardiness_zones 7-10", "source": "USDA PLANTS Database",
+            {"claim": "outdoor_temp_min_f -13", "source": "USDA PLANTS Database",
              "url": "https://plants.usda.gov/plant-profile/SALRO2",
-             "quote": "USDA Hardiness Zone: 7-10"},
+             "quote": "Temperature, Minimum (°F): -13"},
             {"claim": "humidity_need low", "source": "USDA PLANTS Database",
              "url": "https://plants.usda.gov/plant-profile/SALRO2",
              "quote": "Moisture Use: Low"},
@@ -227,7 +228,7 @@ def test_a_scoped_authority_cannot_claim_a_field_outside_its_scope():
     claims, unsupported = claims_from_record(record)
     by_field = {c.field: c for c in claims}
 
-    assert by_field["hardiness_zones"].authority.name == "USDA PLANTS Database"
-    assert by_field["hardiness_zones"].authority.tier == 1
+    assert by_field["outdoor_temp_min_f"].authority.name == "USDA PLANTS Database"
+    assert by_field["outdoor_temp_min_f"].authority.tier == 1
     assert "humidity_need" not in by_field
     assert "humidity_need" in unsupported

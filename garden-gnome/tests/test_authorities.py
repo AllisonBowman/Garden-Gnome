@@ -97,14 +97,15 @@ def test_usda_plants_and_its_redirect_domain_are_one_authority():
     assert a == b
 
 
-def test_usda_plants_may_only_claim_hardiness_zones():
+def test_usda_plants_may_only_claim_the_outdoor_minimum():
     # It was investigated and rejected as a houseplant-care source: it does
     # not track most of the catalog's species, and where it does, its
     # Characteristics schema measures rangeland establishment, not potted
-    # care. It earns tier 1 for names and zones only -- not a blank cheque
-    # to outrank Clemson on humidity because a URL happened to resolve.
+    # care. It earns tier 1 for names and the one temperature it states --
+    # not a blank cheque to outrank Clemson on humidity because a URL
+    # happened to resolve.
     from app.data.claims.authorities import authority_may_claim
-    assert authority_may_claim("USDA PLANTS Database", "hardiness_zones")
+    assert authority_may_claim("USDA PLANTS Database", "outdoor_temp_min_f")
     assert not authority_may_claim("USDA PLANTS Database", "humidity_need")
     assert not authority_may_claim("USDA PLANTS Database", "toxic_to_pets")
 
@@ -114,7 +115,7 @@ def test_an_unrestricted_authority_may_claim_anything():
     # a scoped authority must not narrow the ones that already exist.
     from app.data.claims.authorities import authority_may_claim
     assert authority_may_claim("NC State Extension", "humidity_need")
-    assert authority_may_claim("NC State Extension", "hardiness_zones")
+    assert authority_may_claim("NC State Extension", "outdoor_temp_min_f")
 
 
 def test_usda_plants_carries_a_public_domain_licence():
