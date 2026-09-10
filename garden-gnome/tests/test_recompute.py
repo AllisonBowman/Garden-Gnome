@@ -112,6 +112,36 @@ def test_an_inherited_value_is_labelled_and_downgrades_the_row(session):
     assert sp.care_data_status == CareDataStatus.inferred
 
 
+def test_a_harm_capable_field_is_never_borrowed_from_the_genus(session):
+    """ADR 0007 at the persistence seam. A genus page's regime and cold
+    figure stay off the row and out of its provenance, and the page is
+    credited only for what it was allowed to settle; the species' own claim
+    on the same kind of field lands as before, beside a borrowed humidity."""
+    make_species(session, "Dracaena fragrans")
+    add_claim(session, "Dracaena", "water_regime", "keep_moist", url=NCSU_GENUS)
+    add_claim(session, "Dracaena", "chill_damage_f", 32, url=NCSU_GENUS)
+    add_claim(session, "Dracaena", "humidity_need", "average", url=NCSU_GENUS)
+    add_claim(session, "Dracaena fragrans", "chill_damage_f", 50)
+
+    report = recompute_all(session)
+
+    sp = reload(session, "Dracaena fragrans")
+    assert sp.water_regime is None
+    assert sp.chill_damage_f == 50
+    assert sp.humidity_need == "average"
+    assert sp.care_provenance == {"chill_damage_f": "sourced",
+                                  "humidity_need": "genus_inferred"}
+    assert sp.care_sources == [
+        {"authority": "NC State Extension", "url": NCSU_GENUS,
+         "fields": ["humidity_need"], "inferred": True},
+        {"authority": "NC State Extension", "url": NCSU,
+         "fields": ["chill_damage_f"], "inferred": False},
+    ]
+    assert sp.care_data_status == CareDataStatus.sourced
+    # Not a refusal: nothing disagreed, the genus was simply not asked.
+    assert report.fields_refused == 0
+
+
 def test_a_species_with_no_evidence_says_so(session):
     make_species(session, "Ignotus obscurus")
 

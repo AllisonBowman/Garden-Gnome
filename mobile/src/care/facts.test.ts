@@ -175,7 +175,7 @@ test('the list endpoint omits the sources, so a sourced row says so generically'
 
 test('sourced by status but every page at genus scope is borrowed, not cited', () => {
   const s = sourced({ care_sources: [
-    { authority: 'NC State Extension', url: GENUS_PAGE, fields: ['water_regime'], inferred: true },
+    { authority: 'NC State Extension', url: GENUS_PAGE, fields: ['humidity_need'], inferred: true },
   ] });
   expect(careStatusLine(s)).toBe('Care facts borrowed from the genus — not confirmed for this species');
   expect(careStatusLine(minted({ ...RESOLVED, care_data_status: 'inferred' })))
@@ -212,7 +212,7 @@ test('a second page from one authority is numbered so it does not read as a dupl
   expect(careSourceLabels([
     { authority: 'Clemson Cooperative Extension', url: CLEMSON, fields: ['soil_base'], inferred: false },
     { authority: 'Clemson Cooperative Extension', url: `${CLEMSON}care/`, fields: ['day_f_min'], inferred: false },
-    { authority: 'NC State Extension', url: GENUS_PAGE, fields: ['water_regime'], inferred: true },
+    { authority: 'NC State Extension', url: GENUS_PAGE, fields: ['humidity_need'], inferred: true },
     { authority: 'NC State Extension', url: NCSU, fields: ['light_fc_min'], inferred: false },
   ])).toEqual([
     'Clemson Cooperative Extension',

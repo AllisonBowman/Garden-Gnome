@@ -400,11 +400,12 @@ def _advise_stub(
 
     # What the sources say about watering, beside the schedule line and never
     # in place of it: the regime is the species-level fact, the schedule is
-    # this plant's cadence. Labelled when the resolver borrowed it (ADR 0002).
+    # this plant's cadence. Never labelled as borrowed: a regime is
+    # harm-capable, the resolver refuses to inherit one (ADR 0007), so a
+    # regime on the row was cited to this species.
     regime = water_regime_sentence(species)
     if regime:
-        label = BORROWED_LABEL if is_genus_inferred(species, "water_regime") else ""
-        lines.append(f"💧 From its sources: {regime}.{label}")
+        lines.append(f"💧 From its sources: {regime}.")
 
     # Weather-driven nudges for plants the forecast actually reaches.
     lines.extend(_weather_nudges(species, environment, weather))

@@ -8,7 +8,12 @@ has to be labelled wherever it shows (ADR 0002). These tests pin one shared
 helper for all three surfaces: a resolved concept replaces its legacy line,
 nothing is stated twice, nothing absent is invented, and the authorities are
 named -- names only, never a quote (ADR 0003).
+
+The fixtures only model rows the resolver can produce: a borrowed value is
+always on a field that may be borrowed, never on a harm-capable one, because
+the resolver refuses to inherit those (ADR 0007).
 """
+from app.data.claims.resolve import HARM_CAPABLE
 from app.models.models import (
     CareDataStatus, Environment, LightNeed, MaturityStage, Plant, Shelter,
     Species, SpeciesSource, SunExposure, TempExposure,
@@ -42,8 +47,11 @@ SOURCES = [
     {"authority": "NC State Extension", "url": NCSU,
      "fields": ["light_fc_good", "light_fc_min", "soil_base"], "inferred": False},
     {"authority": "NC State Extension", "url": GENUS_PAGE,
-     "fields": ["chill_damage_f"], "inferred": True},
+     "fields": ["night_f_min"], "inferred": True},
 ]
+#: What a row borrowed entirely from its genus can hold: everything the
+#: resolver is willing to inherit, which is everything but the harm-capable.
+INHERITABLE = {f: v for f, v in RESOLVED.items() if f not in HARM_CAPABLE}
 
 
 def legacy_species(**over):
@@ -66,7 +74,7 @@ def minted_species(**over):
 
 
 def sourced_species(**over):
-    provenance = dict(ALL_SOURCED, chill_damage_f="genus_inferred")
+    provenance = dict(ALL_SOURCED, night_f_min="genus_inferred")
     fields = dict(RESOLVED, care_data_status=CareDataStatus.sourced,
                   care_provenance=provenance, care_sources=SOURCES)
     fields.update(over)
@@ -172,12 +180,12 @@ def test_a_legacy_line_under_a_cited_line_is_marked_as_a_catalog_value():
         "Society; soil above is a catalog value, not cited")
 
     borrowed = legacy_species(
-        water_regime="dry_surface_between", care_data_status="inferred",
-        care_provenance={"water_regime": "genus_inferred"},
-        care_sources=[dict(SOURCES[0], inferred=True)])
+        soil_drainage="fast", care_data_status="inferred",
+        care_provenance={"soil_drainage": "genus_inferred"},
+        care_sources=[dict(SOURCES[0], fields=["soil_drainage"], inferred=True)])
     assert line_starting(species_fact_lines(borrowed), "- Care data:") == (
         "- Care data: borrowed from the genus, not confirmed for this "
-        "species; light, humidity, temperature and soil above are catalog "
+        "species; light, humidity and temperature above are catalog "
         "values, not cited")
 
     # A legacy row nothing resolved has no cited line to sit under.
@@ -243,8 +251,10 @@ def test_outdoor_sun_and_hardiness_lines():
 def test_genus_inferred_values_are_labelled_and_sourced_ones_are_not():
     lines = species_fact_lines(sourced_species())
     temp = line_starting(lines, "- Temperature:")
-    assert "cold damage below 45 F (genus-inferred)" in temp
+    assert "nights from 55 F (genus-inferred)" in temp
     assert "days 65-80 F (genus-inferred)" not in temp
+    assert "cold damage below 45 F" in temp
+    assert "cold damage below 45 F (genus-inferred)" not in temp
     assert "(genus-inferred)" not in line_starting(lines, "- Water:")
 
 
@@ -256,11 +266,18 @@ def test_sourced_row_names_its_authorities_sorted_and_deduped():
 
 
 def test_row_borrowed_entirely_from_the_genus_says_so():
-    borrowed = sourced_species(
-        care_data_status=CareDataStatus.inferred,
-        care_provenance={f: "genus_inferred" for f in RESOLVED},
-        care_sources=[dict(s, inferred=True) for s in SOURCES])
+    """Such a row holds only what may be borrowed: its regime and cold figure
+    are null, not labelled, because the resolver never lends those (ADR 0007).
+    """
+    borrowed = minted_species(
+        **INHERITABLE, care_data_status=CareDataStatus.inferred,
+        care_provenance={f: "genus_inferred" for f in INHERITABLE},
+        care_sources=[{"authority": "NC State Extension", "url": GENUS_PAGE,
+                       "fields": sorted(INHERITABLE), "inferred": True}])
     lines = species_fact_lines(borrowed)
+    assert "cold damage" not in line_starting(lines, "- Temperature:")
+    assert line_starting(lines, "- Water:").startswith(
+        "- Water: check 3 cm down (genus-inferred)")
     assert ("- Care data: borrowed from the genus, not confirmed for this "
             "species") in lines
     value_lines = [ln for ln in lines if ln.startswith((
@@ -308,15 +325,19 @@ def test_stub_adds_a_sources_line_for_the_regime():
         legacy_species(), make_plant(), [], [])
 
 
-def test_borrowed_regime_is_labelled_in_prompt_and_stub():
+def test_a_borrowed_water_detail_is_labelled_but_the_regime_never_is():
+    """The check depth may come from the genus and the prompt says so. The
+    regime beside it cannot (ADR 0007), so the stub's sources line carries
+    no borrowed label -- there is no case for one."""
     sp = sourced_species(care_provenance=dict(
-        ALL_SOURCED, water_regime="genus_inferred"))
+        ALL_SOURCED, water_check_depth_cm="genus_inferred"))
     prompt = _build_prompt(sp, make_plant(), [], [])
-    assert ("- Water: let the surface dry between waterings (genus-inferred); "
-            "check 3 cm down") in prompt
+    assert ("- Water: let the surface dry between waterings; "
+            "check 3 cm down (genus-inferred)") in prompt
     out = _advise_stub(sp, make_plant(), [], [])
-    assert ("💧 From its sources: let the surface dry between waterings. "
-            "(borrowed from the genus)") in out
+    assert "💧 From its sources: let the surface dry between waterings." in out
+    assert "(borrowed from the genus)" not in out
+    assert "water_regime" in HARM_CAPABLE
 
 
 # --- weather nudges read the resolved thresholds -----------------------------
@@ -338,14 +359,19 @@ def test_nudges_prefer_resolved_thresholds_over_legacy():
 
 
 def test_nudges_label_a_borrowed_threshold():
+    # A heat ceiling may be borrowed and is labelled when it is. The cold
+    # threshold never arrives borrowed -- chill_damage_f is harm-capable and
+    # the resolver refuses to inherit it (ADR 0007) -- so the cold nudge is
+    # a species-cited number with nothing to disclaim.
     sp = sourced_species(care_provenance=dict(
-        ALL_SOURCED, day_f_max="genus_inferred", chill_damage_f="genus_inferred"))
+        ALL_SOURCED, day_f_max="genus_inferred"))
     nudges = _weather_nudges(sp, make_env(), forecast(high=95, low=35))
     heat = next(n for n in nudges if "Heat ahead" in n)
     cold = next(n for n in nudges if "Cold night" in n)
     assert heat.endswith(" (borrowed from the genus)")
-    assert "(borrowed from the genus)" in cold  # chill_damage_f is inferred
+    assert "(borrowed from the genus)" not in cold
     assert "45°F" in cold
+    assert "chill_damage_f" in HARM_CAPABLE
 
 
 def test_nudges_keep_their_guards_on_a_bare_row():

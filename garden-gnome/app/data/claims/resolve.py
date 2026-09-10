@@ -4,8 +4,8 @@ Pure: no session, no engine, no SQLModel. The catalog's tables adapt to this
 module rather than the other way round, so the rules that decide what the app
 is willing to assert stay testable without a database.
 
-See CONTEXT.md for the vocabulary and ADR 0001/0002 for why resolution works
-this way.
+See CONTEXT.md for the vocabulary and ADR 0001/0002/0007 for why resolution
+works this way.
 """
 from dataclasses import dataclass, field as dc_field
 from typing import Any
@@ -64,11 +64,17 @@ TOLERANCE: dict[str, float] = {
     "chill_damage_f": 5,
 }
 
-# Fields that may never be borrowed from the genus, in either direction. A
-# genus-inferred "non-toxic" is an invented safety verdict and a genus-inferred
-# "toxic" libels a safe plant; neither is something a source said about this
-# species. Coverage here grows only by citation. See ADR 0002.
-NEVER_INHERIT = frozenset({"toxic_to_pets"})
+# Fields that may never be borrowed from the genus: every harm-capable one,
+# not just toxicity. A genus-inferred "non-toxic" is an invented safety verdict
+# and a genus-inferred "toxic" libels a safe plant; a genus-borrowed watering
+# regime drowns or desiccates a species that wants the other thing; a
+# genus-borrowed cold figure leaves a plant outside on the night that kills
+# it. None of those is something a source said about this species, and
+# labelling the value "genus-inferred" does not make it safer to act on.
+# Coverage on these fields grows only by species-level citation. Derived, not
+# listed twice: a field added to HARM_CAPABLE is barred from inheritance the
+# same moment. See ADR 0002 and ADR 0007.
+NEVER_INHERIT = HARM_CAPABLE
 
 
 def _is_material(field: str, values: list[Any]) -> bool:
@@ -91,7 +97,9 @@ def resolve(subject: str, claims) -> Resolution:
     """Reconcile every Claim about `subject` into one value per field.
 
     Claims about the species itself are used first. Gaps may then be filled
-    from claims about its genus, marked `genus_inferred`. Claims about
+    from claims about its genus, marked `genus_inferred` -- except on the
+    harm-capable fields, which stay empty until a source speaks about this
+    species (NEVER_INHERIT, ADR 0007). Claims about
     anything else — a family, an unrelated species — are ignored outright:
     that is how ADR 0002's "inference stops at the genus" is enforced, by
     never admitting the evidence rather than by filtering it later.

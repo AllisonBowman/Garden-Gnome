@@ -26,7 +26,12 @@ from .store import resolve_from_db
 #: "2": rows now carry `care_sources` and resolve by their accepted name. Every
 #: row resolved under "1" is stale and is rewritten once, on the first sync
 #: after this deploys. That one-time churn is the cost of a bump and expected.
-RESOLVER_VERSION = "2"
+#:
+#: "3": no harm-capable field inherits from the genus any more (ADR 0007). No
+#: row in the tranche held a borrowed one when this landed, so the rewrite
+#: touches only the stamp -- but a row stamped "2" was produced by rules that
+#: would have allowed it, and the stamp should say which rules it got.
+RESOLVER_VERSION = "3"
 
 #: The only columns a Claim is allowed to set. An allowlist rather than a
 #: denylist: a claim naming `scientific_name` or `review_status` must not be

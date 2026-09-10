@@ -3,13 +3,16 @@
 The vocabulary is CONTEXT.md's — Claim, Authority, Authority tier, Resolved
 value, Material disagreement, Genus-inferred, Harm-capable field. The
 decisions being enforced are ADR 0001 (values are derived from claims, never
-typed in) and ADR 0002 (inference stops at the genus; toxicity never inherits).
+typed in), ADR 0002 (inference stops at the genus; toxicity never inherits)
+and ADR 0007 (no harm-capable field inherits, not only toxicity).
 
 Pure logic: no database, no ORM. A Claim here is a plain record, so these
 rules stay testable without a migration and can't drift toward persistence
 concerns.
 """
-from app.data.claims.resolve import Authority, Claim, resolve
+from app.data.claims.resolve import (
+    HARM_CAPABLE, NEVER_INHERIT, Authority, Claim, resolve,
+)
 
 
 WFO = Authority(name="World Flora Online", tier=1)
@@ -131,6 +134,66 @@ def test_toxicity_never_inherits_in_either_direction():
 
     assert "toxic_to_pets" not in safe_genus.values
     assert "toxic_to_pets" not in toxic_genus.values
+
+
+def test_no_harm_capable_field_inherits_from_the_genus():
+    # ADR 0007. The glossary always said a harm-capable field "never accepts
+    # an inferred value"; until this test the code refused only toxicity. A
+    # genus-borrowed regime waters this plant the way its cousins like it,
+    # and a genus-borrowed cold figure leaves it out on the night that kills
+    # it. Neither is something a source said about this species, and the
+    # genus-inferred label would not have made the number safer to act on.
+    for field, value in (("water_regime", "keep_moist"),
+                         ("chill_damage_f", 40)):
+        result = resolve("Dracaena trifasciata", [
+            claim(field, value, subject="Dracaena", authority=WFO)])
+
+        assert field not in result.values, field
+        assert field not in result.provenance, field
+        assert field not in result.winners, field
+        # Nothing to refuse either: the species itself said nothing.
+        assert result.refusals == []
+
+
+def test_never_inherit_is_exactly_the_harm_capable_set():
+    # Derived, not duplicated, so a field added to HARM_CAPABLE cannot end up
+    # refusing to resolve through disagreement while still being borrowed in
+    # silence.
+    assert NEVER_INHERIT == HARM_CAPABLE
+    assert {"toxic_to_pets", "chill_damage_f", "water_regime"} <= HARM_CAPABLE
+
+
+def test_a_species_level_claim_on_a_harm_capable_field_still_resolves():
+    # The bar is on borrowing, not on the field. A source that looked at this
+    # species is still believed, and still outranks the genus.
+    result = resolve("Dracaena trifasciata", [
+        claim("water_regime", "dry_thoroughly_between"),
+        claim("water_regime", "keep_moist", subject="Dracaena", authority=WFO),
+        claim("chill_damage_f", 50),
+        claim("chill_damage_f", 32, subject="Dracaena", authority=WFO),
+    ])
+
+    assert result.values["water_regime"] == "dry_thoroughly_between"
+    assert result.values["chill_damage_f"] == 50
+    assert result.provenance["water_regime"] == "sourced"
+    assert result.provenance["chill_damage_f"] == "sourced"
+    assert result.refusals == []
+
+
+def test_fields_that_cannot_harm_still_inherit_beside_a_barred_one():
+    # ADR 0007 narrows nothing else. One genus page's humidity and drainage
+    # still fill their gaps, labelled, while the same page's regime does not.
+    result = resolve("Dracaena trifasciata", [
+        claim("humidity_need", "low", subject="Dracaena"),
+        claim("soil_drainage", "fast", subject="Dracaena"),
+        claim("water_regime", "dry_thoroughly_between", subject="Dracaena"),
+    ])
+
+    assert result.values["humidity_need"] == "low"
+    assert result.values["soil_drainage"] == "fast"
+    assert result.provenance["humidity_need"] == "genus_inferred"
+    assert result.provenance["soil_drainage"] == "genus_inferred"
+    assert "water_regime" not in result.values
 
 
 def test_withdrawing_an_authority_re_derives_rather_than_leaving_a_stale_value():

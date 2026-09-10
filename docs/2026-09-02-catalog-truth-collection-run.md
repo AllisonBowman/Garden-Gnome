@@ -404,10 +404,10 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
    `flyctl ssh console -a garden-gnome-api -C "python -m app.data.claims.sync --dry-run"`
    and read the `ambiguous:` lines — the ~1,900 Perenual rows on the volume
    were never inspected locally, and a tranche subject matching two of them
-   links neither. Open policy question from review: `NEVER_INHERIT` holds
-   only `toxic_to_pets` while CONTEXT.md says every harm-capable field
-   refuses inferred values; today genus-borrowed `water_regime` /
-   `chill_damage_f` are shown labelled rather than refused. Also open: the
+   links neither. The review's open policy question (`NEVER_INHERIT` held
+   only `toxic_to_pets` while CONTEXT.md said every harm-capable field
+   refuses inferred values) was settled 2026-09-10 in ADR 0007: every
+   harm-capable field now refuses genus inference. Also open: the
    36 records with `toxic_to_pets` null but a cited `toxicity_detail` naming
    harm need verdicts from the research loop.
 2. ~~Decide the verifier's home.~~ **Done 2026-09-05**: `covered.py`,
