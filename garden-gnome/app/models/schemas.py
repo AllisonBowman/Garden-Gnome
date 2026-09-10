@@ -365,10 +365,25 @@ class SpeciesDetail(SpeciesRead):
 
     @field_validator("care_sources", mode="before")
     @classmethod
-    def _null_means_never_recomputed(cls, value):
+    def _only_pages_and_fields_the_client_can_see(cls, value):
         """A row the recompute has not reached holds null, not an empty
-        list; a client gets the list either way, so nothing can 500 on it."""
-        return [] if value is None else value
+        list; a client gets the list either way, so nothing can 500 on it.
+
+        And each entry credits a page for the fields it settled. The
+        recompute withholds the server-only ones when it writes the list
+        (ADR 0003), but the row is what ships, and a row is only as clean as
+        the resolver that last touched it -- so the same rule is applied here
+        at the door, the way care_provenance is. A page left with nothing a
+        reader can check is not listed at all, as the recompute would not
+        list it."""
+        kept = []
+        for source in value or []:
+            entry = source if isinstance(source, dict) else source.model_dump()
+            fields = [f for f in entry.get("fields") or []
+                      if f not in SERVER_ONLY_FIELDS]
+            if fields:
+                kept.append({**entry, "fields": fields})
+        return kept
 
 
 # --- Timeline ---

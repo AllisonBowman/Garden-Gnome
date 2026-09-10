@@ -28,14 +28,17 @@ SQLite cannot alter nullability in place, so this is one batch rebuild of
 defaults the Fly volume's expansion columns carry from migrate_db() -- copies
 every row, and swaps the rebuilt table in with its indexes intact.
 
-Downgrade restores NOT NULL, which is impossible while claims-minted rows
-exist, and it refuses before touching anything rather than discovering that
-halfway through: pysqlite commits each DDL statement as it runs, so a
-rebuild that failed after `sync_state` was dropped would leave the volume at
-this revision with no sync_state table and a stray _alembic_tmp_species --
-every cold start logging "claim sync skipped" until someone hand-writes SQL.
-The refusal is deliberate either way: a downgrade must not quietly delete
-species that users' plants may reference.
+Downgrade restores NOT NULL, which is impossible while any row holds a null
+in those columns -- a claims-minted row, or a row POST /species created with
+no toxicity record -- and it refuses before touching anything rather than
+discovering that halfway through: pysqlite commits each DDL statement as it
+runs, so a rebuild that failed after `sync_state` was dropped would leave the
+volume at this revision with no sync_state table and a stray
+_alembic_tmp_species -- every cold start logging "claim sync skipped" until
+someone hand-writes SQL. The guard asks about the nulls themselves, not the
+row's `source`: the label says who made the row, the nulls are what the old
+schema cannot take back. The refusal is deliberate either way: a downgrade
+must not quietly delete species that users' plants may reference.
 """
 from typing import Sequence, Union
 
@@ -75,11 +78,17 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    minted = op.get_bind().execute(sa.text(
-        "SELECT 1 FROM species WHERE source = 'claims' LIMIT 1")).first()
-    if minted:
+    # Any null the old schema refused, whoever made the row: the batch
+    # rebuild would fail on it halfway through, tmp table and all.
+    nulls = " OR ".join(f"{name} IS NULL" for name in LEGACY_CARE)
+    held = op.get_bind().execute(sa.text(
+        f"SELECT 1 FROM species WHERE source = 'claims' OR {nulls} LIMIT 1"
+    )).first()
+    if held:
         raise RuntimeError(
-            "0015 cannot be downgraded while claims-minted species rows exist")
+            "0015 cannot be downgraded while species rows hold nulls the old "
+            "schema refused: claims-minted rows, or a species created with no "
+            "toxicity record")
     with op.batch_alter_table("species") as batch_op:
         batch_op.drop_index("ix_species_scientific_name_accepted")
         batch_op.drop_column("scientific_name_accepted")
