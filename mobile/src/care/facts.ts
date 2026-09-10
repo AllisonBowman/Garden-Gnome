@@ -18,7 +18,7 @@ import {
 
 export type CareFactKey =
   | 'water' | 'light' | 'humidity' | 'temperature' | 'soil'
-  | 'fertilize' | 'outdoor_sun' | 'hardiness';
+  | 'fertilize' | 'outdoor_sun' | 'cold';
 
 export interface CareFactRow {
   key: CareFactKey;
@@ -94,7 +94,7 @@ const RESOLVED_COLUMNS: (keyof Species)[] = [
   ...RESOLVED_FOR.soil,
   'water_regime', 'water_check_depth_cm', 'water_growing_days_est',
   'water_dormant_days_est', 'fertilize_active_months', 'fertilize_interval_days',
-  'fertilize_strength', 'outdoor_sun_exposure', 'hardiness_zones',
+  'fertilize_strength', 'outdoor_sun_exposure', 'outdoor_temp_min_f',
 ];
 const LEGACY_COLUMNS: (keyof Species)[] = [
   'light_need', 'humidity_pct_min', 'humidity_pct_max', 'temp_f_min',
@@ -153,14 +153,6 @@ export function monthSpan(months: number[]): string {
   return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 }
 
-/** "7–10" for a run without a gap, else "5, 7, 8". */
-function zoneSpan(zones: number[]): string {
-  const ordered = [...new Set(zones)].sort((a, b) => a - b);
-  const contiguous = ordered.every((z, i) => i === 0 || z === ordered[i - 1] + 1);
-  if (ordered.length >= 2 && contiguous) return `${ordered[0]}–${ordered[ordered.length - 1]}`;
-  return ordered.join(', ');
-}
-
 /** One concept's parts and the fields they were read from. */
 interface Concept { parts: string[]; used: string[] }
 
@@ -216,10 +208,12 @@ const CONCEPTS: { key: CareFactKey; label: string; join: string; read: (s: Speci
       ? s.outdoor_sun_exposure.map((v) => SUN_TEXT[v] ?? v.replace(/_/g, ' ')).join(', ')
       : null, ['outdoor_sun_exposure']],
   ]) },
-  { key: 'hardiness', label: 'Hardiness', join: '', read: (s) => concept([
-    [s.hardiness_zones?.length
-      ? `${s.hardiness_zones.length === 1 ? 'zone' : 'zones'} ${zoneSpan(s.hardiness_zones)}`
-      : null, ['hardiness_zones']],
+  // A survival floor from USDA PLANTS — not the temperature row's damage
+  // point, which is where harm begins in cultivation. The two can sit tens
+  // of degrees apart on one plant, so they are never folded into one row.
+  { key: 'cold', label: 'Cold', join: '', read: (s) => concept([
+    [s.outdoor_temp_min_f != null ? `survives to ${num(s.outdoor_temp_min_f)}°F outdoors` : null,
+      ['outdoor_temp_min_f']],
   ]) },
 ];
 

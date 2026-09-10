@@ -34,7 +34,7 @@ RESOLVED_COLUMNS = (
     "water_regime", "water_check_depth_cm", "water_growing_days_est",
     "water_dormant_days_est",
     "fertilize_active_months", "fertilize_interval_days", "fertilize_strength",
-    "outdoor_sun_exposure", "hardiness_zones",
+    "outdoor_sun_exposure", "outdoor_temp_min_f",
 )
 
 # Wording for the categorical fields. A token like `chunky_aroid` is a column
@@ -258,9 +258,11 @@ def _outdoors(sp: Species, tag: Tag) -> Told:
         words = [_SUN_TEXT.get(token(v), str(token(v)).replace("_", " "))
                  for v in sp.outdoor_sun_exposure]
         lines.append(f"- Outdoor sun: {tag(', '.join(words), 'outdoor_sun_exposure')}")
-    if sp.hardiness_zones:
-        zones = ", ".join(str(z) for z in sp.hardiness_zones)
-        lines.append(f"- Hardiness zones: {tag(zones, 'hardiness_zones')}")
+    # A survival floor from USDA PLANTS, kept apart from the temperature
+    # line's `chill_damage_f`, which is where damage begins in cultivation.
+    if sp.outdoor_temp_min_f is not None:
+        floor = f"survives to {_num(sp.outdoor_temp_min_f)} F outdoors"
+        lines.append(f"- Cold: {tag(floor, 'outdoor_temp_min_f')}")
     return lines, ""
 
 

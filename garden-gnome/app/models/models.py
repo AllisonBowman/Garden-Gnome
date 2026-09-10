@@ -355,12 +355,14 @@ class Species(SQLModel, table=True):
     care_sources: Optional[list] = Field(
         default=None, sa_column=Column(JSON, nullable=True))
 
-    # USDA hardiness zones this species tolerates outdoors, e.g. [7, 8, 9, 10].
-    # Only USDA PLANTS Database may claim this field (authorities.py); most of
-    # the catalog is grown indoors and will carry null here, which is correct
-    # -- a windowsill Monstera has no outdoor hardiness zone to speak of.
-    hardiness_zones: Optional[list[int]] = Field(
-        default=None, sa_column=Column(JSON, nullable=True))
+    # The lowest outdoor temperature this species is recorded as tolerating,
+    # in degrees F -- what USDA PLANTS publishes as "Temperature, Minimum
+    # (°F)", and the one field that authority is scoped to (authorities.py,
+    # ADR 0006). A survival floor, not `chill_damage_f`: that is where cold
+    # damage begins in cultivation, and the two can sit tens of degrees apart
+    # on one plant. Most of the catalog is grown indoors and will carry null
+    # here, which is correct -- a windowsill Monstera never faces a winter.
+    outdoor_temp_min_f: Optional[float] = None
 
     # Provenance + review trail for catalog expansion
     source: SpeciesSource = SpeciesSource.curated
@@ -442,7 +444,7 @@ class Authority(SQLModel, table=True):
     homepage_url: str = ""
     # Null means unrestricted -- vetted for the whole care schema, like every
     # extension service. A non-null list scopes the authority to exactly those
-    # fields (USDA PLANTS Database and ["hardiness_zones"] is the one that
+    # fields (USDA PLANTS Database and ["outdoor_temp_min_f"] is the one that
     # exists today). Set once when the row is minted, from authorities.py's
     # registry, and read from here rather than the registry thereafter -- the
     # same "stored, not recalled" rule tier and licence already follow, so a

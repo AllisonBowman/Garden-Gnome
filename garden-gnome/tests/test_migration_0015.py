@@ -19,7 +19,6 @@ LEGACY_CARE = ("light_need", "humidity_pct_min", "humidity_pct_max",
                "temp_f_min", "temp_f_max", "soil_type", "toxic_to_pets")
 
 PROVENANCE_JSON = '{"humidity_need": "sourced", "soil_drainage": "genus_inferred"}'
-ZONES_JSON = "[7, 8, 9, 10]"
 SUN_JSON = '["full_sun", "part_shade"]'
 
 # `species` exactly as SQLModel's create_all built it before the catalog
@@ -116,10 +115,10 @@ def test_a_0014_db_is_rebuilt_without_losing_a_byte_of_json(tmp_path: Path):
             "INSERT INTO species (common_name, scientific_name, light_need, "
             "humidity_pct_min, humidity_pct_max, temp_f_min, temp_f_max, "
             "soil_type, toxic_to_pets, care_notes, source, source_ref, "
-            "review_status, review_note, care_provenance, hardiness_zones, "
+            "review_status, review_note, care_provenance, "
             "outdoor_sun_exposure) VALUES ('Wired', 'Wired wiredus', 'low', 40, "
-            "60, 60, 80, 'mix', 0, '', 'curated', '', 'approved', '', ?, ?, ?)",
-            (PROVENANCE_JSON, ZONES_JSON, SUN_JSON))
+            "60, 60, 80, 'mix', 0, '', 'curated', '', 'approved', '', ?, ?)",
+            (PROVENANCE_JSON, SUN_JSON))
         species_id = conn.execute(
             "SELECT id FROM species WHERE scientific_name = 'Wired wiredus'"
         ).fetchone()[0]
@@ -143,9 +142,9 @@ def test_a_0014_db_is_rebuilt_without_losing_a_byte_of_json(tmp_path: Path):
     conn = sqlite3.connect(db)
     _assert_head_shape(conn)
     assert conn.execute(
-        "SELECT care_provenance, hardiness_zones, outdoor_sun_exposure "
+        "SELECT care_provenance, outdoor_sun_exposure "
         "FROM species WHERE scientific_name = 'Wired wiredus'"
-    ).fetchone() == (PROVENANCE_JSON, ZONES_JSON, SUN_JSON)
+    ).fetchone() == (PROVENANCE_JSON, SUN_JSON)
     _assert_wired_row_survived(conn)
     assert conn.execute(
         "SELECT count(*) FROM careschedule cs JOIN species s ON s.id = cs.species_id"
@@ -215,7 +214,7 @@ def test_the_pre_alembic_volume_shape_upgrades_to_head(tmp_path: Path, monkeypat
         "WHERE scientific_name = 'Wired wiredus'").fetchone() == ("curated", "approved")
     assert conn.execute(
         "SELECT version_num FROM alembic_version").fetchone() == (
-            "0015_species_claim_wiring",)
+            "0016_outdoor_temp_min_f",)
     conn.close()
 
 

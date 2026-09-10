@@ -194,7 +194,7 @@ class SpeciesRead(SQLModel):
     fertilize_active_months: Optional[list[int]] = None
     fertilize_interval_days: Optional[int] = None
     fertilize_strength: Optional[FertilizeStrength] = None
-    hardiness_zones: Optional[list[int]] = None
+    outdoor_temp_min_f: Optional[float] = None
 
     @field_validator("care_provenance", mode="before")
     @classmethod

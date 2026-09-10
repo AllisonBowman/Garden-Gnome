@@ -110,7 +110,7 @@ def test_detail_carries_values_provenance_and_named_sources_only(api):
         water_dry_down_target="verbatim passage from the page",
         chill_damage_f=45, night_f_min=50, light_fc_min=100,
         outdoor_sun_exposure=["part_sun", "part_shade"],
-        fertilize_active_months=[3, 4, 5], hardiness_zones=[7, 8],
+        fertilize_active_months=[3, 4, 5], outdoor_temp_min_f=-10.0,
         toxicity_detail="researcher prose naming harm",
         cool_rest_note="researcher prose", water_estimate_basis="assumptions",
         care_data_status=CareDataStatus.sourced,
@@ -141,7 +141,7 @@ def test_detail_carries_values_provenance_and_named_sources_only(api):
     assert detail["night_f_min"] == 50
     assert detail["outdoor_sun_exposure"] == ["part_sun", "part_shade"]
     assert detail["fertilize_active_months"] == [3, 4, 5]
-    assert detail["hardiness_zones"] == [7, 8]
+    assert detail["outdoor_temp_min_f"] == -10.0
     assert detail["care_data_status"] == "sourced"
     # Provenance names only columns the client has: the server-only ones are
     # dropped rather than announced by name.

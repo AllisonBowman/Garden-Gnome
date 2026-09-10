@@ -39,11 +39,15 @@ PUBLIC_DOMAIN_LICENCE = "U.S. government work; public domain (17 U.S.C. § 105)"
 # species, its Characteristics schema measures rangeland-establishment
 # traits — moisture use, drought tolerance, precipitation range — which
 # answer a different question than a potted plant's care. It earns tier 1
-# for exactly what it is authoritative on: accepted names and USDA hardiness
-# zones. `ALLOWED_FIELDS` below is what makes that scope a fact enforced by
-# the loader rather than an intention that erodes the first time a citation
+# for exactly what it is authoritative on: accepted names and the one number
+# its Characteristics data does state, "Temperature, Minimum (°F)" -- the
+# lowest outdoor temperature a species is recorded as tolerating. It does
+# not publish hardiness zones; those are the USDA ARS zone map's, a separate
+# product, and the field was misnamed for them until ADR 0006.
+# `ALLOWED_FIELDS` below is what makes that scope a fact enforced by the
+# loader rather than an intention that erodes the first time a citation
 # happens to name a care field.
-USDA_PLANTS_ALLOWED_FIELDS = frozenset({"hardiness_zones"})
+USDA_PLANTS_ALLOWED_FIELDS = frozenset({"outdoor_temp_min_f"})
 
 REGISTRY: dict[str, tuple[str, int, str, frozenset[str] | None]] = {
     "plants.ces.ncsu.edu": ("NC State Extension", 2, EXTENSION_LICENCE, None),

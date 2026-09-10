@@ -49,8 +49,9 @@ RESOLVED_FIELDS = frozenset({
     "toxic_to_pets", "toxicity_detail",
     # Scoped to USDA PLANTS Database alone (authorities.py) -- the one field
     # that source is trusted on, and the outcome of the investigation into
-    # whether it could ground the rest of the catalog. It could not.
-    "hardiness_zones",
+    # whether it could ground the rest of the catalog. It could not. A
+    # survival floor, distinct from `chill_damage_f` above (ADR 0006).
+    "outdoor_temp_min_f",
 })
 
 #: Resolved fields a client never sees: verbatim passages held as audit

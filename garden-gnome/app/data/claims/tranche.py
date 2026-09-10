@@ -86,9 +86,10 @@ def claims_from_record(record: dict) -> tuple[list[ExtractedClaim], list[str]]:
         # Only citations from a vetted publisher can support a value, and only
         # for the fields that publisher is trusted on. One from an unknown
         # domain has no tier to weigh it by and no licence on record; one from
-        # a scoped authority (USDA PLANTS, trusted for names and hardiness
-        # zones only) is not a general care-data source just because its URL
-        # resolves. Either way the field is reported, not silently dropped.
+        # a scoped authority (USDA PLANTS, trusted for names and a minimum
+        # outdoor temperature only) is not a general care-data source just
+        # because its URL resolves. Either way the field is reported, not
+        # silently dropped.
         support = None
         for c in citations:
             authority = authority_for(c.get("url"), c.get("source", ""))

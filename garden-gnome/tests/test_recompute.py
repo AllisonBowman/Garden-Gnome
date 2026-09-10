@@ -270,22 +270,23 @@ def test_dry_run_reports_without_writing(session):
     assert reload(session, "Dracaena trifasciata").humidity_need is None
 
 
-def test_a_usda_hardiness_claim_resolves_onto_the_species_row(session):
+def test_a_usda_minimum_temperature_claim_resolves_onto_the_species_row(session):
     """The scoped tier-1 authority feeds the same pipeline as everyone else.
 
     USDA PLANTS was investigated as a general care-data source and rejected --
-    this is the one field it actually earned: hardiness zones, and only that.
+    this is the one field it actually earned: the minimum outdoor temperature
+    its Characteristics data states, and only that.
     """
     make_species(session, "Salvia rosmarinus", "Rosemary")
-    add_claim(session, "Salvia rosmarinus", "hardiness_zones", [7, 8, 9, 10],
+    add_claim(session, "Salvia rosmarinus", "outdoor_temp_min_f", -13,
               url="https://plants.usda.gov/plant-profile/SALRO2",
               name="USDA PLANTS Database")
 
     recompute_all(session)
 
     sp = reload(session, "Salvia rosmarinus")
-    assert sp.hardiness_zones == [7, 8, 9, 10]
-    assert sp.care_provenance["hardiness_zones"] == "sourced"
+    assert sp.outdoor_temp_min_f == -13
+    assert sp.care_provenance["outdoor_temp_min_f"] == "sourced"
 
 
 def test_care_sources_are_null_when_nothing_won(session):
