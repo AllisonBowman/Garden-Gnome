@@ -389,6 +389,9 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 
 ## Do next, in order
 
+> **Research loop paused 2026-09-11** for the weekly usage limit, with b81–b88 researched in part and nothing from
+> them landed. Resume from `docs/2026-09-11-catalog-loop-handoff.md`.
+
 1. ~~Wire the claim graph into the app.~~ **Done 2026-09-05** (ADR 0005,
    migration 0015, `app/data/claims/sync.py`, `app/services/care_facts.py`,
    `mobile/src/care/facts.ts`): the cold-start seed now ingests the tranche,
