@@ -14,7 +14,13 @@ for W in sys.argv[1:]:
             continue
         aid = fn[len('agent-'):-len('.jsonl')]
         head = open(os.path.join(W, fn), errors='replace').read(6000)
-        m = re.search(r'reviewing a researched plant-care record for .{0,160}?\(([A-Z][a-z]+ [a-z\-]+)\)', head, re.S)
+        # The parenthetical is the species' latin name as template-research.js
+        # wrote it, hybrid marker included: "(Nepeta × faassenii)",
+        # "(Nepeta ×faassenii)" and "(Nepeta x faassenii)" all key their
+        # audit verdict, and the shape stays tight so a second parenthesised
+        # name further along the prompt cannot be captured instead.
+        m = re.search(r'reviewing a researched plant-care record for .{0,160}?'
+                      r'\(([A-Z][a-z]+ (?:[\u00d7x] )?\u00d7?[a-z\-]+)\)', head, re.S)
         if m:
             species_of[aid] = m.group(1)
     n_r = n_a = 0

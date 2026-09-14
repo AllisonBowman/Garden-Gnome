@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .authorities import authority_for, authority_may_claim
+from .names import canonical
 from .resolve import Authority
 
 # Bookkeeping on the record, not claims about the plant.
@@ -73,8 +74,11 @@ def claims_from_record(record: dict) -> tuple[list[ExtractedClaim], list[str]]:
     citation mentions — those are reported rather than loaded, because a value
     with nothing behind it is the thing this whole exercise exists to remove.
     """
-    subject = (record.get("scientific_name_accepted")
-               or record.get("scientific_name_given") or "").strip()
+    # Canonical spelling (the hybrid marker spaced), so one plant has one
+    # subject string however its sources spelled it; sync._subject_of is the
+    # same expression and the two must not drift.
+    subject = canonical(record.get("scientific_name_accepted")
+                        or record.get("scientific_name_given"))
     citations = record.get("citations") or []
 
     claims: list[ExtractedClaim] = []

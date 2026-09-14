@@ -18,6 +18,7 @@ from app.models.models import Authority as AuthorityRow
 from app.models.models import Claim as ClaimRow
 
 from .authorities import allowed_fields_of, licence_of
+from .names import canonical
 from .tranche import claims_from_record
 
 
@@ -65,8 +66,8 @@ def ingest_records(session: Session, records, *,
     for record in records:
         extracted, unsupported = claims_from_record(record)
         if unsupported:
-            subject = (record.get("scientific_name_accepted")
-                       or record.get("scientific_name_given") or "?")
+            subject = canonical(record.get("scientific_name_accepted")
+                                or record.get("scientific_name_given")) or "?"
             report.unsupported[subject] = unsupported
 
         for claim in extracted:

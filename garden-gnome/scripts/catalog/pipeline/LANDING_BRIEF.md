@@ -43,7 +43,9 @@ Then `.venv/bin/python -m pytest tests/test_tranche_invariants.py tests/test_cla
   "other names" entry. NC State's Common Name(s) lists are alphabetized -- never write that a list "marks no primary" or call an
   order an "artifact". Title-case the landed name (apostrophes kept). Check `grep -il "<name>" app/data/verified/*.json` for a
   collision with an already-landed common_name; on a collision, land under the next dedicated-page lead and say so in name_note.
-- Species names: bare binomials, no author abbreviations. scientific_name_accepted follows RHS Name Status Correct / NC State's
+- Species names: no author abbreviations; "Genus epithet", or "Genus × epithet" for a hybrid (U+00D7 MULTIPLICATION SIGN, space either
+  side -- repair_lib normalises a source's "Genus ×epithet" to that form). Never strip the hybrid sign and never land a parent
+  species in its place. scientific_name_accepted follows RHS Name Status Correct / NC State's
   current title; a reclassification is followed and disclosed. RHS URLs must have the epithet in the slug, never /wd/.
 - outdoor_sun_exposure: keep only values a structured field or unconditional statement supports; drop a value one source lists
   when the other North American structured field excludes it or a species scorch/flop warning contradicts it; disclose in unknowns.

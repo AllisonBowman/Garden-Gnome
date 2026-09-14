@@ -5,7 +5,9 @@
 
 Run from garden-gnome/ with the project venv. Exit 1 on any DUP.
 
-Matching is exact on the normalized binomial (whitespace collapsed, '×' -> 'x',
+Matching is exact on the normalized binomial (app.data.claims.names.key: the
+hybrid marker normalized to a spaced ' x ' so "Nepeta × faassenii",
+"Nepeta ×faassenii" and "Nepeta x faassenii" are one name, whitespace collapsed,
 case-folded, cultivar/varietal tail stripped for the genus+species key), against
 scientific_name_given AND scientific_name_accepted. This is what a substring
 grep across the whole JSON cannot do: it ignores incidental mentions inside
@@ -19,17 +21,26 @@ import re
 import sys
 from pathlib import Path
 
+# garden-gnome/ for `app`, so the one name normaliser is shared rather than
+# re-typed here: this key has to agree with the sync's binomial_key and with
+# tests/test_tranche_invariants, or a batch passes this gate and fails the
+# commit gate (or, worse, lands a duplicate under a second spelling).
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from app.data.claims import names  # noqa: E402
+
 # garden-gnome/app/data/verified, located from this file so the script runs from any cwd.
 VERIFIED = Path(__file__).resolve().parents[2] / "app" / "data" / "verified"
 
 
 def norm(name: str) -> str:
-    n = re.sub(r"\s+", " ", (name or "").replace("×", "x")).strip().lower()
-    return n
+    return names.key(name)
 
 
 def key(name: str) -> str:
-    # genus + species only: "alocasia x amazonica 'polly'" -> "alocasia x amazonica"
+    # genus + species only: "alocasia x amazonica 'polly'" -> "alocasia x amazonica".
+    # The hybrid marker is NOT stripped: "citrus x aurantiifolia" and
+    # "citrus aurantiifolia" are different names and must stay different keys.
     n = norm(name)
     n = re.sub(r"\s+'.*$", "", n)                 # cultivar tail
     n = re.sub(r"\s+(var|subsp|ssp|f)\.\s+\S+$", "", n)  # infraspecific tail
@@ -60,8 +71,9 @@ if __name__ == "__main__":
             hits = cov.get(k)
             # also flag a genus-level near miss so a synonym under another
             # species epithet at least gets looked at
-            genus = k.split()[0]
-            same_genus = sorted({b for kk, v in cov.items() if kk.split()[0] == genus for b, _ in v})
+            genus = names.genus_token(k)
+            same_genus = sorted({b for kk, v in cov.items()
+                                 if names.genus_token(kk) == genus for b, _ in v})
             if hits:
                 clean = False
                 print(f"DUP   {cand} -> {sorted(set(hits))}")

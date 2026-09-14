@@ -221,6 +221,75 @@ def test_the_hybrid_sign_does_not_split_one_name_into_two_rows(db, tmp_path):
     assert sp.humidity_need == "average"
 
 
+HYBRIDS = [
+    ("Garden Mum", "Chrysanthemum × morifolium"),
+    ("Faassen's Catmint", "Nepeta × faassenii"),
+    ("Million Bells", "Calibrachoa × hybrida"),
+    ("Garden Verbena", "Verbena × hybrida"),
+    ("Hybrid Fuchsia", "Fuchsia × hybrida"),
+    ("Key Lime", "Citrus × aurantiifolia"),
+    ("Vanhoutte Spirea", "Spiraea × vanhouttei"),
+    ("Canna Lily", "Canna × generalis"),
+    ("Montbretia", "Crocosmia × crocosmiiflora"),
+]
+
+
+def test_a_researched_hybrid_is_minted_like_any_other_species(db, tmp_path):
+    """The nine the pipeline used to drop. A hybrid binomial is a species: it
+    mints a row, it is not mistaken for a bare genus, and nothing is ambiguous."""
+    engine, _ = db
+    tranche = tmp_path / "tranche"
+    write_batch(tranche, "b1-test.json", [
+        record(common, latin, humidity_need="average")
+        for common, latin in HYBRIDS])
+
+    with Session(engine) as s:
+        report = sync_catalog(s, directory=tranche)
+
+    assert report.species_created == 9
+    assert report.genus_subjects == [] and report.ambiguous == []
+    for _, latin in HYBRIDS:
+        sp, = rows(engine, latin)
+        assert sp.humidity_need == "average"
+        assert sp.care_provenance["humidity_need"] == "sourced"
+
+
+def test_two_spellings_of_one_hybrid_are_one_row_holding_all_the_evidence(db, tmp_path):
+    """The half-loss this fix exists to prevent. Keyed by spelling, the same
+    plant researched as "Nepeta ×faassenii" and "Nepeta × faassenii" became two
+    rows with the evidence split, and neither row said anything was missing."""
+    engine, _ = db
+    tranche = tmp_path / "tranche"
+    write_batch(tranche, "b1-test.json", [
+        record("Faassen's Catmint", "Nepeta ×faassenii", humidity_need="average")])
+    write_batch(tranche, "b2-test.json", [
+        record("Faassen's Catmint", "Nepeta × faassenii", water_check_depth_cm=5)])
+
+    with Session(engine) as s:
+        report = sync_catalog(s, directory=tranche)
+
+    assert report.species_created == 1
+    sp, = rows(engine)
+    # Stored in one spelling, and both batches' claims resolve onto it.
+    assert sp.scientific_name == "Nepeta × faassenii"
+    assert sp.humidity_need == "average" and sp.water_check_depth_cm == 5
+
+
+def test_a_bare_nothogenus_is_still_a_genus_and_never_becomes_a_row(db, tmp_path):
+    # "× Fatshedera" is two tokens but one word: the marker must not let a
+    # genus-level subject through the gate that keeps genera off the catalog.
+    engine, _ = db
+    tranche = tmp_path / "tranche"
+    write_batch(tranche, "b1-test.json", [
+        record("Fatshedera", "× Fatshedera", humidity_need="average")])
+
+    with Session(engine) as s:
+        report = sync_catalog(s, directory=tranche)
+
+    assert report.genus_subjects == ["× Fatshedera"]
+    assert report.species_created == 0 and rows(engine) == []
+
+
 def test_an_ambiguous_match_links_nothing_and_says_so(db, tmp_path):
     engine, _ = db
     tranche = tmp_path / "tranche"
@@ -390,6 +459,8 @@ def test_every_researched_species_ends_up_on_exactly_one_row(db):
 
 @pytest.mark.parametrize("a,b", [
     ("Abelia × grandiflora", "abelia x grandiflora"),
+    ("Nepeta × faassenii", "Nepeta ×faassenii"),
+    ("× Fatshedera lizei", "×Fatshedera lizei"),
     ("Dracaena  trifasciata ", "Dracaena trifasciata"),
 ])
 def test_binomial_key_treats_spelling_variants_as_one_name(a, b):

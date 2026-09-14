@@ -9,7 +9,7 @@ sample it for a citation pass its evidence already had, and genus_fill must
 not count it as a sibling that says nothing.
 """
 from app.data.expansion import admit_queue, genus_fill
-from app.data.expansion.validate import validate_record
+from app.data.expansion.validate import find_near_duplicates, validate_record
 from app.models.models import ReviewStatus, Species, SpeciesSource
 
 
@@ -63,3 +63,22 @@ def test_genus_fill_never_counts_a_claims_minted_row_as_a_sibling():
     # The projection is the one derive_genus_fill reads.
     assert set(records[0]) == set(
         genus_fill.CORRECTABLE + ["review_status", "review_note"])
+
+
+def test_the_admit_path_sees_one_hybrid_name_however_it_is_spelled():
+    """validate had its own name key, and it was the only one that did not fold
+    the hybrid marker at all: it admitted both spellings as separate species,
+    and the next sync then saw two rows under one key, called them ambiguous
+    and linked neither -- a hybrid with two rows and no care data."""
+    flags = find_near_duplicates(
+        [{"common_name": "Faassen's Catmint",
+          "scientific_name": "Nepeta × faassenii"}],
+        [("Catmint", "Nepeta x faassenii")])
+
+    assert "already in catalog" in " ".join(flags["Nepeta × faassenii"])
+
+
+def test_an_ordinary_name_is_still_compared_exactly_as_before():
+    assert find_near_duplicates(
+        [{"common_name": "Snake Plant", "scientific_name": "Dracaena trifasciata"}],
+        [("Pawpaw", "Asimina triloba")]) == {}

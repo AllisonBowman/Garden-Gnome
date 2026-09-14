@@ -42,14 +42,14 @@ Return up to 12 candidate species, ranked by how commonly a home plant owner act
 1. NOT already in the corpus. Check EVERY candidate mechanically before returning it: run
    cd ${REPO} && .venv/bin/python scripts/catalog/covered.py "Genus species" "Genus species" ...
    (it prints clean/DUP per name and matches given AND accepted names with cultivar tails stripped). Also think about reclassified synonyms yourself (Sansevieria trifasciata is landed as Dracaena trifasciata; Saintpaulia as Streptocarpus ionanthus; Schefflera arboricola as Heptapleurum arboricola) and check the currently accepted name too. Return only names covered.py reports clean.
-2. A single species or a named natural hybrid with its own pages (no 'Various spp.', no seed mixes, no cultivar-only entries).
-3. Has a dedicated single-species page on NC State's Plant Toolbox: check https://plants.ces.ncsu.edu/plants/<genus>-<species>/ (lowercase, hyphenated) returns HTTP 200 (curl -sI -o /dev/null -w '%{http_code}'). NC State is the anchor source of nearly every record; a species without it usually cannot be landed. If the obvious slug 404s, try the page's search once; otherwise drop the candidate.
+2. A single species, or a named hybrid of either natural or garden origin that has its own dedicated pages under its own name (Nepeta × faassenii, Chrysanthemum × morifolium, Spiraea × vanhouttei and Canna × generalis all qualify). Exclude only 'Various spp.', seed mixes, cultivar-only entries, and unnamed 'Genus hybrids' group listings with no binomial of their own.
+3. Has a dedicated page for this exact taxon on NC State's Plant Toolbox: check https://plants.ces.ncsu.edu/plants/<genus>-<species>/ (lowercase, hyphenated; a hybrid KEEPS its marker as a literal 'x' slug segment -- Nepeta × faassenii is nepeta-x-faassenii) returns HTTP 200 (curl -sI -o /dev/null -w '%{http_code}'). NC State is the anchor source of nearly every record; a species without it usually cannot be landed. If the obvious slug 404s, try the page's search once; otherwise drop the candidate.
 4. Not a near-duplicate of a landed entry (do not propose a second cultivar group of a landed species, or a sibling that would land under the same common name).
 
 For each candidate write:
 - common: the common name you expect the dedicated pages to lead with (Title Case).
-- latin: the currently accepted bare binomial (no author abbreviations).
-- note: one to three sentences of research guidance in this exact style, ending with the fixed sentence: "this catalog's first <Genus>" if the genus is new to the corpus (check the corpus file), naming traps (synonyms, sibling confusions, a common name shared with a landed species), toxicity specifics to capture exactly (cat/dog scoping, handling warnings, edibility statements with their conditions), any enum trap (soil_drainage fast only for sharp/sandy drainage with no wet tolerance; moisture_retentive only on a cultivation REQUIREMENT), and always finish with: "Confirm species-specific content on a dedicated single-species page, never a genus-level, cultivar, or multi-species page."
+- latin: the currently accepted name with no author abbreviation -- either a bare binomial 'Genus epithet' or, for a hybrid, 'Genus × epithet' written with U+00D7 MULTIPLICATION SIGN and a space either side. Never strip the hybrid sign, never write it as the letter x, and never substitute one of the hybrid's parent species for it.
+- note: one to three sentences of research guidance in this exact style, ending with the fixed sentence: "this catalog's first <Genus>" if the genus is new to the corpus (check the corpus file), naming traps (synonyms, sibling confusions, a common name shared with a landed species), toxicity specifics to capture exactly (cat/dog scoping, handling warnings, edibility statements with their conditions), any enum trap (soil_drainage fast only for sharp/sandy drainage with no wet tolerance; moisture_retentive only on a cultivation REQUIREMENT), and always finish with: "Confirm taxon-specific content on the dedicated page for this exact name, never a genus-level, cultivar-only, or multi-species page; for a hybrid this means the hybrid's own page, never a parent species' page." For a hybrid, also name both parent species in the note and say that parent-page content must not be borrowed for any field.
 - why: one sentence on why home growers commonly have it.
 
 Return ONLY the JSON: {category: '${L.key}', candidates: [...]}. Fewer than 12 is fine if the lens is nearly exhausted; say so in the last candidate's why field is NOT allowed -- just return fewer.`
@@ -69,13 +69,16 @@ function checkPrompt(latins) {
   return `Mechanically re-check these candidate species for a plant catalog. For EVERY name:
 (a) run: cd ${REPO} && .venv/bin/python scripts/catalog/covered.py ${latins.map(l => JSON.stringify(l)).join(' ')}
     and treat any line reporting DUP as a drop (reason: 'already in corpus').
-(b) check https://plants.ces.ncsu.edu/plants/<genus>-<species>/ (lowercase, hyphenated; drop any 'x ' or '×' hybrid marker from the slug) with: curl -sI -o /dev/null -w '%{http_code}' <url>. A 200 or a 301/302 that lands on a plants.ces.ncsu.edu/plants/ page is a pass; 404 is a drop (reason: 'no NC State page').
-(c) drop any name that is not a bare two-word binomial (author abbreviations, cultivar quotes, 'spp.').
+(b) check https://plants.ces.ncsu.edu/plants/<genus>-<species>/ (lowercase, hyphenated; a hybrid KEEPS its marker as a literal 'x' slug segment -- Nepeta × faassenii is nepeta-x-faassenii, Chrysanthemum × morifolium is chrysanthemum-x-morifolium, Spiraea × vanhouttei is spiraea-x-vanhouttei; never delete the marker, and only if the x-form 404s try the marker-less form before dropping) with: curl -sI -o /dev/null -w '%{http_code}' <url>. A 200 or a 301/302 that lands on a plants.ces.ncsu.edu/plants/ page is a pass; 404 is a drop (reason: 'no NC State page').
+(c) drop any name carrying an author abbreviation, a cultivar epithet in quotes, or 'spp.'/'hybrids'/a bare group name. A name is acceptable in either form: 'Genus epithet', or a hybrid 'Genus × epithet' using U+00D7 MULTIPLICATION SIGN. A source writing 'Genus ×epithet' with no space is the same name -- return it normalised to 'Genus × epithet'. Keep the multiplication sign, never substitute the letter x for it, and never return a parent species in place of the hybrid.
 Names: ${latins.join('; ')}
 Return ONLY the JSON {ok: [...], dropped: [{latin, reason}]} with every input name in exactly one list.`
 }
 
-const norm = l => l.toLowerCase().replace('×', 'x').replace(/\s+/g, ' ').trim()
+// Mirrors app/data/claims/names.py key(): the marker becomes a separate 'x' token, so
+// 'Nepeta × faassenii', 'Nepeta ×faassenii' and 'Nepeta x faassenii' are one key while
+// 'Xanthosoma sagittifolium' and 'Solanum xanti' keep their epithets whole.
+const norm = l => l.toLowerCase().replace(/×/g, ' x ').replace(/\s+/g, ' ').trim()
 
 const found = await parallel(LENSES.map(L => () =>
   agent(finderPrompt(L), { label: `find:${L.key}`, phase: 'Find', schema: CAND_SCHEMA, model: 'opus' })))

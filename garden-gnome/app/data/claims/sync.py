@@ -24,7 +24,6 @@ plants and toxicity.lookup key on and is never renamed here; common names and
 legacy values are never overwritten.
 """
 import hashlib
-import re
 import time
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
@@ -34,6 +33,7 @@ from sqlmodel import Session, col, or_, select
 from app.models.models import ReviewStatus, Species, SpeciesSource, SyncState
 
 from .ingest import VERIFIED_DIR, ingest_tranche, tranche_records
+from .names import canonical, key as name_key, words as name_words
 from .recompute import RESOLVER_VERSION, RecomputeReport, recompute_all
 
 #: Bumped when the sync's own rules change -- what it mints, how it links --
@@ -64,11 +64,13 @@ class SyncReport:
 def binomial_key(name: str | None) -> str:
     """One key for the spellings of one name.
 
-    'Abelia × grandiflora' and 'Abelia x grandiflora', stray whitespace, case:
-    the same normaliser test_tranche_invariants uses to catch a species
-    researched twice, so the sync and the corpus check agree on identity.
+    'Abelia × grandiflora', 'Abelia ×grandiflora' and 'Abelia x grandiflora',
+    stray whitespace, case: `names.key`, which is also what covered.py's
+    pre-landing dedup and test_tranche_invariants use to catch a species
+    researched twice, so every gate agrees on identity. The hybrid marker
+    stays a token -- 'Citrus × aurantiifolia' is not 'Citrus aurantiifolia'.
     """
-    return re.sub(r"\s+", " ", (name or "").replace("×", "x")).strip().casefold()
+    return name_key(name)
 
 
 def tranche_fingerprint(directory: Path | None = None) -> str:
@@ -98,8 +100,11 @@ def _rows_in_step(session: Session) -> bool:
 
 
 def _subject_of(record: dict) -> str:
-    return (record.get("scientific_name_accepted")
-            or record.get("scientific_name_given") or "").strip()
+    # Canonical spelling, so the stored subject and Claim.subject (tranche.py,
+    # the same expression) cannot disagree about a hybrid's spacing while
+    # `binomial_key` matches rows regardless of it.
+    return canonical(record.get("scientific_name_accepted")
+                     or record.get("scientific_name_given"))
 
 
 def _index(rows) -> dict[str, list[Species]]:
@@ -129,7 +134,9 @@ def _mint_and_link(session: Session, directory: Path, report: SyncReport) -> Non
 
     for batch, record in tranche_records(directory):
         subject = _subject_of(record)
-        if len(subject.split()) < 2:
+        # Words, not tokens: "Nepeta × faassenii" is a species and "× Fatshedera"
+        # is still a bare genus, which never becomes a row.
+        if len(name_words(subject)) < 2:
             report.genus_subjects.append(subject)
             continue
 

@@ -101,6 +101,23 @@ def test_a_gap_is_filled_from_the_genus_and_says_so():
     assert result.provenance["humidity_need"] == "sourced"
 
 
+def test_a_hybrid_inherits_from_its_genus_not_from_the_marker():
+    # genus_of reads the first WORD of the name, so "Clematis × jackmanii"
+    # inherits from Clematis. Reading the first token instead would file every
+    # nothogenus under one phantom genus "×" and leak care between them.
+    result = resolve("Clematis × jackmanii", [
+        claim("light_fc_min", 100, subject="Clematis"),
+    ])
+
+    assert result.values["light_fc_min"] == 100
+    assert result.provenance["light_fc_min"] == "genus_inferred"
+
+    nothogenus = resolve("× Fatshedera lizei", [
+        claim("light_fc_min", 100, subject="Fatshedera"),
+    ])
+    assert nothogenus.provenance["light_fc_min"] == "genus_inferred"
+
+
 def test_the_species_outranks_its_genus_even_from_a_worse_authority():
     # Specificity beats authority tier here: a tier-3 source that looked at
     # this species knows more about it than a tier-1 source describing the

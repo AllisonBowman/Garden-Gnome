@@ -10,6 +10,8 @@ works this way.
 from dataclasses import dataclass, field as dc_field
 from typing import Any
 
+from .names import genus_token
+
 
 @dataclass(frozen=True)
 class Authority:
@@ -89,8 +91,14 @@ def _is_material(field: str, values: list[Any]) -> bool:
 
 
 def genus_of(binomial: str) -> str:
-    """The genus part of a scientific name. 'Dracaena trifasciata' -> 'Dracaena'."""
-    return binomial.split()[0] if binomial else ""
+    """The genus part of a scientific name. 'Dracaena trifasciata' -> 'Dracaena'.
+
+    A nothospecies keeps its own genus ('Clematis × jackmanii' -> 'Clematis').
+    A nothogenus carries the marker in front ('× Fatshedera lizei'), and the
+    marker is not a genus: read as one it would make every hybrid genus share
+    the phantom subject '×' and inherit each other's care.
+    """
+    return genus_token(binomial)
 
 
 def resolve(subject: str, claims) -> Resolution:

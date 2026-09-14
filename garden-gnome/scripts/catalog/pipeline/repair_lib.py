@@ -7,6 +7,15 @@ fix to a generic pass reaches every later batch instead of being re-typed.
 import html
 import json
 import re
+import sys
+from pathlib import Path
+
+# garden-gnome/ for `app`: the hybrid-aware name rules live in one module
+# (app/data/claims/names.py) so this landing gate, covered.py's dedup and the
+# sync cannot disagree about what a name is.
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from app.data.claims import names  # noqa: E402
 
 SCHEMA_FIELDS = (
     'common_name', 'scientific_name_given', 'scientific_name_accepted', 'name_note', 'is_houseplant',
@@ -124,9 +133,21 @@ def generic_passes(records):
         for u in r['unknowns']:
             assert ' on audit:' not in u, (r['common_name'], 'audit line survived', u[:60])
         assert title_ok(r['common_name']), (r['common_name'], 'not title case')
-        assert len(r['scientific_name_given'].split()) == 2, r['scientific_name_given']
-        acc = r.get('scientific_name_accepted')
-        assert acc is None or (len(acc.split()) == 2 and acc.split()[1].islower()), (r['common_name'], acc)
+        # Hybrid names are first class. "Chrysanthemum × morifolium" is a
+        # binomial carrying the hybrid marker (U+00D7), not a three-word name,
+        # and a source writing "Chrysanthemum ×morifolium" means the same
+        # plant -- so the spelling is canonicalised here, the earliest point
+        # every landed record passes through, and the words are counted with
+        # the marker set aside. What stays refused is what these asserts were
+        # written for: an author abbreviation ("Adiantum pedatum L."), a
+        # cultivar tail in quotes, "Genus spp.", a bare genus, and an
+        # upper-case epithet in the accepted name.
+        r['scientific_name_given'] = names.canonical(r['scientific_name_given'])
+        assert len(names.words(r['scientific_name_given'])) == 2, r['scientific_name_given']
+        acc = names.canonical(r.get('scientific_name_accepted')) or None
+        r['scientific_name_accepted'] = acc
+        acc_words = names.words(acc)
+        assert acc is None or (len(acc_words) == 2 and acc_words[1].islower()), (r['common_name'], acc)
         # b74 (all landscape shrubs) asserted False outright; b75 carries a carnivorous plant NC State says "can also
         # be grown indoors", as b45's Cape Sundew and Purple Pitcher Plant already do. True is allowed only when a
         # citation labelled is_houseplant quotes an indoor/houseplant framing; null is never allowed.
@@ -138,8 +159,8 @@ def generic_passes(records):
             if f == 'scientific_name_given' or r.get(f) is None:
                 continue
             assert any(f in c['claim'] for c in r['citations']), (r['common_name'], 'uncited field', f)
-    names = [r['common_name'].lower().replace(' ', '') for r in records]
-    dupes = {n for n in names if names.count(n) > 1}
+    commons = [r['common_name'].lower().replace(' ', '') for r in records]
+    dupes = {n for n in commons if commons.count(n) > 1}
     assert not dupes, ('common_name collision inside batch', dupes)
 
 

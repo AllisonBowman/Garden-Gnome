@@ -16,12 +16,12 @@ name_note coverage) are deliberately left to the loader tests and to review.
 """
 import glob
 import json
-import re
 from collections import defaultdict
 from pathlib import Path
 
 import pytest
 
+from app.data.claims.sync import binomial_key
 from app.models.models import (
     FertilizeStrength, HumidityNeed, OutdoorSunExposure, SoilBase,
     SoilDrainage, WaterRegime)
@@ -127,8 +127,22 @@ def test_every_citation_is_a_real_pointer(batch, record):
 
 
 def _binomial(name):
-    # "Abelia × grandiflora" and "Abelia x grandiflora" are one name.
-    return re.sub(r"\s+", " ", (name or "").replace("×", "x")).strip().lower()
+    # "Abelia × grandiflora", "Abelia ×grandiflora" and "Abelia x grandiflora"
+    # are one name. Imported, not re-typed: a private copy of this rule is
+    # exactly how the corpus check and the sync came to disagree about a
+    # hybrid's spacing.
+    return binomial_key(name)
+
+
+@pytest.mark.parametrize("spelling", [
+    "Nepeta × faassenii", "Nepeta ×faassenii", "Nepeta x faassenii"])
+def test_the_duplicate_check_sees_one_name_however_a_source_spelled_it(spelling):
+    """The guard below is only as good as this key. Before the hybrid marker was
+    normalised, "Genus ×epithet" and "Genus × epithet" keyed apart, so one plant
+    researched twice under the two spellings passed the check unnoticed."""
+    assert _binomial(spelling) == "nepeta x faassenii"
+    # and a different taxon is still a different name
+    assert _binomial("Nepeta faassenii") != _binomial("Nepeta × faassenii")
 
 
 def test_no_species_is_researched_twice():

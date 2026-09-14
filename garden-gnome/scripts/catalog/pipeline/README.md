@@ -5,7 +5,9 @@ goes from a candidate list to a landed `app/data/verified/bNN-*.json`. Run every
 `.venv/bin/python`. Generated files stay in this directory and are gitignored.
 
 1. **Pick species.** `gap-finders.js` is the Workflow that chose b81-b88 (six category lenses, covered.py dedup, NC State
-   page check); its output is `batches-b81-b88.json`. Hybrids (×) are dropped because the landing pass needs a bare binomial.
+   page check); its output is `batches-b81-b88.json`. Hybrid names (`Genus × epithet`, U+00D7) are first-class: the finder keeps the
+   multiplication sign, the NC State slug carries it as an `x` segment (`nepeta-x-faassenii`), and the landing pass accepts it.
+   `batches-b89-hybrids.json` holds the nine hybrids the old "bare binomial" rule dropped, waiting for step 2.
 2. **Generate batch scripts.** `gen_batch.py scripts/catalog/pipeline/batches-b81-b88.json` writes `bNN-catalog-research.js`
    from `template-research.js` (Sonnet research, Opus adversarial audit, null-verdict guard, summary-first return).
 3. **Run** each script with the Workflow tool (`scriptPath` = its absolute path). Two or three batches at a time: eight at

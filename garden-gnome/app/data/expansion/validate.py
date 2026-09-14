@@ -10,6 +10,7 @@ Records with any issue are routed to the review queue, never auto-approved.
 import re
 from difflib import SequenceMatcher
 
+from app.data.claims import names
 from app.models.models import SpeciesSource
 
 VALID_LIGHT = {"low", "medium", "bright_indirect", "direct"}
@@ -110,11 +111,13 @@ def validate_record(rec: dict) -> list[str]:
 
 def _name_key(name: str) -> str:
     """Normalize for exact-duplicate comparison: case, whitespace, cultivar
-    quotes, and the abbreviation dot in 'var.' etc."""
-    s = (name or "").lower().strip()
-    s = re.sub(r"['‘’\"]", "", s)
-    s = re.sub(r"\s+", " ", s)
-    return s
+    quotes, the abbreviation dot in 'var.' etc, and the hybrid marker.
+
+    The marker fold is `names.key`, the same one the claim sync matches rows
+    with: without it this gate admits 'Nepeta × faassenii' and
+    'Nepeta x faassenii' as two species, and the next sync sees two rows under
+    one key, calls them ambiguous and links neither."""
+    return names.key(re.sub(r"['‘’\"]", "", name or ""))
 
 
 def find_near_duplicates(
