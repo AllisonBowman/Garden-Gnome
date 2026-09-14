@@ -13,7 +13,7 @@ import {
   fetchPlant, logCare, fetchCareLogs, getAdvice, AdviceResponse,
   diagnosePlantPhoto, DiagnosisResponse, deletePlant, transferPlant,
 } from '../api/plants';
-import { fetchEnvironments } from '../api/environments';
+import { fetchGrowingAreas } from '../api/growingAreas';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { gnomeVoice } from '../gnomeVoice/restyle';
 import { serverMessage } from '../api/errorMessage';
@@ -92,23 +92,23 @@ export default function PlantDetailScreen() {
 
   // Moving and removing. Both are rare, and one is irreversible, so they live
   // at the bottom of the screen and the destructive one asks first.
-  const { data: environments = [] } = useQuery({
-    queryKey: ['environments'],
-    queryFn: fetchEnvironments,
+  const { data: growingAreas = [] } = useQuery({
+    queryKey: ['growingAreas'],
+    queryFn: fetchGrowingAreas,
   });
-  const otherEnvironments = useMemo(
-    () => environments.filter((e) => e.id !== plant?.environment_id),
-    [environments, plant?.environment_id],
+  const otherGrowingAreas = useMemo(
+    () => growingAreas.filter((e) => e.id !== plant?.growing_area_id),
+    [growingAreas, plant?.growing_area_id],
   );
   const [movingTo, setMovingTo] = useState<number | null>(null);
 
   const transferMutation = useMutation({
-    mutationFn: (toEnvironmentId: number) => transferPlant(plantId, toEnvironmentId),
-    onSuccess: (_data, toEnvironmentId) => {
-      const dest = environments.find((e) => e.id === toEnvironmentId);
+    mutationFn: (toGrowingAreaId: number) => transferPlant(plantId, toGrowingAreaId),
+    onSuccess: (_data, toGrowingAreaId) => {
+      const dest = growingAreas.find((e) => e.id === toGrowingAreaId);
       queryClient.invalidateQueries({ queryKey: ['plant', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
-      queryClient.invalidateQueries({ queryKey: ['environments'] });
+      queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       setConfirmation(`🌍 Moved to ${dest?.name ?? 'its new home'} — history came along`);
       void rescheduleAllReminders();
@@ -124,7 +124,7 @@ export default function PlantDetailScreen() {
     mutationFn: () => deletePlant(plantId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plants'] });
-      queryClient.invalidateQueries({ queryKey: ['environments'] });
+      queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       void rescheduleAllReminders();
       navigation.goBack();
@@ -463,7 +463,7 @@ export default function PlantDetailScreen() {
             a new place.
           </Text>
           <View style={styles.moveRow}>
-            {otherEnvironments.map((env) => (
+            {otherGrowingAreas.map((env) => (
               <Button
                 key={env.id}
                 mode="outlined"
@@ -480,10 +480,10 @@ export default function PlantDetailScreen() {
                 Move to {env.name}
               </Button>
             ))}
-            {otherEnvironments.length === 0 && (
+            {otherGrowingAreas.length === 0 && (
               <Text style={styles.empty}>
                 There&apos;s nowhere else to move it yet — add another
-                environment first.
+                growing area first.
               </Text>
             )}
           </View>

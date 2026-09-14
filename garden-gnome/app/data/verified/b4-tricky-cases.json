@@ -619,6 +619,30 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/salvia-rosmarinus/",
           "quote": "#non-toxic for cats ... #non-toxic for dogs ... #non-toxic for horses"
+        },
+        {
+          "claim": "mature_height_in 48-60 (NC State Height 4 ft. 0 in. - 5 ft. 0 in., converted to inches: 4 ft x 12 = 48 low end, 5 ft x 12 = 60 high end)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Salvia rosmarinus (Rosemary)",
+          "url": "https://plants.ces.ncsu.edu/plants/salvia-rosmarinus/",
+          "quote": "Height: 4 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-48 (NC State Width 3 ft. 0 in. - 4 ft. 0 in., converted to inches: 3 ft x 12 = 36 low end, 4 ft x 12 = 48 high end)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Salvia rosmarinus (Rosemary)",
+          "url": "https://plants.ces.ncsu.edu/plants/salvia-rosmarinus/",
+          "quote": "Width: 3 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true — NC State's Edibility field states the herb is used for teas and as a flavoring in foods",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Salvia rosmarinus (Rosemary)",
+          "url": "https://plants.ces.ncsu.edu/plants/salvia-rosmarinus/",
+          "quote": "Teas; flavoring for vinegar, jam, bread, butter, stuffing, vegetables, stew, and meat dishes and, when mixed with other herbs and salt, as a flavoring for most dishes."
+        },
+        {
+          "claim": "attracts_pollinators true — NC State states the flowers attract butterflies, bees, and hummingbirds",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Salvia rosmarinus (Rosemary)",
+          "url": "https://plants.ces.ncsu.edu/plants/salvia-rosmarinus/",
+          "quote": "Flowering usually begins in the spring and into summer and attracts butterflies, bees, and hummingbirds."
         }
       ],
       "unknowns": [
@@ -629,8 +653,20 @@
         "fertilize fields: no cited source gives a feeding schedule; rosemary is generally grown lean and no authority quoted here contradicts or confirms that.",
         "toxicity_detail scope: no cited source addresses rosemary essential oil, only the plant.",
         "soil_ph_min / soil_ph_max: removed by audit. The 6-7 range was a generic herb-bed figure applied as a species limit, and NC State's only species-level pH datum ('Acid (<6.0)') contradicts it. A rosemary-specific source is needed.",
-        "soil_ph_max: see the soil_ph_min note above."
-      ]
+        "soil_ph_max: see the soil_ph_min note above.",
+        "https://hgic.clemson.edu/factsheet/herbs/ refused this machine (fetch status http-403, 0 bytes) via qc.py; no data was read from it and nothing is guessed from it.",
+        "All six fields are sourced from the NC State Extension Gardener Plant Toolbox page alone.",
+        "Species-level dimensions only: NC State's cultivar list gives separate sizes (e.g. 'Arp' up to 4 ft tall, 'Prostratus' low-growing); per the cultivar rule none of those figures were used.",
+        "is_edible true is unconditional in the source for culinary use of the herb: NC State lists Plant Type 'Edible' and an Edibility field describing teas and flavoring for foods. No part is described as poisonous on this page; the page also tags it non-toxic for cats, dogs, and horses. No specific preparation condition is stated.",
+        "attracts_pollinators true rests on both the prose sentence naming butterflies, bees, and hummingbirds and the structured Attracts field (Bees, Butterflies, Hummingbirds). The page separately notes American goldfinches visit for seeds, which was NOT counted as pollination support.",
+        "No field was left null."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 48
     },
     {
       "common_name": "Lavender",
@@ -809,6 +845,7 @@
     "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
     "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
-    "2026-08-16: citation labels rewritten into the structured convention used by b1/b2/b5 (leading field name). This batch was written in prose, so the claim loader — which pairs a value to a citation by field name — could read almost none of it. A label names a field only where the record holds that value; where no value was taken the label stays descriptive, so a value added later cannot inherit a citation that never supported it. Only the labels changed; values, quotes, sources and URLs are untouched."
+    "2026-08-16: citation labels rewritten into the structured convention used by b1/b2/b5 (leading field name). This batch was written in prose, so the claim loader — which pairs a value to a citation by field name — could read almost none of it. A label names a field only where the record holds that value; where no value was taken the label stays descriptive, so a value added later cannot inherit a citation that never supported it. Only the labels changed; values, quotes, sources and URLs are untouched.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

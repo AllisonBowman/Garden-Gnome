@@ -236,6 +236,30 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c580",
           "quote": "Water: Dry to medium"
+        },
+        {
+          "claim": "is_edible true (conditional): NC State's structured Edibility field states the herbaceous parts may be steeped as a tea, a stated food/drink use of a named part of the plant.",
+          "source": "NC State Extension Gardener Plant Toolbox - Echinacea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/echinacea-purpurea/",
+          "quote": "Herbaceous parts may be steeped as a tea"
+        },
+        {
+          "claim": "attracts_pollinators true: NC State states pollinators, especially butterflies, are attracted to the flower (its structured Attracts field also lists Bees, Butterflies and Pollinators).",
+          "source": "NC State Extension Gardener Plant Toolbox - Echinacea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/echinacea-purpurea/",
+          "quote": "Several pollinators are attracted to the flower, especially butterflies."
+        },
+        {
+          "claim": "mature_height_in 36-48 (NC State Dimensions Height 3 ft. 0 in. - 4 ft. 0 in., converted to inches: 3 ft x 12 = 36 in low end, 4 ft x 12 = 48 in high end)",
+          "source": "NC State Extension Gardener Plant Toolbox - Echinacea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/echinacea-purpurea/",
+          "quote": "Height: 3 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Dimensions Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches: 1 ft x 12 = 12 in low end, 2 ft x 12 = 24 in high end)",
+          "source": "NC State Extension Gardener Plant Toolbox - Echinacea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/echinacea-purpurea/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -247,8 +271,23 @@
         "light_fc_min, light_fc_good, direct_sun_hours_max: outdoor sources give a sun-duration category (full sun/part shade/shade) rather than a footcandle intensity, per the outdoor-vs-indoor light axis guidance. NC State's 'full sun' definition is also open-ended ('6 or more hours'), so no upper-bound hours figure is supported either.",
         "fertilize_interval_days, fertilize_strength: Clemson describes one springtime (late March/early April) application of granular 12-6-6 slow-release fertilizer at 1 lb/100 sq ft, with no stated repeat interval and no full/half/quarter dilution framing, so neither field is supported.",
         "cool_rest_note: no admissible source discusses a dormancy or cool-rest care period for this species.",
-        "soil_drainage — removed on audit: Citation 3 quotes NC State as 'Soil Drainage: Good Drainage Moist Occasionally Dry,' but the source's raw HTML <dt>Soil Drainage:</dt> block contains only two <dd> attributes -- 'Good Drainage' and 'Moist.' The string 'Dry' appears zero times anywhere on the page (verified against the full page text, not a summarized render). 'Occasionally Dry' was fabricated and added to the quote; it is exactly the tag used to justify averaging three drainage descriptors into a 'moderate' value. With the real evidence being only 'Good Drainage' + 'Moist' from NC State and 'evenly moist, well-drained' from Clemson -- no real source anywhere mentions dry tolerance -- the record leans toward a wetter classification than 'moderate' actually supports, on top of the citation itself misrepresenting its source."
-      ]
+        "soil_drainage — removed on audit: Citation 3 quotes NC State as 'Soil Drainage: Good Drainage Moist Occasionally Dry,' but the source's raw HTML <dt>Soil Drainage:</dt> block contains only two <dd> attributes -- 'Good Drainage' and 'Moist.' The string 'Dry' appears zero times anywhere on the page (verified against the full page text, not a summarized render). 'Occasionally Dry' was fabricated and added to the quote; it is exactly the tag used to justify averaging three drainage descriptors into a 'moderate' value. With the real evidence being only 'Good Drainage' + 'Moist' from NC State and 'evenly moist, well-drained' from Clemson -- no real source anywhere mentions dry tolerance -- the record leans toward a wetter classification than 'moderate' actually supports, on top of the citation itself misrepresenting its source.",
+        "is_edible is CONDITIONAL: NC State's Edibility field states only that the herbaceous (above-ground green) parts may be steeped as a tea. No source consulted describes eating any part as ordinary food, and none names an edible part beyond that tea use. The true flag is not license to eat roots, seeds, or flowers.",
+        "No page consulted states that any part of Echinacea purpurea is poisonous or unsafe to eat; the true flag rests solely on the tea statement, not on a broader edibility endorsement.",
+        "Mature size comes from NC State's structured Dimensions block (the anchor source), converted feet to inches: Height 3-4 ft = 36-48 in; Width 1-2 ft = 12-24 in. All four size fields are non-null.",
+        "Species-level figures from other authorities that were NOT used, since NC State is the anchor: UF/IFAS gives Height 1 to 3 feet and Spread 2 to 3 feet; Clemson says E. purpurea grows up to 2 to 3 1/2 feet tall and 1 1/2 feet wide. Published spread figures disagree across authorities (NC State 12-24 in vs UF/IFAS 24-36 in).",
+        "Cultivar figures on the Clemson page ('Magnus' 30-36 in, 'Ruby Star' 30-36 in, 'White Swan' 24-36 in, 'Kim's Knee High' 12-18 in) are cultivar sizes, not the species', and were deliberately excluded from every size field.",
+        "RHS carries no 'Ultimate height' or 'Ultimate spread' structured field on the fetched page (0 hits for both patterns), so it contributed no size figure.",
+        "plantfinder.mobot.org refused this machine: qc.py returned 'fetch status: error:ConnectError | bytes: 0'. Nothing from Missouri Botanical Garden was read or used, and nothing was guessed about its content.",
+        "Not pollination, and not used as support for attracts_pollinators: NC State notes the center-cone seeds are attractive to birds and lists Songbirds under Attracts; Clemson notes birds enjoy the seeds and goldfinches take the seed heads. Deer resistance is likewise irrelevant to this field.",
+        "No page consulted mentions hummingbirds or moths for this species; the attracts_pollinators true flag rests on bees, butterflies, and an explicit 'Pollinators' listing."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Lanceleaf Coreopsis",
@@ -1125,6 +1164,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Both species flagged in advance -- Foxglove (cardiac glycosides, one of the best-documented genuinely dangerous garden plants) and Delphinium (toxic alkaloids) -- correctly resolved toxic_to_pets=true, each grounded in genuinely pet-inclusive language (RHS's explicit 'TOXIC to pets' for Foxglove; RHS's 'Humans/Pets: Harmful if eaten' for Delphinium) rather than borrowed from a human-only section. Foxglove's audit went a level deeper than seen before: even the toxic-principle/plant-parts detail that looked properly structured turned out, on raw HTML inspection, to be nested entirely under a 'Poisonous to Humans' group header on the source page -- correctly stripped from toxicity_detail despite reading as legitimate mechanism data at a glance.",
     "Candytuft's audit caught two costed-consequence errors: water_regime was set to a drier category than Clemson's own 'moist to slightly dry' phrasing supports, with Missouri Botanical Garden's structured 'Water: Medium' tag sitting right next to the prose the record actually quoted and never reconciled against it. soil_drainage was softened to 'moderate' against a unanimous well-drained-required signal across all four sources, with Missouri Botanical Garden and Clemson both naming the specific failure mode (crown/root rot) that following the softer reading risks causing.",
-    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched."
+    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

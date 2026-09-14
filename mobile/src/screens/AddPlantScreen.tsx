@@ -13,13 +13,13 @@ import { fetchSpeciesList } from '../api/species';
 import {
   identifySpeciesPhoto, IdentifyResponse, photoIdAvailable,
 } from '../photoId/identify';
-import { fetchEnvironments } from '../api/environments';
+import { fetchGrowingAreas, fetchCandidates } from '../api/growingAreas';
 import { serverMessage } from '../api/errorMessage';
 import { ensureCameraPermission } from '../photoPermissions';
 import { createPlant } from '../api/plants';
 import ReportResult from '../components/ReportResult';
 import { rescheduleAllReminders } from '../notifications/reminders';
-import { Species, Environment } from '../types';
+import { Species, GrowingArea } from '../types';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
@@ -46,17 +46,37 @@ export default function AddPlantScreen() {
     queryFn: fetchSpeciesList,
   });
 
-  const { data: environments = [] } = useQuery({
-    queryKey: ['environments'],
-    queryFn: fetchEnvironments,
+  const { data: growingAreas = [] } = useQuery({
+    queryKey: ['growingAreas'],
+    queryFn: fetchGrowingAreas,
   });
+
+  // Preselect the area the server would have picked on its own. Leaving this
+  // blank did not mean "no area": the plant silently landed in the caller's
+  // oldest one (`plants._resolve_growing_area_id`), so the only thing the
+  // blank achieved was hiding where the plant went.
+  useEffect(() => {
+    if (envId == null && growingAreas.length > 0) setEnvId(growingAreas[0].id);
+  }, [growingAreas, envId]);
+
+  // What the chosen spot would have against this species. Asked before the
+  // plant is saved, because "your Hosta is in the wrong place" is worth far
+  // more before it is planted than after.
+  const { data: areaMisfits = [] } = useQuery({
+    queryKey: ['growingAreaCandidates', envId, 'addPlantCheck'],
+    queryFn: () => fetchCandidates(envId as number, 500),
+    enabled: envId != null && speciesId != null,
+  });
+  const speciesUnsuited = envId != null && speciesId != null
+    && areaMisfits.length > 0
+    && !areaMisfits.some((c) => c.species_id === speciesId);
 
   const mutation = useMutation({
     mutationFn: () => createPlant({
       nickname,
       species_id: speciesId!,
       quantity: quantityValue,
-      environment_id: envId ?? undefined,
+      growing_area_id: envId ?? undefined,
       location,
       // The backend prefixes "Intake condition:" and logs this as the
       // plant's first timeline entry
@@ -279,11 +299,11 @@ export default function AddPlantScreen() {
           </HelperText>
         )}
 
-        {environments.length > 0 && (
+        {growingAreas.length > 0 && (
           <>
-            <Eyebrow style={styles.sectionLabel}>Environment</Eyebrow>
+            <Eyebrow style={styles.sectionLabel}>Growing area</Eyebrow>
             <View style={styles.envGrid}>
-              {environments.map((e: Environment) => (
+              {growingAreas.map((e: GrowingArea) => (
                 <Button
                   key={e.id}
                   mode={envId === e.id ? 'contained' : 'outlined'}
@@ -295,6 +315,13 @@ export default function AddPlantScreen() {
                 </Button>
               ))}
             </View>
+            {speciesUnsuited ? (
+              <HelperText type="error" style={styles.fitWarning}>
+                Nothing confirms this species suits that spot. Open the growing
+                area after saving to see what it has against it — or pick a
+                different place for it.
+              </HelperText>
+            ) : null}
           </>
         )}
 
@@ -363,6 +390,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   debugRawText: { fontFamily: 'monospace', fontSize: 11, color: p.faint, marginTop: 4 },
   envGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   envBtn: { marginBottom: 4 },
+  fitWarning: { lineHeight: 18 },
   segmented: { marginBottom: 8 },
   saveBtn: { marginTop: 24, borderRadius: 8 },
   saveBtnContent: { paddingVertical: 6 },

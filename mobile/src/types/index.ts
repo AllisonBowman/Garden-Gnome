@@ -45,7 +45,7 @@ export type CareType = 'water' | 'fertilize' | 'mist' | 'prune' | 'repot' | 'rot
  *  didn't need doing" is a first-class result. Only water and repot take
  *  outcomes; the server refuses mismatched pairs. */
 export type CareOutcome = 'watered' | 'checked_not_needed' | 'repotted' | 'top_dressed' | 'checked_fine';
-export type EnvironmentType = 'home' | 'nursery' | 'community_garden' | 'conservation' | 'research';
+export type GrowingAreaType = 'home' | 'nursery' | 'community_garden' | 'conservation' | 'research';
 
 export interface CareSchedule {
   id: number;
@@ -143,6 +143,16 @@ export interface Species {
    *  °F — USDA PLANTS' "Temperature, Minimum". A survival floor, not
    *  `chill_damage_f`, which is where cold damage begins. */
   outdoor_temp_min_f?: number | null;
+
+  // Fit fields (0019) — matched against a growing area's real estate.
+  // `is_houseplant` null is "nobody looked", never "outdoor plant".
+  is_houseplant?: boolean | null;
+  is_edible?: boolean | null;
+  attracts_pollinators?: boolean | null;
+  mature_height_in_min?: number | null;
+  mature_height_in_max?: number | null;
+  mature_spread_in_min?: number | null;
+  mature_spread_in_max?: number | null;
 }
 
 export interface CareLog {
@@ -170,7 +180,7 @@ export interface Plant {
   /** Set when this row was split off another planting; carries the original's
    *  plant_uuid so the census can tell a rearrangement from new plants. */
   split_from_uuid?: string | null;
-  environment_id?: number;
+  growing_area_id?: number;
   location: string;
   maturity_stage: MaturityStage;
   acquired_on?: string;
@@ -182,11 +192,19 @@ export type Shelter = 'sheltered' | 'partial' | 'exposed';
 export type TempExposure = 'indoor' | 'outdoor';
 export type SunExposure = 'full_sun' | 'partial_sun' | 'shade';
 
-export interface Environment {
+/** What a plant would physically sit in here. Mirrors GrowingSurface. */
+export type GrowingSurface =
+  | 'in_ground_bed' | 'raised_bed' | 'containers' | 'windowsill'
+  | 'shelf_or_floor' | 'hanging' | 'greenhouse_bench' | 'pond_or_water';
+
+/** What the gardener wants out of the space. Mirrors GrowingGoal. */
+export type GrowingGoal = 'edible' | 'low_upkeep' | 'pollinators';
+
+export interface GrowingArea {
   id: number;
   uuid: string;
   name: string;
-  type: EnvironmentType;
+  type: GrowingAreaType;
   city: string;
   region: string;
   country: string;
@@ -195,6 +213,14 @@ export interface Environment {
   shelter: Shelter;
   temp_exposure: TempExposure;
   sun_exposure: SunExposure;
+  // Real estate. `null` is "nobody has said" and is never the same as 0 — the
+  // fit engine reads it as unknown, and unknown is never a pass. `goals` also
+  // distinguishes null (never asked) from [] (asked, nothing in particular).
+  surface?: GrowingSurface | null;
+  area_sqft?: number | null;
+  headroom_in?: number | null;
+  soil_depth_in?: number | null;
+  goals?: GrowingGoal[] | null;
   created_at: string;
   plant_count: number;
 }
@@ -232,7 +258,7 @@ export interface Weather {
 export interface StewardshipRecord {
   id: number;
   plant_id: number;
-  environment_id: number;
+  growing_area_id: number;
   installation_uuid: string;
   started_at: string;
   ended_at?: string;
@@ -241,8 +267,8 @@ export interface StewardshipRecord {
 
 export interface CensusSummary {
   total_plants: number;
-  total_environments: number;
-  environments_by_type: Record<string, number>;
-  plants_by_environment_type: Record<string, number>;
+  total_growingAreas: number;
+  growingAreas_by_type: Record<string, number>;
+  plants_by_growing_area_type: Record<string, number>;
   species_distribution: Array<{ species_id: number; common_name: string; count: number }>;
 }

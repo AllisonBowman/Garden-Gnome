@@ -74,19 +74,52 @@ class LeafCondition(str, Enum):
     dropping = "dropping"
 
 
-class EnvironmentType(str, Enum):
+class GrowingAreaType(str, Enum):
     home = "home"
     nursery = "nursery"
     community_garden = "community_garden"  # plan's "community_plot" maps here
     conservation = "conservation"
     research = "research"
-    # Added 2026-07-15 (auth plan decision 1) — per-user growing environments
+    # Added 2026-07-15 (auth plan decision 1) — per-user growing areas
     balcony = "balcony"
     greenhouse = "greenhouse"
     other = "other"
 
 
-# --- Environment climate characteristics (weather feature) ---
+# --- GrowingArea real estate (fit feature) ---
+# What the gardener actually has to plant into. Distinct from the climate
+# characteristics below, which say how much weather reaches the space; these
+# say how much space there is and what it is for.
+
+class GrowingSurface(str, Enum):
+    """What a plant would physically sit in here.
+
+    The distinction the catalog can act on is rooting volume and soil control:
+    a bed is whatever soil is already there and effectively unlimited depth, a
+    container is a mix of the owner's choosing and a hard floor a few inches
+    down. `pond_or_water` is neither, which is why it is not "a container with
+    wet soil"."""
+    in_ground_bed = "in_ground_bed"
+    raised_bed = "raised_bed"
+    containers = "containers"
+    windowsill = "windowsill"
+    shelf_or_floor = "shelf_or_floor"   # indoors, off the sill — a plant stand
+    hanging = "hanging"
+    greenhouse_bench = "greenhouse_bench"
+    pond_or_water = "pond_or_water"
+
+
+class GrowingGoal(str, Enum):
+    """What the gardener wants out of the space.
+
+    A goal narrows recommendations; it never loosens them. Nothing here can
+    make a species fit a space it does not fit."""
+    edible = "edible"              # herbs, veg, fruit — grown to eat
+    low_upkeep = "low_upkeep"      # tolerates being left alone
+    pollinators = "pollinators"    # feeds bees, butterflies, hummingbirds
+
+
+# --- GrowingArea climate characteristics (weather feature) ---
 # These describe how much the outside world reaches a plant, so weather-driven
 # advice applies only where it makes sense (an exposed balcony, not a desk).
 
@@ -224,7 +257,7 @@ class User(SQLModel, table=True):
     refresh_tokens: list["RefreshToken"] = Relationship(
         back_populates="user", cascade_delete=True)
     plants: list["Plant"] = Relationship(back_populates="user")
-    environments: list["Environment"] = Relationship(back_populates="user")
+    growing_areas: list["GrowingArea"] = Relationship(back_populates="user")
 
 
 class AuthIdentity(SQLModel, table=True):
@@ -354,6 +387,32 @@ class Species(SQLModel, table=True):
     # the quote stays in `claim` (ADR 0003).
     care_sources: Optional[list] = Field(
         default=None, sa_column=Column(JSON, nullable=True))
+
+    # --- Fit fields (0019) -----------------------------------------------
+    # What a growing area is matched against. All nullable, none harm-capable:
+    # a wrong height crowds a border, it does not kill anything, so these
+    # resolve by tier through disagreement and may be borrowed from the genus
+    # (labelled, ADR 0002) -- which for mature size is the right default,
+    # since congeners differ far less in size than in toxicity.
+
+    # Whether sources describe this as a plant grown indoors. The best-covered
+    # thing the catalog knows about where a plant can live: researchers have
+    # recorded it since b1, and 0019 promoted it from bookkeeping to a claim.
+    is_houseplant: Optional[bool] = None
+    # Grown to eat, and recorded as feeding pollinators. Both empty when 0019
+    # landed -- nothing in the existing corpus cites either -- and filled in as
+    # batches are re-researched.
+    is_edible: Optional[bool] = None
+    attracts_pollinators: Optional[bool] = None
+
+    # Mature size in inches, as a range because that is how sources publish it
+    # ("3 to 6 feet"). The max is what decides whether a plant outgrows a
+    # space; the min is what says it will not look lost in one. A single
+    # number would make the researcher pick an end and hide that they had.
+    mature_height_in_min: Optional[float] = None
+    mature_height_in_max: Optional[float] = None
+    mature_spread_in_min: Optional[float] = None
+    mature_spread_in_max: Optional[float] = None
 
     # The lowest outdoor temperature this species is recorded as tolerating,
     # in degrees F -- what USDA PLANTS publishes as "Temperature, Minimum
@@ -492,17 +551,17 @@ class SyncState(SQLModel, table=True):
     value: str
 
 
-class Environment(SQLModel, table=True):
+class GrowingArea(SQLModel, table=True):
     """A physical place where plants are kept and stewarded.
 
     Separate from stewardship (who cares for the plant) so that the same
     location can host plants across multiple stewards over time, and so
-    census queries can index over geography and environment type
+    census queries can index over geography and growing area type
     independently of ownership history."""
     id: Optional[int] = Field(default=None, primary_key=True)
     uuid: str = Field(default_factory=lambda: str(uuid4()), unique=True)
     name: str
-    type: EnvironmentType = EnvironmentType.home
+    type: GrowingAreaType = GrowingAreaType.home
     # Owner (auth plan decision 1). Schema-nullable only because SQLite can't
     # add NOT NULL to existing rows; backfilled to dev@local in 0004 and
     # required at the application layer from Phase 5 onward.
@@ -516,10 +575,24 @@ class Environment(SQLModel, table=True):
     shelter: Shelter = Shelter.sheltered
     temp_exposure: TempExposure = TempExposure.indoor
     sun_exposure: SunExposure = SunExposure.partial_sun
+
+    # Real estate — what there is to plant into (0018). Every one is Optional
+    # and none is defaulted, because these decide which species get put
+    # forward and a guessed dimension is an invented measurement. Null means
+    # nobody has said, the fit engine reads that as `unknown`, and `unknown`
+    # is never a pass. `goals` distinguishes null (never asked) from [] (asked,
+    # nothing in particular).
+    surface: Optional[GrowingSurface] = None
+    area_sqft: Optional[float] = None
+    headroom_in: Optional[float] = None
+    soil_depth_in: Optional[float] = None
+    goals: Optional[list[str]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    user: Optional[User] = Relationship(back_populates="environments")
-    plants: list["Plant"] = Relationship(back_populates="environment")
+    user: Optional[User] = Relationship(back_populates="growing_areas")
+    plants: list["Plant"] = Relationship(back_populates="growing_area")
 
 
 class Plant(SQLModel, table=True):
@@ -548,7 +621,7 @@ class Plant(SQLModel, table=True):
     # that were previously counted under one, so recording the origin is what
     # lets a census aggregator recognise the pair and avoid double-counting.
     split_from_uuid: Optional[str] = Field(default=None, index=True)
-    environment_id: Optional[int] = Field(default=None, foreign_key="environment.id")
+    growing_area_id: Optional[int] = Field(default=None, foreign_key="growingarea.id")
     # Owner. Schema-nullable only because SQLite can't add a NOT NULL column
     # to existing rows; the migration backfills every plant to the dev user
     # and Phase 6 enforces presence at the application layer. Make it
@@ -568,7 +641,7 @@ class Plant(SQLModel, table=True):
     intake_notes: str = ""
 
     species: Optional[Species] = Relationship(back_populates="plants")
-    environment: Optional[Environment] = Relationship(back_populates="plants")
+    growing_area: Optional[GrowingArea] = Relationship(back_populates="plants")
     user: Optional[User] = Relationship(back_populates="plants")
     # A plant's history is meaningless without the plant; delete it together
     care_logs: list["CareLog"] = Relationship(back_populates="plant", cascade_delete=True)
@@ -589,18 +662,18 @@ class CareLog(SQLModel, table=True):
 
 
 class StewardshipRecord(SQLModel, table=True):
-    """Chain-of-custody record: who had a plant, in which environment, and when.
+    """Chain-of-custody record: who had a plant, in which growing_area, and when.
 
     Stewardship (who cares for it) and location (where it lives) are captured
     as separate dimensions so census queries can ask independently: "how many
-    stewards has this plant had?" vs "which environments has it lived in?"
+    stewards has this plant had?" vs "which growing areas has it lived in?"
 
     ended_at=None means this is the current active stewardship. A plant
     with stewardship_count > 1 has been transferred; its plant_uuid persists
     across transfers so the census never double-counts it."""
     id: Optional[int] = Field(default=None, primary_key=True)
     plant_id: int = Field(foreign_key="plant.id")
-    environment_id: int = Field(foreign_key="environment.id")
+    growing_area_id: int = Field(foreign_key="growingarea.id")
     # Which GardenGnome installation holds this stewardship
     installation_uuid: str = Field(default="", index=True)
     started_at: datetime = Field(default_factory=datetime.utcnow)

@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 
 from tests.conftest import ROOT
-from tests.test_migrations import _upgrade
+from tests.test_migrations import _upgrade, head_revision
 
 LEGACY_CARE = ("light_need", "humidity_pct_min", "humidity_pct_max",
                "temp_f_min", "temp_f_max", "soil_type", "toxic_to_pets")
@@ -213,8 +213,7 @@ def test_the_pre_alembic_volume_shape_upgrades_to_head(tmp_path: Path, monkeypat
         "SELECT source, review_status FROM species "
         "WHERE scientific_name = 'Wired wiredus'").fetchone() == ("curated", "approved")
     assert conn.execute(
-        "SELECT version_num FROM alembic_version").fetchone() == (
-            "0016_outdoor_temp_min_f",)
+        "SELECT version_num FROM alembic_version").fetchone() == (head_revision(),)
     conn.close()
 
 

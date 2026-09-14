@@ -19,7 +19,7 @@ from .resolve import Authority
 # Bookkeeping on the record, not claims about the plant.
 NOT_A_FIELD = frozenset({
     "common_name", "scientific_name_given", "scientific_name_accepted",
-    "name_note", "citations", "unknowns", "is_houseplant",
+    "name_note", "citations", "unknowns",
     # The researcher's own reasoning about an estimate -- which pot, which
     # medium, what light. No source said it, so filing it as evidence would
     # attribute our assumptions to an authority.
@@ -40,6 +40,12 @@ STEMS = {
     "night_f_min": "night_f", "night_f_max": "night_f",
     "soil_ph_min": "soil_ph", "soil_ph_max": "soil_ph",
     "humidity_pct_min": "humidity_pct", "humidity_pct_max": "humidity_pct",
+    # Sources publish mature size as a range in one breath -- "3 to 6 feet" --
+    # so one citation reading `mature_height_in 36-72` supports both bounds.
+    "mature_height_in_min": "mature_height_in",
+    "mature_height_in_max": "mature_height_in",
+    "mature_spread_in_min": "mature_spread_in",
+    "mature_spread_in_max": "mature_spread_in",
 }
 
 

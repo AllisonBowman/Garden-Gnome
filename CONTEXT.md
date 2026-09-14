@@ -79,7 +79,33 @@ precision.
 Something a gardener recorded about one specific plant at one moment. The only
 data in the system that describes a real plant rather than a kind of plant.
 
-**Environment**:
-A place with its own climate and light where plants live. Care schedules and
-weather are per-environment, because a windowsill and a back garden are not the
-same place.
+**Growing area**:
+A place someone has to grow in, described well enough to be matched against:
+its light, its shelter, its surface and dimensions, and what the gardener wants
+out of it. Care schedules and weather are per-area, because a windowsill and a
+back garden are not the same place — and neither are the species that belong in
+them.
+_Avoid_: environment, which in this codebase now means only the one variables
+are read from. The database table is `growingarea` and the API path
+`/growing-areas`; `/environments` answers too, deprecated, until the shipped
+build stops calling it.
+
+**Fit finding**:
+One axis's verdict on one Species in one Growing area — `fits`, `misfits`, or
+`unknown` — with the sentence a person reads for it. Derived on every request,
+never stored, so it stays honest as the catalog is corrected.
+
+**Unknown**:
+The verdict when the catalog says nothing on an axis. Never a pass: it does not
+score, does not rank, and does not make a Candidate. The same rule as a null
+toxicity — no record is not "safe" — applied to space instead of harm.
+
+**Misfit**:
+A Fit finding of `misfits` against a plant already standing in the area. The
+unit of what needs addressing, and the only thing the "needs addressing" card
+shows — a plant nobody can judge is absent from it, not listed as fine.
+
+**Candidate**:
+A Species put forward for a Growing area: zero Misfits *and* at least one
+confirmed fit. The second half is what keeps an unresearched species — nothing
+against it because nothing is known about it — out of a recommendation.

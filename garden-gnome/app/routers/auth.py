@@ -5,7 +5,7 @@ Sign-in upsert (shared by both providers):
 2. Verified email exactly matching an existing user -> link a new identity
    to that user. (Apple private-relay emails won't match by construction.)
 3. Otherwise create the User, the identity, AND a default "My Home"
-   environment so every new account starts usable (decision 5).
+   growing area so every new account starts usable (decision 5).
 """
 import logging
 from datetime import datetime
@@ -20,7 +20,7 @@ from app.db.database import get_session
 from app.deps import get_current_user
 from app.rate_limit import SIGNIN_LIMIT, TOKEN_LIMIT, limiter
 from app.models.models import (
-    AuthIdentity, AuthProvider, Environment, EnvironmentType, Plant, User,
+    AuthIdentity, AuthProvider, GrowingArea, GrowingAreaType, Plant, User,
 )
 from app.models.schemas import (
     AppleSignInRequest, AuthTokensOut, GoogleSignInRequest, LogoutRequest,
@@ -84,10 +84,10 @@ def _sign_in(
         user = User(email=email, display_name=display_name_hint)
         session.add(user)
         session.flush()
-        # Every new account starts with a usable default environment
-        session.add(Environment(
+        # Every new account starts with a usable default growing area
+        session.add(GrowingArea(
             name=DEFAULT_ENV_NAME,
-            type=EnvironmentType.home,
+            type=GrowingAreaType.home,
             user_id=user.id,
         ))
         created = True
@@ -259,11 +259,11 @@ def delete_me(
         session.delete(plant)
     session.flush()
 
-    # Environments next. The router-level "has stewardship history" 409
-    # guard is for user-initiated environment deletes only — account
+    # GrowingAreas next. The router-level "has stewardship history" 409
+    # guard is for user-initiated growing area deletes only — account
     # deletion wipes the history above, and must never be blocked.
     envs = session.exec(
-        select(Environment).where(Environment.user_id == user.id)).all()
+        select(GrowingArea).where(GrowingArea.user_id == user.id)).all()
     for env in envs:
         session.delete(env)
 

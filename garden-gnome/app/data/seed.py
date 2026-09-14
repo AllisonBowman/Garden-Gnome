@@ -1,4 +1,4 @@
-"""Seed species and default environment from the JSON catalog.
+"""Seed species and default growing_area from the JSON catalog.
 
 Species data lives in species_catalog.json — add new plants there without
 touching Python. The seed function is idempotent per scientific name:
@@ -17,7 +17,7 @@ from sqlmodel import Session, select
 from app.db.database import engine, run_migrations
 from app.models.models import (
     Species, CareSchedule, SpeciesTrait, LightNeed, CareType,
-    Environment, EnvironmentType,
+    GrowingArea, GrowingAreaType,
 )
 
 
@@ -290,27 +290,27 @@ SEED_DATA = [
 ]
 
 
-def seed_default_environment() -> None:
-    """DEV-ONLY (decision 5, 2026-07-15): create a global default Environment.
+def seed_default_growing_area() -> None:
+    """DEV-ONLY (decision 5, 2026-07-15): create a global default GrowingArea.
 
-    In production, every account gets its own "My Home" environment at
+    In production, every account gets its own "My Home" growing area at
     sign-up (Phase 5) and plant creation self-heals a missing default — a
-    global unowned environment no longer makes sense. Set GG_DEV_SEED=1 to
+    global unowned growing area no longer makes sense. Set GG_DEV_SEED=1 to
     keep the old single-user dev convenience (attached to dev@local)."""
     if os.getenv("GG_DEV_SEED", "") != "1":
         return
     with Session(engine) as session:
-        existing = session.exec(select(Environment)).first()
+        existing = session.exec(select(GrowingArea)).first()
         if existing:
             return
         env_name = os.getenv("DEFAULT_ENV_NAME", "My Garden")
         env_type_str = os.getenv("DEFAULT_ENV_TYPE", "home")
         try:
-            env_type = EnvironmentType(env_type_str)
+            env_type = GrowingAreaType(env_type_str)
         except ValueError:
-            env_type = EnvironmentType.home
+            env_type = GrowingAreaType.home
 
-        # Attach to dev@local so the environment is owned even in dev
+        # Attach to dev@local so the growing area is owned even in dev
         from datetime import datetime
 
         from app.models.models import User
@@ -321,10 +321,10 @@ def seed_default_environment() -> None:
                        created_at=datetime.utcnow())
             session.add(dev)
             session.flush()
-        env = Environment(name=env_name, type=env_type, user_id=dev.id)
+        env = GrowingArea(name=env_name, type=env_type, user_id=dev.id)
         session.add(env)
         session.commit()
-        print(f"Created default environment: '{env_name}' ({env_type.value})")
+        print(f"Created default growing_area: '{env_name}' ({env_type.value})")
 
 
 def seed() -> None:
@@ -371,7 +371,7 @@ def seed() -> None:
 
 
 def main() -> None:
-    """Everything a cold start needs: schema, catalog, environment, evidence.
+    """Everything a cold start needs: schema, catalog, growing_area, evidence.
 
     The claim sync is fenced. It reads every tranche file and rewrites the
     species table, and a defect in either must never become an API outage --
@@ -379,7 +379,7 @@ def main() -> None:
     not boot is not. So it logs and moves on, and this exits 0 regardless.
     """
     seed()
-    seed_default_environment()
+    seed_default_growing_area()
     try:
         from app.data.claims.sync import describe, sync_catalog
 

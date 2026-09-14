@@ -35,6 +35,12 @@ RESOLVED_COLUMNS = (
     "water_dormant_days_est",
     "fertilize_active_months", "fertilize_interval_days", "fertilize_strength",
     "outdoor_sun_exposure", "outdoor_temp_min_f",
+    # Fit fields (0019). Size and place are care facts too -- a plant that
+    # reaches eight feet is telling the caretaker something about the room
+    # it needs, and the advisor should have it.
+    "is_houseplant", "is_edible", "attracts_pollinators",
+    "mature_height_in_min", "mature_height_in_max",
+    "mature_spread_in_min", "mature_spread_in_max",
 )
 
 # Wording for the categorical fields. A token like `chunky_aroid` is a column
@@ -266,6 +272,51 @@ def _outdoors(sp: Species, tag: Tag) -> Told:
     return lines, ""
 
 
+def _feet(value: float) -> str:
+    """Inches, said the way a gardener says them.
+
+    Under two feet nobody converts; above it, feet with the inches dropped is
+    how every source publishes mature size in the first place."""
+    if value < 24:
+        return f"{_num(value)} in"
+    feet = value / 12
+    return f"{_num(round(feet, 1))} ft"
+
+
+def _size(sp: Species, tag: Tag) -> Told:
+    """How big it gets, and what the space would be for.
+
+    Separate from the care concepts above because these answer a different
+    question: not "what does it need from me" but "does it belong here".
+    """
+    lines = []
+    for label, low, high, fields in (
+        ("Mature height", sp.mature_height_in_min, sp.mature_height_in_max,
+         ("mature_height_in_min", "mature_height_in_max")),
+        ("Mature spread", sp.mature_spread_in_min, sp.mature_spread_in_max,
+         ("mature_spread_in_min", "mature_spread_in_max")),
+    ):
+        if low is None and high is None:
+            continue
+        if low is not None and high is not None:
+            span = f"{_feet(low)}-{_feet(high)}"
+        elif low is not None:
+            span = f"from {_feet(low)}"
+        else:
+            span = f"up to {_feet(high)}"
+        lines.append(f"- {label}: {tag(span, *fields)}")
+
+    if sp.is_houseplant is not None:
+        grown = "grown indoors" if sp.is_houseplant else "an outdoor plant"
+        lines.append(f"- Where it lives: {tag(grown, 'is_houseplant')}")
+    if sp.is_edible:
+        lines.append(f"- Edible: {tag('grown to eat', 'is_edible')}")
+    if sp.attracts_pollinators:
+        lines.append(
+            f"- Pollinators: {tag('recorded as feeding pollinators', 'attracts_pollinators')}")
+    return lines, ""
+
+
 def _toxicity_word(flag: bool | None) -> str:
     # Null is "no record", never "no": a default read as safety is the
     # invented verdict ADR 0002 forbids.
@@ -328,7 +379,7 @@ def species_fact_lines(species: Species) -> list[str]:
              f"- Scientific name: {species.scientific_name}"]
     legacy: list[str] = []
     for concept in (_light, _humidity, _temperature, _soil, _water,
-                    _fertilize, _outdoors):
+                    _fertilize, _outdoors, _size):
         told, from_legacy = concept(species, tag)
         lines.extend(told)
         if from_legacy:

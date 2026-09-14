@@ -15,7 +15,7 @@ the resolver refuses to inherit those (ADR 0007).
 """
 from app.data.claims.resolve import HARM_CAPABLE
 from app.models.models import (
-    CareDataStatus, Environment, LightNeed, MaturityStage, Plant, Shelter,
+    CareDataStatus, GrowingArea, LightNeed, MaturityStage, Plant, Shelter,
     Species, SpeciesSource, SunExposure, TempExposure,
 )
 from app.services.advisor import (
@@ -87,7 +87,7 @@ def make_plant():
 
 
 def make_env():
-    return Environment(name="Balcony", shelter=Shelter.exposed,
+    return GrowingArea(name="Balcony", shelter=Shelter.exposed,
                        temp_exposure=TempExposure.outdoor,
                        sun_exposure=SunExposure.full_sun)
 

@@ -31,7 +31,12 @@ from .store import resolve_from_db
 #: row in the tranche held a borrowed one when this landed, so the rewrite
 #: touches only the stamp -- but a row stamped "2" was produced by rules that
 #: would have allowed it, and the stamp should say which rules it got.
-RESOLVER_VERSION = "3"
+#:
+#: "4": the fit fields land (0019). `is_houseplant` becomes resolvable from
+#: claims that were already in the tranche and never had a column to go to,
+#: so this bump is what actually fills 507 rows; the other six arrive empty
+#: and fill as batches are re-researched. Every row is rewritten once.
+RESOLVER_VERSION = "4"
 
 #: The only columns a Claim is allowed to set. An allowlist rather than a
 #: denylist: a claim naming `scientific_name` or `review_status` must not be
@@ -52,6 +57,13 @@ RESOLVED_FIELDS = frozenset({
     # whether it could ground the rest of the catalog. It could not. A
     # survival floor, distinct from `chill_damage_f` above (ADR 0006).
     "outdoor_temp_min_f",
+    # Fit fields (0019). Matched against a growing area's real estate.
+    # `is_houseplant` was recorded by researchers from b1 onward but sat in
+    # tranche.NOT_A_FIELD, so it never became a claim; promoting it is what
+    # gives the indoor/outdoor axis its coverage. The rest arrive empty.
+    "is_houseplant", "is_edible", "attracts_pollinators",
+    "mature_height_in_min", "mature_height_in_max",
+    "mature_spread_in_min", "mature_spread_in_max",
 })
 
 #: Resolved fields a client never sees: verbatim passages held as audit

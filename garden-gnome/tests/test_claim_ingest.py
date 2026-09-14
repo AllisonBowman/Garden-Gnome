@@ -281,7 +281,15 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # batch was re-verified against the strict loader before landing here
     # -- see each batch's own normalizations entry for what, if anything,
     # that pass caught.
-    assert report.claims_written == 3120
+    # 3120 before `is_houseplant` was promoted from bookkeeping to a claim
+    # field (0019); that jump was 474 records whose citations already named it,
+    # written for the first time rather than newly researched.
+    #
+    # 3594 -> 3629 is the size-backfill pilot: 35 fields (mature size, edibility
+    # and pollinator value) added to seven already-landed species, researched
+    # against the pages each record was already cited to. The other species in
+    # those batches are untouched -- a backfill appends, it never rewrites.
+    assert report.claims_written == 3629
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

@@ -146,7 +146,7 @@ def api(migrated_db_url):
 
     from app.db.database import get_session
     from app.main import app
-    from app.models.models import Environment, EnvironmentType, Plant, Species, User
+    from app.models.models import GrowingArea, GrowingAreaType, Plant, Species, User
     from app.services import tokens
 
     engine = create_engine(migrated_db_url, connect_args={"check_same_thread": False})
@@ -170,11 +170,11 @@ def api(migrated_db_url):
         user = User(email="diag@example.com")
         s.add(user)
         s.flush()
-        env = Environment(name="home", type=EnvironmentType.home, user_id=user.id)
+        env = GrowingArea(name="home", type=GrowingAreaType.home, user_id=user.id)
         s.add(env)
         s.flush()
         plant = Plant(nickname="Front yard sunflower", species_id=species.id,
-                      environment_id=env.id, user_id=user.id)
+                      growing_area_id=env.id, user_id=user.id)
         s.add(plant)
         s.commit()
         plant_id = plant.id

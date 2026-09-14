@@ -102,7 +102,7 @@
         "scientific_name_accepted / name_note: left null. Every admissible source used the binomial Parthenocissus quinquefolia consistently and none disputed it, but none explicitly affirmed it as the currently accepted name (e.g. no source stated synonymy history or an authoritative acceptance statement), so per the 'does the quote actually state this value' standard used elsewhere in this catalog, nothing was recorded rather than inferring acceptance from the absence of dispute.",
         "soil_ph_min / soil_ph_max: left null. NC State's own soil pH tags for this species are Acid (<6.0), Neutral (6.0-8.0), and Alkaline (>8.0) -- i.e. all three bins are checked, meaning the species tolerates essentially the full pH spectrum with no stated numeric floor or ceiling. RHS similarly lists pH tolerance as 'Acid or Alkaline or Neutral' with no numbers. Since no bounded range is actually stated, no min/max could be extracted.",
         "direct_sun_hours_max: left null. NC State's 'Full sun (6 or more hours of direct sunlight a day)' defines the minimum threshold for its Full Sun category, not a maximum sun tolerance for this species; no admissible source caps how much direct sun the plant can take.",
-        "day_f_min/day_f_max/night_f_min/night_f_max: left null. Only USDA hardiness-zone winter-survival data (NC State: zones 3a-10b; RHS: H6 rating, hardy to about -20 to -15\u00b0C / roughly -4 to 5\u00b0F) and UF/IFAS's zone 3B-10 range were found -- these describe the dormant plant's cold-survival limit, not ambient day/night growing-temperature preferences, so per this catalog's convention they were not mapped onto these fields.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: left null. Only USDA hardiness-zone winter-survival data (NC State: zones 3a-10b; RHS: H6 rating, hardy to about -20 to -15°C / roughly -4 to 5°F) and UF/IFAS's zone 3B-10 range were found -- these describe the dormant plant's cold-survival limit, not ambient day/night growing-temperature preferences, so per this catalog's convention they were not mapped onto these fields.",
         "chill_damage_f: left null for the same reason -- the hardiness-zone and RHS H6 figures are winter-survival floors for the dormant plant, not a stated damage-onset temperature for actively growing tissue.",
         "cool_rest_note: left null. No admissible source discusses a dormancy or cool-rest period for this species.",
         "humidity_need/humidity_pct_min/humidity_pct_max: left null. No admissible source addresses ambient humidity requirements, consistent with this being an outdoor landscape vine rather than a plant documented for indoor/humidity-controlled culture.",
@@ -124,7 +124,7 @@
       "name_note": "Also commonly called Beech, Beechnut Tree, Red Beech, Ridge Beech, and White Beech (NC State Extension). RHS separately lists the synonyms Fagus americana and Fagus ferruginea and gives \"purple beech\" as another common name for Fagus grandifolia.",
       "is_houseplant": false,
       "toxic_to_pets": true,
-      "toxicity_detail": "RHS marks Fagus grandifolia as \"Potentially harmful,\" specifically noting \"Pets (dogs): Harmful if eaten,\" with no further symptom or dose detail given. Separately, NC State Extension notes the tree's fruits contain a saponic glycoside that \"can cause stomach irritation in some individuals if eaten in quantity\" \u2014 a low-severity note scoped to human poisoning, not specifically to cats or dogs.",
+      "toxicity_detail": "RHS marks Fagus grandifolia as \"Potentially harmful,\" specifically noting \"Pets (dogs): Harmful if eaten,\" with no further symptom or dose detail given. Separately, NC State Extension notes the tree's fruits contain a saponic glycoside that \"can cause stomach irritation in some individuals if eaten in quantity\" — a low-severity note scoped to human poisoning, not specifically to cats or dogs.",
       "chill_damage_f": null,
       "cool_rest_note": null,
       "day_f_min": null,
@@ -158,12 +158,17 @@
       "unknowns": [
         "NC State Extension's toxicity section is titled 'Poisonous to Humans' and describes fruit-related stomach irritation in people; it does not address toxicity to cats or dogs, so it does not by itself support toxic_to_pets. toxic_to_pets=true here rests solely on RHS's 'Pets (dogs): Harmful if eaten' note; no admissible source specifically addresses cats, so cat-specific risk is unconfirmed.",
         "Soil pH sources disagree in specificity: NC State Extension checks all three pH category tags (Acid <6.0, Neutral 6.0-8.0, Alkaline >8.0) with no numeric bound given beyond the open-ended category thresholds, while UF/IFAS ('acidic') and UGA CAES ('acidic') describe the preference more narrowly. Because no source gives a precise numeric pH range, soil_ph_min/soil_ph_max are left null rather than guessed.",
-        "Multiple admissible sources give USDA hardiness zone data instead of Fahrenheit ranges: NC State lists zones 3a-9b, UF/IFAS lists zones 3A-8B, UGA CAES lists Georgia zones 6b-8b, and RHS rates it H6 (hardy to -20 to -15\u00b0C in the UK). None of these translate directly to the day/night temperature fields as defined, so day_f_min/max, night_f_min/max, chill_damage_f, and cool_rest_note are left null.",
+        "Multiple admissible sources give USDA hardiness zone data instead of Fahrenheit ranges: NC State lists zones 3a-9b, UF/IFAS lists zones 3A-8B, UGA CAES lists Georgia zones 6b-8b, and RHS rates it H6 (hardy to -20 to -15°C in the UK). None of these translate directly to the day/night temperature fields as defined, so day_f_min/max, night_f_min/max, chill_damage_f, and cool_rest_note are left null.",
         "This is a large in-ground shade tree (50-80+ ft tall per NC State, Missouri Botanical Garden, and UF/IFAS), not a species given routine container watering or foot-candle light measurement by any admissible source. light_fc_min/light_fc_good, direct_sun_hours_max, humidity_need/humidity_pct fields, water_regime and the related water-schedule fields are left null because sources only give general soil-moisture and light-category preferences, not the container-care terms these fields assume.",
         "UF/IFAS (ask.ifas.ufl.edu/st243) warns against high-nitrogen fertilizer on trees with bleeding canker disease and separately recommends 'regular fertilization and irrigation in dry weather' to prevent borer infestation, but gives no usable interval, active months, or liquid-feed dilution strength, so the fertilize_* fields are left null despite this partial guidance existing.",
         "Penn State Extension and University of Maryland Extension both describe Beech Leaf Disease (caused by the foliar nematode Litylenchus crenatae ssp. mccannii) as a serious, currently untreatable threat to American beech across the eastern US, with UMD noting infected trees 'typically die in two to seven years.' This is a significant health caveat with no corresponding schema field.",
         "RHS lists 'purple beech' as another common name for Fagus grandifolia alongside the synonyms Fagus americana and Fagus ferruginea; 'purple beech' is more commonly associated with purple/copper-leaved cultivars of the unrelated European beech, Fagus sylvatica (Atropurpurea Group), so this listing may reflect cross-listing with that species rather than a name widely used for American beech itself.",
-        "NC State Extension and UF/IFAS both note American beech is difficult to transplant (best planted from nursery stock rather than moved from the wild) and is not well suited to street/parking-lot or compacted-soil urban sites \u2014 a siting caveat worth flagging even though it has no dedicated schema field."
+        "NC State Extension and UF/IFAS both note American beech is difficult to transplant (best planted from nursery stock rather than moved from the wild) and is not well suited to street/parking-lot or compacted-soil urban sites — a siting caveat worth flagging even though it has no dedicated schema field.",
+        "attracts_pollinators left null: NC State's structured \"Attracts:\" field lists only Small Mammals and Songbirds (nut/seed eaters, not pollination), and neither RHS nor UF/IFAS carries any pollinator, bee, butterfly or 'attractive to pollinators' statement for this species. The only butterfly mention on NC State is the Harvester butterfly, whose larvae eat beech blight aphids on the tree — a predator/host relationship, not pollination. No mention at all, so null rather than false.",
+        "is_edible is CONDITIONAL — the whole condition: NC State says the nutmeats are edible raw or cooked only 'in small quantities', while the same page lists the plant under Poisonous to Humans with Poison Part: Fruits, Poison Severity: Low, toxic principle saponic glycoside, and symptom 'Can cause stomach irritation in some individuals if eaten in quantity.' RHS additionally flags it as harmful to dogs if eaten. Edible nut in small amounts only; not to be eaten in quantity.",
+        "Size comes from NC State's structured Dimensions block (the anchor source), converted ft-to-in: Height 60-80 ft = 720-960 in; Width 40-80 ft = 480-960 in. Other pages give different figures that were deliberately NOT merged: UF/IFAS 'Height: 50 to 75 feet' and 'Spread: 40 to 60 feet'; RHS 'Max Height 8-12 metres' and 'Max Spread wider than 8 metres' (open-ended, no usable numeric high end, and a UK-cultivation figure).",
+        "plantfinder.mobot.org refused this machine — qc.py returned 'fetch status: error:ConnectError | bytes: 0'. Nothing was read from or claimed from Missouri Botanical Garden.",
+        "ask.ifas.ufl.edu fetched ok (it did not refuse this machine) but was not used as the source of any field value; noted for transparency."
       ],
       "citations": [
         {
@@ -249,8 +254,37 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a865",
           "quote": "Best grown in deep, rich, moist but well-drained soils in full sun to part shade. Intolerant of wet, poorly drained soils."
+        },
+        {
+          "claim": "mature_height_in 720-960 (NC State Dimensions block: Height 60 ft. 0 in. - 80 ft. 0 in., converted to inches — 60 ft x 12 = 720 in, 80 ft x 12 = 960 in)",
+          "source": "NC State Extension Gardener Plant Toolbox — Fagus grandifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/fagus-grandifolia/",
+          "quote": "Height: 60 ft. 0 in. - 80 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 480-960 (NC State Dimensions block: Width 40 ft. 0 in. - 80 ft. 0 in., converted to inches — 40 ft x 12 = 480 in, 80 ft x 12 = 960 in)",
+          "source": "NC State Extension Gardener Plant Toolbox — Fagus grandifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/fagus-grandifolia/",
+          "quote": "Width: 40 ft. 0 in. - 80 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true — NC State states the nutmeats are edible raw or cooked, but only in small quantities (conditional; see unknowns)",
+          "source": "NC State Extension Gardener Plant Toolbox — Fagus grandifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/fagus-grandifolia/",
+          "quote": "Nutmeats, in small quantities, edible raw or cooked."
+        },
+        {
+          "claim": "is_edible true but qualified — the same NC State page lists the fruit as poisonous to humans if eaten in quantity, which is the condition attached to this field",
+          "source": "NC State Extension Gardener Plant Toolbox — Fagus grandifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/fagus-grandifolia/",
+          "quote": "Can cause stomach irritation in some individuals if eaten in quantity."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 720,
+      "mature_height_in_max": 960,
+      "mature_spread_in_min": 480,
+      "mature_spread_in_max": 960
     },
     {
       "common_name": "Eastern Cottonwood",
@@ -396,7 +430,7 @@
         },
         {
           "claim": "soil_drainage moderate (Moist but well-drained or Poorly-drained or Well-drained)",
-          "quote": "Moist but well\u2013drained or Poorly\u2013drained or Well\u2013drained",
+          "quote": "Moist but well–drained or Poorly–drained or Well–drained",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/88346/populus-deltoides-eastern-cottonwood-american-cottonwood/details"
         },
@@ -411,7 +445,7 @@
     {
       "common_name": "Red Tip Photinia",
       "scientific_name_given": "Photinia x fraseri",
-      "scientific_name_accepted": "Photinia \u00d7 fraseri",
+      "scientific_name_accepted": "Photinia × fraseri",
       "name_note": "NC State Extension notes that Photinia x fraseri is often confused with Camellia japonica, Photinia glabra, and Photinia serratifolia.",
       "is_houseplant": false,
       "toxic_to_pets": null,
@@ -456,7 +490,7 @@
         "Cold hardiness is documented via USDA zone and UK hardiness-rating systems rather than day/night Fahrenheit figures: NC State lists USDA zones 7a-8b, Missouri Botanical Garden lists winter hardiness to USDA Zone 7 (Zone 6 with a protected siting), and RHS rates 'Red Robin' H5 (hardy throughout most of the UK even in severe winters, roughly -15C to -10C). None of this cleanly resolves to the day_f/night_f/chill_damage_f fields as posed (which read as designed for chill-sensitive/houseplant use on a fully cold-hardy landscape shrub), so those fields are left null rather than derived by unit conversion.",
         "High humidity and poor air circulation are repeatedly cited (Missouri Botanical Garden, Clemson, UMD) as a key driver of Entomosporium leaf spot severity, but this describes ambient disease risk in the landscape rather than the plant's own care requirement for humidity, so humidity_need/humidity_pct fields are left null (the disease-risk information itself is captured in the Entomosporium unknowns entry above rather than repurposed into these fields).",
         "soil_base is inferred as garden_bed because every admissible source describes this species exclusively as an in-ground landscape/hedge shrub; no admissible source discusses container or indoor culture for it.",
-        "name_note \u2014 removed on audit: Bundles three sub-claims; checked each individually against the live pages. (1) The 'often confused with Camellia japonica, Photinia glabra, Photinia serratifolia' claim is fully covered by citation 3 and verbatim-accurate \u2014 I fetched plants.ces.ncsu.edu/plants/photinia-x-fraseri/ directly and confirmed the exact string 'is often confused with: Camellia japonica Photinia glabra Photinia serratifolia'. This sub-claim is fine. (2) The UK-common-name claim ('Sold in the UK under the common name \"Christmas berry\" rather than \"Red Tip Photinia\"') is over-generalized relative to its own citation. Citation 4's quote is accurate verbatim \u2014 I fetched rhs.org.uk/plants/94829 and confirmed the page's common name is always the compound 'Christmas berry 'Red Robin'' (it never appears as bare 'Christmas berry' for the species) \u2014 but the record's own name_note prose silently drops the \"'Red Robin'\" qualifier, presenting a cultivar-specific RHS common name as if it were the general UK name for the species Photinia x fraseri. Notably the record's own unknowns entries are careful to say \"RHS lists 'Red Robin' pH tolerance\" \u2014 correctly scoped \u2014 making the unscoped phrasing in name_note an inconsistency within the record itself. (3) The Fraser Nursery origin/parentage claim has two problems. First, citation 5's quote ('originally discovered at Fraser Nursery in Birmingham, Alabama around 1940') supports only the nursery/location/date; it does not mention parentage species at all, so the added detail 'this P. glabra x P. serratifolia hybrid' is uncited. Second, when I fetched the live MoBot page directly (plantfinder.mobot.org, taxonid=271345), the actual text reads: 'Photinia \u00d7 fraseri is a large, hybrid ( P. glabra and P. serrulata ), evergreen shrub that typically grows to 10-15' tall and as wide.' MoBot names the second parent 'P. serrulata', not 'P. serratifolia' as the record asserts while citing MoBot as the source. (P. serrulata is an older synonym now consolidated under P. serratifolia per POWO, so the substitution may be scientifically defensible, but the record presents it as MoBot's literal claim without flagging the normalization, and the citation quote doesn't cover the detail at all.) Net: 1 of 3 sub-claims is clean; the other two have real accuracy/coverage defects, so name_note as a whole should not land uncorrected."
+        "name_note — removed on audit: Bundles three sub-claims; checked each individually against the live pages. (1) The 'often confused with Camellia japonica, Photinia glabra, Photinia serratifolia' claim is fully covered by citation 3 and verbatim-accurate — I fetched plants.ces.ncsu.edu/plants/photinia-x-fraseri/ directly and confirmed the exact string 'is often confused with: Camellia japonica Photinia glabra Photinia serratifolia'. This sub-claim is fine. (2) The UK-common-name claim ('Sold in the UK under the common name \"Christmas berry\" rather than \"Red Tip Photinia\"') is over-generalized relative to its own citation. Citation 4's quote is accurate verbatim — I fetched rhs.org.uk/plants/94829 and confirmed the page's common name is always the compound 'Christmas berry 'Red Robin'' (it never appears as bare 'Christmas berry' for the species) — but the record's own name_note prose silently drops the \"'Red Robin'\" qualifier, presenting a cultivar-specific RHS common name as if it were the general UK name for the species Photinia x fraseri. Notably the record's own unknowns entries are careful to say \"RHS lists 'Red Robin' pH tolerance\" — correctly scoped — making the unscoped phrasing in name_note an inconsistency within the record itself. (3) The Fraser Nursery origin/parentage claim has two problems. First, citation 5's quote ('originally discovered at Fraser Nursery in Birmingham, Alabama around 1940') supports only the nursery/location/date; it does not mention parentage species at all, so the added detail 'this P. glabra x P. serratifolia hybrid' is uncited. Second, when I fetched the live MoBot page directly (plantfinder.mobot.org, taxonid=271345), the actual text reads: 'Photinia × fraseri is a large, hybrid ( P. glabra and P. serrulata ), evergreen shrub that typically grows to 10-15' tall and as wide.' MoBot names the second parent 'P. serrulata', not 'P. serratifolia' as the record asserts while citing MoBot as the source. (P. serrulata is an older synonym now consolidated under P. serratifolia per POWO, so the substitution may be scientifically defensible, but the record presents it as MoBot's literal claim without flagging the normalization, and the citation quote doesn't cover the detail at all.) Net: 1 of 3 sub-claims is clean; the other two have real accuracy/coverage defects, so name_note as a whole should not land uncorrected."
       ],
       "citations": [
         {
@@ -466,7 +500,7 @@
           "quote": "Red-Tip Photinia"
         },
         {
-          "claim": "RHS lists Photinia \u00d7 fraseri's Name Status as Accepted, supporting scientific_name_accepted.",
+          "claim": "RHS lists Photinia × fraseri's Name Status as Accepted, supporting scientific_name_accepted.",
           "source": "RHS Plant Profile",
           "url": "https://www.rhs.org.uk/plants/94829/photinia-x-fraseri-red-robin/details",
           "quote": "Name Status Accepted"
@@ -688,9 +722,9 @@
       "toxic_to_pets": null,
       "toxicity_detail": null,
       "unknowns": [
-        "No admissible source (NC State, Clemson HGIC, UF/IFAS ask.ifas.ufl.edu/edis.ifas.ufl.edu, RHS, Missouri Botanical Garden) addresses toxicity of Loropetalum chinense to cats or dogs specifically, so toxic_to_pets and toxicity_detail are left null rather than inferred true or false. (General web search turned up non-admissible sources, e.g. a Georgia Gardener blog and Plant Addicts, suggesting mild/low toxicity with tannins and reports of toxicity to goats specifically \u2014 but goats are not cats/dogs and these sources are outside the admissible domain list, so they were not used and do not satisfy Rule 2.)",
-        "water_regime was left null: admissible sources give qualitative and somewhat tension-holding guidance \u2014 RHS and NC State both call for soil kept 'moist but well-drained' / 'rich, moist, well-drained,' while NC State also separately notes the shrub is 'drought-tolerant' once established and Clemson HGIC says it is 'Drought tolerant once established; if necessary, water deeply during prolonged dry periods.' This does not clearly resolve to one of the four enum tokens (keep_moist / keep_barely_moist / dry_surface_between / dry_thoroughly_between), so per the strict-enum rule it was left null instead of guessed.",
-        "soil_ph_min was left null: NC State's Soil pH tag for this plant is 'Acid (<6.0)' \u2014 an open upper bound with no stated lower limit \u2014 so only soil_ph_max could be set from admissible sources.",
+        "No admissible source (NC State, Clemson HGIC, UF/IFAS ask.ifas.ufl.edu/edis.ifas.ufl.edu, RHS, Missouri Botanical Garden) addresses toxicity of Loropetalum chinense to cats or dogs specifically, so toxic_to_pets and toxicity_detail are left null rather than inferred true or false. (General web search turned up non-admissible sources, e.g. a Georgia Gardener blog and Plant Addicts, suggesting mild/low toxicity with tannins and reports of toxicity to goats specifically — but goats are not cats/dogs and these sources are outside the admissible domain list, so they were not used and do not satisfy Rule 2.)",
+        "water_regime was left null: admissible sources give qualitative and somewhat tension-holding guidance — RHS and NC State both call for soil kept 'moist but well-drained' / 'rich, moist, well-drained,' while NC State also separately notes the shrub is 'drought-tolerant' once established and Clemson HGIC says it is 'Drought tolerant once established; if necessary, water deeply during prolonged dry periods.' This does not clearly resolve to one of the four enum tokens (keep_moist / keep_barely_moist / dry_surface_between / dry_thoroughly_between), so per the strict-enum rule it was left null instead of guessed.",
+        "soil_ph_min was left null: NC State's Soil pH tag for this plant is 'Acid (<6.0)' — an open upper bound with no stated lower limit — so only soil_ph_max could be set from admissible sources.",
         "chill_damage_f, cool_rest_note, day_f_min/max, night_f_min/max, humidity_need/humidity_pct fields, and light_fc_min/light_fc_good were all left null. This is a cold-hardy outdoor landscape shrub (USDA zones 7b-9b per Clemson HGIC and NC State; UF/IFAS gives zones 7-10; RHS hardiness rating H3, defined by RHS as 'hardy in coastal and relatively mild parts of the UK (-5 to 1[C])', i.e. roughly 23-34F), not a chill-sensitive tropical houseplant metered in humidity percentages or foot-candles, and no admissible source gives ideal day/night growing-temperature ranges, humidity targets, or foot-candle light values for it.",
         "direct_sun_hours_max was left null: NC State's own Light-tag definitions cap 'Partial Shade' at 2-6 hours of direct sun but define 'Full Sun' as an open-ended '6 or more hours' with no stated ceiling, and since the plant is tagged as full-sun tolerant, no admissible source states a maximum number of direct-sun hours it should not exceed.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength were left null: none of the admissible sources reviewed (NC State, Clemson HGIC, UF/IFAS FP355/EP562, RHS) give a fertilizing schedule, application rate, or liquid-feed dilution strength for Loropetalum chinense.",
@@ -699,8 +733,8 @@
         "Invasive-status note: UF/IFAS's FP355 assessment lists Loropetalum chinense as 'Not considered a problem species at this time and may be recommended by UF/IFAS faculty,' i.e. it is not flagged as invasive in that UF/IFAS IFAS Assessment listing.",
         "Naming/spelling note: the UF/IFAS publication FP355 titles itself 'Loropetalum chinensis Chinese Fringe Bush' (an '-is' ending), while every other admissible source and the accepted binomial use 'Loropetalum chinense' (an '-e' ending); this looks like a spelling inconsistency in that one UF/IFAS document title rather than a distinct taxon.",
         "Cultivar note: the purple/burgundy-leaved, pink-to-red-flowered plants most often sold under the 'Chinese Fringe Flower' name are usually Loropetalum chinense var. rubrum (or f. rubrum) rather than the white-flowered, green-leaved straight species described by most of the sources above; the record here is for the species page and should be treated as broadly applicable rather than cultivar-specific.",
-        "name_note \u2014 removed on audit: name_note bundles four distinct sub-claims and only some are individually cited. (1) 'Formerly classified as Hamamelis chinensis (a taxonomic synonym per NC State)' \u2014 covered by citation 3, which is labeled name_note and whose quote 'Hamamelis chinensis' I verified live on NC State's page under its 'Previously Known As' field. Fine. (2) 'also commonly called \"Chinese witch hazel\" by RHS in the UK' \u2014 covered by citation 4 (labeled name_note); I fetched the live RHS page and confirmed it lists 'Chinese witch hazel' as its common name and does NOT use 'Chinese fringe flower' anywhere on the page, so the contrast is genuine. (3) '...versus \"Chinese fringe flower\" / \"Chinese fringe bush\" used by the US extension sources' \u2014 the 'Chinese fringe flower' half is asserted only in citation 4's prose (not its own quote) and citation 1 (which quotes it) is labeled common_name, not name_note, so per the strict rule it doesn't satisfy name_note's own citation requirement; more seriously, 'Chinese fringe bush' has NO citation anywhere in the array \u2014 no citation object quotes or references it at all. I independently confirmed live that UF/IFAS FP355 (https://ask.ifas.ufl.edu/fp355) is titled 'Loropetalum chinensis Chinese Fringe Bush' and uses that name throughout, so the fact is true and repairable, but as shipped this sub-claim is uncited. (4) 'not to be confused with true witch-hazel (Hamamelis spp.), a related but distinct genus' \u2014 this genus-distinction caveat has zero supporting citation anywhere in the array; it's inserted editorial content with no source backing despite being presented as part of a well-cited note. Because two of the four bundled sub-claims are wholly uncited, name_note as a whole is refuted for a citation-tracing gap, with sub-claims 1 and 2 confirmed sound and repairable using the quotes above.",
-        "name_note_placeholder_unused \u2014 removed on audit: This field is present with value \"\" (empty string) and its own name flags it as pipeline scaffolding ('placeholder_unused') rather than real record content. This matches the known encoding-bug pattern the checklist warns about \u2014 an artifact that should not appear in a landed, cited record and should be stripped before shipping, regardless of whether the empty string is technically distinct from a JSON null."
+        "name_note — removed on audit: name_note bundles four distinct sub-claims and only some are individually cited. (1) 'Formerly classified as Hamamelis chinensis (a taxonomic synonym per NC State)' — covered by citation 3, which is labeled name_note and whose quote 'Hamamelis chinensis' I verified live on NC State's page under its 'Previously Known As' field. Fine. (2) 'also commonly called \"Chinese witch hazel\" by RHS in the UK' — covered by citation 4 (labeled name_note); I fetched the live RHS page and confirmed it lists 'Chinese witch hazel' as its common name and does NOT use 'Chinese fringe flower' anywhere on the page, so the contrast is genuine. (3) '...versus \"Chinese fringe flower\" / \"Chinese fringe bush\" used by the US extension sources' — the 'Chinese fringe flower' half is asserted only in citation 4's prose (not its own quote) and citation 1 (which quotes it) is labeled common_name, not name_note, so per the strict rule it doesn't satisfy name_note's own citation requirement; more seriously, 'Chinese fringe bush' has NO citation anywhere in the array — no citation object quotes or references it at all. I independently confirmed live that UF/IFAS FP355 (https://ask.ifas.ufl.edu/fp355) is titled 'Loropetalum chinensis Chinese Fringe Bush' and uses that name throughout, so the fact is true and repairable, but as shipped this sub-claim is uncited. (4) 'not to be confused with true witch-hazel (Hamamelis spp.), a related but distinct genus' — this genus-distinction caveat has zero supporting citation anywhere in the array; it's inserted editorial content with no source backing despite being presented as part of a well-cited note. Because two of the four bundled sub-claims are wholly uncited, name_note as a whole is refuted for a citation-tracing gap, with sub-claims 1 and 2 confirmed sound and repairable using the quotes above.",
+        "name_note_placeholder_unused — removed on audit: This field is present with value \"\" (empty string) and its own name flags it as pipeline scaffolding ('placeholder_unused') rather than real record content. This matches the known encoding-bug pattern the checklist warns about — an artifact that should not appear in a landed, cited record and should be stripped before shipping, regardless of whether the empty string is technically distinct from a JSON null."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -750,7 +784,7 @@
         },
         {
           "claim": "chill_damage_f: Clemson HGIC states the temperatures at which fragrant tea olive can suffer cold/chill damage",
-          "quote": "Fragrant tea olives will grow throughout South Carolina, but can suffer cold damage in the upper Piedmont or Mountains if temperatures in a very cold winter approach 0 \u00b0F or if during a warm winter the temperature drops rapidly to 20 \u00b0F.",
+          "quote": "Fragrant tea olives will grow throughout South Carolina, but can suffer cold damage in the upper Piedmont or Mountains if temperatures in a very cold winter approach 0 °F or if during a warm winter the temperature drops rapidly to 20 °F.",
           "source": "Clemson HGIC",
           "url": "https://hgic.clemson.edu/factsheet/tea-olive/"
         },
@@ -818,14 +852,14 @@
         "No admissible source (NC State Plant Toolbox, Clemson HGIC's 'Tea Olive' factsheet, or the RHS plant profile) contains a toxicity/poison section for Osmanthus fragrans naming cats or dogs, so toxic_to_pets and toxicity_detail are left null rather than inferred true or false.",
         "UF/IFAS's dedicated fact sheet on this species (ENH-584/ST425, 'Osmanthus fragrans: Sweet Osmanthus') is retired -- both edis.ifas.ufl.edu/st425 and ask.ifas.ufl.edu/st425 (and the /pdf variants) return HTTP 410 Gone ('This Publication is no longer supported on AskIFAS'), even though search engines still index its old title and snippet, so it could not be used as a citation source.",
         "The common name 'Tea Olive' is shared across the genus Osmanthus; care advice for this species should not be conflated with Osmanthus heterophyllus (holly tea olive / false holly) or Osmanthus x fortunei (Fortune's tea olive), which NC State explicitly lists as commonly confused with O. fragrans and which differ in leaf shape and cold hardiness.",
-        "Cold-damage thresholds vary by source and by acclimation scenario: Clemson gives both about 0\u00b0F (gradual cold in a well-acclimated plant) and 20\u00b0F (a rapid temperature drop during an otherwise warm winter); UGA CAES describes injury at 'single digit' temperatures and death below 0\u00b0F; Missouri Botanical Garden states the plant is 'winter hardy to about 10\u00b0F.' chill_damage_f uses Clemson's more protective 20\u00b0F rapid-drop figure; the lower ~0\u00b0F gradual-cold threshold is a separate, less conservative data point worth surfacing to users.",
+        "Cold-damage thresholds vary by source and by acclimation scenario: Clemson gives both about 0°F (gradual cold in a well-acclimated plant) and 20°F (a rapid temperature drop during an otherwise warm winter); UGA CAES describes injury at 'single digit' temperatures and death below 0°F; Missouri Botanical Garden states the plant is 'winter hardy to about 10°F.' chill_damage_f uses Clemson's more protective 20°F rapid-drop figure; the lower ~0°F gradual-cold threshold is a separate, less conservative data point worth surfacing to users.",
         "Clemson HGIC says tea olives prefer 'fertile, moist, well-drained, acidic soil' but gives no numeric pH range, and no other admissible source provides one either, so soil_ph_min/soil_ph_max are left null rather than guessed.",
         "No admissible source gives foot-candle light levels, ambient humidity percentage or need category, indoor day/night temperature targets, a watering interval in days, a soil dry-down check depth, or a fertilizer dilution 'strength' for this species -- these are landscape-shrub fact sheets and don't report houseplant-style metrics, so those fields are left null.",
         "UGA CAES recommends fertilizing 'in early spring with a complete fertilizer, such as 16-4-8' containing slow-release nitrogen, but 16-4-8 is an NPK ratio (explicitly excluded from fertilize_strength by the schema's rules) and 'early spring' does not cleanly convert to a specific calendar month without guessing, so fertilize_interval_days, fertilize_active_months, and fertilize_strength are all left null despite fertilizer information being available in the source.",
         "is_houseplant is marked true on a conditional/regional basis only: NC State says it 'can be grown in containers and overwintered indoors or as a houseplant' specifically 'in cooler climates,' and Missouri Botanical Garden says to grow it as a houseplant 'where not winter hardy' -- this is a cold-climate fallback, not how the plant is primarily grown.",
-        "Missouri Botanical Garden's own page gives two slightly different hardiness figures ('Zone: 9 to 11' in its summary table vs. 'Winter hardy to about 10\u00b0F ... USDA Zones 8b-11' in its Culture prose), and both differ somewhat from NC State's listed 8a-11b and UGA CAES's 7b-9b -- a minor source-to-source discrepancy in hardiness zone boundaries.",
+        "Missouri Botanical Garden's own page gives two slightly different hardiness figures ('Zone: 9 to 11' in its summary table vs. 'Winter hardy to about 10°F ... USDA Zones 8b-11' in its Culture prose), and both differ somewhat from NC State's listed 8a-11b and UGA CAES's 7b-9b -- a minor source-to-source discrepancy in hardiness zone boundaries.",
         "NC State cautions that 'In southern climates, afternoon shade is a must' -- a qualitative caution about intense afternoon sun that doesn't cleanly convert to a numeric direct_sun_hours_max, so that field is left null despite the source discussing sun-exposure limits.",
-        "name_note \u2014 removed on audit: The name_note prose bundles four sub-claims, each checked separately against its citation. (1) The framing sentence that 'Tea Olive' is used broadly across the genus is a fair chapeau supported by the other three citations collectively \u2014 fine. (2) The Clemson sub-claim ('Clemson HGIC's Tea Olive factsheet ... covers Osmanthus fragrans together with related species') is well supported: I fetched hgic.clemson.edu/factsheet/tea-olive/ directly and the opening line reads verbatim 'Tea olives (Osmanthus species) are some of the most sweetly fragrant plants in Southern gardens.' \u2014 matches the cited quote exactly. (3) The NC State sub-claim is NOT adequately covered and contains outright inaccuracies. I fetched plants.ces.ncsu.edu/plants/osmanthus-fragrans/ directly (verified via Content-Length match and 172 case-insensitive 'osmanthus' hits, so this is the genuine current page, not a mis-fetch). The cited quote 'Osmanthus fragrans is often confused with:' is verbatim accurate, and the page does list Osmanthus heterophyllus and Osmanthus x fortunei there. But: (a) NC State never calls Osmanthus x fortunei 'Fortune's tea olive' anywhere on the page \u2014 it explicitly calls it 'Fortune's osmanthus' ('Fragrant tea olive is one of the parents of Fortune's osmanthus (Osmanthus x fortunei), but Fortune's osmanthus has numerous, evenly spaced spines on its leaves...'). The name_note's parenthetical 'Fortune's tea olive' is a factual misattribution to this source. (b) 'holly tea olive' as a name for O. heterophyllus does not appear anywhere on the cited page (only 'false holly' does, which IS accurate: '...a feature inherited from its other parent, false holly (Osmanthus heterophyllus)'). (c) The claim that these species 'differ in leaf shape and cold hardiness' is only half-supported \u2014 the page discusses leaf shape/spines in detail but never mentions cold hardiness anywhere (I searched for 'hardy'/'hardiness' on the full page text and got zero matches). 'Cold hardiness' is an invented addition not present in the citation. Additionally, even the citation's own claim label overstates the source \u2014 it says NC State flags species 'that share the tea olive common name,' but 'tea olive' appears on this page only in reference to O. fragrans itself (4 occurrences, all tied to this species' own common names/title/meta description), never attached to O. heterophyllus or O. fortunei. (4) The MoBOT sub-claim ('fragrant olive' as primary, with 'sweet olive,' 'sweet tea,' and 'kwei' as further alternates) is directionally true \u2014 I independently fetched plantfinder.mobot.org and confirmed the page's Common Names tooltip lists exactly 'fragrant olive, fragrant tea olive, kwei, sweet olive, sweet tea, tea olive' with 'Common Name: fragrant olive' as the headline field \u2014 but the cited quote only captures 'Common Name: fragrant olive' and doesn't itself quote the 'sweet olive/sweet tea/kwei' list, so that portion is uncited even though I confirm it's true and could be repaired by quoting the tooltip text above. Net: sub-claim (3) is the disqualifying problem \u2014 it attributes specific common names and a hardiness distinction to NC State that the source does not contain, one of which ('Fortune's tea olive') is affirmatively wrong versus what the page says ('Fortune's osmanthus')."
+        "name_note — removed on audit: The name_note prose bundles four sub-claims, each checked separately against its citation. (1) The framing sentence that 'Tea Olive' is used broadly across the genus is a fair chapeau supported by the other three citations collectively — fine. (2) The Clemson sub-claim ('Clemson HGIC's Tea Olive factsheet ... covers Osmanthus fragrans together with related species') is well supported: I fetched hgic.clemson.edu/factsheet/tea-olive/ directly and the opening line reads verbatim 'Tea olives (Osmanthus species) are some of the most sweetly fragrant plants in Southern gardens.' — matches the cited quote exactly. (3) The NC State sub-claim is NOT adequately covered and contains outright inaccuracies. I fetched plants.ces.ncsu.edu/plants/osmanthus-fragrans/ directly (verified via Content-Length match and 172 case-insensitive 'osmanthus' hits, so this is the genuine current page, not a mis-fetch). The cited quote 'Osmanthus fragrans is often confused with:' is verbatim accurate, and the page does list Osmanthus heterophyllus and Osmanthus x fortunei there. But: (a) NC State never calls Osmanthus x fortunei 'Fortune's tea olive' anywhere on the page — it explicitly calls it 'Fortune's osmanthus' ('Fragrant tea olive is one of the parents of Fortune's osmanthus (Osmanthus x fortunei), but Fortune's osmanthus has numerous, evenly spaced spines on its leaves...'). The name_note's parenthetical 'Fortune's tea olive' is a factual misattribution to this source. (b) 'holly tea olive' as a name for O. heterophyllus does not appear anywhere on the cited page (only 'false holly' does, which IS accurate: '...a feature inherited from its other parent, false holly (Osmanthus heterophyllus)'). (c) The claim that these species 'differ in leaf shape and cold hardiness' is only half-supported — the page discusses leaf shape/spines in detail but never mentions cold hardiness anywhere (I searched for 'hardy'/'hardiness' on the full page text and got zero matches). 'Cold hardiness' is an invented addition not present in the citation. Additionally, even the citation's own claim label overstates the source — it says NC State flags species 'that share the tea olive common name,' but 'tea olive' appears on this page only in reference to O. fragrans itself (4 occurrences, all tied to this species' own common names/title/meta description), never attached to O. heterophyllus or O. fortunei. (4) The MoBOT sub-claim ('fragrant olive' as primary, with 'sweet olive,' 'sweet tea,' and 'kwei' as further alternates) is directionally true — I independently fetched plantfinder.mobot.org and confirmed the page's Common Names tooltip lists exactly 'fragrant olive, fragrant tea olive, kwei, sweet olive, sweet tea, tea olive' with 'Common Name: fragrant olive' as the headline field — but the cited quote only captures 'Common Name: fragrant olive' and doesn't itself quote the 'sweet olive/sweet tea/kwei' list, so that portion is uncited even though I confirm it's true and could be repaired by quoting the tooltip text above. Net: sub-claim (3) is the disqualifying problem — it attributes specific common names and a hardiness distinction to NC State that the source does not contain, one of which ('Fortune's tea olive') is affirmatively wrong versus what the page says ('Fortune's osmanthus')."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -889,109 +923,109 @@
       "citations": [
         {
           "claim": "common_name is Japanese Pittosporum",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "(Australian Laurel, Japanese Pittosporum, Mockorange, Mock Orange, Pittosporum, Variegated Japanese Pittosporum)"
         },
         {
           "claim": "scientific_name_accepted Pittosporum tobira (Name Status: Correct)",
-          "source": "Royal Horticultural Society (RHS) \u2014 Pittosporum tobira",
+          "source": "Royal Horticultural Society (RHS) — Pittosporum tobira",
           "url": "https://www.rhs.org.uk/plants/13205/i-pittosporum-tobira-i/details",
           "quote": "Name Status\nCorrect"
         },
         {
           "claim": "name_note: given binomial matches the currently accepted name",
-          "source": "Royal Horticultural Society (RHS) \u2014 Pittosporum tobira",
+          "source": "Royal Horticultural Society (RHS) — Pittosporum tobira",
           "url": "https://www.rhs.org.uk/plants/13205/i-pittosporum-tobira-i/details",
           "quote": "Name Status\nCorrect"
         },
         {
           "claim": "name_note: RHS lists 'Australian laurel' as an alternate common name",
-          "source": "Royal Horticultural Society (RHS) \u2014 Pittosporum tobira",
+          "source": "Royal Horticultural Society (RHS) — Pittosporum tobira",
           "url": "https://www.rhs.org.uk/plants/13205/i-pittosporum-tobira-i/details",
           "quote": "Other common names\nAustralian laurel, house-blooming mock orange"
         },
         {
           "claim": "name_note: NC State also lists 'Australian Laurel' as a common name",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "(Australian Laurel, Japanese Pittosporum, Mockorange, Mock Orange, Pittosporum, Variegated Japanese Pittosporum)"
         },
         {
           "claim": "name_note: Missouri Botanical Garden's own text instead reads 'Austrian laurel'",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Pittosporum tobira",
+          "source": "Missouri Botanical Garden Plant Finder — Pittosporum tobira",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=285126",
           "quote": "It is also sometimes commonly called mock orange or Austrian laurel."
         },
         {
           "claim": "is_houseplant true (grown as a houseplant in well-lit areas of the home)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "Grown it as a houseplant in well-lit areas of the home."
         },
         {
           "claim": "is_houseplant true (listed as a year-round Houseplant use)",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Pittosporum tobira",
+          "source": "Missouri Botanical Garden Plant Finder — Pittosporum tobira",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=285126",
           "quote": "Houseplant."
         },
         {
           "claim": "is_houseplant true (categorized under Houseplants)",
-          "source": "Royal Horticultural Society (RHS) \u2014 Pittosporum tobira",
+          "source": "Royal Horticultural Society (RHS) — Pittosporum tobira",
           "url": "https://www.rhs.org.uk/plants/13205/i-pittosporum-tobira-i/details",
           "quote": "Houseplants\nShrubs"
         },
         {
           "claim": "toxic_to_pets false (non-toxic for cats, dogs, and horses)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
         },
         {
           "claim": "toxicity_detail: non-toxic tags for cats, dogs, and horses, no poison section on this species' profile",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
         },
         {
           "claim": "cool_rest_note: indoor/container plants kept in bright light, no direct sun, reduced winter watering",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Pittosporum tobira",
+          "source": "Missouri Botanical Garden Plant Finder — Pittosporum tobira",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=285126",
           "quote": "Indoor plants are best placed in bright light, but direct sun should be avoided. Reduce watering in winter."
         },
         {
           "claim": "outdoor_sun_exposure full_sun",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "Full sun (6 or more hours of direct sunlight a day)"
         },
         {
           "claim": "outdoor_sun_exposure part_sun",
-          "source": "UF/IFAS EDIS FPS483/FP483 \u2014 Pittosporum tobira",
+          "source": "UF/IFAS EDIS FPS483/FP483 — Pittosporum tobira",
           "url": "https://ask.ifas.ufl.edu/fp483",
           "quote": "Light requirement:\nplant grows in part shade/part sun"
         },
         {
           "claim": "outdoor_sun_exposure part_shade",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
         },
         {
           "claim": "outdoor_sun_exposure full_shade",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "Plant in full sun to heavy shade, wide range of pH, but prefers well-drained soils."
         },
         {
           "claim": "soil_base garden_bed (landscape screen/hedge/border/mass-planting use)",
-          "source": "UF/IFAS EDIS FPS483/FP483 \u2014 Pittosporum tobira",
+          "source": "UF/IFAS EDIS FPS483/FP483 — Pittosporum tobira",
           "url": "https://ask.ifas.ufl.edu/fp483",
           "quote": "Uses:\nscreen; hedge; border; mass planting; container or aboveground planter; trained as a standard; near a deck or patio"
         },
         {
           "claim": "soil_drainage moderate (Good Drainage, Moist, Occasionally Dry tags span from good drainage into occasional moisture/dryness)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Pittosporum tobira",
+          "source": "NC State Extension Gardener Plant Toolbox — Pittosporum tobira",
           "url": "https://plants.ces.ncsu.edu/plants/pittosporum-tobira/",
           "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Dry"
         }
@@ -1152,6 +1186,7 @@
     }
   ],
   "normalizations": [
-    "2026-08-23: twentieth batch of the \"blind spots\" pass -- Virginia Creeper (a deliberate identification-confusion companion to Poison Ivy, already in this catalog -- confirmed distinct toxicity mechanisms, oxalic-acid GI risk versus urushiol contact dermatitis, with no content bleed), American Beech, Eastern Cottonwood, and five common Southern landscape shrubs (Red Tip Photinia, Chinese Fringe Flower, Tea Olive, Japanese Pittosporum, Thorny Elaeagnus). Virginia Creeper's toxic_to_pets=true rests on Clemson's citation naming dogs specifically ('moderately toxic to humans and dogs') -- properly scoped per this catalog's rule. American Beech's toxic_to_pets=true rests on RHS naming dogs specifically ('Pets (dogs): Harmful if eaten') -- also properly scoped, a plant most people wouldn't expect to carry a toxicity flag. This batch caught an entirely new defect: Chinese Fringe Flower's raw record carried an extraneous field, name_note_placeholder_unused, not part of this catalog's schema at all -- caught by extending the independent landing-time verification script to diff each record's keys against the full known field list, not just check values within known fields; deleted outright rather than nulled, since it isn't a real field. Three records had name_note refuted for bundling multiple sub-claims where some had real accuracy defects, not just citation gaps -- all three repaired by keeping only the sub-claims the audit confirmed clean and dropping the rest, matching this catalog's now-established per-sub-claim repair discipline (b35, b37): Photinia's name_note was trimmed to its one clean sub-claim (confusability with Camellia japonica/Photinia glabra/Photinia serratifolia) after the audit found the RHS cultivar-name claim silently dropped its 'Red Robin' qualifier and the parentage/nursery-origin claim misattributed a specific botanical name to Missouri Botanical Garden that MoBOT's page doesn't use; Chinese Fringe Flower's name_note kept its two clean sub-claims (former Hamamelis chinensis synonym; RHS's 'Chinese witch hazel' name) and added a new UF/IFAS citation for the 'Chinese Fringe Bush' name using the auditor's own confirmed publication title, dropping an uncited witch-hazel genus-distinction aside entirely; Tea Olive's name_note kept its genus-breadth framing and Clemson corroboration, widened its Missouri Botanical Garden citation to the source's full common-name list per the auditor's own confirmed quote, and dropped its NC State sub-claim outright after the audit found it misattributed 'Fortune's tea olive' (the source actually says 'Fortune's osmanthus') and invented a cold-hardiness distinction the source never mentions -- a genuine factual error, not merely an uncited-but-true gap. Virginia Creeper's and (following b37's Bugleweed precedent) no other record's scientific_name_accepted were left null on the same conservative standard: consistent usage across sources isn't the same as an explicit statement of current taxonomic acceptance."
+    "2026-08-23: twentieth batch of the \"blind spots\" pass -- Virginia Creeper (a deliberate identification-confusion companion to Poison Ivy, already in this catalog -- confirmed distinct toxicity mechanisms, oxalic-acid GI risk versus urushiol contact dermatitis, with no content bleed), American Beech, Eastern Cottonwood, and five common Southern landscape shrubs (Red Tip Photinia, Chinese Fringe Flower, Tea Olive, Japanese Pittosporum, Thorny Elaeagnus). Virginia Creeper's toxic_to_pets=true rests on Clemson's citation naming dogs specifically ('moderately toxic to humans and dogs') -- properly scoped per this catalog's rule. American Beech's toxic_to_pets=true rests on RHS naming dogs specifically ('Pets (dogs): Harmful if eaten') -- also properly scoped, a plant most people wouldn't expect to carry a toxicity flag. This batch caught an entirely new defect: Chinese Fringe Flower's raw record carried an extraneous field, name_note_placeholder_unused, not part of this catalog's schema at all -- caught by extending the independent landing-time verification script to diff each record's keys against the full known field list, not just check values within known fields; deleted outright rather than nulled, since it isn't a real field. Three records had name_note refuted for bundling multiple sub-claims where some had real accuracy defects, not just citation gaps -- all three repaired by keeping only the sub-claims the audit confirmed clean and dropping the rest, matching this catalog's now-established per-sub-claim repair discipline (b35, b37): Photinia's name_note was trimmed to its one clean sub-claim (confusability with Camellia japonica/Photinia glabra/Photinia serratifolia) after the audit found the RHS cultivar-name claim silently dropped its 'Red Robin' qualifier and the parentage/nursery-origin claim misattributed a specific botanical name to Missouri Botanical Garden that MoBOT's page doesn't use; Chinese Fringe Flower's name_note kept its two clean sub-claims (former Hamamelis chinensis synonym; RHS's 'Chinese witch hazel' name) and added a new UF/IFAS citation for the 'Chinese Fringe Bush' name using the auditor's own confirmed publication title, dropping an uncited witch-hazel genus-distinction aside entirely; Tea Olive's name_note kept its genus-breadth framing and Clemson corroboration, widened its Missouri Botanical Garden citation to the source's full common-name list per the auditor's own confirmed quote, and dropped its NC State sub-claim outright after the audit found it misattributed 'Fortune's tea olive' (the source actually says 'Fortune's osmanthus') and invented a cold-hardiness distinction the source never mentions -- a genuine factual error, not merely an uncited-but-true gap. Virginia Creeper's and (following b37's Bugleweed precedent) no other record's scientific_name_accepted were left null on the same conservative standard: consistent usage across sources isn't the same as an explicit statement of current taxonomic acceptance.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

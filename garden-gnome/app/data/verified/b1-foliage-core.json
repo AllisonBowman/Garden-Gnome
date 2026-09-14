@@ -71,6 +71,12 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/dracaena-trifasciata/",
           "quote": "Poison Severity: Low Poison Symptoms: Toxic if ingested:  vomiting (occasionally with blood), depression, nausea, diarrhea, anorexia, hypersalivation, dilated pupils (cats). The sap can cause skin irritation."
+        },
+        {
+          "claim": "is_edible false -- NC State Extension Plant Toolbox states Dracaena trifasciata is toxic if ingested (Poison Part: Flowers, Fruits; toxic principle saponins), and no page states any part is grown or used for food.",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Dracaena trifasciata",
+          "url": "https://plants.ces.ncsu.edu/plants/dracaena-trifasciata/",
+          "quote": "Toxic if ingested:  vomiting (occasionally with blood), depression, nausea, diarrhea, anorexia, hypersalivation, dilated pupils (cats). The sap can cause skin irritation."
         }
       ],
       "unknowns": [
@@ -83,8 +89,16 @@
         "soil_base: NC State lists loam and sand textures with good drainage but names no specific medium.",
         "soil_ph_max: NC State lists both the Neutral (6.0-8.0) and Alkaline (>8.0) categories, so the upper bound is open-ended.",
         "fertilize_active_months/interval_days/strength: no source I read gives a feeding schedule for this species.",
-        "outdoor_sun_exposure: houseplant record; the indoor light values must not be reinterpreted as an outdoor exposure rating."
-      ]
+        "outdoor_sun_exposure: houseplant record; the indoor light values must not be reinterpreted as an outdoor exposure rating.",
+        "mature_height_in_min / mature_height_in_max left null: the NC State Plant Toolbox page for Dracaena trifasciata carries no structured 'Dimensions:' block and no 'Height:' field at all (regex probes for 'Dimensions', 'Height', 'Height:', 'ft. 0 in', 'Mature', 'feet tall' all returned 0 hits). No published plant height figure was available from the two permitted pages.",
+        "mature_spread_in_min / mature_spread_in_max left null: the only 'Width:' field on the NC State page is 'Leaf Width:' ('1-3 inches'), which is a leaf dimension, not the plant's spread. No whole-plant width/spread figure is published on either permitted page.",
+        "The NC State Description text says leaves are 'up to 4 feet long and 2 to 4 inches wide' -- this is leaf length/width, deliberately NOT used for mature_height_in or mature_spread_in, which are whole-plant dimensions.",
+        "attracts_pollinators left null: no mention of pollinators on either permitted page. NC State has no 'Attracts' field and no 'Wildlife Value' field for this species; regex probes for 'Attracts', 'Attract', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' all returned 0 hits. Null means no record, not absence of pollinator value.",
+        "is_edible=false is based on NC State's Poison Symptoms field stating the plant is toxic if ingested; the page's Poison Part field names Flowers and Fruits, and it carries the tag 'poisonous if ingested'. No part of the plant is described anywhere as grown or used for food, so this is an unconditional false rather than a conditional edibility case.",
+        "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/ REFUSED this machine: every fetch returned 'http-403 | bytes: 0'. Nothing was read from it; no field or quote is drawn from Clemson HGIC.",
+        "Only the NC State Plant Toolbox page was readable, so all six fields rest on that single authority."
+      ],
+      "is_edible": false
     },
     {
       "common_name": "Pothos",
@@ -852,6 +866,7 @@
     "2026-08-08: High-band floors (Aloe, Crassula, Hoya) nulled — the audit killed their companion fc_good as class-floor artifacts, and a floor read off the bottom of Clemson's 150-1000 band understates a high-light plant. Re-source in the verification pass.",
     "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
-    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus)."
+    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

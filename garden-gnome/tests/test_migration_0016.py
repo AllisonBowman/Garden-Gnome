@@ -12,7 +12,7 @@ import pytest
 from alembic import command
 
 from tests.test_migration_0015 import _config, _insert_plant_of
-from tests.test_migrations import _upgrade
+from tests.test_migrations import _upgrade, head_revision
 
 MINTED_INSERT = (
     "INSERT INTO species (common_name, scientific_name, care_notes, source, "
@@ -82,7 +82,7 @@ def test_a_0015_db_is_renamed_and_downgrades_back(tmp_path: Path, monkeypatch):
     conn = sqlite3.connect(db)
     _assert_renamed(conn)
     assert conn.execute("SELECT version_num FROM alembic_version").fetchone() == (
-        "0016_outdoor_temp_min_f",)
+        head_revision(),)
     joined = conn.execute(
         "SELECT s.outdoor_temp_min_f FROM plant p JOIN species s ON s.id = p.species_id "
         "WHERE p.nickname = 'Wired'").fetchone()

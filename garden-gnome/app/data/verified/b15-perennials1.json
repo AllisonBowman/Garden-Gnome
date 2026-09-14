@@ -948,7 +948,13 @@
         "water_regime (and its day-count/basis fields): NC State's own structured 'Soil Drainage' attribute lists 'Good Drainage, Moist, Occasionally Dry' as tolerated conditions, while its own prose and other sources (Clemson HGIC, University of Maryland Extension, Missouri Botanical Garden) stress a strict need for dry, well-drained soil and warn of root/crown rot if kept too wet — a genuine conflict between a source's structured tag and prose (and across sources), so left null rather than picking a side.",
         "fertilize_interval_days/fertilize_strength/fertilize_active_months: no admissible source gives fertilizing guidance for this species; several instead emphasize it thrives in poor, low-fertility soil without describing any feeding schedule.",
         "toxicity_detail is deliberately limited to the pet-specific 'Problem for Cats/Dogs/Horses' tag; NC State's fuller symptom/mechanism writeup on the same page sits under a separate 'Poisonous to Humans' heading and was not carried over, since it describes human, not pet, effects. RHS separately flags the species as generally 'Harmful if eaten' without naming an affected species, so it was not used to support toxic_to_pets either.",
-        "soil_drainage — removed on audit: soil_drainage is asserted as \"fast\" citing only Clemson HGIC's prose (\"plant in a well-drained area, as root rot will become an issue if the soil is kept too wet\"), but the record's own unknowns text — two fields later, for water_regime — discloses that NC State's own structured 'Soil Drainage' attribute for this exact species lists 'Good Drainage, Moist, Occasionally Dry' as tolerated conditions (confirmed live on plants.ces.ncsu.edu/plants/asclepias-tuberosa/, under Cultural Conditions). That is the same species-specific, admissible-source structured field directly on-topic for soil_drainage, and it names 'Moist' as a tolerated condition rather than a strict fast-draining-only requirement. The record treats this exact conflict as sufficient grounds to leave water_regime null, but never applies the same caution to soil_drainage — it picks 'fast' from a single source while sitting on, and not disclosing, a structured contradiction it had already identified for the closely related field."
+        "soil_drainage — removed on audit: soil_drainage is asserted as \"fast\" citing only Clemson HGIC's prose (\"plant in a well-drained area, as root rot will become an issue if the soil is kept too wet\"), but the record's own unknowns text — two fields later, for water_regime — discloses that NC State's own structured 'Soil Drainage' attribute for this exact species lists 'Good Drainage, Moist, Occasionally Dry' as tolerated conditions (confirmed live on plants.ces.ncsu.edu/plants/asclepias-tuberosa/, under Cultural Conditions). That is the same species-specific, admissible-source structured field directly on-topic for soil_drainage, and it names 'Moist' as a tolerated condition rather than a strict fast-draining-only requirement. The record treats this exact conflict as sufficient grounds to leave water_regime null, but never applies the same caution to soil_drainage — it picks 'fast' from a single source while sitting on, and not disclosing, a structured contradiction it had already identified for the closely related field.",
+        "mature_height_in and mature_spread_in come from NC State's structured Dimensions block (Height: 1 ft. 0 in. - 2 ft. 0 in. = 12-24 in; Width: 1 ft. 0 in. - 1 ft. 6 in. = 12-18 in). Other cited pages give differing or partial figures that were NOT blended in: Clemson says mature size 1 to 3 feet tall and 1 to 1.5 feet wide (12-36 in tall, 12-18 in wide); UMD gives only 'Height: Up to 3 feet' (36 in, a max-only figure); Penn State gives 'Height: 18 to 24 inches'. The single anchor source was used rather than merging ranges across sources.",
+        "UMD's height is single-ended ('Up to 3 feet'), so it could only ever have filled a max; it was not centred or expanded into an invented range.",
+        "is_edible is false on NC State's human-poisoning record (toxic principle: cardiac glycosides and resinoids; symptoms if eaten in quantity), not on any conditional-edibility statement. No cited page describes any part of Asclepias tuberosa as grown or used for food. The sap can also cause contact dermatitis and eye irritation, and NC State tags the plant as a problem for dogs, horses, and cats.",
+        "No cultivar-specific sizes were used; NC State's Cultivars / Varieties section was empty in the fetched page.",
+        "Not a climber, so no support-versus-plant height ambiguity applies to these figures.",
+        "https://edis.ifas.ufl.edu/fp050 refused this machine (fetch status: error:ReadError, 0 bytes) on two attempts; nothing from that page was used or guessed."
       ],
       "citations": [
         {
@@ -1004,8 +1010,44 @@
           "quote": "This deciduous plant exhibits dormancy and will die back to the ground in winter. As it is also slow to start its growth in the spring, mark its location to prevent damage to the easily injured dormant crowns.",
           "source": "UF/IFAS Extension (EDIS)",
           "url": "https://edis.ifas.ufl.edu/fp050"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State structured Dimensions 'Height: 1 ft. 0 in. - 2 ft. 0 in.', converted at 12 inches per foot to 12-24 inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Asclepias tuberosa",
+          "url": "https://plants.ces.ncsu.edu/plants/asclepias-tuberosa/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State structured Dimensions 'Width: 1 ft. 0 in. - 1 ft. 6 in.', converted at 12 inches per foot to 12-18 inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Asclepias tuberosa",
+          "url": "https://plants.ces.ncsu.edu/plants/asclepias-tuberosa/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true - NC State's Wildlife Value states the flowers are a nectar source for butterflies and insect pollinators, and its structured Attracts field lists bees, butterflies, hummingbirds, moths and pollinators",
+          "source": "NC State Extension Gardener Plant Toolbox - Asclepias tuberosa",
+          "url": "https://plants.ces.ncsu.edu/plants/asclepias-tuberosa/",
+          "quote": "The flowers are a nectar source for many butterflies and insect pollinators."
+        },
+        {
+          "claim": "attracts_pollinators true - RHS cultivation notes describe the plant as attractive to bees",
+          "source": "RHS - Asclepias tuberosa | butterfly weed",
+          "url": "https://www.rhs.org.uk/plants/43609/i-asclepias-tuberosa-i/details",
+          "quote": "Attractive to bees and ideal for a border or wildflower garden"
+        },
+        {
+          "claim": "is_edible false - NC State records the plant as poisonous to humans when eaten, and no cited page describes any part as food",
+          "source": "NC State Extension Gardener Plant Toolbox - Asclepias tuberosa",
+          "url": "https://plants.ces.ncsu.edu/plants/asclepias-tuberosa/",
+          "quote": "Can cause stomach upset, nausea, vomiting, abdominal pain, diarrhea, weakness, lethargy, and confusion if eaten in quantity."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     }
   ],
   "audit_summary": [
@@ -1044,6 +1086,7 @@
   ],
   "normalizations": [
     "2026-08-21: landed after one registry fix (garden-gnome commit 9afdde5), not a data fix. Black-Eyed Susan cited ask.ifas.ufl.edu/fp512 -- attributed in the researcher's own source string to the identical EDIS document edis.ifas.ufl.edu hosts -- which the loader correctly refused since the domain wasn't registered. Registered it alongside UF/IFAS's known domain, same authority, and the citations resolved cleanly on re-check.",
-    "All three species flagged in advance for toxicity attention -- Sweet Pea (a different genus from the already-landed edible garden pea, despite the name), Vinca (source of the vinca alkaloids), and Butterfly Weed (a milkweed, cardiac glycosides) -- correctly resolved toxic_to_pets=true. Sweet Pea and Vinca both kept toxicity_detail null rather than borrow their sources' human-toxicity writeups -- Sweet Pea's audit explicitly caught and stripped an embedded Lathyrism symptom list that had been copied from a 'Poisonous to Humans' section into the pet-facing field, the same anti-pattern found in b14 now generalizing correctly across unrelated species without being re-taught per batch. Scarlet Sage's record separately cross-checked its own common name against a real collision -- a different species (Salvia coccinea) shares the name 'scarlet sage' in some sources."
+    "All three species flagged in advance for toxicity attention -- Sweet Pea (a different genus from the already-landed edible garden pea, despite the name), Vinca (source of the vinca alkaloids), and Butterfly Weed (a milkweed, cardiac glycosides) -- correctly resolved toxic_to_pets=true. Sweet Pea and Vinca both kept toxicity_detail null rather than borrow their sources' human-toxicity writeups -- Sweet Pea's audit explicitly caught and stripped an embedded Lathyrism symptom list that had been copied from a 'Poisonous to Humans' section into the pet-facing field, the same anti-pattern found in b14 now generalizing correctly across unrelated species without being re-taught per batch. Scarlet Sage's record separately cross-checked its own common name against a real collision -- a different species (Salvia coccinea) shares the name 'scarlet sage' in some sources.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

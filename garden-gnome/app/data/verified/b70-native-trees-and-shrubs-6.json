@@ -226,7 +226,12 @@
         "outdoor_sun_exposure excludes full_sun even though RHS's Position field lists \"Full shade, Full sun, Partial shade\": both North American structured sun fields (NC State Light Conditions: Dappled Sunlight, Deep shade, Partial Shade; MoBot Sun: \"Part shade to full shade\") exclude full sun, and UF/IFAS (ask.ifas.ufl.edu FP017) states the plant \"thrives in partial to full shade,\" so RHS's UK-calibrated full-sun listing is treated as excluded/disclosed rather than carried.",
         "soil_drainage is set to moderate based on NC State's own structured Soil Drainage field (\"Good Drainage, Moist, Occasionally Wet\"), per the rule that this field must be read first. UF/IFAS separately lists an \"Extended flooding\" tolerance and NC State's own field includes \"Occasionally Wet\" -- both are disclosed as counterpoints/tolerance traits, not used to push the value to moisture_retentive.",
         "No admissible source gives foot-candle light figures, a species-specific direct-sun-hour maximum, temperature ranges (day/night), humidity percentage or need, chill-damage onset temperature, or any fertilizing schedule/strength for this species specifically, so those fields are left null. A Penn State, UMD, or Georgia CAES page specific to this species was not found in this research pass.",
-        "RHS's page also lists 'Other common names: dwarf buckeye, dwarf horse chestnut' -- a secondary field, not treated as a competing lead name since NC State, MoBot, Clemson, and UF/IFAS/ask.ifas.ufl.edu all independently use 'bottlebrush buckeye' as the working common name."
+        "RHS's page also lists 'Other common names: dwarf buckeye, dwarf horse chestnut' -- a secondary field, not treated as a competing lead name since NC State, MoBot, Clemson, and UF/IFAS/ask.ifas.ufl.edu all independently use 'bottlebrush buckeye' as the working common name.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, kempercode=b180) refused this machine -- fetch status error:ConnectError, 0 bytes -- so nothing from that page was used.",
+        "Sources disagree on size: UF/IFAS FP017 gives 'Height: 5 to 10 feet' and 'Spread: 10 to 15 feet' (60-120 in / 120-180 in), while NC State and Clemson both give 8-12 ft tall by 8-15 ft wide. The NC State structured Dimensions block was used as the anchor, as instructed; Clemson independently agrees with it.",
+        "RHS gives size in metres only ('Max Height 2.5-4 metres', 'Max Spread 4-8 metres'), a broader spread than the US sources; not used, to avoid a metric-to-inch round trip on top of the anchored NC State figures.",
+        "is_edible is false on the basis of stated non-edibility/toxicity, not merely an absence of record: NC State says the buckeye nut is 'not edible' and lists 'Poisonous to Humans'; Clemson cautions the seeds are poisonous to people and pets; UF/IFAS says all parts are toxic if ingested, especially the nuts. No page describes any part as used for food, so this is not a conditional-edibility case.",
+        "No field was left null."
       ],
       "citations": [
         {
@@ -372,8 +377,62 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/aesculus-parviflora/",
           "quote": "Riparian, Woodland"
+        },
+        {
+          "claim": "mature_height_in 96-144 (NC State Plant Toolbox structured Dimensions block, Height 8 ft. 0 in. - 12 ft. 0 in., converted to inches: 8 ft x 12 = 96 in low end, 12 ft x 12 = 144 in high end)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Aesculus parviflora (Bottlebrush Buckeye)",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-parviflora/",
+          "quote": "Height: 8 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 96-180 (NC State Plant Toolbox structured Dimensions block, Width 8 ft. 0 in. - 15 ft. 0 in., converted to inches: 8 ft x 12 = 96 in low end, 15 ft x 12 = 180 in high end)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Aesculus parviflora (Bottlebrush Buckeye)",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-parviflora/",
+          "quote": "Width: 8 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "mature_height_in 96-144 and mature_spread_in 96-180 corroborated by Clemson HGIC, which gives 8 to 12 feet tall (96-144 inches) and 8 to 15 feet wide (96-180 inches)",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center -- How to Grow and Care for Bottlebrush Buckeye",
+          "url": "https://hgic.clemson.edu/how-to-grow-and-care-for-bottlebrush-buckeye-aesculus-parviflora-in-shade-gardens/",
+          "quote": "It is a multi-stemmed, deciduous shrub with a naturally rounded shape that matures to 8 to 12 feet tall and 8 to 15 feet wide."
+        },
+        {
+          "claim": "is_edible false -- NC State states the nut (buckeye) produced by this plant is not edible",
+          "source": "NC State Extension Gardener Plant Toolbox -- Aesculus parviflora (Bottlebrush Buckeye)",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-parviflora/",
+          "quote": "Flowers are followed by the nut called a buckeye and are not edible."
+        },
+        {
+          "claim": "is_edible false -- Clemson states the seeds are poisonous to people and pets and must not be eaten",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center -- How to Grow and Care for Bottlebrush Buckeye",
+          "url": "https://hgic.clemson.edu/how-to-grow-and-care-for-bottlebrush-buckeye-aesculus-parviflora-in-shade-gardens/",
+          "quote": "Don’t be tempted to eat the seed as they are poisonous to people and pets."
+        },
+        {
+          "claim": "attracts_pollinators true -- NC State's Wildlife Value field names pollinators, hummingbirds and swallowtail butterflies",
+          "source": "NC State Extension Gardener Plant Toolbox -- Aesculus parviflora (Bottlebrush Buckeye)",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-parviflora/",
+          "quote": "attracts pollinators, hummingbirds and eastern swallowtail butterflies"
+        },
+        {
+          "claim": "attracts_pollinators true -- Clemson describes honey bees and other pollinating insects gathering pollen from the flowers",
+          "source": "Clemson Cooperative Extension Home & Garden Information Center -- How to Grow and Care for Bottlebrush Buckeye",
+          "url": "https://hgic.clemson.edu/how-to-grow-and-care-for-bottlebrush-buckeye-aesculus-parviflora-in-shade-gardens/",
+          "quote": "Bees and other pollinating insects will exhibit red pollen sacs when gathering pollen from bottlebrush buckeyes."
+        },
+        {
+          "claim": "attracts_pollinators true -- UF/IFAS states the flowers are highly attractive to pollinators",
+          "source": "UF/IFAS Extension FPS-17/FP017 -- Aesculus parviflora: Bottlebrush Buckeye",
+          "url": "https://ask.ifas.ufl.edu/publication/fp017",
+          "quote": "The flowers are highly attractive to pollinators."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 96,
+      "mature_spread_in_max": 180
     },
     {
       "chill_damage_f": null,
@@ -1172,6 +1231,7 @@
   ],
   "normalizations": [
     "2026-09-05: fifty-second batch (cruise throttle) -- native trees and shrubs: Cucumber Tree, Bottlebrush Buckeye, Franklin Tree, Silky Dogwood, Water Tupelo, and Inkberry. Clean first run (12/12 agents, 1.37M subagent tokens); land_check.py and covered.py clean; verify_quotes.py 89/91 reachable quotes before repair, both MISSes fixed here (a Plant Type quote that dropped the 'Poisonous' entry -- a trimmed safety trait -- and NC State Light strings paraphrased with rewritten parentheticals). One value changed: Water Tupelo's soil_ph_min 6.0, a floor the record had read off the absence of NC State's Acid checkbox, was nulled because RHS's pH field reads 'Acid or Neutral' and both NC State's and MoBot's prose say the species prefers acidic soils. Two accepted names were restored with values unchanged (Franklin Tree's one-word 'Correct' quote paired with the title and NC State's Previously known as list; Inkberry's on RHS's page 20984, which the researcher had reported not found and the auditor reached -- H1, title, Name Status, Other common names and Potentially harmful field all cited). Four MoBot Common Names tooltips reconstructed from overlib markup were removed and replaced with the pages' rendered prose. Every name_note was replaced with the auditor's corrected wording (invented 'N entries marks no primary' conventions, a false 'all three converge' claim, 'RHS is the only dedicated page', a section NC State does not have). Three toxicity_detail fields were repaired as trimmed safety fields: Bottlebrush Buckeye gains RHS's dog-scoped 'harmful if eaten' handling warning, Causes Contact Dermatitis and the Poisonous plant-type trait, and its UF/IFAS quote is restored to the lower-case field value; Inkberry gains RHS's handling warning and the disclosed edibility conflict (NC State tags the fruit Edible three times while cautioning against ingestion; RHS says not to be eaten); Franklin Tree's warnings are re-attributed to the sections NC State actually has, with RHS's Phytophthora line added. toxic_to_pets=true on Bottlebrush Buckeye rests on NC State's cat and dog tags with RHS's 'Pets (dogs)' now corroborating; the other five are null (Inkberry's Poison block is human-scoped; RHS's unscoped 'Pets' does not count).",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Inkberry -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Inkberry -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

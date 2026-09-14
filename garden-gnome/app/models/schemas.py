@@ -6,10 +6,10 @@ from sqlmodel import Field, SQLModel
 
 from app.data.claims.recompute import SERVER_ONLY_FIELDS
 from app.models.models import (
-    MaturityStage, CareOutcome, CareType, LightNeed, SoilMoisture, LeafCondition, EnvironmentType,
+    MaturityStage, CareOutcome, CareType, LightNeed, SoilMoisture, LeafCondition, GrowingAreaType,
     ReviewStatus, SpeciesSource, Shelter, TempExposure, SunExposure,
     CareDataStatus, FertilizeStrength, HumidityNeed, OutdoorSunExposure,
-    SoilBase, SoilDrainage, WaterRegime,
+    SoilBase, SoilDrainage, WaterRegime, GrowingSurface, GrowingGoal,
 )
 
 
@@ -56,11 +56,11 @@ class AuthTokensOut(SQLModel):
     user: UserOut
 
 
-# --- Environment ---
+# --- GrowingArea ---
 
-class EnvironmentCreate(SQLModel):
+class GrowingAreaCreate(SQLModel):
     name: str
-    type: EnvironmentType = EnvironmentType.home
+    type: GrowingAreaType = GrowingAreaType.home
     city: str = ""
     region: str = ""
     country: str = ""
@@ -70,10 +70,18 @@ class EnvironmentCreate(SQLModel):
     temp_exposure: TempExposure = TempExposure.indoor
     sun_exposure: SunExposure = SunExposure.partial_sun
 
+    # Real estate. Unset means unanswered, never a default dimension -- see
+    # GrowingArea in models.py.
+    surface: Optional[GrowingSurface] = None
+    area_sqft: Optional[float] = None
+    headroom_in: Optional[float] = None
+    soil_depth_in: Optional[float] = None
+    goals: Optional[list[GrowingGoal]] = None
 
-class EnvironmentPatch(SQLModel):
+
+class GrowingAreaPatch(SQLModel):
     name: Optional[str] = None
-    type: Optional[EnvironmentType] = None
+    type: Optional[GrowingAreaType] = None
     city: Optional[str] = None
     region: Optional[str] = None
     country: Optional[str] = None
@@ -82,13 +90,18 @@ class EnvironmentPatch(SQLModel):
     shelter: Optional[Shelter] = None
     temp_exposure: Optional[TempExposure] = None
     sun_exposure: Optional[SunExposure] = None
+    surface: Optional[GrowingSurface] = None
+    area_sqft: Optional[float] = None
+    headroom_in: Optional[float] = None
+    soil_depth_in: Optional[float] = None
+    goals: Optional[list[GrowingGoal]] = None
 
 
-class EnvironmentRead(SQLModel):
+class GrowingAreaRead(SQLModel):
     id: int
     uuid: str
     name: str
-    type: EnvironmentType
+    type: GrowingAreaType
     city: str
     region: str
     country: str
@@ -97,8 +110,52 @@ class EnvironmentRead(SQLModel):
     shelter: Shelter
     temp_exposure: TempExposure
     sun_exposure: SunExposure
+    surface: Optional[GrowingSurface]
+    area_sqft: Optional[float]
+    headroom_in: Optional[float]
+    soil_depth_in: Optional[float]
+    goals: Optional[list[GrowingGoal]]
     created_at: datetime
     plant_count: int = 0  # computed in the router, not stored
+
+
+# --- Fit (growing area <-> species) ---
+
+class FitFindingRead(SQLModel):
+    """One axis's verdict, and the sentence a person reads for it.
+
+    `sentence` is the whole point: a bare verdict says a plant is wrong for a
+    spot without saying how, which is not something anyone can act on. It
+    already carries the genus-borrowed label when the value it rests on was
+    inherited (ADR 0002), so a client renders it as-is.
+    """
+    axis: str
+    verdict: str      # fits | misfits | unknown
+    sentence: str
+    borrowed: bool = False
+
+
+class CandidateRead(SQLModel):
+    """A species put forward for a growing area, with why.
+
+    `fits` holds only the confirmed axes -- never the unknown ones. A reader
+    should be able to count the reasons, and "we have no idea about its
+    mature size" is not a reason to plant something.
+    """
+    species_id: int
+    common_name: str
+    scientific_name: str
+    score: int        # how many axes actually confirmed; unknowns never count
+    fits: list[FitFindingRead]
+
+
+class PlantMisfitRead(SQLModel):
+    """A plant already in the area, and what specifically doesn't suit it."""
+    plant_id: int
+    nickname: str
+    species_id: int
+    common_name: str
+    misfits: list[FitFindingRead]
 
 
 # --- Plant ---
@@ -111,7 +168,7 @@ class PlantCreate(SQLModel):
     nickname: str = ""
     species_id: int
     quantity: int = Field(default=1, ge=1)
-    environment_id: Optional[int] = None  # defaults to the installation's primary environment
+    growing_area_id: Optional[int] = None  # defaults to the installation's primary growing_area
     location: str = ""
     maturity_stage: MaturityStage = MaturityStage.juvenile
     acquired_on: Optional[date] = None
@@ -196,6 +253,15 @@ class SpeciesRead(SQLModel):
     fertilize_strength: Optional[FertilizeStrength] = None
     outdoor_temp_min_f: Optional[float] = None
 
+    # Fit fields (0019) -- matched against a growing area's real estate.
+    is_houseplant: Optional[bool] = None
+    is_edible: Optional[bool] = None
+    attracts_pollinators: Optional[bool] = None
+    mature_height_in_min: Optional[float] = None
+    mature_height_in_max: Optional[float] = None
+    mature_spread_in_min: Optional[float] = None
+    mature_spread_in_max: Optional[float] = None
+
     @field_validator("care_provenance", mode="before")
     @classmethod
     def _only_columns_the_client_has(cls, value):
@@ -215,7 +281,7 @@ class PlantRead(SQLModel):
     species_id: int
     quantity: int = 1
     split_from_uuid: Optional[str] = None
-    environment_id: Optional[int]
+    growing_area_id: Optional[int]
     location: str
     maturity_stage: MaturityStage
     acquired_on: Optional[date]
@@ -249,17 +315,17 @@ class PlantSplitRequest(SQLModel):
     previously counted under one, so the new row records where it came from and
     the original's count drops by the same amount — the total is conserved."""
     quantity: int = Field(ge=1)
-    to_environment_id: Optional[int] = None
+    to_growing_area_id: Optional[int] = None
     location: Optional[str] = None
     notes: str = ""
 
 
 class PlantTransferRequest(SQLModel):
-    """Move a plant to a different environment and open a new stewardship record.
+    """Move a plant to a different growing area and open a new stewardship record.
 
     The plant's plant_uuid is preserved so census aggregators treat it as the
     same physical plant, not a new one."""
-    to_environment_id: int
+    to_growing_area_id: int
     transfer_notes: str = ""
 
 
@@ -285,7 +351,7 @@ class AdviceRequest(SQLModel):
 class StewardshipRecordRead(SQLModel):
     id: int
     plant_id: int
-    environment_id: int
+    growing_area_id: int
     installation_uuid: str
     started_at: datetime
     ended_at: Optional[datetime]
