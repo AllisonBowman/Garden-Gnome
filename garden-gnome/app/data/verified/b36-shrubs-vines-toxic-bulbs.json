@@ -122,7 +122,7 @@
           "claim": "soil_ph_min 6 and soil_ph_max 7 (slightly acidic to neutral pH about 6.0-7.0 recommended)",
           "source": "Penn State Extension",
           "url": "https://extension.psu.edu/the-timeless-beauty-of-bleeding-hearts-in-the-garden",
-          "quote": "A slightly acidic to neutral pH (about 6.0\u20137.0) is typically recommended."
+          "quote": "A slightly acidic to neutral pH (about 6.0–7.0) is typically recommended."
         },
         {
           "claim": "water_regime keep_moist (consistent soil moisture preferred during active growth and blooming)",
@@ -141,6 +141,42 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c480",
           "quote": "Intolerant of wet soils in winter and dry soils in summer."
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Dimensions — Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Lamprocapnos spectabilis",
+          "url": "https://plants.ces.ncsu.edu/plants/lamprocapnos-spectabilis/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_height_in 24-36 corroborated (Penn State Extension: mature height and width of 2 to 3 feet, converted to inches)",
+          "source": "Penn State Extension — The Timeless Beauty of Bleeding Hearts in the Garden",
+          "url": "https://extension.psu.edu/the-timeless-beauty-of-bleeding-hearts-in-the-garden",
+          "quote": "reaching a mature height and width of 2 to 3 feet"
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Dimensions — Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Lamprocapnos spectabilis",
+          "url": "https://plants.ces.ncsu.edu/plants/lamprocapnos-spectabilis/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: attracts hummingbirds and butterflies)",
+          "source": "NC State Extension Plant Toolbox — Lamprocapnos spectabilis",
+          "url": "https://plants.ces.ncsu.edu/plants/lamprocapnos-spectabilis/",
+          "quote": "Attracts hummingbirds and butterflies."
+        },
+        {
+          "claim": "attracts_pollinators true corroborated (Penn State: flowers attract butterflies and hummingbirds)",
+          "source": "Penn State Extension — The Timeless Beauty of Bleeding Hearts in the Garden",
+          "url": "https://extension.psu.edu/the-timeless-beauty-of-bleeding-hearts-in-the-garden",
+          "quote": "The flowers also attract butterflies and hummingbirds."
+        },
+        {
+          "claim": "is_edible false (NC State: all parts of the plant are poisonous if ingested, i.e. not edible)",
+          "source": "NC State Extension Plant Toolbox — Lamprocapnos spectabilis",
+          "url": "https://plants.ces.ncsu.edu/plants/lamprocapnos-spectabilis/",
+          "quote": "All parts of the plant are poisonous if ingested."
         }
       ],
       "common_name": "Bleeding Heart",
@@ -185,14 +221,25 @@
         "Identification note: NC State's Plant Toolbox flags this species as \"often confused with: Dicentra eximia\" (fringed/eastern bleeding heart, a related but distinct native species with different care needs), and lists Dicentra canadensis, Dicentra cucullaria, and Dicentra eximia as native alternatives to this non-native species.",
         "Invasive status: Penn State Extension explicitly notes that \"Though not a native species, it is not invasive.\"",
         "Notable care caveat: NC State notes bleeding heart rhizomes \"can be forced to flower on Valentine's Day by bringing dormant rhizomes into a cool greenhouse in late winter\" -- a commercial floristry forcing technique for the cut-flower trade, not typical home care, and it was not treated as evidence of houseplant status.",
-        "A University of Maryland Extension commercial-horticulture IPM report (extension.umd.edu) notes bleeding heart, along with anemone and hosta, as susceptible to Tobacco Rattle Virus, which spreads through infected divisions of stock plants and via certain soil-dwelling plant-parasitic nematodes -- a disease caveat with no dedicated field in this schema."
+        "A University of Maryland Extension commercial-horticulture IPM report (extension.umd.edu) notes bleeding heart, along with anemone and hosta, as susceptible to Tobacco Rattle Virus, which spreads through infected divisions of stock plants and via certain soil-dwelling plant-parasitic nematodes -- a disease caveat with no dedicated field in this schema.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused the fetch (ConnectError) — skipped per instructions rather than guessed at its content.",
+        "RHS page (rhs.org.uk) fetched successfully (200 OK, 210KB) but none of the tried patterns (Ultimate height, Ultimate spread, pollinator, Edible, poison) matched any plant-detail content — only navigation/menu text ('Wildlife gardening' nav link) came back, so RHS could not be used as a citation source for any of these six fields.",
+        "is_edible set to false on NC State's statement 'All parts of the plant are poisonous if ingested' — this is treated as the page stating the plant is poisonous to eat (rule 5's FALSE condition); no page addressed culinary/food use of any part directly.",
+        "Mature size figures (height and spread both 2-3 ft per NC State and Penn State) are given for the species as a whole, not a named cultivar, and the plant is not a climber, so no cultivar or climbing-support caveat applies.",
+        "NC State's structured Attracts field also lists 'Butterflies' and 'Hummingbirds' as separate lines (not quotable as one span due to line-break characters), so the citation below instead quotes the single-line 'Wildlife Value: Attracts hummingbirds and butterflies.' sentence, which conveys the same attraction claim."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -200,104 +247,122 @@
         {
           "claim": "common_name: NC State Extension's Plant Toolbox lists the common name(s) for Berberis thunbergii",
           "quote": "Japanese Barberry",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Berberis thunbergii",
+          "source": "NC State Extension Gardener Plant Toolbox — Berberis thunbergii",
           "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/"
         },
         {
           "claim": "scientific_name_accepted: RHS's plant profile page confirms Berberis thunbergii as the accepted name for Japanese barberry",
           "quote": "Berberis thunbergii | Japanese barberry",
-          "source": "RHS \u2014 Berberis thunbergii",
+          "source": "RHS — Berberis thunbergii",
           "url": "https://www.rhs.org.uk/plants/2183/berberis-thunbergii/details"
         },
         {
           "claim": "name_note: NC State's Plant Toolbox entry for the straight species Berberis thunbergii records a prior/alternate name on file",
           "quote": "Previously known as: Berberis thunbergii var. atropurpurea",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Berberis thunbergii",
+          "source": "NC State Extension Gardener Plant Toolbox — Berberis thunbergii",
           "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/"
         },
         {
           "claim": "is_houseplant: Missouri Botanical Garden's Plant Finder profiles Berberis thunbergii as a cold-hardy outdoor landscape shrub rather than an indoor houseplant",
           "quote": "Zone: 4 to 8",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Berberis thunbergii",
+          "source": "Missouri Botanical Garden Plant Finder — Berberis thunbergii",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781"
         },
         {
           "claim": "is_houseplant: NC State's Plant Toolbox lists outdoor USDA hardiness zones for this shrub",
           "quote": "USDA Plant Hardiness Zone: 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Berberis thunbergii",
+          "source": "NC State Extension Gardener Plant Toolbox — Berberis thunbergii",
           "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/"
         },
         {
           "claim": "toxicity_detail: UGA Extension's poisonous-landscape-plants circular lists Barberry (Berberis spp., the genus Japanese barberry belongs to) as toxic to humans when ingested",
           "quote": "depressant action on the heart muscle",
-          "source": "UGA Cooperative Extension Circular 957 \u2014 Poisonous Plants in the Landscape",
+          "source": "UGA Cooperative Extension Circular 957 — Poisonous Plants in the Landscape",
           "url": "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf"
         },
         {
           "claim": "toxicity_detail: RHS flags the fruit as not for consumption and carries an unscoped 'Pets' notice naming no specific animal",
           "quote": "Fruit are ornamental - not to be eaten. Wear gloves and other protective equipment when handling. Pets: Fruit are ornamental - not to be eaten",
-          "source": "RHS \u2014 Berberis thunbergii",
+          "source": "RHS — Berberis thunbergii",
           "url": "https://www.rhs.org.uk/plants/2183/berberis-thunbergii/details"
         },
         {
           "claim": "outdoor_sun_exposure: NC State documents full_sun tolerance/preference",
           "quote": "Full sun (6 or more hours of direct sunlight a day)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Berberis thunbergii",
+          "source": "NC State Extension Gardener Plant Toolbox — Berberis thunbergii",
           "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/"
         },
         {
           "claim": "outdoor_sun_exposure: NC State documents part_shade tolerance",
           "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Berberis thunbergii",
+          "source": "NC State Extension Gardener Plant Toolbox — Berberis thunbergii",
           "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/"
         },
         {
           "claim": "outdoor_sun_exposure: Penn State Extension documents full_shade (deep shade) tolerance",
           "quote": "it can grow in sites from full sun to deep shade",
-          "source": "Penn State Extension \u2014 Japanese Barberry",
+          "source": "Penn State Extension — Japanese Barberry",
           "url": "https://extension.psu.edu/japanese-barberry"
         },
         {
           "claim": "soil_base: Missouri Botanical Garden describes this as grown in ordinary in-ground garden soil (garden_bed), not a specialized potting mix",
           "quote": "Easily grown in average, dry to medium, well-drained soil in full sun.",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Berberis thunbergii",
+          "source": "Missouri Botanical Garden Plant Finder — Berberis thunbergii",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781"
         },
         {
           "claim": "soil_base: RHS lists ordinary garden soil types this shrub grows in",
           "quote": "Soil Types Chalk, Clay, Loam, Sand",
-          "source": "RHS \u2014 Berberis thunbergii",
+          "source": "RHS — Berberis thunbergii",
           "url": "https://www.rhs.org.uk/plants/2183/berberis-thunbergii/details"
         },
         {
           "claim": "soil_drainage fast: Missouri Botanical Garden notes intolerance of wet, poorly-drained soil",
           "quote": "generally intolerant of poorly-drained, wet soils",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Berberis thunbergii",
+          "source": "Missouri Botanical Garden Plant Finder — Berberis thunbergii",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781"
         },
         {
           "claim": "soil_drainage fast: NC State lists tolerated drainage conditions from good drainage to very dry",
           "quote": "Soil Drainage: Good Drainage Moist Occasionally Dry Very Dry",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Berberis thunbergii",
+          "source": "NC State Extension Gardener Plant Toolbox — Berberis thunbergii",
           "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/"
         },
         {
           "claim": "water_regime dry_thoroughly_between: Missouri Botanical Garden lists dry-to-medium water needs",
           "quote": "Water: Dry to medium",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Berberis thunbergii",
+          "source": "Missouri Botanical Garden Plant Finder — Berberis thunbergii",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781"
         },
         {
           "claim": "water_regime dry_thoroughly_between: Missouri Botanical Garden notes drought tolerance and intolerance of wet soil",
           "quote": "Plants also tolerates heat and drought, but are generally intolerant of poorly-drained, wet soils.",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Berberis thunbergii",
+          "source": "Missouri Botanical Garden Plant Finder — Berberis thunbergii",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781"
         },
         {
           "claim": "fertilize_active_months: Clemson HGIC's barberry factsheet recommends fertilizing in spring",
           "quote": "Fertilize the shrubs in spring.",
-          "source": "Clemson HGIC \u2014 Barberry",
+          "source": "Clemson HGIC — Barberry",
           "url": "https://hgic.clemson.edu/factsheet/barberry/"
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-84 (NC State Width: 4 ft. 0 in. - 7 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/berberis-thunbergii/",
+          "quote": "Width: 4 ft. 0 in. - 7 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species Plants for pollinators)",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/2183/berberis-thunbergii/details",
+          "quote": "Plants for pollinators"
         }
       ],
       "common_name": "Japanese Barberry",
@@ -318,7 +383,7 @@
       "is_houseplant": false,
       "light_fc_good": null,
       "light_fc_min": null,
-      "name_note": "NC State's Plant Toolbox entry for the straight species notes it was \"Previously known as: Berberis thunbergii var. atropurpurea\" in their records. This is worth flagging because var./f. atropurpurea (purple-leaf Japanese barberry) is also catalogued elsewhere \u2014 including by NC State and RHS on separate pages \u2014 as a distinct, separately-described purple-foliage variety/form, not simply identical to the plain green-leaf species. Treat this as a taxonomic/database history note rather than proof the two are interchangeable; confirm which exact cultivar/form a given plant is before assuming leaf color or other traits.",
+      "name_note": "NC State's Plant Toolbox entry for the straight species notes it was \"Previously known as: Berberis thunbergii var. atropurpurea\" in their records. This is worth flagging because var./f. atropurpurea (purple-leaf Japanese barberry) is also catalogued elsewhere — including by NC State and RHS on separate pages — as a distinct, separately-described purple-foliage variety/form, not simply identical to the plain green-leaf species. Treat this as a taxonomic/database history note rather than proof the two are interchangeable; confirm which exact cultivar/form a given plant is before assuming leaf color or other traits.",
       "night_f_max": null,
       "night_f_min": null,
       "outdoor_sun_exposure": [
@@ -338,18 +403,30 @@
         "toxic_to_pets was left null rather than true or false: the only ingestion-toxicity evidence found in admissible sources is either scoped to humans (UGA CAES Circular 957, 'Reported To Be Toxic When Ingested by Humans') or is an unscoped 'Pets' caution on RHS that names no specific animal ('Pets: Fruit are ornamental - not to be eaten'). Per the task rules, neither supports toxic_to_pets=true, and no admissible source affirmatively clears the plant as safe for cats/dogs either, so it stays null and should not be inferred either way.",
         "No schema field covers physical/contact hazard, but it's decision-relevant: NC State tags this plant 'Problem for Children' and 'Spines/Thorns.' Penn State Extension gives a specific warning: 'the tips of barberry spines are finer than the point of a hypodermic needle and their silicate composition decomposes very slowly under the skin,' recommending gloves/protective equipment when handling, pruning, or removing the plant.",
         "Japanese barberry is widely regulated/flagged as invasive across the admissible sources, which a plant-care app may want to surface even though there's no schema field for it: NC State calls it 'an invasive species in North Carolina'; Penn State Extension says it is 'now illegal to sell, propagate, or intentionally plant Japanese barberry' in Pennsylvania except a few exempted sterile varieties; University of Maryland Extension calls it 'a prohibited species under Maryland law'; UF/IFAS rates it 'invasive and not recommended by UF/IFAS faculty.' NC State lists sterile 'WorryFree' and 'Sunjoy' cultivars as non-invasive alternatives to the straight species.",
-        "Penn State Extension also documents a health-relevant caveat beyond ingestion: a 'relationship between Japanese barberry and deer ticks (Ixodes scapularis)' \u2014 dense barberry thickets create favorable tick habitat, linked to increased Lyme disease exposure risk where the shrub grows.",
+        "Penn State Extension also documents a health-relevant caveat beyond ingestion: a 'relationship between Japanese barberry and deer ticks (Ixodes scapularis)' — dense barberry thickets create favorable tick habitat, linked to increased Lyme disease exposure risk where the shrub grows.",
         "soil_ph_min/max were left null rather than estimated: RHS gives only categorical pH tolerance ('Acid or Alkaline or Neutral' all listed as acceptable) with no numeric range in any admissible source found.",
         "direct_sun_hours_max, light_fc_min/good, humidity fields, chill_damage_f, cool_rest_note, day/night temperature fields, water_dry_down_target, water_check_depth_cm, water_growing/dormant_days_est, water_estimate_basis, fertilize_interval_days, and fertilize_strength were all left null: this is documented across every admissible source as a cold-hardy outdoor landscape shrub (USDA zones 4-8 per Missouri Botanical Garden and NC State; RHS hardiness H7), and extension/RHS profiles for it describe care in categorical terms (full sun/partial shade/deep shade, well-drained to dry soil, drought-tolerant, fertilize in spring) rather than the numeric houseplant-style metrics (footcandles, indoor temperature ranges, %humidity, watering-interval days) this schema also supports, so there was nothing admissible to cite for those fields.",
-        "Cultivar/naming complexity beyond name_note: the straight species is sold alongside many cultivars and forms (e.g., purple-leaf 'Atropurpurea'/f. atropurpurea forms, dwarf 'Crimson Pygmy,' and the sterile non-invasive 'WorryFree' and 'Sunjoy' series) that can differ in size, foliage color, invasiveness, and even (per one UF/IFAS-listed cultivar name, 'Thornless') presence of thorns \u2014 so care/hazard specifics should be confirmed against the exact cultivar in hand, not assumed from the species entry alone.",
-        "toxic_to_pets \u2014 verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/berberis-thunbergii/, https://www.rhs.org.uk/plants/2183/berberis-thunbergii/details, https://hgic.clemson.edu/factsheet/barberry/, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781, https://ask.ifas.ufl.edu/publication/FP066, https://extension.psu.edu/japanese-barberry, https://extension.psu.edu/japanese-barberry-accurate-identification, https://extension.umd.edu/resource/japanese-barberry); none found, so the value stays null. Audited live."
+        "Cultivar/naming complexity beyond name_note: the straight species is sold alongside many cultivars and forms (e.g., purple-leaf 'Atropurpurea'/f. atropurpurea forms, dwarf 'Crimson Pygmy,' and the sterile non-invasive 'WorryFree' and 'Sunjoy' series) that can differ in size, foliage color, invasiveness, and even (per one UF/IFAS-listed cultivar name, 'Thornless') presence of thorns — so care/hazard specifics should be confirmed against the exact cultivar in hand, not assumed from the species entry alone.",
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/berberis-thunbergii/, https://www.rhs.org.uk/plants/2183/berberis-thunbergii/details, https://hgic.clemson.edu/factsheet/barberry/, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781, https://ask.ifas.ufl.edu/publication/FP066, https://extension.psu.edu/japanese-barberry, https://extension.psu.edu/japanese-barberry-accurate-identification, https://extension.umd.edu/resource/japanese-barberry); none found, so the value stays null. Audited live.",
+        "is_edible left null: none of the five specified pages state that Japanese Barberry (or any part of it) is eaten or is poisonous to eat -- no record either way.",
+        "hgic.clemson.edu/factsheet/barberry/ refused this machine (http-403) -- skipped, no data drawn from it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277781 refused this machine (connect error) -- skipped, no data drawn from it.",
+        "NC State's own structured 'Attracts' field lists only Songbirds (birds eating the fruit, not pollination) -- not used as support for attracts_pollinators; the true value rests on RHS's 'Plants for pollinators' tag instead.",
+        "PSU Extension states the shrub 'rarely exceeds 4 feet in height' (a single max-only figure, ~48 in, no spread given) and RHS separately lists Max Height/Max Spread of 1-1.5 metres (~39-59 in) -- both are broadly consistent with but smaller than NC State's 36-72 in height / 48-84 in width range; NC State's structured Dimensions block was used as the citation per the anchor-source guidance, since it supplies a full published low-high range for both height and spread.",
+        "No page among the five gave a size figure that was explicitly for a named cultivar or explicitly described a climbing support structure, so rules 3 and 4 did not need to null out any size figure here.",
+        "is_edible removed on audit: The unknowns entry claims \"none of the five specified pages state that Japanese Barberry (or any part of it) is eaten or is poisonous to eat -- no record either way.\" The RHS page contradicts that. Under Botanical Details it carries a \"Potentially harmful\" row reading \"Fruit are ornamental - not to be eaten. Wear gloves and other protective equipment when handling.  Pets: Fruit are ornamental - not to be eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers\" (qc.py on https://www.rhs.org.uk/plants/2183/berberis-thunbergii/details returns 1 exact hit for \"Fruit are ornamental - not to be eaten.\"). That is an explicit source denial of edibility, so rule D's silence-is-null does not apply: the correct value is is_edible false, carried by a citation whose claim contains \"is_edible\" literally and quotes \"Fruit are ornamental - not to be eaten.\" The proposed null plus its justification must not be accepted as written. NC State returns 0 hits for poison/edib/eaten and PSU 0 for edible/poison/toxic, so those two pages really are silent, but RHS is not."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "dry_thoroughly_between"
+      "water_regime": "dry_thoroughly_between",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 84
     },
     {
       "common_name": "Weigela",
@@ -400,8 +477,12 @@
         "cool_rest_note: no admissible source frames Weigela's winter dormancy in 'cool rest' terms as used by this schema; sources describe it only as a deciduous shrub that blooms on old wood and should be pruned right after flowering.",
         "humidity_need, humidity_pct_min, humidity_pct_max: no admissible source addresses ambient humidity for this outdoor landscape shrub.",
         "Identification/care notes found but not schema fields: RHS lists 'weigelia' as an alternate spelling of the common name (used for name_note). Missouri Botanical Garden notes the genus honors German botanist Christian Ehrenfried Weigel and that the epithet 'florida' means 'freely flowering.' UGA's CAES Field Report and University of Maryland Extension both flag some Weigela florida cultivars (e.g. 'Wine and Roses') as highly susceptible to red-headed flea beetle; Clemson and NC State both note the species is generally deer-resistant with minimal insect/disease problems otherwise.",
-        "outdoor_sun_exposure \u2014 removed on audit: Fetched the live NC State Extension Plant Toolbox page for Weigela florida and confirmed the citation's quote is verbatim: the raw HTML has three separate <dd class=\"detail_display_attribute\"> entries under the 'Light:' attribute -- 'Dappled Sunlight (Shade through upper canopy all day)', 'Full sun (6 or more hours of direct sunlight a day)', and 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' -- all three structured identically as species-applicable attribute values, not a generic legend of unchecked options (I compared this to the analogous Soil pH and Soil Drainage <dt>/<dd> blocks on the same page, which use the identical markup pattern and are treated elsewhere in the record's own unknowns section as genuinely applicable, e.g. 'NC State checks all three of its pH categories'). So NC State attributes Dappled Sunlight -- a deeper-shade category distinct from Partial Shade -- to this species, not just Full sun and Partial Shade. This is corroborated independently: the Missouri Botanical Garden Plant Finder page (already used elsewhere in this record for soil_base), in its culture paragraph, states 'Needs full sun for best flowering and foliage color, but will tolerate some light shade or sun dappled shade.' Two independent sources therefore support a shade-tolerance category beyond full_sun/part_shade, and the record's own cited NC State quote already contains this evidence verbatim -- yet the outdoor_sun_exposure array only includes ['full_sun','part_shade'], silently dropping the Dappled Sunlight category with no explanation anywhere in the unknowns section (unlike other deliberate scoping choices in this record, which are consistently explained when a source is only partially used). This is an enum under-inclusion: the value doesn't match what the record's own admissible, quoted source establishes.",
-        "soil_drainage \u2014 left null at landing: the record originally stored a full prose paragraph instead of a valid SoilDrainage enum member (fast/moderate/moisture_retentive), a schema violation the in-workflow audit did not catch for this record (though it did catch the identical defect shape on Star Jasmine in this same batch). The underlying citations -- Clemson's bare 'Plant in well-drained soil' and NC State's 'Good Drainage Moist' (no Occasionally Dry/Wet spanning qualifier) -- are exactly the bare, non-distinguishing 'well-drained' language this catalog has previously treated as too ambiguous to safely pick 'fast' over 'moderate' (see b22's Amorphophallus konjac precedent), so left null rather than guessing."
+        "outdoor_sun_exposure — removed on audit: Fetched the live NC State Extension Plant Toolbox page for Weigela florida and confirmed the citation's quote is verbatim: the raw HTML has three separate <dd class=\"detail_display_attribute\"> entries under the 'Light:' attribute -- 'Dappled Sunlight (Shade through upper canopy all day)', 'Full sun (6 or more hours of direct sunlight a day)', and 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' -- all three structured identically as species-applicable attribute values, not a generic legend of unchecked options (I compared this to the analogous Soil pH and Soil Drainage <dt>/<dd> blocks on the same page, which use the identical markup pattern and are treated elsewhere in the record's own unknowns section as genuinely applicable, e.g. 'NC State checks all three of its pH categories'). So NC State attributes Dappled Sunlight -- a deeper-shade category distinct from Partial Shade -- to this species, not just Full sun and Partial Shade. This is corroborated independently: the Missouri Botanical Garden Plant Finder page (already used elsewhere in this record for soil_base), in its culture paragraph, states 'Needs full sun for best flowering and foliage color, but will tolerate some light shade or sun dappled shade.' Two independent sources therefore support a shade-tolerance category beyond full_sun/part_shade, and the record's own cited NC State quote already contains this evidence verbatim -- yet the outdoor_sun_exposure array only includes ['full_sun','part_shade'], silently dropping the Dappled Sunlight category with no explanation anywhere in the unknowns section (unlike other deliberate scoping choices in this record, which are consistently explained when a source is only partially used). This is an enum under-inclusion: the value doesn't match what the record's own admissible, quoted source establishes.",
+        "soil_drainage — left null at landing: the record originally stored a full prose paragraph instead of a valid SoilDrainage enum member (fast/moderate/moisture_retentive), a schema violation the in-workflow audit did not catch for this record (though it did catch the identical defect shape on Star Jasmine in this same batch). The underlying citations -- Clemson's bare 'Plant in well-drained soil' and NC State's 'Good Drainage Moist' (no Occasionally Dry/Wet spanning qualifier) -- are exactly the bare, non-distinguishing 'well-drained' language this catalog has previously treated as too ambiguous to safely pick 'fast' over 'moderate' (see b22's Amorphophallus konjac precedent), so left null rather than guessing.",
+        "is_edible left null: NC State Plant Toolbox has no 'Edible' content for this record (0 hits), and RHS has no edibility mention either; the two other assigned sources (Clemson HGIC, Missouri Botanical Garden PlantFinder) could not be fetched by this machine, so no page anywhere in the assigned set addresses eating this plant -- treated as no record, not as false.",
+        "hgic.clemson.edu refused this machine's fetch (http-403) -- could not check it for size or edibility/pollinator language; skipped per instructions rather than guessed.",
+        "plantfinder.mobot.org refused this machine's fetch (error:ConnectError) -- could not check it for size or edibility/pollinator language; skipped per instructions rather than guessed.",
+        "RHS gives Max Height 1.5-2.5 metres and Max Spread 1.5-2.5 metres for the species page (not flagged to a named cultivar), which converts to roughly 59-98 in and corroborates the same general size range as NC State's feet-based Height/Width figures; NC State's Dimensions block was used as the cited figure since it is the more precise, unit-explicit source and matches this task's worked conversion example."
       ],
       "citations": [
         {
@@ -419,13 +500,13 @@
         {
           "claim": "scientific_name_accepted corroborated by RHS Name Status for this taxon",
           "quote": "Name Status Correct",
-          "source": "RHS Gardening \u2014 Weigela florida (old-fashioned weigela)",
+          "source": "RHS Gardening — Weigela florida (old-fashioned weigela)",
           "url": "https://www.rhs.org.uk/plants/101006/old-fashioned-weigela/details"
         },
         {
           "claim": "name_note: alternate spelling 'weigelia' listed as another common name for this species",
           "quote": "Other common names weigelia",
-          "source": "RHS Gardening \u2014 Weigela florida (old-fashioned weigela)",
+          "source": "RHS Gardening — Weigela florida (old-fashioned weigela)",
           "url": "https://www.rhs.org.uk/plants/101006/old-fashioned-weigela/details"
         },
         {
@@ -455,7 +536,7 @@
         {
           "claim": "outdoor_sun_exposure full_sun and part_shade corroborated by RHS Position field",
           "quote": "Position Full sun Partial shade",
-          "source": "RHS Gardening \u2014 Weigela florida (old-fashioned weigela)",
+          "source": "RHS Gardening — Weigela florida (old-fashioned weigela)",
           "url": "https://www.rhs.org.uk/plants/101006/old-fashioned-weigela/details"
         },
         {
@@ -475,8 +556,31 @@
           "quote": "Soil Drainage: Good Drainage Moist",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/weigela-florida/"
+        },
+        {
+          "claim": "mature_height_in 72-120 (NC State Dimensions Height: 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Weigela florida",
+          "url": "https://plants.ces.ncsu.edu/plants/weigela-florida/",
+          "quote": "Height: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 108-144 (NC State Dimensions Width: 9 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Weigela florida",
+          "url": "https://plants.ces.ncsu.edu/plants/weigela-florida/",
+          "quote": "Width: 9 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states the species draws pollinating wildlife)",
+          "source": "NC State Extension Plant Toolbox - Weigela florida",
+          "url": "https://plants.ces.ncsu.edu/plants/weigela-florida/",
+          "quote": "Attracts hummingbirds and butterflies."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 108,
+      "mature_spread_in_max": 144
     },
     {
       "chill_damage_f": null,
@@ -564,6 +668,24 @@
           "quote": "Soil pH: Acid (<6.0) Neutral (6.0-8.0)",
           "url": "https://plants.ces.ncsu.edu/plants/viburnum-dentatum/",
           "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "mature_height_in 60-120 (NC State Height: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/viburnum-dentatum/",
+          "quote": "Height: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-120 (NC State Width: 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/viburnum-dentatum/",
+          "quote": "Width: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies and Pollinators, and text describes nectar for pollinators including native bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/viburnum-dentatum/",
+          "quote": "It provides nectar for pollinators, including native bees, food and shelter for birds, and is a larval host plant."
         }
       ],
       "common_name": "Arrowwood Viburnum",
@@ -609,14 +731,24 @@
         "Not invasive: every admissible source describes Viburnum dentatum as native to eastern North America (NC State: 'native to most of the eastern USA'; Missouri Botanical Garden: native range 'Eastern North America,' with wild Missouri populations confined to one Shelby County site; Clemson: 'native to several areas throughout South Carolina'). No admissible source flags it as invasive anywhere in its range.",
         "Notable pest caveats (not schema fields): Penn State Extension flags the viburnum leaf beetle (Pyrrhalta viburni) as 'invasive and highly destructive' and notes it particularly favors this species; NC State separately flags whiteflies and lists 'Purple Mite' as another problem for this species.",
         "is_houseplant/soil_base rely on the absence of any indoor or container-culture mention across all six admissible sources consulted for this species, combined with explicit landscape/hedge/native-planting language, rather than on a source explicitly stating 'grown in the ground' in those words.",
-        "toxic_to_pets \u2014 verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/viburnum-dentatum/, https://www.rhs.org.uk/plants/18893/viburnum-dentatum/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=278980, https://hgic.clemson.edu/factsheet/viburnum/, https://edis.ifas.ufl.edu/topics/viburnum, https://ask.ifas.ufl.edu/publication/ST661, https://extension.psu.edu/selecting-viburnums-for-the-home-garden, https://extension.umd.edu/resource/mapleleaf-viburnum, https://fieldreport.caes.uga.edu/news/adding-small-shrubs-to-your-home-landscape/); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/viburnum-dentatum/, https://www.rhs.org.uk/plants/18893/viburnum-dentatum/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=278980, https://hgic.clemson.edu/factsheet/viburnum/, https://edis.ifas.ufl.edu/topics/viburnum, https://ask.ifas.ufl.edu/publication/ST661, https://extension.psu.edu/selecting-viburnums-for-the-home-garden, https://extension.umd.edu/resource/mapleleaf-viburnum, https://fieldreport.caes.uga.edu/news/adding-small-shrubs-to-your-home-landscape/); none found, so the value stays null. Audited live.",
+        "is_edible left null: NC State Plant Toolbox states, in structured fields, 'Edibility: Edible fruit' and 'Fruit Value To Gardener: Edible', but RHS states 'Fruit are ornamental - not to be eaten' under 'Potentially harmful'. These two anchor sources directly conflict on edibility, so the field is left null rather than asserting either side against a contradicting authority.",
+        "RHS gives its own size figures ('Max Height 2.5-4 metres', 'Max Spread 2.5-4 metres', roughly 98-157 in) for UK garden cultivation, which is a materially different range from NC State's inches-native 'Height: 5 ft. 0 in. - 10 ft. 0 in.' / 'Width: 6 ft. 0 in. - 10 ft. 0 in.'. NC State was used as the size citation since it is already denominated in feet/inches and matches the structured-Dimensions anchor called out in the task; the RHS metric figures were not blended in.",
+        "attracts_pollinators is supported only by NC State (structured 'Attracts: Butterflies, Pollinators' field, 'Play Value: Attracts Pollinators', and running text on nectar for native bees). The RHS page for this species carries no comparable pollinator/attracts field or tag.",
+        "hgic.clemson.edu/factsheet/viburnum/ returned http-403 (refused this machine) via qc.py -- skipped per instructions; no data was drawn from it, and nothing here should be read as confirming or contradicting what that page says.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=m720 returned a connection error (refused this machine) via qc.py -- skipped per instructions; no data was drawn from it."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Common Jasmine",
@@ -830,7 +962,7 @@
       "unknowns": [
         "NC State's Plant Toolbox page tags this species \"Poisonous\" as a Whole Plant Trait/Plant Type, on the same page that separately tags it \"non-toxic for cats,\" \"non-toxic for dogs,\" and \"non-toxic for horses.\" No plant part, toxic principle, or affected population is named for the \"Poisonous\" tag, so per the task's rules it was not used to override the specific, animal-named non-toxic tags; toxic_to_pets is set to false on the strength of those specific tags, but this internal inconsistency on NC State's own page is worth knowing about.",
         "Despite Trachelospermum jasminoides being in Apocynaceae (the family that includes oleander and milkweed) and multiple admissible sources confirming a milky latex sap when stems/petioles are cut or bruised, none of the admissible sources describe that sap as causing skin irritation, dermatitis, or eye irritation on contact. This is an evidence gap, not a finding that the sap is harmless to handle.",
-        "No admissible source gives a specific degree-Fahrenheit cold-damage threshold. RHS rates the species H4 (\"hardy through most of the UK,\" average annual minimum -10 to -5\u00b0C / 14-23\u00b0F) and separately notes that \"In cold snaps, the leaves may turn red, develop spots or even fall,\" without tying a number to that damage. NC State and Missouri Botanical Garden both place it in USDA Zones 8-10; UGA CAES's Landscape Plants for Georgia lists Georgia's Hardy Zone as 8; the cultivar 'Madison' is separately reported by UGA CAES as hardy through USDA Zone 7 (and marginal in Zone 6 pockets), noticeably hardier than the species. chill_damage_f is left null rather than picking a number off the hardiness-zone range.",
+        "No admissible source gives a specific degree-Fahrenheit cold-damage threshold. RHS rates the species H4 (\"hardy through most of the UK,\" average annual minimum -10 to -5°C / 14-23°F) and separately notes that \"In cold snaps, the leaves may turn red, develop spots or even fall,\" without tying a number to that damage. NC State and Missouri Botanical Garden both place it in USDA Zones 8-10; UGA CAES's Landscape Plants for Georgia lists Georgia's Hardy Zone as 8; the cultivar 'Madison' is separately reported by UGA CAES as hardy through USDA Zone 7 (and marginal in Zone 6 pockets), noticeably hardier than the species. chill_damage_f is left null rather than picking a number off the hardiness-zone range.",
         "No admissible source gives numeric humidity percentages or a categorical humidity rating for this species (it's treated in the sources mainly as an outdoor/landscape vine, not a humidity-sensitive tropical houseplant), so humidity_need, humidity_pct_min, and humidity_pct_max are left null.",
         "No admissible source gives foot-candle light figures. NC State's light category tops out at \"Full sun (6 or more hours of direct sunlight a day)\" with no stated ceiling, and RHS only cautions to keep conservatory/indoor plants \"out of direct sun in summer, as this may scorch the leaves\" without giving an hour cap, so light_fc_min, light_fc_good, and direct_sun_hours_max are all left null.",
         "No admissible source gives a numeric soil pH range. RHS's structured pH field reads only \"Acid or Alkaline or Neutral\" (effectively unrestricted), and its growing guide adds that the plant \"prefers neutral to alkaline soil conditions, but will grow in slightly acid soils too\" -- qualitative, not numeric. soil_ph_min/soil_ph_max are left null.",
@@ -839,133 +971,133 @@
         "Identification note: NC State's Plant Toolbox flags Trachelospermum jasminoides as \"often confused with\" Jasminum, Jasminum officinale, Trachelospermum asiaticum, Lonicera x heckrottii, Cestrum aurantiacum, and Catharanthus roseus. This record is specifically about Trachelospermum jasminoides (star/Confederate jasmine, Apocynaceae) and should stay distinct from the separate Jasminum officinale (common/Poet's jasmine, Oleaceae) record in this batch.",
         "RHS also lists other common names for this species -- Chinese ivy, Chinese jasmine, and traders compass -- and a taxonomic synonym rendered on its page as \"Rhynchospermum jasminoides.\" These weren't cleanly quotable from the fetched page text (a rendering artifact split the synonym across lines) so they're noted here rather than folded into name_note.",
         "UGA CAES Field Report's pet-toxicity guide (Publication C1245, \"Keep Your Pets Safe Around Plants\") does not list Trachelospermum jasminoides, Confederate jasmine, or Star Jasmine at all -- it neither supports nor contradicts the toxic_to_pets=false determination drawn from NC State's tags.",
-        "soil_drainage \u2014 removed on audit: The app's schema types soil_drainage as an Optional[SoilDrainage] enum with exactly three valid members: 'fast', 'moderate', 'moisture_retentive' (app/models/models.py line 150-153, 318). Every other record in app/data/verified/*.json -- including the three brand-new, uncommitted batches (b19/b20/b21) sitting alongside this one -- populates soil_drainage with one of those three tokens or null; none ever holds prose. This record instead stores a full paragraph ('Good drainage is preferred; NC State tags it tolerant of both \"Good Drainage\" and \"Moist\" soil-moisture conditions, but RHS warns...'). I confirmed this isn't just a style nit: I ran the record through the actual ingest pipeline (app/data/claims/tranche.py's claims_from_record) and it happily extracts a claim with value equal to that full paragraph, and app/data/claims/recompute.py writes resolved values with a bare `setattr(species, name, new)` -- no enum coercion or validation gate. Constructing a Species row with this exact string for soil_drainage succeeds silently. So this isn't merely a citation problem; the VALUE itself is the wrong shape and would corrupt the soil_drainage column with an unbounded free-text blob instead of the controlled vocabulary the rest of the app (and the UI/filtering built on it) expects. The individual citations backing the paragraph's content (NC State 'Good Drainage Moist' tags, RHS phytophthora warning) are themselves accurate quotes -- verified against the live pages -- so the underlying research is fine; only the field's encoding is broken. The content maps most naturally to 'moderate' per this dataset's own convention (an average houseplant/landscape drainage need, not fast-draining cactus mix nor constantly-wet), but that's a guess at the fix, not a claim about which value was intended.",
-        "water_regime \u2014 removed on audit: water_regime is an enum with four members: keep_moist, keep_barely_moist, dry_surface_between, dry_thoroughly_between. The record picks 'dry_surface_between', cited to RHS's 'Plants in containers dry out quickly, so need regular watering. Try not to let the compost dry out, especially in summer, or get waterlogged.' -- a genuine, verbatim quote (confirmed against the live growing-guide page). But that quote never says to let the medium dry between waterings; it says the opposite (don't let it dry out). I checked how this exact same dataset/pipeline classifies structurally identical guidance elsewhere: Angel's Trumpet's citation 'avoid letting it dry out completely... avoid letting the pot become waterlogged' (near word-for-word the same shape as Star Jasmine's citation) is filed as keep_moist, as is Jackman's Clematis ('Do not let soil dry out... uniformly moist at all times') and Venus Flytrap/Tannia. Every record I found tagged dry_surface_between instead carries language that explicitly endorses letting the medium dry -- 'let the surface dry between waterings' (Sunflower, Myrtle), 'top 1-2 inches dry' (Chinese Evergreen), 'let it dry slightly at the surface' (Peace Lily). Star Jasmine's citation has none of that -- it only forbids both extremes, which is the keep_moist pattern throughout this dataset. This looks like a genuine miscategorization of the enum value against the dataset's own established convention, not just a debatable judgment call, given how consistently the opposite phrasing pattern (silent on letting anything dry, explicit only about not drying out) maps to keep_moist elsewhere in the same batches."
+        "soil_drainage — removed on audit: The app's schema types soil_drainage as an Optional[SoilDrainage] enum with exactly three valid members: 'fast', 'moderate', 'moisture_retentive' (app/models/models.py line 150-153, 318). Every other record in app/data/verified/*.json -- including the three brand-new, uncommitted batches (b19/b20/b21) sitting alongside this one -- populates soil_drainage with one of those three tokens or null; none ever holds prose. This record instead stores a full paragraph ('Good drainage is preferred; NC State tags it tolerant of both \"Good Drainage\" and \"Moist\" soil-moisture conditions, but RHS warns...'). I confirmed this isn't just a style nit: I ran the record through the actual ingest pipeline (app/data/claims/tranche.py's claims_from_record) and it happily extracts a claim with value equal to that full paragraph, and app/data/claims/recompute.py writes resolved values with a bare `setattr(species, name, new)` -- no enum coercion or validation gate. Constructing a Species row with this exact string for soil_drainage succeeds silently. So this isn't merely a citation problem; the VALUE itself is the wrong shape and would corrupt the soil_drainage column with an unbounded free-text blob instead of the controlled vocabulary the rest of the app (and the UI/filtering built on it) expects. The individual citations backing the paragraph's content (NC State 'Good Drainage Moist' tags, RHS phytophthora warning) are themselves accurate quotes -- verified against the live pages -- so the underlying research is fine; only the field's encoding is broken. The content maps most naturally to 'moderate' per this dataset's own convention (an average houseplant/landscape drainage need, not fast-draining cactus mix nor constantly-wet), but that's a guess at the fix, not a claim about which value was intended.",
+        "water_regime — removed on audit: water_regime is an enum with four members: keep_moist, keep_barely_moist, dry_surface_between, dry_thoroughly_between. The record picks 'dry_surface_between', cited to RHS's 'Plants in containers dry out quickly, so need regular watering. Try not to let the compost dry out, especially in summer, or get waterlogged.' -- a genuine, verbatim quote (confirmed against the live growing-guide page). But that quote never says to let the medium dry between waterings; it says the opposite (don't let it dry out). I checked how this exact same dataset/pipeline classifies structurally identical guidance elsewhere: Angel's Trumpet's citation 'avoid letting it dry out completely... avoid letting the pot become waterlogged' (near word-for-word the same shape as Star Jasmine's citation) is filed as keep_moist, as is Jackman's Clematis ('Do not let soil dry out... uniformly moist at all times') and Venus Flytrap/Tannia. Every record I found tagged dry_surface_between instead carries language that explicitly endorses letting the medium dry -- 'let the surface dry between waterings' (Sunflower, Myrtle), 'top 1-2 inches dry' (Chinese Evergreen), 'let it dry slightly at the surface' (Peace Lily). Star Jasmine's citation has none of that -- it only forbids both extremes, which is the keep_moist pattern throughout this dataset. This looks like a genuine miscategorization of the enum value against the dataset's own established convention, not just a debatable judgment call, given how consistently the opposite phrasing pattern (silent on letting anything dry, explicit only about not drying out) maps to keep_moist elsewhere in the same batches."
       ],
       "citations": [
         {
           "claim": "common_name Star Jasmine and scientific_name_given Trachelospermum jasminoides (page title/common name field)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "(Confederate Jasmine, Star Jasmine)"
         },
         {
           "claim": "scientific_name_accepted Trachelospermum jasminoides (RHS Name Status)",
-          "source": "Royal Horticultural Society (RHS) \u2014 Trachelospermum jasminoides plant profile",
+          "source": "Royal Horticultural Society (RHS) — Trachelospermum jasminoides plant profile",
           "url": "https://www.rhs.org.uk/plants/18287/i-trachelospermum-jasminoides-i/details",
           "quote": "Name Status Correct"
         },
         {
-          "claim": "name_note \u2014 not a true jasmine; different genus/family from Jasminum",
-          "source": "Clemson Cooperative Extension HGIC \u2014 Jasmine factsheet (HGIC 1106)",
+          "claim": "name_note — not a true jasmine; different genus/family from Jasminum",
+          "source": "Clemson Cooperative Extension HGIC — Jasmine factsheet (HGIC 1106)",
           "url": "https://hgic.clemson.edu/factsheet/jasmine/",
           "quote": "despite its common name the fragrant Confederate or star jasmine is not a true jasmine (Jasminum) at all, but a member of the genus Trachelospermum"
         },
         {
-          "claim": "name_note corroboration \u2014 different family (Apocynaceae) than true jasmines (Oleaceae)",
-          "source": "Missouri Botanical Garden \u2014 Plant Finder, Trachelospermum jasminoides",
+          "claim": "name_note corroboration — different family (Apocynaceae) than true jasmines (Oleaceae)",
+          "source": "Missouri Botanical Garden — Plant Finder, Trachelospermum jasminoides",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a155",
           "quote": "Star jasmine is in a different family (Apocynaceae) than the true jasmines in genus Jasminum (Oleaceae)."
         },
         {
-          "claim": "is_houseplant true \u2014 Houseplant plant type tag; can be clipped to grow as a houseplant",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "claim": "is_houseplant true — Houseplant plant type tag; can be clipped to grow as a houseplant",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "Clip it to grow as a houseplant."
         },
         {
-          "claim": "is_houseplant corroboration \u2014 Houseplant listed among Uses",
-          "source": "Missouri Botanical Garden \u2014 Plant Finder, Trachelospermum jasminoides",
+          "claim": "is_houseplant corroboration — Houseplant listed among Uses",
+          "source": "Missouri Botanical Garden — Plant Finder, Trachelospermum jasminoides",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a155",
           "quote": "Container plant either as annual or brought indoors for winter in colder climates.  Houseplant."
         },
         {
-          "claim": "toxic_to_pets false \u2014 tagged non-toxic for cats and non-toxic for dogs (also horses)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "claim": "toxic_to_pets false — tagged non-toxic for cats and non-toxic for dogs (also horses)",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
         },
         {
-          "claim": "toxicity_detail \u2014 milky latex sap in bruised twigs and petiole",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "claim": "toxicity_detail — milky latex sap in bruised twigs and petiole",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "Bruised twigs & petiole with white milky latex"
         },
         {
-          "claim": "toxicity_detail corroboration \u2014 stems exude milky sap when broken",
-          "source": "Missouri Botanical Garden \u2014 Plant Finder, Trachelospermum jasminoides",
+          "claim": "toxicity_detail corroboration — stems exude milky sap when broken",
+          "source": "Missouri Botanical Garden — Plant Finder, Trachelospermum jasminoides",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a155",
           "quote": "Stems exude a milky sap when broken."
         },
         {
-          "claim": "toxicity_detail \u2014 same NC State page also lists Poisonous as an unscoped Whole Plant Trait alongside the non-toxic-for-cats/dogs/horses tags",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "claim": "toxicity_detail — same NC State page also lists Poisonous as an unscoped Whole Plant Trait alongside the non-toxic-for-cats/dogs/horses tags",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "Ground Cover Houseplant Perennial Poisonous Vine"
         },
         {
-          "claim": "day_f_min 68, day_f_max 72, night_f_min 50, night_f_max 55 \u2014 ideal indoor temperatures for Confederate/star jasmine",
-          "source": "Clemson Cooperative Extension HGIC \u2014 Jasmine factsheet (HGIC 1106), Confederate Jasmine section",
+          "claim": "day_f_min 68, day_f_max 72, night_f_min 50, night_f_max 55 — ideal indoor temperatures for Confederate/star jasmine",
+          "source": "Clemson Cooperative Extension HGIC — Jasmine factsheet (HGIC 1106), Confederate Jasmine section",
           "url": "https://hgic.clemson.edu/factsheet/jasmine/",
-          "quote": "Night temperatures of 50 to 55 \u00b0F and day temperatures of 68 to 72 \u00b0F are ideal."
+          "quote": "Night temperatures of 50 to 55 °F and day temperatures of 68 to 72 °F are ideal."
         },
         {
           "claim": "outdoor_sun_exposure full_sun and part_shade",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
         },
         {
           "claim": "outdoor_sun_exposure corroboration (Sun: Full sun to part shade)",
-          "source": "Missouri Botanical Garden \u2014 Plant Finder, Trachelospermum jasminoides",
+          "source": "Missouri Botanical Garden — Plant Finder, Trachelospermum jasminoides",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a155",
           "quote": "Sun: Full sun to part shade"
         },
         {
-          "claim": "outdoor_sun_exposure corroboration \u2014 sun or light shade is best",
-          "source": "Royal Horticultural Society (RHS) \u2014 How to grow trachelospermum, Growing Guide",
+          "claim": "outdoor_sun_exposure corroboration — sun or light shade is best",
+          "source": "Royal Horticultural Society (RHS) — How to grow trachelospermum, Growing Guide",
           "url": "https://www.rhs.org.uk/plants/trachelospermum/growing-guide",
           "quote": "Sun or light shade is best, with shelter from cold, drying winds."
         },
         {
-          "claim": "soil_base standard_potting \u2014 grow in a container using peat-free potting compost",
-          "source": "Royal Horticultural Society (RHS) \u2014 How to grow trachelospermum, Growing Guide",
+          "claim": "soil_base standard_potting — grow in a container using peat-free potting compost",
+          "source": "Royal Horticultural Society (RHS) — How to grow trachelospermum, Growing Guide",
           "url": "https://www.rhs.org.uk/plants/trachelospermum/growing-guide",
           "quote": "use peat-free John Innes No 3 potting compost, or a good quality peat-free multipurpose compost"
         },
         {
-          "claim": "soil_drainage \u2014 Good Drainage and Moist soil-moisture tags",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "claim": "soil_drainage — Good Drainage and Moist soil-moisture tags",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "Good Drainage Moist"
         },
         {
-          "claim": "soil_drainage corroboration \u2014 free-draining soil needed to avoid phytophthora root rot in heavy/clay/waterlogged soils",
-          "source": "Royal Horticultural Society (RHS) \u2014 How to grow trachelospermum, Growing Guide",
+          "claim": "soil_drainage corroboration — free-draining soil needed to avoid phytophthora root rot in heavy/clay/waterlogged soils",
+          "source": "Royal Horticultural Society (RHS) — How to grow trachelospermum, Growing Guide",
           "url": "https://www.rhs.org.uk/plants/trachelospermum/growing-guide",
           "quote": "In heavy, damp or clay soils, or in soils with a fluctuating water table, star jasmine may be susceptible to phytophthora root rots. So choose a free-draining site or grow it in a container."
         },
         {
-          "claim": "water_regime keep_moist and water_dry_down_target \u2014 don't let compost dry out or get waterlogged in containers",
-          "source": "Royal Horticultural Society (RHS) \u2014 How to grow trachelospermum, Growing Guide",
+          "claim": "water_regime keep_moist and water_dry_down_target — don't let compost dry out or get waterlogged in containers",
+          "source": "Royal Horticultural Society (RHS) — How to grow trachelospermum, Growing Guide",
           "url": "https://www.rhs.org.uk/plants/trachelospermum/growing-guide",
           "quote": "Plants in containers dry out quickly, so need regular watering. Try not to let the compost dry out, especially in summer, or get waterlogged."
         },
         {
-          "claim": "water_dry_down_target corroboration \u2014 drought-tolerant once established in the ground",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Trachelospermum jasminoides",
+          "claim": "water_dry_down_target corroboration — drought-tolerant once established in the ground",
+          "source": "NC State Extension Gardener Plant Toolbox — Trachelospermum jasminoides",
           "url": "https://plants.ces.ncsu.edu/plants/trachelospermum-jasminoides/",
           "quote": "Once established, it is drought-tolerant."
         },
         {
-          "claim": "water_estimate_basis \u2014 structured Water rating is Medium",
-          "source": "Missouri Botanical Garden \u2014 Plant Finder, Trachelospermum jasminoides",
+          "claim": "water_estimate_basis — structured Water rating is Medium",
+          "source": "Missouri Botanical Garden — Plant Finder, Trachelospermum jasminoides",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a155",
           "quote": "Water: Medium"
         },
         {
-          "claim": "water_estimate_basis corroboration \u2014 water regularly the first year and during summer dry spells",
-          "source": "Royal Horticultural Society (RHS) \u2014 How to grow trachelospermum, Growing Guide",
+          "claim": "water_estimate_basis corroboration — water regularly the first year and during summer dry spells",
+          "source": "Royal Horticultural Society (RHS) — How to grow trachelospermum, Growing Guide",
           "url": "https://www.rhs.org.uk/plants/trachelospermum/growing-guide",
           "quote": "water regularly for at least the first year, until settled in. Plants may also need watering during dry spells in summer."
         }
@@ -1012,14 +1144,20 @@
         "Naming discrepancy: NC State Extension and Penn State Extension use \"Iris x germanica\" as the current name (treating \"Iris germanica\" as a prior synonym), while RHS marks \"Iris germanica\" itself with Name Status \"Correct\" and Missouri Botanical Garden also profiles it as \"Iris germanica\". This record's scientific_name_accepted follows the RHS/MOBOT usage, but \"Iris x germanica\" is equally well supported by two other admissible authorities.",
         "The true wild species Iris germanica is essentially absent from commerce; per Missouri Botanical Garden, \"Iris germanica as a species is simply not sold in commerce today\" -- nearly everything sold as \"bearded iris\" is a hybrid cultivar derived from it, so identification/authenticity confusion between the species and its cultivars is common.",
         "Toxicity also extends to horses (NC State additionally tags \"Problem for Horses\"), beyond the cats/dogs scoping used for toxic_to_pets in this record.",
-        "chill_damage_f, cool_rest_note, day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, and light_fc_good were left null: this is a fully cold-hardy outdoor garden perennial (USDA Zones 3-10 per Missouri Botanical Garden and Penn State; RHS hardiness rating H6, hardy to -20 to -15\u00b0C) rather than a houseplant. Admissible sources describe it via USDA zones and full-sun/part-shade categories, not indoor day/night temperature bands, humidity percentages, or foot-candle light levels -- no numeric values for these fields were found on any admissible page.",
+        "chill_damage_f, cool_rest_note, day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, and light_fc_good were left null: this is a fully cold-hardy outdoor garden perennial (USDA Zones 3-10 per Missouri Botanical Garden and Penn State; RHS hardiness rating H6, hardy to -20 to -15°C) rather than a houseplant. Admissible sources describe it via USDA zones and full-sun/part-shade categories, not indoor day/night temperature bands, humidity percentages, or foot-candle light levels -- no numeric values for these fields were found on any admissible page.",
         "direct_sun_hours_max was left null: sources state only a minimum sun need (\"full sun,\" 6+ hours per NC State), with no stated upper limit; Missouri Botanical Garden notes best flowering and disease resistance occur in full sun, implying more sun helps rather than something to cap.",
         "soil_ph_min and soil_ph_max were left null: RHS gives only a qualitative pH descriptor (\"Alkaline or Neutral\" / \"neutral or slightly alkaline soil\"), not a numeric range, and no other admissible source gave pH figures.",
         "fertilize_interval_days and fertilize_active_months were left null: sources describe fertilizing timing in relative/seasonal terms (early spring; again at the very end of the season per Clemson; after flowering per Penn State and Missouri Botanical Garden) rather than a specific day-count interval or calendar-month numbers, so no numeric value could be extracted without guessing.",
         "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis were left null: no admissible source gives a specific soil-check depth or a numeric days-between-watering figure for either the growing or dormant season; the available guidance is qualitative only (drought-tolerant once established, avoid overwatering/overhead watering, water new plantings during dry spells).",
         "Planting-depth guidance is unusually consistent across sources but has no dedicated schema field: rhizomes should be planted shallow (at or just below soil level) and never mulched over, since mulch/overwatering promotes root rot and bacterial soft rot -- agreed on by NC State, Penn State, Missouri Botanical Garden, and University of Maryland Extension.",
         "Reported native origin is inconsistent across sources: NC State lists \"Yugoslavia,\" Missouri Botanical Garden says origin is uncertain but probably southern Europe/the Mediterranean, RHS lists native range as Turkey, and NC State's own description calls Iris x germanica an ancient hybrid of garden origin (a cross between I. pallida and I. variegata that arose in the Balkans) rather than a species with one clear wild provenance.",
-        "fertilize_strength \u2014 left null at landing: the record stored a garden-bed fertilizer formulation/application-rate description (Low-nitrogen fertilizer such as 5-10-10 (about 1/2 cup per clump), applied aroun...) rather than a dilution strength (full/half/quarter of a liquid feed's label rate), which is what this schema field actually measures -- the same category error already caught on Crown of Thorns in b35 (RHS's 'low nitrogen liquid fertiliser' described formulation, not dilution). No admissible source in this record gives a full/half/quarter-style dilution figure, so left null rather than force-mapping an NPK ratio or per-area application rate onto a strength category it doesn't describe."
+        "fertilize_strength — left null at landing: the record stored a garden-bed fertilizer formulation/application-rate description (Low-nitrogen fertilizer such as 5-10-10 (about 1/2 cup per clump), applied aroun...) rather than a dilution strength (full/half/quarter of a liquid feed's label rate), which is what this schema field actually measures -- the same category error already caught on Crown of Thorns in b35 (RHS's 'low nitrogen liquid fertiliser' described formulation, not dilution). No admissible source in this record gives a full/half/quarter-style dilution figure, so left null rather than force-mapping an NPK ratio or per-area application rate onto a strength category it doesn't describe.",
+        "is_edible left null: none of the six pages state that Bearded Iris (or a named part of it) is eaten/used for food, or that it is poisonous to eat. NC State's Plant Toolbox lists a generic 'Poisonous' whole-plant trait tag but does not address ingestion/edibility specifically, so per the no-inference rule this was not read as a false-for-edibility statement — left null rather than guessed.",
+        "attracts_pollinators left null: NC State's structured 'Attracts' field returned 0 hits (no bees/butterflies/hummingbirds/wildlife listed), and the RHS species page carries no pollinator-attractiveness tag or unconditional pollinator statement for this species. No page addresses pollinator attraction at all, so left null (not false).",
+        "hgic.clemson.edu/bearded-iris/ refused this machine (http-403) — could not check it for edibility, pollinator, or size content; skipped per instructions rather than guessed.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (ConnectError), consistent with the task's warning that this host is known to refuse — skipped, not guessed.",
+        "extension.psu.edu/german-bearded-iris and extension.umd.edu/resource/dividing-iris contained no body-text mentions of edibility, pollinators, or mature size; the PSU page's 'pollinat'/'bee'/'butterfl'/'wildlife' keyword hits were all site-navigation menu links (e.g. 'Pollination and Bees', 'Landscaping for Wildlife' category links), not statements about Iris germanica itself, so they were not used as support.",
+        "RHS's species page does carry its own size data (Max Height 0.5-1 metres / Max Spread 0.1-0.5 metres, i.e. roughly 19.7-39.4 in height and 3.9-19.7 in spread) that was not used here in favor of NC State's structured Dimensions block as the anchor source per task instructions; the two ranges overlap but are not identical, noted here for transparency rather than merged into one citation."
       ],
       "citations": [
         {
@@ -1168,144 +1306,178 @@
         },
         {
           "claim": "fertilize_strength: Penn State Extension specifies fertilizing with 1/2 cup of 5-10-10 per clump after flowering",
-          "quote": "Fertilize with \u00bd cup of 5-10-10 around each clump (not on top of the rhizomes) after flowering.",
+          "quote": "Fertilize with ½ cup of 5-10-10 around each clump (not on top of the rhizomes) after flowering.",
           "source": "Penn State Extension",
           "url": "https://extension.psu.edu/german-bearded-iris"
+        },
+        {
+          "claim": "mature_height_in 12-48 (NC State Height 1 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Iris x germanica",
+          "url": "https://plants.ces.ncsu.edu/plants/iris-x-germanica/",
+          "quote": "Height: 1 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Iris x germanica",
+          "url": "https://plants.ces.ncsu.edu/plants/iris-x-germanica/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
       "citations": [
         {
           "claim": "common_name is Gladiolus, matching NC State Extension's plant page title and common-name listing",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Gladiolus (Aunt Eliza Rat's Rail, Gladiola, Gladiolus, Glads, Sword Lilies, Sword Lily)"
         },
         {
-          "claim": "scientific_name_accepted: Gladiolus \u00d7 hortulanus is the designation commonly used for these modern garden hybrids",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Gladiolus (group)",
+          "claim": "scientific_name_accepted: Gladiolus × hortulanus is the designation commonly used for these modern garden hybrids",
+          "source": "Missouri Botanical Garden Plant Finder — Gladiolus (group)",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=264598&isprofile=0",
-          "quote": "Most of the gladiolus sold today are hybrids which are commonly designated as Gladiolus \u00d7 hortulanus. At least eight different species have been utilized in breeding modern gladiolus, and the parentage of most cultivars is not known."
+          "quote": "Most of the gladiolus sold today are hybrids which are commonly designated as Gladiolus × hortulanus. At least eight different species have been utilized in breeding modern gladiolus, and the parentage of most cultivars is not known."
         },
         {
           "claim": "name_note: the Gladiolus x hortulanus label is a hybrid grouping of unknown/mixed parentage rather than a single validated wild species",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Gladiolus (group)",
+          "source": "Missouri Botanical Garden Plant Finder — Gladiolus (group)",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=264598&isprofile=0",
-          "quote": "Most of the gladiolus sold today are hybrids which are commonly designated as Gladiolus \u00d7 hortulanus. At least eight different species have been utilized in breeding modern gladiolus, and the parentage of most cultivars is not known."
+          "quote": "Most of the gladiolus sold today are hybrids which are commonly designated as Gladiolus × hortulanus. At least eight different species have been utilized in breeding modern gladiolus, and the parentage of most cultivars is not known."
         },
         {
           "claim": "name_note: Gladiolus also carries older synonym genus names and is commonly confused with other corm-forming plants, relevant to correct catalog identification",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Previously known as:"
         },
         {
           "claim": "name_note: this genus is often confused with other genera in identification, per NC State's toolbox",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Gladiolus is often confused with:"
         },
         {
           "claim": "is_houseplant is false: Gladiolus is grown outdoors in garden beds/borders and in containers on patios, not marketed as an indoor houseplant, per NC State",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Sword lilies also grow well in containers and in garden borders."
         },
         {
           "claim": "toxic_to_pets is true for cats specifically, per NC State Extension's toxicity attribute data",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Problem for Cats"
         },
         {
           "claim": "toxic_to_pets is true for dogs specifically, per NC State Extension's toxicity attribute data",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Problem for Dogs"
         },
         {
           "claim": "toxicity_detail: overall poison severity is rated low by NC State Extension",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "This plant has low severity poison characteristics."
         },
         {
           "claim": "toxicity_detail describes the specific poisoning symptoms and where toxicity concentrates in the plant",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Salivation, vomiting, drooling, lethargy, diarrhea. Highest concentration in corms (bulbs)"
         },
         {
           "claim": "cool_rest_note: corms must be stored cool and dry over winter after digging in most regions",
-          "source": "Home & Garden Information Center, Clemson Cooperative Extension \u2014 Summer- and Fall-Flowering Bulbs",
+          "source": "Home & Garden Information Center, Clemson Cooperative Extension — Summer- and Fall-Flowering Bulbs",
           "url": "https://hgic.clemson.edu/factsheet/summer-and-fall-flowering-bulbs/",
-          "quote": "Corms should be stored during the winter at a temperature of 35 to 45\u00b0F in a well-ventilated area."
+          "quote": "Corms should be stored during the winter at a temperature of 35 to 45°F in a well-ventilated area."
         },
         {
           "claim": "cool_rest_note is corroborated by NC State's corm storage guidance for the winter dormant period",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Harvest corms after foliage dies in the fall.  Clean carefully and store dry in mesh bags with good air circulation at 35-41 degrees F (2-5C)"
         },
         {
           "claim": "outdoor_sun_exposure includes full_sun, per NC State's light category for this plant",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Full sun (6 or more hours of direct sunlight a day)"
         },
         {
           "claim": "outdoor_sun_exposure includes part_shade, per NC State's partial-shade light category for this plant",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
         },
         {
           "claim": "soil_base is best classified as garden_bed since Gladiolus is used in outdoor beds, borders, and patio containers rather than as a potted indoor plant",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Gladiolus (group)",
+          "source": "Missouri Botanical Garden Plant Finder — Gladiolus (group)",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=264598&isprofile=0",
           "quote": "Beds, borders. Container plant for decks and patios. Good fresh cut flowers."
         },
         {
           "claim": "soil_drainage moderate: soil_drainage should be well-drained, adapting to most soils except heavy clay",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Gladiolus (group)",
+          "source": "Missouri Botanical Garden Plant Finder — Gladiolus (group)",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=264598&isprofile=0",
           "quote": "Best grown in humusy, medium wet, well-drained soils in full sun. Adapts to a wide range of soils except heavy clay."
         },
         {
           "claim": "soil_drainage moderate -- soil_drainage is corroborated by NC State listing good drainage as a preferred soil condition",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Gladiolus",
+          "source": "NC State Extension Gardener Plant Toolbox — Gladiolus",
           "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
           "quote": "Good Drainage"
         },
         {
           "claim": "water_regime keep_moist: water_regime is consistent moisture during active growth with reduced watering after bloom",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Gladiolus (group)",
+          "source": "Missouri Botanical Garden Plant Finder — Gladiolus (group)",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=264598&isprofile=0",
           "quote": "Provide consistent moisture during the growing season, especially during dry summer periods, and do not allow soils to dry out. After bloom, reduce watering."
         },
         {
           "claim": "water_regime keep_moist -- water_regime should be deep, thorough soakings rather than light daily watering during the growing season",
-          "source": "Home & Garden Information Center, Clemson Cooperative Extension \u2014 Summer- and Fall-Flowering Bulbs",
+          "source": "Home & Garden Information Center, Clemson Cooperative Extension — Summer- and Fall-Flowering Bulbs",
           "url": "https://hgic.clemson.edu/factsheet/summer-and-fall-flowering-bulbs/",
           "quote": "Glads need ample water throughout the growing season. Watering should soak the ground thoroughly. Avoid daily light watering."
         },
         {
           "claim": "water_dry_down_target: soil should not be allowed to dry out during active growth",
-          "source": "Missouri Botanical Garden Plant Finder \u2014 Gladiolus (group)",
+          "source": "Missouri Botanical Garden Plant Finder — Gladiolus (group)",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=264598&isprofile=0",
           "quote": "Provide consistent moisture during the growing season, especially during dry summer periods, and do not allow soils to dry out. After bloom, reduce watering."
         },
         {
           "claim": "fertilize_strength: a 5-10-10 fertilizer applied at a garden-bed rate at two growth-stage points is the documented feeding regime",
-          "source": "Home & Garden Information Center, Clemson Cooperative Extension \u2014 Summer- and Fall-Flowering Bulbs",
+          "source": "Home & Garden Information Center, Clemson Cooperative Extension — Summer- and Fall-Flowering Bulbs",
           "url": "https://hgic.clemson.edu/factsheet/summer-and-fall-flowering-bulbs/",
           "quote": "Fertilizer (5-10-10) should be applied at the rate of 3 to 4 pounds per 100 square feet of bed area when plants are 6 to 8 inches tall, and again when the flower spikes appear."
+        },
+        {
+          "claim": "attracts_pollinators true -- NC State structured Attracts field lists Bees",
+          "source": "NC State Extension Gardener Plant Toolbox - Gladiolus",
+          "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
+          "quote": "Attracts: ⏎ ⏎ Bees"
+        },
+        {
+          "claim": "mature_height_in 12-72 (NC State Height 1 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Gladiolus",
+          "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
+          "quote": "Dimensions: ⏎ Height: 1 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Gladiolus",
+          "url": "https://plants.ces.ncsu.edu/plants/gladiolus/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
       ],
       "common_name": "Gladiolus",
-      "cool_rest_note": "Corms are not reliably cold-hardy in the ground outside roughly USDA zones 7-10 and are typically dug in fall after foliage dies/yellows, then cleaned and stored dry over winter in a cool, well-ventilated spot around 35-45\u00b0F before replanting the following spring.",
+      "cool_rest_note": "Corms are not reliably cold-hardy in the ground outside roughly USDA zones 7-10 and are typically dug in fall after foliage dies/yellows, then cleaned and stored dry over winter in a cool, well-ventilated spot around 35-45°F before replanting the following spring.",
       "day_f_max": null,
       "day_f_min": null,
       "direct_sun_hours_max": null,
@@ -1325,7 +1497,7 @@
         "full_sun",
         "part_shade"
       ],
-      "scientific_name_accepted": "Gladiolus \u00d7 hortulanus",
+      "scientific_name_accepted": "Gladiolus × hortulanus",
       "scientific_name_given": "Gladiolus x hortulanus",
       "soil_base": "garden_bed",
       "soil_drainage": "moderate",
@@ -1335,23 +1507,33 @@
       "toxicity_detail": "Low-severity toxicity to cats and dogs (NC State Extension also flags horses). Ingestion causes salivation, vomiting, drooling, lethargy, and diarrhea, with the toxic principle most concentrated in the corms (bulbs); the listed toxic plant parts are leaves and roots.",
       "unknowns": [
         "soil_ph_min/max left null: no admissible source gives a numeric pH range for Gladiolus. RHS (a UK cultivar page, e.g. Gladiolus 'Her Majesty') states the plant is suitable in Acid, Alkaline, or Neutral soil conditions, implying pH is not a strongly limiting factor, but gives no numbers, so no range was recorded.",
-        "day_f_min/max and night_f_min/max left null: admissible sources give a planting-time soil-temperature cue (Penn State: plant once soil has warmed to at least 55\u00b0F) and frost/freeze risk descriptions, but no explicit ambient day/night air temperature range during active growth.",
-        "chill_damage_f left null: Penn State Extension distinguishes 'light frost' (kills foliage only) from 'hard freeze' (can kill the whole plant/corms), but does not give a specific numeric threshold in \u00b0F, so no number was recorded rather than assuming the standard 32\u00b0F frost point.",
+        "day_f_min/max and night_f_min/max left null: admissible sources give a planting-time soil-temperature cue (Penn State: plant once soil has warmed to at least 55°F) and frost/freeze risk descriptions, but no explicit ambient day/night air temperature range during active growth.",
+        "chill_damage_f left null: Penn State Extension distinguishes 'light frost' (kills foliage only) from 'hard freeze' (can kill the whole plant/corms), but does not give a specific numeric threshold in °F, so no number was recorded rather than assuming the standard 32°F frost point.",
         "humidity_need/humidity_pct left null: the only humidity-specific guidance found is about post-harvest corm storage ('low humidity' per Penn State) rather than the growing plant's ambient humidity need, so it wasn't mapped to this field to avoid conflating storage and growing conditions.",
         "light_fc_min/light_fc_good and direct_sun_hours_max left null: no admissible source gives foot-candle light measurements or an upper bound on direct-sun hours; NC State's 'full sun' category is defined as '6 or more hours' with no stated ceiling.",
         "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis left null: admissible sources describe watering qualitatively (soak thoroughly, avoid daily light watering, do not let soil dry out, reduce after bloom) but give no soil-check depth or day-interval watering frequency to convert into a numeric estimate.",
         "toxicity scope note: Penn State Extension separately states 'Parts of the flower are poisonous and should not be kept within reach of children or animals as they can cause allergic reactions such as skin irritation' and RHS states 'Pets: Harmful if eaten' for Gladiolus cultivars -- both are unscoped to cats/dogs specifically (naming only 'animals'/'pets' generically) and so were not used as the basis for toxic_to_pets=true per the catalog's scoping rule; that determination instead rests on NC State Extension's cat- and dog-specific 'Problem for Cats' / 'Problem for Dogs' listings. Note also a minor cross-source tension: NC State's structured data says 'Causes Contact Dermatitis: No' while Penn State's prose mentions possible skin irritation from handling.",
         "identification caution: NC State Extension notes Gladiolus 'is often confused with' Babiana nervosa, Hesperantha, Hesperantha coccinea, and Iris, and lists Acidanthera and Antholyza as previously-used synonym genus names -- worth flagging for the app's species-matching/photo-ID logic.",
-        "corm storage temperature varies slightly by source: NC State and Clemson both give roughly 35-45\u00b0F for winter corm storage, while University of Maryland Extension gives a different post-dig storage window (50-55\u00b0F, avoiding below 45\u00b0F or above 70\u00b0F) that appears to describe an initial curing/holding stage rather than the same long-term cold storage; cool_rest_note uses the NC State/Clemson figures as the more specific, converging pair.",
+        "corm storage temperature varies slightly by source: NC State and Clemson both give roughly 35-45°F for winter corm storage, while University of Maryland Extension gives a different post-dig storage window (50-55°F, avoiding below 45°F or above 70°F) that appears to describe an initial curing/holding stage rather than the same long-term cold storage; cool_rest_note uses the NC State/Clemson figures as the more specific, converging pair.",
         "is_houseplant=false and the associated null houseplant-style fields (light_fc, humidity_pct, water_check_depth_cm, fertilize_active_months) reflect that every admissible source frames Gladiolus purely as an outdoor garden/cut-flower corm; none discuss it as an indoor houseplant.",
-        "fertilize_strength \u2014 left null at landing: the record stored a garden-bed fertilizer formulation/application-rate description (5-10-10 granular fertilizer at 3 to 4 pounds per 100 square feet of bed area, ap...) rather than a dilution strength (full/half/quarter of a liquid feed's label rate), which is what this schema field actually measures -- the same category error already caught on Crown of Thorns in b35 (RHS's 'low nitrogen liquid fertiliser' described formulation, not dilution). No admissible source in this record gives a full/half/quarter-style dilution figure, so left null rather than force-mapping an NPK ratio or per-area application rate onto a strength category it doesn't describe."
+        "fertilize_strength — left null at landing: the record stored a garden-bed fertilizer formulation/application-rate description (5-10-10 granular fertilizer at 3 to 4 pounds per 100 square feet of bed area, ap...) rather than a dilution strength (full/half/quarter of a liquid feed's label rate), which is what this schema field actually measures -- the same category error already caught on Crown of Thorns in b35 (RHS's 'low nitrogen liquid fertiliser' described formulation, not dilution). No admissible source in this record gives a full/half/quarter-style dilution figure, so left null rather than force-mapping an NPK ratio or per-area application rate onto a strength category it doesn't describe.",
+        "is_edible is conditional: NC State states flowers are edible only 'with anthers removed' (used as a garnish or container for dip/spread) — other parts are not addressed as edible; do not read this as whole-plant edibility.",
+        "Missouri Botanical Garden PlantFinder page (taxonid=264598) could not be fetched by qc.py: fetch status error:ConnectError, on two attempts. Not used; no data drawn from it.",
+        "Clemson HGIC 'summer-and-fall-flowering-bulbs' factsheet could not be fetched by qc.py: fetch status http-403, on two attempts. Not used; no data drawn from it.",
+        "Size and Attracts data both come solely from NC State Plant Toolbox's Dimensions and Attracts fields, which read at the species level (Gladiolus, not a named cultivar) despite the page also listing several cultivars/hybrids in its synonym/related list.",
+        "is_edible removed on audit: Rule F. is_edible is true, and the very page cited names toxic parts that never reach unknowns. https://plants.ces.ncsu.edu/plants/gladiolus/ has a 'Poisonous to Humans' section reading 'Poison Severity: Low', 'Poison Symptoms: Salivation, vomiting, drooling, lethargy, diarrhea. Highest concentration in corms (bulbs)', 'Poison Toxic Principle: Unknown', and 'Poison Part: Leaves / Roots'. The header line also states 'This plant has low severity poison characteristics.' The unknowns entry discloses only the anthers-removed preparation and then asserts that 'other parts are not addressed as edible' -- which is worse than silence: the page does address other parts, and names the leaves and roots as the poison part with the highest concentration in the corms. A record saying edible: true while omitting a named poisonous part is exactly the failure this check exists to catch. Null the field until unknowns carries both conditions (flowers only, anthers removed; leaves, roots and corms listed as poison parts, low severity)."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": "Do not allow the soil to dry out during active growth; keep it consistently/evenly moist, then reduce watering after bloom.",
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1390,6 +1572,7 @@
   ],
   "normalizations": [
     "2026-08-23: eighteenth batch of the \"blind spots\" pass -- Bleeding Heart (Lamprocapnos spectabilis, researched under its currently accepted name with the Dicentra spectabilis synonym captured in name_note per the b21 reclassification lesson), Japanese Barberry, Weigela, Arrowwood Viburnum, a deliberate two-species Jasmine companion test (Jasminum officinale vs. Trachelospermum jasminoides -- unrelated families sharing only a common name, both confirmed non-toxic to cats/dogs via NC State's explicit '#non-toxic for cats/dogs' tags, with no content bleed found), Bearded Iris, and Gladiolus. This batch's research prompt was updated to require a name_note-labeled citation whenever name_note is non-null (closing the gap b35 surfaced across three records) -- confirmed working across all 8 records here. Restored two audit-nulled fields where the auditor's own citations, already correctly labeled and quote-verified, supported the original value once checked against this catalog's established cross-batch conventions: Weigela's outdoor_sun_exposure (the audit treated NC State's 'Dappled Sunlight' tag as a distinct category silently dropped from ['full_sun','part_shade'], but this catalog has consistently mapped 'Dappled Sunlight' into part_shade rather than a separate value since b21 -- the original array was already complete); and Star Jasmine's water_regime (the audit correctly caught 'dry_surface_between' as a miscategorization of a quote that actually forbids both drying out and waterlogging, and its own reasoning -- backed by precedent from Angel's Trumpet, Jackman's Clematis, and Venus Flytrap already in this catalog -- pointed to keep_moist as the correct value, so the same citation was relabeled and the value restored rather than left null). Separately, independent landing-time review caught a defect this batch's own in-workflow audit missed for 4 of 8 records: soil_drainage and/or water_regime and/or fertilize_strength held a full prose paragraph instead of a valid enum member (the audit caught this exact shape on Star Jasmine's soil_drainage but not on Japanese Barberry, Weigela, Bearded Iris, or Gladiolus) -- a schema violation that the ingest pipeline would accept silently (bare setattr, no enum coercion), corrupting the column with free text instead of the controlled vocabulary the app's UI and filtering expect. Each was resolved on its own evidence: Japanese Barberry and Bearded Iris both mapped to soil_drainage=fast and water_regime=dry_thoroughly_between (both explicitly drought-tolerant, rot-prone if kept wet, with no source describing any wet-tolerance); Gladiolus mapped to soil_drainage=moderate (Missouri Botanical Garden's 'medium wet, well-drained... adapts to a wide range of soils' spans beyond strict fast-drainage) and water_regime=keep_moist (two sources explicitly say not to let the soil dry out during the growing season); Weigela's bare 'well-drained' language (no moisture-spanning qualifier either way) was left null rather than guessed, matching this catalog's established ambiguous-well-drained precedent from b22. Bearded Iris's and Gladiolus's fertilize_strength values were also prose (fertilizer NPK formulation and garden-bed application rate, not a full/half/quarter dilution strength -- the same category error already caught on Crown of Thorns in b35) and were left null rather than force-mapped. toxic_to_pets confirmed clean across all four scoped records: Bleeding Heart, Bearded Iris, and Gladiolus true with explicit NC State 'Problem for Cats'/'Problem for Dogs' or Penn State cats-and-dogs-named evidence; both Jasmine species false with explicit NC State '#non-toxic for cats'/'#non-toxic for dogs' tags (a genuine sourced false, not an absence-of-evidence null).",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Japanese Barberry -> none, Arrowwood Viburnum -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Japanese Barberry -> none, Arrowwood Viburnum -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

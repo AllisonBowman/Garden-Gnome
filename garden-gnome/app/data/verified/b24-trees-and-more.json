@@ -49,7 +49,14 @@
         "cool_rest_note: no admissible source describes a distinct cool/dormancy-rest care regimen beyond noting the tree is winter-deciduous and cold-hardy within its rated zone.",
         "Container/bonsai culture: RHS's growing guide extensively documents growing Japanese maples in outdoor containers (John Innes No. 2 or ericaceous potting mix, root-pruning/repotting every 2-3 years, winter pot protection), and Clemson/NC State note patio and bonsai use -- but this is outdoor container culture, not indoor houseplant use, so is_houseplant is kept false. No schema field distinguishes 'outdoor container' from garden-bed planting, so soil_base is set to garden_bed as the primary, most-supported growing context rather than left null.",
         "water_regime: RHS's container-specific instruction ('keep the compost moist, but not soaking wet, allowing it to begin to dry out between waterings') differs in emphasis from the in-ground guidance (NC State, MOBOT, Clemson all specify evenly/consistently moist soil). This reads as normal container-vs-ground technique variation rather than a genuine disagreement about the species' moisture preference, so keep_moist was kept rather than nulled, but the container nuance is noted here for transparency.",
-        "soil_drainage — removed on audit: The value 'moderate' does not appear, in substance or in wording, in any of the citations offered for it. NC State's own structured field reads 'Soil Drainage: Good Drainage / Moist' (verified verbatim), RHS's structured field reads 'Moisture: Moist but well-drained' (verified verbatim), MOBOT's Culture text says 'well-drained soils... in full sun to part shade' (verified verbatim), and Clemson's Japanese Maple section says soil should be 'well-drained' with drainage good enough that water never stands around the roots (verified verbatim). Every admissible source that addresses drainage at all describes it as good/well-drained, not as a middling or moderate drainage capacity -- so labeling the category 'moderate' asserts a distinction none of the cited quotes actually draw."
+        "soil_drainage — removed on audit: The value 'moderate' does not appear, in substance or in wording, in any of the citations offered for it. NC State's own structured field reads 'Soil Drainage: Good Drainage / Moist' (verified verbatim), RHS's structured field reads 'Moisture: Moist but well-drained' (verified verbatim), MOBOT's Culture text says 'well-drained soils... in full sun to part shade' (verified verbatim), and Clemson's Japanese Maple section says soil should be 'well-drained' with drainage good enough that water never stands around the roots (verified verbatim). Every admissible source that addresses drainage at all describes it as good/well-drained, not as a middling or moderate drainage capacity -- so labeling the category 'moderate' asserts a distinction none of the cited quotes actually draw.",
+        "is_edible left null: none of the six anchor pages (NC State Plant Toolbox, RHS species page, UF/IFAS FP009, RHS growing guide; Missouri Botanical Garden and Clemson HGIC could not be fetched) address eating this plant or any part of it -- no claim of edibility or inedibility either way.",
+        "mature_height_in / mature_spread_in taken from NC State Plant Toolbox's structured Dimensions block: 'Height: 15 ft. 0 in. - 25 ft. 0 in.' -> 180-300 in, and 'Width: 10 ft. 0 in. - 25 ft. 0 in.' -> 120-300 in (used as spread).",
+        "Other allowed pages give different, overlapping size figures for the species/genus that were NOT used, to keep one clean citation per field: RHS species page states 'Max Height 4-8 metres' / 'Max Spread 4-8 metres' (~157-315 in); UF/IFAS FP009 states 'Height: 10 to 20 feet' / 'Spread: 10 to 20 feet' (120-240 in) and also an intro line 'height and spread of 20 feet' (a single figure, not a range, so not usable as a min/max pair); RHS growing guide gives only a general genus-level statement ('most are small... rarely more than 1-2m (3¼ ft-6½ ft) in height', 'can grow to 8m (26ft) in fifty years') that is not a structured species figure and was not used.",
+        "attracts_pollinators=true is supported by NC State Plant Toolbox's Play Value field 'Attracts Pollinators' and its separate 'Attracts:' list naming Moths, Pollinators, and Songbirds -- songbirds/moth-larval-host status was not read as pollinator support, only the explicit 'Pollinators' listing was.",
+        "Missouri Botanical Garden PlantFinder page returned a fetch error (status: error:ConnectError) via qc.py -- could not be read; not used, per instructions, rather than guessed.",
+        "Clemson HGIC factsheet page returned http-403 via qc.py -- this host refused the fetch; could not be read; not used, per instructions, rather than guessed.",
+        "RHS species detail page and RHS growing guide page contained no mention of edibility, pollinators, bees, butterflies, or wildlife attraction for Acer palmatum specifically."
       ],
       "citations": [
         {
@@ -159,8 +166,31 @@
           "quote": "Japanese maples like their roots quite shallow so plant them with no more than 2.5cm (1in) of soil over the main roots",
           "source": "RHS Growing Guide: How to grow Japanese maples",
           "url": "https://www.rhs.org.uk/plants/acer/japanese-maples/growing-guide"
+        },
+        {
+          "claim": "mature_height_in 180-300 (NC State Height: 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Acer palmatum",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-palmatum/",
+          "quote": "Height: 15 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-300 (NC State Width: 10 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Acer palmatum",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-palmatum/",
+          "quote": "Width: 10 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value field: Attracts Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Acer palmatum",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-palmatum/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 300
     },
     {
       "common_name": "Crape Myrtle",
@@ -214,7 +244,14 @@
         "is_houseplant is set to false based on this species' outdoor cold-hardiness data (USDA zones 6a-9b per NC State; 7A-9A per UF/IFAS; Zone 6-9 per MOBOT) and RHS's cultivation note that in frost-prone areas it is grown against a wall outdoors or overwintered in an unheated/cool greenhouse rather than kept as a houseplant. Multiple admissible sources do describe outdoor CONTAINER cultivation specifically for dwarf cultivars -- NC State: 'Dwarf varieties may be grown in a container' and tags 'Landscape Location: Container'; UF/IFAS lists 'container or planter' among its landscape Uses -- but none describes sustained INDOOR cultivation, so this container evidence was documented but not read as houseplant status.",
         "No admissible source addresses whether Lagerstroemia indica is toxic to humans, so no human-toxicity claim is made in either direction; NC State's page (the only one carrying the pet-toxicity tags for this species) has no 'Poisonous to Humans' section at all to potentially conflate with the pet-toxicity tags.",
         "Clemson's factsheet (HGIC 1008, titled 'Crape Myrtle') is nominally written for the genus and opens by discussing 'Lagerstroemia species' collectively, but it explicitly identifies Lagerstroemia indica as 'the most common species in the United States' and its cultivar table is overwhelmingly L. indica selections, so it was treated as species-relevant rather than excluded as generic genus-wide boilerplate.",
-        "fertilize_active_months — removed on audit: The value [3,4,5,6,7,8] is drawn solely from UGA's instruction 'To newly planted small plants (1-gallon size), apply 1 teaspoon of fertilizer monthly from March to August along the perimeter of the planting hole' (verified verbatim on fieldreport.caes.uga.edu). The SAME source gives established/mature plants a completely different regime: 'one broadcast application of fertilizer in spring' (verified verbatim) -- no monthly cadence, no March-August window. A field named fertilize_active_months will read to a downstream consumer as the general recurring fertilizing window for the species, but the actual value only supports a first-year establishment practice for small container starts; applying it to an established landscape specimen (the far more common state for this plant) would represent six months of monthly feeding where the source instead calls for a single spring application. The unknowns text discloses this scoping, but the field's raw value itself carries no such qualifier and is liable to be consumed at face value."
+        "fertilize_active_months — removed on audit: The value [3,4,5,6,7,8] is drawn solely from UGA's instruction 'To newly planted small plants (1-gallon size), apply 1 teaspoon of fertilizer monthly from March to August along the perimeter of the planting hole' (verified verbatim on fieldreport.caes.uga.edu). The SAME source gives established/mature plants a completely different regime: 'one broadcast application of fertilizer in spring' (verified verbatim) -- no monthly cadence, no March-August window. A field named fertilize_active_months will read to a downstream consumer as the general recurring fertilizing window for the species, but the actual value only supports a first-year establishment practice for small container starts; applying it to an established landscape specimen (the far more common state for this plant) would represent six months of monthly feeding where the source instead calls for a single spring application. The unknowns text discloses this scoping, but the field's raw value itself carries no such qualifier and is liable to be consumed at face value.",
+        "is_edible left null: none of the readable pages (NC State, RHS) state that Lagerstroemia indica or any part of it is eaten or is inedible/poisonous to eat; NC State's Ethnobotany note only says the plant is used for medical disorders, animal feed, and fuel, which does not address human edibility.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (fetch status: error:ConnectError) -- not consulted.",
+        "ask.ifas.ufl.edu (UF/IFAS EDIS ST342) refused this machine (fetch status: error:ReadError) -- not consulted.",
+        "hgic.clemson.edu (Clemson HGIC Crape Myrtle factsheet) refused this machine (fetch status: http-403) -- not consulted.",
+        "UGA CAES Field Report (fieldreport.caes.uga.edu) was readable and states 'Plant height ranges from less than 3 feet to more than 20 feet,' but this is framed as the range produced by breeding work across many named cultivars, not a single species-level figure, so it was not used for mature_height_in per the cultivar-size rule.",
+        "RHS page gives Max Height and Max Spread only as '4-8 metres' (no ft/in breakdown, no 'Ultimate height/spread' fields found); not used as the size citation since NC State's Height/Width Dimensions block gave a directly convertible ft/in range from a source already anchoring this record.",
+        "NC State Plant Toolbox is used as the size citation because it is one of the record's original anchor sources and gives a structured Dimensions block for the species (not a cultivar)."
       ],
       "citations": [
         {
@@ -330,8 +367,31 @@
           "quote": "To newly planted small plants (1-gallon size), apply 1 teaspoon of fertilizer monthly from March to August along the perimeter of the planting hole.",
           "source": "UGA Cooperative Extension (CAES Field Report), \"Crape Myrtle Culture\"",
           "url": "https://fieldreport.caes.uga.edu/publications/C944/crape-myrtle-culture/"
+        },
+        {
+          "claim": "mature_height_in 72-360 (NC State Height 6 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Lagerstroemia indica",
+          "url": "https://plants.ces.ncsu.edu/plants/lagerstroemia-indica/",
+          "quote": "Height: 6 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-360 (NC State Width 6 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Lagerstroemia indica",
+          "url": "https://plants.ces.ncsu.edu/plants/lagerstroemia-indica/",
+          "quote": "Width: 6 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states the plant attracts pollinators, and its Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Lagerstroemia indica",
+          "url": "https://plants.ces.ncsu.edu/plants/lagerstroemia-indica/",
+          "quote": "Attracts pollinators."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 360
     },
     {
       "common_name": "Flowering Dogwood",
@@ -380,7 +440,14 @@
         "fertilize_interval_days/fertilize_active_months/fertilize_strength: left null -- no admissible source gives a specific fertilizing schedule; UMD Extension explicitly advises fertilizing 'only according to soil test results and not on a regular basis,' recommending annual compost topdressing instead.",
         "water_regime: left null -- none of the fixed regime categories (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist) cleanly fits UMD's establishment-period practice (check soil moisture at 4-6in deep weekly, water only when dry at that depth) without forcing an awkward fit; that guidance is instead captured in water_check_depth_cm, water_dry_down_target, and water_estimate_basis. water_growing_days_est and water_dormant_days_est are also left null since no source gives a numeric watering-frequency interval.",
         "is_houseplant / container or bonsai culture: no admissible source describes growing Cornus florida long-term in a container or as a dwarf/bonsai specimen; UMD's mention of a 'container-grown tree' refers only to nursery stock at planting time, not routine container culture, so is_houseplant is set false rather than left open.",
-        "water_check_depth_cm — removed on audit: The value 12.7 is not stated by the UMD quote ('4 to 6 inches deep'); it's an undisclosed midpoint (5in = 12.7cm exactly) that fails the audit's 're-derive the number from the quote' test. Established project precedent for converting a stated depth range takes a literal bound, not a synthesized midpoint -- e.g. Chinese Evergreen (b1): quote 'allow top 1-2 inches to dry' -> water_check_depth_cm 5 (the 2-inch upper bound in cm), not the 1.5in/3.8cm midpoint. 12.7 introduces false precision the source never gave and that this project doesn't otherwise manufacture."
+        "water_check_depth_cm — removed on audit: The value 12.7 is not stated by the UMD quote ('4 to 6 inches deep'); it's an undisclosed midpoint (5in = 12.7cm exactly) that fails the audit's 're-derive the number from the quote' test. Established project precedent for converting a stated depth range takes a literal bound, not a synthesized midpoint -- e.g. Chinese Evergreen (b1): quote 'allow top 1-2 inches to dry' -> water_check_depth_cm 5 (the 2-inch upper bound in cm), not the 1.5in/3.8cm midpoint. 12.7 introduces false precision the source never gave and that this project doesn't otherwise manufacture.",
+        "EDIS ST185 (edis.ifas.ufl.edu) refused this fetch machine (ReadError) — not read; nothing from it is reflected here.",
+        "Clemson HGIC (hgic.clemson.edu) refused this fetch machine (HTTP 403) — not read; nothing from it is reflected here.",
+        "UMD Extension (extension.umd.edu/resource/growing-flowering-dogwood-trees) has no structured height/spread/edible data for the species and discusses pollinator value only in the context of cultivars vs. the straight species and double-flower forms, not as an unconditional attracts-pollinators statement for the species itself — not used as a citation.",
+        "PSU Extension's taxonomy-for-gardeners page is a general article on plant naming/taxonomy (mentions Cornus florida only by name, now reclassified as Benthamidia florida in that source) and contains no size, edibility, or pollinator data — not used as a citation.",
+        "is_edible is set false specifically for human consumption per NC State's explicit fruit description ('bitter and inedible to humans'); the same page's structured tags ('Play Value: Edible fruit' and 'Fruit Value To Gardener: Edible') appear to reflect wildlife/gardener value (the fruit is eaten by birds), not human edibility, and are not treated as contradicting the false human-edibility determination.",
+        "RHS's page for Cornus florida (rhs.org.uk/plants/21060/cornus-florida/details) returned zero hits for 'Ultimate height', 'Ultimate spread', 'pollinator', or 'Edib' in the qc.py extraction — its structured dimension/pollinator fields, if present, are rendered in a way qc.py's fetch-and-extract path did not surface as plain text under those terms, so RHS contributed no data to any field here.",
+        "Height and width figures are for the species entry (Cornus florida) as listed on the NC State Plant Toolbox page, not a named cultivar."
       ],
       "citations": [
         {
@@ -496,8 +563,38 @@
           "quote": "Flowering dogwood (Benthamidia florida), formerly Cornus florida.",
           "source": "Penn State Extension",
           "url": "https://extension.psu.edu/taxonomy-for-gardeners"
+        },
+        {
+          "claim": "mature_height_in 180-300 (NC State Height 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Cornus florida",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-florida/",
+          "quote": "Height: 15 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-360 (NC State Width 15 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Cornus florida",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-florida/",
+          "quote": "Width: 15 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false: NC State's fruit description states the drupes are bitter and inedible to humans, though eaten by birds",
+          "source": "NC State Extension Plant Toolbox — Cornus florida",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-florida/",
+          "quote": "Fruit is a glossy bright, shiny red, oval drupes (0.5 inch) in tight clusters of 3 or 4 that are bitter and inedible to humans but loved by birds."
+        },
+        {
+          "claim": "attracts_pollinators true: NC State's structured Attracts field lists Pollinators, Butterflies, and Specialized Bees",
+          "source": "NC State Extension Plant Toolbox — Cornus florida",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-florida/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 360
     },
     {
       "common_name": "Southern Magnolia",
@@ -554,7 +651,14 @@
         "is_houseplant / container growing: UGA's 'Container-grown Southern magnolias can be planted successfully any time of year' refers to the nursery-trade form the tree is purchased in (container-grown vs. balled-and-burlapped) before transplanting into the ground, not to long-term container or houseplant culture; no admissible source describes growing this species indoors or permanently in a container (e.g. as a bonsai or patio specimen), so is_houseplant is false with no container-specific carve-out.",
         "outdoor_sun_exposure: UGA's looser phrasing 'Southern magnolia can be grown in sun or shade' was not used to add full_shade to this field, since five more specific admissible sources (NC State, UF/IFAS, MOBOT, Clemson, RHS) all describe the shade-tolerant end specifically as partial shade, not full shade.",
         "soil_base: mapped to garden_bed based on UGA's planting instructions ('plant it in an ornamental bed,' backfill with 'native soil') and MOBOT's 'well-drained loams' culture description; no admissible source frames this species as container-grown long-term, consistent with is_houseplant false.",
-        "name_note — removed on audit: Structural check 1 fails for this field: name_note asserts specific, quotable facts (NC State's three prior names \"Magnolia angustifolia, Magnolia elliptica, Magnolia foetida\" and RHS's synonym \"Magnolia obovata (W.T. Aiton) Link\") that trace to NO entry in the citations array. The only two citations touching the name (scientific_name_given's Genus/Species/Family quote and scientific_name_accepted's bare \"Name Status: Correct\" quote) contain none of this synonym text. I independently fetched both source pages and confirmed the underlying facts are actually true verbatim on each site, so the content itself is not fabricated -- but the record as submitted provides zero citation support for a non-null field carrying specific factual claims, which is exactly the traceability gap the audit is meant to catch. The fix is mechanical (add two citation entries quoting the synonym lists), not a value change, so I am refuting the field's current sourcing rather than its content."
+        "name_note — removed on audit: Structural check 1 fails for this field: name_note asserts specific, quotable facts (NC State's three prior names \"Magnolia angustifolia, Magnolia elliptica, Magnolia foetida\" and RHS's synonym \"Magnolia obovata (W.T. Aiton) Link\") that trace to NO entry in the citations array. The only two citations touching the name (scientific_name_given's Genus/Species/Family quote and scientific_name_accepted's bare \"Name Status: Correct\" quote) contain none of this synonym text. I independently fetched both source pages and confirmed the underlying facts are actually true verbatim on each site, so the content itself is not fabricated -- but the record as submitted provides zero citation support for a non-null field carrying specific factual claims, which is exactly the traceability gap the audit is meant to catch. The fix is mechanical (add two citation entries quoting the synonym lists), not a value change, so I am refuting the field's current sourcing rather than its content.",
+        "hgic.clemson.edu/factsheet/magnolia/ returned http-403 (refused this machine) — could not be read, not used for any field.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c117 returned a connection error — could not be read, not used for any field.",
+        "RHS gives only open-ended size figures ('Max Height: Higher than 12 metres', 'Max Spread: wider than 8 metres') with no defined upper bound and effectively no separately stated lower bound — not usable as a min/max pair per rule 2, so RHS was not used for size; NC State's structured 'Dimensions' block (the designated anchor) was used instead.",
+        "UF/IFAS (edis.ifas.ufl.edu/st371) gives Height 60-80 ft (matches NC State) but Spread 30-40 ft, narrower than NC State's Width 30-50 ft. Per the task's anchor guidance, NC State's Dimensions block (Height 60-80 ft, Width 30-50 ft) was used for both mature_height_in and mature_spread_in; the IFAS spread figure is a secondary source not incorporated.",
+        "UGA CAES cultivar table lists sizes for named cultivars (e.g., 'Little Gem', 'Claudia Wannamaker', 'Bracken's Brown Beauty' [as referenced elsewhere], 'Majestic Beauty', 'Samuel Sommer', 'Teddy Bear') — per rule 3 these cultivar-specific figures were excluded and not used for the species-level size fields.",
+        "is_edible=true rests solely on NC State Plant Toolbox's structured tags ('Play Value: Edible fruit' and 'Fruit Value To Gardener: Edible'); it is a categorical tag rather than a plain-language statement describing actual human food use or preparation. No other consulted source (UF/IFAS, UGA CAES, RHS) mentions human consumption of the fruit — UF/IFAS and NC State both instead describe the fruit's red seeds as consumed by birds/small mammals (wildlife use, not pollination or human food), which was not treated as support for is_edible. No source states any part of the plant is toxic or inedible.",
+        "attracts_pollinators=true is supported by NC State Plant Toolbox's structured 'Attracts: Pollinators' field and matching 'Play Value: Attracts Pollinators' tag; no specific pollinator taxa (bees, butterflies, hummingbirds) are named on any of the readable pages."
       ],
       "citations": [
         {
@@ -652,8 +756,38 @@
           "quote": "During the first growing season after establishment, apply ½ pound (1 cup) of 8-8-8 or 10-10-10 fertilizer along the perimeter of the planting hole in March, May and July.",
           "source": "UGA Cooperative Extension (CAES Field Report, Circular 974)",
           "url": "https://fieldreport.caes.uga.edu/publications/C974/growing-southern-magnolia/"
+        },
+        {
+          "claim": "mature_height_in 720-960 (NC State Height 60 ft. 0 in. - 80 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Magnolia grandiflora",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-grandiflora/",
+          "quote": "Height: 60 ft. 0 in. - 80 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 360-600 (NC State Width 30 ft. 0 in. - 50 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Magnolia grandiflora",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-grandiflora/",
+          "quote": "Width: 30 ft. 0 in. - 50 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Plant Toolbox lists Play Value: Edible fruit and Fruit Value To Gardener: Edible for Magnolia grandiflora)",
+          "source": "NC State Extension Plant Toolbox — Magnolia grandiflora",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-grandiflora/",
+          "quote": "Edible fruit"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox structured Attracts field lists Pollinators, and Play Value lists Attracts Pollinators)",
+          "source": "NC State Extension Plant Toolbox — Magnolia grandiflora",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-grandiflora/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 720,
+      "mature_height_in_max": 960,
+      "mature_spread_in_min": 360,
+      "mature_spread_in_max": 600
     },
     {
       "common_name": "Ponytail Palm",
@@ -1385,6 +1519,7 @@
     "Two landing-time schema-correctness fixes, both the same defect class as b23's Ceropegia woodii bug: Flowering Dogwood's scientific_name_accepted was written as an empty string instead of JSON null. Its own unknowns text and name_note both already say 'left null' -- a genuine, real naming split (NC State/RHS treat Cornus florida as current; Penn State Extension treats Benthamidia florida as current, with neither side resolving the other) -- so the fix is purely mechanical, matching what the record already intended.",
     "The audit caught a genuinely important, subtle safety nuance on Money Tree: NC State's own toxicity text states the toxic part is seeds-only, in the same sentence as \"Houseplants never produce seeds\" -- meaning a flat toxic_to_pets=true overstates the practical risk for the near-universal potted-specimen case this record otherwise describes throughout (is_houseplant=true, container-mix soil, indoor overwintering). Rather than just losing this nuance when the boolean was correctly nulled, added the missing citation and restored it as a toxicity_detail explaining the seeds-only/rarely-applicable caveat, so a reader still learns the real, conditional fact instead of nothing at all.",
     "A precise, well-cited catch on Flowering Dogwood: a watering check-depth was recorded as 12.7cm, silently converting UMD's stated \"4 to 6 inches deep\" range into an undisclosed 5-inch midpoint rather than taking a literal bound the way this catalog has consistently done elsewhere (e.g. Chinese Evergreen in b1, \"1-2 inches\" -> the 2-inch upper bound) -- correctly nulled as false precision the source never stated.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Money Tree -> true. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Money Tree -> true. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

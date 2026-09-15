@@ -87,6 +87,18 @@
           "source": "Penn State Extension — The Mighty Arborvitae",
           "url": "https://extension.psu.edu/the-mighty-arborvitae",
           "quote": "They prefer moist, well-drained soil but have been known to adapt to poor soil and rocky conditions."
+        },
+        {
+          "claim": "mature_height_in 480-720 (NC State Height: 40 ft. 0 in. - 60 ft. 0 in., converted to inches: 40 ft = 480 in, 60 ft = 720 in)",
+          "quote": "Height: 40 ft. 0 in. - 60 ft. 0 in.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/thuja-occidentalis/common-name/american-arborvitae/"
+        },
+        {
+          "claim": "mature_spread_in 120-180 (NC State Width: 10 ft. 0 in. - 15 ft. 0 in., converted to inches: 10 ft = 120 in, 15 ft = 180 in)",
+          "quote": "Width: 10 ft. 0 in. - 15 ft. 0 in.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/thuja-occidentalis/common-name/american-arborvitae/"
         }
       ],
       "common_name": "American Arborvitae",
@@ -127,14 +139,22 @@
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: none of the admissible sources reviewed give any fertilizer schedule, timing, or dilution guidance for Thuja occidentalis.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are left null: sources describe watering only qualitatively (needs irrigation in dry spells, not drought-tolerant) with no quantified schedule, depth, or day-interval given.",
         "soil_ph_max is based on Penn State Extension's explicit numeric range (6.0 to 8.0); NC State's own categorical tags separately include 'Alkaline (>8.0)' with no stated upper bound, suggesting tolerance may extend somewhat higher, but no admissible source gives a firm number above 8.0.",
-        "soil_drainage is set to moisture_retentive on the weight of qualitative evidence (NC State: 'does not tolerate dry or exposed, windy sites'; Missouri Botanical Garden: 'Intolerant of dry conditions'; Penn State: 'not drought-tolerant and may need irrigation during dry spells') even though NC State's own structured Soil Drainage tags for this species also include 'Occasionally Dry' alongside 'Moist' and 'Good Drainage' — the tag set does not include 'Occasionally Wet,' so it does not cleanly satisfy the 'moderate' criterion either."
+        "soil_drainage is set to moisture_retentive on the weight of qualitative evidence (NC State: 'does not tolerate dry or exposed, windy sites'; Missouri Botanical Garden: 'Intolerant of dry conditions'; Penn State: 'not drought-tolerant and may need irrigation during dry spells') even though NC State's own structured Soil Drainage tags for this species also include 'Occasionally Dry' alongside 'Moist' and 'Good Drainage' — the tag set does not include 'Occasionally Wet,' so it does not cleanly satisfy the 'moderate' criterion either.",
+        "is_edible left null: none of the three source pages (NC State, PSU Extension) address eating the plant or any part of it; the Missouri Botanical Garden page could not be checked (see below). No claim of edibility or inedibility found, so per the rules this is 'no record', not false.",
+        "attracts_pollinators left null: NC State's structured 'Attracts' field lists only Small Mammals and Songbirds (no bees, butterflies, moths, or hummingbirds), and its 'Wildlife Value' text describes nesting sites for songbirds and winter cover/browse for white-tailed deer -- browsing and nesting are not pollination and do not count as support. PSU Extension's page text about the plant itself contains no pollinator mentions (the only 'Pollinator'/'bee' hits found were from the site's global navigation menu, not content about arborvitae). No page states pollinators are attracted, so null rather than false.",
+        "Missouri Botanical Garden PlantFinder page (https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=279599) refused connections from this machine on two separate attempts (fetch status: error:ConnectError) -- it was not read and is not used as a source for any field, per instructions not to guess its content.",
+        "PSU Extension ('The Mighty Arborvitae') separately states the native species has a 'natural height of 50 to 60 feet' and elsewhere 'can reach a height of 50 to 60 feet,' which corroborates NC State's height range, but PSU gives no spread/width figure for the species (spread figures on that page, e.g. 8 ft, 3-4 ft in diameter, 20-30 ft, are explicitly for named cultivars 'Steeplechase,' 'Emerald Green,' and 'Green Giant,' not the species -- excluded per the cultivar rule) and was not needed as a citation since NC State's structured Dimensions block already provides a clean, verbatim-quotable figure for both height and spread."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 480,
+      "mature_height_in_max": 720,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 180
     },
     {
       "common_name": "Leyland Cypress",
@@ -188,7 +208,11 @@
         "soil_drainage — removed on audit: The citation's quote is fabricated. I loaded the live NC State page (https://plants.ces.ncsu.edu/plants/x-hesperotropsis-leylandii/common-name/leyland-cypress/) in a browser and searched both the rendered text and the full page HTML source: the actual 'Soil Drainage' tag section lists ONLY 'Good Drainage' and 'Moist' -- 'Occasionally Dry' and 'Occasionally Wet' do not appear anywhere on the page (confirmed via indexOf returning -1 across 99KB of HTML). The record's citation claims all four tags are present and calls that 'a direct match for the moderate enum definition,' but that basis is false. Applying the record's own stated mapping rule to the REAL tags (Good Drainage + Moist only, no wet/dry tolerance tags) points to 'good' drainage, not 'moderate.' This is reinforced by verified qualitative evidence the record itself surfaces but discounts: Clemson's disease factsheet (hgic.clemson.edu/factsheet/leyland-cypress-diseases-insects-related-pests/), confirmed live, states 'Phytophthora root rot is a soilborne fungal-like disease that affects Leyland cypress growing in poorly drained soils' and 'Avoid planting in poorly drained soil'; UGA B1229, confirmed via search, states 'in poorly drained soils, Leyland cypress is prone to root rot.' The record's unknowns text uses a fabricated same-source tag match to override this real disease evidence. soil_drainage should most likely be 'good,' not 'moderate,' and the NC State citation must be corrected or dropped regardless.",
         "outdoor_sun_exposure — FLAGGED on audit (left as-is, needs manual review before landing): The list VALUE (full_sun, part_sun, part_shade) does not need to change -- part_shade is independently and accurately supported by RHS ('Position: Full sun, Partial shade', verified live), UF/IFAS ('Light requirement: full sun, partial sun, or partial shade', verified live), and Clemson ('This tree prefers sun to part shade...', verified live, exact match). However, the specific NC State citation for this claim is fabricated: its quote reads 'Light:\\nFull sun (6 or more hours of direct sunlight a day)\\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)', but the live NC State page's Light tag section contains ONLY 'Full sun (6 or more hours of direct sunlight a day)' -- 'Partial Shade' does not appear anywhere on the page (confirmed via full-DOM search, zero matches). This NC State citation should be dropped or replaced; it is not needed anyway since three other citations validly establish part_shade.",
         "soil_drainage left null at landing: the audit found the NC State citation supporting 'moderate' was fabricated (the live page's Soil Drainage tags are only 'Good Drainage' and 'Moist', not the four-tag combination the citation claimed). The real tags alone don't clearly resolve to any one enum token, and while Clemson and UGA both warn that poorly drained soil causes root rot in this species (arguing for good/fast drainage), no admissible source frames it as drought-tolerant the way this catalog's other 'fast' calls have been supported -- left null rather than force a token onto genuinely thin, disease-risk-only evidence.",
-        "2026-09-02: the NC State soil_drainage citation (claiming Good Drainage/Moist/Occasionally Dry/Occasionally Wet tags) was removed from the citations array -- the audit had already shown the page carries only Good Drainage and Moist, and the value was nulled at landing, but the fabricated citation itself had been left behind; the corpus-wide quote verifier flagged it."
+        "2026-09-02: the NC State soil_drainage citation (claiming Good Drainage/Moist/Occasionally Dry/Occasionally Wet tags) was removed from the citations array -- the audit had already shown the page carries only Good Drainage and Moist, and the value was nulled at landing, but the fabricated citation itself had been left behind; the corpus-wide quote verifier flagged it.",
+        "is_edible left null: none of the four sources (NC State, UF/IFAS, RHS, Clemson attempted) address eating this plant or any part of it at all -- no record either way.",
+        "attracts_pollinators set to false on inference, not a direct statement: UF/IFAS's structured Flower field says 'no flowers' and its Fruit field says fruit 'does not attract wildlife'; NC State's structured 'Attracts' field lists only Songbirds, no pollinators. No source uses the word pollinator/bee/butterfly/hummingbird directly, but a conifer with no flowers has nothing for pollinators to visit, so this is treated as a supported false rather than a bare null.",
+        "mature_height_in and mature_spread_in taken from NC State Plant Toolbox (the anchor source: Height 60-70 ft, Width 10-15 ft). Other sources give different figures for the species (not a cultivar) and were not used to avoid mixing incompatible ranges: UF/IFAS gives Height 35-50 ft / Spread 15-25 ft; RHS gives Max Height 'Higher than 12 metres' (open-ended, not a two-sided range, so unusable per rule 2) and Max Spread 4-8 metres.",
+        "Clemson HGIC (https://hgic.clemson.edu/factsheet/leyland-cypress/) refused this machine's fetch (http-403) for every query attempted -- not used, per instructions, rather than guessed."
       ],
       "citations": [
         {
@@ -286,8 +310,31 @@
           "quote": "It is an excellent choice for quick screens, hedges and groupings, especially on large properties.",
           "source": "Clemson Cooperative Extension Home & Garden Information Center",
           "url": "https://hgic.clemson.edu/factsheet/leyland-cypress/"
+        },
+        {
+          "claim": "mature_height_in 720-840 (NC State Height 60 ft. 0 in. - 70 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/x-hesperotropsis-leylandii/common-name/leyland-cypress/",
+          "quote": "Height: 60 ft. 0 in. - 70 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-180 (NC State Width 10 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/x-hesperotropsis-leylandii/common-name/leyland-cypress/",
+          "quote": "Width: 10 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators false: page states the plant has no flowers, and its fruit does not attract wildlife, so it offers pollinators nothing to visit",
+          "source": "UF/IFAS EDIS ENH-828/ST671",
+          "url": "https://edis.ifas.ufl.edu/publication/ST671",
+          "quote": "Flower color:  no flowers \nFlower characteristics:  no flowers"
         }
-      ]
+      ],
+      "attracts_pollinators": false,
+      "mature_height_in_min": 720,
+      "mature_height_in_max": 840,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 180
     },
     {
       "common_name": "Eastern Redcedar",
@@ -336,7 +383,13 @@
         "No admissible source gives fertilizer guidance specific to Juniperus virginiana; the only fertilizer note found on an admissible domain (UGA's general 'Junipers' factsheet, covering the genus) gives an NPK ratio rather than a dilution-strength fraction and is not species-specific, so fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null.",
         "soil_base ('garden_bed') and is_houseplant (false) are inferred directly from every admissible source uniformly describing this species as an in-ground landscape/windbreak/street tree spanning USDA zones 2-9B, rather than from an explicit 'container vs. garden' or 'houseplant' label in any source.",
         "RHS's page is the only admissible source that addresses nomenclatural status directly ('Name Status: Correct'); no admissible source flags a synonym for Juniperus virginiana.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/juniperus-virginiana/, https://www.rhs.org.uk/plants/9636/i-juniperus-virginiana-i/details, https://ask.ifas.ufl.edu/publication/ST330); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/juniperus-virginiana/, https://www.rhs.org.uk/plants/9636/i-juniperus-virginiana-i/details, https://ask.ifas.ufl.edu/publication/ST330); none found, so the value stays null. Audited live.",
+        "is_edible is CONDITIONAL: NC State's Edibility field describes only young berryless twigs boiled into tea 'in small quantities' (Angier, Field Guide to Edible Wild Plants); the same page's Poison Symptoms field says the plant 'CAUSES ONLY LOW TOXICITY IF EATEN. Large amounts may cause diarrhea,' with Poison Part listed as Flowers, and Poison Toxic Principle as volatile oils including thujone. Set true only because of the twig-tea use; do not treat the whole plant as freely edible.",
+        "mature_height_in and mature_spread_in are taken from NC State Extension Plant Toolbox's structured Dimensions block (the designated anchor source) rather than from UMD Extension (which gives only a height range, 40-70 ft, with no width figure) or UF/IFAS ST327 (Height 40-50 ft, Spread 10-20 ft) -- both alternates were left unused per the anchor rule rather than averaged or merged in.",
+        "RHS's page for Juniperus virginiana was fetched successfully but returned no 'Ultimate height', 'Ultimate spread', 'Attracts', or 'pollinator' hits in the extracted text, so it contributed no field here.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279605 refused this machine (fetch status: error:ConnectError) -- skipped per instructions, nothing was guessed from it.",
+        "attracts_pollinators is set true solely on NC State's structured 'Attracts' field, which lists Pollinators (along with Butterflies, Moths, Small Mammals, Songbirds) -- the small-mammal and songbird entries reflect seed/fruit consumption, not pollination, and were not used as support for this flag.",
+        "is_edible removed on audit: The note misreports the anchor page. It says \"Poison Part listed as Flowers\". NC State's Poison Part field actually reads \"Flowers / Fruits / Leaves\" -- I pulled the block directly. Omitting Fruits and Leaves is the unsafe direction of error, because the sanctioned preparation is young berryless twigs, i.e. foliage, and the fruits are the part a reader is most likely to eat. The note also renders the Poison Symptoms text with one space where the page has two (\"IF EATEN.  Large amounts\"), and omits RHS's \"Harmful if eaten/skin allergen.  Wear gloves and other protective equipment when handling\". Rewrite the note with the full three-part poison list and the RHS line."
       ],
       "citations": [
         {
@@ -476,8 +529,31 @@
           "quote": "Name Status| |Correct",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/9636/i-juniperus-virginiana-i/details"
+        },
+        {
+          "claim": "mature_height_in 360-480 (NC State Dimensions Height: 30 ft. 0 in. - 40 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Juniperus virginiana",
+          "url": "https://plants.ces.ncsu.edu/plants/juniperus-virginiana/",
+          "quote": "Height: 30 ft. 0 in. - 40 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-240 (NC State Dimensions Width: 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Juniperus virginiana",
+          "url": "https://plants.ces.ncsu.edu/plants/juniperus-virginiana/",
+          "quote": "Width: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field names Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox: Juniperus virginiana",
+          "url": "https://plants.ces.ncsu.edu/plants/juniperus-virginiana/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 480,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 240
     },
     {
       "chill_damage_f": null,
@@ -607,6 +683,24 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/5661/i-deutzia-gracilis-i/details",
           "quote": "Deutzia gracilis | Japanese snow flower"
+        },
+        {
+          "claim": "mature_height_in 24-60 (NC State Dimensions Height: 2 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Deutzia gracilis",
+          "url": "https://plants.ces.ncsu.edu/plants/deutzia-gracilis/",
+          "quote": "Height: 2 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-48 (NC State Dimensions Width: 3 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Deutzia gracilis",
+          "url": "https://plants.ces.ncsu.edu/plants/deutzia-gracilis/",
+          "quote": "Width: 3 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field names Hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox — Deutzia gracilis",
+          "url": "https://plants.ces.ncsu.edu/plants/deutzia-gracilis/",
+          "quote": "Hummingbirds"
         }
       ],
       "common_name": "Japanese Snow Flower",
@@ -649,14 +743,24 @@
         "No admissible source gives an actionable soil dry-down depth/target, a soil-check depth in cm, or a literal numeric watering-interval (growing-season or dormant-season) for this in-ground shrub, so water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis were left null.",
         "None of the admissible sources (NC State, Missouri Botanical Garden, Clemson HGIC, RHS, UGA CAES Field Report) discuss fertilizing this species, so fertilize_interval_days, fertilize_active_months, and fertilize_strength were left null.",
         "For common_name, sources disagree on the lead name: NC State's dedicated species page and Missouri Botanical Garden's Plant Finder both lead with 'Slender Deutzia'/'slender deutzia,' listing 'Japanese Snow Flower' only as a secondary/Other Common Name, while RHS's dedicated species page instead leads with 'Japanese snow flower' in its title ('Deutzia gracilis | Japanese snow flower'). 'Slender Deutzia' was selected based on the majority of dedicated-page lead names.",
-        "common_name — FLAGGED on audit (left as-is, needs manual review before landing): Live-fetched all three cited pages. NC State's citation URL (https://plants.ces.ncsu.edu/plants/deutzia-gracilis/common-name/slender-deutzia/) is NOT NC State's dedicated single-species page -- it is one of NC State's auto-generated per-common-name SEO subpages (the site builds one such subpage per common name; a sibling '.../common-name/japanese-snow-flower/' almost certainly exists). On that subpage 'Japanese Snow Flower' is relegated to 'Other Common Name(s)' purely because the URL slug is 'slender-deutzia' -- that's circular, not evidence of NC State's actual lead name. NC State's true dedicated species page (https://plants.ces.ncsu.edu/plants/deutzia-gracilis/, no common-name suffix) has <title> 'Deutzia gracilis (Japanese Snow Flower, Slender Deutzia)' and its on-page 'Common Name(s):' field lists them in this order: 'Japanese Snow Flower' first, then 'Slender Deutzia' -- the reverse of what the record and its own 'unknowns' justification assert. RHS's dedicated page (https://www.rhs.org.uk/plants/5661/i-deutzia-gracilis-i/details) is titled 'Deutzia gracilis | Japanese snow flower' and doesn't list 'slender deutzia' as a common name at all in its header. Only Missouri Botanical Garden's Plant Finder (Common Name field = 'slender deutzia', with 'Japanese snow flower' listed second) actually leads with 'Slender Deutzia.' So 2 of the 3 admissible dedicated-page sources (NC State's real main page and RHS) lead with 'Japanese Snow Flower,' not 'Slender Deutzia' -- directly contradicting the 'selected based on the majority of dedicated-page lead names' claim in unknowns, which has the majority backwards. By the record's own stated tie-break rule, common_name should be 'Japanese Snow Flower', not 'Slender Deutzia'. (For balance: NC State's own running description prose does casually say 'Slender deutzia is a rounded, deciduous shrub...', so 'Slender Deutzia' is a real, NC-State-recognized name for this species -- this is a genuine source conflict, not an invented name -- but the specific citation and majority-count used to justify the choice are wrong and should be corrected or the value changed to 'Japanese Snow Flower'.)"
+        "common_name — FLAGGED on audit (left as-is, needs manual review before landing): Live-fetched all three cited pages. NC State's citation URL (https://plants.ces.ncsu.edu/plants/deutzia-gracilis/common-name/slender-deutzia/) is NOT NC State's dedicated single-species page -- it is one of NC State's auto-generated per-common-name SEO subpages (the site builds one such subpage per common name; a sibling '.../common-name/japanese-snow-flower/' almost certainly exists). On that subpage 'Japanese Snow Flower' is relegated to 'Other Common Name(s)' purely because the URL slug is 'slender-deutzia' -- that's circular, not evidence of NC State's actual lead name. NC State's true dedicated species page (https://plants.ces.ncsu.edu/plants/deutzia-gracilis/, no common-name suffix) has <title> 'Deutzia gracilis (Japanese Snow Flower, Slender Deutzia)' and its on-page 'Common Name(s):' field lists them in this order: 'Japanese Snow Flower' first, then 'Slender Deutzia' -- the reverse of what the record and its own 'unknowns' justification assert. RHS's dedicated page (https://www.rhs.org.uk/plants/5661/i-deutzia-gracilis-i/details) is titled 'Deutzia gracilis | Japanese snow flower' and doesn't list 'slender deutzia' as a common name at all in its header. Only Missouri Botanical Garden's Plant Finder (Common Name field = 'slender deutzia', with 'Japanese snow flower' listed second) actually leads with 'Slender Deutzia.' So 2 of the 3 admissible dedicated-page sources (NC State's real main page and RHS) lead with 'Japanese Snow Flower,' not 'Slender Deutzia' -- directly contradicting the 'selected based on the majority of dedicated-page lead names' claim in unknowns, which has the majority backwards. By the record's own stated tie-break rule, common_name should be 'Japanese Snow Flower', not 'Slender Deutzia'. (For balance: NC State's own running description prose does casually say 'Slender deutzia is a rounded, deciduous shrub...', so 'Slender Deutzia' is a real, NC-State-recognized name for this species -- this is a genuine source conflict, not an invented name -- but the specific citation and majority-count used to justify the choice are wrong and should be corrected or the value changed to 'Japanese Snow Flower'.)",
+        "is_edible left null: none of the five reachable pages (NC State x2, RHS) address eating or poisoning; Clemson HGIC and Missouri Botanical Garden PlantFinder both refused this machine and could not be checked.",
+        "hgic.clemson.edu/deutzia/ returned HTTP 403 to this fetch path -- skipped, not guessed.",
+        "plantfinder.mobot.org (kempercode=v560) returned a connection error to this fetch path -- skipped, not guessed.",
+        "RHS also gives Max Height and Max Spread as 0.5-1 metres for the species (not a cultivar), which roughly corroborates the NC State inch range used here, but NC State's explicit Height/Width Dimensions block was used as the anchor figure per instructions rather than converting the RHS metric band.",
+        "attracts_pollinators is set true solely on NC State's structured 'Attracts: Hummingbirds' field, per the rule that hummingbirds count as pollinators; no bee/butterfly/moth mention was found on any reachable page."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 48
     },
     {
       "chill_damage_f": null,
@@ -750,6 +854,24 @@
           "quote": "Japanese kerria does not tolerate heavy, poorly drained soils, so planting areas should be amended with compost to improve internal soil drainage.",
           "source": "Clemson Cooperative Extension HGIC — Japanese Kerria",
           "url": "https://hgic.clemson.edu/factsheet/japanese-kerria/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox: Attracts — Butterflies, Hummingbirds; Play Value — Attracts Pollinators; Wildlife Value — flowers attract hummingbirds and butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/kerria-japonica/",
+          "quote": "Attracts Pollinators"
+        },
+        {
+          "claim": "mature_height_in 36-96 (NC State Dimensions Height: 3 ft. 0 in. - 7 ft. 0 in., converted to inches; consistent with RHS Max Height 1.5-2.5 metres, ~59-98 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/kerria-japonica/",
+          "quote": "Height: 3 ft. 0 in. - 7 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-108 (NC State Dimensions Width: 6 ft. 0 in. - 9 ft. 0 in., converted to inches; consistent with RHS Max Spread 1.5-2.5 metres, ~59-98 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/kerria-japonica/",
+          "quote": "Width: 6 ft. 0 in. - 9 ft. 0 in."
         }
       ],
       "common_name": "Japanese Kerria",
@@ -795,14 +917,24 @@
         "common_name selection: NC State's dedicated species page lists five common names alphabetically (Bachelor's Button, Easter Rose, Japanese Kerria, Japanese Rose, Kerria) without marking one as primary. 'Japanese Kerria' was chosen because it is the lead name on Clemson HGIC's dedicated single-species factsheet title and is the consistent Common Name value across every Kerria japonica cultivar entry in Missouri Botanical Garden's Plant Finder.",
         "soil_drainage=fast rather than moderate: Missouri Botanical Garden's 'Pleniflora' page carries a structured Tolerate tag listing both 'Dry Soil' and 'Wet Soil' (which alone would suggest moderate), but that same page's own Problems text flags susceptibility to root rot, and NC State's Problems text separately attributes its leaf/twig blight to 'wet weather conditions' while its own Soil Drainage tags list only Good Drainage and Occasionally Dry (no Occasionally Wet). Weighing each source's own disease-risk statement over the raw tolerance tag, and given Clemson's explicit 'does not tolerate heavy, poorly drained soils' statement, fast drainage was judged the better-supported classification.",
         "is_houseplant=false is inferred rather than directly stated: no admissible source explicitly frames the plant as 'not a houseplant'; the conclusion rests on its consistent treatment across all four sources as a cold-hardy, USDA-zoned outdoor deciduous landscape shrub.",
-        "No admissible source (edis.ifas.ufl.edu, ask.ifas.ufl.edu, fieldreport.caes.uga.edu, extension.psu.edu, extension.umd.edu) appears to carry a dedicated Kerria japonica page; those domains did not contribute usable species-specific content beyond the general UMD poisonous-plants check noted above."
+        "No admissible source (edis.ifas.ufl.edu, ask.ifas.ufl.edu, fieldreport.caes.uga.edu, extension.psu.edu, extension.umd.edu) appears to carry a dedicated Kerria japonica page; those domains did not contribute usable species-specific content beyond the general UMD poisonous-plants check noted above.",
+        "is_edible left null: none of the four target pages, nor the accessible ones, state that Kerria japonica or any part of it is eaten or is inedible/poisonous -- no record either way.",
+        "Clemson HGIC (https://hgic.clemson.edu/factsheet/japanese-kerria/) refused this machine with an http-403 status; could not be read, so it contributed nothing to this pass.",
+        "Missouri Botanical Garden PlantFinder (taxonid=249949) refused this machine with a connection error; could not be read, so it contributed nothing to this pass.",
+        "RHS page loaded but its Max Height and Max Spread (1.5-2.5 metres each) are given in metres, not feet/inches, and RHS carried no pollinator, bee, butterfly, or edibility language at all when searched -- size fields here rely on NC State's feet-and-inches figures instead, with the RHS metric figures noted only as a rough cross-check.",
+        "NC State's Attracts field and Wildlife Value text name butterflies and hummingbirds specifically; no page found named bees for this species, so attracts_pollinators is set true on the butterfly/hummingbird evidence alone, not on a bee-specific claim."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 84,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 108
     },
     {
       "chill_damage_f": 0,
@@ -890,6 +1022,24 @@
           "source": "North Carolina Extension Gardener Plant Toolbox — Abelia x grandiflora (Glossy Abelia)",
           "url": "https://plants.ces.ncsu.edu/plants/abelia-x-grandiflora/",
           "quote": "It prefers moist, well-drained soils of loam, clay, or sand."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: shrub attractive to bees, hummingbirds, and butterflies)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelia-x-grandiflora/",
+          "quote": "This shrub is attractive to bees, hummingbirds, and butterflies."
+        },
+        {
+          "claim": "mature_height_in 30-96 (NC State Height: 2 ft. 6 in. - 8 ft. 0 in., converted to inches: 2ft6in=30in, 8ft0in=96in)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelia-x-grandiflora/",
+          "quote": "Height: 2 ft. 6 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width: 3 ft. 0 in. - 6 ft. 0 in., converted to inches: 3ft0in=36in, 6ft0in=72in)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelia-x-grandiflora/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
         }
       ],
       "common_name": "Glossy Abelia",
@@ -930,14 +1080,22 @@
         "Clemson HGIC (hgic.clemson.edu) has no dedicated Abelia factsheet; it only mentions glossy abelia in passing within its Pruning Shrubs and Plants for Shade factsheets (pruning timing and general shade tolerance), which did not add information beyond what NC State and Missouri Botanical Garden already supported.",
         "NC State Extension's own image captions for two cultivars label the plant 'Linnaea × grandiflora' (e.g., \"Linnaea × grandiflora 'Kaleidoscope'\"), reflecting an alternate taxonomic treatment that places this hybrid in genus Linnaea. However, NC State's structured record for the species itself lists 'Linnaea x grandiflora' only under 'Previously known as,' and every other admissible source (Missouri Botanical Garden, RHS, UF/IFAS, UGA) currently uses 'Abelia × grandiflora,' so scientific_name_accepted follows that consensus rather than the inconsistent image caption.",
         "water_regime — removed on audit: The value 'keep_moist' is structurally a valid single enum token and both quotes are verbatim, but the VALUE itself is contradicted by explicit, structured evidence on the SAME two source pages that the record cites for everything else and simply ignored here. NC State's live page carries a dedicated structured tag 'Resistance To Challenges: Drought' and a '#drought-tolerant' badge tag, plus prose stating the shrub is 'hardy, drought tolerant, erosion tolerant, deer resistant... Once established, glossy abelia requires very little maintenance.' Missouri Botanical Garden's own structured field on the same page reads 'Water: Medium' (not High/Wet) -- a direct, purpose-built categorical answer to exactly the question water_regime is trying to encode, and it was not cited or reconciled. Both citations offered for water_regime quote the identical boilerplate planting-culture sentence about soil type ('prefers moist, organically rich soils which drain well' / 'prefers moist, well-drained soils of loam, clay, or sand') -- language about desirable soil quality for establishment/best growth, not a statement that the plant must be kept continuously moist. The record's own unknowns section even acknowledges UGA CAES's field observation that an established plant 'basically don't have to water it' but doesn't let that inform water_regime. Weight of evidence (two independent structured 'low/medium water' signals plus explicit drought-tolerance framing) points away from keep_moist; the value should be revisited, not the citations.",
-        "water_regime — removed on audit: the value 'keep_moist' was contradicted by structured evidence on the same two cited pages the record otherwise relies on -- NC State's own 'Resistance To Challenges: Drought' tag and '#drought-tolerant' badge, and Missouri Botanical Garden's own 'Water: Medium' field -- neither cited or reconciled. Both citations originally offered for keep_moist actually quote planting-establishment soil guidance ('prefers moist, organically rich soils which drain well'), not a statement that the plant must be kept continuously moist once established. Left null rather than guess among the three remaining enum tokens without a source that states a clear regime."
+        "water_regime — removed on audit: the value 'keep_moist' was contradicted by structured evidence on the same two cited pages the record otherwise relies on -- NC State's own 'Resistance To Challenges: Drought' tag and '#drought-tolerant' badge, and Missouri Botanical Garden's own 'Water: Medium' field -- neither cited or reconciled. Both citations originally offered for keep_moist actually quote planting-establishment soil guidance ('prefers moist, organically rich soils which drain well'), not a statement that the plant must be kept continuously moist once established. Left null rather than guess among the three remaining enum tokens without a source that states a clear regime.",
+        "is_edible left null: neither NC State (0 hits for 'Edible') nor Missouri Botanical Garden PlantFinder (page refused this machine) addresses edibility of Abelia x grandiflora; no record found either way.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=j150 (Missouri Botanical Garden PlantFinder) returned a connection error to this machine (qc.py: 'fetch status: error:ConnectError') and could not be read at all -- not used for any field, its normal RHS/MOBOT-style 'Ultimate height'/'Ultimate spread' data (if present) is not reflected here.",
+        "Size and pollinator data both drawn solely from NC State Extension Plant Toolbox; these figures are given for the species/hybrid Abelia x grandiflora generally, not flagged as cultivar-specific or as climbing-support height, so rules 3 and 4 do not apply here."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 30,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "chill_damage_f": 14,
@@ -1043,6 +1201,30 @@
           "source": "RHS — Camellia sinensis | tea plant",
           "url": "https://www.rhs.org.uk/plants/2867/camellia-sinensis/details",
           "quote": "Don't allow to dry out."
+        },
+        {
+          "claim": "mature_height_in 72-180 (NC State Dimensions Height: 6 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Camellia sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-sinensis/",
+          "quote": "Height: 6 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-96 (NC State Dimensions Width: 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Camellia sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-sinensis/",
+          "quote": "Width: 4 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility note: leaves/buds dried for tea, flowers a source of edible oil; Plant Type tagged Edible)",
+          "source": "NC State Extension Gardener Plant Toolbox - Camellia sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-sinensis/",
+          "quote": "Leaves and buds are dried and used to make tea. Fragrant flowers a source of edible oil."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: Attracts bees; Play Value: Attracts Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Camellia sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-sinensis/",
+          "quote": "Attracts bees"
         }
       ],
       "common_name": "Tea Plant",
@@ -1092,8 +1274,19 @@
         "Companion-species check performed: this record draws only on Camellia sinensis-specific claims, not general Camellia genus material or content specific to the ornamental Camellia (C. japonica) already in the catalog.",
         "soil_drainage — removed on audit: 'moisture_retentive' is a structurally valid single enum token, but the value itself is contradicted by the exact qualitative-evidence trap the audit checklist calls out. The record's NC State citation quotes only 'Moist' and claims there is 'no Occasionally Dry counterpart tag' -- but live-fetch of the NC State page shows the actual Soil Drainage tag set for this species is 'Good Drainage, Moist' (two tags), and the citation's reasoning silently omits the 'Good Drainage' tag. RHS's cultivation text pairs the two explicitly ('fertile, moist, but well-drained'), and MBG's culture notes likewise say 'organically rich, acidic, well-drained soils with consistent moisture' -- and the same MBG page's Problems section (live-fetched) lists 'root rot' among the fungal diseases camellias are susceptible to. Choosing moisture_retentive alone, with no well-drained qualifier, risks steering care guidance toward keeping soil wet/soggy, which is exactly the condition MBG's own disease note associates with root rot risk. The qualitative evidence should win over the incomplete tag-mapping heuristic; the value needs to reflect the well-drained requirement, not moisture_retentive alone.",
         "outdoor_sun_exposure — FLAGGED on audit (left as-is, needs manual review before landing): This list field bundles two entries with unequal support, and only one should survive. part_shade is solid: NC State's own Light tag ('Partial Shade (2-6 hours)'), RHS's exposure field ('Partial shade', and its 'Grow your own tea' article instruction to 'Choose a shady, sheltered site'), and MBG's 'Sun: Part shade' listing all agree — keep part_shade. full_sun is weak: it rests only on NC State's broad structured Light tag ('Full sun (6 or more hours)'), which (live-fetch confirmed alongside 'Partial Shade' on the same tag list) reads as a tolerance range, not a recommendation. It is directly contradicted by the other two admissible sources' qualitative cultivation guidance: RHS says to pick a shady, sheltered site, and MBG's culture notes (live-fetched) explicitly warn that plants 'appreciate protection from early morning sun and from direct hot afternoon sun' and 'thrive in sun-dappled part shade conditions under the protection of tree canopies.' With 2 of 3 admissible sources actively warning against full sun, full_sun should be dropped from outdoor_sun_exposure, leaving only part_shade.",
-        "soil_drainage — removed on audit: 'moisture_retentive' rested on an NC State citation that omitted the page's own accompanying 'Good Drainage' tag (real tag set: 'Good Drainage, Moist'), and RHS/MOBOT both explicitly pair 'moist' with 'well-drained' rather than wet-tolerant framing; MOBOT's own Problems section separately lists root rot among this species' fungal disease risks. The source language describes wanting consistent moisture AND good drainage simultaneously, which doesn't cleanly map to any one of fast/moderate/moisture_retentive without overstating either the drainage need or the moisture need -- left null rather than force a token that could steer care toward keeping soil too wet."
-      ]
+        "soil_drainage — removed on audit: 'moisture_retentive' rested on an NC State citation that omitted the page's own accompanying 'Good Drainage' tag (real tag set: 'Good Drainage, Moist'), and RHS/MOBOT both explicitly pair 'moist' with 'well-drained' rather than wet-tolerant framing; MOBOT's own Problems section separately lists root rot among this species' fungal disease risks. The source language describes wanting consistent moisture AND good drainage simultaneously, which doesn't cleanly map to any one of fast/moderate/moisture_retentive without overstating either the drainage need or the moisture need -- left null rather than force a token that could steer care toward keeping soil too wet.",
+        "RHS page (https://www.rhs.org.uk/plants/2867/camellia-sinensis/details) returned fetch status ok but 0 hits for every size/edible/pollinator pattern tried via qc.py -- its Ultimate height/spread and Attracts tags are apparently loaded by client-side JS not captured by the fetch-and-extract path, so it could not be used as a source for any field.",
+        "plantfinder.mobot.org refused this machine (fetch status error:ConnectError) -- skipped per instructions, not used as a source.",
+        "ask.ifas.ufl.edu/hs308 loaded successfully but its only height figures describe managed pruning practice for tea harvest ('cut back to no more than 3 to 5 ft', 'once the tea bush has reached 5 to 6 feet it should be cut back to 2 to 4 feet') rather than the species' unmanaged mature size, so it was not used for mature_height_in/mature_spread_in; it gives no spread/width figure at all.",
+        "mature_height_in and mature_spread_in rely solely on NC State Plant Toolbox's structured Dimensions block (Height: 6 ft. 0 in. - 15 ft. 0 in.; Width: 4 ft. 0 in. - 8 ft. 0 in.), the only source among the five pages that yielded a usable, non-cultivar, non-support-structure figure.",
+        "is_edible is true specifically for the leaves/buds (dried for tea) and flowers (source of edible oil) per NC State's Edibility note -- not a claim that the whole plant is edible."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 180,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 96
     },
     {
       "common_name": "Star Magnolia",
@@ -1147,7 +1340,12 @@
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: no admissible source gives a fertilizing schedule, interval, or product-strength for this species; UF/IFAS's disease-management advice to 'Keep trees healthy with regular fertilization and by watering in dry weather' is a generic vigor recommendation tied to canker/Verticillium management, not a dated or numeric fertilizing schedule.",
         "common_name: NC State's page also lists 'Magnolia Bush' and 'Starry Magnolia' as common names alongside 'Star Magnolia' (page title: 'Magnolia stellata (Magnolia Bush, Star Magnolia, Starry Magnolia)'), but Missouri Botanical Garden and RHS -- both dedicated single-species pages -- lead with 'star magnolia' as the common name in their own labeled Common Name field/title, so that was used.",
         "is_houseplant: all admissible sources describe this as a hardy, USDA zone 4-8 deciduous landscape shrub/small tree grown in the ground (NC State: 'consider the stunning star magnolia as an accent, specimen, border, or foundation planting in your home landscape'; UF/IFAS: 'Star magnolia makes a wonderful patio, lawn specimen, or accent tree'); no admissible source describes growing it indoors or as a long-term houseplant, so is_houseplant is false.",
-        "scientific_name_given/UF/IFAS: no generic (non-cultivar) 'Magnolia stellata' base species fact sheet was found among admissible UF/IFAS pages for this species, unlike the saucer magnolia precedent's ENH-547/ST388; only cultivar-specific sheets (FPS-359/FP359 'Centennial', FPS-360/FP360 'Green Star', and others for 'Royal Star', 'Waterlily', 'Rosea Jane Platt') were available, and only their generic, non-cultivar-specific prose was used, not their cultivar-scoped structured data (e.g. cultivar height/spread/zone figures)."
+        "scientific_name_given/UF/IFAS: no generic (non-cultivar) 'Magnolia stellata' base species fact sheet was found among admissible UF/IFAS pages for this species, unlike the saucer magnolia precedent's ENH-547/ST388; only cultivar-specific sheets (FPS-359/FP359 'Centennial', FPS-360/FP360 'Green Star', and others for 'Royal Star', 'Waterlily', 'Rosea Jane Platt') were available, and only their generic, non-cultivar-specific prose was used, not their cultivar-scoped structured data (e.g. cultivar height/spread/zone figures).",
+        "RHS page (https://www.rhs.org.uk/plants/10721/i-magnolia-stellata-i/details) returned status ok but the extracted text contained no 'Ultimate height', 'Ultimate spread', 'Attracts', 'Edible', or pollinator-related content -- likely JS-rendered detail panels not present in the fetch-and-extract path; not used for any field.",
+        "plantfinder.mobot.org refused this machine (fetch status error:ConnectError) -- skipped per instructions, not guessed.",
+        "ask.ifas.ufl.edu/fp359 and /fp360 are cultivar pages ('Centennial' and 'Green Star' Star Magnolia, both listed as Magnolia kobus var. stellata cultivars), each giving Height 12-20 ft / Spread 12-18 ft -- these are cultivar-specific figures, not the species', so they were excluded from mature_height_in and mature_spread_in per rule 3.",
+        "is_edible=true is drawn from NC State Plant Toolbox's Play Value trait 'Edible fruit' and tag '#edible seeds'; the page gives no preparation detail, no statement that the fruit/seeds are commonly eaten by humans, and no toxicity caveat for this part -- flagging so a human can judge whether this needs a stronger source before being surfaced as care advice.",
+        "No page among the five specified mentions bees or hummingbirds for this species; pollinator support rests solely on NC State's Wildlife Value statement that butterflies pollinate the flowers, plus its own 'Attracts: Butterflies' and Play Value 'Attracts Pollinators' fields."
       ],
       "citations": [
         {
@@ -1245,8 +1443,38 @@
           "quote": "Soil Drainage:\nGood Drainage\nMoist\nOccasionally Wet",
           "source": "North Carolina Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/magnolia-stellata/"
+        },
+        {
+          "claim": "mature_height_in 180-246 (NC State Dimensions Height: 15 ft. 0 in. - 20 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Magnolia stellata",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-stellata/",
+          "quote": "Height: 15 ft. 0 in. - 20 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 120-180 (NC State Dimensions Width: 10 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Magnolia stellata",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-stellata/",
+          "quote": "Width: 10 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators is true: NC State Wildlife Value states butterflies pollinate the flowers, and its Attracts field lists Butterflies",
+          "source": "NC State Extension Gardener Plant Toolbox - Magnolia stellata",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-stellata/",
+          "quote": "Butterflies pollinate the flowers"
+        },
+        {
+          "claim": "is_edible is true: NC State lists Edible fruit as a Play Value trait (condition/detail noted in unknowns)",
+          "source": "NC State Extension Gardener Plant Toolbox - Magnolia stellata",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-stellata/",
+          "quote": "Edible fruit"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 246,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 180
     }
   ],
   "audit_summary": [
@@ -1285,6 +1513,7 @@
   ],
   "normalizations": [
     "2026-08-23: twenty-fourth batch, and the last of this run before the loop was paused -- three privacy-hedge conifers (American Arborvitae, Leyland Cypress, Eastern Redcedar), two more common landscape shrubs (Slender Deutzia, Glossy Abelia), and two deliberate companion species to genera already in this catalog (Tea Plant vs. Camellia japonica; Star Magnolia vs. Saucer/Southern Magnolia) -- no content bleed found in either companion pair. Leyland Cypress resolved to its reclassified accepted name, x Hesperotropsis leylandii. This batch's audit caught a more serious defect than usual: Leyland Cypress's original record contained two outright FABRICATED citations, not just mis-mapped or over-generalized ones -- a toxicity_detail citation invented an entire NC State human-poisoning entry (severity, symptoms, toxic principle) that does not exist anywhere on the live page, and a soil_drainage citation claimed the page's Soil Drainage tags included 'Occasionally Dry' and 'Occasionally Wet' when the real tag set is only 'Good Drainage, Moist'. Both were caught by the auditor's own live re-fetch (full-page text search, zero matches) rather than by any mechanical check in the landing script -- toxicity_detail was correctly left null (its toxic_to_pets=true boolean remains independently supported by a genuine, verified RHS dog-scoped citation), and soil_drainage was left null rather than guessed given the fabricated citation left no reliable basis. Slender Deutzia's common_name was corrected to 'Japanese Snow Flower' after the audit found the record had gotten its own stated tie-break rule backwards -- 2 of 3 dedicated-page sources (NC State's real main page, RHS) actually lead with 'Japanese Snow Flower', not 'Slender Deutzia' as the record had concluded. Two more soil_drainage/water_regime values were nulled after the audit found them contradicted by explicit qualitative evidence the record itself had cited elsewhere but not reconciled: Glossy Abelia's water_regime=keep_moist was undercut by NC State's own '#drought-tolerant' tag and MOBOT's 'Water: Medium' rating; Tea Plant's soil_drainage=moisture_retentive omitted the same NC State page's paired 'Good Drainage' tag and was contradicted by MOBOT's own root-rot disease note. Tea Plant's outdoor_sun_exposure was also narrowed from ['full_sun', 'part_shade'] to just ['part_shade'] after 2 of 3 admissible sources actively warned against full sun for this species (RHS: 'choose a shady, sheltered site'; MOBOT: 'appreciate protection from... direct hot afternoon sun'), continuing the array-partial-refutation discipline established in b40/b41. toxic_to_pets confirmed clean and properly scoped across all three non-null verdicts: Leyland Cypress true via RHS naming dogs specifically ('Pets (dogs): Skin allergen'); Japanese Snow Flower and Star Magnolia both false via explicit NC State '#non-toxic for cats'/'#non-toxic for dogs' tags.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Eastern Redcedar -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Eastern Redcedar -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

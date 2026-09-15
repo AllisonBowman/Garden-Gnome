@@ -63,6 +63,24 @@
           "quote": "Good Drainage\nMoist\nOccasionally Dry\nOccasionally Wet",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/parthenocissus-quinquefolia/"
+        },
+        {
+          "claim": "is_edible false (PSU Extension: all parts toxic to humans, ingestion may be fatal if fruit is eaten)",
+          "source": "Penn State Extension - Not-so-Nice Native Plants",
+          "url": "https://extension.psu.edu/not-so-nice-native-plants",
+          "quote": "All parts of the plant contain oxalic acid and are toxic to humans. Ingestion may cause nausea, abdominal pain, and vomiting and may be fatal if the fruit is eaten."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: bees and other pollinators enjoy the nectar from the flowers)",
+          "source": "NC State Extension Plant Toolbox - Parthenocissus quinquefolia",
+          "url": "https://plants.ces.ncsu.edu/plants/parthenocissus-quinquefolia/",
+          "quote": "Bees and other pollinators enjoy the nectar from the flowers."
+        },
+        {
+          "claim": "mature_spread_in 60-120 (NC State Dimensions Width: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Parthenocissus quinquefolia",
+          "url": "https://plants.ces.ncsu.edu/plants/parthenocissus-quinquefolia/",
+          "quote": "Width: 5 ft. 0 in. - 10 ft. 0 in."
         }
       ],
       "common_name": "Virginia Creeper",
@@ -108,14 +126,24 @@
         "humidity_need/humidity_pct_min/humidity_pct_max: left null. No admissible source addresses ambient humidity requirements, consistent with this being an outdoor landscape vine rather than a plant documented for indoor/humidity-controlled culture.",
         "light_fc_min/light_fc_good: left null. No admissible source gives a foot-candle light measurement for this species.",
         "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: left null. Sources describe this species only in outdoor/garden-bed watering terms -- 'average, medium moisture' (NC State), 'very drought tolerant' (Clemson), tolerant of both 'occasionally dry' and 'occasionally wet' soil (NC State), 'Dry to Wet' (UMD) -- with no admissible source framing it as a container plant, giving a soil-check depth, a dry-down target, or a watering-frequency interval, so none of the container-oriented water fields could be populated.",
-        "fertilize_interval_days/fertilize_active_months/fertilize_strength: left null. No admissible source discusses a fertilizing schedule, dilution strength, or application timing for this species."
+        "fertilize_interval_days/fertilize_active_months/fertilize_strength: left null. No admissible source discusses a fertilizing schedule, dilution strength, or application timing for this species.",
+        "RHS lists Max Height as the open-ended bucket \"Higher than 12 metres\" and Max Spread as \"4-8 metres\"; the height bucket has no fixed upper bound and, for a climbing vine, RHS's category likely reflects how high it can climb a support rather than the plant's own growth habit (rule 4), so it was not used for mature_height_in.",
+        "hgic.clemson.edu (weed-of-the-month-virginia-creeper) returned HTTP 403 to this machine and could not be read; not used.",
+        "ask.ifas.ufl.edu/fp454 returned a fetch error (refuses this machine) and could not be read; not used.",
+        "PSU Extension corroborates the height range, describing Virginia creeper as growing \"to 30 to 50 feet long\" (matches NC State's 30-50 ft height figure), but frames it as vine length rather than a structured height/width dimension block, so NC State's Dimensions field was used as the citation instead.",
+        "mature_height_in_min removed on audit: The 360-600 in pair converts correctly (30 ft = 360 in, 50 ft = 600 in) and \"Height: 30 ft. 0 in. - 50 ft. 0 in.\" is verbatim on the NC State page, so this is not a unit or provenance defect -- it is a scope defect. NC State's own prose on the same page says \"This vigorous tendril-climbing vine will rapidly grow to 30 to 50 feet long or more\", and Climbing Method is \"Tendrils\" with Habit/Form \"Climbing, Creeping\". PSU says the identical figure is length: \"may grow to 30 to 50 feet long.\" So 30-50 ft is the vine's run along whatever it climbs (or along the ground -- NC State: \"It also will creep along the ground\"), not the plant's own stature. That is exactly the climber-height-is-really-the-support case. The researcher applied this reasoning to reject RHS's \"Higher than 12 metres\" for being a climbing figure, then accepted NC State's climbing figure anyway; the record cannot have it both ways. \"or more\" also means 50 ft is not a real upper bound, and RHS's \">12 m\" (>39 ft) contradicts a 50 ft cap. Null the field.",
+        "mature_height_in_max removed on audit: The 360-600 in pair converts correctly (30 ft = 360 in, 50 ft = 600 in) and \"Height: 30 ft. 0 in. - 50 ft. 0 in.\" is verbatim on the NC State page, so this is not a unit or provenance defect -- it is a scope defect. NC State's own prose on the same page says \"This vigorous tendril-climbing vine will rapidly grow to 30 to 50 feet long or more\", and Climbing Method is \"Tendrils\" with Habit/Form \"Climbing, Creeping\". PSU says the identical figure is length: \"may grow to 30 to 50 feet long.\" So 30-50 ft is the vine's run along whatever it climbs (or along the ground -- NC State: \"It also will creep along the ground\"), not the plant's own stature. That is exactly the climber-height-is-really-the-support case. The researcher applied this reasoning to reject RHS's \"Higher than 12 metres\" for being a climbing figure, then accepted NC State's climbing figure anyway; the record cannot have it both ways. \"or more\" also means 50 ft is not a real upper bound, and RHS's \">12 m\" (>39 ft) contradicts a 50 ft cap. Null the field."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "American Beech",
@@ -335,7 +363,11 @@
         "fertilize_interval_days/fertilize_active_months/fertilize_strength: left null -- no admissible source gives a fertilizing schedule or dilution strength for this species; it is consistently described as a wild-growing native tree not cultivated on a fertilizing regimen (NC State: 'not recommended as an ornamental ... It may be best to leave this tree to its native habitats').",
         "Identification confusion: NC State Extension's own Plant Toolbox flags a look-alike risk directly on this species' page: 'Populus deltoides is often confused with: Populus x acuminata' (Lanceleaf Cottonwood/Poplar, a naturally occurring cottonwood hybrid).",
         "Structural/placement caveats (offered as care context, not a schema field): NC State tags '#weedy' and states 'it is messy, weedy, and has brittle wood ... It can be weedy as seedlings, and it produces copious root sprouts ... The roots may also cause damage to sidewalks or sewer lines'; Missouri Botanical Garden states it is 'Generally considered inappropriate for ornamental use ... A particularly poor selection for urban areas because trees are messy, weak-wooded and their roots can buckle sidewalks and damage sewer lines'; RHS separately warns to 'Avoid growing within 40m of buildings as the vigorous root system may damage drains and foundations, particularly in clay soils' and flags it as having 'the potential to become a nuisance' plant. None of these admissible sources labels the species legally 'invasive' -- NC State states it is 'native to the eastern, central, and southwestern United States as well as portions of Canada and Mexico' -- but RHS's UK-facing page treats it purely as an introduced fast-growing ornamental/screening tree, so the nuisance warnings differ somewhat in framing (structural/urban-forestry caveats from NC State and MOBOT vs. a foundation/drain-damage caveat from RHS).",
-        "name_note left null: RHS's machine-readable metadata for this species page lists 'Populus sargentii' and 'Populus monilifera' as alternate names alongside 'Populus deltoides,' but this appears only in non-visible schema.org metadata, not in visible page prose explicitly framing them as historical synonyms (unlike other records in this catalog where a source's page carries an explicit visible 'Previously known as:' section). RHS's own visible 'Name Status' field for Populus deltoides reads 'Correct,' and no admissible source disputes this accepted binomial, so there is no live taxonomic-acceptance conflict to document, and the thin, indirect synonym metadata alone was judged insufficient to promote into a dedicated name_note claim."
+        "name_note left null: RHS's machine-readable metadata for this species page lists 'Populus sargentii' and 'Populus monilifera' as alternate names alongside 'Populus deltoides,' but this appears only in non-visible schema.org metadata, not in visible page prose explicitly framing them as historical synonyms (unlike other records in this catalog where a source's page carries an explicit visible 'Previously known as:' section). RHS's own visible 'Name Status' field for Populus deltoides reads 'Correct,' and no admissible source disputes this accepted binomial, so there is no live taxonomic-acceptance conflict to document, and the thin, indirect synonym metadata alone was judged insufficient to promote into a dedicated name_note claim.",
+        "is_edible: left null -- neither NC State nor RHS addresses eating this plant or any part of it; plantfinder.mobot.org (the third assigned source) refused this machine (ConnectError), so it was not checked and no guess was made from what it might have said.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a894 returned a non-ok fetch status (ConnectError) and was skipped entirely per instructions -- not used for any field.",
+        "RHS page had no 'Ultimate height'/'Ultimate spread' structured fields and no pollinator or edibility mentions detected by the queried patterns, so it contributed nothing beyond corroborating the species identity.",
+        "Size figures (height 75-100 ft, width 35-60 ft) are given for the species generally on NC State's Plant Toolbox, not a named cultivar, so rule 3 does not apply here."
       ],
       "citations": [
         {
@@ -439,8 +471,31 @@
           "quote": "It tolerates a wide range of soil pH, from 4.5 to 8.0, and can withstand occasional flooding.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/populus-deltoides/"
+        },
+        {
+          "claim": "mature_height_in 900-1200 (NC State Dimensions Height: 75 ft. 0 in. - 100 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/populus-deltoides/",
+          "quote": "Height: 75 ft. 0 in. - 100 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 420-720 (NC State Dimensions Width: 35 ft. 0 in. - 60 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/populus-deltoides/",
+          "quote": "Width: 35 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Pollinators)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/populus-deltoides/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 900,
+      "mature_height_in_max": 1200,
+      "mature_spread_in_min": 420,
+      "mature_spread_in_max": 720
     },
     {
       "common_name": "Red Tip Photinia",
@@ -490,7 +545,13 @@
         "Cold hardiness is documented via USDA zone and UK hardiness-rating systems rather than day/night Fahrenheit figures: NC State lists USDA zones 7a-8b, Missouri Botanical Garden lists winter hardiness to USDA Zone 7 (Zone 6 with a protected siting), and RHS rates 'Red Robin' H5 (hardy throughout most of the UK even in severe winters, roughly -15C to -10C). None of this cleanly resolves to the day_f/night_f/chill_damage_f fields as posed (which read as designed for chill-sensitive/houseplant use on a fully cold-hardy landscape shrub), so those fields are left null rather than derived by unit conversion.",
         "High humidity and poor air circulation are repeatedly cited (Missouri Botanical Garden, Clemson, UMD) as a key driver of Entomosporium leaf spot severity, but this describes ambient disease risk in the landscape rather than the plant's own care requirement for humidity, so humidity_need/humidity_pct fields are left null (the disease-risk information itself is captured in the Entomosporium unknowns entry above rather than repurposed into these fields).",
         "soil_base is inferred as garden_bed because every admissible source describes this species exclusively as an in-ground landscape/hedge shrub; no admissible source discusses container or indoor culture for it.",
-        "name_note — removed on audit: Bundles three sub-claims; checked each individually against the live pages. (1) The 'often confused with Camellia japonica, Photinia glabra, Photinia serratifolia' claim is fully covered by citation 3 and verbatim-accurate — I fetched plants.ces.ncsu.edu/plants/photinia-x-fraseri/ directly and confirmed the exact string 'is often confused with: Camellia japonica Photinia glabra Photinia serratifolia'. This sub-claim is fine. (2) The UK-common-name claim ('Sold in the UK under the common name \"Christmas berry\" rather than \"Red Tip Photinia\"') is over-generalized relative to its own citation. Citation 4's quote is accurate verbatim — I fetched rhs.org.uk/plants/94829 and confirmed the page's common name is always the compound 'Christmas berry 'Red Robin'' (it never appears as bare 'Christmas berry' for the species) — but the record's own name_note prose silently drops the \"'Red Robin'\" qualifier, presenting a cultivar-specific RHS common name as if it were the general UK name for the species Photinia x fraseri. Notably the record's own unknowns entries are careful to say \"RHS lists 'Red Robin' pH tolerance\" — correctly scoped — making the unscoped phrasing in name_note an inconsistency within the record itself. (3) The Fraser Nursery origin/parentage claim has two problems. First, citation 5's quote ('originally discovered at Fraser Nursery in Birmingham, Alabama around 1940') supports only the nursery/location/date; it does not mention parentage species at all, so the added detail 'this P. glabra x P. serratifolia hybrid' is uncited. Second, when I fetched the live MoBot page directly (plantfinder.mobot.org, taxonid=271345), the actual text reads: 'Photinia × fraseri is a large, hybrid ( P. glabra and P. serrulata ), evergreen shrub that typically grows to 10-15' tall and as wide.' MoBot names the second parent 'P. serrulata', not 'P. serratifolia' as the record asserts while citing MoBot as the source. (P. serrulata is an older synonym now consolidated under P. serratifolia per POWO, so the substitution may be scientifically defensible, but the record presents it as MoBot's literal claim without flagging the normalization, and the citation quote doesn't cover the detail at all.) Net: 1 of 3 sub-claims is clean; the other two have real accuracy/coverage defects, so name_note as a whole should not land uncorrected."
+        "name_note — removed on audit: Bundles three sub-claims; checked each individually against the live pages. (1) The 'often confused with Camellia japonica, Photinia glabra, Photinia serratifolia' claim is fully covered by citation 3 and verbatim-accurate — I fetched plants.ces.ncsu.edu/plants/photinia-x-fraseri/ directly and confirmed the exact string 'is often confused with: Camellia japonica Photinia glabra Photinia serratifolia'. This sub-claim is fine. (2) The UK-common-name claim ('Sold in the UK under the common name \"Christmas berry\" rather than \"Red Tip Photinia\"') is over-generalized relative to its own citation. Citation 4's quote is accurate verbatim — I fetched rhs.org.uk/plants/94829 and confirmed the page's common name is always the compound 'Christmas berry 'Red Robin'' (it never appears as bare 'Christmas berry' for the species) — but the record's own name_note prose silently drops the \"'Red Robin'\" qualifier, presenting a cultivar-specific RHS common name as if it were the general UK name for the species Photinia x fraseri. Notably the record's own unknowns entries are careful to say \"RHS lists 'Red Robin' pH tolerance\" — correctly scoped — making the unscoped phrasing in name_note an inconsistency within the record itself. (3) The Fraser Nursery origin/parentage claim has two problems. First, citation 5's quote ('originally discovered at Fraser Nursery in Birmingham, Alabama around 1940') supports only the nursery/location/date; it does not mention parentage species at all, so the added detail 'this P. glabra x P. serratifolia hybrid' is uncited. Second, when I fetched the live MoBot page directly (plantfinder.mobot.org, taxonid=271345), the actual text reads: 'Photinia × fraseri is a large, hybrid ( P. glabra and P. serrulata ), evergreen shrub that typically grows to 10-15' tall and as wide.' MoBot names the second parent 'P. serrulata', not 'P. serratifolia' as the record asserts while citing MoBot as the source. (P. serrulata is an older synonym now consolidated under P. serratifolia per POWO, so the substitution may be scientifically defensible, but the record presents it as MoBot's literal claim without flagging the normalization, and the citation quote doesn't cover the detail at all.) Net: 1 of 3 sub-claims is clean; the other two have real accuracy/coverage defects, so name_note as a whole should not land uncorrected.",
+        "is_edible left null: none of the readable pages (NC State Plant Toolbox x2, RHS) address eating the plant or any part of it at all.",
+        "attracts_pollinators left null: NC State has no 'Attracts' field populated for this species and RHS carries no pollinator/wildlife attraction tag or statement for this page.",
+        "RHS gives Max Height 4-8 metres and Max Spread 2.5-4 metres, but that page is titled 'Red Robin' -- a named cultivar -- so per the cultivar rule that size data was NOT used for the species record; NC State's species-level Dimensions block was used instead.",
+        "https://hgic.clemson.edu/factsheet/photinia-red-tip/ refused this machine (http-403) -- skipped, not guessed at.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=271345&isprofile=0&letter=P refused this machine (connection error) -- skipped, not guessed at.",
+        "is_edible removed on audit: The null is justified by a claim I verified as false. The unknowns entry says none of the readable pages \"address eating the plant or any part of it at all\", but https://www.rhs.org.uk/plants/94829/photinia-x-fraseri-red-robin/details has a Botanical Details row \"Potentially harmful\" whose value reads verbatim \"Fruit are ornamental - not to be eaten.  Wear gloves and other protective equipment when handling.\", followed by \"Pets: Fruit are ornamental - not to be eaten - see the HTA guide to potentially harmful plants\". qc.py finds \"Fruit are ornamental - not to be eaten.\" once, on one rendered run. A source explicitly denying that a part may be eaten is not silence, so this field cannot land as null on this rationale: it should be is_edible false, cited to that RHS quote, with the protective-equipment/handling caution recorded in unknowns. Note also that the researcher excluded the RHS page's size data as cultivar-scoped ('Red Robin') yet still asserted the page says nothing about eating, so the page was mis-read rather than merely set aside."
       ],
       "citations": [
         {
@@ -582,8 +643,24 @@
           "source": "Clemson HGIC Factsheet HGIC 1081",
           "url": "https://hgic.clemson.edu/factsheet/photinia-red-tip/",
           "quote": "Avoid wetting the leaves when watering. Splashing water spreads the fungus."
+        },
+        {
+          "claim": "mature_height_in 120-240 (NC State Height 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/photinia-x-fraseri/",
+          "quote": "Height: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-120 (NC State Width 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/photinia-x-fraseri/",
+          "quote": "Width: 5 ft. 0 in. - 10 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -689,6 +766,18 @@
           "source": "UF/IFAS Ask IFAS (EDIS publication FP355)",
           "url": "https://ask.ifas.ufl.edu/fp355",
           "quote": "Loropetalum chinensis Chinese Fringe Bush"
+        },
+        {
+          "claim": "mature_height_in 72-96 (NC State Height 6 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Loropetalum chinense",
+          "url": "https://plants.ces.ncsu.edu/plants/loropetalum-chinense/",
+          "quote": "Dimensions: ⏎                 Height: 6 ft. 0 in. - 8 ft. 0 in. ⏎                 Width: 6 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-96 (NC State Width 6 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Loropetalum chinense",
+          "url": "https://plants.ces.ncsu.edu/plants/loropetalum-chinense/",
+          "quote": "Dimensions: ⏎                 Height: 6 ft. 0 in. - 8 ft. 0 in. ⏎                 Width: 6 ft. 0 in. - 8 ft. 0 in."
         }
       ],
       "common_name": "Chinese Fringe Flower",
@@ -734,14 +823,25 @@
         "Naming/spelling note: the UF/IFAS publication FP355 titles itself 'Loropetalum chinensis Chinese Fringe Bush' (an '-is' ending), while every other admissible source and the accepted binomial use 'Loropetalum chinense' (an '-e' ending); this looks like a spelling inconsistency in that one UF/IFAS document title rather than a distinct taxon.",
         "Cultivar note: the purple/burgundy-leaved, pink-to-red-flowered plants most often sold under the 'Chinese Fringe Flower' name are usually Loropetalum chinense var. rubrum (or f. rubrum) rather than the white-flowered, green-leaved straight species described by most of the sources above; the record here is for the species page and should be treated as broadly applicable rather than cultivar-specific.",
         "name_note — removed on audit: name_note bundles four distinct sub-claims and only some are individually cited. (1) 'Formerly classified as Hamamelis chinensis (a taxonomic synonym per NC State)' — covered by citation 3, which is labeled name_note and whose quote 'Hamamelis chinensis' I verified live on NC State's page under its 'Previously Known As' field. Fine. (2) 'also commonly called \"Chinese witch hazel\" by RHS in the UK' — covered by citation 4 (labeled name_note); I fetched the live RHS page and confirmed it lists 'Chinese witch hazel' as its common name and does NOT use 'Chinese fringe flower' anywhere on the page, so the contrast is genuine. (3) '...versus \"Chinese fringe flower\" / \"Chinese fringe bush\" used by the US extension sources' — the 'Chinese fringe flower' half is asserted only in citation 4's prose (not its own quote) and citation 1 (which quotes it) is labeled common_name, not name_note, so per the strict rule it doesn't satisfy name_note's own citation requirement; more seriously, 'Chinese fringe bush' has NO citation anywhere in the array — no citation object quotes or references it at all. I independently confirmed live that UF/IFAS FP355 (https://ask.ifas.ufl.edu/fp355) is titled 'Loropetalum chinensis Chinese Fringe Bush' and uses that name throughout, so the fact is true and repairable, but as shipped this sub-claim is uncited. (4) 'not to be confused with true witch-hazel (Hamamelis spp.), a related but distinct genus' — this genus-distinction caveat has zero supporting citation anywhere in the array; it's inserted editorial content with no source backing despite being presented as part of a well-cited note. Because two of the four bundled sub-claims are wholly uncited, name_note as a whole is refuted for a citation-tracing gap, with sub-claims 1 and 2 confirmed sound and repairable using the quotes above.",
-        "name_note_placeholder_unused — removed on audit: This field is present with value \"\" (empty string) and its own name flags it as pipeline scaffolding ('placeholder_unused') rather than real record content. This matches the known encoding-bug pattern the checklist warns about — an artifact that should not appear in a landed, cited record and should be stripped before shipping, regardless of whether the empty string is technically distinct from a JSON null."
+        "name_note_placeholder_unused — removed on audit: This field is present with value \"\" (empty string) and its own name flags it as pipeline scaffolding ('placeholder_unused') rather than real record content. This matches the known encoding-bug pattern the checklist warns about — an artifact that should not appear in a landed, cited record and should be stripped before shipping, regardless of whether the empty string is technically distinct from a JSON null.",
+        "is_edible: left null -- neither readable source (NC State Plant Toolbox, RHS) addresses eating this plant at all; no record of edibility either way.",
+        "attracts_pollinators: left null -- neither readable source has a structured Attracts/pollinator field or an unconditional pollinator statement. NC State's Wildlife Value field says only \"Deer resistant\"; no bees, butterflies, moths, or hummingbirds mentioned on either page.",
+        "NC State's free-text body also says the shrub \"may also reach a height up to 20 feet tall\" beyond the normal 6-8 ft habit -- this is a single high outlier figure (no matching min) called out separately from the structured Dimensions block, so it was not used per rule 2 (one figure fills one end, never invented as a range) and not merged with the anchor's 6-8 ft figures.",
+        "RHS gives Max Height and Max Spread as 2.5-4 metres (a different unit, would be ~98-157 in) -- corroborates NC State's range order-of-magnitude but was not used as the cited figure since NC State is the designated anchor and already supplies a complete height/spread range in its own structured block.",
+        "https://ask.ifas.ufl.edu/publication/ep562 refused this machine (fetch status: error:ReadError) -- skipped, not guessed.",
+        "https://hgic.clemson.edu/factsheet/loropetalum-chinese-fringe-flower-care-cultivars-growing-guide/ refused this machine (fetch status: http-403) -- skipped, not guessed.",
+        "https://ask.ifas.ufl.edu/fp355 refused this machine (fetch status: error:ReadError) -- skipped, not guessed."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 96
     },
     {
       "chill_damage_f": 20,
@@ -1187,6 +1287,7 @@
   ],
   "normalizations": [
     "2026-08-23: twentieth batch of the \"blind spots\" pass -- Virginia Creeper (a deliberate identification-confusion companion to Poison Ivy, already in this catalog -- confirmed distinct toxicity mechanisms, oxalic-acid GI risk versus urushiol contact dermatitis, with no content bleed), American Beech, Eastern Cottonwood, and five common Southern landscape shrubs (Red Tip Photinia, Chinese Fringe Flower, Tea Olive, Japanese Pittosporum, Thorny Elaeagnus). Virginia Creeper's toxic_to_pets=true rests on Clemson's citation naming dogs specifically ('moderately toxic to humans and dogs') -- properly scoped per this catalog's rule. American Beech's toxic_to_pets=true rests on RHS naming dogs specifically ('Pets (dogs): Harmful if eaten') -- also properly scoped, a plant most people wouldn't expect to carry a toxicity flag. This batch caught an entirely new defect: Chinese Fringe Flower's raw record carried an extraneous field, name_note_placeholder_unused, not part of this catalog's schema at all -- caught by extending the independent landing-time verification script to diff each record's keys against the full known field list, not just check values within known fields; deleted outright rather than nulled, since it isn't a real field. Three records had name_note refuted for bundling multiple sub-claims where some had real accuracy defects, not just citation gaps -- all three repaired by keeping only the sub-claims the audit confirmed clean and dropping the rest, matching this catalog's now-established per-sub-claim repair discipline (b35, b37): Photinia's name_note was trimmed to its one clean sub-claim (confusability with Camellia japonica/Photinia glabra/Photinia serratifolia) after the audit found the RHS cultivar-name claim silently dropped its 'Red Robin' qualifier and the parentage/nursery-origin claim misattributed a specific botanical name to Missouri Botanical Garden that MoBOT's page doesn't use; Chinese Fringe Flower's name_note kept its two clean sub-claims (former Hamamelis chinensis synonym; RHS's 'Chinese witch hazel' name) and added a new UF/IFAS citation for the 'Chinese Fringe Bush' name using the auditor's own confirmed publication title, dropping an uncited witch-hazel genus-distinction aside entirely; Tea Olive's name_note kept its genus-breadth framing and Clemson corroboration, widened its Missouri Botanical Garden citation to the source's full common-name list per the auditor's own confirmed quote, and dropped its NC State sub-claim outright after the audit found it misattributed 'Fortune's tea olive' (the source actually says 'Fortune's osmanthus') and invented a cold-hardiness distinction the source never mentions -- a genuine factual error, not merely an uncited-but-true gap. Virginia Creeper's and (following b37's Bugleweed precedent) no other record's scientific_name_accepted were left null on the same conservative standard: consistent usage across sources isn't the same as an explicit statement of current taxonomic acceptance.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

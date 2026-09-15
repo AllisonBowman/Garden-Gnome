@@ -51,7 +51,15 @@
         "soil_base garden_bed: no schema value distinguishes 'landscape/street tree planting' from a generic garden bed. Every admissible source discusses Acer rubrum only as an in-ground shade, street, rain-garden, or native tree grown in ordinary landscape/native soil textures (clay, loam, sand per NC State's Soil Texture tags), with no source describing container culture, so garden_bed was used as the best-supported single value rather than left null, consistent with this catalog's prior treatment of the related species Acer palmatum.",
         "name_note — removed on audit: The name_note prose states that 'Clemson, UF/IFAS, Penn State, UMD Extension, and UGA CAES all refer to the species consistently as Acer rubrum with no alternate binomial proposed' -- but no extension.umd.edu citation exists anywhere in the citations array. I enumerated all 19 citation entries: NC State Extension (7), RHS (2), Clemson (2), UF/IFAS (1), Penn State (4), UGA CAES (3). UMD Extension is named as a source that was checked and found consistent, yet it never appears as a citation. This is an uncited factual claim embedded in a field value -- exactly the failure mode structural check #1 (every non-null field value must trace to a citations entry) is meant to catch. As written this UMD claim is unverifiable and should either be backed by an actual UMD citation or removed from the note.",
         "toxic_to_pets — 2026-09-10: the b25 audit nulled the false verdict because the same page tags the species a problem for horses. The catalog rule settled on this very record is that toxic_to_pets tracks cats and dogs specifically; the horse hazard stays in toxicity_detail. Re-audited live: NC State renders \"#non-toxic for dogs\" and \"#non-toxic for cats\", and no admissible page contradicts them.",
-        "toxic_to_pets — verdict pass 2026-09-10: set to false on a cat/dog-scoped statement (https://plants.ces.ncsu.edu/plants/acer-rubrum/, https://hgic.clemson.edu/factsheet/red-maple/, https://hgic.clemson.edu/factsheet/maples/, https://hgic.clemson.edu/?s=Acer+rubrum, https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=277481, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277481, https://www.rhs.org.uk/plants/276/acer-rubrum/details, https://www.rhs.org.uk/plants/17726/acer-rubrum/details, https://extension.umd.edu/resource/native-trees-maryland-red-maple, https://edis.ifas.ufl.edu/publication/ST033, https://ask.ifas.ufl.edu/search?q=Acer+rubrum, https://fieldreport.caes.uga.edu/publications/C1100/is-my-tree-dying/ checked). Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: set to false on a cat/dog-scoped statement (https://plants.ces.ncsu.edu/plants/acer-rubrum/, https://hgic.clemson.edu/factsheet/red-maple/, https://hgic.clemson.edu/factsheet/maples/, https://hgic.clemson.edu/?s=Acer+rubrum, https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=277481, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277481, https://www.rhs.org.uk/plants/276/acer-rubrum/details, https://www.rhs.org.uk/plants/17726/acer-rubrum/details, https://extension.umd.edu/resource/native-trees-maryland-red-maple, https://edis.ifas.ufl.edu/publication/ST033, https://ask.ifas.ufl.edu/search?q=Acer+rubrum, https://fieldreport.caes.uga.edu/publications/C1100/is-my-tree-dying/ checked). Audited live.",
+        "is_edible is CONDITIONAL: only the sap is edible (tapped and boiled into syrup, per NC State's Edibility field); no source read states the leaves, seeds, or other parts are food for humans -- seeds/buds are eaten by squirrels and birds, which is wildlife value, not human edibility.",
+        "hgic.clemson.edu/factsheet/maple/ returned HTTP 403 and could not be read by this machine; not used for any field.",
+        "RHS (rhs.org.uk) shows bucketed size fields 'Max Height: Higher than 12 metres' and 'Max Spread: wider than 8 metres' -- these are open-ended threshold categories, not a stated min/max range, so they were not used for mature_height_in/mature_spread_in; no 'Ultimate height'/'Ultimate spread' or pollinator/edibility text was found on the fetched RHS page.",
+        "extension.psu.edu/rain-garden-plants-red-maple gives 'Height: 40 to 70 inches' for red maple, inconsistent with mature tree size from every other source read; treated as not applicable to overall mature size and not used, since NC State's structured Dimensions block is the designated anchor.",
+        "fieldreport.caes.uga.edu (UGA) gives an alternate Red Maple size ('40 to 50 feet tall with a spread of 24 to 35 feet') that differs from NC State's figures; NC State was used per the anchor instruction, so this was not incorporated.",
+        "ask.ifas.ufl.edu/publication/st041 loaded successfully this run (Height 60 to 75 feet, Spread 25 to 35 feet) and was not used since NC State is the designated size anchor.",
+        "extension.psu.edu/sycamores-maples-and-sycamore-maples-which-are-safe-for-horses (the horse-safety page) contained no height/spread/edibility/pollinator information relevant to these six fields; it concerns toxicity to horses, which is outside scope here.",
+        "is_edible removed on audit: Rule F fails. is_edible is true, and two of the pages I re-read name a toxic part of Acer rubrum that never appears in unknowns. https://extension.psu.edu/sycamores-maples-and-sycamore-maples-which-are-safe-for-horses states 'Red maple,  Acer rubrum , is commonly known to be toxic to horses, primarily when wilted leaves are consumed by the horse. Its toxins cause destruction of red blood cells...' -- yet the record's unknowns assert that page 'contained no height/spread/edibility/pollinator information relevant to these six fields', which is wrong: it names a toxic plant part. The NC State page itself carries 'Problems:  Problem for Horses' and the tag '#problem for horses', also unrecorded. The unknowns capture only the sap-only/boiling preparation condition, not the toxic-part condition, so the field must be nulled until the wilted-leaf toxicity is written into unknowns."
       ],
       "citations": [
         {
@@ -173,8 +181,31 @@
           "source": "Penn State Extension (Sycamores, Maples, and Sycamore Maples - Which Are Safe for Horses?)",
           "url": "https://extension.psu.edu/sycamores-maples-and-sycamore-maples-which-are-safe-for-horses",
           "quote": "Its toxins cause destruction of red blood cells and prevent remaining red blood cells from transporting oxygen throughout the body."
+        },
+        {
+          "claim": "mature_height_in 480-1440 (NC State Height 40 ft. 0 in. - 120 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Height: 40 ft. 0 in. - 120 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 360-600 (NC State Width 30 ft. 0 in. - 50 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Width: 30 ft. 0 in. - 50 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field names bees and pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/acer-rubrum/",
+          "quote": "Flower nectar attracts bees and other pollinators."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 480,
+      "mature_height_in_max": 1440,
+      "mature_spread_in_min": 360,
+      "mature_spread_in_max": 600
     },
     {
       "common_name": "Eastern Redbud",
@@ -226,7 +257,14 @@
         "outdoor_sun_exposure full_shade: based on Clemson's statement 'Although it will grow in fairly dense shade, it blooms more heavily when exposed to sun.' This is unqualified 'shade' language (distinct from 'partial shade'), which this catalog has previously treated as supporting the full_shade category (e.g. Japanese Maple's UF/IFAS listing 'plant grows in the shade' as a separate line from 'plant grows in partial shade'). The same Clemson sentence notes bloom is reduced in denser shade, which is a tradeoff rather than a contradiction of tolerance.",
         "Penn State Extension's page 'Eastern Redbuds Support Early Pollinators' (extension.psu.edu) was reviewed but addresses only early-season nectar value for pollinators, not any cultivation field in this schema, so it was not cited.",
         "Mature size and growth-rate figures (e.g. Clemson: 20-30 ft height x 15-35 ft width, ~7-10 ft growth in 5-6 years; MOBOT: 20-30 ft x 25-35 ft; UF/IFAS: 20-30 ft, rare 35 ft specimens; RHS: 8-12 m x 4-8 m) were reviewed for context but have no corresponding field in this schema.",
-        "outdoor_sun_exposure — removed on audit: The 'full_shade' member of this array over-reaches. Its sole support is the Clemson quote 'Although it will grow in fairly dense shade, it blooms more heavily when exposed to sun' — descriptive, hedged prose about survival, not an assertion of a 'full shade' exposure category. Critically, I re-fetched NC State's own structured Light field for this exact species page (plants.ces.ncsu.edu/plants/cercis-canadensis/), which is a discrete-category field (confirmed format: 'Full sun (6 or more hours...)' / 'Partial Shade (2-6 hours)'), and it lists ONLY Full Sun and Partial Shade for Cercis canadensis — NOT Full Shade, even though NC State's toolbox has a Full Shade category available in general (the record's own justification cites NC State using it for Japanese Maple). So the one source with a rigorous, discrete sun-category taxonomy declines to tag this species as full-shade-tolerant, while the record adds 'full_shade' anyway based on a different source's loose prose. The other three array values (full_sun, part_sun, part_shade) are cleanly and independently supported by multiple sources (NC State, Clemson, UF/IFAS, RHS, UMD, MOBOT) and are not in question — only the full_shade member should be dropped."
+        "outdoor_sun_exposure — removed on audit: The 'full_shade' member of this array over-reaches. Its sole support is the Clemson quote 'Although it will grow in fairly dense shade, it blooms more heavily when exposed to sun' — descriptive, hedged prose about survival, not an assertion of a 'full shade' exposure category. Critically, I re-fetched NC State's own structured Light field for this exact species page (plants.ces.ncsu.edu/plants/cercis-canadensis/), which is a discrete-category field (confirmed format: 'Full sun (6 or more hours...)' / 'Partial Shade (2-6 hours)'), and it lists ONLY Full Sun and Partial Shade for Cercis canadensis — NOT Full Shade, even though NC State's toolbox has a Full Shade category available in general (the record's own justification cites NC State using it for Japanese Maple). So the one source with a rigorous, discrete sun-category taxonomy declines to tag this species as full-shade-tolerant, while the record adds 'full_shade' anyway based on a different source's loose prose. The other three array values (full_sun, part_sun, part_shade) are cleanly and independently supported by multiple sources (NC State, Clemson, UF/IFAS, RHS, UMD, MOBOT) and are not in question — only the full_shade member should be dropped.",
+        "is_edible is TRUE but CONDITIONAL: NC State states only the flowers are edible ('The flowers are edible and taste similar to peas'; also carries high vitamin C) — no page states the whole plant, seed pods, bark, or leaves are edible, so do not treat this as a blanket edibility claim.",
+        "mature_height_in and mature_spread_in are taken from NC State's structured Dimensions block (species-level, not a cultivar), which reads Height 20-30 ft / Width 25-35 ft — converted to 240-360 in height and 300-420 in spread.",
+        "RHS gives Max Height 8-12 metres and Max Spread 4-8 metres for this species (roughly 315-472 in height, 157-315 in spread) — broadly consistent with NC State's range but not used as the citation source since NC State's Dimensions block was the anchor; noted here in case of future reconciliation.",
+        "University of Maryland Extension independently corroborates attracts_pollinators, stating bees, butterflies, and moths (Io Moth, White-Marked Tussock Moth) use the flowers/foliage, and separately notes songbirds eat the seeds (not counted as pollination support, per the rule that bird seed predation is not pollinator evidence).",
+        "hgic.clemson.edu/factsheet/redbud/ refused this machine (http-403) — not read, no data taken from it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=h550 refused this machine (ConnectError) — not read, no data taken from it.",
+        "ask.ifas.ufl.edu/publication/ST145 refused this machine (http-403) — not read, no data taken from it."
       ],
       "citations": [
         {
@@ -384,8 +422,38 @@
           "quote": "The flowers are edible and taste similar to peas.  Contain high amounts of vitamin C.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: flowers attract pollinators including butterflies and bees; structured Attracts field lists Bees, Butterflies, Pollinators, Specialized Bees)",
+          "quote": "In early spring, clusters of rose pink to light purple flowers mature and attract many pollinators, including butterflies, and bees.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "is_edible true, conditional — only the flowers are stated as edible, not the whole plant",
+          "quote": "The flowers are edible and taste similar to peas.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "mature_height_in 240-360 (NC State Height: 20 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "quote": "Height: 20 ft. 0 in. - 30 ft. 0 in.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
+        },
+        {
+          "claim": "mature_spread_in 300-420 (NC State Width: 25 ft. 0 in. - 35 ft. 0 in., converted to inches)",
+          "quote": "Width: 25 ft. 0 in. - 35 ft. 0 in.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cercis-canadensis/"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 240,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 300,
+      "mature_spread_in_max": 420
     },
     {
       "common_name": "Apple",
@@ -434,7 +502,12 @@
         "day_f_min/day_f_max/night_f_min/night_f_max, humidity_need, humidity_pct_min/humidity_pct_max, light_fc_min/light_fc_good, direct_sun_hours_max: left null. This is an outdoor orchard/landscape tree with no admissible source discussing it in houseplant/container terms, so no source gives ambient indoor-style day/night temperature ranges, humidity percentages, or foot-candle/hour light figures.",
         "soil_ph_min/soil_ph_max: populated from Clemson's specific numeric range (5.8-6.5), corroborated qualitatively by UGA Cooperative Extension ('grow best when the soil pH is near 6.5'). NC State categorizes the plant's soil pH tolerance more broadly as 'Neutral (6.0-8.0)' and 'Alkaline (>8.0)', and RHS's Soil pH field is simply 'Acid or Alkaline or Neutral' -- both are broad qualitative categories rather than a specific preferred range, so they were not merged into the numeric field, consistent with how this catalog treats a specific Extension figure alongside a broader NC State/RHS category tag elsewhere (e.g. Green Beans).",
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est: left null. No admissible source states a dry-down/moisture regime (e.g. keep_moist vs. dry between waterings) or a soil check-depth for this species. UF/IFAS gives an irrigation depth and volume, but frames the every-7-to-10-day figure as specific to 'extremely dry conditions' rather than a general watering interval, so that information is captured qualitatively in water_estimate_basis instead of being forced into water_growing_days_est.",
-        "fertilize_interval_days and fertilize_strength: left null. UF/IFAS gives calendar months (January, June) and an age-scaled granular-fertilizer amount (about one pound of 10-10-10 per year of tree age, up to 15 lb/year), but no day-interval figure, and no liquid-dilution 'strength' framing (full/half/quarter) that would map to fertilize_strength -- Clemson and UGA give a similar granular 10-10-10/ammonium-nitrate schedule by tree age with the same lack of a strength framing."
+        "fertilize_interval_days and fertilize_strength: left null. UF/IFAS gives calendar months (January, June) and an age-scaled granular-fertilizer amount (about one pound of 10-10-10 per year of tree age, up to 15 lb/year), but no day-interval figure, and no liquid-dilution 'strength' framing (full/half/quarter) that would map to fertilize_strength -- Clemson and UGA give a similar granular 10-10-10/ammonium-nitrate schedule by tree age with the same lack of a strength framing.",
+        "is_edible is conditional: only the fruit is the edible part (eaten raw or cooked, also pressed for cider per NC State); no page addresses edibility of other plant parts, so do not treat the whole plant as edible.",
+        "RHS gives only open-ended size thresholds (Max Height: 'Higher than 12 metres', Max Spread: 'wider than 8 metres') with no upper bound, so these were not used; NC State's explicit Height/Width range (15-30 ft. both dimensions) was used instead for mature_height_in and mature_spread_in.",
+        "hgic.clemson.edu/factsheet/apple/ refused this machine (http-403); not read, not guessed.",
+        "ask.ifas.ufl.edu/mg073 refused this machine (fetch ReadError); not read, not guessed.",
+        "fieldreport.caes.uga.edu/publications/C740/home-garden-apples/ was read but contained no plant dimension data and no unconditional pollinator-attraction statement (only cross-pollination/pollinizer variety codes for fruit set, which is not pollinator attraction) and no edibility statement beyond navigation-menu links, so it contributed no field data."
       ],
       "citations": [
         {
@@ -508,8 +581,44 @@
           "quote": "Plant this tree in an edible garden or as a flowering specimen in a lawn or meadow.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/"
+        },
+        {
+          "claim": "mature_height_in 180-360 (NC State Height 15 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/",
+          "quote": "Height: 15 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-360 (NC State Width 15 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/",
+          "quote": "Width: 15 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (fruit eaten raw and cooked, per NC State)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/",
+          "quote": "Fruits can be eaten raw and cooked in a variety of dishes."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "attracts_pollinators true, corroborating: RHS tags this species Plants for pollinators",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/60558/malus-domestica-f/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 360
     },
     {
       "common_name": "River Birch",
@@ -561,7 +670,14 @@
         "water_regime: kept as keep_moist despite UF/IFAS rating overall drought tolerance as 'moderate' and Clemson noting established trees 'tolerate fairly dry soils.' This reads as normal established-tree resilience layered on a consistent moist-soil preference -- NC State, UF/IFAS, and Clemson all independently recommend keeping the soil moist/irrigated -- not a genuine disagreement about the species' baseline moisture regime.",
         "soil_drainage: set to moisture_retentive on repeated cross-source evidence that this species tolerates and even favors consistently moist-to-wet soil far more than a typical landscape tree -- NC State ('known to tolerate flooded conditions for extended periods of time... naturally found in riverbanks, streambanks and floodplains' plus Soil Drainage tags including 'Moist' and 'Occasionally Wet'), Missouri Botanical Garden ('Water: Medium to wet' and 'will tolerate poor drainage and occasional inundation'), UF/IFAS ('Soil tolerances: ...wet to well-drained'), and University of Maryland Extension (naming it one of the few tree species that is an 'exception' to needing well-drained soil and 'not susceptible to root rot on wet sites'). No admissible source describes it as needing fast/sharp drainage, so this is not treated as a conflict despite RHS and Clemson also using the phrase 'well-drained' in passing.",
         "outdoor_sun_exposure: full_sun and part_shade are supported by five independently-worded sources (NC State, Missouri Botanical Garden, RHS, UF/IFAS, Clemson); none of the six admissible sources consulted mention full_shade or a distinct part_sun tolerance, so those enum values were not added.",
-        "Penn State Extension and UGA CAES Cooperative Extension: searched but no dedicated River Birch/Betula nigra species page with quotable care specifics (sun/soil/water/pH/hardiness) was found on extension.psu.edu or fieldreport.caes.uga.edu -- only passing mentions in unrelated pest/rain-garden articles -- so neither publisher contributed a citation to this record."
+        "Penn State Extension and UGA CAES Cooperative Extension: searched but no dedicated River Birch/Betula nigra species page with quotable care specifics (sun/soil/water/pH/hardiness) was found on extension.psu.edu or fieldreport.caes.uga.edu -- only passing mentions in unrelated pest/rain-garden articles -- so neither publisher contributed a citation to this record.",
+        "hgic.clemson.edu/factsheet/river-birch/ returned HTTP 403 to this machine — skipped; no data drawn from it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277830 returned a connection error to this machine — skipped; no data drawn from it.",
+        "UF/IFAS ST094 gives a narrower size range (Height: 40 to 50 feet; Spread: 25 to 35 feet) than NC State's Dimensions block (Height 30-70 ft, Width 40-60 ft); per instructions NC State is the anchor, so UF's figures were not used to set mature_height_in/mature_spread_in.",
+        "RHS gives Max Height as the open-ended bucket 'Higher than 12 metres' (no upper bound) and Max Spread '4-8 metres' (~157-315 in); this doesn't supply a matching low/high pair comparable to NC State's range and was not used for the size fields.",
+        "is_edible is based solely on NC State's structured Play Value tag 'Edible fruit' and its '#edible seeds' tag; no page describes river birch as commonly eaten by people, and the edible part (small hard-mast seeds/catkins) is a minor/uncommon food use, not a cultivated food crop use.",
+        "attracts_pollinators is based on NC State's structured Attracts field, which also lists Small Mammals and Songbirds alongside Butterflies and Moths; per the rules, the mammal/bird entries were not treated as pollinator support, only Butterflies/Moths were.",
+        "UMD's planting-tree-or-shrub page mentions river birch only in passing (as an example tolerant of wet sites) and provides no size, edibility, or pollinator data for this species."
       ],
       "citations": [
         {
@@ -701,8 +817,38 @@
           "quote": "River birch prefers moist, fertile, well-drained soil.",
           "source": "Clemson Cooperative Extension HGIC, River Birch factsheet",
           "url": "https://hgic.clemson.edu/factsheet/river-birch/"
+        },
+        {
+          "claim": "mature_height_in 360-840 (NC State Dimensions Height: 30 ft. 0 in. - 70 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/",
+          "quote": "Height: 30 ft. 0 in. - 70 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 480-720 (NC State Dimensions Width: 40 ft. 0 in. - 60 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/",
+          "quote": "Width: 40 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Play Value field lists Edible fruit for river birch)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/",
+          "quote": "Edible fruit"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies among the wildlife river birch draws)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/betula-nigra/",
+          "quote": "Butterflies"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 840,
+      "mature_spread_in_min": 480,
+      "mature_spread_in_max": 720
     },
     {
       "common_name": "Camellia",
@@ -753,7 +899,13 @@
         "cool_rest_note: this field is oriented at houseplants with a winter dormancy/rest period; every admissible source treats this species as grown outdoors. Missouri Botanical Garden's note that container-grown plants need greenhouse winter temperatures of 45-55 degrees F (with flower buds dropping above 55 degrees F) describes an overwintering requirement for the 'containers generally don't work indoors' scenario, not a cool-rest care instruction, so left null.",
         "is_houseplant: UGA's 'Success with Mixed Containers Using Perennial and Woody Plants' names Camellia japonica as suited to outdoor mixed container plantings on patios/entrances with 'partial to full shade' and 'moderate soil moisture,' but this describes outdoor container gardening (not indoor/long-term houseplant culture), so it was not used to support is_houseplant true; Missouri Botanical Garden's explicit statement that containers are 'typically not an effective option' for growing this species indoors in private residences was decisive for is_houseplant false.",
         "soil_drainage — removed on audit: Value 'moderate' rests on two citations that don't actually agree with each other and don't match this catalog's own established mapping for the same source data. The NC State citation's raw tags are 'Good Drainage, Moist, Occasionally Wet' (no 'Occasionally Dry'). I checked every other verified-batch record in app/data/verified/*.json that quotes this exact three-tag NC State combination (no 'Occasionally Dry'), and found it: Jack-in-the-Pulpit, in b22-aroid-genus-gaps.json, uses the identical quote and is correctly mapped to soil_drainage 'moisture_retentive', not 'moderate'. Every record in the catalog that IS mapped to 'moderate' pairs 'Good Drainage' with BOTH 'Occasionally Dry' AND 'Occasionally Wet' (Common Morning Glory, Crape Myrtle, Golden Bamboo) -- i.e. tolerates both extremes. Camellia's NC State tags lack 'Occasionally Dry', so by this catalog's own precedent they should map to moisture_retentive, not moderate. Compounding this, the second (UGA) citation for the same field literally says soil should be 'moderate soil moisture (but not wet soil)' -- which directly conflicts with NC State's own 'Occasionally Wet' tag on a field the record's own unknowns text identifies as consequential (UF/IFAS: camellias 'succumb to root rot when kept too wet'). Because the two citations disagree with each other and the value contradicts this catalog's own prior treatment of the identical underlying source tags, the VALUE itself -- not just one citation's label -- is in doubt; per the audit's own rule 2 exception, that means the field should be refuted rather than waved through as independently corroborated. moisture_retentive (or null) would better fit the actual evidence.",
-        "name_note — removed on audit: name_note asserts a specific, checkable fact -- 'RHS lists \"Camellia hozanensis\" under Synonyms' -- that is used to conclude there is no accepted-name conflict. I fetched the live RHS page (rhs.org.uk/plants/2845/camellia-japonica/details) and confirmed this is actually true (Synonyms: Camellia hozanensis; Name Status: Correct). But the record's own citations array does not trace to it: the only RHS citation present quotes just 'Name Status\\nCorrect' and never quotes or mentions the synonym itself. Per structural check 1 (every non-null field value must trace to an entry in citations), this specific claim in name_note has no supporting citation entry in the record as given -- it is asserted in prose without the quote that would substantiate it, even though a supporting quote was trivially available and simply wasn't included. The record should either be refuted for this untraceable claim or amended to add a citation entry quoting the Synonyms field."
+        "name_note — removed on audit: name_note asserts a specific, checkable fact -- 'RHS lists \"Camellia hozanensis\" under Synonyms' -- that is used to conclude there is no accepted-name conflict. I fetched the live RHS page (rhs.org.uk/plants/2845/camellia-japonica/details) and confirmed this is actually true (Synonyms: Camellia hozanensis; Name Status: Correct). But the record's own citations array does not trace to it: the only RHS citation present quotes just 'Name Status\\nCorrect' and never quotes or mentions the synonym itself. Per structural check 1 (every non-null field value must trace to an entry in citations), this specific claim in name_note has no supporting citation entry in the record as given -- it is asserted in prose without the quote that would substantiate it, even though a supporting quote was trivially available and simply wasn't included. The record should either be refuted for this untraceable claim or amended to add a citation entry quoting the Synonyms field.",
+        "edis.ifas.ufl.edu/ep002 refused this fetch (ReadError) -- not used, no claims drawn from it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287331 refused this fetch (ConnectError) -- not used, no claims drawn from it.",
+        "is_edible left null: none of the four readable pages state the plant or any part of it is eaten, grown for food, or poisonous to eat. NC State's page lists 'edible garden' only as a garden-style/use tag (alongside 'Asian garden', 'children's garden', 'pollinator garden'), which is not a statement that Camellia japonica itself is edible, so it was not treated as support for true.",
+        "RHS (rhs.org.uk/plants/2845/camellia-japonica/details) gives a much larger structured size -- Max Height 8-12 metres, Max Spread 4-8 metres -- for UK-grown specimens over a 10-20 year maturity horizon. This conflicts with NC State's Height 10-13 ft / Width 5-10 ft. Per the task's guidance that NC State's structured Dimensions block is the anchor, its figures were used for mature_height_in/mature_spread_in and RHS's larger figures were not; flagging the size discrepancy between the two authorities as decision-relevant.",
+        "fieldreport.caes.uga.edu (UGA B1418, mixed containers) fetched successfully but contained no Camellia-specific size, edibility, or pollinator statements -- it was not used as a citation source for any of the six fields.",
+        "RHS page fetched successfully but contained no edibility or pollinator/wildlife-attraction statement for Camellia japonica -- not used for those two fields."
       ],
       "citations": [
         {
@@ -827,8 +979,31 @@
           "source": "RHS Plant Profile",
           "url": "https://www.rhs.org.uk/plants/2845/camellia-japonica/details",
           "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "mature_height_in 120-156 (NC State Height: 10 ft. 0 in. - 13 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Camellia japonica",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-japonica/",
+          "quote": "Height: 10 ft. 0 in. - 13 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-120 (NC State Width: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Camellia japonica",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-japonica/",
+          "quote": "Width: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field: attracts pollinators and provides cover for wintering birds)",
+          "source": "NC State Extension Plant Toolbox, Camellia japonica",
+          "url": "https://plants.ces.ncsu.edu/plants/camellia-japonica/",
+          "quote": "Attracts pollinators and provides cover for wintering birds."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 156,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Gardenia",
@@ -1023,7 +1198,12 @@
         "water_regime / water_dry_down_target / water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis: Missouri Botanical Garden's only relevant data is a categorical 'Water: Medium' tag plus 'Moderate drought tolerance once established' -- neither maps cleanly onto the schema's regime enum (keep_moist / dry_surface_between / dry_thoroughly_between / keep_barely_moist), which reads as written for containerized/indoor watering behavior, so this was left null rather than forced into an awkward fit. Clemson's guidance to 'Water plants weekly ... during drought stress' is about establishment-phase drought response, not a general regime, and was not used to fill this field either.",
         "fertilize_active_months / fertilize_interval_days / fertilize_strength: none of the four admissible sources give fertilizing guidance for this species.",
         "toxicity_detail: toxic_to_pets false rests on a single source -- NC State's site-wide hashtag tags ('#non-toxic for cats', '#non-toxic for horses', '#non-toxic for dogs') rather than descriptive prose naming a compound or symptom (there being none, since the plant is tagged non-toxic). Clemson, RHS, and Missouri Botanical Garden do not address toxicity for this species at all (Missouri Botanical Garden's 'Problems' section lists only pests -- leaf spot, crown gall, dieback, spider mites, aphids -- with no toxicity mention), so there is no cross-source corroboration or conflict, just silence from three of the four sources.",
-        "soil_base — removed on audit: Sole citation is MOBOT's 'Suggested Use: Hedge' -- a landscape-design usage tag, not a statement about planting medium or location. It does not literally support the categorical value 'garden_bed', and certainly not the parenthetical 'not in containers' (nothing in the quote addresses containers at all). No other citation in the array is attached to this field. The value is plausible given the plant's general profile, but as documented it rests entirely on an inferential leap from a two-word tag, not on a citation that actually states it."
+        "soil_base — removed on audit: Sole citation is MOBOT's 'Suggested Use: Hedge' -- a landscape-design usage tag, not a statement about planting medium or location. It does not literally support the categorical value 'garden_bed', and certainly not the parenthetical 'not in containers' (nothing in the quote addresses containers at all). No other citation in the array is attached to this field. The value is plausible given the plant's general profile, but as documented it rests entirely on an inferential leap from a two-word tag, not on a citation that actually states it.",
+        "is_edible left null: none of the two reachable pages (NC State, RHS) address eating this plant at all; RHS's own pest/disease notes only mention birds eating flower buds, which is not an edibility statement.",
+        "attracts_pollinators left null: NC State's page has no Attracts/Wildlife field for this species (0 hits on 'Attracts', 'Wildlife', 'bee', 'butterfl', 'pollinat' patterns), and RHS's page likewise has 0 hits on 'pollinat', 'bee', 'butterfl', 'hummingbird', 'moth', 'insect' -- no structured attracts field or unconditional pollinator statement on either page.",
+        "RHS's own size figures (Max Height 1-1.5 metres, Max Spread 1-1.5 metres = roughly 39-59 in) were NOT used for the size fields because they conflict sharply with NC State's structured Dimensions block (8-10 ft height) for the same species and NC State's block is the more detailed, unambiguous structured source; NC State was used as the single size citation per the task's stem-citation rule.",
+        "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=291997&isprofile=0&pt=4 refused this machine (fetch status: error:ConnectError on repeated tries) -- not consulted, skipped per instructions.",
+        "https://hgic.clemson.edu/factsheet/forsythia/ refused this machine (fetch status: http-403 on repeated tries) -- not consulted, skipped per instructions."
       ],
       "citations": [
         {
@@ -1121,8 +1301,24 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/94712/forsythia-intermedia/details",
           "quote": "Moisture\nMoist but well-drained"
+        },
+        {
+          "claim": "mature_height_in 96-120 (NC State Height: 8 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Forsythia x intermedia",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "Height: 8 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-144 (NC State Width: 10 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Forsythia x intermedia",
+          "url": "https://plants.ces.ncsu.edu/plants/forsythia-x-intermedia/",
+          "quote": "Width: 10 ft. 0 in. - 12 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 144
     },
     {
       "common_name": "Common Fig",
@@ -1174,7 +1370,15 @@
         "fertilize_active_months, fertilize_interval_days: left null on genuinely divergent, context-specific schedules rather than picked. UMD gives a container schedule of 'once per month in May, June, and July'; Clemson gives a different in-ground schedule for larger plants ('early April, early June, and mid-July'); UF/IFAS gives yet another for young trees (three to five applications 'starting in late winter (February to March) and ending by the beginning of August'); and UGA gives a once-a-year spring schedule for mature bushes six years and older. These differ by plant age and by container vs. in-ground culture, and no single month list or interval represents the species generally, so neither field was populated.",
         "fertilize_strength: left null. No admissible source uses full/half/quarter-strength dilution language for this species; only fertilizer amount, analysis, and timing are given.",
         "scientific_name_accepted — removed on audit: The only citation tagged to this field (MOBOT: 'Type: Fruit Family: Moraceae Native Range: Western Asia, southeastern Europe') establishes nothing about accepted-name status or absence of a synonym — it's classification/origin data, not a synonymy check. The name_note's specific claims about what NC State's and RHS's pages do or don't show for synonyms have no citation in the array supporting them at all. I independently verified via direct fetch that NC State and RHS in fact list no species-level synonym for Ficus carica, so the value itself happens to be correct — but the record's own citations don't demonstrate that determination was made from cited evidence, which is a structural traceability failure (checks 1 and 4).",
-        "is_houseplant — removed on audit: Every citation for this field (NC State 'containers must be overwintered indoors,' MOBOT 'best grown in containers in full sun... Containers must be brought indoors in winter... overwintered in greenhouses, garages or basements,' UMD 'grown in containers or in-ground') describes an outdoor, full-sun woody plant that is only brought indoors as dormant winter storage in unheated garages/basements/greenhouses — not an actively-growing indoor plant. Verified via direct fetch that the word 'houseplant' does not appear anywhere in the UMD source. This is materially different from this same catalog's own precedent for legitimately-tagged cold-climate houseplants (b21-houseplant-gaps.json's Purple Shamrock/Oxalis triangularis, cited there as 'grown as houseplant,' 'grown year-round in a cool room indoors') and from the catalog's other Ficus entries (b2-figs-and-succulents.json's Fiddle Leaf Fig and Rubber Plant, true indoor foliage houseplants). Calling seasonal dormant cold-storage 'is_houseplant: true' overstates the cited evidence."
+        "is_houseplant — removed on audit: Every citation for this field (NC State 'containers must be overwintered indoors,' MOBOT 'best grown in containers in full sun... Containers must be brought indoors in winter... overwintered in greenhouses, garages or basements,' UMD 'grown in containers or in-ground') describes an outdoor, full-sun woody plant that is only brought indoors as dormant winter storage in unheated garages/basements/greenhouses — not an actively-growing indoor plant. Verified via direct fetch that the word 'houseplant' does not appear anywhere in the UMD source. This is materially different from this same catalog's own precedent for legitimately-tagged cold-climate houseplants (b21-houseplant-gaps.json's Purple Shamrock/Oxalis triangularis, cited there as 'grown as houseplant,' 'grown year-round in a cool room indoors') and from the catalog's other Ficus entries (b2-figs-and-succulents.json's Fiddle Leaf Fig and Rubber Plant, true indoor foliage houseplants). Calling seasonal dormant cold-storage 'is_houseplant: true' overstates the cited evidence.",
+        "attracts_pollinators left null: no reachable page states common fig attracts bees, butterflies, moths, or hummingbirds. NC State's structured 'Attracts' field lists only 'Songbirds' (birds eating fruit, not pollination). UGA Extension mentions Ficus carica's Smyrna-type pollination by a fig wasp, but frames it as a fruit-set mechanism the recommended Southeast varieties don't need (they set fruit without cross-pollination) -- not a statement that the plant attracts pollinators, so it does not support true.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (fetch status: error:ConnectError) -- could not check its Dimensions data.",
+        "ask.ifas.ufl.edu/mg214 refused this machine (fetch status: error:ReadError) -- could not check its content.",
+        "hgic.clemson.edu/factsheet/fig/ refused this machine (fetch status: http-403) -- could not check its content.",
+        "extension.umd.edu/resource/growing-figs-maryland gives no species-wide mature height/spread: it states only planting spacing ('Space plants at least 10 feet apart') and a named cultivar's container size ('Petite Negri' is a genetic dwarf that grows to 4-6 ft. in height) -- a cultivar figure per rule 3, so not used for the species fields.",
+        "rhs.org.uk lists Max Height and Max Spread as 2.5-4 metres (roughly 98-157 in), narrower than NC State's 10-30 ft (120-360 in) range used as the anchor citation here -- noted for awareness of source variance, not used as the primary size citation.",
+        "No reachable page states the fig fruit or any part of the plant is toxic or inedible; is_edible is set unconditionally true based on the fruit being the only part any source discusses eating.",
+        "is_edible removed on audit: Value true is itself supported (NC State Edibility: \"Fruits are highly edible fresh, cooked, used in preserves, or dried.\", Plant Type: Edible; RHS lists \"Fruit Edible\"), but rule F fails. The same NC State page names a toxic part in its structured fields -- \"Poison Part: Sap/Juice\", \"Poison Severity: Low\", \"Poison Symptoms: Phytophotodermatitis from the white, milky sap.\", \"Poison Toxic Principle: Furanocoumarins\", \"Causes Contact Dermatitis: Yes\", plus a banner reading \"This plant has low severity poison characteristics.\" -- and RHS states \"Humans/Pets: Harmful to skin with sunlight.\" while UMD says to \"Consider wearing gloves to avoid skin irritation from contact with the milky, latex plant sap.\" None of this appears in unknowns; worse, the unknowns entry affirmatively states the opposite (\"No reachable page states the fig fruit or any part of the plant is toxic or inedible\"), which is false against the anchor citation's own page. Null the field until the sap/latex phytophotodermatitis condition is recorded."
       ],
       "citations": [
         {
@@ -1308,8 +1512,24 @@
           "quote": "When temperatures in winter dip below 15°F, consider additional protection for outdoor plants to the extent possible (e.g., clear plastic sheets or frames).",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282762"
+        },
+        {
+          "claim": "mature_height_in 120-360 (NC State Height 10 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-carica/",
+          "quote": "Height: 10 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-360 (NC State Width 10 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-carica/",
+          "quote": "Width: 10 ft. 0 in. - 30 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 360
     }
   ],
   "audit_summary": [
@@ -1352,6 +1572,7 @@
     "Red Maple surfaced a genuine edge case this catalog's toxic_to_pets field hasn't hit before: NC State tags it explicitly non-toxic for both cats and dogs, but a documented, serious hazard to horses (Penn State: red maple leaf toxicosis). The audit judged that a flat toxic_to_pets=false would read as \"safe for pets\" while omitting a real hazard to a commonly kept companion/working animal, and nulled the boolean while keeping the full nuance in toxicity_detail -- a defensible, cautious call given the field's name, even though every other record in this catalog scopes toxic_to_pets to cats/dogs specifically.",
     "Camellia's soil_drainage catch is a nice example of the audit now enforcing its own precedent across the whole catalog, not just within one record: the same NC State three-tag combination ('Good Drainage, Moist, Occasionally Wet', missing 'Occasionally Dry') is correctly mapped to moisture_retentive on Jack-in-the-Pulpit in b22, but this record had mapped the identical tags to 'moderate' -- inconsistent with the catalog's own established convention, and caught by checking against it directly rather than judging the record in isolation.",
     "Fig's scientific_name_accepted and is_houseplant both landed null on careful, correct reasoning rather than data gaps: the accepted-name value is true but the citation supporting it doesn't actually establish taxonomic status (traceability failure, not a factual one), and is_houseplant was refused because every citation describes dormant winter cold-storage in an unheated garage or basement, not active indoor growing -- explicitly distinguished from this catalog's real houseplant precedents (Purple Shamrock in b21; Fiddle Leaf Fig and Rubber Plant, the catalog's other Ficus entries, in b2).",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Red Maple -> false. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Red Maple -> false. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

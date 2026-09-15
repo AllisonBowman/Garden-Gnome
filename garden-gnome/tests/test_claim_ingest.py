@@ -285,11 +285,17 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # field (0019); that jump was 474 records whose citations already named it,
     # written for the first time rather than newly researched.
     #
-    # 3594 -> 3629 is the size-backfill pilot: 35 fields (mature size, edibility
-    # and pollinator value) added to seven already-landed species, researched
-    # against the pages each record was already cited to. The other species in
-    # those batches are untouched -- a backfill appends, it never rewrites.
-    assert report.claims_written == 3629
+    # 3594 -> 3629 was the size-backfill pilot: 35 fields (mature size,
+    # edibility and pollinator value) added to seven already-landed species,
+    # researched against the pages each record was already cited to. The other
+    # species in those batches are untouched -- a backfill appends, it never
+    # rewrites.
+    #
+    # 3629 -> 3823 is wave 1 chunk 1: 194 fields over 39 woody species, the
+    # plants where a missing mature size does real damage. One more, English
+    # Yew, was held back -- its researcher returned a citation array of literal
+    # 'placeholder' strings, and the merge's loader gate refused it.
+    assert report.claims_written == 3823
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
