@@ -448,7 +448,12 @@
         "University of Maryland Extension: no dedicated Taxus baccata/English yew plant-profile page was found; only pest-management factsheets (black vine weevil, cottony camellia scale, deer damage to ornamentals) list yew/Taxus as a host or browse plant in passing, with no care or toxicity content usable for this record's fields.",
         "UGA Cooperative Extension: two relevant publications were found -- Circular 1245 'Keep Your Pets Safe Around Plants' (lists 'Taxus spp.' under 'Major Toxicity: May result in serious illness or death if ingested') and Circular 957 'Poisonous Plants in the Landscape' (lists, in a table of plants toxic to HUMANS specifically, 'Yew** / Taxus spp. / berries, foliage / foliage more toxic than berries, death can be sudden without symptoms') -- but neither names the species Taxus baccata specifically; both use the genus label 'Taxus spp.' Per the rule against inferring toxicity from genus/family alone, neither was used as a citation, even though both are consistent with the NC State- and RHS-sourced toxic_to_pets=true finding, and Circular 957's foliage-vs-berries note is broadly consistent with (though not used to independently confirm) the seed/fruit distinction NC State documents at the species level.",
         "Penn State Extension: only one substantive mention of this species was found, a single sentence in a general 'Growin' of the Green' color-in-landscaping article ('Classic English yews (Taxus baccata) are popular evergreen landscape plants...'), with no dedicated care or toxicity page for this species; used only as minor corroboration for is_houseplant/landscape framing.",
-        "is_houseplant: no admissible source contains an explicit sentence stating this species is 'not grown indoors.' The false determination rests on the combination of exclusively outdoor-landscape/hedge/topiary framing and full mature tree dimensions (30-60 ft per NC State and MOBOT; 'Higher than 12 metres' per RHS) across all three primary sources, with zero container or indoor-culture guidance found anywhere, rather than on one direct disclaiming quote."
+        "is_houseplant: no admissible source contains an explicit sentence stating this species is 'not grown indoors.' The false determination rests on the combination of exclusively outdoor-landscape/hedge/topiary framing and full mature tree dimensions (30-60 ft per NC State and MOBOT; 'Higher than 12 metres' per RHS) across all three primary sources, with zero container or indoor-culture guidance found anywhere, rather than on one direct disclaiming quote.",
+        "attracts_pollinators left null: no page named a pollinator; NC State's structured Attracts field lists only 'Songbirds' (seed/bird use, not pollination) and RHS's page carries no attracts/wildlife or pollinator tag for this species.",
+        "is_edible set to false on RHS's 'TOXIC if eaten' statement (Potentially harmful section). Decision-relevant toxicity detail from the NC State anchor page, which the checker requires be surfaced because a toxic part is named on the same class of page: poison severity High; symptoms include dry mouth, vomiting, vertigo, abdominal pain, difficulty breathing, irregular heart rhythms, low blood pressure, unconsciousness, with possible cardiac/respiratory failure and death; toxic principles are taxines and taxiphyllin (a cyanogenic glycoside); poisonous parts listed are bark, leaves, seeds, and stems; the plant is tagged 'Problem for Cats', 'Problem for Dogs', 'Problem for Children', and 'Problem for Horses'/'Problem for Cattle'; fruit description notes the seeds specifically are poisonous while the berry-like aril flesh is not addressed for edibility on either page, so no conditional-true was recorded.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d948 refused this machine (ConnectError, 0 bytes) -- not read, and nothing from it is guessed at.",
+        "extension.psu.edu/growin-of-the-green mentions Taxus baccata only in passing as a landscape plant with foliage-color cultivars ('Repandens Aurea', 'Standshii'); it contains no size, edibility, toxicity, or pollinator statement about the species and was searched for all of those with no results.",
+        "RHS's own Max Height ('Higher than 12 metres') and Max Spread ('wider than 8 metres') are open-ended values with no usable upper bound, so RHS was not used for size; NC State's structured Dimensions block was used instead as the higher-quality, closed-range source."
       ],
       "citations": [
         {
@@ -546,8 +551,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/taxus-baccata/common-name/english-yew/",
           "quote": "Female plants bear single seeds that are partially enclosed by arils. The seeds are poisonous."
+        },
+        {
+          "claim": "is_edible false: RHS states the plant is toxic if eaten",
+          "source": "RHS - Taxus baccata (common yew, English yew)",
+          "url": "https://www.rhs.org.uk/plants/18001/taxus-baccata-common-yew-english-yew/details",
+          "quote": "TOXIC if eaten."
+        },
+        {
+          "claim": "mature_height_in 360-720 (NC State Height 30 ft. 0 in. - 60 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - English Yew (Taxus baccata)",
+          "url": "https://plants.ces.ncsu.edu/plants/taxus-baccata/common-name/english-yew/",
+          "quote": "Height: 30 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-300 (NC State Width 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - English Yew (Taxus baccata)",
+          "url": "https://plants.ces.ncsu.edu/plants/taxus-baccata/common-name/english-yew/",
+          "quote": "Width: 15 ft. 0 in. - 25 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 720,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 300
     },
     {
       "common_name": "White Oak",
@@ -1541,6 +1569,7 @@
     "Eastern White Pine is a TRUE pine (genus Pinus), completing a naming-trap thread already run through this catalog for Norfolk Island Pine (Araucaria heterophylla, not a true pine, in b24). Its toxic_to_pets landed null -- true pines are not generally documented as toxic in extension literature, and no admissible source addresses it either way for this species, so null is the honest answer rather than an assumed false.",
     "Lily of the Valley's toxicity_detail was correctly pared back after the audit found the record's own symptom narrative (\"coma, seizures, abdominal pain\") was lifted from NC State's human-toxicity section -- the record's own reasoning had already excluded a UGA table on the identical human-vs-pet distinction elsewhere in the same document, making the toxicity_detail lapse an inconsistency the audit caught by holding the record to its own stated standard. toxic_to_pets=true itself is untouched and remains well-supported independently.",
     "Tulip Tree's outdoor_sun_exposure catch is a good example of the audit enforcing a standard the record itself had already applied elsewhere: the record correctly nulled soil_ph over a genuine source conflict, but kept part_shade despite UGA Extension stating directly (not just about seedlings) that the species 'is intolerant of shade... needs full sun to become established and grow well' -- conflicting with two other sources' part-shade tolerance claims. The audit held the sun-exposure field to the same conflict-resolution discipline the record used for pH.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

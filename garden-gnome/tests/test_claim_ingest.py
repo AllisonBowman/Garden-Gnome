@@ -291,11 +291,18 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # species in those batches are untouched -- a backfill appends, it never
     # rewrites.
     #
-    # 3629 -> 3823 is wave 1 chunk 1: 194 fields over 39 woody species, the
+    # 3629 -> 3823 was wave 1 chunk 1: 194 fields over 39 woody species, the
     # plants where a missing mature size does real damage. One more, English
     # Yew, was held back -- its researcher returned a citation array of literal
     # 'placeholder' strings, and the merge's loader gate refused it.
-    assert report.claims_written == 3823
+    #
+    # 3823 -> 4043 is chunk 2: 220 fields over 40 species, natives and the
+    # English Yew retry. Every species came back with a size and the audit
+    # refuted nothing, against 38/40 and eleven refutations in chunk 1 -- the
+    # difference is three prompt fixes chunk 1 paid for (RHS labels its size
+    # fields Max Height/Max Spread in metres, a poison-block sweep is a
+    # precondition of setting is_edible, and a citation may never be a stub).
+    assert report.claims_written == 4043
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

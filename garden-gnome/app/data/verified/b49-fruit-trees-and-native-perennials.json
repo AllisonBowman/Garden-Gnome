@@ -93,6 +93,30 @@
           "quote": "A split fertilization plan with 3 applications is recommended, with 50% applied in late dormancy (March) and 25% each in June and September.",
           "source": "UF/IFAS EDIS HS1389 — Japanese Persimmon Cultural Practices in Florida",
           "url": "https://ask.ifas.ufl.edu/publication/hs1389"
+        },
+        {
+          "claim": "is_edible true (fruit and leaves used for food; astringent-variety fruit must be fully ripe/soft before eating -- see unknowns)",
+          "source": "NC State Extension Plant Toolbox - Diospyros kaki",
+          "url": "https://plants.ces.ncsu.edu/plants/diospyros-kaki/",
+          "quote": "Fruits can be eaten raw or made into various dishes. Leaves can be used to make teas."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field)",
+          "source": "NC State Extension Plant Toolbox - Diospyros kaki",
+          "url": "https://plants.ces.ncsu.edu/plants/diospyros-kaki/",
+          "quote": "Attracts: \n Pollinators"
+        },
+        {
+          "claim": "mature_height_in 240-360 (NC State Height 20 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Diospyros kaki",
+          "url": "https://plants.ces.ncsu.edu/plants/diospyros-kaki/",
+          "quote": "Height: 20 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-300 (NC State Width 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Diospyros kaki",
+          "url": "https://plants.ces.ncsu.edu/plants/diospyros-kaki/",
+          "quote": "Width: 15 ft. 0 in. - 25 ft. 0 in."
         }
       ],
       "common_name": "Japanese Persimmon",
@@ -134,14 +158,27 @@
         "water_regime was left null: the only structured watering signal found was Missouri Botanical Garden's coarse 'Water: Medium' tag, which does not map confidently to one of the four enum cadence values (keep_moist / keep_barely_moist / dry_surface_between / dry_thoroughly_between); no admissible source gives an explicit watering cadence statement for this species.",
         "fertilize_interval_days, water_growing_days_est, water_dormant_days_est, water_dry_down_target, and water_check_depth_cm were left null: UF/IFAS frames fertilizing by calendar month (March/June/September), not a day interval, and frames irrigation frequency ('2 to 4 times per week') only for the newly-planted/establishment period rather than as an ongoing steady-state cadence for this in-ground tree — per the rules, day-intervals should not be derived from calendar-based or establishment-only statements.",
         "light_fc_min, light_fc_good, direct_sun_hours_max, day_f_min/max, night_f_min/max, and all humidity fields were left null: no admissible source gives foot-candle light levels, an hours-of-direct-sun figure from species-specific prose, indoor-style day/night temperature targets, or ambient humidity requirements for this outdoor orchard/landscape tree. (NC State's 'Full sun (6 or more hours of direct sunlight a day)' is that site's generic light-category legend, not species-specific prose, so it was used only to support the full_sun exposure value, not direct_sun_hours_max, per the rules.)",
-        "fertilize_strength was left null: UF/IFAS gives fertilizer amounts by weight/NPK ratio and application timing, not a dilution/strength fraction (full/half/quarter)."
+        "fertilize_strength was left null: UF/IFAS gives fertilizer amounts by weight/NPK ratio and application timing, not a dilution/strength fraction (full/half/quarter).",
+        "Searched the NC State Diospyros kaki page for \"Poison\", \"Toxic\", and \"Problem for\" -- 0 hits each; no toxic part, severity, principle, preparation requirement, or pets warning is named on this page.",
+        "is_edible is TRUE and conditional: the NC State page distinguishes fruit handling by variety -- \"Fruit from these non-astringent varieties can be sliced like a tomato and eaten raw or they can be used in a variety of baked goods,\" implying astringent-type fruit requires full ripening/softening before it is palatable (astringent while unripe). No poisonous part or toxicity is stated anywhere on the page.",
+        "The UF/IFAS page (ask.ifas.ufl.edu/publication/hs1389) fetched successfully (not one of the machine-refusing hosts) and corroborates the astringent/nonastringent distinction and pollination (paired-variety) practice, but was not used as the primary citation source since NC State's Diospyros kaki page already carries structured, on-topic values for all six fields.",
+        "Diospyros virginiana (a distinct species, American Persimmon) has its own NC State Plant Toolbox page with its own Dimensions block (Height 30-80 ft, Width 20-35 ft), but this is a different species from Diospyros kaki and was not used for this record's size fields.",
+        "RHS lists Max Height 8-12 metres and Max Spread 4-8 metres for Diospyros kaki, but NC State's own species-specific Dimensions block was used instead as it is the designated anchor/primary source and gives a narrower, directly-stated range in the target units' source form (feet/inches).",
+        "No page among the four searched addresses hummingbirds, moths, or butterflies specifically for pollination of this species; attracts_pollinators is supported only by NC State's structured \"Attracts: Pollinators\" field.",
+        "All four assigned pages returned an ok fetch status via qc.py; none refused this machine."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 240,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 300
     },
     {
       "chill_damage_f": null,
@@ -247,6 +284,24 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/morus-alba/",
           "quote": "in late fall or winter to avoid the bleeding of milky sap"
+        },
+        {
+          "claim": "mature_height_in 360-720 (NC State Height: 30 ft. 0 in. - 60 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/morus-alba/",
+          "quote": "Height: 30 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 360-600 (NC State Width: 30 ft. 0 in. - 50 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/morus-alba/",
+          "quote": "Width: 30 ft. 0 in. - 50 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: ripe fruit is eaten as food)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/morus-alba/",
+          "quote": "Ripe fruits are eaten raw or made into pies, jellies, and jams.  Dried fruits can be added to bread, cookies, or puddings like raisins."
         }
       ],
       "common_name": "White Mulberry",
@@ -286,14 +341,23 @@
         "No admissible source (NC State, RHS, Missouri Botanical Garden, Clemson HGIC) provided fertilizer guidance, footcandle light data, indoor temperature/humidity ranges, or chill-damage onset temperature for this species; all such fields are left null.",
         "EDIS/Ask IFAS's white mulberry page (ST408, 'Morus alba Fruitless Cultivars: White Mulberry') returned HTTP 410 Gone at both edis.ifas.ufl.edu/st408 and its ask.ifas.ufl.edu redirect at the time of research, so no content from that admissible source could be verified or cited.",
         "RHS's page for Morus alba carries no 'Potentially harmful' or 'Pets:' toxicity line at all, so RHS contributes no toxicity signal one way or the other.",
-        "toxicity_detail — removed on audit: The value is trimmed — it drops two co-listed safety flags that sit on the same NC State page. (1) NC State's \"Problems:\" list reads \"Messy / Poisonous to Humans / Problem for Children / Weedy\". The record reproduces the \"Poisonous to Humans\" scope but silently omits \"Problem for Children\", which is a child-safety flag and the most decision-relevant co-listed tag for a plant-care app. (2) NC State's \"Whole Plant Traits / Plant Type\" reads \"Edible / Poisonous / Tree / Weed\" — the plant carries an explicit \"Poisonous\" plant-type trait alongside \"Edible\", which the field also omits. Everything else in the field checks out verbatim against the live page and should be kept: Poison Severity \"Low\"; the symptom text is complete including the third sentence — the page's Poison Symptoms field reads in full \"CAUSES ONLY LOW TOXICITY IF EATEN. Hallucinations and stomach upset from unripe berries and milky sap. Both the leaves and young shoots contain a white latex that is mildly toxic.\"; Poison Toxic Principle \"Unidentified\"; Causes Contact Dermatitis \"No\"; Poison Part \"Fruits / Leaves / Sap/Juice / Stems\"; the human-scoping of the Poison block; the separate pet tags; and the no-contradiction statement (verified against RHS and MoBot). Repair: append to the field — \"NC State also lists this species under Problems as 'Problem for Children' alongside 'Poisonous to Humans', and its Whole Plant Traits give Plant Type as 'Edible, Poisonous, Tree, Weed'. NC State's prose adds a handling note: 'Plants exude a milky sap from young twigs when broken,' and it advises pruning 'in late fall or winter to avoid the bleeding of milky sap.'\""
+        "toxicity_detail — removed on audit: The value is trimmed — it drops two co-listed safety flags that sit on the same NC State page. (1) NC State's \"Problems:\" list reads \"Messy / Poisonous to Humans / Problem for Children / Weedy\". The record reproduces the \"Poisonous to Humans\" scope but silently omits \"Problem for Children\", which is a child-safety flag and the most decision-relevant co-listed tag for a plant-care app. (2) NC State's \"Whole Plant Traits / Plant Type\" reads \"Edible / Poisonous / Tree / Weed\" — the plant carries an explicit \"Poisonous\" plant-type trait alongside \"Edible\", which the field also omits. Everything else in the field checks out verbatim against the live page and should be kept: Poison Severity \"Low\"; the symptom text is complete including the third sentence — the page's Poison Symptoms field reads in full \"CAUSES ONLY LOW TOXICITY IF EATEN. Hallucinations and stomach upset from unripe berries and milky sap. Both the leaves and young shoots contain a white latex that is mildly toxic.\"; Poison Toxic Principle \"Unidentified\"; Causes Contact Dermatitis \"No\"; Poison Part \"Fruits / Leaves / Sap/Juice / Stems\"; the human-scoping of the Poison block; the separate pet tags; and the no-contradiction statement (verified against RHS and MoBot). Repair: append to the field — \"NC State also lists this species under Problems as 'Problem for Children' alongside 'Poisonous to Humans', and its Whole Plant Traits give Plant Type as 'Edible, Poisonous, Tree, Weed'. NC State's prose adds a handling note: 'Plants exude a milky sap from young twigs when broken,' and it advises pruning 'in late fall or winter to avoid the bleeding of milky sap.'\"",
+        "is_edible conditional: only ripe fruit is the edible part -- NC State's Edibility field says 'Ripe fruits are eaten raw or made into pies, jellies, and jams. Dried fruits can be added to bread, cookies, or puddings like raisins.' The same page lists the species as Poisonous (Poison Severity: Low) with Poison Symptoms 'CAUSES ONLY LOW TOXICITY IF EATEN. Hallucinations and stomach upset from unripe berries and milky sap. Both the leaves and young shoots contain a white latex that is mildly toxic.' Poison Toxic Principle: Unidentified. Causes Contact Dermatitis: No. Poison Part: Fruits, Leaves, Sap/Juice, Stems. Problems list also includes 'Poisonous to Humans' and 'Problem for Children.' So: ripe fruit is eaten as food, but unripe fruit and the plant's milky sap/leaves/stems carry low-severity toxicity (hallucinations, stomach upset).",
+        "attracts_pollinators left null: NC State's structured 'Attracts' field lists only 'Songbirds' (bird seed/fruit consumption, not pollination) and does not mention bees, butterflies, moths, or hummingbirds; searched RHS for both 'pollinator' (0 hits) and no unconditional pollinator statement was found on either page. plantfinder.mobot.org was not checked for this either -- see below.",
+        "mature_height_in / mature_spread_in taken from NC State's structured Dimensions block (the species-specific anchor page), not RHS: NC State gives Height: 30 ft. 0 in. - 60 ft. 0 in. (360-720 in) and Width: 30 ft. 0 in. - 50 ft. 0 in. (360-600 in). RHS's Max Height (8-12 metres = 314.9-472.4 in) and Max Spread ('wider than 8 metres', open-ended) were checked but not used since the NC State species page is the designated anchor and its figures are already a full range.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d439 refused this machine (fetch status: error:ConnectError) -- not guessed at, skipped per instructions."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 720,
+      "mature_spread_in_min": 360,
+      "mature_spread_in_max": 600
     },
     {
       "chill_damage_f": 40,
@@ -488,6 +552,30 @@
           "quote": "do not allow to dry out in summer",
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/11181/monarda-didyma/details"
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Monarda didyma",
+          "url": "https://plants.ces.ncsu.edu/plants/monarda-didyma/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Monarda didyma",
+          "url": "https://plants.ces.ncsu.edu/plants/monarda-didyma/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true — flowers are edible",
+          "source": "NC State Extension Gardener Plant Toolbox — Monarda didyma",
+          "url": "https://plants.ces.ncsu.edu/plants/monarda-didyma/",
+          "quote": "Used in teas, flavor jellies, soups, stews, and fruit salads; edible flowers."
+        },
+        {
+          "claim": "attracts_pollinators true — attracts bumblebees, butterflies, and hummingbirds",
+          "source": "NC State Extension Gardener Plant Toolbox — Monarda didyma",
+          "url": "https://plants.ces.ncsu.edu/plants/monarda-didyma/",
+          "quote": "Attracts bumblebees, swallowtail butterflies, and Ruby-throated hummingbirds. It is a larval host to the hermit sphinx, orange mint moth, and the raspberry pyrausta."
         }
       ],
       "common_name": "Bee Balm",
@@ -526,14 +614,23 @@
         "soil_drainage left null: Missouri Botanical Garden's own culture text is internally mixed, calling for 'medium to wet, moisture-retentive soils' in one clause and 'well-draining conditions' in the next, while NC State (Good Drainage/Moist/Occasionally Wet tags) and RHS ('moist but well-drained') both lean toward a well-drained reading -- given the disagreement, no enum value was set.",
         "direct_sun_hours_max left null: NC State's only numeric hour figure ('6 or more hours of direct sunlight a day') is the site-wide Light-category legend text embedded in the structured Light field, not species-specific prose, so per the sourcing rules it was not used.",
         "Clemson HGIC states Monarda 'grow[s] best in half to all-day sunlight,' which loosely suggests part-sun tolerance, but the phrasing does not map cleanly onto the part_sun enum term, so part_sun was not added to outdoor_sun_exposure; only full_sun and part_shade were included, both backed by unconditional statements/structured fields.",
-        "day_f_min/max, night_f_min/max, chill_damage_f, cool_rest_note, humidity_need/pct, light_fc_min/good, fertilize_interval_days/active_months/strength, water_dry_down_target, water_check_depth_cm, and water_growing/dormant_days_est were all left null: Monarda didyma is a hardy outdoor garden perennial (USDA zones 4-9 per NC State and Missouri Botanical Garden) and none of the admissible extension/garden sources frame its care in these houseplant-style temperature, humidity, footcandle, fertilizer-schedule, or day-interval terms."
+        "day_f_min/max, night_f_min/max, chill_damage_f, cool_rest_note, humidity_need/pct, light_fc_min/good, fertilize_interval_days/active_months/strength, water_dry_down_target, water_check_depth_cm, and water_growing/dormant_days_est were all left null: Monarda didyma is a hardy outdoor garden perennial (USDA zones 4-9 per NC State and Missouri Botanical Garden) and none of the admissible extension/garden sources frame its care in these houseplant-style temperature, humidity, footcandle, fertilizer-schedule, or day-interval terms.",
+        "No toxicity, poison, or 'problem for' warning was found on the NC State anchor page — searches for 'Poison', 'Toxic', and 'Problem for' returned no relevant hits (the two 'Toxic' hits were 'black walnut toxicity tolerant', a soil/growing-condition tag unrelated to human/pet toxicity of the plant itself), so is_edible is recorded as unconditionally true rather than conditional.",
+        "Edibility per NC State is specifically for the flowers (and the plant is used in teas, jellies, soups, stews, fruit salads) — not a blanket statement about the whole plant.",
+        "RHS and Missouri Botanical Garden (plantfinder.mobot.org) pages were not consulted for these six fields because the NC State Plant Toolbox anchor page fully supplied structured Height/Width dimensions plus edibility and Attracts fields, so no gap required falling back to them."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -639,6 +736,24 @@
           "source": "RHS Plants",
           "url": "https://www.rhs.org.uk/plants/74364/solidago-canadensis/details",
           "quote": "pH Acid or Alkaline or Neutral"
+        },
+        {
+          "claim": "mature_height_in 24-72 (NC State Height: 2 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Solidago canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/solidago-canadensis/",
+          "quote": "Height: 2 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-72 (NC State Width: 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Solidago canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/solidago-canadensis/",
+          "quote": "Width: 4 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: bees and butterflies are attracted to the flowers, and the structured Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Plant Toolbox — Solidago canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/solidago-canadensis/",
+          "quote": "Bees and butterflies are attracted to the flowers."
         }
       ],
       "common_name": "Canada Goldenrod",
@@ -683,14 +798,24 @@
         "soil_ph_max — removed on audit: The band-reading is legitimate but the ceiling is contradicted by a source the record already uses, undisclosed. On the mechanics the record is right and I confirm it: NC State's Soil pH field reads exactly \"Acid (<6.0) Neutral (6.0-8.0)\", the 8.0 comes off the closed top of a closed band (not off an open-ended \"Alkaline (>8.0)\"), and I grepped the whole page for \"Alkaline\" — zero hits, so the record's statement that no Alkaline tag is present is accurate. The problem is elsewhere. RHS's structured Growing Conditions block for this exact species reads \"pH Acid or Alkaline or Neutral\" — RHS explicitly says alkaline soils are acceptable, which directly contradicts a hard ceiling of 8.0. The record cites RHS twice for other fields and its unknowns bullet argues at length about why 8.0 is safe to take, yet never mentions that a second admissible source on the same species rejects the ceiling. That is undisclosed source disagreement on a numeric field. Repair: either set soil_ph_max to null, or keep 8.0 and add a citation plus disclosure — source RHS Plants, url https://www.rhs.org.uk/plants/74364/solidago-canadensis/details, quote \"pH Acid or Alkaline or Neutral\", with an unknowns line reading roughly: \"soil_ph_max: taken from the closed top of NC State's Neutral (6.0-8.0) band; NC State carries no Alkaline tag for this species, but RHS's own pH field reads 'Acid or Alkaline or Neutral', so 8.0 is NC State's ceiling and not a cross-source consensus.\" Nulling is the safer landing.",
         "water_regime — removed on audit: The value may well survive, but one citation misrepresents its source and a cross-source contradiction is undisclosed. The MBG claim label reads \"Missouri Botanical Garden's structured Water field rates this species Medium, and its culture notes describe moist growing conditions.\" The second half is false. MBG's Culture paragraph says the opposite about growing conditions: \"Easily grown in average, slightly acidic, moderately rich, well-drained soils in full sun.\" The only place \"moist\" appears on the MBG page is Noteworthy Characteristics, describing wild habitat, not cultivation: \"It is mostly found growing in moist conditions on abandoned farmlands, pastures, fields, thickets, prairies, waste areas and along roadsides.\" Habitat prose is not culture guidance and must not be relabeled as such. Separately, \"Water: Medium\" is MBG's middle rating — it is neutral-to-contradictory for keep_moist, not supporting evidence, and the record leans on it twice (in the citation and again in the unknowns bullet, which asserts keep_moist \"was supported by MBG's structured 'Water: Medium' field\"). What genuinely supports keep_moist is NC State alone: \"It prefers a soil with some clay and moist but not wet conditions in full sun.\" — verbatim, species-specific, and a real moisture preference. Repair: (1) rewrite the MBG claim label to \"water_regime: Missouri Botanical Garden's structured Water field rates this species Medium\" and stop there, or drop the MBG citation from this field entirely; (2) add an unknowns line disclosing that MBG rates Water: Medium and prescribes well-drained soil while NC State prescribes moist-but-not-wet, and that keep_moist follows NC State. If the catalog's middle water token is preferred over keep_moist, that is a defensible alternative — but as written the field asserts agreement between two sources that do not agree.",
         "soil_ph_max left null: the 8.0 would come from the closed top of NC State's Neutral (6.0-8.0) band (no Alkaline tag on that page), but RHS's own pH field for this species reads 'Acid or Alkaline or Neutral', so 8.0 is one source's ceiling, not a consensus.",
-        "water_regime keep_moist follows NC State's species-specific 'moist but not wet conditions'; Missouri Botanical Garden rates the species 'Water: Medium' and prescribes well-drained soil (its 'moist conditions' sentence describes wild habitat, not cultivation) -- disclosed as a moderate counterpoint."
+        "water_regime keep_moist follows NC State's species-specific 'moist but not wet conditions'; Missouri Botanical Garden rates the species 'Water: Medium' and prescribes well-drained soil (its 'moist conditions' sentence describes wild habitat, not cultivation) -- disclosed as a moderate counterpoint.",
+        "is_edible: none of the four pages (NC State solidago-canadensis, NC State solidago-altissima, RHS solidago-canadensis) contains any 'Edible' hit, nor any statement that the plant or a part of it is eaten or used for food; left null per rule 6 (no record = null, not false).",
+        "Searched the anchor NC State canadensis page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: all returned 0 hits. Same zero-hit result on the NC State altissima page for 'Poison'/'Toxic'/'Edible'. No toxicity language found on either page, so there is nothing to disclose in unknowns on that front, and is_edible stays null regardless.",
+        "RHS (https://www.rhs.org.uk/plants/74364/solidago-canadensis/details) reports Max Height 1.5-2.5 metres (59.1-98.4 in) and Max Spread 1-1.5 metres (39.4-59.1 in) for the same species Solidago canadensis -- a different range than NC State's 24-72 in height / 48-72 in spread. Per the instructions, NC State's Plant Toolbox page for the exact species is the anchor and RHS is only a fallback when no NC State species page exists; since plants.ces.ncsu.edu/plants/solidago-canadensis/ does exist, its Dimensions block was used for the size fields and the RHS figures were not merged in.",
+        "plants.ces.ncsu.edu/plants/solidago-altissima/ carries no 'Dimensions', 'Height:', or numeric size block at all (searched both wordings, 0 hits for Height:/Dimensions); it is also a different species (Solidago altissima, not Solidago canadensis) so its content was not used for size or as the primary pollinator citation, only cross-checked.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277473 refused this machine (fetch status: error:ConnectError, 0 bytes) -- could not be read at all, so nothing from it is recorded and no guess was made about its content."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 72
     },
     {
       "chill_damage_f": null,
@@ -778,6 +903,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b540",
           "quote": "Prefers moist, rich soils."
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Symphyotrichum novae-angliae",
+          "url": "https://plants.ces.ncsu.edu/plants/symphyotrichum-novae-angliae/",
+          "quote": "Dimensions: ⏎                 Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Width 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Symphyotrichum novae-angliae",
+          "url": "https://plants.ces.ncsu.edu/plants/symphyotrichum-novae-angliae/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators is true (NC State structured Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Symphyotrichum novae-angliae",
+          "url": "https://plants.ces.ncsu.edu/plants/symphyotrichum-novae-angliae/",
+          "quote": "Attracts: ⏎                 ⏎                     ⏎                          Butterflies ⏎                     ⏎                          Pollinators"
         }
       ],
       "common_name": "New England Aster",
@@ -819,14 +962,23 @@
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: this is an in-ground garden perennial and no source frames watering in day-interval or check-depth terms, so per the schema rules these were left null.",
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: no admissible source (NC State, MOBOT) mentions fertilizing this species at all.",
         "HGIC (Clemson), Penn State Extension, UMD Extension, EDIS/Ask IFAS, and UGA CAES fieldreport were searched but no dedicated, admissible-domain page specifically for Symphyotrichum novae-angliae (as opposed to passing mentions, PDFs, or non-admissible domains like extension.umass.edu or news.maryland.gov) was found, so those domains contributed no citations for this record.",
-        "RHS (rhs.org.uk) carries only cultivar pages for this species (e.g. 'Barr's Purple', 'Purple Dome') with 'Name Status: Unresolved' at the cultivar level; no straight-species RHS page with a 'Name Status Correct' binomial was found, so RHS was not used as a citation source for this record to avoid bleed from a specific cultivar's growing conditions onto the species."
+        "RHS (rhs.org.uk) carries only cultivar pages for this species (e.g. 'Barr's Purple', 'Purple Dome') with 'Name Status: Unresolved' at the cultivar level; no straight-species RHS page with a 'Name Status Correct' binomial was found, so RHS was not used as a citation source for this record to avoid bleed from a specific cultivar's growing conditions onto the species.",
+        "is_edible left null: neither the NC State page nor the RHS/mobot page (unreachable) addresses eating the plant or any part of it -- no toxicity, poison, or food-use language appears on the NC State page (searched 'Edible', 'Poison', 'Toxic', 'Problem for' -- 0 hits each).",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b540 refused the fetch (ConnectError, 0 bytes) -- skipped per instructions, not guessed at.",
+        "Size figures (height 36-72 in, spread 12-36 in) come from NC State's structured Dimensions block for the species page (not a cultivar, not a genus page) -- this is the anchor source per the task rules.",
+        "attracts_pollinators=true is supported by NC State's structured 'Attracts' field (Butterflies, Pollinators, Predatory Insects, Small Mammals, Songbirds, Specialized Bees) and its 'Play Value' field (Attracts Pollinators); this is an unconditional structured field, not just seed-eating by birds."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     }
   ],
   "audit_summary": [
@@ -857,6 +1009,7 @@
   ],
   "normalizations": [
     "2026-09-02: thirty-first batch (overnight throttle; 1.29M subagent tokens) -- Japanese Persimmon (companion to American Persimmon; no genus bleed, and a model chill_damage_f: UF/IFAS's stated bud-break damage onset of 27°F for a 1-hour duration, not a zone or survival figure), White Mulberry, Mandarin Orange (third Citrus companion), Bee Balm, Canada Goldenrod, and New England Aster. land_check.py and covered.py ran clean (covered.py had already caught four would-be duplicates at selection: Corn Plant, Purple Shamrock, Butterfly Weed, Blazing Star); verify_quotes.py 62/63 reachable quotes, the one miss a benign RHS 'other common names' list the page renders as title-plus-list. Repairs, each from the auditor's live-verified text: White Mulberry's toxicity_detail restored complete with NC State's co-listed 'Problem for Children' tag, its 'Poisonous' plant-type trait beside 'Edible', and the milky-sap handling and pruning-timing notes the record had dropped; Mandarin's toxicity_detail reworded to RHS's exact text (the record had added a 'photodermatitis' label and a 'fruit that is affected' scope RHS never states) and its outdoor_sun_exposure narrowed to full_sun (MOBOT's 'to light shade' is followed by 'Best performance occurs in full sun' and both MOBOT records and RHS give full sun only); Canada Goldenrod's name_note now discloses that two of three sources (MBG, RHS) lead with 'Canadian goldenrod' and that NC State flags confusion with S. altissima, its soil_ph_max was left null because RHS's pH field admits alkaline soils against NC State's closed 8.0 band, and its water_regime keeps keep_moist on NC State's 'moist but not wet' with MOBOT's 'Water: Medium' disclosed (the record had mislabeled MOBOT's wild-habitat 'moist conditions' sentence as culture guidance). toxic_to_pets: White Mulberry false on explicit NC State non-toxic tags; the other five null with no cat/dog-scoped source.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Mandarin orange -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Mandarin orange -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

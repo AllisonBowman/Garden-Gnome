@@ -555,6 +555,30 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280280&isprofile=0&letter=G",
           "quote": "Suggested Use: Street Tree"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: pulp inside the seed pod is edible, raw or cooked, but mostly consumed by livestock and wildlife -- condition noted in unknowns)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Gleditsia triacanthos",
+          "url": "https://plants.ces.ncsu.edu/plants/gleditsia-triacanthos/",
+          "quote": "The pulp inside the seed pod is edible, raw or cooked, but mostly consumed by livestock and wildlife."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Bees, Butterflies, Moths)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Gleditsia triacanthos",
+          "url": "https://plants.ces.ncsu.edu/plants/gleditsia-triacanthos/",
+          "quote": "Attracts: ⏎ ⏎ ⏎ Bees ⏎ ⏎ Butterflies ⏎ ⏎ Moths ⏎ ⏎ Small Mammals"
+        },
+        {
+          "claim": "mature_height_in 720-960 (NC State Height 60 ft. 0 in. - 80 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Gleditsia triacanthos",
+          "url": "https://plants.ces.ncsu.edu/plants/gleditsia-triacanthos/",
+          "quote": "Dimensions: ⏎ Height: 60 ft. 0 in. - 80 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 720-960 (NC State Width 60 ft. 0 in. - 80 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Gleditsia triacanthos",
+          "url": "https://plants.ces.ncsu.edu/plants/gleditsia-triacanthos/",
+          "quote": "Width: 60 ft. 0 in. - 80 ft. 0 in."
         }
       ],
       "common_name": "Honey Locust",
@@ -596,14 +620,26 @@
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: no admissible species-specific source (as opposed to an inadmissible genus-level production/orchard guide) gives a fertilizing schedule or dilution strength for Honey Locust.",
         "toxicity_detail is left null: NC State's Plant Type and Problems tag lists do not include 'Poisonous' or 'Poisonous to Humans,' so there is no structured Poison block (no severity, symptoms, or poison-part list) to capture; the only toxicity evidence found is the '#non-toxic for cats#non-toxic for horses#non-toxic for dogs' tag set, used only to support toxic_to_pets=false.",
         "chill_damage_f and cool_rest_note are left null: no admissible source states a numeric damage-onset temperature for this species; only regional hardiness-zone ranges are given, which the rules explicitly say do not substitute for an onset figure.",
-        "soil_base is set to garden_bed by inference, since every admissible source treats Honey Locust strictly as an in-ground landscape/street/native-garden tree and never as a potted or specialty-substrate plant; no source uses the literal term 'soil_base.'"
+        "soil_base is set to garden_bed by inference, since every admissible source treats Honey Locust strictly as an in-ground landscape/street/native-garden tree and never as a potted or specialty-substrate plant; no source uses the literal term 'soil_base.'",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) -- skipped, no content read or guessed.",
+        "RHS gives Max Height 'Higher than 12 metres' and Max Spread 'wider than 8 metres' -- both open-ended (no upper bound), so no usable size figures came from RHS; NC State's structured Dimensions block (Height: 60 ft. 0 in. - 80 ft. 0 in.; Width: 60 ft. 0 in. - 80 ft. 0 in.) was used instead as the anchor source.",
+        "RHS page was searched for 'Attracts', 'Edible', and 'pollinator' -- zero hits for all three, so RHS contributes nothing to attracts_pollinators or is_edible.",
+        "is_edible is TRUE but conditional: NC State's Edibility field states 'The pulp inside the seed pod is edible, raw or cooked, but mostly consumed by livestock and wildlife' -- i.e. only the pod pulp is the edible part, it can be eaten raw or cooked, and human consumption is limited since livestock and wildlife are the primary consumers.",
+        "Anchor page (NC State) was searched for 'Poison', 'Toxic', 'Problem for', 'caution', 'warning', 'safe', and 'livestock' before setting is_edible. 'Poison' and 'Problem for' returned zero hits. 'Toxic' returned 8 hits, all of which were tag labels reading 'non-toxic for cats', 'non-toxic for horses', and 'non-toxic for dogs' -- no toxic part, severity, toxic principle, or preparation requirement was named anywhere on the page.",
+        "attracts_pollinators is TRUE per NC State's structured 'Attracts:' field, which lists Bees, Butterflies, Moths, and Small Mammals; bees and butterflies/moths are pollinators, so this counts as an unconditional pollinator statement."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 720,
+      "mature_height_in_max": 960,
+      "mature_spread_in_min": 720,
+      "mature_spread_in_max": 960
     },
     {
       "chill_damage_f": null,
@@ -941,6 +977,30 @@
           "source": "NC State Extension Plant Toolbox - Prunus serotina",
           "url": "https://plants.ces.ncsu.edu/plants/prunus-serotina/",
           "quote": "Edible"
+        },
+        {
+          "claim": "mature_height_in 720-960 (NC State Height 60 ft. 0 in. - 80 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Prunus serotina",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-serotina/",
+          "quote": "Height: 60 ft. 0 in. - 80 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 360-720 (NC State Width 30 ft. 0 in. - 60 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Prunus serotina",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-serotina/",
+          "quote": "Width: 30 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (fruits used to make jellies and jams, per NC State)",
+          "source": "NC State Extension Gardener Plant Toolbox — Prunus serotina",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-serotina/",
+          "quote": "Fruits are bitter but can be used to make jellies and jams."
+        },
+        {
+          "claim": "attracts_pollinators true (flowers provide nectar for pollinators, per NC State)",
+          "source": "NC State Extension Gardener Plant Toolbox — Prunus serotina",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-serotina/",
+          "quote": "small, white flowers mature and provide nectar for pollinators."
         }
       ],
       "common_name": "Black Cherry",
@@ -981,14 +1041,24 @@
         "fertilize_interval_days, fertilize_active_months, fertilize_strength left null: no admissible species-specific fertilizing schedule was found (this is a native forest tree, not a container/houseplant subject).",
         "toxic_to_pets is scoped strictly to NC State's Problem for Cats and Problem for Dogs tags; the co-listed Problem for Horses (livestock) tag was excluded from that determination per the cat/dog scoping rule.",
         "Research was confirmed species-specific: NC State's URL slug and page title both name Prunus serotina; MoBot's page title reads 'Prunus serotina  - Plant Finder' with taxonid 286398 (Black Cherry, distinct from other Prunus species pages such as americana/serrula); RHS's URL slug (/plants/14023/prunus-serotina-american-cherry-black-cherry/details) contains the species epithet and its page title reads 'Prunus serotina | black cherry', confirming this is not a cached page for a sibling Prunus already in the catalog.",
-        "part_shade was excluded from outdoor_sun_exposure at landing: it rested on MoBot's \"Sun: Full sun to part shade\" alone, while NC State's Light field lists Full sun only, NC State's prose says \"Black cherry requires full sun, soil high in organic matter and good drainage.\", and RHS's Position field lists Full sun only -- a single-source entry excluded by the other sources' structured sun fields is disclosed here rather than carried."
+        "part_shade was excluded from outdoor_sun_exposure at landing: it rested on MoBot's \"Sun: Full sun to part shade\" alone, while NC State's Light field lists Full sun only, NC State's prose says \"Black cherry requires full sun, soil high in organic matter and good drainage.\", and RHS's Position field lists Full sun only -- a single-source entry excluded by the other sources' structured sun fields is disclosed here rather than carried.",
+        "is_edible is TRUE but CONDITIONAL: NC State Plant Toolbox states 'Fruits are bitter but can be used to make jellies and jams' (i.e., processed/cooked use, not typically eaten raw off the tree).",
+        "Per rule 5, disclosing all toxicity text found on the same anchor page because is_edible is true: the page lists 'medium severity poison characteristics'; Poison Symptoms: 'All parts are potentially toxic. If ingested, it is likely to cause death in livestock and pets. Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure. The leaves, fruits and seeds contain cyanide compounds, which are poisonous. If a couple of pits are accidentally swallowed, it will not cause poisoning. The pits are more poisonous if they are broken to expose the seeds. Fruit that has not been pitted should not [be] processed in a blender or other machine that might crack open the pits.'; Poison Toxic Principle: 'Cyanogenic glycosides (amygdalin & prunasin)'; Poison Part: 'Fruits' (also leaves/seeds per symptoms text); Causes Contact Dermatitis: 'No'; Whole Plant Traits list includes 'Poisonous'; General Traits/Tags include 'Poisonous to Humans', 'Problem for Cats', 'Problem for Children', 'Problem for Dogs', 'Problem for Horses'.",
+        "mature_height_in and mature_spread_in taken solely from NC State Plant Toolbox's structured Dimensions block, the anchor source for this species (no genus-page substitution needed). RHS and Missouri Botanical Garden Plant Finder pages were not consulted for these six fields because the anchor page already supplied unambiguous, structured values for all of them; no attempt was made on those two URLs in this pass, so no refusal is being reported for them.",
+        "attracts_pollinators set true from NC State's narrative text ('...provide nectar for pollinators') and its structured 'Attracts:' field, which separately lists Butterflies, Pollinators, and Songbirds; songbirds/seed-eating is not being used as support for pollination, only the explicit 'Pollinators' listing and the nectar sentence are."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 720,
+      "mature_height_in_max": 960,
+      "mature_spread_in_min": 360,
+      "mature_spread_in_max": 720
     },
     {
       "chill_damage_f": null,
@@ -1118,6 +1188,30 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286496&isprofile=0",
           "quote": "Other: Winter Interest, Thorns"
+        },
+        {
+          "claim": "mature_height_in 240-420 (NC State Height 20 ft. 0 in. - 35 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Crataegus viridis",
+          "url": "https://plants.ces.ncsu.edu/plants/crataegus-viridis/",
+          "quote": "Height: 20 ft. 0 in. - 35 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 240-420 (NC State Width 20 ft. 0 in. - 35 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Crataegus viridis",
+          "url": "https://plants.ces.ncsu.edu/plants/crataegus-viridis/",
+          "quote": "Width: 20 ft. 0 in. - 35 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true, conditionally: fruit is edible but of low quality and often left for wildlife rather than harvested",
+          "source": "NC State Extension Gardener Plant Toolbox — Crataegus viridis",
+          "url": "https://plants.ces.ncsu.edu/plants/crataegus-viridis/",
+          "quote": "Fruit is edible, but not of high quality. It can be used to make jelly, but is often left for the birds."
+        },
+        {
+          "claim": "attracts_pollinators true: NC State's structured Attracts field names Butterflies, and the Wildlife Value text names nectar-seeking bees and butterflies unconditionally",
+          "source": "NC State Extension Gardener Plant Toolbox — Crataegus viridis",
+          "url": "https://plants.ces.ncsu.edu/plants/crataegus-viridis/",
+          "quote": "Host to nectar-bees, nectar-butterflies, and mammals seeking the fruit."
         }
       ],
       "common_name": "Green Hawthorn",
@@ -1154,14 +1248,26 @@
         "water_regime is left null: two structured moisture readings exist (NC State's Soil Drainage field: Good Drainage, Moist, Occasionally Dry; and MoBot's 'Water: Dry to medium' field) but neither is an explicit watering statement, and MoBot's mid/dry-leaning tag does not map cleanly onto any of the four water_regime enum tokens, so it is disclosed here rather than guessed.",
         "The RHS species page (rhs.org.uk/plants/312999/crataegus-viridis/details) confirms Name Status: Correct but carries no plant-profile subtitle common name, no Other common names field, and no Position/Soil/Exposure/Cultivation content for the plain species -- only the 'Winter King' and 'Big Golden Star' cultivar pages carry that detail -- so it could not corroborate or contradict sun-exposure, soil, or toxicity fields for the species itself.",
         "No admissible-source Clemson (hgic.clemson.edu), UF/IFAS (edis.ifas.ufl.edu / ask.ifas.ufl.edu, aside from the 'Winter King' cultivar page ENH373/ST214, which was excluded as cultivar- rather than species-specific), Penn State (extension.psu.edu), Maryland (extension.umd.edu), or UGA CAES Field Report (fieldreport.caes.uga.edu) page dedicated to Crataegus viridis was found, despite searching each domain directly.",
-        "NC State's structured 'is often confused with:' module names Crataegus nitida (not the Winter King cultivar, C. phaenopyrum, or C. crus-galli) as a look-alike species for identification purposes; this is a taxonomic-confusion note, not a common-name split, and was not used to support any schema field."
+        "NC State's structured 'is often confused with:' module names Crataegus nitida (not the Winter King cultivar, C. phaenopyrum, or C. crus-galli) as a look-alike species for identification purposes; this is a taxonomic-confusion note, not a common-name split, and was not used to support any schema field.",
+        "is_edible is conditional/qualified: NC State states the fruit is 'edible, but not of high quality. It can be used to make jelly, but is often left for the birds' — set true per rule 6 but the low-quality/bird-food caveat is part of the claim, not a bare endorsement.",
+        "Checked NC State page for Poison/Toxic/Problem for language before setting is_edible: 0 hits for 'Poison', 0 hits for 'Problem for'; the 6 'Toxic' hits are all the page's own tags stating the plant is 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' — no toxic part, severity, or preparation warning is named on this page, so nothing further to disclose.",
+        "RHS page (https://www.rhs.org.uk/plants/312999/crataegus-viridis/details) was searched for 'Dimensions', 'Height', 'Width', 'Max Height', 'Max Spread', 'Ultimate height', 'Attracts', 'Edible', 'Poison', 'Toxic', 'Problem for', 'Pollinator', 'bee', and 'butterfl' — zero hits on every term, so it contributed no data to any of the six fields.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286496&isprofile=0 refused the fetch (ConnectError) — could not read it; not used for any field.",
+        "https://plants.ces.ncsu.edu/plants/crataegus-phaenopyrum/ describes Crataegus phaenopyrum (Washington Hawthorn/Thornapple), a different species from Crataegus viridis (this record). Its Dimensions (Height 25-30 ft, Width 20-25 ft) and edibility text were read but deliberately NOT used for any of Crataegus viridis's fields.",
+        "All four size/edibility/pollinator fields rely solely on the NC State Crataegus viridis Plant Toolbox page; the other three source pages in the reading list yielded no usable data for this species."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 240,
+      "mature_height_in_max": 420,
+      "mature_spread_in_min": 240,
+      "mature_spread_in_max": 420
     }
   ],
   "audit_summary": [
@@ -1191,6 +1297,7 @@
     }
   ],
   "normalizations": [
-    "2026-09-05: forty-seventh batch (cruise throttle) -- a third native tree set: Ohio Buckeye, Red Buckeye, Honey Locust, Shagbark Hickory, Black Cherry, and Green Hawthorn. The run stalled on 2026-09-03 when the weekly usage limit refused one research agent and four Opus audits mid-batch (four records flagged UNVERIFIED by the null-verdict guard, nothing landed), and completed on a plain resume two days later (12/12 agents). land_check.py and covered.py ran clean; verify_quotes.py 101/102 reachable quotes before repair, the one MISS being the synthesized NC State Light quote below. Three sun values changed on the sources' own words: both Aesculus drop full_sun (NC State's species-specific scorch warnings -- 'prone to leaf scorch if planted in full sun' for Ohio Buckeye, 'may experience leaf scorch in the heat of summer' for Red Buckeye, whose NC State Light field carries only Partial Shade -- corroborated by MoBot's Culture text, against unconditional full-sun tags from MoBot and RHS, now disclosed), and Black Cherry drops part_shade (MoBot's single reading against NC State's Full-sun-only Light field, its 'requires full sun' prose, and RHS's Full-sun-only Position). Three nulled citation-form fields were restored with their values unchanged: Red Buckeye's scientific_name_accepted (the one-word 'Correct' quote now paired with RHS's H1 binomial), Honey Locust's soil_base (a cherry-picked NC State planting sentence replaced by MoBot's 'Type: Tree' and 'Suggested Use: Street Tree'), and Shagbark Hickory's is_houseplant (a Plant Type tag list that had dropped Woody Plant). Every name_note was replaced with the auditor's corrected wording for the same description classes as b63/b64 -- the invented 'three or more entries' convention (also scrubbed from citation labels), overstated N-of-M leads, RHS title strings called subtitles, and a MoBot tooltip list reconstructed from overlib attribute markup (that citation removed). Three toxicity_detail fields were repaired as trimmed safety fields from the researchers' own recovered prose plus the auditor's verbatim additions: Ohio Buckeye now carries NC State's 'The seeds, leaves and bark are poisonous' against its structured Fruits/Leaves/Stems Poison Part entries, Causes Contact Dermatitis: No, and RHS's referral tail; Black Cherry adds the Plant Type Poisonous tag and NC State's Fruit Description cyanide caveat against its own Edible tag; Green Hawthorn adds both sources' 'best left for the birds' edibility hedge and the thorn hazard both flag. Ohio Buckeye's NC State Light quote 'Full sun (6+ hours) or Partial Shade (2-6 hours)' was an abbreviation with an invented 'or' and now quotes the single rendered value. One common name cased to catalog title case. toxic_to_pets=true on both Aesculus and Black Cherry rests on NC State's Problem for Cats / Problem for Dogs tags (horses disclosed, not counted); Honey Locust and Green Hawthorn are false on explicit non-toxic-for-cats/dogs tags; Shagbark Hickory is null (no cat/dog-scoped source)."
+    "2026-09-05: forty-seventh batch (cruise throttle) -- a third native tree set: Ohio Buckeye, Red Buckeye, Honey Locust, Shagbark Hickory, Black Cherry, and Green Hawthorn. The run stalled on 2026-09-03 when the weekly usage limit refused one research agent and four Opus audits mid-batch (four records flagged UNVERIFIED by the null-verdict guard, nothing landed), and completed on a plain resume two days later (12/12 agents). land_check.py and covered.py ran clean; verify_quotes.py 101/102 reachable quotes before repair, the one MISS being the synthesized NC State Light quote below. Three sun values changed on the sources' own words: both Aesculus drop full_sun (NC State's species-specific scorch warnings -- 'prone to leaf scorch if planted in full sun' for Ohio Buckeye, 'may experience leaf scorch in the heat of summer' for Red Buckeye, whose NC State Light field carries only Partial Shade -- corroborated by MoBot's Culture text, against unconditional full-sun tags from MoBot and RHS, now disclosed), and Black Cherry drops part_shade (MoBot's single reading against NC State's Full-sun-only Light field, its 'requires full sun' prose, and RHS's Full-sun-only Position). Three nulled citation-form fields were restored with their values unchanged: Red Buckeye's scientific_name_accepted (the one-word 'Correct' quote now paired with RHS's H1 binomial), Honey Locust's soil_base (a cherry-picked NC State planting sentence replaced by MoBot's 'Type: Tree' and 'Suggested Use: Street Tree'), and Shagbark Hickory's is_houseplant (a Plant Type tag list that had dropped Woody Plant). Every name_note was replaced with the auditor's corrected wording for the same description classes as b63/b64 -- the invented 'three or more entries' convention (also scrubbed from citation labels), overstated N-of-M leads, RHS title strings called subtitles, and a MoBot tooltip list reconstructed from overlib attribute markup (that citation removed). Three toxicity_detail fields were repaired as trimmed safety fields from the researchers' own recovered prose plus the auditor's verbatim additions: Ohio Buckeye now carries NC State's 'The seeds, leaves and bark are poisonous' against its structured Fruits/Leaves/Stems Poison Part entries, Causes Contact Dermatitis: No, and RHS's referral tail; Black Cherry adds the Plant Type Poisonous tag and NC State's Fruit Description cyanide caveat against its own Edible tag; Green Hawthorn adds both sources' 'best left for the birds' edibility hedge and the thorn hazard both flag. Ohio Buckeye's NC State Light quote 'Full sun (6+ hours) or Partial Shade (2-6 hours)' was an abbreviation with an invented 'or' and now quotes the single rendered value. One common name cased to catalog title case. toxic_to_pets=true on both Aesculus and Black Cherry rests on NC State's Problem for Cats / Problem for Dogs tags (horses disclosed, not counted); Honey Locust and Green Hawthorn are false on explicit non-toxic-for-cats/dogs tags; Shagbark Hickory is null (no cat/dog-scoped source).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

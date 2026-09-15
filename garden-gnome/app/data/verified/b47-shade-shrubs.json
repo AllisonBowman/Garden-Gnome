@@ -45,6 +45,30 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=292288",
           "quote": "Avoid full sun (leaves will scorch) in hot summer climates."
+        },
+        {
+          "claim": "mature_height_in 36-78 (NC State Height 3 ft. 0 in. - 6 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Daphne odora",
+          "url": "https://plants.ces.ncsu.edu/plants/daphne-odora/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 24-48 (NC State Width 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Daphne odora",
+          "url": "https://plants.ces.ncsu.edu/plants/daphne-odora/",
+          "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Pollinators, along with Bees, Butterflies and Moths)",
+          "source": "NC State Extension Gardener Plant Toolbox - Daphne odora",
+          "url": "https://plants.ces.ncsu.edu/plants/daphne-odora/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false (RHS states the plant is toxic if eaten)",
+          "source": "RHS - Daphne odora | winter daphne",
+          "url": "https://www.rhs.org.uk/plants/31151/daphne-odora/details",
+          "quote": "TOXIC if eaten; skin irritant."
         }
       ],
       "common_name": "Winter Daphne",
@@ -86,14 +110,23 @@
         "No admissible source provided any fertilizing information (interval, active months, or strength) for this species.",
         "outdoor_sun_exposure — FLAGGED on audit (left as-is, needs manual review before landing): The entry in doubt is \"full_sun\". \"part_shade\" should stay -- all three sources carry it (NC State tag \"Partial Shade (Direct sunlight only part of the day, 2-6 hours)\", RHS Position \"Full sun, Partial shade\", MOBOT structured \"Sun: Part shade\"). \"full_sun\" is contradicted by the dedicated MOBOT species page in prose the record already had open: Culture reads \"Where winter hardy, this shrub is best grown in moist, rich, sandy-humusy, well-drained soils with a neutral pH in part shade. Avoid full sun (leaves will scorch) in hot summer climates.\" and Problems reads \"Daphnes in the St. Louis area often suffer significant winter injury in severe winters, particularly if improperly planted in locations exposed to cold winter winds and full sun.\" MOBOT's structured Sun field is \"Part shade\" alone. In fairness both ways: NC State's own prose does say \"Daphne should be planted in sun to part shade...\" and RHS lists Full sun, so full_sun is not baseless -- but the record asserts it with zero disclosure while disclosing the water conflict drawn from the *same MOBOT paragraph*, which is a selective-disclosure defect on a field that drives care advice (scorch and winter injury). Repair either way: drop \"full_sun\" leaving [\"part_shade\"], or keep it and add an unknowns entry disclosing verbatim that MOBOT says \"Avoid full sun (leaves will scorch) in hot summer climates\" and lists Sun: Part shade.",
         "outdoor_sun_exposure narrowed to part_shade: NC State's Light tags and RHS's Position both list full sun, but MOBOT's dedicated species page says 'Avoid full sun (leaves will scorch) in hot summer climates', notes winter injury on sites exposed to full sun, and its structured Sun field is 'Part shade' alone -- scorch and winter injury are harm-relevant, so the contested value is left out.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/daphne-odora/, https://www.rhs.org.uk/plants/31151/daphne-odora/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?Grootendorst=&taxonid=292288, https://hgic.clemson.edu/factsheet/daphne/, https://extension.psu.edu/daphnes-for-pennsylvania-gardens); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/daphne-odora/, https://www.rhs.org.uk/plants/31151/daphne-odora/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?Grootendorst=&taxonid=292288, https://hgic.clemson.edu/factsheet/daphne/, https://extension.psu.edu/daphnes-for-pennsylvania-gardens); none found, so the value stays null. Audited live.",
+        "Missouri Botanical Garden PlantFinder page (taxonid=292288) returned fetch status error:ConnectError via qc.py -- refused this machine or otherwise unreachable; not used and nothing from it was guessed.",
+        "NC State's anchor page also states this plant has 'high severity' poison characteristics, Poison Part: Bark, Poison Toxic Principle: 'Unknown, suspected to be a diterpenoid (mezerein)', and Causes Contact Dermatitis: Yes -- consistent with RHS's 'TOXIC if eaten; skin irritant' statement, which is why is_edible was set to false rather than left null.",
+        "RHS also gives Max Height and Max Spread of 1-1.5 metres (39.4-59.1 in), but NC State's structured Dimensions block (Height: 3 ft 0 in - 6 ft 6 in / Width: 2 ft 0 in - 4 ft 0 in) was used instead since NC State is the designated anchor for species dimensions when a species-level NC State page exists."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 78,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 48
     },
     {
       "chill_damage_f": null,
@@ -1104,6 +1137,7 @@
   "normalizations": [
     "2026-09-02: twenty-ninth batch, the first at the overnight throttle (6 species, research on Sonnet at medium effort, verify on Opus) -- a shade-shrub set: Winter Daphne, Japanese Pieris (checked against Rhododendron for grayanotoxin family-level bleed; none), Oregon Grape (left with scientific_name_accepted null on a genuine split -- NC State and MOBOT now file it as Berberis aquifolium, RHS keeps Mahonia aquifolium as Correct), Japanese Aucuba, Japanese Aralia, and Japanese Skimmia. 1.39M subagent tokens for six species, about 30% less per species than b46. land_check.py, covered.py and verify_quotes.py (81/81 reachable quotes) ran clean before and after repair. Winter Daphne's toxic_to_pets is correctly null despite the plant's reputation: NC State's Poison fields are human-scoped and RHS's 'TOXIC to pets' names no animal -- the scoping rule holds even when it is inconvenient. The audit's dominant finding, on three records (Pieris, Oregon Grape, Skimmia), was 'moist but well-drained' being read as the wet end of the soil_drainage scale rather than the middle; all three corrected to moderate on the sources' own well-drained prescriptions (RHS 'will not tolerate waterlogging' for Pieris; NC State's structured 'Good Drainage' for Oregon Grape; NC State's 'well-drained soils' prose for Skimmia) and this catalog's 27-to-8 precedent for the bare Good Drainage + Moist tag pair. Two safety fields were restored complete after the audit found them trimmed: Oregon Grape's now carries NC State's '#poisonous if ingested' tag, its low-severity line, the berberine/children Edibility sentence, and the disclosed NC State/MOBOT-vs-RHS disagreement on whether the berries are edible; Skimmia's now carries RHS's gloves warning (the record had cropped the quote to start at 'Pets:') and NC State's cardiac-arrest Edibility sentence. Pieris's toxicity_detail was reworded so RHS is no longer credited with a 'whole plant' scope it never states. Three outdoor_sun_exposure lists lost full_sun on species-specific scorch/burn evidence (Winter Daphne via MOBOT, Aucuba via NC State, MOBOT and Clemson; Aralia had already excluded it). Aucuba's water_regime was left null on MOBOT's own 'very good drought tolerance' and 'Avoid overly moist to wet soils' against its 'moist' soil adjective; Aralia's chill_damage_f was left null because Clemson's 10°F is a growing-range limit, not a damage onset, and its scientific_name_accepted was restored with an RHS Name Status citation. toxic_to_pets: Pieris true on explicit NC State Problem for Cats/Dogs tags plus RHS naming both; Oregon Grape and Aralia false on explicit non-toxic tags; Daphne, Aucuba and Skimmia null with no cat/dog-scoped source.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Winter Daphne -> none, Japanese Skimmia -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
