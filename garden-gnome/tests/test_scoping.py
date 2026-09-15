@@ -9,14 +9,14 @@ import pytest
 from sqlmodel import Session, create_engine, select
 
 from app.models.models import (
-    Environment, EnvironmentType, Plant, Species, User,
+    GrowingArea, GrowingAreaType, Plant, Species, User,
 )
 from app.services import tokens
 
 
 @pytest.fixture()
 def iso(migrated_db_url):
-    """Two users with an environment + plant each, plus an API client."""
+    """Two users with a growing area + plant each, plus an API client."""
     from fastapi.testclient import TestClient
 
     from app.db.database import get_session
@@ -49,14 +49,14 @@ def iso(migrated_db_url):
             user = User(email=f"user-{label}@example.com")
             s.add(user)
             s.flush()
-            env = Environment(
-                name=f"{label}-home", type=EnvironmentType.home,
+            env = GrowingArea(
+                name=f"{label}-home", type=GrowingAreaType.home,
                 user_id=user.id)
             s.add(env)
             s.flush()
             plant = Plant(
                 nickname=f"{label}-plant", species_id=species_id,
-                environment_id=env.id, user_id=user.id)
+                growing_area_id=env.id, user_id=user.id)
             s.add(plant)
             s.flush()
             data[label] = {
@@ -88,7 +88,7 @@ def iso(migrated_db_url):
 
 def test_unauthenticated_is_401(iso):
     assert iso.client.get("/plants/").status_code == 401
-    assert iso.client.get("/environments/").status_code == 401
+    assert iso.client.get("/growing-areas/").status_code == 401
     assert iso.client.get("/census/summary").status_code == 401
     assert iso.client.get("/census/export").status_code == 401
 
@@ -132,17 +132,17 @@ def test_cannot_get_advice_or_timeline_for_other_users_plant(iso):
 
 
 def test_create_plant_defaults_to_callers_env_not_first_in_db(iso):
-    # B's environment has the LOWEST id in the table (created second in the
+    # B's growing area has the LOWEST id in the table (created second in the
     # fixture? ensure by checking) — regardless, A creating a plant with no
-    # environment_id must land in A's env, never "first env in the DB".
+    # growing_area_id must land in A's env, never "first env in the DB".
     r = iso.client.post(
         "/plants/",
         json={"nickname": "a-second", "species_id": iso.species_id},
         headers=iso.a["headers"],
     )
     assert r.status_code == 201, r.text
-    assert r.json()["environment_id"] == iso.a["env_id"]
-    assert r.json()["environment_id"] != iso.b["env_id"]
+    assert r.json()["growing_area_id"] == iso.a["env_id"]
+    assert r.json()["growing_area_id"] != iso.b["env_id"]
 
 
 def test_create_plant_into_other_users_env_404(iso):
@@ -150,7 +150,7 @@ def test_create_plant_into_other_users_env_404(iso):
         "/plants/",
         json={
             "nickname": "intruder", "species_id": iso.species_id,
-            "environment_id": iso.b["env_id"],
+            "growing_area_id": iso.b["env_id"],
         },
         headers=iso.a["headers"],
     )
@@ -163,18 +163,18 @@ def test_create_plant_into_other_users_env_404(iso):
 def test_cannot_transfer_own_plant_into_other_users_env(iso):
     r = iso.client.post(
         f"/plants/{iso.a['plant_id']}/transfer",
-        json={"to_environment_id": iso.b["env_id"]},
+        json={"to_growing_area_id": iso.b["env_id"]},
         headers=iso.a["headers"],
     )
     assert r.status_code == 404
     with iso.db() as s:  # unchanged
-        assert s.get(Plant, iso.a["plant_id"]).environment_id == iso.a["env_id"]
+        assert s.get(Plant, iso.a["plant_id"]).growing_area_id == iso.a["env_id"]
 
 
 def test_cannot_transfer_other_users_plant_at_all(iso):
     r = iso.client.post(
         f"/plants/{iso.b['plant_id']}/transfer",
-        json={"to_environment_id": iso.a["env_id"]},
+        json={"to_growing_area_id": iso.a["env_id"]},
         headers=iso.a["headers"],
     )
     assert r.status_code == 404
@@ -182,7 +182,7 @@ def test_cannot_transfer_other_users_plant_at_all(iso):
 
 def test_transfer_within_own_account_works(iso):
     r = iso.client.post(
-        "/environments/",
+        "/growing-areas/",
         json={"name": "a-balcony", "type": "balcony"},
         headers=iso.a["headers"],
     )
@@ -190,48 +190,48 @@ def test_transfer_within_own_account_works(iso):
     new_env = r.json()["id"]
     t = iso.client.post(
         f"/plants/{iso.a['plant_id']}/transfer",
-        json={"to_environment_id": new_env},
+        json={"to_growing_area_id": new_env},
         headers=iso.a["headers"],
     )
     assert t.status_code == 200, t.text
-    assert t.json()["environment_id"] == new_env
+    assert t.json()["growing_area_id"] == new_env
 
 
-# --- Environments ---------------------------------------------------------------
+# --- GrowingAreas ---------------------------------------------------------------
 
 
-def test_environment_list_and_read_scoped(iso):
-    r = iso.client.get("/environments/", headers=iso.a["headers"])
+def test_growing_area_list_and_read_scoped(iso):
+    r = iso.client.get("/growing-areas/", headers=iso.a["headers"])
     names = {e["name"] for e in r.json()}
     assert "a-home" in names and "b-home" not in names
     assert iso.client.get(
-        f"/environments/{iso.b['env_id']}", headers=iso.a["headers"],
+        f"/growing-areas/{iso.b['env_id']}", headers=iso.a["headers"],
     ).status_code == 404
 
 
-def test_cannot_patch_other_users_environment(iso):
+def test_cannot_patch_other_users_growing_area(iso):
     r = iso.client.patch(
-        f"/environments/{iso.b['env_id']}",
+        f"/growing-areas/{iso.b['env_id']}",
         json={"name": "hijacked"}, headers=iso.a["headers"],
     )
     assert r.status_code == 404
 
 
-def test_delete_environment_with_plants_409(iso):
+def test_delete_growing_area_with_plants_409(iso):
     r = iso.client.delete(
-        f"/environments/{iso.a['env_id']}", headers=iso.a["headers"])
+        f"/growing-areas/{iso.a['env_id']}", headers=iso.a["headers"])
     assert r.status_code == 409
 
 
-def test_delete_empty_environment_204(iso):
+def test_delete_empty_growing_area_204(iso):
     r = iso.client.post(
-        "/environments/",
+        "/growing-areas/",
         json={"name": "a-empty", "type": "other"},
         headers=iso.a["headers"],
     )
     env_id = r.json()["id"]
     assert iso.client.delete(
-        f"/environments/{env_id}", headers=iso.a["headers"],
+        f"/growing-areas/{env_id}", headers=iso.a["headers"],
     ).status_code == 204
 
 
@@ -276,19 +276,19 @@ def test_export_has_no_stable_env_ids_and_no_latlng(iso):
     e2 = iso.client.get("/census/export", headers=iso.a["headers"]).json()
 
     def env_refs(body):
-        return {p["environment"]["ref"]
-                for p in body["plants"] if p["environment"]}
+        return {p["growing_area"]["ref"]
+                for p in body["plants"] if p["growing_area"]}
 
     refs1, refs2 = env_refs(e1), env_refs(e2)
     assert refs1 and refs2
     assert refs1.isdisjoint(refs2)  # rotated per export — not linkable
 
     with iso.db() as s:
-        real_uuids = {e.uuid for e in s.exec(select(Environment)).all()}
-    assert refs1.isdisjoint(real_uuids)  # never the real environment uuid
+        real_uuids = {e.uuid for e in s.exec(select(GrowingArea)).all()}
+    assert refs1.isdisjoint(real_uuids)  # never the real growing area uuid
 
     for p in e1["plants"]:
-        if p["environment"]:
-            assert "lat" not in p["environment"]
-            assert "lng" not in p["environment"]
-            assert "uuid" not in p["environment"]
+        if p["growing_area"]:
+            assert "lat" not in p["growing_area"]
+            assert "lng" not in p["growing_area"]
+            assert "uuid" not in p["growing_area"]

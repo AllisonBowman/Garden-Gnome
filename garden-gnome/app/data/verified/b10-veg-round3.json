@@ -1,0 +1,974 @@
+{
+  "batch": "b10-veg-round3",
+  "records": [
+    {
+      "chill_damage_f": null,
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun and direct_sun_hours_max 10",
+          "source": "University of Maryland Extension — Growing Cucumbers in a Home Garden",
+          "url": "https://extension.umd.edu/resource/growing-cucumbers-home-garden",
+          "quote": "Full sun requires direct light at least 6 hours/day; prefers 8 - 10 hours/day."
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "source": "Clemson Cooperative Extension HGIC — Cucumber",
+          "url": "https://hgic.clemson.edu/factsheet/cucumber/",
+          "quote": "the soil pH should be between 6.0 and 6.5"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive",
+          "source": "Royal Horticultural Society — Cucumis sativus (cucumber, gherkin)",
+          "url": "https://www.rhs.org.uk/plants/105568/cucumis-sativus-cucumber-gherkin/details",
+          "quote": "Grow in an acidic to neutral, moisture-retentive, well drained compost and a position in full sun"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Clemson Cooperative Extension HGIC — Cucumber",
+          "url": "https://hgic.clemson.edu/factsheet/cucumber/",
+          "quote": "Cucumbers have a shallow root system and can suffer when no irrigation is provided during droughts. Practice good cultivation and provide adequate water to moisten the soil to at least a 6 inch depth."
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating)",
+          "source": "Royal Horticultural Society — How to grow cucumbers",
+          "url": "https://www.rhs.org.uk/vegetables/cucumbers/grow-your-own",
+          "quote": "Water greenhouse and container plants regularly, especially when fruits are forming, aiming to keep the soil or potting compost evenly moist."
+        },
+        {
+          "claim": "container growing qualitative: outdoor/greenhouse container use only, no indoor houseplant claim taken",
+          "source": "Royal Horticultural Society — How to grow cucumbers",
+          "url": "https://www.rhs.org.uk/vegetables/cucumbers/grow-your-own",
+          "quote": "can also be grown in containers at least 30cm (1ft) wide and deep, filled with peat-free multi-purpose compost"
+        },
+        {
+          "claim": "frost sensitivity qualitative: killed by light frost, no degree value given so chill_damage_f not populated",
+          "source": "Clemson Cooperative Extension HGIC — Cucumber",
+          "url": "https://hgic.clemson.edu/factsheet/cucumber/",
+          "quote": "Cucumbers are very tender and can be killed by light frosts"
+        }
+      ],
+      "common_name": "Cucumber",
+      "cool_rest_note": null,
+      "day_f_max": null,
+      "day_f_min": null,
+      "direct_sun_hours_max": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_max": null,
+      "humidity_pct_min": null,
+      "is_houseplant": false,
+      "light_fc_good": null,
+      "light_fc_min": null,
+      "name_note": "Cucumis sativus is already the correct, currently accepted binomial for cultivated cucumber across every consulted source (NC State, Clemson, UMD, RHS, Missouri Botanical Garden). No synonym or accepted-name discrepancy was found, so scientific_name_accepted matches scientific_name_given.",
+      "night_f_max": null,
+      "night_f_min": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "scientific_name_accepted": "Cucumis sativus",
+      "scientific_name_given": "Cucumis sativus",
+      "soil_base": null,
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_max": 6.5,
+      "soil_ph_min": 6,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "chill_damage_f: Clemson ('very tender and can be killed by light frosts') and UMD ('Frost will injure top growth') both describe frost sensitivity qualitatively but neither states a specific degree-Fahrenheit threshold at which damage begins, so left null.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: Clemson states cucumber 'grows best at temperatures between 75 and 85 °F' as a single undifferentiated range, never split into day vs. night values, so left null rather than force an average onto a day- or night-specific field.",
+        "light_fc_min/light_fc_good: no admissible source gave a footcandle figure for cucumber; extension sources describe light only as a sun-exposure duration category, captured instead in outdoor_sun_exposure and direct_sun_hours_max.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source addressed ambient air humidity requirements for outdoor or greenhouse cucumber cultivation.",
+        "fertilize_interval_days/fertilize_strength/fertilize_active_months: Clemson and UMD both describe a one-time pre-plant application plus one or two event-triggered sidedressings ('one week after blossoming begins and, if needed, 3 weeks later') rather than a repeating day-interval schedule, a dilution strength, or specific calendar months, so none of these were populated.",
+        "soil_base: sources describe both in-row/garden-bed cultivation (Clemson spacing and per-square-foot fertilizer rates; UMD in-row/hill spacing) and container cultivation with 'peat-free multi-purpose compost' (RHS, containers >=30cm) as separate, non-exclusive settings; no single soil_base bucket was chosen to avoid overstating one setting as the only one.",
+        "water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_dry_down_target: no admissible source gave a moisture-check depth or a numeric watering-frequency interval. Clemson's 'moisten the soil to at least a 6 inch depth' describes how deep irrigation should penetrate, not a pre-watering moisture-check depth, so it supported water_regime only, not water_check_depth_cm.",
+        "is_houseplant set false: sources document cucumber grown outdoors in the ground/rows (Clemson, UMD), in an outdoor or greenhouse container >=1 gallon or >=30cm (NC State, RHS), or in a greenhouse/polytunnel border (RHS) -- none describe indoor home/houseplant cultivation, so is_houseplant is false per the task's framing that ground/raised-bed/container are outdoor garden settings distinct from houseplant use.",
+        "toxic_to_pets: admissible sources conflict. RHS's Cucumis sativus profile carries an explicit 'Pets: Bitter fruit can be TOXIC if eaten' warning, while NC State Extension's plant database tags the same species '#non-toxic for cats/dogs/horses'. Recorded as true, weighting RHS's specific, actionable pet-safety statement over NC State's unqualified database tag; flagging for human review given the direct disagreement between two admissible sources.",
+        "cool_rest_note: not applicable -- cucumber is an annual warm-season crop and no source discussed a dormancy or cool-rest period.",
+        "toxicity_detail beyond pets/bitterness: no admissible source discussed human toxicity for normal ripe cucumber fruit; RHS's warning is specifically about bitter fruit and is filed under a 'Pets' heading.",
+        "direct_sun_hours_max — removed on audit: Verified by fetching the UMD page: the quote 'Full sun requires direct light at least 6 hours/day; prefers 8 - 10 hours/day' is correctly transcribed, but it is not cucumber-specific data — it is UMD Extension's fixed, byte-for-byte-identical definition of the 'Full Sun' exposure category, reused verbatim on UMD's tomato ('Growing Tomatoes in a Home Garden') and pepper ('Growing Peppers in a Home Garden') pages as well. The record presents '10' as though it were a researched fact about cucumbers' particular sun preference, when it is actually just the generic upper bound UMD assigns to any crop it labels 'full sun.' This is exactly the generic-boilerplate failure mode the audit brief warns about (criterion 2) — the outdoor_sun_exposure='full_sun' categorization itself is plausibly a real per-crop editorial choice, but the numeric direct_sun_hours_max=10 riding on the same quote is not evidence of anything cucumber-specific.",
+        "toxic_to_pets/toxicity_detail — nulled on landing review, not the field-level audit: two admissible sources give directly opposing answers (RHS: bitter fruit can be toxic; NC State: non-toxic for cats/dogs/horses) and the record picked RHS over NC State rather than nulling. The tranche format has no way to store this as two competing claims for the resolver's own material-disagreement rule to arbitrate -- a single record asserts one value per field -- so a genuine cross-source conflict on a harm-capable field has to be resolved the same way the system-level resolver would resolve it if it could see both: null, not a researcher's preference between sources. Original citations and reasoning preserved above/in citations for whoever revisits this."
+      ]
+    },
+    {
+      "chill_damage_f": null,
+      "citations": [
+        {
+          "claim": "scientific_name_accepted Solanum melongena (page identifies this as the binomial for Eggplant/Aubergine/Brinjal)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "Solanum melongena (Aubergine, Brinjal, Eggplant, Mad Apple, Raging Apple)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "direct_sun_hours_max 10",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/growing-eggplant-home-garden",
+          "quote": "Full sun, requires direct light at least 6 hours/day; prefers 8 - 10 hours/day."
+        },
+        {
+          "claim": "direct_sun_hours_max 10 (corroborating)",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1028/home-garden-eggplant/",
+          "quote": "Eggplants need a well-drained soil that receives eight to 10 hours of sunlight per day."
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/eggplant/",
+          "quote": "Follow the results of a soil test to maintain a soil pH between 6.0 and 6.5."
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/vegetables/aubergines/grow-your-own",
+          "quote": "Aubergine plants need a steady supply of moisture to grow and crop well."
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating, 1 to 2 inches per week)",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1028/home-garden-eggplant/",
+          "quote": "Water as needed to a depth of 6 inches with drip irrigation when possible. Eggplants require between 1 to 2 inches of water per week for best production."
+        },
+        {
+          "claim": "fertilize_interval_days 14 (container-grown, liquid feed)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/vegetables/aubergines/grow-your-own",
+          "quote": "Feed aubergines in containers every two weeks with an organic high-potassium liquid fertiliser once the first flowers appear."
+        },
+        {
+          "claim": "toxic_to_pets true (alkaloids including solanine; flowers, leaves, roots, stems); flagged Problem for Cats and Problem for Dogs",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "Problems: Problem for Cats, Problem for Children, Problem for Dogs, Problem for Horses. Poisonous to Humans: Poison Severity: High. Poison Symptoms: If the leaves, flowers, stems, or roots are ingested, throat burning, nausea, vomiting, and irregular heart rhythm can occur which may be fatal. Poison Toxic Principle: Alkaloids including solanine. Poison Part: Flowers, Leaves, Roots, Stems"
+        },
+        {
+          "claim": "toxicity_detail supporting: edible fruit vs. toxic remainder of plant",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "The fruits and seeds are edible; however, the remainder of the plant is poisonous. The fruits should not be consumed raw. Preferably, they should be baked, stewed, or fried. The flowers, leaves, and roots of the plant are toxic and should not be consumed."
+        }
+      ],
+      "common_name": "Eggplant",
+      "cool_rest_note": null,
+      "day_f_max": null,
+      "day_f_min": null,
+      "direct_sun_hours_max": 10,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_max": null,
+      "humidity_pct_min": null,
+      "is_houseplant": false,
+      "light_fc_good": null,
+      "light_fc_min": null,
+      "name_note": "No accepted-name change found. NC State Extension's Plant Toolbox lists \"Solanum melongena\" as the current binomial for this species, with \"Aubergine\" and \"Brinjal\" given as common-name synonyms; scientific_name_given and scientific_name_accepted are therefore identical.",
+      "night_f_max": null,
+      "night_f_min": null,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "scientific_name_accepted": "Solanum melongena",
+      "scientific_name_given": "Solanum melongena",
+      "soil_base": null,
+      "soil_drainage": null,
+      "soil_ph_max": 6.5,
+      "soil_ph_min": 6,
+      "toxic_to_pets": true,
+      "toxicity_detail": "Flowers, leaves, roots, and stems contain alkaloids including solanine and are rated \"Poison Severity: High\" by NC State Extension; ingestion can cause throat burning, nausea, vomiting, and irregular heart rhythm, which may be fatal. Fruit and seeds are edible when cooked (fruit should not be eaten raw). The species is explicitly flagged as \"Problem for Cats,\" \"Problem for Dogs,\" \"Problem for Horses,\" and \"Problem for Children\" on the same source page — confirmed species-specific (not reused genus boilerplate) by comparing against NC State's Solanum lycopersicum/tomato page, which carries a different severity rating, different toxic-part list, and different symptom text.",
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: Clemson and NC State both give a single 70-85°F range for best/fastest growth without ever splitting it into day vs. night temperature, so none of the four fields were populated rather than guessing which one it describes.",
+        "chill_damage_f: UMD Extension states 'Frost will injure top growth; needs warm weather to grow' but gives no specific temperature number for where damage begins.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no admissible source states a humidity requirement for eggplant.",
+        "light_fc_min / light_fc_good: every admissible source treats eggplant as an outdoor garden crop and describes sun in hours/day or the 'full sun' category, never in footcandles.",
+        "soil_base: sources split between in-ground/row garden culture (Clemson spacing in rows, UMD, UGA) and explicit container culture (RHS container feeding/watering instructions; NC State lists 'Container' as a Landscape Location) -- no single soil_base enum value was chosen given this mixed evidence.",
+        "soil_drainage: NC State's soil-drainage tags for this species are 'Good Drainage' and 'Moist' listed together, which doesn't map cleanly onto a single fast/moderate/moisture_retentive value.",
+        "water_growing_days_est / water_dormant_days_est / water_dry_down_target / water_check_depth_cm / water_estimate_basis: UGA states a weekly water volume ('1 to 2 inches of water per week'), not a watering-frequency-in-days or a soil-check depth, so it was not converted into a days estimate.",
+        "fertilize_active_months / fertilize_strength: no source ties fertilizing to specific calendar months or states a liquid-feed dilution strength.",
+        "fertilize_interval_days — removed on audit: The value 14 is drawn solely from RHS's container-grown, liquid-feed instruction ('Feed aubergines in containers every two weeks with an organic high-potassium liquid fertiliser'). This is scoped explicitly to container culture -- the record's own citation label even says so -- yet the field is populated as a general fertilize_interval_days with no container caveat carried into the value itself, despite the record elsewhere (soil_base unknowns) acknowledging it could not determine whether this plant is grown in containers or in ground. Worse, a same-tier admissible source for in-ground culture directly conflicts: Clemson HGIC's eggplant factsheet specifies granular side-dressing 'three to four weeks after planting' and again 'three to four weeks after that' -- i.e. a ~21-28 day interval, not 14. I also checked RHS's own tomato page and found the 'feed every two weeks (container) / fortnightly (ground)' language is a template RHS reuses with minor variation across vegetable pages, reinforcing that this is generic container-feeding boilerplate rather than an eggplant-specific finding that should override the conflicting in-ground guidance from Clemson. Presenting 14 as the record's single fertilize_interval_days, without reconciling or scoping around this conflict, is an over-reach."
+      ],
+      "water_check_depth_cm": null,
+      "water_dormant_days_est": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "water_growing_days_est": null,
+      "water_regime": "keep_moist"
+    },
+    {
+      "common_name": "Garlic",
+      "scientific_name_given": "Allium sativum",
+      "scientific_name_accepted": "Allium sativum",
+      "name_note": "No source treated Allium sativum as a synonym of a different accepted binomial. NC State's toolbox splits garden garlic into two botanical varieties at the species level (var. sativum = softneck, var. ophioscorodon = hardneck), but the species-level name itself, Allium sativum, is what every source used and is retained here unchanged from the name given.",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": "NC State Extension Gardener Plant Toolbox flags this specific species as a problem for cats, dogs, and horses, with poison symptoms \"Vomiting, breakdown of red blood cells (hemolytic anemia, Heinz body anemia), blood in urine, weakness, high heart rate, panting\" and toxic principle \"N-propyl disulfide, diallyl disulfide.\" This is about pet/animal toxicity specifically, distinct from garlic's edibility/use as a human food crop.",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "soil_base": "garden_bed",
+      "soil_ph_min": 6,
+      "soil_ph_max": 6.5,
+      "soil_drainage": null,
+      "water_regime": null,
+      "water_growing_days_est": 7,
+      "water_dormant_days_est": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_estimate_basis": "Estimate for garlic grown in a garden bed (in-ground, not a container). Penn State Extension states supplemental irrigation of \"one inch of water per week during dry periods through mid-June\" during the growing season; the 7-day figure is our estimate of a watering-check interval derived from that stated weekly rate, not a schedule the source itself frames as an interval, and it applies only to the active growing season (irrigation is explicitly stopped after mid-June per the same source).",
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": [
+        1,
+        2,
+        3,
+        11
+      ],
+      "fertilize_strength": null,
+      "unknowns": [
+        "light_fc_min / light_fc_good: garlic is grown outdoors as a garden crop; no source gave an indoor footcandle value (outdoor_sun_exposure is used instead).",
+        "direct_sun_hours_max: NC State states 'Full sun (6 or more hours of direct sunlight a day)' -- that quote gives a stated MINIMUM, not a maximum, so it cannot honestly support a 'max hours' field and was left null rather than repurposed.",
+        "soil_drainage: sources consistently say 'well-drained' (NC State's toolbox tags both 'Good Drainage' and 'Moist' simultaneously) but none used language mapping unambiguously to the fast/moderate/moisture_retentive categories, so left null rather than guess.",
+        "humidity_need / humidity_pct_min / humidity_pct_max: no growing-humidity data found. PSU's '65-75 percent relative humidity' figure describes post-harvest bulb storage conditions, not the live plant's growing environment, so it was not used for this field.",
+        "day_f_min/max, night_f_min/max, chill_damage_f: sources give USDA hardiness zones (4a-9b, NC State) and qualitative fall cold tolerance ('Unless temperatures get extremely cold, little damage will result,' PSU) but no specific degree-F thresholds for either a growing range or a frost-damage onset point.",
+        "fertilize_interval_days: Clemson's schedule (mid-Nov, early Jan, mid-Feb, early March) has irregular gaps between applications (about 7 weeks, then 6 weeks, then 3 weeks), so no single day-interval number is supportable without inventing an average the source doesn't state.",
+        "fertilize_strength: the sourced fertilizer applications are granular soil amendments (calcium nitrate, 5-10-10, sulfur) measured in lbs per 1,000 sq ft, not a diluted liquid feed with a full/half/quarter strength concept, so this field doesn't apply.",
+        "water_dormant_days_est, water_dry_down_target, water_check_depth_cm: no source gave a distinct dormant/winter watering estimate or a specific dry-down depth or moisture-check depth.",
+        "water_regime — removed on audit: The cited Clemson quote is truncated mid-sentence. Verified against the live page, the full sentence reads: \"Consistent soil moisture is important and is especially critical during the bulbing period. Monitor moisture, and water the plot as necessary. However, when the crop is nearing maturity, somewhat dry soil is best.\" The record dropped the final clause, which directly contradicts a blanket 'keep_moist' label — the source actually describes a two-phase regime (moist during bulbing, then deliberately dry near maturity), and the record's own water_estimate_basis field separately confirms irrigation is stopped after mid-June specifically to avoid bulb disease. A flat 'keep_moist' value for the whole season misrepresents the source and could lead to overwatering during the maturation phase, which the source explicitly warns against."
+      ],
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-sativum/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Garlic grows best in full sun in well-drained, fertile, loamy soils with a soil pH between 6.2 and 6.5.",
+          "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+          "source": "Clemson Cooperative Extension HGIC"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and soil_base garden_bed and is_houseplant false (outdoor garden planting only; no indoor or container culture mentioned)",
+          "quote": "Plant individual garlic cloves (pointy end up) 1 to 2 inches deep in a sunny location with well-drained garden soil in mid- to late-October.",
+          "url": "https://extension.psu.edu/growing-and-using-garlic",
+          "source": "Penn State Extension"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "quote": "Soils that are rich in organic matter with a pH of 6.0–6.5 are best.",
+          "url": "https://extension.psu.edu/garlic-production",
+          "source": "Penn State Extension"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "Consistent soil moisture is important and is especially critical during the bulbing period.",
+          "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+          "source": "Clemson Cooperative Extension HGIC"
+        },
+        {
+          "claim": "water_growing_days_est 7 (converted from stated weekly irrigation rate)",
+          "quote": "The application of one inch of water per week during dry periods through mid-June will ensure good sizing.",
+          "url": "https://extension.psu.edu/garlic-production",
+          "source": "Penn State Extension"
+        },
+        {
+          "claim": "toxic_to_pets true (N-propyl disulfide, diallyl disulfide; cats, dogs, horses)",
+          "quote": "Problem for Cats Problem for Dogs Problem for Horses Poisonous to Humans: Poison Severity: Low Poison Symptoms: Vomiting, breakdown of red blood cells (hemolytic anemia, Heinz body anemia), blood in urine, weakness, high heart rate, panting Poison Toxic Principle: N-propyl disulfide, diallyl disulfide",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-sativum/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "fertilize_active_months 11, 1, 2, 3 (mid-November, early January, mid-February, early March application dates)",
+          "quote": "Mid-November: 4 lbs. calcium nitrate (15.5-0-0) per 1,000 sq. ft. Early January: 10 lbs. 5-10-10 per 1,000 sq. ft., 0.50 lb. sulfur per 1,000 sq. ft. Mid-February: 4 lbs. calcium nitrate per 1,000 sq. feet. Early March: 4 lbs. calcium nitrate per 1,000 sq. ft.",
+          "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+          "source": "Clemson Cooperative Extension HGIC"
+        }
+      ]
+    },
+    {
+      "common_name": "Gourds",
+      "scientific_name_given": "Cucurbita pepo var. ovifera",
+      "scientific_name_accepted": "Cucurbita pepo var. ovifera",
+      "is_houseplant": null,
+      "name_note": "The given name matches the accepted name for this taxon: RHS lists \"Name Status: Correct\" for Cucurbita pepo var. ovifera, so no name change was made. RHS's primary common name for this entry is \"apple gourd,\" with other common names listed as bell gourd, bicolor gourd, orange gourd, pear gourd, vegetable marrow, and yellow-flowered gourd.",
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "soil_base": null,
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": 7,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": "Estimate, not stated directly as a day count by the source. UGA Extension states gourds grown in the garden are not drought-tolerant and need over an inch of water per week during peak development; the \"per week\" figure is converted to a 7-day check interval as an estimate. Assumes outdoor garden-bed growing conditions (the source does not address container culture specifically).",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: no approved source gives specific air-temperature ranges for this variety.",
+        "chill_damage_f: UGA and RHS describe frost sensitivity qualitatively ('easily damaged by frost'; RHS hardiness rating H1C implying summer-outdoor-only use) but neither states a specific damage-onset temperature.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no live-growing humidity data found; UGA's 80-85% relative-humidity figure is for post-harvest curing of dried gourds, not growing conditions, so it was not used.",
+        "light_fc_min/light_fc_good/direct_sun_hours_max: this is an outdoor garden crop; sources give a sun-duration category (full sun) rather than footcandle or hour-count figures specific to this variety.",
+        "fertilize_interval_days/fertilize_active_months/fertilize_strength: no approved source gives a fertilizing schedule for this variety.",
+        "soil_ph_min/soil_ph_max: RHS gives only a categorical pH tolerance ('Acid or Alkaline or Neutral'), not a numeric range.",
+        "soil_base: no source categorizes the growing medium into a specific mix type; sources describe general soil qualities (rich, fertile, well-drained) rather than naming a soil base.",
+        "water_check_depth_cm/water_dry_down_target/water_dormant_days_est: not addressed by any approved source; this is a warm-season annual with no dormant season described.",
+        "cool_rest_note: not addressed by any approved source for this frost-tender annual.",
+        "is_houseplant — removed on audit: Fetched the cited RHS page directly: its full 'Suggested planting locations and garden types' list is only 'Patio and container plants', 'City and courtyard gardens', 'Wildlife gardens' — no Houseplant/Indoors/Conservatory tag exists. 'Patio and container plants' is RHS's outdoor container-gardening category, not evidence of indoor houseplant status. The claim also contradicts the rest of the record, which describes a frost-tender, full-sun annual vine with no cool-rest/dormancy behavior — the opposite of a typical houseplant profile in this schema.",
+        "toxic_to_pets — removed on audit: Verified via direct fetch that RHS's 'Potentially harmful' section for this page contains no 'Toxic to: Humans/Cats/Dogs/Livestock' category tags — just a general 'TOXIC if eaten; fruit intended for decoration only' warning, which reads as aimed at people mistaking an ornamental gourd for food. The record's own toxicity_detail admits the source 'does not specify whether it is directed at humans, pets, or both,' yet the boolean field still asserts true as a settled pet-toxicity fact. Source silence on animals/pets specifically should not be encoded as a confirmed pets claim.",
+        "toxicity_detail — removed on audit: Same underlying defect as toxic_to_pets: the text is honest that the source is ambiguous about the intended audience (human vs. pet), but that honesty doesn't rescue the paired boolean field from overclaiming, and the detail itself never establishes an animal-specific toxicity mechanism or dose — it's a decoration-safety warning, not a veterinary toxicity statement.",
+        "water_regime — removed on audit: The UGA quote qualifies the >1 inch/week moisture requirement as occurring 'during peak development' (i.e., fruiting stage), not as a season-long directive. The record's own water_estimate_basis text preserves that qualifier, but the categorical water_regime value 'keep_moist' drops it and generalizes a stage-specific watering note into a blanket regime for the whole crop cycle — a mild overreach beyond what the source actually states."
+      ],
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "quote": "Grow in rich, fertile, well drained soil in full sun.",
+          "source": "Royal Horticultural Society (RHS) — Cucurbita pepo var. ovifera (apple gourd) plant profile",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive",
+          "quote": "Moist but well–drained",
+          "source": "Royal Horticultural Society (RHS) — Cucurbita pepo var. ovifera (apple gourd) plant profile",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "is_houseplant true (container growing)",
+          "quote": "Patio and container plants",
+          "source": "Royal Horticultural Society (RHS) — Cucurbita pepo var. ovifera (apple gourd) plant profile, 'Suggested planting locations and garden types'",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (fruit toxic if eaten; source does not specify pets vs. humans)",
+          "quote": "TOXIC if eaten; fruit intended for decoration only. Wear gloves and other protective equipment when handling",
+          "source": "Royal Horticultural Society (RHS) — Cucurbita pepo var. ovifera (apple gourd) plant profile, 'Potentially harmful'",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "name_note: RHS accepted-name status for this taxon",
+          "quote": "Name Status Correct",
+          "source": "Royal Horticultural Society (RHS) — Cucurbita pepo var. ovifera (apple gourd) plant profile, 'Botanical Details'",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "name_note: RHS common names for this taxon",
+          "quote": "Other common names bell gourd, bicolor gourd, orange gourd, pear gourd, vegetable marrow, yellow-flowered gourd",
+          "source": "Royal Horticultural Society (RHS) — Cucurbita pepo var. ovifera (apple gourd) plant profile",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and water_regime keep_moist",
+          "quote": "Gourds need full sunlight and a well-drained soil. They are not drought tolerant and require over an inch of moisture per week during peak development.",
+          "source": "University of Georgia Cooperative Extension — CAES Field Report, 'Growing gourds in Georgia' by W. Terry Kelley",
+          "url": "https://fieldreport.caes.uga.edu/news/growing-gourds-in-georgia/"
+        },
+        {
+          "claim": "water_growing_days_est 7 (estimate, converted from 'per week')",
+          "quote": "require over an inch of moisture per week during peak development",
+          "source": "University of Georgia Cooperative Extension — CAES Field Report, 'Growing gourds in Georgia' by W. Terry Kelley",
+          "url": "https://fieldreport.caes.uga.edu/news/growing-gourds-in-georgia/"
+        },
+        {
+          "claim": "qualitative: Cucurbita gourds generally inedible and frost-tender (no numeric chill_damage_f value given)",
+          "quote": "Gourds of the Cucurbita species all have yellow flowers, and most are inedible. They are easily damaged by frost, have a thick shell and are difficult to cure.",
+          "source": "University of Georgia Cooperative Extension — CAES Field Report, 'Growing gourds in Georgia' by W. Terry Kelley",
+          "url": "https://fieldreport.caes.uga.edu/news/growing-gourds-in-georgia/"
+        }
+      ]
+    },
+    {
+      "common_name": "Kohlrabi",
+      "scientific_name_given": "Brassica oleracea var. gongylodes",
+      "scientific_name_accepted": "Brassica oleracea (Gongylodes Group)",
+      "name_note": "The given varietal name and the accepted name refer to the same cultivated form of wild cabbage. RHS and Missouri Botanical Garden both classify it as \"(Gongylodes Group)\" under the modern Cultivar Group system used for Brassica oleracea, rather than the older Latin varietal treatment \"var. gongylodes.\" NC State Extension's Plant Toolbox uses the parallel English designation \"Kohlrabi Group.\"",
+      "is_houseplant": false,
+      "day_f_max": 80,
+      "day_f_min": null,
+      "night_f_max": null,
+      "night_f_min": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": 6,
+      "soil_ph_max": 7,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "water_regime": "keep_moist",
+      "water_check_depth_cm": null,
+      "water_dormant_days_est": null,
+      "water_growing_days_est": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "unknowns": [
+        "chill_damage_f: sources say kohlrabi tolerates frost but not a hard freeze, with no specific damage-onset temperature stated",
+        "night_f_min, night_f_max: no source gives nighttime-specific temperatures for kohlrabi",
+        "direct_sun_hours_max: NC State states a sun-hours minimum (6+) but no source gives a maximum",
+        "light_fc_min, light_fc_good: no footcandle values found; this outdoor crop is described by sun-exposure category instead",
+        "humidity_need, humidity_pct_min, humidity_pct_max: no source addresses growing-environment humidity for kohlrabi (only unrelated post-harvest storage humidity was found)",
+        "fertilize_interval_days, fertilize_active_months, fertilize_strength: sources say to apply nitrogen per a soil test but give no interval, months, or strength",
+        "toxic_to_pets, toxicity_detail: NC State tags this species 'Problem for Horses' with no mechanism, plant part, or acute-toxicity detail given, and no source addresses cats or dogs, so left null rather than guess",
+        "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_dry_down_target, water_estimate_basis: no source gives a watering frequency in days or a check depth, only a qualitative 'keep consistently moist' regime",
+        "cool_rest_note: no source discusses a dormancy/rest period for kohlrabi",
+        "day_f_min — removed on audit: The cited RHS quote ('wait until temperatures are above 10°C (50°F), as cold conditions can make plants more prone to bolting') is a spring-SOWING timing rule to avoid premature flowering, not a statement that the growing plant is damaged or grows poorly below 50°F. The citation's own claim label even admits this ('spring sowing threshold to avoid bolting, not a general growth minimum'), yet the number was still used to populate day_f_min, a field whose sibling day_f_max was correctly sourced from an actual growth-impairment threshold (MBG: 'Plants generally grow poorly when daytime temperatures consistently exceed 80 degrees F'). Worse, this value directly conflicts with other citations in the same record: MBG states kohlrabi 'needs cool temperatures to produce the best crop' and 'is typically grown in the cool temperatures of spring or fall,' and NC State states it 'can tolerate frost but not a hard freeze' — both describing a plant that performs well well below 50°F daytime temps, the opposite of what a 50°F 'day_f_min' floor implies. The researcher treated night_f_min/max and chill_damage_f correctly by leaving them null when no true damage-onset value existed; day_f_min should have received the same treatment (null, with an unknowns entry) instead of being filled with a mismatched proxy number."
+      ],
+      "citations": [
+        {
+          "claim": "scientific_name_accepted Brassica oleracea (Gongylodes Group)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=257407&isprofile=0",
+          "quote": "Brassica oleracea (Gongylodes Group) - Plant Finder ... Common Name: kohlrabi"
+        },
+        {
+          "claim": "scientific_name_accepted Brassica oleracea (Gongylodes Group), common name kohlrabi",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/124565/brassica-oleracea-(gongylodes-group)-quickstar/details",
+          "quote": "Brassica oleracea (Gongylodes Group) 'Quickstar' | kohlrabi 'Quickstar'"
+        },
+        {
+          "claim": "is_houseplant false (grown outdoors in the ground or in a large outdoor container, not indoors)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own",
+          "quote": "Kohlrabi is best sown in the ground, but if you're short on ground space, you could sow in a large container, especially to harvest as a quick crop of mini veg."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade (some varieties, per RHS)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own",
+          "quote": "Some varieties will also grow in partial shade, especially in summer."
+        },
+        {
+          "claim": "soil_drainage moisture_retentive",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own",
+          "quote": "Kohlrabi grows best in a sunny site with fertile, moisture-retentive soil."
+        },
+        {
+          "claim": "soil_ph_min 6 and soil_ph_max 7",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=257407&isprofile=0",
+          "quote": "Soil pH should be between 6 and 7."
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "They do best in full sun and in any amended garden soil."
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own",
+          "quote": "a lack of water can slow their growth and cause them to turn woody, so keep the soil consistently moist."
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=257407&isprofile=0",
+          "quote": "Keep plants consistently moist."
+        },
+        {
+          "claim": "day_f_max 80",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=257407&isprofile=0",
+          "quote": "Plants generally grow poorly when daytime temperatures consistently exceed 80 degrees F."
+        },
+        {
+          "claim": "day_f_min 50 (spring sowing threshold to avoid bolting, not a general growth minimum)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own",
+          "quote": "In spring, wait until temperatures are above 10°C (50°F), as cold conditions can make plants more prone to bolting."
+        },
+        {
+          "claim": "descriptive: source tags this species 'Problem for Horses' with no mechanism, plant part, or other animal named (no value taken for toxicity fields)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "Problems: Problem for Horses"
+        },
+        {
+          "claim": "descriptive: fertilizer needs full nitrogen per soil test, no interval or strength given (no value taken)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "Provide adequate nitrogen for best results. Get a soil test before planting and fertilize according to the results."
+        },
+        {
+          "claim": "descriptive: frost tolerance is qualitative only, no specific damage-onset temperature given (no value taken for chill_damage_f)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "They can tolerate frost but not a hard freeze."
+        }
+      ]
+    },
+    {
+      "common_name": "Leek",
+      "scientific_name_given": "Allium ampeloprasum",
+      "scientific_name_accepted": "Allium porrum",
+      "name_note": "RHS lists \"Allium ampeloprasum var. porrum\" as a synonym under its accepted-name page for \"Allium porrum\" (the cultivated leek). The species-level name given in this task, Allium ampeloprasum, is the broader wild/cultivated complex (also covering elephant garlic and other cultivar groups); the accepted binomial for leek specifically, per RHS, is Allium porrum.",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "fertilize_active_months": [
+        11,
+        1,
+        2,
+        3
+      ],
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "direct_sun_hours_max": null,
+      "water_check_depth_cm": null,
+      "water_dormant_days_est": null,
+      "water_dry_down_target": null,
+      "water_estimate_basis": null,
+      "water_growing_days_est": null,
+      "cool_rest_note": null,
+      "unknowns": [
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source splits a day-vs-night temperature range for leeks; only an unsplit 'average below 75°F' maturation ceiling (Clemson) and a variety-dependent overwinter survival extreme (Penn State) were found, neither of which is a day/night comfort range.",
+        "chill_damage_f: sources give a winter survival floor for the hardiest varieties (0°F/-18°C, Penn State) and a general maturation temperature ceiling (75°F average, Clemson) — a tolerance floor and a maturation cap, not a frost-damage-onset temperature.",
+        "direct_sun_hours_max/light_fc_min/light_fc_good: the only numeric sun-hours figure found ('full sun requires at least 6 hrs/day, prefers 8-10 hrs/day') is a generic definition of 'full sun' reused verbatim across dozens of unrelated UMD Extension vegetable pages (corn, cucumbers, tomatoes, peppers, garlic, potatoes, carrots, asparagus, squash), not a leek-specific figure, so it was not used; this is an outdoor garden crop with no footcandle data.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source discusses ambient humidity for this outdoor crop.",
+        "fertilize_interval_days: Clemson gives four sidedress calendar dates (mid-Nov, early Jan, mid-Feb, early Mar) that are not evenly spaced in days, so no single interval figure can be derived without inventing one.",
+        "fertilize_strength: fertilizer rates are given as lb of a specific formulation per 1,000 sq ft (Clemson) or lb per acre (UGA), not categorized as full/half/quarter strength.",
+        "water_growing_days_est/water_dormant_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: only a qualitative 'grow with soil moisture at or near field capacity' statement (UGA) was found; no source gives a watering-frequency day count or a soil-check depth for leeks.",
+        "cool_rest_note: no admissible source describes a winter dormancy/rest requirement for leeks in these terms.",
+        "is_houseplant: no admissible source discusses indoor or container cultivation of leeks; recorded false per the expected outdoor-vegetable default.",
+        "toxicity_detail — removed on audit: The severity rating and symptom description in toxicity_detail ('Poison Severity Low; vomiting and digestive problems ... in large quantities') are lifted verbatim from the NC State Plant Toolbox page's 'Poisonous to Humans' subsection, not from any dog/cat/horse-specific entry. Direct verification of the page shows there is only ONE poison subsection with a severity rating and symptom text, and it is the Human one (framed around eating/food safety and oxalic acid/contact dermatitis). The animal side of the page consists solely of bare tags ('#problem for dogs', '#problem for cats', '#problem for horses') with no elaborated severity or symptoms attached to them. So toxic_to_pets=true has some tag-level support, but toxicity_detail misattributes a human food-safety statement (severity, symptoms) to pets -- exactly the human-vs-pet conflation the audit brief warns about, just in the reverse direction (human text presented as pet detail rather than 'safe to eat' being read as 'safe for pets').",
+        "soil_ph_min — removed on audit: Verified the source paragraph: 'Although garlic and related Alliums have no specific recommendations based on soil testing ... The soil pH should be between 6.0 and 6.5.' This sentence names 'garlic and related Alliums' generically, not 'leek' specifically -- unlike the neighboring water-regime sentence in the same document, which does explicitly list 'Garlic, elephant garlic, and leek' by name. There is no leek-specific pH subsection anywhere in the UGA publication; leek is mentioned later in Land Preparation only for planting depth/spacing, not pH. Applying this genus-level, garlic-anchored figure to leek's own soil_ph_min/max fields is an inference from generic Allium guidance, not a value the source states for leek specifically.",
+        "soil_ph_max — removed on audit: Same defect as soil_ph_min: the 6.0-6.5 range is stated for 'garlic and related Alliums' generically in the UGA Land Preparation section, not attributed to leek by name in that sentence, and no leek-specific pH guidance exists elsewhere in the source."
+      ],
+      "citations": [
+        {
+          "claim": "scientific_name_accepted Allium porrum (synonym Allium ampeloprasum var. porrum)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/106043/allium-porrum/details",
+          "quote": "Synonyms: Allium ampeloprasum var. porrum"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/186099/allium-ampeloprasum-var-porrum/details",
+          "quote": "Position: Full sun, Partial shade"
+        },
+        {
+          "claim": "soil_drainage moderate (moist but well-drained)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/186099/allium-ampeloprasum-var-porrum/details",
+          "quote": "Moisture: Moist but well–drained"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-ampeloprasum/common-name/broadleaf-wild-leek/",
+          "quote": "Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "toxic_to_pets true (dogs, cats, horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-ampeloprasum/common-name/broadleaf-wild-leek/",
+          "quote": "Problem for Cats"
+        },
+        {
+          "claim": "toxicity_detail Poison Severity Low; vomiting and digestive problems in large quantities",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-ampeloprasum/common-name/broadleaf-wild-leek/",
+          "quote": "Poison Severity: Low"
+        },
+        {
+          "claim": "toxicity_detail symptoms (vomiting and digestive problems)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-ampeloprasum/common-name/broadleaf-wild-leek/",
+          "quote": "Eating in large quantities can cause vomiting and digestive problems."
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C852/garlic-and-leek-production-in-georgia/",
+          "quote": "The soil pH should be between 6.0 and 6.5"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "UGA Cooperative Extension (CAES Field Report)",
+          "url": "https://fieldreport.caes.uga.edu/publications/C852/garlic-and-leek-production-in-georgia/",
+          "quote": "Garlic, elephant garlic, and leek should be grown with soil moisture at or near field capacity, particularly during periods of rapid growth"
+        },
+        {
+          "claim": "fertilize_active_months 11, 1, 2, 3 (mid-Nov, early Jan, mid-Feb, early Mar sidedress schedule)",
+          "source": "Clemson Cooperative Extension (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+          "quote": "Leeks should be sidedressed four times throughout the growing season with 3 pounds of calcium nitrate (15.5-0-0) per 1,000 square feet. This should be done mid-November, early January, mid-February, and early March."
+        },
+        {
+          "claim": "soil_base garden_bed (row planting, per-area field rates — not container)",
+          "source": "Clemson Cooperative Extension (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+          "quote": "Plant 10 to 15 seeds per foot of row, and thin to 4 inches apart, or set transplants 4 inches apart."
+        },
+        {
+          "claim": "temperature qualitative: matures best in average temps below 75°F (not day/night specific, no field value taken)",
+          "source": "Clemson Cooperative Extension (HGIC)",
+          "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+          "quote": "Leeks mature best during temperatures averaging below 75 °F."
+        },
+        {
+          "claim": "cold hardiness qualitative: hardiest varieties survive down to 0°F/-18°C (survival floor, not chill_damage_f onset — no field value taken)",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/season-extenders-and-growing-fall-vegetables",
+          "quote": "Note that there is considerable variation in the freezing susceptibility of leek varieties; although most leeks are very cold-tolerant, the darker, blue-green varieties are most likely to survive plunges to 0°F (-18°C)."
+        }
+      ]
+    },
+    {
+      "common_name": "Lettuce",
+      "scientific_name_given": "Lactuca sativa",
+      "scientific_name_accepted": "Lactuca sativa",
+      "name_note": "Given name matches the accepted name in every admissible source consulted (all titled the species page \"Lactuca sativa\" with no synonym noted); no composite or hybrid name was constructed.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "soil_base": null,
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": 6,
+      "soil_ph_max": 6.7,
+      "water_regime": "keep_moist",
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": "Estimate, not a fixed schedule. UGA Cooperative Extension's home-garden lettuce guide advises irrigating every 4 to 5 days once established, for lettuce grown in a garden bed/raised bed in Georgia; this record uses the lower (more frequent) end of that stated range. Actual frequency depends on rainfall, soil, and container vs. in-ground planting -- the same source notes containers need more frequent irrigation than beds.",
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "citations": [
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Lettuce grows best in full sun to partial shade and organically rich, moist, well-drained soils.",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "light qualitative: tolerates partial shade with full sun preferred in spring/fall (no additional value taken)",
+          "quote": "Tolerates partial shade (4-6 hours of direct light/day) but grows well with full sun in spring and fall.",
+          "url": "https://extension.umd.edu/resource/growing-lettuce-home-garden",
+          "source": "University of Maryland Extension"
+        },
+        {
+          "claim": "direct_sun_hours_max 4 (summer growing recommendation, shade rest of the day)",
+          "quote": "If grown during summer, give the plant 3 to 4 hours of sun daily and shade the rest of the day.",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "soil_ph_min 6 and soil_ph_max 6.7",
+          "quote": "Optimal pH ranges from 6 to 6.7.",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "soil pH qualitative corroboration (no value taken, differs slightly from NC State's 6-6.7 range so not used for the field)",
+          "quote": "Lettuce prefers a slightly acidic soil with a pH of 6.0 to 6.5.",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1018/home-garden-lettuce/",
+          "source": "UGA Cooperative Extension (CAES Field Report)"
+        },
+        {
+          "claim": "soil_drainage moisture_retentive (organically rich, moist, well-drained soil)",
+          "quote": "Lettuce grows best in full sun to partial shade and organically rich, moist, well-drained soils.",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "soil_base garden_bed (loamy garden soil high in organic matter, from a home garden vegetable factsheet)",
+          "quote": "This crop prefers a loamy soil with a high organic matter content.",
+          "url": "https://hgic.clemson.edu/factsheet/lettuce/",
+          "source": "Clemson Cooperative Extension (Home & Garden Information Center)"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "quote": "Lettuce has a shallow root system and requires consistently moist soil for proper growth and flavor.",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "water_growing_days_est 4 (garden-bed irrigation interval once established, estimate)",
+          "quote": "Continue to irrigate lettuce every 4 to 5 days as needed to keep the plants healthy and producing.",
+          "url": "https://fieldreport.caes.uga.edu/publications/C1018/home-garden-lettuce/",
+          "source": "UGA Cooperative Extension (CAES Field Report)"
+        },
+        {
+          "claim": "container growing qualitative: containers of at least 2 quarts volume, 6-8 inches deep work for lettuce (no field in schema for this fact)",
+          "quote": "Lettuce can also be grown in containers that are a minimum of 2 quarts volume and 6 to 8 inches deep.",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "source": "NC State Extension Gardener Plant Toolbox"
+        }
+      ],
+      "unknowns": [
+        "light_fc_min / light_fc_good: not stated by any source; this is an outdoor garden crop and sources give sun-exposure duration categories (full sun / part shade) rather than indoor footcandle intensity, so the duration axis (outdoor_sun_exposure, direct_sun_hours_max) was used instead.",
+        "day_f_min/day_f_max and night_f_min/night_f_max: Clemson HGIC states lettuce 'prefers temperatures of 55 to 65 °F for optimum growth' but this is a single general growing-temperature preference, not split into day vs. night figures by the source -- left null rather than mapped onto one field per the instruction against forcing an unsplit average onto a day- or night-specific slot.",
+        "chill_damage_f: multiple sources describe qualitative frost tolerance ('withstands light frosts', 'can even tolerate a light frost, but extremely cold ... weather will cause it to perish') but none states the actual temperature at which cold/frost damage begins, so left null.",
+        "cool_rest_note: no source discussed a dormancy or cool-rest period for this annual crop.",
+        "toxic_to_pets / toxicity_detail: NC State's Plant Toolbox lists a 'Poison Severity: Low' entry with symptom 'Skin irritation after exposure to sap' (contact dermatitis from lactucin/lactucopicrin), but this section does not name dogs, cats, horses, or any pet/animal -- it reads as a general/human contact-irritant note, not a pet-toxicity claim, so left null per the rule against inferring pet safety in either direction.",
+        "fertilize_active_months / fertilize_interval_days / fertilize_strength: Clemson and UGA both give fertilizer guidance as an application-rate schedule tied to planting stage (e.g., '3 to 4 lb of 5-10-10 per 100 sq ft' before planting, then a monthly or once-per-season sidedress of a different N-P-K blend) rather than a calendar-month list, a day interval, or a full/half/quarter dilution strength, so none of it mapped cleanly onto these fields; left null.",
+        "water_check_depth_cm: Clemson states to 'water the garden sufficiently to moisten the soil to a depth of 6 inches,' which is an irrigation-depth target (how deep to water), not a soil-check depth (how deep to probe before deciding to water) -- a different concept from this field, so left null.",
+        "water_dry_down_target: not applicable/not stated -- water_regime is keep_moist (consistently moist), not a dry-down-between-waterings regime.",
+        "water_dormant_days_est: lettuce is an annual crop; no source described a dormant period, so left null.",
+        "soil_base/soil_drainage/soil_ph reflect in-ground or raised-bed garden cultivation as described by the Clemson and NC State home-garden guides; NC State also separately supports container growing (see citations) but the catalog's soil_base field only takes one value, so container-specific media was not asserted.",
+        "direct_sun_hours_max — removed on audit: Value 4 comes from NC State's quote 'If grown during summer, give the plant 3 to 4 hours of sun daily and shade the rest of the day' -- a summer-specific heat-avoidance instruction, not a general sun-hours ceiling. Fetching the same NC State page's structured Cultural Conditions data shows it defines 'Full Sun' as '6 or more hours of direct sunlight a day' and 'Partial Shade' as '2-6 hours'; UMD (also cited) says lettuce 'tolerates partial shade (4-6 hours of direct light/day) but grows well with full sun in spring and fall.' The record's own outdoor_sun_exposure includes full_sun, which by the cited source's own definition means 6+ hours -- directly contradicting a year-round direct_sun_hours_max of 4. The citation was generalized out of its seasonal heat-protection context.",
+        "soil_base — removed on audit: The Clemson quote used to support garden_bed ('This crop prefers a loamy soil with a high organic matter content') is a statement about soil texture/composition, not about growing location or base type -- it says nothing distinguishing garden bed from container or raised bed. The claim's real justification, per the record's own parenthetical, is that the source is 'a home garden vegetable factsheet,' i.e. inferred from the source's title/scope rather than from the quote's content. No cited quote for this claim actually asserts a location/base fact, and the record's own NC State citation shows lettuce is also grown in containers.",
+        "water_growing_days_est — removed on audit: water_estimate_basis frames the 4-5 day UGA irrigation interval as applying to lettuce 'grown in a garden bed/raised bed' and states 'containers need more frequent irrigation than beds.' Fetching the UGA source directly shows its Irrigation section actually groups 'raised beds or containers' together as needing MORE frequent irrigation than the general 4-to-5-day guidance, which applies to ordinary in-ground garden plantings. By lumping raised bed into the 4-5 day group and singling out only containers as needing more, the basis text misstates its own source -- a meaningful risk since raised beds are a very common home-lettuce setup that this framing would under-water."
+      ]
+    },
+    {
+      "common_name": "Okra",
+      "scientific_name_given": "Abelmoschus esculentus",
+      "scientific_name_accepted": "Abelmoschus esculentus",
+      "name_note": "The given binomial matches the accepted name used consistently by NC State Extension, Missouri Botanical Garden, and RHS — no synonym discrepancy found. NC State lists many alternate common names for the same species (Common Ivy, Gobbo, Gumbo, Ivy Gum Plant, Ladies' Fingers, Ochro, Okro); \"Okra\" is used here as it's the name given.",
+      "is_houseplant": false,
+      "outdoor_sun_exposure": [
+        "full_sun"
+      ],
+      "direct_sun_hours_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "day_f_min": 75,
+      "day_f_max": 90,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": "keep_moist",
+      "water_check_depth_cm": null,
+      "water_dry_down_target": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_interval_days": null,
+      "fertilize_active_months": null,
+      "fertilize_strength": null,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "unknowns": [
+        "toxic_to_pets / toxicity_detail: none of the admissible sources (NC State, Clemson, MoBot, RHS, UF/IFAS, UGA) discuss pet toxicity for this species; NC State and MoBot only mention human skin-irritant hairs on the pods and deer browsing behavior, neither of which is evidence about cats/dogs, so left null rather than inferred.",
+        "chill_damage_f: sources state qualitatively that frost/cold injures okra (e.g. 'Very tender annual, frost will injure top growth' - UMD) but none give a specific temperature at which that damage begins, so left null rather than assuming 32F.",
+        "direct_sun_hours_max: NC State gives only a minimum ('6 or more hours of direct sunlight a day') defining full sun, not an upper bound, so no max value could be supported.",
+        "water_growing_days_est / water_dormant_days_est / water_estimate_basis: UF/IFAS gives water need as inches per week (up to 1.5in/week or /10 days) rather than a watering-interval-in-days figure, and okra is an annual with no dormant season, so converting to a days-between-watering estimate would require an unsupported assumption; left null.",
+        "soil_drainage: sources describe soil as 'well-drained' and 'moist' in qualitative terms (NC State: 'Good Drainage, Moist'; MoBot: 'moist, moderately fertile, well-drained') but none map cleanly to the fast/moderate/moisture_retentive enum without guessing, so left null.",
+        "humidity_need, humidity_pct_min/max, light_fc_min/good, fertilize_interval_days, fertilize_active_months, fertilize_strength, water_check_depth_cm, water_dry_down_target, cool_rest_note, night_f_max: no admissible source gives species-specific figures for these; all left null.",
+        "day_f_min/day_f_max were taken from Clemson's general 'grows best at temperatures between 75F and 90F' statement, which is not explicitly split into day vs night — used per the day_f convention since no separate day-specific quote exists, but flagged here since the source itself doesn't use the word 'day'.",
+        "night_f_min — removed on audit: Verified the Missouri Botanical Garden Plant Finder page directly and the quote is accurate, but its context is being misapplied. The full sentence is: 'Seeds are sensitive to cold temperatures and should not be planted outside until soil temperatures have risen to 60°F. and night temperatures no longer dip below 55°F.' This is a seed/seedling planting-timing threshold ('when is it safe to direct-seed this cold-sensitive crop outdoors'), not a statement about the ongoing night temperature a growing/established okra plant needs or tolerates — which is what a night_f_min field should represent by analogy to day_f_min/day_f_max. Using a germination-establishment guideline as a general night-temperature-requirement figure overstates what the source supports. This mismatch is corroborated by the record's own RHS citation (citation 13, rhs.org.uk/plants/71839), which independently rates the species H2 hardiness — 'tolerant of low temperatures but not surviving being frozen; 1-5°C minimum' (~34-41°F) — for the mature plant, a floor well below the 55°F figure used, showing 55°F is a planting-window recommendation rather than the plant's actual night-temperature floor."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Okra",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Common Name(s): Common Ivy Gobbo Gumbo Ivy Gum Plant Ladies' Fingers Ochro Okra Okro"
+        },
+        {
+          "claim": "scientific_name_given Abelmoschus esculentus and scientific_name_accepted Abelmoschus esculentus",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Genus: Abelmoschus Species: esculentus Family: Malvaceae"
+        },
+        {
+          "claim": "scientific_name_accepted Abelmoschus esculentus (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282605&isprofile=0&chr=19",
+          "quote": "Abelmoschus esculentus, commonly called okra, is native to tropical Africa and Asia."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun (corroborating)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/okra/",
+          "quote": "The soil must be well-drained; plant in full sun for best productivity."
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Soil pH: Neutral (6.0-8.0)"
+        },
+        {
+          "claim": "soil_base garden_bed (grown in vegetable garden ground)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Use this plant in the vegetable garden."
+        },
+        {
+          "claim": "day_f_min 75 and day_f_max 90",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/okra/",
+          "quote": "Okra grows best at temperatures between 75 °F and 90 °F."
+        },
+        {
+          "claim": "night_f_min 55",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282605&isprofile=0&chr=19",
+          "quote": "Seeds are sensitive to cold temperatures and should not be planted outside until soil temperatures have risen to 60°F. and night temperatures no longer dip below 55°F."
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/vegetables/okra/grow-your-own",
+          "quote": "keep the potting compost or soil consistently moist, in particular when plants are flowering and fruiting"
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282605&isprofile=0&chr=19",
+          "quote": "Easily grown in moist, moderately fertile, well-drained soils in full sun."
+        },
+        {
+          "claim": "is_houseplant false (outdoor vegetable garden crop, not indoor)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Okra is a warm-season vegetable in the mallow family (Malvaceae). It is native to tropical areas of Africa and Asia and can be grown in warmer temperate parts of the USA."
+        },
+        {
+          "claim": "qualitative: RHS notes container growing is an option outdoors alongside ground planting (no soil_base value taken beyond garden_bed)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/71839/abelmoschus-esculentus/details",
+          "quote": "Best grown under glass or in a polytunnel but can be planted outside in a warm, sunny, sheltered position in a container or in the ground when soil temperature has risen to 15°C."
+        }
+      ]
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Cucumis sativus",
+      "fields_removed": 2
+    },
+    {
+      "species": "Solanum melongena",
+      "fields_removed": 1
+    },
+    {
+      "species": "Allium sativum",
+      "fields_removed": 1
+    },
+    {
+      "species": "Cucurbita pepo var. ovifera",
+      "fields_removed": 4
+    },
+    {
+      "species": "Brassica oleracea var. gongylodes",
+      "fields_removed": 1
+    },
+    {
+      "species": "Allium ampeloprasum",
+      "fields_removed": 3
+    },
+    {
+      "species": "Lactuca sativa",
+      "fields_removed": 3
+    },
+    {
+      "species": "Abelmoschus esculentus",
+      "fields_removed": 2
+    }
+  ],
+  "normalizations": [
+    "2026-08-21: one fix applied after landing review, upstream of the usual loader sweep. Cucumber's record asserted toxic_to_pets=true, picking RHS's 'bitter fruit can be TOXIC if eaten' warning over NC State's blanket 'non-toxic for cats/dogs/horses' tag -- a genuine disagreement between two admissible sources on a harm-capable field, which the record's own unknowns correctly flagged but then resolved by researcher preference rather than nulling. This is exactly the case resolve.py's material-disagreement rule exists to catch, but the tranche format asserts one value per field per record, so a real cross-source conflict discovered during research never reaches the system as two competing claims for that rule to see -- it has to be caught and nulled at landing time instead. Nulled toxic_to_pets and toxicity_detail, removed the now-orphaned citations, and kept the disagreement documented in unknowns. Future batch prompts should tell agents explicitly: a genuine cross-source conflict on a harm-capable field is nulled, not decided by preference."
+  ]
+}

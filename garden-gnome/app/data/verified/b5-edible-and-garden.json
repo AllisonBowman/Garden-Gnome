@@ -660,7 +660,8 @@
         "fertilize_interval_days and fertilize_strength null: MOBOT rates maintenance 'Low' but publishes no fertilizer schedule, interval or strength. 'Low maintenance' is not a feeding regime.",
         "water_* day estimates and water_estimate_basis null: sources describe in-ground shrub culture. A container-overwintering interval would need pot material, size, light and medium assumptions that no source supplies.",
         "toxic_to_pets null: the NC State page was checked for both 'problem for cats/dogs/horses' and 'non-toxic for cats/dogs/horses' tags and NEITHER is present, independently confirmed by audit; MOBOT makes no toxicity statement. Human edibility of the berries says nothing about cats, dogs or horses. ASPCA's list may not be reproduced.",
-        "soil_base = garden_bed is a product classification, not a sourced fact."
+        "soil_base = garden_bed is a product classification, not a sourced fact.",
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/myrtus-communis/, https://www.rhs.org.uk/plants/11311/myrtus-communis/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282870, https://hgic.clemson.edu, https://edis.ifas.ufl.edu, https://ask.ifas.ufl.edu); none found, so the value stays null. Audited live."
       ]
     }
   ],
@@ -776,6 +777,7 @@
     "2026-08-08: High-band floors (Aloe, Crassula, Hoya) nulled — the audit killed their companion fc_good as class-floor artifacts, and a floor read off the bottom of Clemson's 150-1000 band understates a high-light plant. Re-source in the verification pass.",
     "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
-    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus)."
+    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Myrtle -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
   ]
 }

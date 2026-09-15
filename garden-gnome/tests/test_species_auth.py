@@ -78,3 +78,53 @@ def test_species_list_does_not_leak_the_internal_review_trail():
         )
     # and the derived sentence IS part of it
     assert "toxicity_description" in SpeciesRead.model_fields
+
+
+# Names that exist only to be audited on the server: the supporting quote,
+# the researcher's verbatim passages and assumptions, and the review trail.
+# ADR 0003 ships a value, an authority's name and a link -- nothing else.
+SERVER_ONLY_FIELDS = {
+    "quote", "toxicity_detail", "water_dry_down_target",
+    "water_estimate_basis", "review_status",
+}
+
+
+def _schemas_under(schema):
+    """Every SQLModel schema reachable from `schema`'s fields, itself included."""
+    from typing import get_args
+
+    from sqlmodel import SQLModel
+
+    seen, stack = [], [schema]
+    while stack:
+        current = stack.pop()
+        if current in seen:
+            continue
+        seen.append(current)
+        annotations = [f.annotation for f in current.model_fields.values()]
+        while annotations:
+            annotation = annotations.pop()
+            if isinstance(annotation, type) and issubclass(annotation, SQLModel):
+                stack.append(annotation)
+            else:
+                annotations.extend(get_args(annotation))
+    return seen
+
+
+def test_no_client_schema_carries_a_server_only_field():
+    """Extends the review-trail check to every schema a client can receive,
+    nested ones included: a PlantRead embeds a SpeciesRead, a SpeciesDetail
+    embeds its sources, and a leak two levels down is still a leak."""
+    from app.models.schemas import (
+        CareSourceRead, PlantRead, SpeciesDetail, SpeciesRead,
+    )
+
+    walked = set()
+    for root in (SpeciesRead, SpeciesDetail, PlantRead, CareSourceRead):
+        for schema in _schemas_under(root):
+            walked.add(schema.__name__)
+            leaked = SERVER_ONLY_FIELDS & set(schema.model_fields)
+            assert not leaked, f"{schema.__name__} carries {sorted(leaked)}"
+    # The walk actually reached the nested schemas, or the test proves nothing.
+    assert {"SpeciesRead", "SpeciesDetail", "PlantRead", "CareSourceRead",
+            "CareScheduleRead"} <= walked

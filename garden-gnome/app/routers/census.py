@@ -4,7 +4,7 @@ Privacy model (decision 3, 2026-07-15):
 - Participation is per-user consent: only users with census_opt_in=True
   contribute to /census/export and /census/sync. Consent is toggled via
   PATCH /me.
-- No stable pseudonymous identifiers: environment UUIDs are rotated fresh on
+- No stable pseudonymous identifiers: growing_area UUIDs are rotated fresh on
   every export (consistent within one export so stewardship chains still
   read, but never linkable across exports).
 - No precise location: lat/lng never leave the server; city/region/country
@@ -24,7 +24,7 @@ from sqlmodel import Session, select
 from app.db.database import get_session
 from app.deps import get_current_user
 from app.models.models import (
-    CareLog, Environment, Plant, Species, StewardshipRecord, User,
+    CareLog, GrowingArea, Plant, Species, StewardshipRecord, User,
 )
 
 router = APIRouter(prefix="/census", tags=["census"])
@@ -38,15 +38,15 @@ def census_summary(
     """Aggregate counts for the CALLER's garden — their population snapshot."""
     plants = session.exec(
         select(Plant).where(Plant.user_id == user.id)).all()
-    environments = session.exec(
-        select(Environment).where(Environment.user_id == user.id)).all()
+    growing_areas = session.exec(
+        select(GrowingArea).where(GrowingArea.user_id == user.id)).all()
     species_list = session.exec(select(Species)).all()
 
     species_name_map = {s.id: s.common_name for s in species_list}
-    env_map = {e.id: e for e in environments}
+    env_map = {e.id: e for e in growing_areas}
 
     env_type_counts: dict[str, int] = {}
-    for e in environments:
+    for e in growing_areas:
         env_type_counts[e.type.value] = env_type_counts.get(e.type.value, 0) + 1
 
     # Count PLANTS, not rows. One row can stand for a whole planting — "twelve
@@ -56,7 +56,7 @@ def census_summary(
     plants_by_env_type: dict[str, int] = {}
     species_counts: dict[int, int] = {}
     for p in plants:
-        env = env_map.get(p.environment_id) if p.environment_id else None
+        env = env_map.get(p.growing_area_id) if p.growing_area_id else None
         env_label = env.type.value if env else "unassigned"
         qty = p.quantity or 1
         plants_by_env_type[env_label] = plants_by_env_type.get(env_label, 0) + qty
@@ -67,9 +67,9 @@ def census_summary(
         # Rows, which is also how many care schedules the caretaker actually
         # tends — twelve tomatoes watered together are one job, not twelve.
         "total_plantings": len(plants),
-        "total_environments": len(environments),
-        "environments_by_type": env_type_counts,
-        "plants_by_environment_type": plants_by_env_type,
+        "total_growing_areas": len(growing_areas),
+        "growing_areas_by_type": env_type_counts,
+        "plants_by_growing_area_type": plants_by_env_type,
         "species_distribution": [
             {
                 "species_id": sid,
@@ -97,7 +97,7 @@ def census_export(
 ):
     """Anonymized export of OPTED-IN users' plant records.
 
-    Environment identifiers are rotated per export: consistent within this
+    GrowingArea identifiers are rotated per export: consistent within this
     payload (stewardship chains stay meaningful) but freshly generated each time,
     so exports can't be joined into a longitudinal profile of a household.
     Locations are city/region/country only — lat/lng never leave the server."""
@@ -115,7 +115,7 @@ def census_export(
 
     records = []
     for plant in plants:
-        env = session.get(Environment, plant.environment_id) if plant.environment_id else None
+        env = session.get(GrowingArea, plant.growing_area_id) if plant.growing_area_id else None
 
         logs = session.exec(
             select(CareLog).where(CareLog.plant_id == plant.id)
@@ -132,10 +132,10 @@ def census_export(
 
         stewardship_chain = []
         for rec in stewardship:
-            rec_env = session.get(Environment, rec.environment_id)
+            rec_env = session.get(GrowingArea, rec.growing_area_id)
             stewardship_chain.append({
-                "environment_ref": rotated_uuid(rec.environment_id) if rec_env else None,
-                "environment_type": rec_env.type.value if rec_env else None,
+                "growing_area_ref": rotated_uuid(rec.growing_area_id) if rec_env else None,
+                "growing_area_type": rec_env.type.value if rec_env else None,
                 "started_at": rec.started_at.isoformat(),
                 "ended_at": rec.ended_at.isoformat() if rec.ended_at else None,
             })
@@ -156,7 +156,7 @@ def census_export(
             "maturity_stage": plant.maturity_stage.value,
             "acquired_on": plant.acquired_on.isoformat() if plant.acquired_on else None,
             # Location dimension: geographic region only — never lat/lng
-            "environment": {
+            "growing_area": {
                 "ref": rotated_uuid(env.id),
                 "type": env.type.value,
                 "city": env.city,
@@ -176,10 +176,17 @@ def census_export(
         })
 
     return {
-        # 2.1 adds per-record `quantity` and `split_from_uuid`. Bumped rather
-        # than added silently because `plant_count` changes meaning with it:
-        # it now counts plants, as its name always claimed, instead of rows.
-        "export_version": "2.1",
+        # 3.0 renames the location dimension: `environment` is `growing_area`,
+        # and inside the stewardship chain `environment_ref`/`environment_type`
+        # are `growing_area_ref`/`growing_area_type`. A major bump because an
+        # aggregator reading 2.1 keys finds nothing under them rather than
+        # finding something wrong -- there is no compatible reading of this
+        # payload against the old names.
+        #
+        # 2.1 added per-record `quantity` and `split_from_uuid`. Bumped rather
+        # than added silently because `plant_count` changed meaning with it:
+        # it counts plants, as its name always claimed, instead of rows.
+        "export_version": "3.0",
         "exported_at": datetime.utcnow().isoformat() + "Z",
         "installation_uuid": os.getenv("INSTALLATION_UUID", ""),
         "plant_count": sum(r["quantity"] for r in records),

@@ -17,9 +17,9 @@ from slowapi.errors import RateLimitExceeded  # noqa: E402
 
 from app.config import get_settings  # noqa: E402
 from app.db.database import run_migrations  # noqa: E402
-from app.data.seed import seed_default_environment  # noqa: E402
+from app.data.seed import seed_default_growing_area  # noqa: E402
 from app.rate_limit import limiter  # noqa: E402
-from app.routers import ai, auth, species, plants, environments, census  # noqa: E402
+from app.routers import ai, auth, species, plants, growing_areas, census  # noqa: E402
 from app.services.vision import vision_status  # noqa: E402
 
 
@@ -27,7 +27,7 @@ from app.services.vision import vision_status  # noqa: E402
 async def lifespan(app: FastAPI):
     get_settings()      # fail fast if required secrets are missing
     run_migrations()    # Alembic owns the schema now (replaces init/migrate_db)
-    seed_default_environment()  # ensure an environment exists for new plants
+    seed_default_growing_area()  # ensure a growing area exists for new plants
     vs = await vision_status()  # surface a dead vision config at boot, not first photo
     print(f"[vision] backend={vs['backend']} ready={vs['ready']} "
           f"model={vs['model'] or '-'} — {vs['detail']}")
@@ -55,7 +55,8 @@ app.include_router(ai.router)
 app.include_router(auth.router)
 app.include_router(species.router)
 app.include_router(plants.router)
-app.include_router(environments.router)
+app.include_router(growing_areas.router)
+app.include_router(growing_areas.legacy_router)
 app.include_router(census.router)
 
 app.mount(

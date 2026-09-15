@@ -46,9 +46,11 @@ function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
             </Text>
           )}
           <View style={styles.chipRow}>
-            {plant.species && (
+            {/* A row minted from the claim tranche has no legacy light need
+                (ADR 0005); the chip says nothing rather than "undefined". */}
+            {plant.species?.light_need && (
               <Chip compact icon="weather-sunny" style={styles.chip}>
-                {LIGHT_LABELS[plant.species.light_need] ?? plant.species.light_need}
+                {LIGHT_LABELS[plant.species.light_need] ?? plant.species.light_need.replace(/_/g, ' ')}
               </Chip>
             )}
             {plant.species?.toxic_to_pets && (

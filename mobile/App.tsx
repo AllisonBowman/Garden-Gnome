@@ -14,8 +14,8 @@ import AddPlantScreen      from './src/screens/AddPlantScreen';
 import CaptureGardenScreen from './src/screens/CaptureGardenScreen';
 import SpeciesScreen       from './src/screens/SpeciesScreen';
 import SpeciesDetailScreen from './src/screens/SpeciesDetailScreen';
-import EnvironmentsScreen  from './src/screens/EnvironmentsScreen';
-import EnvironmentDetailScreen from './src/screens/EnvironmentDetailScreen';
+import GrowingAreasScreen  from './src/screens/GrowingAreasScreen';
+import GrowingAreaDetailScreen from './src/screens/GrowingAreaDetailScreen';
 import CensusScreen        from './src/screens/CensusScreen';
 import AlmanacScreen      from './src/screens/AlmanacScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
@@ -39,9 +39,9 @@ export type SpeciesStackParamList = {
   SpeciesDetail: { speciesId: number };
 };
 
-export type EnvironmentsStackParamList = {
-  EnvironmentsList:  undefined;
-  EnvironmentDetail: { environmentId: number; name?: string };
+export type GrowingAreasStackParamList = {
+  GrowingAreasList:  undefined;
+  GrowingAreaDetail: { growingAreaId: number; name?: string };
 };
 
 export type CensusStackParamList = {
@@ -53,7 +53,7 @@ export type CensusStackParamList = {
 type RootTabParamList = {
   Plants:       undefined;
   Species:      undefined;
-  Environments: undefined;
+  GrowingAreas: undefined;
   Census:       undefined;
   Settings:     undefined;
 };
@@ -61,7 +61,7 @@ type RootTabParamList = {
 // ── Stack navigators ──────────────────────────────────────────────────────────
 const PlantsStack       = createNativeStackNavigator<PlantsStackParamList>();
 const SpeciesStack      = createNativeStackNavigator<SpeciesStackParamList>();
-const EnvironmentsStack = createNativeStackNavigator<EnvironmentsStackParamList>();
+const GrowingAreasStack = createNativeStackNavigator<GrowingAreasStackParamList>();
 const CensusStack       = createNativeStackNavigator<CensusStackParamList>();
 const Tab               = createBottomTabNavigator<RootTabParamList>();
 
@@ -106,16 +106,16 @@ function CensusNavigator() {
   );
 }
 
-function EnvironmentsNavigator() {
+function GrowingAreasNavigator() {
   return (
-    <EnvironmentsStack.Navigator screenOptions={useHeaderOpts()}>
-      <EnvironmentsStack.Screen name="EnvironmentsList" component={EnvironmentsScreen} options={{ title: 'Environments' }} />
-      <EnvironmentsStack.Screen
-        name="EnvironmentDetail"
-        component={EnvironmentDetailScreen}
-        options={({ route }) => ({ title: route.params.name ?? 'Environment' })}
+    <GrowingAreasStack.Navigator screenOptions={useHeaderOpts()}>
+      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreasScreen} options={{ title: 'GrowingAreas' }} />
+      <GrowingAreasStack.Screen
+        name="GrowingAreaDetail"
+        component={GrowingAreaDetailScreen}
+        options={({ route }) => ({ title: route.params.name ?? 'GrowingArea' })}
       />
-    </EnvironmentsStack.Navigator>
+    </GrowingAreasStack.Navigator>
   );
 }
 
@@ -224,8 +224,8 @@ function AuthGate() {
                 }}
               />
               <Tab.Screen
-                name="Environments"
-                component={EnvironmentsNavigator}
+                name="GrowingAreas"
+                component={GrowingAreasNavigator}
                 options={{
                   headerShown: false,
                   tabBarIcon: ({ focused }) => <TabIcon emoji="🌍" focused={focused} />,

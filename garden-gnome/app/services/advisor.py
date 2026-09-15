@@ -20,8 +20,12 @@ import os
 from datetime import datetime, timezone
 
 from app.models.models import (
-    Species, Plant, CareLog, CareSchedule, CareType, Environment,
+    Species, Plant, CareLog, CareSchedule, CareType, GrowingArea,
     Shelter, TempExposure, SunExposure,
+)
+from app.services.care_facts import (
+    BORROWED_LABEL, is_genus_inferred, species_fact_lines,
+    water_regime_sentence,
 )
 from app.services.grounding import grounding_failures, log_rejection
 from app.services.persona import PERSONA_PREAMBLE
@@ -99,17 +103,17 @@ def _days_since(when: datetime | None) -> int | None:
     return (now - when).days
 
 
-def weather_applies(environment: Environment | None) -> bool:
+def weather_applies(growing_area: GrowingArea | None) -> bool:
     """Whether the outside world reaches this plant enough for weather to matter.
 
     A desk plant in a climate-controlled room (indoor + sheltered) is unaffected
     by the forecast, so weather grounding and nudges are skipped for it. This is
     the gate that scopes the feature to "plants outside of shelters." """
-    if environment is None:
+    if growing_area is None:
         return False
     return (
-        environment.temp_exposure == TempExposure.outdoor
-        or environment.shelter in (Shelter.partial, Shelter.exposed)
+        growing_area.temp_exposure == TempExposure.outdoor
+        or growing_area.shelter in (Shelter.partial, Shelter.exposed)
     )
 
 
@@ -124,14 +128,14 @@ _TEMP_EXPOSURE_DESC = {
 }
 
 
-def _environment_block(environment: Environment) -> str:
+def _growing_area_block(growing_area: GrowingArea) -> str:
     return (
         "\nGROW ENVIRONMENT (how much of the weather actually reaches this plant):\n"
-        f"- Name: {environment.name}\n"
-        f"- Shelter: {_SHELTER_DESC.get(environment.shelter, environment.shelter.value)}\n"
+        f"- Name: {growing_area.name}\n"
+        f"- Shelter: {_SHELTER_DESC.get(growing_area.shelter, growing_area.shelter.value)}\n"
         f"- Temperature exposure: "
-        f"{_TEMP_EXPOSURE_DESC.get(environment.temp_exposure, environment.temp_exposure.value)}\n"
-        f"- Sun exposure: {environment.sun_exposure.value}\n"
+        f"{_TEMP_EXPOSURE_DESC.get(growing_area.temp_exposure, growing_area.temp_exposure.value)}\n"
+        f"- Sun exposure: {growing_area.sun_exposure.value}\n"
     )
 
 
@@ -175,27 +179,14 @@ def _build_prompt(
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
-    environment: Environment | None = None,
+    growing_area: GrowingArea | None = None,
     weather: dict | None = None,
 ) -> str:
-    # The humidity line exists only when the numbers came from a source. On
-    # imported rows they were derived from a watering category, and a block
-    # headed "authoritative" must not hand the model derived numbers as facts.
-    humidity_line = (
-        f"- Humidity: {species.humidity_pct_min}-{species.humidity_pct_max}%\n"
-        if species.humidity_sourced else ""
-    )
-    facts = (
-        f"SPECIES CARE FACTS (authoritative):\n"
-        f"- Common name: {species.common_name}\n"
-        f"- Scientific name: {species.scientific_name}\n"
-        f"- Light need: {species.light_need.value}\n"
-        f"{humidity_line}"
-        f"- Temperature: {species.temp_f_min}-{species.temp_f_max} F\n"
-        f"- Soil: {species.soil_type}\n"
-        f"- Toxic to pets: {'yes' if species.toxic_to_pets else 'no'}\n"
-        f"- Curated notes: {species.care_notes or '(none)'}\n"
-    )
+    # One line per concept the row can back, resolved values first and
+    # genus-borrowed ones labelled -- shared with the vision prompt so the
+    # two never describe the same species differently (care_facts.py).
+    facts = ("SPECIES CARE FACTS (authoritative):\n"
+             + "\n".join(species_fact_lines(species)) + "\n")
 
     if care_schedules:
         lines = []
@@ -235,13 +226,13 @@ def _build_prompt(
     else:
         history = "\nRECENT CARE HISTORY: none logged yet.\n"
 
-    # Environment + weather only when the outside world reaches this plant and
+    # GrowingArea + weather only when the outside world reaches this plant and
     # we actually have a forecast; a desk plant's prompt is unchanged.
-    if weather is not None and weather_applies(environment):
-        env_weather = _environment_block(environment) + _weather_block(weather)
+    if weather is not None and weather_applies(growing_area):
+        env_weather = _growing_area_block(growing_area) + _weather_block(weather)
         weather_clause = (
             " Factor in the local weather and how much of it this plant's "
-            "environment actually exposes it to."
+            "growing area actually exposes it to."
         )
     else:
         env_weather = ""
@@ -279,21 +270,21 @@ _CARE_TYPE_EMOJI = {
 
 def _weather_nudges(
     species: Species,
-    environment: Environment | None,
+    growing_area: GrowingArea | None,
     weather: dict | None,
 ) -> list[str]:
     """Deterministic, conservative forecast nudges for plants the weather
     reaches. One line per applicable signal; each is gated by the physical
-    reality of the environment (rain only matters where the sky reaches, heat
+    reality of the growing area (rain only matters where the sky reaches, heat
     and cold only where the plant feels outdoor air, UV only in open sun)."""
-    if environment is None or weather is None:
+    if growing_area is None or weather is None:
         return []
 
     days = weather.get("daily") or []
     current = weather.get("current") or {}
-    unsheltered = environment.shelter in (Shelter.partial, Shelter.exposed)
-    outdoor = environment.temp_exposure == TempExposure.outdoor
-    open_sun = unsheltered and environment.sun_exposure != SunExposure.shade
+    unsheltered = growing_area.shelter in (Shelter.partial, Shelter.exposed)
+    outdoor = growing_area.temp_exposure == TempExposure.outdoor
+    open_sun = unsheltered and growing_area.sun_exposure != SunExposure.shade
 
     nudges: list[str] = []
 
@@ -306,28 +297,36 @@ def _weather_nudges(
                 f"hold off watering; the sky may do it for you."
             )
 
-    # Heat spike above the species' comfort ceiling for an outdoor plant.
-    if outdoor and species.temp_f_max is not None:
+    # Heat spike above the species' comfort ceiling for an outdoor plant. The
+    # resolved daytime maximum outranks the legacy band when a claim set it.
+    ceiling, ceiling_label = _threshold(species, "day_f_max", "temp_f_max")
+    if outdoor and ceiling is not None:
         hot = next(
-            (d for d in days if d.get("high_f") is not None and d["high_f"] > species.temp_f_max),
+            (d for d in days if d.get("high_f") is not None and d["high_f"] > ceiling),
             None,
         )
         if hot:
             nudges.append(
                 f"🔥 Heat ahead (high {hot['high_f']}°F on {hot['date']}, above its "
-                f"{species.temp_f_max}°F comfort ceiling) — check soil sooner and add shade or water."
+                f"{ceiling}°F comfort ceiling) — check soil sooner and add shade or water."
+                + ceiling_label
             )
 
-    # Cold snap below the comfort floor for an outdoor plant.
-    if outdoor and species.temp_f_min is not None:
+    # Cold snap for an outdoor plant: below the cited cold-damage line when
+    # there is one, else the legacy comfort floor.
+    floor, floor_label = _threshold(species, "chill_damage_f", "temp_f_min")
+    if outdoor and floor is not None:
         cold = next(
-            (d for d in days if d.get("low_f") is not None and d["low_f"] < species.temp_f_min),
+            (d for d in days if d.get("low_f") is not None and d["low_f"] < floor),
             None,
         )
         if cold:
+            what = ("cold-damage line" if species.chill_damage_f is not None
+                    else "comfort floor")
             nudges.append(
                 f"❄️ Cold night ahead (low {cold['low_f']}°F on {cold['date']}, below its "
-                f"{species.temp_f_min}°F comfort floor) — bring it in or shelter it."
+                f"{floor}°F {what}) — bring it in or shelter it."
+                + floor_label
             )
 
     # Very high UV reaching a plant that's open to the sky and not in shade.
@@ -343,13 +342,23 @@ def _weather_nudges(
     return nudges
 
 
+def _threshold(species: Species, resolved: str, legacy: str) -> tuple[int | None, str]:
+    """The resolved column when a claim set it, else the legacy one, with the
+    label a genus-borrowed value must carry (ADR 0002). A legacy value is
+    never labelled: it was typed in, not inferred."""
+    value = getattr(species, resolved)
+    if value is not None:
+        return value, BORROWED_LABEL if is_genus_inferred(species, resolved) else ""
+    return getattr(species, legacy), ""
+
+
 def _advise_stub(
     species: Species,
     plant: Plant,
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
-    environment: Environment | None = None,
+    growing_area: GrowingArea | None = None,
     weather: dict | None = None,
 ) -> str:
     # One line per care type; the client renders each line as its own row.
@@ -389,8 +398,17 @@ def _advise_stub(
     if not lines:
         lines.append("No care schedules defined for this species yet.")
 
+    # What the sources say about watering, beside the schedule line and never
+    # in place of it: the regime is the species-level fact, the schedule is
+    # this plant's cadence. Never labelled as borrowed: a regime is
+    # harm-capable, the resolver refuses to inherit one (ADR 0007), so a
+    # regime on the row was cited to this species.
+    regime = water_regime_sentence(species)
+    if regime:
+        lines.append(f"💧 From its sources: {regime}.")
+
     # Weather-driven nudges for plants the forecast actually reaches.
-    lines.extend(_weather_nudges(species, environment, weather))
+    lines.extend(_weather_nudges(species, growing_area, weather))
 
     if species.toxic_to_pets:
         lines.append(f"⚠️ {species.common_name} is toxic to pets.")
@@ -412,13 +430,13 @@ def _advise_anthropic(
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
-    environment: Environment | None = None,
+    growing_area: GrowingArea | None = None,
     weather: dict | None = None,
 ) -> str:
     import anthropic
 
     prompt = _build_prompt(
-        species, plant, recent_logs, care_schedules, symptoms, environment, weather
+        species, plant, recent_logs, care_schedules, symptoms, growing_area, weather
     )
     try:
         client = anthropic.Anthropic()
@@ -455,12 +473,12 @@ def get_care_advice(
     recent_logs: list[CareLog],
     care_schedules: list[CareSchedule],
     symptoms: str = "",
-    environment: Environment | None = None,
+    growing_area: GrowingArea | None = None,
     weather: dict | None = None,
 ) -> dict:
     backend = SYMPTOMS_BACKEND if symptoms.strip() else BACKEND
     fn = _BACKENDS.get(backend, _advise_stub)
-    advice = fn(species, plant, recent_logs, care_schedules, symptoms, environment, weather)
+    advice = fn(species, plant, recent_logs, care_schedules, symptoms, growing_area, weather)
 
     # The stub is derived from the data, so it is grounded by construction and
     # needs no check. Model output does: if it drifts from the facts it was
@@ -469,7 +487,7 @@ def get_care_advice(
     # is actually reading.
     if backend != "stub":
         facts = _build_prompt(
-            species, plant, recent_logs, care_schedules, symptoms, environment, weather
+            species, plant, recent_logs, care_schedules, symptoms, growing_area, weather
         )
         failures = grounding_failures(facts, advice)
         if failures:
@@ -478,7 +496,7 @@ def get_care_advice(
                 "backend": "stub",
                 "advice": _advise_stub(
                     species, plant, recent_logs, care_schedules, symptoms,
-                    environment, weather,
+                    growing_area, weather,
                 ),
                 "guarded": True,
             }

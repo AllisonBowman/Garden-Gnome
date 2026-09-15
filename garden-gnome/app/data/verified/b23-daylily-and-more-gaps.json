@@ -1,0 +1,1268 @@
+{
+  "batch": "b23-daylily-and-more-gaps",
+  "records": [
+    {
+      "common_name": "Daylily",
+      "scientific_name_given": "Hemerocallis fulva",
+      "scientific_name_accepted": "Hemerocallis fulva",
+      "name_note": null,
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": "Toxic to cats, sharing the same acute-kidney-injury pattern documented for true lilies. UF/IFAS's dedicated Daylily toxicity write-up (EP648) states: \"All parts of the plant are toxic to dogs and cats. Even a small amount of plant material can cause serious concerns if ingested. The mechanism of the toxicity is still unknown, but it is known to cause acute kidney injury in cats. Symptoms include gastrointestinal irritation, followed by dehydration, vomiting, and then renal failure. Seizures can also occur in some cases.\" NC State's Hemerocallis genus page adds that affected cats \"may show signs of vomiting, inappetence, lethargy, kidney failure, and even death after eating.\" NC State's own Hemerocallis fulva species page (\"The plant is reportedly toxic to cats\"), the RHS species page (\"TOXIC to pets (cats)\"), and UGA CAES (\"Major Toxicity (for cats)\") all independently confirm cat toxicity for this species. Sources disagree on dogs specifically -- NC State tags H. fulva \"non-toxic for dogs\" while UF/IFAS EP648 says all parts are toxic to dogs and cats -- so this record asserts toxicity for cats only, where every source is unanimous.",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": 6,
+      "soil_ph_max": 6.5,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f: no admissible source states a specific cold-damage-onset temperature in Fahrenheit; only broad USDA hardiness zone ranges (3a-8b / zones 3-9) are given, which describe winter survival, not damage onset.",
+        "day_f_min/day_f_max, night_f_min/night_f_max: no admissible source gives explicit daytime or nighttime temperature ranges in Fahrenheit for daylily.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: no admissible source discusses ambient humidity requirements -- expected for an outdoor garden perennial, which extension sources don't evaluate on this axis.",
+        "cool_rest_note: no admissible source describes a cool/dormancy rest period requirement.",
+        "water_regime: sources describe water needs only qualitatively (drought-tolerant once established, 'moderate water requirements,' 'consistent watering while budding and flowering') -- none frame it in the container/houseplant soil-moisture terms this field's enum expects (keep_moist / dry_surface_between / etc.), so mapping to any single enum value would go beyond what the quotes support.",
+        "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no admissible source gives a specific irrigation schedule, soil-check depth, or day-count watering interval -- daylily is grown in garden beds and evaluated with garden-scale language, not houseplant watering metrics.",
+        "fertilize_interval_days: Clemson HGIC ties fertilizing to growth stage ('early spring just as new growth commences, and again in midsummer') rather than a day-count interval.",
+        "fertilize_active_months: HGIC's fertilizing guidance uses phenological cues ('early spring,' 'midsummer') rather than named calendar months, so no specific month numbers can be read off directly per the rule against presenting non-literal figures.",
+        "fertilize_strength: no admissible source gives fertilizer strength in full/half/quarter terms; HGIC only notes a general preference for moderate nitrogen and higher phosphorus/potash with slow-release products.",
+        "light_fc_min, light_fc_good: no admissible source gives light levels in foot-candles; all light guidance found is qualitative (full sun/partial shade) or hour-based.",
+        "direct_sun_hours_max: sources state a minimum sun-hour threshold for the 'full sun' category (6+ hours) but no source states a maximum number of direct-sun hours the plant tolerates or needs.",
+        "toxic_to_pets (dogs specifically): NC State's own species page tags Hemerocallis fulva 'non-toxic for dogs,' while UF/IFAS EP648 states all parts are toxic to dogs and cats -- a genuine disagreement on dogs specifically. Cat toxicity is unanimous across every admissible source, so toxic_to_pets is kept true and toxicity_detail is scoped to cats only rather than asserting dog toxicity either way.",
+        "soil_drainage: reported as 'moderate' by mapping 'well-drained soil' / 'good drainage' / 'moist but well-drained' language (NC State, HGIC, RHS) onto the enum's middle category; no source uses the literal word 'moderate,' and this is a judgment call distinguishing it from the enum's 'fast' (gritty/succulent-style) and 'moisture_retentive' (boggy) options.",
+        "name_note — removed on audit: name_note asserts that 'Missouri Botanical Garden's Plant Finder' independently treats Hemerocallis fulva as the accepted binomial, but no plantfinder.mobot.org or missouribotanicalgarden.org citation exists anywhere in the citations array -- only NC State and RHS entries are present. This is a specific factual claim about a named source with zero supporting citation entry, violating the requirement that every non-null field value trace to at least one citations entry (structural check 1).",
+        "soil_drainage — removed on audit: Value 'moderate' does not literally appear in any cited quote in relation to drainage. Citation 13's 'moderate' modifies 'water requirements,' not drainage; citation 14 (RHS) never uses 'moderate' at all. I fetched NC State's live H. fulva page directly and found it carries an explicit structured field, 'Soil Drainage: Good Drainage,' which the record never cites and which contradicts the 'moderate' value chosen -- the record substituted a looser prose-based inference for the source's own more specific and directly-relevant structured drainage tag."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Daylily; scientific_name_given Hemerocallis fulva (this is NC State's dedicated species entry for Hemerocallis fulva)",
+          "quote": "Daylily",
+          "source": "NC State Extension Plant Toolbox — Hemerocallis fulva (Orange Daylily)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/"
+        },
+        {
+          "claim": "scientific_name_accepted Hemerocallis fulva",
+          "quote": "Hemerocallis fulva | common orange daylily",
+          "source": "Royal Horticultural Society — Hemerocallis fulva",
+          "url": "https://www.rhs.org.uk/plants/8622/hemerocallis-fulva/details"
+        },
+        {
+          "claim": "toxic_to_pets true (cats: acute kidney injury, GI irritation, dehydration, vomiting, renal failure, seizures); toxicity_detail cats renal failure pattern",
+          "quote": "All parts of the plant are toxic to dogs and cats. Even a small amount of plant material can cause serious concerns if ingested. The mechanism of the toxicity is still unknown, but it is known to cause acute kidney injury in cats. Symptoms include gastrointestinal irritation, followed by dehydration, vomiting, and then renal failure (Bates 2016). Seizures can also occur in some cases.",
+          "source": "UF/IFAS EDIS EP648 — Common Poisonous Landscape Plant Species in Florida (Day Lily section)",
+          "url": "https://edis.ifas.ufl.edu/publication/EP648"
+        },
+        {
+          "claim": "toxic_to_pets true (cats)",
+          "quote": "TOXIC to pets (cats) - see the HTA guide to potentially harmful plants for further information and useful contact numbers",
+          "source": "Royal Horticultural Society — Hemerocallis fulva",
+          "url": "https://www.rhs.org.uk/plants/8622/hemerocallis-fulva/details"
+        },
+        {
+          "claim": "toxicity_detail cats vomiting, inappetence, lethargy, kidney failure, death (NC State's Hemerocallis genus page, which lists H. fulva among its cultivars)",
+          "quote": "These plants are toxic to cats, which may show signs of vomiting, inappetence, lethargy, kidney failure, and even death after eating.",
+          "source": "NC State Extension Plant Toolbox — Hemerocallis (Day Lilies)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis/common-name/day-lilies"
+        },
+        {
+          "claim": "toxic_to_pets true (reportedly toxic to cats)",
+          "quote": "The plant is reportedly toxic to cats.",
+          "source": "NC State Extension Plant Toolbox — Hemerocallis fulva (Orange Daylily)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/"
+        },
+        {
+          "claim": "toxic_to_pets dog-toxicity conflict note -- this NC State tag says non-toxic for dogs, which disagrees with UF/IFAS's 'toxic to dogs and cats' claim; this record limits its toxic_to_pets assertion to cats only, where every source agrees",
+          "quote": "#non-toxic for dogs",
+          "source": "NC State Extension Plant Toolbox — Hemerocallis fulva (Orange Daylily), site tag",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/"
+        },
+        {
+          "claim": "toxic_to_pets true (cats, classified as major toxicity)",
+          "quote": "Daylily Hemerocallis spp. Toxicity class: Major Toxicity (for cats)",
+          "source": "UGA CAES Field Report — Keep These Toxic Plants Away From Your Pets",
+          "url": "https://fieldreport.caes.uga.edu/news/keep-these-toxic-plants-away-from-your-pets/"
+        },
+        {
+          "claim": "toxic_to_pets true (cats), genus-level corroboration mentioned inside the Easter Lily toxicity writeup",
+          "quote": "In general, many species of the genus Lilium and Hemerocallis (day lilies) are considered potentially toxic to cats (Fitzgerald 2010).",
+          "source": "UF/IFAS EDIS EP639 — Common Poisonous Houseplant Species in Florida",
+          "url": "https://ask.ifas.ufl.edu/publication/EP639"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun (6 or more hours of direct sunlight a day) ... Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
+          "source": "NC State Extension Plant Toolbox — Hemerocallis fulva (Orange Daylily)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "quote": "Full sun, Partial shade",
+          "source": "Royal Horticultural Society — Hemerocallis fulva (Position)",
+          "url": "https://www.rhs.org.uk/plants/8622/hemerocallis-fulva/details"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 6.5",
+          "quote": "Daylilies prefer slightly acid (pH 6 to 6.5) well-drained soil with plenty of organic matter.",
+          "source": "Clemson HGIC — Daylily factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/daylily/"
+        },
+        {
+          "claim": "soil_drainage moderate (interpreting well-drained/good-drainage language); soil_base garden_bed",
+          "quote": "This daylily grows in full sun to partial shade in average, well-drained soil, but does tolerate poor soil as well. It is low maintenance with only moderate water requirements and naturalizes easily. The clump, which spreads rapidly by rhizomes, may be divided for propagation as needed.",
+          "source": "NC State Extension Plant Toolbox — Hemerocallis fulva (Orange Daylily)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/"
+        },
+        {
+          "claim": "soil_base garden_bed; soil_drainage moderate",
+          "quote": "Grow in fertile, moist but well-drained soil preferably in full sun. Flowering is likely to be poor in shadier situations. Tolerant of heavy clay and poorer soils.",
+          "source": "Royal Horticultural Society — Hemerocallis fulva (Cultivation)",
+          "url": "https://www.rhs.org.uk/plants/8622/hemerocallis-fulva/details"
+        },
+        {
+          "claim": "is_houseplant false (hardy outdoor garden perennial across USDA zones 3a-8b; no admissible source describes indoor/container houseplant use)",
+          "quote": "USDA Plant Hardiness Zone: 3a, 3b, 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b",
+          "source": "NC State Extension Plant Toolbox — Hemerocallis fulva (Orange Daylily)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/"
+        }
+      ]
+    },
+    {
+      "common_name": "String of Hearts",
+      "scientific_name_given": "Ceropegia woodii",
+      "scientific_name_accepted": null,
+      "name_note": "Two admissible sources anchor to different accepted names and neither resolves to the other's. NC State Extension's own page is titled \"Ceropegia woodii\" and states \"Previously known as: Ceropegia linearis subsp. woodii\" -- treating Ceropegia woodii as the current name and Ceropegia linearis subsp. woodii as the superseded one. RHS's own page is titled \"Ceropegia linearis subsp. woodii,\" carries a structured \"Name Status: Correct\" tag for that binomial, and lists \"Ceropegia woodii\" among its Synonyms -- treating Ceropegia linearis subsp. woodii as the accepted name and Ceropegia woodii as a synonym of it. Because the two sources take opposite positions on which of the two names is currently accepted, scientific_name_accepted is left null rather than picking a side.",
+      "is_houseplant": true,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": "NC State: \"It is dormant over the winter and watering should be reduced even further.\" RHS's cultivation guidance describes the same growing-season/rest-season split: \"Water moderately when in growth and apply a low nitrogen liquid fertiliser 2 or 3 times. Keep plants dry at other times.\"",
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "part_shade"
+      ],
+      "soil_base": "cactus_succulent",
+      "soil_drainage": "fast",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "dry_thoroughly_between",
+      "water_dry_down_target": "Let the soil dry out completely between waterings. NC State: \"Be careful not to overwater this plant. It should be allowed to dry out completely between waterings.\"",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxic_to_pets and toxicity_detail: left null. NC State Extension's Ceropegia woodii page does carry a structured 'Poisonous to Humans' block (Poison Severity: Low; Poison Symptoms: 'Vomiting (sometimes with blood), diarrhea, depression'; Poison Toxic Principle: 'Lectin, wisterin glycoside'; Poison Part: Bark, Flowers, Leaves, Roots, Sap/Juice, Seeds), but I verified by independently fetching NC State's own Wisteria sinensis page (https://plants.ces.ncsu.edu/plants/wisteria-sinensis/) that this exact block -- identical severity, identical symptom text, and identical 'wisterin glycoside' toxic principle (a compound name derived from Wisteria, not Ceropegia) and 'Bark' listed as a poisoned part, which makes no botanical sense for a non-woody succulent vine -- is reproduced byte-for-byte on that unrelated species' page too. This is a templating/caching defect on NC State's site, not species-specific data, so it was excluded rather than used for toxicity in either direction. Separately, that block is headed 'Poisonous to Humans,' not pets, so per the task's own rule it could not have supported toxic_to_pets even if genuine. RHS's page has zero occurrences of toxic/poison/harmful/irritant anywhere in its HTML, so no admissible source actually addresses toxicity -- to pets or otherwise -- for this species.",
+        "day_f_min/day_f_max and night_f_min/night_f_max: left null. Neither source states an indoor or outdoor day/night temperature range for this species; NC State's page contains no temperature figures at all, and RHS gives only a categorical outdoor hardiness rating (see chill_damage_f note), not a day/night range.",
+        "chill_damage_f: left null. RHS rates this species 'H1C,' but the accompanying explanatory text -- 'can be grown outside in the summer (5 - 10)' -- is part of RHS's site-wide Hardiness Ratings legend (H1A through H7) that is reused verbatim across every RHS plant page, not a species-specific damage-onset temperature. It is also framed as an outdoor-growing-suitability window, not a stated point where sublethal chill damage begins, so it was not converted into a Fahrenheit damage-onset figure.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: left null. Neither admissible source mentions humidity for this species at all.",
+        "light_fc_min and light_fc_good: left null. Neither source gives a foot-candle light figure for this species.",
+        "direct_sun_hours_max: left null. NC State's only checked Light category for this species is 'Dappled Sunlight (Shade through upper canopy all day),' which -- unlike NC State's own 'Partial Shade' category, elsewhere defined as '2-6 hours' of direct sun -- carries no specific hour figure. RHS's Position field just says 'Partial shade' with no hour range either.",
+        "soil_ph_min and soil_ph_max: left null. NC State gives only broad pH category checkboxes, 'Acid (<6.0)' and 'Neutral (6.0-8.0)' together, and RHS gives only the categorical 'Acid or Neutral.' Neither source states a specific numeric preferred range for this species.",
+        "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. No admissible source gives a specific check-depth or day-interval watering figure for this species; only qualitative dry-down guidance was found, captured instead in water_dry_down_target and cool_rest_note.",
+        "fertilize_active_months and fertilize_interval_days: left null. RHS says to fertilize 'when in growth' '2 or 3 times' but never names specific calendar months or gives a day interval.",
+        "fertilize_strength: left null. RHS's cultivation text says to apply 'a low nitrogen liquid fertiliser' -- this describes the fertilizer's nitrogen content/formulation, not a dilution strength (full/half/quarter), so it was not forced into this field."
+      ],
+      "citations": [
+        {
+          "claim": "common_name String of Hearts; scientific_name_given Ceropegia woodii",
+          "quote": "Ceropegia woodii (Bushman's Pipe, Chain of Hearts, Chinese Lantern, Necklace Vine, Rosary Vine, String of Hearts, Sweetheart Vine)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/"
+        },
+        {
+          "claim": "name_note: NC State treats Ceropegia woodii as the current name, Ceropegia linearis subsp. woodii as a prior name",
+          "quote": "Previously known as: Ceropegia linearis subsp. woodii",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/"
+        },
+        {
+          "claim": "name_note: RHS lists Ceropegia woodii as a synonym of Ceropegia linearis subsp. woodii",
+          "quote": "Synonyms Ceropegia barbertonensis, Ceropegia hastata, Ceropegia schoenlandii, Ceropegia woodii",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/74288/ceropegia-linearis-subsp-woodii/details"
+        },
+        {
+          "claim": "name_note: RHS marks Ceropegia linearis subsp. woodii itself as the accepted/correct name",
+          "quote": "Name Status Correct",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/74288/ceropegia-linearis-subsp-woodii/details"
+        },
+        {
+          "claim": "is_houseplant true",
+          "quote": "Tags: #houseplant #container plant #hanging baskets #succulent #perennial #interesting flowers #interesting leaves #cascading #hummingbird friendly #prostrate #climber",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/"
+        },
+        {
+          "claim": "is_houseplant true",
+          "quote": "Houseplants Cactus Succulent Conservatory Greenhouse",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/74288/ceropegia-linearis-subsp-woodii/details"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "quote": "Light: Dappled Sunlight (Shade through upper canopy all day)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade",
+          "quote": "Position Partial shade",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/74288/ceropegia-linearis-subsp-woodii/details"
+        },
+        {
+          "claim": "soil_base cactus_succulent and cool_rest_note (water moderately in growth, fertilize 2-3 times, keep dry other times)",
+          "quote": "Grow in cactus compost. Water moderately when in growth and apply a low nitrogen liquid fertiliser 2 or 3 times. Keep plants dry at other times",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/74288/ceropegia-linearis-subsp-woodii/details"
+        },
+        {
+          "claim": "soil_drainage fast",
+          "quote": "Soil Drainage: Good Drainage",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/"
+        },
+        {
+          "claim": "soil_drainage fast",
+          "quote": "Moisture Well–drained",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/74288/ceropegia-linearis-subsp-woodii/details"
+        },
+        {
+          "claim": "water_regime dry_thoroughly_between, water_dry_down_target (dry out completely between waterings), and cool_rest_note (dormant over winter, reduce watering further)",
+          "quote": "The String of Hearts prefers well-drained sandy, potting soil, and bright, indirect sunlight. Be careful not to overwater this plant. It should be allowed to dry out completely between waterings. It is dormant over the winter and watering should be reduced even further.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/"
+        }
+      ]
+    },
+    {
+      "common_name": "Venus Flytrap",
+      "scientific_name_given": "Dionaea muscipula",
+      "scientific_name_accepted": "Dionaea muscipula",
+      "name_note": "All three admissible sources consulted -- NC State Extension Gardener Plant Toolbox, Missouri Botanical Garden Plant Finder, and RHS -- consistently use Dionaea muscipula as both the given and the accepted binomial. No conflicting accepted name was found for this species.",
+      "is_houseplant": true,
+      "toxic_to_pets": false,
+      "toxicity_detail": null,
+      "day_f_min": 50,
+      "day_f_max": 80,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": "high",
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": "moisture_retentive",
+      "soil_ph_min": null,
+      "soil_ph_max": 6,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Never allow the soil to dry out -- keep it constantly/permanently wet, ideally with the pot standing in a saucer or tray of water. Use only rainwater, distilled water, or reverse-osmosis water; ordinary tap water (chlorinated or hard) can kill the plant.",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "night_f_min / night_f_max: no admissible source gives a distinct nighttime temperature figure for the active growing season; RHS's \"10–27°C (50–80°F)\" range (used for day_f_min/day_f_max) is a single undifferentiated range, not split into day vs. night.",
+        "chill_damage_f: left null on a genuine conflict. RHS instructs keeping a potted plant \"above 10°C/50°F\" during its winter rest (\"Avoid keeping in a warm room over winter – it needs a cool rest (but above 10°C/50°F)\"), while Missouri Botanical Garden recommends overwintering containers indoors \"in a sunny but cool area (southern window) with temperatures of 40-50 degrees F\" — explicitly endorsing temperatures below RHS's stated floor for the same practical scenario (a potted plant's indoor winter rest). Neither side was adopted.",
+        "humidity_pct_min / humidity_pct_max: no admissible source gives a percentage figure, only NC State's categorical \"high humidity\" (captured in humidity_need).",
+        "light_fc_min / light_fc_good: no admissible source gives footcandle figures for this species.",
+        "direct_sun_hours_max: NC State's \"6 or more hours of direct sunlight a day\" is a sitewide generic definition of its \"Full sun\" category label used across all Plant Toolbox species pages, not a species-specific sun-hours ceiling for Dionaea muscipula, so it was not used to populate this field.",
+        "soil_base: the recommended media — \"whole-fiber sphagnum moss\" or \"equal parts peat moss and coarse vermiculite or sharp sand\" (NC State), \"sustainably grown live sphagnum moss or peat-free carnivorous plant compost\" (RHS), \"a mixture of sand and peat moss\" (Missouri Botanical Garden) — does not cleanly match any fixed soil_base enum option, so it is left null rather than forced into an awkward fit (cactus_succulent or semi_hydro would both misrepresent a peat/sphagnum bog mix).",
+        "soil_ph_min: NC State's structured field gives only an upper bound, \"Acid (<6.0)\"; no admissible source gives an explicit lower-bound pH number, so soil_ph_min is left null while soil_ph_max is set to 6.0.",
+        "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no admissible source gives a numeric watering-interval, check-depth, or dormancy-duration figure; all three sources describe watering qualitatively (\"never let dry out\", \"kept permanently wet\", pot standing in a saucer of water) rather than as a check-and-water schedule.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: left null by design, not by data gap. NC State is explicit — \"Do not fertilize the plant\" — consistent with the species note that it derives nitrogen from digested insect prey rather than soil/fertilizer, so no fertilizing schedule applies at all.",
+        "toxicity_detail: left null. NC State's page carries only the categorical tags \"#non-toxic for cats\", \"#non-toxic for horses\", and \"#non-toxic for dogs\", with no prose describing a mechanism or symptom set to summarize into a detail field.",
+        "is_houseplant is set true on NC State's structured \"Houseplant\" Plant Type tag/Landscape Location listing and RHS's \"It is relatively easy to grow as a houseplant.\" Missouri Botanical Garden is notably more cautious on this exact question without flatly contradicting it — \"Growth as a houseplant is possible but can be difficult because of the need for growing season sun, humidity and winter dormancy\" and \"Plants often do not grow well as houseplants\" — so the true value is kept, but this is not an easy-care tropical foliage plant indoors and that caveat should travel with the field.",
+        "No schema field cleanly captures the plant's single most safety-critical care fact — that ordinary tap water can kill it. NC State: \"treated (chlorinated) water or hard water can kill the plant\"; RHS: \"tap water, especially in hard water areas, can kill it\"; Missouri Botanical Garden: \"It is best to use rain water, distilled water, or reverse osmosis water.\" This is captured in water_dry_down_target in the absence of a dedicated water-source/water-quality field.",
+        "scientific_name_accepted: no conflict found — NC State, Missouri Botanical Garden, and RHS all consistently use Dionaea muscipula as both the given and the accepted name.",
+        "cool_rest_note — removed on audit: The field asserts RHS instructs 'avoiding a warm room,' but the citations array's RHS entry for cool_rest_note only quotes 'Give it a cooler rest period over winter' -- it does not include the warm-room language. I fetched the live RHS page and confirmed RHS really does say 'Avoid keeping in a warm room over winter - it needs a cool rest (but above 10 C/50 F),' so the claim is factually accurate, but that supporting quote was never entered into the citations array under any claim label. As constructed, this specific clause in the field's own value fails structural check 1 (every non-null field value must trace to an entry in citations) -- it traces only to text the record never cited, not to the RHS entry actually listed for this field."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Venus Flytrap and scientific_name_given Dionaea muscipula",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Dionaea muscipula\n(Meadow Clams, Venus Flytrap, Venus Fly Trap)"
+        },
+        {
+          "claim": "scientific_name_accepted Dionaea muscipula",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279896",
+          "quote": "Dionaea muscipula, commonly called Venus fly trap, is perhaps the best known of the carnivorous plants that are native to the southeastern United States."
+        },
+        {
+          "claim": "is_houseplant true (tagged Houseplant) and toxic_to_pets false (tagged non-toxic for cats, dogs, and horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Tags:\n#endangered\n#carnivorous\n#deciduous\n#native garden\n#NC native\n#humidity tolerant\n#Coastal FACW\n#Piedmont Mountains FACW\n#food source summer\n#food source herbage\n#Audubon\n#non-toxic for cats\n#non-toxic for horses\n#non-toxic for dogs\n#full sun tolerant\n#container plant\n#coastal plant\n#pest resistant\n#boggy sites\n#wildflower\n#houseplant"
+        },
+        {
+          "claim": "is_houseplant true (relatively easy to grow as a houseplant)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/venus-fly-trap",
+          "quote": "The Venus fly trap (Dionaea muscipula) is a fascinating plant with distinctive jaw-like traps that snap closed when triggered and digest live insects. It is relatively easy to grow as a houseplant, as long as it’s planted in the right potting mix and kept permanently wet, using rainwater or distilled water."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279896",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "humidity_need high",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "It needs high humidity, wet, sandy soil, and full sun to partial shade."
+        },
+        {
+          "claim": "water_regime keep_moist; fertilize_active_months, fertilize_interval_days, and fertilize_strength intentionally null (no fertilizer used); water_dry_down_target rainwater or distilled water only",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Do not allow the soil to dry out. Do not fertilize the plant. Irrigate with rainwater or distilled water; treated (chlorinated) water or hard water can kill the plant."
+        },
+        {
+          "claim": "water_regime keep_moist; water_dry_down_target tap water can kill it",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/venus-fly-trap",
+          "quote": "This swamp plant dislikes dryness at the roots, so keep it permanently wet. However, tap water, especially in hard water areas, can kill it, so always give it rainwater."
+        },
+        {
+          "claim": "water_dry_down_target rainwater, distilled water, or reverse osmosis water only",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279896",
+          "quote": "It is best to use rain water, distilled water, or reverse osmosis water."
+        },
+        {
+          "claim": "soil_drainage moisture_retentive",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Soil Drainage:\nFrequent Standing Water\nMoist\nOccasionally Wet"
+        },
+        {
+          "claim": "soil_ph_max 6.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Soil pH:\nAcid (<6.0)"
+        },
+        {
+          "claim": "day_f_min 50 and day_f_max 80",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/venus-fly-trap",
+          "quote": "Plant it in sustainably grown live sphagnum moss or peat-free carnivorous plant compost, and keep it at 10–27°C (50–80°F)."
+        },
+        {
+          "claim": "cool_rest_note winter dormancy required with a cooler rest period",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/venus-fly-trap",
+          "quote": "Full sun helps it thrive and ensures the traps turn red. Give it a cooler rest period over winter."
+        },
+        {
+          "claim": "cool_rest_note dormancy triggered by falling temperatures and shortening days; plant dies back over winter",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279896",
+          "quote": "Plants flower in spring, produce new leaves (“traps”) in spring-summer and then mostly die back as winter approaches. Winter dormancy is usually triggered in fall when temperatures begin to fall below 50 degrees F as day lengths shorten."
+        }
+      ]
+    },
+    {
+      "common_name": "Chinese Wisteria",
+      "scientific_name_given": "Wisteria sinensis",
+      "scientific_name_accepted": "Wisteria sinensis",
+      "name_note": "The accepted binomial across every admissible source is Wisteria sinensis. NC State Extension titles its page \"Wisteria sinensis (Chinese Wisteria, Wisteria)\" and RHS's own \"Name Status\" field for this exact taxon reads \"Correct.\" No admissible source proposes a different accepted name or flags a synonym conflict. Per the task's species note, Wisteria sinensis (Chinese Wisteria) is documented separately from the North American native Wisteria frutescens (American Wisteria) -- NC State Extension maintains a distinct species page for W. frutescens and states there that \"American wisteria is not as aggressive a spreader as Wisteria sinensis (Chinese wisteria).\" No admissible source conflates the two, and every citation below was checked to confirm it specifically names sinensis (not frutescens or floribunda).",
+      "is_houseplant": false,
+      "toxic_to_pets": true,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxicity_detail is deliberately thin: NC State Extension structures its poison data as two separate tag blocks -- a 'Problems:' list (which includes 'Problem for Cats,' 'Problem for Dogs,' 'Problem for Horses') and a separate 'Poisonous to Humans:' block (Poison Severity: Low; Poison Symptoms: vomiting sometimes with blood, diarrhea, depression; Poison Toxic Principle: lectin, wisterin glycoside; Poison Part: bark, flowers, leaves, roots, sap/juice, seeds, stems). Because the detailed severity/symptom/toxic-principle/plant-part data is nested specifically under the human-only header, it was not used to populate toxicity_detail for pets. RHS is the only source with pet-specific wording ('Pets: Harmful if eaten') and gives no symptom or mechanism detail beyond that phrase.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source gives ambient day or night temperature targets -- this is a hardy outdoor landscape vine (USDA zones 5a-8b per NC State; RHS Hardiness H6) never described in indoor-temperature terms.",
+        "chill_damage_f: no admissible source gives a damage-onset cold temperature. Only survival-oriented hardiness data exists (NC State USDA zones 5a-8b; Missouri Botanical Garden zone 5-8; RHS Hardiness H6, -20 to -15°C), which per the task's own guidance should not be mapped onto a damage-onset field. Missouri Botanical Garden separately notes the plant's 'vulnerability to late spring frost damage to flower buds' but gives no temperature figure for that damage.",
+        "cool_rest_note: no admissible source describes a winter-chilling or dormancy requirement in measurable terms.",
+        "humidity_need/humidity_pct_min/humidity_pct_max: no admissible source addresses ambient humidity for this outdoor landscape vine.",
+        "light_fc_min/light_fc_good/direct_sun_hours_max: sources give only the categorical 'full sun' (NC State: 6 or more hours; RHS: Full sun/Partial shade positions) and 'partial shade' (NC State: 2-6 hours) terms, no footcandle figures, and 'full sun' is stated only as a floor with no upper ceiling, so direct_sun_hours_max cannot be set.",
+        "soil_ph_min/soil_ph_max: NC State tags the species as tolerating the full Acid (<6.0), Neutral (6.0-8.0), and Alkaline (>8.0) categories, and RHS similarly lists 'Acid or Alkaline or Neutral' -- both describe broad tolerance rather than a specific target range. Missouri Botanical Garden's culture note ('slightly acidic') is qualitative with no number attached. No numeric range was accepted.",
+        "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a specific watering interval, check-depth, or a description matching one of the defined regime categories. Missouri Botanical Garden's 'medium moisture, well-drained soils' and NC State's 'Soil Drainage: Good Drainage, Moist' tags are both too general to map onto keep_moist / dry_surface_between / dry_thoroughly_between / keep_barely_moist without guessing.",
+        "fertilize_interval_days/fertilize_active_months/fertilize_strength: Missouri Botanical Garden's only fertilizer-related note is a one-time bloom-stimulation tip -- 'An application of superphosphate in early spring can also help stimulate flowering' -- not a recurring feeding schedule, and the same source separately lists 'overfertilization' as a cause of flowering failure, i.e. routine feeding is actively discouraged rather than scheduled. No interval, month set, or dilution strength was given by any admissible source.",
+        "Invasive-species concern (no dedicated schema field): multiple admissible sources flag Wisteria sinensis as invasive/regulated outside cultivation. NC State Extension states 'This plant is an invasive species in North Carolina' and describes 'rampant growth and invasive tendency.' Missouri Botanical Garden states the plant 'is listed as a noxious weed in one or more Midwestern states outside Missouri and should not be moved or grown under conditions that would involve danger of dissemination' and separately notes it 'Can be invasive (rampant growth plus rooting surface runners).' Clemson HGIC states 'Chinese wisteria (Wisteria sinensis) is a highly invasive vine and should not be planted in the landscape,' appearing on the 'South Carolina Exotic Pest Plant Council Invasive Plant List.' University of Maryland Extension reports the Maryland Department of Agriculture designates it a 'Tier 2' invasive under a law making 'these three Asian species of wisteria...prohibited under Maryland law,' with populations 'as far south as Louisiana and as far west as Wisconsin.' Penn State Extension calls it an 'introduced invasive vine' and separately states 'the seeds are poisonous.' NC State's separate Wisteria frutescens (American Wisteria) page corroborates that the native alternative 'is not as aggressive a spreader as Wisteria sinensis.'",
+        "toxicity_detail — removed on audit: The field's value embeds NC State's human-toxicity-section specifics verbatim -- 'Poison Severity (\"Low\") / Symptoms (\"Vomiting (sometimes with blood), diarrhea, depression\") / Toxic Principle (\"Lectin, wisterin glycoside\")' -- inside a field that is supposed to describe toxicity to PETS. Wrapping it in a disclaimer ('was deliberately not carried into this pet-facing field') doesn't stop the human clinical symptom/mechanism data from sitting in the toxicity_detail text itself; a consumer of this field is exposed to human-scoped poisoning detail as if it were relevant pet context. This is exactly the human-vs-animal-toxicity contamination the audit's check 3 warns about, just achieved through a disclaimer rather than a direct copy. Separately, none of that quoted NC State language ('Poison Severity: Low', the symptom list, 'Lectin, wisterin glycoside') appears anywhere in the citations array -- citation #5's quote is only the bare tag line 'Problems: Invasive Species Problem for Cats Problem for Dogs Problem for Horses Weedy' -- so this portion of the field fails citation-traceability (check 1) independent of the scoping problem. The one genuinely pet-scoped, cited fact ('Pets: Harmful if eaten' from RHS) is sound on its own, but the field as authored goes well beyond it.",
+        "soil_drainage — removed on audit: The value 'moderate' does not match the actual drainage language in its own citation. Citation #9's quote reads 'slightly acidic, humusy, moderately fertile, medium moisture, well-drained soils' -- the word 'moderately' there modifies FERTILITY, not drainage, and the quote's actual drainage descriptor is 'well-drained.' 'Moderate' appears to be a mapping error (borrowing 'moderately fertile' or 'medium moisture' language onto the wrong attribute). This is compounded by a second admissible source the record itself is aware of: its own unknowns text cites NC State's explicit 'Soil Drainage: Good Drainage, Moist' tag, which also does not say 'moderate' -- both available sources describe drainage as good/well-drained, and neither was reconciled with or cited in support of the chosen 'moderate' value.",
+        "unknowns — removed on audit: The invasive-species paragraph in unknowns attributes specific, quotation-styled claims to Clemson HGIC ('highly invasive vine and should not be planted in the landscape'), University of Maryland Extension ('Tier 2', 'prohibited under Maryland law', the Louisiana/Wisconsin range), and Penn State Extension ('introduced invasive vine', 'the seeds are poisonous') -- but none of these three sources appear anywhere in the citations array: no URL, no independently checkable quote entry. I independently verified all three via web search and found the substance accurate (including confirming the Penn State 'seeds are poisonous' line actually describes 'Japanese and Chinese wisteria species' collectively, which does still cover sinensis by name), but the record itself provides no way to verify any of it -- a real citation-traceability gap on a populated field, per the audit's structural check 1."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Chinese Wisteria and scientific_name_given Wisteria sinensis",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Wisteria sinensis (Chinese Wisteria, Wisteria) | North Carolina Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "scientific_name_accepted Wisteria sinensis (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/19126/wisteria-sinensis/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "name_note Wisteria sinensis is distinct from the native Wisteria frutescens (American Wisteria)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-frutescens/",
+          "quote": "American wisteria is not as aggressive a spreader as Wisteria sinensis (Chinese wisteria)."
+        },
+        {
+          "claim": "is_houseplant false (grown outdoors trained on sturdy structures such as arbors, pergolas, trellises, fences, or walls; no indoor/houseplant use described)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280632",
+          "quote": "This is an excellent vine for large, sturdy, freestanding arbors, pergolas, posts, trellises, fences or terrace walls, and can be particularly effective when grown near or above patios where the flowers can be enjoyed in season. May also be trained as a specimen shrub or tree."
+        },
+        {
+          "claim": "toxic_to_pets true (flagged Problem for Cats, Problem for Dogs, Problem for Horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Problems: Invasive Species Problem for Cats Problem for Dogs Problem for Horses Weedy"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (Pets: Harmful if eaten)",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/19126/wisteria-sinensis/details",
+          "quote": "Potentially harmful Harmful if eaten. Wear gloves and other protective equipment when handling. Pets: Harmful if eaten - for further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society (RHS)",
+          "url": "https://www.rhs.org.uk/plants/19126/wisteria-sinensis/details",
+          "quote": "Position Full sun Partial shade"
+        },
+        {
+          "claim": "soil_base garden_bed and soil_drainage moderate",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280632",
+          "quote": "Best grown in slightly acidic, humusy, moderately fertile, medium moisture, well-drained soils in full sun."
+        },
+        {
+          "claim": "soil_base garden_bed (garden soil texture, not a container/potting mix)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Soil Texture: Clay Loam (Silt) Sand"
+        }
+      ]
+    },
+    {
+      "common_name": "Jackman's Clematis",
+      "scientific_name_given": "Clematis × jackmanii",
+      "scientific_name_accepted": "Clematis 'Jackmanii'",
+      "name_note": null,
+      "is_houseplant": null,
+      "toxic_to_pets": true,
+      "toxicity_detail": "NC State Extension flags this species as a \"Problem for Cats,\" \"Problem for Dogs,\" and \"Problem for Horses\" (listed as parallel sibling tags in that page's \"Problems\" list), but gives no plant part, severity, or symptom detail specific to animals -- that detail (poison severity, symptoms, and the toxic principle protoanemonin) sits on the same page under a separate \"Poisonous to Humans\" heading and was not carried over here. RHS adds a pet-specific note under \"Potentially harmful\": the plant is a skin irritant to handle, and \"Pets (rabbits): Harmful if eaten.\"",
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": null,
+      "soil_drainage": "moderate",
+      "soil_ph_min": 6,
+      "soil_ph_max": 8,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": "Do not let soil dry out; keep the root zone cool, shaded, and uniformly moist at all times (mulch the root area).",
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min, day_f_max, night_f_min, night_f_max: no admissible source gives a specific daytime or nighttime temperature target for this outdoor landscape vine; all sources describe ambient garden conditions (sun exposure, hardiness zone/rating) rather than a controlled temperature range.",
+        "chill_damage_f: no source gives a Fahrenheit damage-onset figure. RHS gives only a categorical hardiness rating (H6: hardy in all of UK and northern Europe, roughly -20 to -15°C) and NC State/Missouri Botanical Garden give zone-level winter-hardiness (USDA Zones 4a-9b / Zone 4 to 8) -- these are survival/hardiness statements, not a damage-onset temperature, so were not mapped onto this field.",
+        "cool_rest_note: no source frames this plant's winter dormancy as a deliberate 'cool rest' care step; it is a cold-hardy, deciduous perennial vine that is simply pruned back per its pruning group (Group 2 or Group 3) each dormant season.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: not addressed by any admissible source for this outdoor garden vine.",
+        "light_fc_min, light_fc_good, direct_sun_hours_max: no source gives footcandle figures or a specific maximum sun-hours number for this species itself; NC State's 'Full sun (6+ hours)' and 'Partial Shade (2-6 hours)' are generic definitions of those light categories, not a measured value unique to Jackman's clematis.",
+        "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no admissible, cultivar-specific source gives a numeric watering interval or soil-moisture-check depth. Missouri Botanical Garden's 'Jackmanii'-specific page gives only a qualitative 'Water: Medium' rating plus the instruction not to let soils dry out, with no day-count figure attached.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source addresses fertilizer timing, interval, or strength for this species.",
+        "soil_ph: NC State's structured field gives a specific numeric range ('Neutral (6.0-8.0)'), used here. RHS separately lists a broader qualitative tolerance ('pH: Acid or Alkaline or Neutral') with no numeric bound -- read as wider tolerance rather than a contradicting number, so not treated as a disqualifying conflict, but the true tolerated range may extend beyond 6.0-8.0.",
+        "toxicity_detail is deliberately scoped: NC State's detailed poison severity/symptom/toxic-principle information (protoanemonin; severe mouth pain; dermatitis) sits specifically under that page's 'Poisonous to Humans' heading, structurally separate from the sibling 'Problem for Cats/Dogs/Horses' tags used for toxic_to_pets, and was not carried over into the pet-facing toxicity_detail field.",
+        "Missouri Botanical Garden's 'Common Name' field on this cultivar's page ('clematis, leather flower, vase vine, virgin's bower') reads as genus-wide boilerplate rather than a Jackmanii-specific common name and was not used; NC State's 'Jackman's Clematis' and RHS's 'Jackman's clematis' were used instead.",
+        "is_houseplant = false and soil_base = garden_bed are classification calls based on the plant being documented only as a cold-hardy (USDA Zones 4-8/9), full-sun-to-part-shade outdoor deciduous climbing vine; the container mentions in the sources (NC State's 'Container' landscape-location tag, Missouri Botanical Garden's 'Containers' use note) are for outdoor patio containers among trellises/fences/arbors, not indoor long-term houseplant growing -- no admissible source discusses indoor cultivation of this species.",
+        "is_houseplant — removed on audit: The only citation supporting is_houseplant=false quotes text ('Clematis can be trained to climb a wall, trellis, fence, arbor, porch, lamppost or other stationary structure... Containers.') that does not appear anywhere on the cited URL (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280) -- I fetched the full live page and confirmed zero matches for 'lamppost', 'trellis, fence', 'stationary structure', 'framework for small gardens', or 'scramble over old stumps'. A web search traced this exact phrasing to Missouri Botanical Garden's page for a different cultivar, Clematis 'Henryi', not 'Jackmanii'. This is reused sibling-cultivar boilerplate misattributed to the Jackmanii URL, so the field's only citation is invalid.",
+        "soil_base — removed on audit: The NC State quote ('Use Jackman's clematis where it can grow vertically such as on a rock wall, a patio trellis, or trees and shrubs in a woodland area') does not establish in-ground garden_bed as opposed to container growing -- a trellis or rock wall can equally be container-based. I fetched the live NC State page and confirmed its own structured 'Landscape Location' field lists 'Container' as the first tag, ahead of Patio, Rock Wall, Vertical Spaces, and Woodland. The record's unknowns note cites this Container tag only to justify is_houseplant=false but never reconciles it against soil_base=garden_bed, effectively picking the vaguer narrative sentence while ignoring the source's own container designation for this specific field.",
+        "name_note — removed on audit: The note asserts 'The hybrid-formula name \"Clematis × jackmanii\" is used as the working scientific name on both NC State Extension's and Missouri Botanical Garden's plant pages.' This is false for Missouri Botanical Garden: I fetched the live MOBOT page (kempercode=a280) and it is titled 'Clematis 'Jackmanii'' (cultivar-style name, matching what RHS calls accepted) -- a full-text search of the page for 'Clematis × jackmanii' / 'Clematis x jackmanii' returns zero matches anywhere. MOBOT never uses the hybrid-formula name at all, contradicting the note's premise that only RHS resolves accepted/synonym status while the other two sources are neutral, silent users of the hybrid-formula name."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Jackman's Clematis",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Common Name(s):\nJackman's Clematis"
+        },
+        {
+          "claim": "scientific_name_given Clematis x jackmanii",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Clematis x jackmanii"
+        },
+        {
+          "claim": "scientific_name_accepted Clematis 'Jackmanii' (RHS Name Status: Accepted)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/96731/clematis-jackmanii-(ll)/details",
+          "quote": "Name Status\nAccepted"
+        },
+        {
+          "claim": "name_note Clematis x jackmanii listed as a synonym of Clematis 'Jackmanii'",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/96731/clematis-jackmanii-(ll)/details",
+          "quote": "Synonyms\nClematis × jackmanii"
+        },
+        {
+          "claim": "is_houseplant false (documented only as an outdoor climbing vine, including outdoor patio containers, not as an indoor houseplant)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280",
+          "quote": "Clematis can be trained to climb a wall, trellis, fence, arbor, porch, lamppost or other stationary structure.  They provides good architectural height and framework for small gardens.  They can also be planted to sprawl over and through shrubs, scramble over old stumps or simply as a ground cover in conjunction with other flowering perennials.  Containers."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/96731/clematis-jackmanii-(ll)/details",
+          "quote": "Position\nFull sun, Partial shade"
+        },
+        {
+          "claim": "soil_base garden_bed",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Use Jackman's clematis where it can grow vertically such as on a rock wall, a patio trellis, or trees and shrubs in a woodland area."
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Soil Drainage:\nGood Drainage\nMoist"
+        },
+        {
+          "claim": "soil_drainage moderate",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/96731/clematis-jackmanii-(ll)/details",
+          "quote": "Moisture\nMoist but well–drained"
+        },
+        {
+          "claim": "soil_ph_min 6.0 and soil_ph_max 8.0",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Soil pH:\nNeutral (6.0-8.0)"
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280",
+          "quote": "Roots should be kept cool, shaded and uniformly moist.  Root areas may be shaded with perennials, annuals or small shrubs.  A thick root mulch is appreciated.  Do not allow soils to dry out."
+        },
+        {
+          "claim": "water_dry_down_target do not allow soil to dry out; keep roots uniformly moist",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280",
+          "quote": "Roots should be kept cool, shaded and uniformly moist.  Root areas may be shaded with perennials, annuals or small shrubs.  A thick root mulch is appreciated.  Do not allow soils to dry out."
+        },
+        {
+          "claim": "toxic_to_pets true (problem for cats, dogs, and horses)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Problems:\nContact Dermatitis\nPoisonous to Humans\nProblem for Cats\nProblem for Children\nProblem for Dogs\nProblem for Horses"
+        },
+        {
+          "claim": "toxic_to_pets true and toxicity_detail (skin irritant to handle; harmful to pet rabbits if eaten)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/96731/clematis-jackmanii-(ll)/details",
+          "quote": "Skin irritant.  Wear gloves and other protective equipment when handling.  Pets (rabbits): Harmful if eaten.  For further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants"
+        }
+      ]
+    },
+    {
+      "common_name": "Chinese Hibiscus",
+      "scientific_name_given": "Hibiscus rosa-sinensis",
+      "scientific_name_accepted": "Hibiscus rosa-sinensis",
+      "name_note": "NC State Extension, Missouri Botanical Garden, Clemson HGIC, and RHS's own separate advice page (\"Hibiscus rosa-sinensis | RHS Advice,\" Botanical name field) all independently use the plain binomial \"Hibiscus rosa-sinensis\" as this species' working/accepted name. However, RHS's Plant Profile / Find a Plant database entry for the same taxon (rhs.org.uk/plants/8738) titles the page \"Hibiscus × rosa-sinensis,\" gives \"Name Status: Correct\" for that hybrid-marked form, and lists plain \"Hibiscus rosa-sinensis 'Rose of China'\" only as a Synonym -- disagreeing with RHS's own growing-guide page on the same domain. Missouri Botanical Garden's profile separately notes \"No wild populations of this plant have been found in modern times... This name is often applied to hybrid tropical hibiscus cultivars, although it does not fully reflect the multiple species involved in breeding modern hybrid cultivars,\" consistent with genuine unresolved ambiguity over whether this taxon is a true species or an ancient hybrid complex. Because RHS's two admissible pages disagree with each other and no admissible source resolves it, scientific_name_accepted is kept equal to the given binomial rather than confidently endorsed as verified; the underlying nomenclature (plain epithet vs. × nothospecies marker) should be treated as unresolved.",
+      "is_houseplant": true,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": "RHS: in cool winter conditions plants overwinter in a semi-dormant state indoors -- flower buds and leaves yellow and drop when indoor light levels are low, but the plant survives this semi-dormant period if watering is reduced (and feeding is stopped).",
+      "humidity_need": "high",
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "standard_potting",
+      "soil_drainage": null,
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": "keep_moist",
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "chill_damage_f: genuine conflict between admissible sources, all naming H. rosa-sinensis specifically. UF/IFAS: \"Tropical hibiscus requires very high amounts of sunlight and is intolerant to temperatures below 50°F.\" Clemson: \"Bring Chinese hibiscus indoors when nighttime temperatures fall into the lower 50s °F.\" RHS: \"a minimum night temperature of 7ºC (45ºF)\" is what cultivation \"requires,\" and its Hardiness quick-fact reads \"Tender minimum 7-10ºC (45-50ºF).\" The two US extension sources cluster near 50°F while RHS gives 45°F as the minimum required night temperature -- a 5°F disagreement on the same actionable cold-damage question -- so per policy the field is left null rather than picking a side.",
+        "day_f_min/day_f_max/night_f_min/night_f_max: no admissible source gives a clean ambient day/night temperature range. Only overwintering/cold-tolerance minimums were found, and those themselves conflict: Missouri Botanical Garden says plants \"should be overwintered in 60 degree F. locations,\" while RHS's overwintering guidance calls \"minimum night temperatures of 7-10ºC (45-50ºF)\" ideal for a glasshouse -- a materially different number for the same concept, so neither was mapped to night_f_min.",
+        "USDA Plant Hardiness Zone (NC State: \"9a, 9b, 10a, 10b, 11a, 11b\"; MOBOT: \"Zone: 9 to 11\") is a winter-survival zone rating, not a frost-damage-onset temperature, so it was not mapped to chill_damage_f.",
+        "soil_ph_min/soil_ph_max: RHS's species profile gives only a categorical value (\"pH: Acid or Neutral\"), with no numeric range from any admissible source, so left null rather than guess bounds for the category.",
+        "soil_drainage: NC State (\"Soil Drainage: Good Drainage / Moist\"), Missouri Botanical Garden (\"moist, organically rich, well-drained soils\"), Clemson (\"rich, well-drained soil with plenty of organic matter\"), and RHS (\"Moisture: Well-drained\") all combine 'well-drained' with 'moist'/'organically rich' language, but none uses the schema's literal fast/moderate/moisture_retentive wording for this species. Consistent with how this catalog has treated the same ambiguous 'well-drained + moist' combination elsewhere (forcing it to 'moderate' was rejected on audit for a different species on the same grounds), left null rather than force a category.",
+        "soil_base: set to 'standard_potting' based specifically on RHS's houseplant/container compost recommendation (peat-free houseplant compost or John Innes No 2). This describes the houseplant/container growing medium. For in-ground zone 9-11 garden cultivation, NC State/MOBOT/Clemson describe soil only qualitatively (rich, organically amended, well-drained) and none names a specific outdoor soil-mix category such as 'garden_bed', so only the container/houseplant medium is captured by this field.",
+        "toxic_to_pets/toxicity_detail: no admissible source (NC State Plant Toolbox, Clemson HGIC, Missouri Botanical Garden, RHS) addresses toxicity of Hibiscus rosa-sinensis to pets, other animals, or humans. NC State's Plant Toolbox Attributes section for this species carries no 'Poison' field at all, and RHS's Plant Profile page -- which does carry a 'Potentially harmful' pet-toxicity field on other species profiles (e.g. it flags Vitis vinifera as harmful to dogs) -- has no such field on this species' page either. Left null rather than inferred as safe.",
+        "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a watering frequency in days, a moisture-check depth, or a specific dry-down target. Sources describe watering only qualitatively: 'roots should be kept moist' / 'never dry out' (NC State, MOBOT) during the growing season, versus RHS's instruction to 'Reduce watering as growth slows and only water when the top layer of compost is dry' during winter dormancy -- a seasonal qualitative split, not a day-count or depth figure, so none of these fields could be populated.",
+        "fertilize_interval_days/fertilize_active_months/fertilize_strength: RHS states to 'Begin feeding weekly with a balanced liquid fertiliser for houseplants, about six to eight weeks after repotting' (repotting itself done 'in February or early March'), which names a frequency word ('weekly') and a feeding-start offset but never an explicit calendar month range for the whole feeding window, and never a liquid dilution 'strength' (full/half/quarter). Per policy the only permitted word-to-number translation is a named month to its calendar number for fertilize_active_months, not a frequency word ('weekly') to a day-count, so fertilize_interval_days was left null rather than convert 'weekly' to 7. UF/IFAS separately mentions 'biweekly applications of N-P-K fertilizer' for commercial South Florida field nursery production, but 'biweekly' is itself ambiguous in English (twice-weekly vs. every-two-weeks) and describes a different (commercial outdoor nursery) context than home/houseplant care, so it was not used either.",
+        "light_fc_min/light_fc_good/direct_sun_hours_max: no admissible source gives a footcandle value or an upper-bound sun-hours figure for this species; NC State's 'Full sun (6 or more hours of direct sunlight a day)' is a floor, not a ceiling, and RHS's indoor guidance ('bright, filtered light,' 'protected from direct sunlight') is qualitative only.",
+        "humidity_pct_min/humidity_pct_max: no admissible source gives a numeric humidity percentage; only qualitative categories/instructions are given.",
+        "humidity_need: set to 'high' based on NC State ('Chinese hibiscus appreciates high humidity') and Missouri Botanical Garden ('Plants appreciate consistent moisture and high humidity'). RHS's Plant Profile page's generic Cultivation blurb instead says 'moderate humidity,' but that blurb explicitly directs readers to a separate 'Hibiscus rosa-sinensis cultivation' page for species-specific advice, and that dedicated RHS growing guide instead calls for actively increasing humidity via damp gravel trays and describes 'humid conditions' as a requirement -- consistent with 'high' rather than contradicting it. This narrower RHS profile wording was not treated as a controlling conflict given the stronger, more specific corroboration elsewhere.",
+        "scientific_name_accepted: see name_note -- RHS's own two admissible pages disagree on whether the correct name carries a × (hybrid) marker; the given plain binomial is retained here because it is what NC State, MOBOT, Clemson, and RHS's own growing-guide page all independently use, but this should be treated as unresolved rather than confidently verified.",
+        "outdoor_sun_exposure: 'part_sun' was not used; NC State's category is literally labeled 'Partial Shade (Direct sunlight only part of the day, 2-6 hours),' mapped to 'part_shade' per this catalog's established convention for that exact phrase."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Chinese Hibiscus",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "Hibiscus rosa-sinensis (Chinese Hibiscus, HIbiscus) | North Carolina Extension Gardener Plant Toolbox ... Common Name(s): Chinese Hibiscus HIbiscus"
+        },
+        {
+          "claim": "common_name Chinese Hibiscus (corroborating)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/hibiscus/",
+          "quote": "Chinese Hibiscus (Hibiscus rosa-sinensis) has four- to eight-inch single or double flowers that are available in a wide range of colors."
+        },
+        {
+          "claim": "scientific_name_given Hibiscus rosa-sinensis",
+          "source": "UF/IFAS Ask IFAS (EDIS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FE1158",
+          "quote": "Tropical hibiscus (Hibiscus rosa-sinensis) is a bushy evergreen shrub or small tree that is native to the temperate regions of Asia."
+        },
+        {
+          "claim": "name_note: RHS Plant Profile gives Name Status Correct for the hybrid-marked form \"Hibiscus × rosa-sinensis\" and lists the plain binomial only as a synonym",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/8738/hibiscus-rosa-sinensis/details",
+          "quote": "Hibiscus × rosa-sinensis | Chinese hibiscus ... Synonyms Hibiscus rosa-sinensis 'Rose of China' ... Name Status Correct"
+        },
+        {
+          "claim": "name_note (supporting): RHS's own separate growing guide instead gives the plain binomial as the Botanical name",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "quote": "Hibiscus rosa-sinensis | RHS Advice ... Botanical name - Hibiscus rosa-sinensis"
+        },
+        {
+          "claim": "name_note (supporting): unresolved hybrid-origin ambiguity for this taxon",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b557",
+          "quote": "No wild populations of this plant have been found in modern times. This name is often applied to hybrid tropical hibiscus cultivars, although it does not fully reflect the multiple species involved in breeding modern hybrid cultivars."
+        },
+        {
+          "claim": "is_houseplant true",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "It can also be grown in a container and as a houseplant or conservatory plant."
+        },
+        {
+          "claim": "is_houseplant true (supporting)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "Indoors, it requires a large container in a location that receives bright light."
+        },
+        {
+          "claim": "is_houseplant true (supporting)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/hibiscus/",
+          "quote": "For this reason, it is generally used as a summer annual but can also be grown as a houseplant."
+        },
+        {
+          "claim": "is_houseplant true (supporting)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b557",
+          "quote": "They also may be grown in sunny rooms (bright light but not full sun) as houseplants."
+        },
+        {
+          "claim": "is_houseplant true (supporting)",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "quote": "Group - Evergreen houseplant for warm greenhouse or conservatory ... Although widely grown as houseplant it can be tricky to manage in a dwelling."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b557",
+          "quote": "Sun: Full sun to part shade"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (corroborating)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/hibiscus/",
+          "quote": "They prefer rich, well-drained soil with plenty of organic matter and full sun or light afternoon shade."
+        },
+        {
+          "claim": "water_regime keep_moist",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "The roots should be kept moist."
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b557",
+          "quote": "Plants appreciate consistent moisture and high humidity. Regular watering, misting and fertilization during the growing season are advisable. Roots should never dry out."
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/hibiscus/",
+          "quote": "Water the plants freely during the growing season."
+        },
+        {
+          "claim": "water_regime keep_moist (corroborating)",
+          "source": "UF/IFAS Ask IFAS (EDIS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FE1158",
+          "quote": "Tropical hibiscus plants require a high amount of water and nutrient-rich soil that still allows for adequate drainage."
+        },
+        {
+          "claim": "humidity_need high",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "Chinese hibiscus appreciates high humidity and needs protection from wind and frost, but it is resistant to browsing by deer."
+        },
+        {
+          "claim": "humidity_need high (corroborating)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b557",
+          "quote": "Plants appreciate consistent moisture and high humidity."
+        },
+        {
+          "claim": "humidity_need high (supporting, indoor context): RHS instructs actively raising humidity for indoor plants",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "quote": "Hibiscus requires bright, humid conditions with good ventilation ... Increase humidity by placing the plant on a tray containing damp gravel or clay pellets. Plants can be grouped together to maintain a humid microclimate"
+        },
+        {
+          "claim": "soil_base standard_potting",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "quote": "Re-pot in February or early March using a peat-free, ideally one formulated specifically for houseplants. Soil based compost such as John Innes No 2 are also suitable"
+        },
+        {
+          "claim": "cool_rest_note: semi-dormant winter rest with reduced watering and yellowing/dropping buds and leaves under low indoor light",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "quote": "In cool conditions plants will overwinter in a semi-dormant condition ... Flower buds and leaves turn yellow and drop in winter when light levels are low indoors but plants can survive in this semi-dormant state if watering is reduced."
+        },
+        {
+          "claim": "chill_damage_f qualitative: UF/IFAS states intolerance below 50°F (conflicts with RHS's 45°F minimum night temperature figure below; genuine conflict, no chill_damage_f value taken)",
+          "source": "UF/IFAS Ask IFAS (EDIS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FE1158",
+          "quote": "Tropical hibiscus requires very high amounts of sunlight and is intolerant to temperatures below 50°F, which is why Florida provides an ideal environment for its cultivation."
+        },
+        {
+          "claim": "chill_damage_f qualitative: Clemson states bring plants indoors once nighttime temperatures reach the lower 50s°F (corroborates UF/IFAS's ~50°F figure, conflicts with RHS's 45°F below; genuine conflict, no chill_damage_f value taken)",
+          "source": "Clemson Cooperative Extension HGIC",
+          "url": "https://hgic.clemson.edu/factsheet/hibiscus/",
+          "quote": "Bring Chinese hibiscus indoors when nighttime temperatures fall into the lower 50s °F."
+        },
+        {
+          "claim": "chill_damage_f qualitative: RHS states a required minimum night temperature of 45°F, and a tenderness/hardiness minimum of 45-50°F (conflicts with UF/IFAS's and Clemson's ~50°F cutoff above; genuine conflict, no chill_damage_f value taken)",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "quote": "Hardiness - Tender minimum 7-10ºC (45-50ºF) ... Hibiscus requires bright, humid conditions with good ventilation, protected from direct sunlight and a minimum night temperature of 7ºC (45ºF). Plants can be placed outdoors in summer but need to be brought indoors before temperatures drop below 12ºC (59ºF)."
+        },
+        {
+          "claim": "night_f_min qualitative: MOBOT states overwintering location should be 60°F (conflicts with RHS's 45-50°F minimum night temperature figure above; genuine conflict, no night_f_min value taken)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b557",
+          "quote": "Plants should be overwintered in 60 degree F. locations with reduced watering and reduced fertilization."
+        },
+        {
+          "claim": "qualitative only, no field taken: USDA Plant Hardiness Zone is a survival zone rating, not a frost-damage-onset temperature",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "USDA Plant Hardiness Zone: 9a, 9b, 10a, 10b, 11a, 11b"
+        },
+        {
+          "claim": "qualitative only, no soil_ph value taken: RHS gives only a categorical pH descriptor, not a numeric range",
+          "source": "Royal Horticultural Society (RHS) Plant Profile",
+          "url": "https://www.rhs.org.uk/plants/8738/hibiscus-rosa-sinensis/details",
+          "quote": "pH Acid or Neutral"
+        },
+        {
+          "claim": "qualitative only, no soil_drainage category value taken: well-drained/moist language does not use the schema's fast/moderate/moisture_retentive wording",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "Plant in a location with full sun to partial shade and in rich, moist soil with good drainage. ... Soil Drainage: Good Drainage Moist"
+        },
+        {
+          "claim": "qualitative only, no fertilize_interval_days/fertilize_active_months/fertilize_strength value taken: weekly feeding tied to a repotting offset, not a calendar-month range or dilution strength",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "quote": "Begin feeding weekly with a balanced liquid fertiliser for houseplants, about six to eight weeks after repotting"
+        },
+        {
+          "claim": "qualitative only, no fertilize field value taken: biweekly commercial fertilizer schedule is ambiguous in wording and describes South Florida field nursery production, not home/houseplant care",
+          "source": "UF/IFAS Ask IFAS (EDIS)",
+          "url": "https://ask.ifas.ufl.edu/publication/FE1158",
+          "quote": "Fertilization treatments for hibiscus include biweekly applications of N-P-K fertilizer."
+        },
+        {
+          "claim": "qualitative only, no toxic_to_pets value taken: no Poison/toxicity attribute section appears on this species' page",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "Attributes: Genus: Hibiscus Species: rosa Family: Malvaceae Life Cycle: Woody Recommended Propagation Strategy: Stem Cutting Country Or Region Of Origin: Asia Wildlife Value: ... Dimensions: ... Whole Plant Traits: ... Cultural Conditions: ... Flowers: ... Leaves: ... Stem: ... Landscape: ... Resistance To Challenges: Deer"
+        }
+      ]
+    },
+    {
+      "common_name": "Golden Bamboo",
+      "scientific_name_given": "Phyllostachys aurea",
+      "scientific_name_accepted": "Phyllostachys aurea",
+      "name_note": "RHS's own species page carries a structured \"Name Status: Correct\" field under Botanical Details for Phyllostachys aurea, which this record treats as an affirmative statement of current taxonomic acceptance -- unlike a bare synonym list, which this catalog does not treat as sufficient on its own (see the Rosa rugosa precedent in b20-common-ornamentals.json, where a \"Previously known as\" list alone was ruled not to establish acceptance). Both NC State (\"Previously known as: Phyllostachys breviligula, Phyllostachys formosana\") and RHS (\"Synonyms: Bambusa aurea, Phyllostachys aurea formosana\") separately list historical/synonym names, none of which conflict with or displace Phyllostachys aurea as the current name. This is true bamboo, a woody grass in the Poaceae family (NC State: \"Family: Poaceae\"; RHS: \"Family Poaceae\") -- distinct from \"Lucky Bamboo,\" already cataloged in this database under Dracaena sanderiana, which is not a grass and not related. This is the same kind of common-name mismatch already documented elsewhere in this catalog for Sago Palm (not a true palm) and Mini Monstera (not a Monstera).",
+      "is_houseplant": false,
+      "toxic_to_pets": false,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "moderate",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "day_f_min, day_f_max, night_f_min, night_f_max: no admissible source gives ambient day/night temperature ranges for this species; only USDA hardiness-zone and RHS hardiness-rating winter-survival data are available.",
+        "chill_damage_f: no admissible source gives an actionable damage-onset temperature for the straight species. RHS rates it 'H5: hardy in most places throughout the UK even in severe winters (-15 to -10)' [Celsius] -- a winter-survival hardiness category, not a damage-onset figure. NC State's USDA Hardiness Zone list (4a-10b) is likewise a survival-zone classification, not a stated temperature. UGA's 'Growing Bamboo in Georgia' gives 'Minimum Temp - 0 F' but only for the named variety Phyllostachys aurea holochrysa ('Golden Golden'), not the straight species this record covers, and that figure is itself a minimum-survival temperature rather than a damage-onset one -- so it fails on both counts and was not used.",
+        "cool_rest_note: this is an evergreen species (RHS: 'Foliage Evergreen'; NC State: 'Broadleaf Evergreen'); no admissible source describes a dormancy or cool-rest period.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: no admissible source addresses ambient humidity requirements for this outdoor species.",
+        "light_fc_min, light_fc_good: no admissible source gives foot-candle light values.",
+        "direct_sun_hours_max: NC State's '6 or more hours of direct sunlight a day' defines the minimum threshold for its 'Full sun' category, not a stated maximum for this species -- the same reasoning already applied elsewhere in this catalog (e.g. Rugosa Rose, b20-common-ornamentals.json) for the identical quote.",
+        "soil_ph_min, soil_ph_max: RHS gives pH as 'Acid or Alkaline or Neutral' -- essentially the full range with no numeric bounds stated -- and no other admissible source gives a pH number for this species.",
+        "soil_drainage moderate: this is a categorical inference, not a literal enum term from either source. NC State's tags ('Good Drainage', 'Occasionally Dry', 'Occasionally Wet') describe tolerance of swings in both directions around a well-drained baseline, and RHS's Cultivation text calls for 'moist but well-drained soil.' Neither source uses the words 'fast', 'moderate', or 'moisture retentive'; 'moderate' was chosen as the closest fit to the NC State tolerate-both-ways combination, consistent with how this catalog has mapped similarly ambiguous NC State drainage-tag combinations elsewhere (see the audited soil_drainage note on Rhaphidophora tetrasperma in b22-aroid-genus-gaps.json).",
+        "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no admissible source frames watering for this species in container-style regime terms. UGA's 'Growing Bamboo in Georgia' states 'bamboo needs about 1 inch of water every seven to 10 days' and 'A soil pH of 6 to 6.5 is desirable' under a general 'Ground Preparation for Groves' section that applies across the many bamboo genera and species discussed in that document (Bambusa, Chimonobambusa, Phyllostachys, Pseudosasa, Sasa, Sinobambusa), not stated as this species' specific value, so it was not used, per this catalog's rule against presenting genus/class-level figures as a species-specific value.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: RHS's only fertilizing instruction for this species ('In a container grow in a peat-free, loam-based compost and feed with a balanced liquid fertiliser on a monthly basis during the growing season') is explicitly scoped to container culture; the same Cultivation paragraph's ground-planting instruction ('Grow in fertile, humus-rich, moist but well-drained soil...') has no fertilizing guidance at all. Since this record treats the species as an outdoor/ground landscape plant (is_houseplant=false), and this catalog has already established (see the audited eggplant/Aubergine fertilize_interval_days finding in b10-veg-round3.json) that container-scoped RHS feeding language should not be force-fit onto a general fertilize field without carrying the container caveat, it was not used here. 'During the growing season' also names no specific months, and 'balanced liquid fertiliser' states no dilution strength.",
+        "is_houseplant: RHS's Cultivation section does include container-growing instructions ('In a container grow in a peat-free, loam-based compost...') and lists 'Patio and container plants' among 'Suggested planting locations and garden types' -- but this describes an outdoor patio container, not indoor houseplant culture, and sits alongside outdoor-only guidance (full sun/partial shade position, south- or west-facing aspect, 'protect from cold drying winds', RHS hardiness H5). No admissible source supports growing this species indoors long-term, so is_houseplant is recorded as false rather than left null.",
+        "Habit/growth-form conflict found on NC State's own page: its 'Quick ID Hints' list tags this species 'Clump forming bamboo', but the same page's own description paragraph states 'This plant spreads aggressively by rhizomes and will form large stands preventing native plants to grow' and separately lists it as invasive. Every other admissible source addressing growth habit agrees with the rhizome-spreading/running characterization and disagrees with the 'clump forming' tag: RHS's genus note ('Phyllostachys are attractive, large, evergreen bamboos with running rhizomes') and its species-specific Cultivation caveat ('May remain clump-forming in poor or dry soils but can become invasive in warm, moist or favourable conditions'); Clemson HGIC ('Running bamboos can be problematic once established, as they spread by thick, tough, underground stems called rhizomes'); and UMD ('Golden bamboo spreads through underground rhizomes which grow quickly, spreading out horizontally from the parent plant'). NC State's 'Clump forming bamboo' Quick ID tag was treated as an unreliable outlier that contradicts its own page's prose and was not used for any field.",
+        "Running-bamboo containment and invasiveness (no dedicated field in this schema, captured here per task instructions because it materially affects whether a home gardener should plant this species directly in the ground): this is a running, rhizome-spreading bamboo, not a clumping one. The South Carolina Exotic Plant Pest Council designates it 'a severe environmental threat' capable of being 'highly detrimental to the composition, structure, and function of natural areas from South Carolina's Piedmont through the Coastal Plain' (Clemson HGIC, Bamboo Control factsheet). NC State lists it as invasive in North Carolina; UMD reports it is 'now considered an invasive species in Maryland, Pennsylvania, Virginia, West Virginia and Georgia'; Penn State Extension's 'Don't Plant a Pest' fact sheet lists 'Golden bamboo - Phyllostachys aurea' among its partial list of invasive plants; and RHS's own species page cautions it 'can become invasive in warm, moist or favourable conditions.' Rhizomes are hard to contain: Clemson says they 'can spread more than 100 feet from the mother plant and are very resistant to adverse environmental conditions and most herbicides'; UMD similarly says rhizomes 'allow the plant to spread for a hundred or more feet in any unobstructed direction' and 'can run indefinitely unless damaged at the growing tip.' Physical barriers only redirect rather than stop growth and need ongoing upkeep: Clemson recommends a barrier 'made of concrete, metal, high density polyethylene (HDPE), or pressure-treated wood installed about 18 inches deep' but warns 'bamboo rhizomes are not stopped by barriers but are merely reflected,' so surrounding areas must be 'monitored regularly'; UMD specifies barrier material of 'a minimum thickness of 60 mil... polypropylene [PP] or high-density polyethylene [HDPE]' installed so 'About 6 to 8 inches of the barrier should remain above-ground,' warning 'Any break in the barrier can allow rhizomes to spread undetected.' For an already-established stand, UMD says 'all rhizomes must be removed through excavation' and 'repeated treatment of the area will likely be necessary to ensure complete eradication.' Given this, a home gardener considering this species should plan for a permanent physical barrier plus ongoing monitoring, or grow it in a large container instead of directly in open ground.",
+        "toxicity_detail — removed on audit: The field asserts a specific cross-check — 'Checked against other Phyllostachys species pages on the same site (P. aureosulcata, P. nigra) to rule out genus-wide boilerplate: neither page carries any toxicity tag at all' — that is not backed by any entry in the citations array; the array's only toxicity citation is the bare NC State tag quote for P. aurea itself ('#non-toxic for cats #non-toxic for horses #non-toxic for dogs'), with no citation object for the aureosulcata/nigra comparison. I independently fetched plants.ces.ncsu.edu/plants/phyllostachys-aureosulcata/ and confirmed it indeed carries no toxicity tags, matching the claim — but the P. nigra slug given implicitly (plants.ces.ncsu.edu/plants/phyllostachys-nigra/) 404s, so that half of the claim is unverifiable as stated and may reference a page that doesn't exist under that name. Per structural check 1, this portion of the field's own text does not trace to any citations array entry. The underlying toxic_to_pets=false value itself is fine (directly, affirmatively supported by the single NC State citation, which is species-specific and not silence), so only toxicity_detail's embedded verification claim is unsound, not the boolean."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Golden Bamboo and scientific_name_given Phyllostachys aurea",
+          "source": "University of Maryland Extension — Invasives in Your Woodland: Golden Bamboo",
+          "url": "https://extension.umd.edu/resource/invasives-your-woodland-golden-bamboo",
+          "quote": "Golden bamboo (Phyllostachys aurea) is native to southeast China, and has been cultivated in Japan for centuries. It was first introduced to the United States in 1882 at a site in Alabama."
+        },
+        {
+          "claim": "scientific_name_accepted Phyllostachys aurea (Name Status: Correct)",
+          "source": "Royal Horticultural Society (RHS) — Phyllostachys aurea (fish-pole bamboo) plant profile, 'Botanical Details'",
+          "url": "https://www.rhs.org.uk/plants/75274/phyllostachys-aurea/details",
+          "quote": "Name Status Correct"
+        },
+        {
+          "claim": "name_note Previously known as Phyllostachys breviligula and Phyllostachys formosana",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Previously known as: Phyllostachys breviligula Phyllostachys formosana"
+        },
+        {
+          "claim": "name_note synonyms Bambusa aurea and Phyllostachys aurea formosana",
+          "source": "Royal Horticultural Society (RHS) — Phyllostachys aurea (fish-pole bamboo) plant profile, 'Synonyms'",
+          "url": "https://www.rhs.org.uk/plants/75274/phyllostachys-aurea/details",
+          "quote": "Synonyms Bambusa aurea, Phyllostachys aurea formosana"
+        },
+        {
+          "claim": "name_note Poaceae (true bamboo/grass family)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Family: Poaceae"
+        },
+        {
+          "claim": "is_houseplant false (introduced and grown as a landscape plant)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "The plant was introduced to AL in 1882 as a landscape plant but has escaped gardens and spread aggressively."
+        },
+        {
+          "claim": "is_houseplant false (USDA Plant Hardiness Zone 4a-10b, outdoor perennial)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "USDA Plant Hardiness Zone: 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b, 9a, 9b, 10a, 10b"
+        },
+        {
+          "claim": "is_houseplant false (suggested for outdoor architectural, patio, and hedging/screen garden use)",
+          "source": "Royal Horticultural Society (RHS) — Phyllostachys aurea (fish-pole bamboo) plant profile, 'Suggested planting locations and garden types'",
+          "url": "https://www.rhs.org.uk/plants/75274/phyllostachys-aurea/details",
+          "quote": "Suggested planting locations and garden types Architectural Patio and container plants Hedging and screens"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Light: Full sun (6 or more hours of direct sunlight a day) Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "Royal Horticultural Society (RHS) — Phyllostachys aurea (fish-pole bamboo) plant profile, 'Cultivation'",
+          "url": "https://www.rhs.org.uk/plants/75274/phyllostachys-aurea/details",
+          "quote": "Grow in fertile, humus-rich, moist but well-drained soil, in full sun or partial shade. Protect from cold drying winds."
+        },
+        {
+          "claim": "soil_base garden_bed (soil texture clay, loam, sand)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Soil Texture: Clay Loam (Silt) Sand"
+        },
+        {
+          "claim": "soil_drainage moderate (good drainage, occasionally dry, occasionally wet)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Soil Drainage: Good Drainage Occasionally Dry Occasionally Wet"
+        },
+        {
+          "claim": "soil_base garden_bed and soil_drainage moderate (moist but well-drained soil)",
+          "source": "Royal Horticultural Society (RHS) — Phyllostachys aurea (fish-pole bamboo) plant profile, 'Cultivation'",
+          "url": "https://www.rhs.org.uk/plants/75274/phyllostachys-aurea/details",
+          "quote": "Grow in fertile, humus-rich, moist but well-drained soil, in full sun or partial shade."
+        },
+        {
+          "claim": "toxic_to_pets false",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
+        }
+      ]
+    },
+    {
+      "common_name": "Showy Stonecrop",
+      "scientific_name_given": "Sedum spectabile",
+      "scientific_name_accepted": "Hylotelephium spectabile",
+      "name_note": "All three admissible sources that address the taxonomy agree, so there is no accepted-name conflict: NC State Extension's species page for \"Hylotelephium spectabile\" lists \"Previously known as: Sedum spectabile,\" and RHS's own database explicitly flags \"Hylotelephium spectabile\" as \"Name Status: Correct\" while its separate page for the plain binomial \"Sedum spectabile\" is flagged \"Name Status: Synonym (Currently classified as Hylotelephium spectabile).\" scientific_name_accepted is therefore set to Hylotelephium spectabile.",
+      "is_houseplant": false,
+      "toxic_to_pets": null,
+      "toxicity_detail": null,
+      "day_f_min": null,
+      "day_f_max": null,
+      "night_f_min": null,
+      "night_f_max": null,
+      "chill_damage_f": null,
+      "cool_rest_note": null,
+      "humidity_need": null,
+      "humidity_pct_min": null,
+      "humidity_pct_max": null,
+      "light_fc_min": null,
+      "light_fc_good": null,
+      "direct_sun_hours_max": null,
+      "outdoor_sun_exposure": [
+        "full_sun",
+        "part_shade"
+      ],
+      "soil_base": "garden_bed",
+      "soil_drainage": "fast",
+      "soil_ph_min": null,
+      "soil_ph_max": null,
+      "water_regime": null,
+      "water_dry_down_target": null,
+      "water_check_depth_cm": null,
+      "water_growing_days_est": null,
+      "water_dormant_days_est": null,
+      "water_estimate_basis": null,
+      "fertilize_active_months": null,
+      "fertilize_interval_days": null,
+      "fertilize_strength": null,
+      "unknowns": [
+        "toxic_to_pets, toxicity_detail: left null. NC State Extension's Plant Toolbox page for this exact species carries structured poison data, but it is filed entirely under a \"Poisonous to Humans\" heading (Problems: Poisonous to Humans; Poison Severity: Low; Poison Symptoms: Unknown, but possibly gastrointestinal symptoms; Poison Toxic Principle: Alkaloids sedine, sedamine, and others; Poison Part: Flowers, Leaves, Stems) — unlike other NC State species pages in this catalog, there is no separate 'Problem for Cats/Dogs/Horses' tag anywhere on this page. RHS's species page (both the Hylotelephium spectabile 'Correct' page and the Sedum spectabile 'Synonym' page) contains no toxicity/harmful/pet language at all (confirmed by full-page text search). Penn State Extension's 'Spring Plants that are Poisonous to Horses, Dogs, and Barn Cats' does not mention Sedum, Hylotelephium, or stonecrop anywhere in its list (confirmed by direct fetch). No UGA CAES, Clemson, UF/IFAS, or Maryland Extension page addresses pet toxicity for this species either — the two UGA CAES succulent/groundcover articles that surfaced in search do not name this species. Per the human-vs-pet distinction rule, the human-only NC State data was not used for a pet-facing field, and no admissible source fills the gap.",
+        "chill_damage_f: left null. Only winter-survival/hardiness-zone data exists across all three sources (NC State: USDA Zones 4a-9b; Missouri Botanical Garden: Zone 3 to 9; RHS: Hardiness H7, 'hardy in the severest European continental climates' i.e. below -20°C). These are survival floors, not the actionable damage-onset temperature this field calls for, so per instructions none was mapped here.",
+        "day_f_min, day_f_max, night_f_min, night_f_max: left null. No admissible source gives ambient day or night temperature ranges for this outdoor garden perennial; all discuss winter hardiness zones only, not day-to-day temperature comfort ranges (consistent with it not being houseplant-cultivated).",
+        "cool_rest_note: left null. No admissible source addresses a dormancy or cool-rest period for this species.",
+        "humidity_need, humidity_pct_min, humidity_pct_max: left null. No admissible source addresses ambient humidity requirements for this outdoor plant.",
+        "light_fc_min, light_fc_good: left null. No admissible source gives foot-candle light values for this species.",
+        "direct_sun_hours_max: left null. NC State's 'Full sun (6 or more hours of direct sunlight a day)' defines the minimum threshold for its 'Full sun' category, not a species-specific maximum.",
+        "soil_ph_min, soil_ph_max: left null. NC State tags all three categorical pH bands for this species (Acid <6.0, Alkaline >8.0, Neutral 6.0-8.0), implying broad tolerance with no numeric bound, while RHS states only 'Alkaline or Neutral' (excluding acid) with no numeric range either. Neither source gives a specific number, and the two sources are not fully aligned on whether acid soil is tolerated, so no min/max was set rather than forcing a number or picking a side.",
+        "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. Sources describe outdoor garden-bed drought tolerance in qualitative/categorical terms (Missouri Botanical Garden: 'Water: Dry to medium,' 'Drought tolerant'; NC State: 'It can suffer in overly moist or fertile soils,' 'drought- and salt-tolerant') rather than a container watering schedule or dry-down target, and this doesn't map cleanly onto the container-oriented water_regime enum (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist), consistent with this not being a houseplant.",
+        "fertilize_active_months, fertilize_interval_days, fertilize_strength: left null. No admissible source specifies a fertilizing schedule, interval, or dilution strength for this species; RHS's cultivation note only describes 'moderately fertile' soil as a planting condition, not an active feeding program.",
+        "Clemson HGIC (hgic.clemson.edu) and UF/IFAS (edis.ifas.ufl.edu / ask.ifas.ufl.edu) were both searched and returned no dedicated page for Sedum spectabile / Hylotelephium spectabile / showy stonecrop as a species; Clemson's 'Growing Perennials' factsheet only lists 'Sedum species — Stonecrop' generically among drought-tolerant perennial options with no species-specific care detail, and UF/IFAS's closest hit (FPS-543, a factsheet for the hybrid cultivar Sedum x 'Autumn Joy') was a corrupted/unreadable PDF on fetch and in any case covers a hybrid cultivar rather than the species itself, so neither was used as a citation.",
+        "University of Maryland Extension (extension.umd.edu) and UGA Cooperative Extension (fieldreport.caes.uga.edu) were both searched; no page from either addresses this species specifically. UGA's succulent and groundcover articles that surfaced in search name other Sedum species/cultivars (Sedum 'Akebono', Angelina Stonecrop) but never Sedum spectabile / Hylotelephium spectabile / showy stonecrop, so neither was used."
+      ],
+      "citations": [
+        {
+          "claim": "common_name Ice Plant, Showy Stonecrop, Stonecrop",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "(Ice Plant, Showy Stonecrop, Stonecrop)"
+        },
+        {
+          "claim": "scientific_name_accepted Hylotelephium spectabile (previously known as Sedum spectabile)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Previously known as: Sedum spectabile"
+        },
+        {
+          "claim": "scientific_name_accepted Hylotelephium spectabile is flagged Correct by RHS (synonym Sedum spectabile)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/159311/hylotelephium-spectabile/details",
+          "quote": "Name Status: Correct"
+        },
+        {
+          "claim": "scientific_name_accepted — 'Sedum spectabile' is flagged Synonym by RHS for the same plant",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/17003/sedum-spectabile/details",
+          "quote": "Name Status: Synonym (Currently classified as Hylotelephium spectabile)"
+        },
+        {
+          "claim": "is_houseplant false (grown as an outdoor garden plant, including outdoor containers, not indoors long-term)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Plant as a specimen or in small groups in rock, crevice, or drought-tolerant gardens. It also works well in containers (outside), in borders, along a foundation, near a patio or pool hardscape, or along a walkway."
+        },
+        {
+          "claim": "is_houseplant false (outdoor garden uses only: rock gardens, borders, outdoor containers)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279422",
+          "quote": "Uses\nLarge rock gardens or border fronts. Specimen or groups. Ground cover. Containers."
+        },
+        {
+          "claim": "is_houseplant false (outdoor patio/container and garden bed uses only)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/159311/hylotelephium-spectabile/details",
+          "quote": "Suggested planting locations and garden types\nGravel garden\nPatio and container plants\nCity and courtyard gardens\nCoastal\nCottage and informal garden\nRock garden\nWildlife gardens\nBanks and slopes\nFlower borders and beds"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Light:\nFull sun (6 or more hours of direct sunlight a day)\nPartial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun and part_shade (requires full sun or partial shade)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Stonecrop requires full sun or partial shade and well-drained or gravelly soil with average to low fertility."
+        },
+        {
+          "claim": "outdoor_sun_exposure full_sun",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/159311/hylotelephium-spectabile/details",
+          "quote": "Position\nFull sun"
+        },
+        {
+          "claim": "outdoor_sun_exposure part_shade (tolerates light part shade in hot summer climates)",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279422",
+          "quote": "Tolerates some light part shade in hot summer climates, but will produce weak floppy growth when grown in too much shade or in overly rich soils."
+        },
+        {
+          "claim": "soil_base garden_bed and soil_drainage fast",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Stonecrop requires full sun or partial shade and well-drained or gravelly soil with average to low fertility. It can suffer in overly moist or fertile soils."
+        },
+        {
+          "claim": "soil_drainage fast (Good Drainage, Occasionally Dry)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Soil Drainage:\nGood Drainage\nOccasionally Dry"
+        },
+        {
+          "claim": "soil_base garden_bed and soil_drainage fast",
+          "source": "Missouri Botanical Garden Plant Finder",
+          "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279422",
+          "quote": "Easily grown in average, dry to medium, well-drained soils in full sun. Thrives in sandy to gravelly soils of moderate to low fertility. ... Needs good soil drainage to perform well. Drought tolerant."
+        },
+        {
+          "claim": "soil_drainage fast (well-drained)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/159311/hylotelephium-spectabile/details",
+          "quote": "Moisture\nWell–drained"
+        },
+        {
+          "claim": "toxic_to_pets — NC State addresses only human poisoning, not pets, for this species",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Problems:\nPoisonous to Humans\nPoisonous to Humans:\nPoison Severity:\nLow\nPoison Symptoms:\nUnknown, but possibly gastrointestinal symptoms.\nPoison Toxic Principle:\nAlkaloids sedine, sedamine, and others.\nCauses Contact Dermatitis:\nNo\nPoison Part:\nFlowers\nLeaves\nStems"
+        }
+      ]
+    }
+  ],
+  "audit_summary": [
+    {
+      "species": "Hemerocallis fulva",
+      "fields_removed": 2
+    },
+    {
+      "species": "Ceropegia woodii",
+      "fields_removed": 2
+    },
+    {
+      "species": "Dionaea muscipula",
+      "fields_removed": 1
+    },
+    {
+      "species": "Wisteria sinensis",
+      "fields_removed": 3
+    },
+    {
+      "species": "Clematis × jackmanii",
+      "fields_removed": 3
+    },
+    {
+      "species": "Hibiscus rosa-sinensis",
+      "fields_removed": 0
+    },
+    {
+      "species": "Phyllostachys aurea",
+      "fields_removed": 1
+    },
+    {
+      "species": "Sedum spectabile",
+      "fields_removed": 0
+    }
+  ],
+  "normalizations": [
+    "2026-08-22: fifth batch of the \"blind spots\" pass, anchored by toxicity.py's SPECIES_SPECIFIC_RISK dict -- it names Lilium and Hemerocallis as sharing the identical severe cat-specific acute kidney-failure pattern, but only Lilium had been researched (b19). Daylily (Hemerocallis fulva) is one of the most widely planted garden perennials in North America and was a real, important gap. Also landed Ceropegia woodii (String of Hearts), found via a Perenual API mock fixture naming it as a real, commonly-sold species distinct from the already-covered String of Pearls, plus 6 more species confirmed to have zero coverage by direct grep: Venus Flytrap, Chinese Wisteria, Jackman's Clematis, Chinese Hibiscus, true Golden Bamboo, and Showy Stonecrop. Confirmed all 8 against every batch file before landing.",
+    "Daylily's toxicity was researched thoroughly and correctly scoped: every admissible source agrees cats are severely at risk (UF/IFAS: acute kidney injury; UGA: Major Toxicity), but sources disagree on dogs specifically (NC State tags it non-toxic for dogs; UF/IFAS says toxic to both) -- the record asserts toxic_to_pets=true scoped to cats, where every source is unanimous, rather than either ignoring the dog disagreement or picking a side on it.",
+    "One landing-time fix: Ceropegia woodii's scientific_name_accepted was written as the literal string \"null\" instead of JSON null by the research agent -- would have landed as if \"null\" were an actual species name. Corrected to real null; the field is genuinely unresolved anyway (RHS and NC State anchor to two different accepted names for the same plant with neither resolving to the other).",
+    "The audit caught a striking cross-species contamination: NC State's toxicity block for Ceropegia woodii (a non-woody succulent vine) turned out to be byte-for-byte identical to its Wisteria sinensis block elsewhere in this same batch, down to \"wisterin glycoside\" (a compound named for Wisteria) and \"Bark\" as a poisoned part -- a templating/caching defect on the source site, not real data, and correctly excluded from both records.",
+    "Chinese Hibiscus landed with toxic_to_pets correctly null after a genuinely thorough four-source search found no toxicity data at all for this species -- not assumed toxic by Malvaceae-family association, not assumed safe by silence. Zero fields were removed by the audit on this record, a rare clean pass.",
+    "Golden Bamboo (Phyllostachys aurea) continues this catalog's running theme of common-name naming traps -- true bamboo (a grass, Poaceae), unrelated to \"Lucky Bamboo\" (Dracaena sanderiana, already covered) the way Sago Palm isn't a true palm and Mini Monstera isn't a Monstera. It's also a running, rhizome-spreading, invasive-listed species in multiple states -- captured at length in unknowns even though the schema has no dedicated field for it, since it materially affects whether a home gardener should plant it directly in the ground versus in a contained pot."
+  ]
+}

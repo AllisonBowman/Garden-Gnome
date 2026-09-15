@@ -15,7 +15,7 @@ function species(schedules: Species['care_schedules']): Species {
 function plant(over: Partial<Plant> = {}): Plant {
   return {
     id: 1, plant_uuid: 'p', nickname: 'Ferny', species_id: 100,
-    environment_id: 5, location: '', maturity_stage: 'mature', intake_notes: '',
+    growing_area_id: 5, location: '', maturity_stage: 'mature', intake_notes: '',
     ...over,
   } as Plant;
 }
@@ -114,8 +114,8 @@ describe('computeCareTasks', () => {
     expect(run({ speciesById: { 100: species(undefined) } })).toEqual([]);
   });
 
-  it('scopes nothing itself — every task carries its environmentId for the caller to filter', () => {
+  it('scopes nothing itself — every task carries its growingAreaId for the caller to filter', () => {
     const [task] = run();
-    expect(task.environmentId).toBe(5);
+    expect(task.growingAreaId).toBe(5);
   });
 });

@@ -79,7 +79,7 @@ export default function SettingsScreen() {
     const sure = await confirmDialog(
       'Delete your account?',
       'This permanently deletes your account, plants, care history, and '
-      + 'environments from PlantAdvocate. This cannot be undone.',
+      + 'growingAreas from PlantAdvocate. This cannot be undone.',
       'Delete forever',
     );
     if (!sure) return;
@@ -314,7 +314,7 @@ export default function SettingsScreen() {
               </View>
               <Text variant="bodySmall" style={styles.subHint}>
                 {prefs.water
-                  ? 'Nudges watering reminders by a day or two for outdoor, unsheltered plants — later before rain, sooner in a heat spike. Needs a location on the environment.'
+                  ? 'Nudges watering reminders by a day or two for outdoor, unsheltered plants — later before rain, sooner in a heat spike. Needs a location on the growing area.'
                   : 'Turn on watering reminders above to use this.'}
               </Text>
             </>

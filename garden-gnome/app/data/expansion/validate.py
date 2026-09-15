@@ -10,6 +10,9 @@ Records with any issue are routed to the review queue, never auto-approved.
 import re
 from difflib import SequenceMatcher
 
+from app.data.claims import names
+from app.models.models import SpeciesSource
+
 VALID_LIGHT = {"low", "medium", "bright_indirect", "direct"}
 
 # Plausibility windows (days) per care type: (min allowed, max allowed)
@@ -31,6 +34,12 @@ _PLACEHOLDER = re.compile(
 
 def validate_record(rec: dict) -> list[str]:
     """Return a list of issues; empty list means the record passes."""
+    # A row minted from the claim tranche (ADR 0005) has no legacy care values
+    # by design: its values are resolved from citations, never typed in. The
+    # legacy-shape checks below would only report the absence they expect.
+    if rec.get("source") == SpeciesSource.claims:
+        return []
+
     issues: list[str] = []
 
     # -- Missing / placeholder fields ----------------------------------------
@@ -102,11 +111,13 @@ def validate_record(rec: dict) -> list[str]:
 
 def _name_key(name: str) -> str:
     """Normalize for exact-duplicate comparison: case, whitespace, cultivar
-    quotes, and the abbreviation dot in 'var.' etc."""
-    s = (name or "").lower().strip()
-    s = re.sub(r"['‘’\"]", "", s)
-    s = re.sub(r"\s+", " ", s)
-    return s
+    quotes, the abbreviation dot in 'var.' etc, and the hybrid marker.
+
+    The marker fold is `names.key`, the same one the claim sync matches rows
+    with: without it this gate admits 'Nepeta × faassenii' and
+    'Nepeta x faassenii' as two species, and the next sync sees two rows under
+    one key, calls them ambiguous and links neither."""
+    return names.key(re.sub(r"['‘’\"]", "", name or ""))
 
 
 def find_near_duplicates(
