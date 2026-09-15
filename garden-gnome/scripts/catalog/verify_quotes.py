@@ -148,8 +148,20 @@ def _fragment_present(q: str, text: str) -> bool:
     return sum(run in text for run in runs) / len(runs) >= 0.8
 
 
+#: qc.py renders a page's element boundaries as U+23CE so a researcher can see
+#: where the page stacks separate nodes. The character exists nowhere in real
+#: page text, so a quote containing one was copied across a boundary: it glues
+#: elements the page renders apart ("Dimensions:" + "Height: ..." + "Width:
+#: ...") into a single run that was never on the page as one. Normalisation
+#: flattens that boundary, so such a quote passes the substring test -- which
+#: is exactly why it has to be rejected before the test rather than by it.
+RENDER_ARTIFACT = "\u23ce"
+
+
 def present(raw_quote: str, text: str) -> bool:
     """Whole quote, or -- for a composite -- >= 80% of its fragments."""
+    if RENDER_ARTIFACT in (raw_quote or ""):
+        return False
     if _fragment_present(norm(raw_quote), text):
         return True
     frags = [f for f in COMPOSITE_SEP.split(raw_quote) if f.strip()]
@@ -193,7 +205,9 @@ def check(paths: list[str]) -> int:
             print(f"INCONCLUSIVE [{batch}] {name}: {claim[:60]}\n      {url}")
             continue
         miss += 1
-        print(f"MISS [{batch}] {name}: {claim[:70]}\n      {url}\n      quote: {quote[:200]!r}")
+        why = ("  <- quote splices elements the page renders apart (U+23CE)"
+               if RENDER_ARTIFACT in (quote or "") else "")
+        print(f"MISS [{batch}] {name}: {claim[:70]}{why}\n      {url}\n      quote: {quote[:200]!r}")
 
     print(f"\n{hit} hit, {miss} MISS, {inconclusive} inconclusive, {skip} skipped (pdf/http/error)")
     return 1 if miss else 0

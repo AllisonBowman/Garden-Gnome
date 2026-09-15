@@ -843,6 +843,18 @@
           "source": "Clemson HGIC - Muscadine Grape",
           "url": "https://hgic.clemson.edu/factsheet/muscadine-grape/",
           "quote": "If lime is needed, use dolomitic limestone and incorporate it before planting to adjust the soil pH to between 6.0 and 6.5."
+        },
+        {
+          "claim": "is_edible true (NC State: muscadine grapes are good for eating; species also carries a structured \"Edible fruit\" Play Value tag)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Vitis rotundifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/vitis-rotundifolia/",
+          "quote": "Muscadine grapes are large and have thick skin but are good for eating and wine-making due to their sweet, pungent flavor."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: the muscadine grape attracts bees and pollinators; structured \"Attracts\" field also lists Bees and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Vitis rotundifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/vitis-rotundifolia/",
+          "quote": "The muscadine grape attracts bees, pollinators, small mammals and songbirds and is a natural addition to pollinator, native and edible gardens."
         }
       ],
       "common_name": "Muscadine Grape",
@@ -887,14 +899,20 @@
         "No dedicated Missouri Botanical Garden Plant Finder page for Vitis rotundifolia was found (search returned only Vitis vinifera and unrelated Vitex/Viola rotundifolia pages), so MoBot's structured Sun field could not be used as corroboration for outdoor_sun_exposure.",
         "EDIS/ask.ifas.ufl.edu publications found (HS100/HS401, the muscadine grape production bulletin) are commercial fruit-crop production guides (cultivar selection, spacing, pollination, spray programs) and were treated as inadmissible crop-production sources rather than species care sources, per the task's carve-out for viticulture/production pages.",
         "UGA fieldreport.caes.uga.edu and Penn State extension.psu.edu results returned were either vineyard/production content or about a different species (Vitis riparia, 'Wild Grape'), so neither was used as a citation source for Vitis rotundifolia.",
-        "University of Maryland Extension's 'Growing Grapes in a Home Garden' page only mentions muscadine grape's winter-hardiness in passing within a general grape-growing guide rather than as a dedicated species profile, so it was not used as a citation source beyond being noted here."
+        "University of Maryland Extension's 'Growing Grapes in a Home Garden' page only mentions muscadine grape's winter-hardiness in passing within a general grape-growing guide rather than as a dedicated species profile, so it was not used as a citation source beyond being noted here.",
+        "mature_height_in and mature_spread_in left null: NC State's Plant Toolbox page has no structured Dimensions/Height/Width block for this species, and its narrative text states \"The height and width of the vine varies due to the amount of support that the vine receives\" -- for a climber, a height/width figure tied to its support is not the plant's own dimension (rule 4), so no usable figure exists there.",
+        "RHS page (https://www.rhs.org.uk/plants/136288/vitis-rotundifolia/details) was searched for 'Height', 'Spread', 'Max Height', 'Max Spread', 'Ultimate height', and 'metres' -- zero hits for every term; the page carries no size data for this species to record.",
+        "Clemson HGIC factsheet (https://hgic.clemson.edu/factsheet/muscadine-grape/) returned an http-403 status -- it refused this machine. Not read, not used for any field, per instructions to skip and disclose rather than guess.",
+        "is_edible=true is unconditional: NC State's anchor page was searched for 'Poison', 'Toxic', and 'Problem for' with zero hits for all three, so no toxic part, severity, or preparation requirement was found on the cited page to attach as a condition."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "chill_damage_f": null,
@@ -1060,6 +1078,24 @@
           "source": "RHS Plants - Rhododendron maximum",
           "url": "https://www.rhs.org.uk/plants/15406/rhododendron-maximum-american-rosebay-great-laurel/details",
           "quote": "Harmful if eaten.  Wear gloves and other protective equipment when handling.     Pets (dogs, cats, rabbits, tortoises) Harmful if eaten - for further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants"
+        },
+        {
+          "claim": "mature_height_in 60-180 (NC State Height: 5 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-maximum/",
+          "quote": "Height: 5 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-144 (NC State Width: 5 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-maximum/",
+          "quote": "Width: 5 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators is true (flowers attract bees, butterflies, hummingbirds, and other pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-maximum/",
+          "quote": "This species blooms later than some, and the flowers attract bees, butterflies, hummingbirds, and other pollinators."
         }
       ],
       "common_name": "Rosebay Rhododendron",
@@ -1099,14 +1135,23 @@
         "chill_damage_f, cool_rest_note, day/night temperature fields, humidity fields, and light_fc fields are all left null: no admissible source for this species states a numeric damage-onset temperature, a day/night operating range, a humidity percentage or category, or a foot-candle light level — these sources describe hardiness zones, shade tolerance, and qualitative cultivation guidance only.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: the only fertilizing guidance found is NC State's caution 'Avoid overwatering and over-fertilizing,' which gives no interval, active season, or dilution strength.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are left null per the rule that in-ground shrub watering is not framed with a dry-down target or day intervals in these sources.",
-        "is_houseplant is set to false on the strength of NC State's USDA Hardiness Zone range (3a-7b) and its native North American range description, indicating an outdoor landscape/woodland shrub; no source frames this species as an indoor houseplant."
+        "is_houseplant is set to false on the strength of NC State's USDA Hardiness Zone range (3a-7b) and its native North American range description, indicating an outdoor landscape/woodland shrub; no source frames this species as an indoor houseplant.",
+        "is_edible left null: no page addresses eating or food use of this species -- NC State anchor page has 0 hits for 'Edible' and RHS also has 0 hits for 'Edible'/'edible'; this is 'no record', not a claim of inedibility.",
+        "NC State anchor page (the same page cited for size/pollinators) lists this species as poisonous: Poison Severity Low, Poison Toxic Principle Grayanotoxins, Poison Part Bark/Flowers/Fruits/Leaves/Roots/Seeds/Stems, Causes Contact Dermatitis No -- flagged here even though is_edible is null (not true) because it is decision-relevant to anyone considering this field.",
+        "Missouri Botanical Garden PlantFinder page (https://www.missouribotanicalgarden.org/plantfinder/PlantFinderDetails.aspx?taxonid=279985) refused this machine (fetch status: error:ConnectError) -- skipped per instructions, not guessed.",
+        "RHS page gives Max Height 2.5-4 metres and Max Spread 2.5-4 metres for this species, but NC State's Plant Toolbox page is the anchor for this record and already carries a structured Dimensions block for the species, so the NC State figures (converted to inches) were used instead of RHS's; RHS also had 0 hits for 'pollinator', 'Poison', 'Toxic', 'Edible'."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 180,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 144
     }
   ],
   "audit_summary": [
@@ -1137,6 +1182,7 @@
   ],
   "normalizations": [
     "2026-09-05: fiftieth batch (cruise throttle) -- native vines and a rhododendron: Trumpet Honeysuckle, Crossvine, American Wisteria, American Bittersweet, Muscadine Grape, and Rosebay Rhododendron. Clean first run (12/12 agents, 1.33M subagent tokens); land_check.py and covered.py ran clean; verify_quotes.py 77/79 reachable quotes before repair, both MISSes fixed here (a synthesized confused-with quote and a semicolon-joined Poison block, now cited value by value). Two researchers reported RHS or MoBot unreachable where the auditors reached them; the URLs come from the auditors' own fetches (RHS 94290 for Wisteria frutescens, RHS 101010 and MoBot a151 for Celastrus scandens) and only auditor-quoted text is cited -- both records keep scientific_name_accepted null because the Name Status value was not captured. Trumpet Honeysuckle's RHS URL carried the placeholder 'wd' slug (the wrong-species shape that bit Sourwood); rewritten to the epithet slug and re-verified. Values changed: none. Citation-form repairs: a fabricated NC State Plant Type entry ('Woody Plant', the head of the next field's label) on Crossvine, one-word 'Correct' quotes paired with the H1 or title, pipe-joined and label+value NC State quotes newline-stacked, and 'is' for 'are' in MoBot's Rhododendron toxicity sentence. Four toxicity_detail fields were repaired as trimmed safety fields with the auditor's verbatim additions: American Wisteria drops a fabricated 'Fruit Value To Gardener: Edible / Berry' conflict bled in from a berry crop and gains NC State's Edibility sentence naming roots, bark, branches, fruits and seeds plus RHS's handling warning; American Bittersweet gains NC State's 'Edibility: Poison', RHS's handling warning and 'Pets (dogs, cats)' line, and MoBot's fruit-only counterpoint; Rosebay Rhododendron gains RHS's handling warning and pet list against NC State's Low/No; Trumpet Honeysuckle gains NC State's ethnobotany use of the leaves against RHS's handling warning and the page's high-flammability Fire Risk statement. Every name_note was replaced with the auditor's corrected wording (invented 'N entries marks no primary' conventions, overstated leads and counts, an NC State prose count mis-sourced against its own list lead). Muscadine's soil pH stays null with Clemson's 6.0-6.5 pre-plant liming target disclosed rather than used. toxic_to_pets=true on American Wisteria, American Bittersweet and Rosebay Rhododendron rests on NC State's cat and dog tags (RHS's 'Pets (dogs, cats)' lines now corroborate two of them); the other three are null (RHS's unscoped 'Pets' language does not count).",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Trumpet Honeysuckle -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Trumpet Honeysuckle -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

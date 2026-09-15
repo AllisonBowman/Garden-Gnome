@@ -46,7 +46,12 @@
         "soil_ph_min and soil_ph_max left null: NC State's Soil pH field lists only an open-ended 'Acid (<6.0)' band and a closed 'Neutral (6.0-8.0)' band, but RHS's pH field lists 'Acid or Neutral or Alkaline,' accepting soils on both sides of Neutral. Per the cross-check rule, RHS accepting alkaline rules out a ceiling and RHS accepting acid rules out a floor, so both were left null. NC State's own Description prose also says the species 'tolerates a wide range of pH.'",
         "water_regime and the water day-interval/dry-down fields left null: MoBot's only structured moisture cue is 'Water: Medium,' a mid-scale rating that cannot support keep_moist per the rules, and no admissible source frames watering for this species in dry-down, keep-moist, or day-interval terms; NC State's 'prefers moist well-drained soil...sensitive to heat and drought' is a soil/tolerance statement, not a watering-frequency instruction. As an in-ground canopy tree, the day-interval and dry-down-target fields were left null per the rule for in-ground trees/shrubs/perennials.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: none of the admissible sources give a fertilizing schedule or dilution strength for this species, and no genus-level commercial-crop source was used per the rule against borrowing production schedules.",
-        "An earlier automated extraction pass returned a purported NC State 'is often confused with' module naming Magnolia ashei and Magnolia macrophylla; a direct render of the live NC State page showed no such module present, so that claim was discarded rather than cited to avoid reporting fabricated content."
+        "An earlier automated extraction pass returned a purported NC State 'is often confused with' module naming Magnolia ashei and Magnolia macrophylla; a direct render of the live NC State page showed no such module present, so that claim was discarded rather than cited to avoid reporting fabricated content.",
+        "is_edible left null: none of the three anchor pages (NC State, RHS, MoBot) addresses eating this plant or any part of it -- no record either way.",
+        "attracts_pollinators left null: NC State's structured 'Attracts' field lists only 'Small Mammals' and 'Songbirds' -- no bees, butterflies, moths, or hummingbirds named. RHS's page has no Attracts field and no 'pollinat' mention at all. No page makes an unconditional pollinator statement.",
+        "RHS gives Max Height 'Higher than 12 metres' and Max Spread 'wider than 8 metres' -- both open-ended values with no usable bound, so they were not used; NC State's Height 50-80 ft. and Width 35-60 ft. figures were used instead as they carry a full range.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) -- skipped per instructions; nothing was guessed from it.",
+        "Neither 'Poison' nor 'Toxic' nor 'Problem for' produced any hits on the NC State page (0 hits each), so there is no toxicity disclosure to carry into unknowns."
       ],
       "citations": [
         {
@@ -180,8 +185,24 @@
           "source": "RHS Plants - Magnolia acuminata",
           "url": "https://www.rhs.org.uk/plants/10687/magnolia-acuminata/details",
           "quote": "cucumber tree"
+        },
+        {
+          "claim": "mature_height_in 600-960 (NC State Height 50 ft. 0 in. - 80 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Magnolia acuminata",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-acuminata/",
+          "quote": "Height: 50 ft. 0 in. - 80 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 420-720 (NC State Width 35 ft. 0 in. - 60 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Magnolia acuminata",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-acuminata/",
+          "quote": "Width: 35 ft. 0 in. - 60 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 600,
+      "mature_height_in_max": 960,
+      "mature_spread_in_min": 420,
+      "mature_spread_in_max": 720
     },
     {
       "common_name": "Bottlebrush Buckeye",
@@ -544,6 +565,18 @@
           "source": "RHS Plants - Franklinia alatamaha",
           "url": "https://www.rhs.org.uk/plants/21629/franklinia-alatamaha/details",
           "quote": "Susceptible to Phytophthora root rot"
+        },
+        {
+          "claim": "mature_height_in 120-300 (NC State Height 10 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/franklinia-alatamaha/",
+          "quote": "Height: 10 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-180 (NC State Width 6 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/franklinia-alatamaha/",
+          "quote": "Width: 6 ft. 0 in. - 15 ft. 0 in."
         }
       ],
       "common_name": "Franklin Tree",
@@ -583,14 +616,23 @@
         "day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min/good, chill_damage_f, cool_rest_note, fertilize_interval_days, fertilize_active_months, fertilize_strength all left null: no admissible source frames care for this hardy outdoor tree in these houseplant-style terms (indoor temperature ranges, foot-candles, humidity percentage, fertilizer dilution/schedule). NC State's USDA Plant Hardiness Zone list (5a-8b) is a survival-zone range, not a damage-onset temperature, so it cannot support chill_damage_f per the rubric.",
         "direct_sun_hours_max left null: NC State's Light entries read \"Full sun (6 or more hours of direct sunlight a day)\" and \"Partial Shade (Direct sunlight only part of the day, 2-6 hours)\". Those hour figures are NC State's site-wide light-category legend definitions, not species-specific prose for Franklinia alatamaha, so they are excluded per the rubric.",
         "Root-disturbance, transplant-difficulty, and heat warnings (decision-relevant but no matching schema field): NC State: \"It can be difficult to transplant because of a sparsely fibrous root system, so plan well when choosing its planting location.\" and \"In general, this tree has a reputation for being difficult to grow.\" and \"This is a lovely tree but it can struggle in urban conditions and is intolerant of drought.\" MoBot: \"Hard to transplant because of its sparsely fibrous root system, and is best left undisturbed once planted in the landscape.\" RHS Cultivation: \"Can be challenging to grow. Best grown in rich, moist, well-drained soils in full sun to part shade. Intolerant of root disturbance once established as well as drought\". Heat/afternoon-shade guidance: NC State's Description: \"Ideal growing conditions include full sun, with some afternoon shade the summer, and acidic soil that is moist and well-drained.\" MoBot Culture: \"Perhaps best in full sun in northern climates, but appreciates some afternoon shade in hot summer climates.\" Disease/pathogen warnings: NC State's Insects, Diseases, or Other Plant Problems: \"Sawflies do eat these trees. Do not plant where cotton has been grown as there is a pathogen that affects cotton that also affects Franklin trees.\" and \"Wilt and root rot can also be serious problems. Consider planting in raised beds in areas with heavy clay.\" MoBot Problems: \"Wilt and root rot can be serious problems. In general, this tree has a reputation for being difficult to grow.\" RHS's Diseases line independently corroborates the root-rot warning: 'Susceptible to Phytophthora root rot'.",
-        "is_houseplant is set to false by inference from NC State's outdoor USDA Hardiness Zone and Landscape Location framing (Container, Patio, Small space, all outdoor landscape/patio uses) and RHS/MoBot's outdoor cultivation prose; no admissible source frames this species as an indoor houseplant, but none explicitly states 'not a houseplant' either."
+        "is_houseplant is set to false by inference from NC State's outdoor USDA Hardiness Zone and Landscape Location framing (Container, Patio, Small space, all outdoor landscape/patio uses) and RHS/MoBot's outdoor cultivation prose; no admissible source frames this species as an indoor houseplant, but none explicitly states 'not a houseplant' either.",
+        "is_edible left null: no page among the three anchor pages addresses eating this plant at all (searched 'Edible' on NC State and RHS, zero hits on both; MBG could not be checked, see below).",
+        "attracts_pollinators left null: no structured Attracts/wildlife field and no unconditional pollinator statement found on NC State or RHS (searched 'Attracts' and 'pollinator' on both, zero hits).",
+        "Also searched 'Poison', 'Toxic', 'Problem for' on NC State and RHS before setting is_edible -- zero hits on both, so no toxicity disclosure applies here.",
+        "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=q160 refused this machine (fetch status: error:ConnectError) -- could not check it for size, edibility, or pollinator info; not guessing what it would show.",
+        "RHS also gives Max Height 2.5-4 metres and Max Spread 2.5-4 metres (98.4-157.5 in for both), but NC State's structured Dimensions block (Height 10-25 ft, Width 6-15 ft) was used as the anchor per instructions since NC State has a species-specific page here."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 180
     },
     {
       "chill_damage_f": null,
@@ -738,6 +780,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279336",
           "quote": "This shrub is also commonly called swamp dogwood in reference to habitat and kinnkinnik (tobacco) in reference to a prior use of shrub bark by Native Americans as tobacco."
+        },
+        {
+          "claim": "mature_height_in 72-144 (NC State Height: 6 ft. 0 in. - 12 ft. 0 in., converted to inches: 6 ft = 72 in, 12 ft = 144 in)",
+          "source": "NC State Extension Gardener Plant Toolbox: Cornus amomum",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-amomum/",
+          "quote": "Height: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-144 (NC State Width: 6 ft. 0 in. - 12 ft. 0 in., converted to inches: 6 ft = 72 in, 12 ft = 144 in)",
+          "source": "NC State Extension Gardener Plant Toolbox: Cornus amomum",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-amomum/",
+          "quote": "Width: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field names Pollinators among the wildlife the plant draws, alongside Butterflies and Specialized Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox: Cornus amomum",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-amomum/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Silky Dogwood",
@@ -776,14 +836,23 @@
         "soil_ph_min and soil_ph_max are left null: NC State's Soil pH field for this species is the open-ended 'Acid (<6.0)' band (no numeric ceiling), and RHS's pH field lists 'Acid or Alkaline or Neutral' as all acceptable, so neither a floor nor a ceiling can be set from either source in either direction.",
         "day/night temperature ranges, chill_damage_f, cool_rest_note, humidity_need/pct, light_fc_min/good, direct_sun_hours_max, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis, and all fertilize_* fields are left null: Cornus amomum is an in-ground native wetland-margin shrub, and no admissible source frames its care in container/houseplant terms (temperature setpoints, humidity percentages, foot-candle light levels, dry-down watering cycles, or a fertilizer schedule/dilution). No admissible source gives species-specific fertilizing guidance for Cornus amomum at all.",
         "RHS's own Cultivation note for this page ('Will grow in most soil conditions in sun or partial shade.') links out to the flowering-dogwood (Cornus florida) growing guide, suggesting this cultivation sentence may be shared boilerplate rather than Cornus-amomum-specific prose; it was not relied on for any schema field beyond corroborating the already-established full-sun/partial-shade sun exposure and moderate drainage, both of which are independently supported by RHS's own structured Position and Moisture fields plus NC State and MoBot.",
-        "NC State's structured Light Requirements field alone lists a 'Deep shade' value for this species, but MoBot's Sun field ('Full sun to part shade') and RHS's Position field ('Full sun, Partial shade') both exclude it, so full_shade is disclosed here rather than carried into outdoor_sun_exposure, per the rule that a shade value present in only one of the three structured sun fields and excluded by the other two is not carried."
+        "NC State's structured Light Requirements field alone lists a 'Deep shade' value for this species, but MoBot's Sun field ('Full sun to part shade') and RHS's Position field ('Full sun, Partial shade') both exclude it, so full_shade is disclosed here rather than carried into outdoor_sun_exposure, per the rule that a shade value present in only one of the three structured sun fields and excluded by the other two is not carried.",
+        "is_edible left null: no page among the three sources (NC State, RHS) states the plant or any part of it is eaten or grown for food, and none states it is inedible or poisonous to eat. Per rule 5, searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting this field: 'Poison' returned 0 hits, 'Problem for' returned 0 hits, and 'Toxic' returned 2 hits, both being the tag/attribute 'black walnut toxicity tolerant' (meaning the plant tolerates juglone toxicity from black walnut trees, not a statement about the plant's own toxicity or edibility to humans). No usable edibility evidence found anywhere.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (fetch status: error:ConnectError) -- could not read that page at all, so it contributes no evidence to any field here; not guessing what it would have said.",
+        "mature_height_in and mature_spread_in were sourced from the NC State Plant Toolbox anchor page (Height: 6 ft. 0 in. - 12 ft. 0 in.; Width: 6 ft. 0 in. - 12 ft. 0 in.), per the instruction that NC State is the anchor source when available. RHS also carries a size field for this species (Max Height 2.5-4 metres, Max Spread 2.5-4 metres = approx. 98.4-157.5 inches), which is a somewhat wider/different range than NC State's, but NC State was used as the anchor per the task's stated priority; RHS's figure was not blended in.",
+        "attracts_pollinators set true on NC State's structured 'Attracts:' field, which lists Butterflies, Pollinators, Small Mammals, Songbirds, and Specialized Bees. RHS's page for this species only states the berries are 'attractive to birds' -- it does not carry RHS's pollinator-attraction tag or mention bees/butterflies/moths/hummingbirds for this species, so RHS was not used as a citation for this field."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 144
     },
     {
       "chill_damage_f": null,
@@ -907,6 +976,30 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d444",
           "quote": "Nyssa aquatica, commonly called tupelo gum or water tupelo, is a large aquatic tree that is native to floodplains and swamps from Florida to Texas north to Missouri, Illinois, Kentucky and Virginia."
+        },
+        {
+          "claim": "mature_height_in 720-1200 (NC State Height 60 ft. 0 in. - 100 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox: Nyssa aquatica",
+          "url": "https://plants.ces.ncsu.edu/plants/nyssa-aquatica/",
+          "quote": "Height: 60 ft. 0 in. - 100 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 301-602 (NC State Width 25 ft. 1 in. - 50 ft. 2 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox: Nyssa aquatica",
+          "url": "https://plants.ces.ncsu.edu/plants/nyssa-aquatica/",
+          "quote": "Width: 25 ft. 1 in. - 50 ft. 2 in."
+        },
+        {
+          "claim": "is_edible true: the fruit is eaten raw and used in preserves",
+          "source": "NC State Extension Plant Toolbox: Nyssa aquatica",
+          "url": "https://plants.ces.ncsu.edu/plants/nyssa-aquatica/",
+          "quote": "The fruit can be eaten raw, often used in preserves."
+        },
+        {
+          "claim": "attracts_pollinators true per the page's Play Value / Attracts fields",
+          "source": "NC State Extension Plant Toolbox: Nyssa aquatica",
+          "url": "https://plants.ces.ncsu.edu/plants/nyssa-aquatica/",
+          "quote": "Attracts Pollinators"
         }
       ],
       "common_name": "Water Tupelo",
@@ -943,14 +1036,22 @@
         "water_regime left null: no admissible source gives an explicit watering statement for this species. MoBot's structured field reads 'Water: Medium to wet' (mid-scale, not keep_moist) and NC State/MoBot cultivation prose describes soil moisture tolerance and wild-habitat conditions ('grows well in medium to wet soils', 'tolerates poorly-drained soils and can grow in standing water'), not a watering instruction, so this is disclosed rather than used to set water_regime.",
         "day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, direct_sun_hours_max, chill_damage_f, cool_rest_note, fertilize_interval_days, fertilize_active_months, fertilize_strength, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are all left null: this is an in-ground native swamp tree and none of the admissible sources frame it with container/houseplant temperature, humidity, footcandle, fertilizer-schedule, or watering-interval terms. NC State's Light field's hour ranges (6+ hours; 2-6 hours) are its site-wide legend text, not species-specific prose, so they were not used for direct_sun_hours_max per the sourcing rule.",
         "soil_ph_min and soil_ph_max left null: NC State's structured Soil pH field selects only Neutral (6.0-8.0) and the open-ended Alkaline (>8.0), so no ceiling is established; the 6.0 floor the record had read off the ABSENCE of NC State's Acid checkbox was removed at landing because RHS's pH field reads 'Acid or Neutral' and both NC State's and MoBot's prose say the species prefers acidic soils -- the sources disagree on the low end, so no defensible floor exists.",
-        "outdoor_sun_exposure: full_shade and part_sun were not added. NC State's Light field and MoBot's Sun field (the two North American structured fields) both support full_sun and part_shade; RHS's Position field lists only 'Full sun', a narrower reading that is disclosed as a conflict rather than used to drop part_shade."
+        "outdoor_sun_exposure: full_shade and part_sun were not added. NC State's Light field and MoBot's Sun field (the two North American structured fields) both support full_sun and part_shade; RHS's Position field lists only 'Full sun', a narrower reading that is disclosed as a conflict rather than used to drop part_shade.",
+        "Checked the anchor NC State page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible true: zero hits for all three, so no toxic part, severity, or preparation warning was found to disclose.",
+        "RHS, Missouri Botanical Garden, and the NC State Nyssa biflora pages were not needed for these six fields because the NC State Nyssa aquatica anchor page already carried a complete structured Dimensions block, an Edibility statement, and an Attracts field covering all of them."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 720,
+      "mature_height_in_max": 1200,
+      "mature_spread_in_min": 301,
+      "mature_spread_in_max": 602
     },
     {
       "common_name": "Inkberry",
@@ -999,7 +1100,12 @@
         "fertilize fields and day/night/humidity/light_fc fields: no admissible source (NC State, MoBot) gave any fertilizing schedule, temperature range, humidity requirement, or foot-candle light measurement for this in-ground landscape shrub, so all these fields are left null.",
         "is_houseplant is set to false based on both sources describing Ilex glabra exclusively as an outdoor, USDA-hardiness-zoned (NC State: zones 4a-11b; MoBot: zones 4-9) landscape/garden shrub used for hedges, screens, and naturalized plantings, with no houseplant use mentioned by either source.",
         "Fire risk: NC State's page carries an explicit high-flammability warning, reproduced verbatim in the fire_risk citation below, and its cultivar list separately flags 'Compacta' as high flammability; the species-level Fire Risk Rating field itself (independent of any cultivar) also reads 'high flammability.'",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/ilex-glabra/, https://www.rhs.org.uk/plants/20984/ilex-glabra/details, https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=276153, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276153, https://hgic.clemson.edu, https://ask.ifas.ufl.edu/publication/ST303); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/ilex-glabra/, https://www.rhs.org.uk/plants/20984/ilex-glabra/details, https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=276153, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276153, https://hgic.clemson.edu, https://ask.ifas.ufl.edu/publication/ST303); none found, so the value stays null. Audited live.",
+        "Missouri Botanical Garden PlantFinder page (missouribotanicalgarden.org, taxonid=276153) refused/failed to connect via qc.py (ConnectError) -- not read, not used for any field.",
+        "NC State's ilex-verticillata page is a different species (winterberry) and was not used for any of Inkberry's fields, per the rule that a genus/related-species page is not a substitute for the species' own data; NC State's ilex-glabra page (the anchor) already carries a structured Dimensions block, Attracts field, and Poison/Edibility fields covering all six requested properties.",
+        "is_edible is TRUE but conditional: NC State's Edibility field reads 'Use caution. Human ingestion of berries can cause minor toxic reaction,' and the same page separately states 'Poisonous to Humans,' 'Poison Severity: Low,' 'Poison Symptoms: Minor toxicity. Ingestion may cause vomiting, diarrhea, or other illness in humans,' and 'Poison Toxic Principle: Saponins' (Causes Contact Dermatitis: No). The Play Value field also lists 'Edible fruit' as a trait. So the fruit is treated as edible/eaten but ingestion carries a documented low-severity toxic risk from saponins -- disclosing in full per the rule that a named poisonous part/severity/toxic principle must appear here whenever is_edible is true.",
+        "RHS's Ilex glabra page (rhs.org.uk/plants/20984) gives Max Height 1.5-2.5 metres and Max Spread 1.5-2.5 metres (49.2-98.4 in), which differs from NC State's range; NC State was used as the anchor species page per instructions (RHS is only the fallback source when no species-level NC State page exists), so RHS's size figures were not recorded.",
+        "RHS's page had no hits for 'pollinator', 'bee', 'butterfl', 'Poison', 'Toxic', or 'Edible' -- it did not address edibility, toxicity, or pollinator attraction for this species, so it contributed nothing to those fields (search terms tried, not a claim about what the page lacks beyond these searches)."
       ],
       "citations": [
         {
@@ -1199,8 +1305,44 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ilex-glabra/",
           "quote": "#edible fruits"
+        },
+        {
+          "claim": "mature_height_in 60-120 (NC State Height: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Ilex glabra",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-glabra/",
+          "quote": "Height: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-96 (NC State Width: 5 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Ilex glabra",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-glabra/",
+          "quote": "Width: 5 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true, conditional: fruit is listed as edible but human ingestion carries a documented low-severity toxic reaction",
+          "source": "NC State Extension Gardener Plant Toolbox -- Ilex glabra",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-glabra/",
+          "quote": "Edible fruit"
+        },
+        {
+          "claim": "is_edible caution text: human ingestion of the berries can cause a minor toxic reaction",
+          "source": "NC State Extension Gardener Plant Toolbox -- Ilex glabra",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-glabra/",
+          "quote": "Use caution. Human ingestion of berries can cause minor toxic reaction."
+        },
+        {
+          "claim": "attracts_pollinators true",
+          "source": "NC State Extension Gardener Plant Toolbox -- Ilex glabra",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-glabra/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 96
     }
   ],
   "audit_summary": [
@@ -1232,6 +1374,7 @@
   "normalizations": [
     "2026-09-05: fifty-second batch (cruise throttle) -- native trees and shrubs: Cucumber Tree, Bottlebrush Buckeye, Franklin Tree, Silky Dogwood, Water Tupelo, and Inkberry. Clean first run (12/12 agents, 1.37M subagent tokens); land_check.py and covered.py clean; verify_quotes.py 89/91 reachable quotes before repair, both MISSes fixed here (a Plant Type quote that dropped the 'Poisonous' entry -- a trimmed safety trait -- and NC State Light strings paraphrased with rewritten parentheticals). One value changed: Water Tupelo's soil_ph_min 6.0, a floor the record had read off the absence of NC State's Acid checkbox, was nulled because RHS's pH field reads 'Acid or Neutral' and both NC State's and MoBot's prose say the species prefers acidic soils. Two accepted names were restored with values unchanged (Franklin Tree's one-word 'Correct' quote paired with the title and NC State's Previously known as list; Inkberry's on RHS's page 20984, which the researcher had reported not found and the auditor reached -- H1, title, Name Status, Other common names and Potentially harmful field all cited). Four MoBot Common Names tooltips reconstructed from overlib markup were removed and replaced with the pages' rendered prose. Every name_note was replaced with the auditor's corrected wording (invented 'N entries marks no primary' conventions, a false 'all three converge' claim, 'RHS is the only dedicated page', a section NC State does not have). Three toxicity_detail fields were repaired as trimmed safety fields: Bottlebrush Buckeye gains RHS's dog-scoped 'harmful if eaten' handling warning, Causes Contact Dermatitis and the Poisonous plant-type trait, and its UF/IFAS quote is restored to the lower-case field value; Inkberry gains RHS's handling warning and the disclosed edibility conflict (NC State tags the fruit Edible three times while cautioning against ingestion; RHS says not to be eaten); Franklin Tree's warnings are re-attributed to the sections NC State actually has, with RHS's Phytophthora line added. toxic_to_pets=true on Bottlebrush Buckeye rests on NC State's cat and dog tags with RHS's 'Pets (dogs)' now corroborating; the other five are null (Inkberry's Poison block is human-scoped; RHS's unscoped 'Pets' does not count).",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Inkberry -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

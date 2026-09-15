@@ -302,7 +302,12 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # difference is three prompt fixes chunk 1 paid for (RHS labels its size
     # fields Max Height/Max Spread in metres, a poison-block sweep is a
     # precondition of setting is_edible, and a citation may never be a stub).
-    assert report.claims_written == 4043
+    #
+    # 4043 -> 4221 is chunk 3: 178 fields over 34 species. Six of the forty were
+    # held back rather than landed -- four climbers, because the catalog has no
+    # way to say a vine's published "height" is its run along a support and not
+    # its stature, and two whose quotes spliced elements the page renders apart.
+    assert report.claims_written == 4221
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

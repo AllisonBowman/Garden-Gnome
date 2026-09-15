@@ -48,7 +48,10 @@
         "soil_drainage=moisture_retentive is based on two independent cultivation-requirement statements: RHS's Cultivation section ('Needs good light, permanently damp soil...') and NC State's own body-prose cultivation sentence ('requires full sun to partial shade in moist to wet soils with a neutral pH'), corroborated (not contradicted) by NC State's structured Soil Drainage field values 'Moist' and 'Occasionally Wet' (not the Good Drainage + Moist pair that would indicate moderate). RHS's separate structured Moisture field ('Moist but well-drained or Poorly-drained') and its 'Drought Resistance: Yes' tag are disclosed tolerance/alternate-condition data, not used as the basis.",
         "soil_base=garden_bed inferred from RHS listing in-ground garden soil types (Chalk, Clay, Loam, Sand) and NC State's Landscape Location tags (Naturalized Area, Pond, Riparian, Slope/Bank) — no admissible source frames this as a container/potting-mix plant.",
         "No admissible source (hgic.clemson.edu, edis.ifas.ufl.edu, ask.ifas.ufl.edu, extension.psu.edu, extension.umd.edu, fieldreport.caes.uga.edu) has a dedicated single-species page for Alnus serrulata; all mentions found there were within multi-species lists or unrelated publications (e.g., UF/IFAS's ENH229/ST070 page is for Alnus glutinosa, a different species, and was excluded).",
-        "common_name researched as Tag Alder; landed as Hazel Alder on MoBot's single-value Common Name field and NC State's body prose (RHS leads with smooth alder; the split is disclosed in name_note). No other Alnus is in this catalog."
+        "common_name researched as Tag Alder; landed as Hazel Alder on MoBot's single-value Common Name field and NC State's body prose (RHS leads with smooth alder; the split is disclosed in name_note). No other Alnus is in this catalog.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page addresses eating this plant or any part of it; plantfinder.mobot.org could not be checked (see below).",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting any edibility-adjacent field: 0 hits for all three. RHS page also had 0 hits for 'Poison', 'Toxic', and 'Problem for'. No toxicity information was found on either page.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277828 returned a connection error (status: error:ConnectError) when fetched via qc.py -- it refused this machine, consistent with the task's warning about this host. Not used; not guessed."
       ],
       "citations": [
         {
@@ -164,8 +167,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277828",
           "quote": "Water: Medium to wet"
+        },
+        {
+          "claim": "mature_height_in 120-180 (NC State Dimensions Height: 10 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox - Alnus serrulata",
+          "url": "https://plants.ces.ncsu.edu/plants/alnus-serrulata/",
+          "quote": "Height: 10 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 96-180 (NC State Dimensions Width: 8 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox - Alnus serrulata",
+          "url": "https://plants.ces.ncsu.edu/plants/alnus-serrulata/",
+          "quote": "Width: 8 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies, Pollinators, Songbirds)",
+          "source": "North Carolina Extension Gardener Plant Toolbox - Alnus serrulata",
+          "url": "https://plants.ces.ncsu.edu/plants/alnus-serrulata/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 180,
+      "mature_spread_in_min": 96,
+      "mature_spread_in_max": 180
     },
     {
       "chill_damage_f": null,
@@ -313,6 +339,30 @@
           "source": "RHS Plants - Aronia arbutifolia",
           "url": "https://www.rhs.org.uk/plants/1609/aronia-arbutifolia/details",
           "quote": "Moist but well–drained"
+        },
+        {
+          "claim": "mature_height_in 72-144 (NC State Height 6 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Aronia arbutifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/aronia-arbutifolia/",
+          "quote": "Height: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-60 (NC State Width 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Aronia arbutifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/aronia-arbutifolia/",
+          "quote": "Width: 3 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: butterflies and pollinators are drawn to the flowers for nectar, and the structured Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Plant Toolbox — Aronia arbutifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/aronia-arbutifolia/",
+          "quote": "Butterflies and pollinators are attracted to the flowers for nectar."
+        },
+        {
+          "claim": "is_edible true, conditionally (NC State: fruits are edible but so astringent they may cause choking; see unknowns for full condition)",
+          "source": "NC State Extension Plant Toolbox — Aronia arbutifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/aronia-arbutifolia/",
+          "quote": "The fruits are edible but so astringent that they may cause choking (hence the common name)."
         }
       ],
       "common_name": "Red Chokeberry",
@@ -352,14 +402,25 @@
         "direct_sun_hours_max left null: NC State's Light field values ('Full sun (6 or more hours...)', 'Partial Shade (...2-6 hours)') are the site-wide light-category legend definitions, not species-specific prose, per instructions.",
         "No admissible source provided indoor-climate fields (day/night temperature, humidity, foot-candle light levels, chill-damage onset), fertilizer schedule/strength, or watering day-intervals for this in-ground, cold-hardy (USDA zones 3a-9b) native shrub, so those fields are left null.",
         "soil_base is set to garden_bed as an inference that this is an in-ground landscape/native shrub (NC State: Native Plant, Shrub, planting-space field in feet) rather than any potting or container medium; no admissible source frames it as container-grown.",
-        "RHS's species page (rhs.org.uk/plants/1609/aronia-arbutifolia/details, title 'Aronia arbutifolia | red chokeberry') was located by the auditor after the research pass reported only the 'Brilliantissima' cultivar page; its Name Status, pH, Cultivation, Position and Moisture fields are cited above."
+        "RHS's species page (rhs.org.uk/plants/1609/aronia-arbutifolia/details, title 'Aronia arbutifolia | red chokeberry') was located by the auditor after the research pass reported only the 'Brilliantissima' cultivar page; its Name Status, pH, Cultivation, Position and Moisture fields are cited above.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) — not read, no data drawn from it.",
+        "is_edible is conditional, not an unqualified yes: NC State states 'The fruits are edible but so astringent that they may cause choking (hence the common name).' It also says raw berries are 'bitter and tart,' are best used in canning/jams/jellies, and that the species 'can be eaten raw and is more palatable than the black chokeberry (Aronia melanocarpa).' No poisonous part, toxic principle, severity, or pets warning was found on the anchor page — searched 'Poison' (0 hits), 'Toxic' (0 hits), and 'Problem for' (0 hits).",
+        "RHS gives larger size figures for the species (Max Height 2.5-4 metres = 98.4-157.5 in; Max Spread 1.5-2.5 metres = 59.1-98.4 in), but NC State's structured 'Dimensions:' block was used as the anchor per instructions since NC State has a species page; RHS size was not cited to avoid mixing sources for one field.",
+        "RHS's edibility sentence ('These berries are edible, but are very astringent when raw; they may attract birds') sits under the page's Aronia Genus description block, not species-specific text, so it was not used for is_edible.",
+        "PSU Extension's rain-garden page independently confirms height ('Height: 6 to 12 feet', consistent with NC State's 6-12 ft.) but gives no width/spread figure and no edibility or pollinator-attraction statement beyond a general 'very attractive to pollinators' line already covered by NC State's own 'Attracts' field and nectar sentence; not separately cited since NC State's structured data already covers these fields."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 60
     },
     {
       "common_name": "Swamp Rose",
@@ -406,7 +467,11 @@
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: no admissible source gives a species-specific fertilizing statement for Rosa palustris; genus-level rose-feeding guidance was deliberately excluded per instructions.",
         "day/night temperature fields, humidity fields, light_fc fields, chill_damage_f, cool_rest_note, and the water day-interval/dry-down fields are all left null: no admissible source frames Rosa palustris care in these terms (it is an in-ground wetland shrub, not container/houseplant-managed).",
         "RHS's page for Rosa palustris (https://www.rhs.org.uk/plants/16062/rosa-palustris/details, title confirmed as \"Rosa palustris | swamp rose\") contains only Botanical Details (Family, Native to GB/Ireland, Genus description, Name Status, Plant Range) with no Position, Soil, or pH sections to draw on.",
-        "No admissible source used the name \"Marsh Rose\" for this species; all three (NC State, MoBot, RHS) converge on \"Swamp Rose\"/\"swamp rose\"."
+        "No admissible source used the name \"Marsh Rose\" for this species; all three (NC State, MoBot, RHS) converge on \"Swamp Rose\"/\"swamp rose\".",
+        "is_edible left null: neither NC State (searched \"Edible\"/\"edible\", 0 hits) nor RHS (searched \"Edible\"/\"edible\", 0 hits) addresses whether Swamp Rose or any part of it is eaten or used for food.",
+        "Checked NC State anchor page for \"Poison\", \"Toxic\", and \"Problem for\" before setting any field involving edibility/safety -- 0 hits for all three; page states \"Insects, Diseases, and Other Plant Problems: No significant problems.\" No toxicity information found on this species page.",
+        "RHS page (https://www.rhs.org.uk/plants/16062/rosa-palustris/details) carries no usable size data for this species -- its \"Size\" field rendered with no value (\"Size ... Time to Maturity ... No preference\"), and searches for \"Height\", \"Spread\", \"Max Height\", \"Max Spread\", \"Ultimate height\", and \"metres\" all returned 0 hits. Size fields are sourced from NC State's structured Dimensions block instead.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e834 refused this machine (fetch status: error:ConnectError) -- skipped per instructions, not guessed."
       ],
       "citations": [
         {
@@ -534,8 +599,31 @@
           "source": "NC State Extension Gardener Plant Toolbox - Rosa palustris",
           "url": "https://plants.ces.ncsu.edu/plants/rosa-palustris/",
           "quote": "It tolerates partial shade but will flower best and be more disease resistant in full sun."
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Rosa palustris (Swamp Rose)",
+          "url": "https://plants.ces.ncsu.edu/plants/rosa-palustris/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Rosa palustris (Swamp Rose)",
+          "url": "https://plants.ces.ncsu.edu/plants/rosa-palustris/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: flowers attract bees, butterflies, and other pollinators; structured Attracts field lists Bees, Butterflies, Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Rosa palustris (Swamp Rose)",
+          "url": "https://plants.ces.ncsu.edu/plants/rosa-palustris/",
+          "quote": "Fragrant, single, pink roses bloom from late spring to early summer and attract bees, butterflies, and other pollinators."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "chill_damage_f": null,
@@ -860,6 +948,24 @@
           "source": "Missouri Botanical Garden Plant Finder - Rhododendron viscosum",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280018",
           "quote": "Prefers a sun dappled shade or high open part shade.  Foliage may scorch in full sun unless soils are kept uniformly moist."
+        },
+        {
+          "claim": "mature_height_in 24-96 (NC State Height 2 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Rhododendron viscosum",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-viscosum/",
+          "quote": "Height: 2 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-96 (NC State Width 3 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Rhododendron viscosum",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-viscosum/",
+          "quote": "Width: 3 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true: NC State describes the flowers as attracting pollinators, and lists a structured Attracts field naming Bees, Butterflies, Moths, and Pollinators",
+          "source": "NC State Extension Gardener Plant Toolbox — Rhododendron viscosum",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-viscosum/",
+          "quote": "This shrub has very fragrant, sticky, white flowers that bloom from May to July and attract hummingbirds, bees, and other pollinators."
         }
       ],
       "common_name": "Swamp Azalea",
@@ -896,14 +1002,24 @@
         "No admissible source gives a fertilizer schedule, interval, active months, or dilution strength specific to this species; NC State only warns generally against 'overfertilization' in the context of Phytophthora root rot risk, which is not a feeding schedule, so all fertilize_* fields are left null.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are left null: this is an in-ground landscape shrub and no source frames its watering in terms of dry-down depth or day intervals.",
         "humidity_need and humidity_pct fields are left null; no admissible source discusses ambient humidity for this species (it is an outdoor shrub, not a humidity-sensitive houseplant).",
-        "is_houseplant false rests on NC State's Plant Type field (Native Plant, Perennial, Poisonous, Shrub -- the audit's suggested fifth value 'Woody Plant' is the start of the next NC State label, Woody Plant Leaf Characteristics, not a Plant Type value) and its USDA Plant Hardiness Zone range 4a-9b."
+        "is_houseplant false rests on NC State's Plant Type field (Native Plant, Perennial, Poisonous, Shrub -- the audit's suggested fifth value 'Woody Plant' is the start of the next NC State label, Woody Plant Leaf Characteristics, not a Plant Type value) and its USDA Plant Hardiness Zone range 4a-9b.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) — could not read the MoBOT page at all for size, edibility, or pollinator info; not guessing what it would have said.",
+        "is_edible left null: searched 'Edible' on the NC State anchor page (0 hits), the NC State common-name page (0 hits), and the RHS page (0 hits) — none of the three reachable anchor pages state the plant or any part is eaten, grown for food, or not edible. No edibility claim found anywhere, so per the rules this is 'no record' (null), not false.",
+        "Context for the is_edible=null decision (not used as a citation since the field is null, but decision-relevant): the NC State anchor page states 'This plant has low severity poison characteristics,' with Poison Severity: Low; Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems; Poison Toxic Principle: Grayanotoxins; and Poison Symptoms: 'While the plants are known to contain toxins, ingestion of moderate amounts of azalea (nectar or leaves) poses little toxic hazard.' The NC State common-name page (clammy-azalea) repeats the same poison data verbatim.",
+        "Size fields were taken from the NC State anchor page's structured Dimensions block (Height: 2 ft. 0 in. - 8 ft. 0 in.; Width: 3 ft. 0 in. - 8 ft. 0 in.), which is present, so per the rules it takes priority over RHS. RHS was still checked and separately gives Max Height 1.5-2.5 metres and Max Spread 1.5-2.5 metres (59.1-98.4 in) for the species page (taxon 'Vs') — this RHS figure was not used for the field since NC State already carries a usable structured range, but is noted here in case it's wanted as a cross-check.",
+        "attracts_pollinators=true is supported both by NC State's structured 'Attracts:' field (Bees, Butterflies, Moths, Pollinators, Small Mammals, Specialized Bees) and by the unconditional prose statement that the flowers 'attract hummingbirds, bees, and other pollinators.' Only the prose sentence was used as the citation quote to avoid gluing separate structured-field lines across a rendered-newline (U+23CE) boundary."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 96
     },
     {
       "chill_damage_f": null,
@@ -1057,6 +1173,24 @@
           "source": "NC State Extension Gardener Plant Toolbox — Cyrilla racemiflora",
           "url": "https://plants.ces.ncsu.edu/plants/cyrilla-racemiflora/",
           "quote": "Cyrilla racemiflora (American Cyrilla, Black Titi, Burnwood Bark, Leatherwood, Red Titi, Swamp Cyrilla, Swamp Titi, Titi)"
+        },
+        {
+          "claim": "mature_height_in 96-360 (NC State Height 8 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Cyrilla racemiflora",
+          "url": "https://plants.ces.ncsu.edu/plants/cyrilla-racemiflora/",
+          "quote": "Height: 8 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-180 (NC State Width 10 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Cyrilla racemiflora",
+          "url": "https://plants.ces.ncsu.edu/plants/cyrilla-racemiflora/",
+          "quote": "Width: 10 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field names Bees, Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Cyrilla racemiflora",
+          "url": "https://plants.ces.ncsu.edu/plants/cyrilla-racemiflora/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Leatherwood",
@@ -1098,14 +1232,24 @@
         "MoBot's Common Name field ('Common Name: leatherwood') sits next to a popup/tooltip control; the tooltip's bulleted list text exists only in the link's onmouseover markup and did not render visibly on hover in this session, so per instructions it is not quoted here — the rendered Noteworthy Characteristics prose ('commonly called leatherwood, black titi, or swamp cyrilla') is cited instead for the alternate names it lists.",
         "common_name changed at landing from 'Swamp Titi' (NC State's body-prose name and the seventh of eight alphabetized entries in its Common Name(s) list; researched as 'Titi') to 'Leatherwood', the name MoBot's Common Name field and RHS's page header lead with. 'Leatherwood' is also applied to the unrelated Dirca palustris, which is not in this catalog; the overlap is noted as a caution, not as a sourced claim about Dirca.",
         "UGA's Native Plants for Georgia (B 987) mentions this species only as 'Red Titi' in a single sentence inside a multi-species introduction, not in a dedicated species section with cultivation fields, so it was used only as name corroboration and not for any care-related field.",
-        "Clemson HGIC's 'Plants for Damp or Wet Areas' factsheet lists 'Leatherwood – Cyrilla racemiflora' as one entry in a multi-species wet-site plant list; per the rule that such lists are not species-specific ratings, it was not used to support any light or drainage field."
+        "Clemson HGIC's 'Plants for Damp or Wet Areas' factsheet lists 'Leatherwood – Cyrilla racemiflora' as one entry in a multi-species wet-site plant list; per the rule that such lists are not species-specific ratings, it was not used to support any light or drainage field.",
+        "is_edible left null: no page among the four cited addresses eating/food use of Cyrilla racemiflora. NC State's page has 0 hits for 'Edible'; RHS's page has 0 hits for 'Edible'; the UGA entry specifically for Red Titi/Swamp Cyrilla (Cyrilla racemiflora) discusses flowers, size, habitat and bee attraction but never edibility.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused the fetch (status: error:ConnectError) -- skipped per instructions, not guessed.",
+        "Decision-relevant safety note not captured by any field (is_edible is null, not true, so it does not gate on the field, but it matters for use near beekeeping): NC State states 'Toxic pollen from this plant is responsible for purple brood to honeybee colonies. This plant is not suitable for beekeepers.' and separately 'The pollen is toxic to honeybees.'",
+        "RHS's page (https://www.rhs.org.uk/plants/5226/cyrilla-racemiflora/details) was searched for both size wordings -- 'Height', 'Spread', 'metres', 'Max Height', 'Max Spread', 'Ultimate height' -- and returned 0 hits for all; it carries no usable size data for this species, so NC State's structured Dimensions block was used as the size anchor instead.",
+        "UGA's Red Titi/Swamp Cyrilla entry independently gives '10 to 25 feet tall with a spread of 10 to 20 feet' (120-300in height, 120-240in spread) and 'Attractive to bees' -- corroborates the NC State-sourced height/spread ranges and the attracts_pollinators=true call, though NC State was used as the cited anchor per the task's anchor rule."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 180
     }
   ],
   "audit_summary": [
@@ -1135,6 +1279,7 @@
     }
   ],
   "normalizations": [
-    "2026-09-05: fifty-fifth batch (cruise throttle) -- native wetland shrubs: Hazel Alder, Red Chokeberry, Swamp Rose, Smooth Witherod, Swamp Azalea, and Leatherwood. Clean first run (12/12 agents, 1.37M subagent tokens); land_check.py and covered.py clean; verify_quotes.py 79 hit / 0 MISS before repair with 37 skipped, all MoBot connection errors from this machine (third batch running; the MoBot quotes stand on the auditor's live fetches). Value changes on the audit's findings: Cyrilla racemiflora lands as Leatherwood -- MoBot's Common Name field and RHS's page header both lead with it, while the researched 'Swamp Titi' was NC State's body-prose name and the seventh of eight alphabetized entries, chosen on an unsourced worry about Dirca palustris; Red Chokeberry gains its accepted name and an 8.0 pH ceiling (Penn State 'can tolerate a pH of up to 8.0', RHS pH 'Acid or Neutral') from the RHS species page the research pass missed and the auditor found; Swamp Rose drops part_shade (a tolerance in both sources' species prose, excluded by MoBot's Sun field) and, at landing under the structured-field-first drainage rule, moves from moisture_retentive to moderate (NC State's field pairs Good Drainage with Moist; the boggy-soil requirement prose is carried by water_regime keep_moist and disclosed); Swamp Azalea drops full_sun on two species scorch warnings ('Avoid afternoon sun which can scorch the leaves.'; 'Foliage may scorch in full sun unless soils are kept uniformly moist.') and MoBot's Part-shade-only Sun field. is_houseplant false was restored for Smooth Witherod and Swamp Azalea on completed Plant Type lists plus USDA zone fields. One auditor repair was declined: the fifth Plant Type value it wanted for Swamp Azalea ('Woody Plant') is the start of NC State's next label, Woody Plant Leaf Characteristics, not a value -- the cached page shows four values, as the record had them. Two researched names changed on the researchers' own findings (Tag Alder -> Hazel Alder on MoBot's single-value field and NC State's prose; Possumhaw Viburnum -> Smooth Witherod on the same pattern), each disclosed. Every name_note was replaced with the auditor's corrected wording (the invented 'three or more entries marks no primary' convention appeared in four records; a false 'only ... never' claim for Tag Alder; an overstated 'both lead with' for Smooth Witherod; an invented 'genus-umbrella' reading of MoBot's bare 'chokeberry'). Three more MoBot tooltip quotes reconstructed from overlib markup were removed or replaced with rendered prose; six NC State label+value stacks were trimmed to the value; an eight-name space-joined run-on was replaced with the stacked field and the H1 parenthetical; an orphan 'handling statement' citation quoting a morphology sentence and a fertilize citation quoting a pest sentence were dropped; every one-word 'Correct' Name Status citation was paired with the page title or header. water_regime keep_moist stands on explicit requirements for Swamp Azalea ('Roots must never be allowed to dry out.'), Swamp Rose (MoBot Water: Wet plus 'Best grown in ... boggy to wet soils') and Leatherwood ('evenly moist to wet ... soils'; 'adequate moisture is provided during dry periods'), and is null for Hazel Alder, Red Chokeberry and Smooth Witherod. Swamp Azalea is toxic_to_pets=true on NC State's cat- and dog-scoped Problems tags and RHS's 'Pets (dogs, cats, rabbits, tortoises)'; the other five are null (Leatherwood's only toxicity statement concerns honeybees)."
+    "2026-09-05: fifty-fifth batch (cruise throttle) -- native wetland shrubs: Hazel Alder, Red Chokeberry, Swamp Rose, Smooth Witherod, Swamp Azalea, and Leatherwood. Clean first run (12/12 agents, 1.37M subagent tokens); land_check.py and covered.py clean; verify_quotes.py 79 hit / 0 MISS before repair with 37 skipped, all MoBot connection errors from this machine (third batch running; the MoBot quotes stand on the auditor's live fetches). Value changes on the audit's findings: Cyrilla racemiflora lands as Leatherwood -- MoBot's Common Name field and RHS's page header both lead with it, while the researched 'Swamp Titi' was NC State's body-prose name and the seventh of eight alphabetized entries, chosen on an unsourced worry about Dirca palustris; Red Chokeberry gains its accepted name and an 8.0 pH ceiling (Penn State 'can tolerate a pH of up to 8.0', RHS pH 'Acid or Neutral') from the RHS species page the research pass missed and the auditor found; Swamp Rose drops part_shade (a tolerance in both sources' species prose, excluded by MoBot's Sun field) and, at landing under the structured-field-first drainage rule, moves from moisture_retentive to moderate (NC State's field pairs Good Drainage with Moist; the boggy-soil requirement prose is carried by water_regime keep_moist and disclosed); Swamp Azalea drops full_sun on two species scorch warnings ('Avoid afternoon sun which can scorch the leaves.'; 'Foliage may scorch in full sun unless soils are kept uniformly moist.') and MoBot's Part-shade-only Sun field. is_houseplant false was restored for Smooth Witherod and Swamp Azalea on completed Plant Type lists plus USDA zone fields. One auditor repair was declined: the fifth Plant Type value it wanted for Swamp Azalea ('Woody Plant') is the start of NC State's next label, Woody Plant Leaf Characteristics, not a value -- the cached page shows four values, as the record had them. Two researched names changed on the researchers' own findings (Tag Alder -> Hazel Alder on MoBot's single-value field and NC State's prose; Possumhaw Viburnum -> Smooth Witherod on the same pattern), each disclosed. Every name_note was replaced with the auditor's corrected wording (the invented 'three or more entries marks no primary' convention appeared in four records; a false 'only ... never' claim for Tag Alder; an overstated 'both lead with' for Smooth Witherod; an invented 'genus-umbrella' reading of MoBot's bare 'chokeberry'). Three more MoBot tooltip quotes reconstructed from overlib markup were removed or replaced with rendered prose; six NC State label+value stacks were trimmed to the value; an eight-name space-joined run-on was replaced with the stacked field and the H1 parenthetical; an orphan 'handling statement' citation quoting a morphology sentence and a fertilize citation quoting a pest sentence were dropped; every one-word 'Correct' Name Status citation was paired with the page title or header. water_regime keep_moist stands on explicit requirements for Swamp Azalea ('Roots must never be allowed to dry out.'), Swamp Rose (MoBot Water: Wet plus 'Best grown in ... boggy to wet soils') and Leatherwood ('evenly moist to wet ... soils'; 'adequate moisture is provided during dry periods'), and is null for Hazel Alder, Red Chokeberry and Smooth Witherod. Swamp Azalea is toxic_to_pets=true on NC State's cat- and dog-scoped Problems tags and RHS's 'Pets (dogs, cats, rabbits, tortoises)'; the other five are null (Leatherwood's only toxicity statement concerns honeybees).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

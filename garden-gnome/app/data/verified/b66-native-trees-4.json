@@ -117,6 +117,30 @@
           "source": "RHS - Staphylea trifolia",
           "url": "https://www.rhs.org.uk/plants/17754/staphylea-trifolia/details",
           "quote": "American bladdernut"
+        },
+        {
+          "claim": "mature_height_in 120-180 (NC State Height: 10 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/staphylea-trifolia/",
+          "quote": "Height: 10 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-180 (NC State Width: 10 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/staphylea-trifolia/",
+          "quote": "Width: 10 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true: NC State states the seed is eaten raw or cooked, used like walnuts, and pressed for a sweet edible oil",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/staphylea-trifolia/",
+          "quote": "Seeds can be eaten raw or cooked. The seed can be used in place of walnuts in making chocolate-chip cookies. A sweet edible oil is obtained from the seed used for cooking purposes."
+        },
+        {
+          "claim": "attracts_pollinators true: NC State's Wildlife Value describes bees and butterflies using the nectar",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/staphylea-trifolia/",
+          "quote": "Bees, butterflies, and other pollinating insects enjoy the nectar from the flowers."
         }
       ],
       "common_name": "American Bladdernut",
@@ -154,14 +178,25 @@
         "water_regime left null: NC State's body prose describes the plant growing 'in average, dry to medium, well-drained soils' and MoBot's structured Water field reads 'Dry to medium' -- both are ranges/mid-scale descriptions rather than a clean directive mapping to one of the four enum watering regimes, so no value was assigned; this is disclosed as a genus/species watering ambiguity rather than resolved by guessing.",
         "full_shade is included in outdoor_sun_exposure based on NC State's own unconditional body prose ('...in part shade to full shade') and MoBot's structured Sun field ('Part shade to full shade'), even though NC State's structured Light field itself lists only Full sun and Partial Shade (not Full/Deep Shade) and RHS's Position field lists only Full sun and Partial shade -- disclosing that the structured Light/Position fields alone would not have supported full_shade.",
         "day/night temperature fields, humidity fields, light_fc fields, chill_damage_f, fertilize fields, and water day-interval/dry-down fields are all left null: no admissible source frames Staphylea trifolia care in these terms (it is an in-ground, cold-hardy (USDA zones 3-8) native shrub/tree, not a container/houseplant subject with a stated fertilizer schedule or an explicit chill-damage onset temperature).",
-        "soil_ph_min/max left null per the pH rule: NC State lists no Soil pH field for this species, and RHS's pH field reads 'Acid or Alkaline or Neutral', i.e. it explicitly admits both acid and alkaline soils, so neither a floor nor a ceiling is set."
+        "soil_ph_min/max left null per the pH rule: NC State lists no Soil pH field for this species, and RHS's pH field reads 'Acid or Alkaline or Neutral', i.e. it explicitly admits both acid and alkaline soils, so neither a floor nor a ceiling is set.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) -- not used, not guessed",
+        "RHS gives Max Height 2.5-4 metres and Max Spread 2.5-4 metres (about 98.4-157.5 in) for this species, but NC State Plant Toolbox has a structured species-specific Dimensions block and was used as the anchor per instructions instead, so the RHS figures were not recorded as a separate citation",
+        "is_edible is conditional: NC State's Edibility text names only the SEED as edible ('Seeds can be eaten raw or cooked. The seed can be used in place of walnuts in making chocolate-chip cookies. A sweet edible oil is obtained from the seed used for cooking purposes.') -- no statement was found that the rest of the plant is edible",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' -- 0 hits each, so no toxicity disclosure was found or omitted",
+        "No mention of hummingbirds found on the NC State anchor page ('hummingbird': 0 hits); pollinator support is documented via bees, butterflies, and general pollinating insects/the site's 'Attracts' field"
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 180,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 180
     },
     {
       "chill_damage_f": null,
@@ -333,6 +368,24 @@
           "source": "RHS - Ptelea trifoliata",
           "url": "https://www.rhs.org.uk/plants/14113/ptelea-trifoliata-hop-tree-shrubby-trefoil/details",
           "quote": "Full sun, Partial shade"
+        },
+        {
+          "claim": "mature_height_in 180-240 (NC State Height: 15 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ptelea-trifoliata/",
+          "quote": "Height: 15 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-240 (NC State Width: 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ptelea-trifoliata/",
+          "quote": "Width: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS lists Ptelea trifoliata under 'Plants for pollinators'; NC State's structured Attracts field also lists Butterflies)",
+          "source": "RHS Plant Finder",
+          "url": "https://www.rhs.org.uk/plants/14113/ptelea-trifoliata-hop-tree-shrubby-trefoil/details",
+          "quote": "Plants for pollinators"
         }
       ],
       "common_name": "Hoptree",
@@ -374,14 +427,23 @@
         "'Common Hoptree' — one of the four common names sometimes associated with this species — is not led by any admissible source's dedicated straight-species page. UF/IFAS (edis.ifas.ufl.edu / ask.ifas.ufl.edu) carries only cultivar-specific pages for 'Aurea' and 'Glauca' (excluded here as cultivar pages per instructions), and its straight-species fact sheet (Fact Sheet ST-530) is hosted only at hort.ifas.ufl.edu, which is not on the admissible domain list.",
         "No dedicated species page for Ptelea trifoliata was found on hgic.clemson.edu, extension.umd.edu, or fieldreport.caes.uga.edu. A Penn State Extension Master Gardener teaching-garden listing page mentions 'Wafer ash' among its plantings but is a garden inventory page, not a species care page, so it was not used as a source here.",
         "full_sun is carried in outdoor_sun_exposure at landing on two of the three structured sun fields -- NC State's Light field (Deep shade, Full sun, Partial Shade) and RHS's Position field (Full sun, Partial shade) -- while MoBot's structured Sun field reads 'Part shade to full shade' and its Culture text adds only 'Tolerates full sun.'; MoBot's omission is disclosed here rather than used to drop a value two sources list plainly. No species-specific scorch or avoid-sun warning was found in any source.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/ptelea-trifoliata/, https://www.rhs.org.uk/plants/14113/ptelea-trifoliata/details, https://ask.ifas.ufl.edu/publication/ST531, https://ask.ifas.ufl.edu/entity/topic/hoptree); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/ptelea-trifoliata/, https://www.rhs.org.uk/plants/14113/ptelea-trifoliata/details, https://ask.ifas.ufl.edu/publication/ST531, https://ask.ifas.ufl.edu/entity/topic/hoptree); none found, so the value stays null. Audited live.",
+        "is_edible left null: none of the three cited pages (NC State, RHS) address eating the plant or any part of it, and neither mentions poison, toxicity, or a preparation requirement -- no record either way.",
+        "Missouri Botanical Garden PlantFinder (https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=286752) refused this machine (fetch status: error:ConnectError) both times it was tried -- could not be checked for any field, so nothing from it is reflected here.",
+        "RHS also carries species-level size figures (Max Height 4-8 metres, Max Spread 2.5-4 metres) but these were NOT used for mature_height_in/mature_spread_in because NC State has a species-specific page and is the designated anchor for size per task instructions; only NC State's Height/Width figures were converted and cited.",
+        "NC State's structured 'Attracts' field also lists Small Mammals and Songbirds; these do not count as pollinator evidence (they are not pollinators) and were not used to support attracts_pollinators -- only Butterflies (NC State) and the RHS 'Plants for pollinators' tag were used."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 240
     },
     {
       "chill_damage_f": null,
@@ -599,7 +661,12 @@
         "UF/IFAS EDIS pages found for this species (ENH-729/ST571 'Frisia', ENH-730/ST572 'Purple Robe', ENH-731/ST573 'Umbraculifera') are all cultivar fact sheets and were excluded per the cultivar-page exclusion rule; no dedicated UF/IFAS species page for Robinia pseudoacacia was found.",
         "NC State's body prose states, unscoped as to source category: \"Unfortunately, the black locust has become invasive in the Midwestern United States.\" This is captured here as-stated; there is no schema field for invasive status.",
         "Clemson, Penn State, UGA, and UMD extension sites were checked via search but no dedicated Robinia pseudoacacia species page (as opposed to a multi-species list or a cultivar page) was located on those domains.",
-        "part_shade was excluded from outdoor_sun_exposure at landing: it rested on NC State's Light field alone ('Partial Shade (Direct sunlight only part of the day, 2-6 hours)'), while RHS's Position field reads 'Full sun' and MoBot's Sun field reads 'Full sun', and MoBot's Culture text reads 'Tolerates some light shade, but avoid shady locations.' -- a tolerance clause followed by an instruction to avoid shade, so the value is disclosed here rather than carried. The audit reached MoBot's page (the researcher's fetch had failed on a certificate error)."
+        "part_shade was excluded from outdoor_sun_exposure at landing: it rested on NC State's Light field alone ('Partial Shade (Direct sunlight only part of the day, 2-6 hours)'), while RHS's Position field reads 'Full sun' and MoBot's Sun field reads 'Full sun', and MoBot's Culture text reads 'Tolerates some light shade, but avoid shady locations.' -- a tolerance clause followed by an instruction to avoid shade, so the value is disclosed here rather than carried. The audit reached MoBot's page (the researcher's fetch had failed on a certificate error).",
+        "is_edible left null: neither NC State nor RHS addresses eating this plant or any part of it; plantfinder.mobot.org refused this machine so it could not be checked.",
+        "Decision-relevant toxicity data found on the NC State anchor page even though is_edible is null: 'This plant has high severity poison characteristics.' Poison Severity: High. Poison Symptoms: 'If ingested, it may cause death in humans and livestock and pets. Depression, weakness, dilated pupils, vomiting, bloody diarrhea, weak pulse, coldness of arms and legs, paleness, and shock.' Poison Toxic Principle: 'Robin, a phytotoxin; robitin, a glycoside; robinine, an alkaloid.' Poison Part: Bark, Leaves, Seeds. Causes Contact Dermatitis: No.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c143 returned a ConnectError (refused this machine) -- not used for any field, nothing guessed in its place.",
+        "RHS gives Max Height 'Higher than 12 metres' and Max Spread 'wider than 8 metres' -- both open-ended values with no usable bound, so RHS size data was not used; NC State's structured Dimensions block (the size anchor) was used instead since it carries closed low and high ends.",
+        "NC State's free-text description separately states the tree 'may grow 30 to 50 feet tall, and 20 to 35 feet wide,' which differs from its own structured Dimensions block ('Height: 50 ft. 0 in. - 50 ft. 0 in.', 'Width: 20 ft. 0 in. - 35 ft. 0 in.'); the structured Dimensions block was used per instructions since it is the designated size anchor field."
       ],
       "citations": [
         {
@@ -751,8 +818,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c143",
           "quote": "Grow in average, dry to medium, well-drained soils in full sun. Tolerates some light shade, but avoid shady locations."
+        },
+        {
+          "claim": "mature_height_in 600-600 (NC State Dimensions Height: 50 ft. 0 in. - 50 ft. 0 in., converted to inches: 50 ft = 600 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Robinia pseudoacacia",
+          "url": "https://plants.ces.ncsu.edu/plants/robinia-pseudoacacia/",
+          "quote": "Height: 50 ft. 0 in. - 50 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 240-420 (NC State Dimensions Width: 20 ft. 0 in. - 35 ft. 0 in., converted to inches: 20 ft = 240 in, 35 ft = 420 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Robinia pseudoacacia",
+          "url": "https://plants.ces.ncsu.edu/plants/robinia-pseudoacacia/",
+          "quote": "Width: 20 ft. 0 in. - 35 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Bees, Butterflies, Hummingbirds, Pollinators, Small Mammals, Songbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox - Robinia pseudoacacia",
+          "url": "https://plants.ces.ncsu.edu/plants/robinia-pseudoacacia/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 600,
+      "mature_height_in_max": 600,
+      "mature_spread_in_min": 240,
+      "mature_spread_in_max": 420
     },
     {
       "common_name": "Slippery Elm",
@@ -800,7 +890,12 @@
         "Dutch elm disease and phloem necrosis are documented by NC State and MoBot as disease problems for this species, not care values, and were excluded from the schema per task instructions.",
         "MoBot's Culture prose (inner bark, medicinal Native American use) was treated as historical/description content rather than care data and was not used to populate any field.",
         "Clemson (hgic.clemson.edu), UF/IFAS (edis.ifas.ufl.edu / ask.ifas.ufl.edu), Penn State (extension.psu.edu), University of Maryland (extension.umd.edu), and UGA (fieldreport.caes.uga.edu) were searched but no dedicated single-species Ulmus rubra page was found on any of them; only NC State, MoBot, and RHS yielded admissible content for this species.",
-        "part_shade was excluded from outdoor_sun_exposure at landing: NC State's Light field does carry 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)', but MoBot's structured Sun field reads 'Full sun' alone and every shade statement on either page is a tolerance clause -- MoBot 'Tolerant of light shade.' and NC State 'It will tolerate drought and part shade but prefers sun and moist loam or clay loam soils.' -- so the single structured tag is disclosed here rather than carried."
+        "part_shade was excluded from outdoor_sun_exposure at landing: NC State's Light field does carry 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)', but MoBot's structured Sun field reads 'Full sun' alone and every shade statement on either page is a tolerance clause -- MoBot 'Tolerant of light shade.' and NC State 'It will tolerate drought and part shade but prefers sun and moist loam or clay loam soils.' -- so the single structured tag is disclosed here rather than carried.",
+        "is_edible left null: none of the three anchor pages (NC State, RHS, MoBot attempted) address eating this plant at all; searched NC State for 'Edible', 'Poison', 'Toxic', 'Problem for' -- all 0 hits.",
+        "RHS page (https://www.rhs.org.uk/plants/161727/ulmus-rubra/details) was searched for 'Max Height', 'Max Spread', 'Ultimate height', 'Edible', 'pollinator', 'Poison', 'Toxic' -- all returned 0 hits; the page carries none of these fields for this species, so it contributes no citations here.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a926 refused this machine (fetch status: error:ConnectError) -- not read, not guessed.",
+        "Size figures (height 480-960in wait -- 480-840 height, 360-600 spread) come from NC State's structured Dimensions block, which is species-level (not a cultivar), so rules 1-3 are satisfied cleanly.",
+        "attracts_pollinators set true on NC State's 'Attracts: Butterflies, Moths' field; no hummingbird/bee mention found, and no birds-eating-seed or deer-browsing text was misread as pollination."
       ],
       "citations": [
         {
@@ -910,8 +1005,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ulmus-rubra/",
           "quote": "It will tolerate drought and part shade but prefers sun and moist loam or clay loam soils."
+        },
+        {
+          "claim": "attracts_pollinators (NC State Attracts: Butterflies, Moths)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ulmus-rubra/",
+          "quote": "Attracts:                          Butterflies                          Moths"
+        },
+        {
+          "claim": "mature_height_in 480-840 (NC State Height: 40 ft. 0 in. - 70 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ulmus-rubra/",
+          "quote": "Dimensions:                 Height: 40 ft. 0 in. - 70 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 360-600 (NC State Width: 30 ft. 0 in. - 50 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ulmus-rubra/",
+          "quote": "Width: 30 ft. 0 in. - 50 ft. 0 in."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 480,
+      "mature_height_in_max": 840,
+      "mature_spread_in_min": 360,
+      "mature_spread_in_max": 600
     },
     {
       "chill_damage_f": null,
@@ -1113,6 +1231,30 @@
           "source": "UF/IFAS Extension - FR326 Morus rubra: Red Mulberry",
           "url": "https://edis.ifas.ufl.edu/fr326",
           "quote": "The pollen from members of the Morus genus can cause allergies ranging from hay fever to asthma."
+        },
+        {
+          "claim": "mature_height_in 300-720 (NC State Height 25 ft. 0 in. - 60 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Morus rubra",
+          "url": "https://plants.ces.ncsu.edu/plants/morus-rubra/",
+          "quote": "Height: 25 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 420-480 (NC State Width 35 ft. 0 in. - 40 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Morus rubra",
+          "url": "https://plants.ces.ncsu.edu/plants/morus-rubra/",
+          "quote": "Width: 35 ft. 0 in. - 40 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value field lists Attracts Pollinators; the Attracts field also separately lists Butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Morus rubra",
+          "url": "https://plants.ces.ncsu.edu/plants/morus-rubra/",
+          "quote": "Attracts Pollinators"
+        },
+        {
+          "claim": "is_edible true, conditionally: ripe fruit is edible, unripe fruit and sap are poisonous (NC State)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Morus rubra",
+          "url": "https://plants.ces.ncsu.edu/plants/morus-rubra/",
+          "quote": "sweet, juicy, and can be eaten raw or made into pies, jellies, or jams."
         }
       ],
       "common_name": "Red Mulberry",
@@ -1153,14 +1295,25 @@
         "is_houseplant is inferred as false from NC State's Plant Type field ('Tree') and its 25-60 ft mature landscape height in USDA zones 4a-9b; no admissible source explicitly frames this species as a houseplant or explicitly rules it out.",
         "toxic_to_pets is set to false based on NC State's own tags '#non-toxic for cats' and '#non-toxic for dogs', which directly and separately name both animals covered by this field; this coexists with NC State's human-scoped Poison block covering unripe fruit and the plant's milky sap.",
         "Clemson HGIC's 'Red vs. White Mulberry (Morus rubra vs. Morus alba)' page (an admissible-domain comparison page) could not be retrieved — it returned a Cloudflare bot-challenge page rather than content — so no Clemson-sourced material is included in this record.",
-        "Ripe-fruit edibility is stated only as: NC State's Edibility field says ripe fruits are sweet, juicy, and can be eaten raw or made into pies, jellies, jams, breads, muffins, and cakes, and its body prose says fruit eaten when ripe is harmless; no broader edibility claim is made beyond that."
+        "Ripe-fruit edibility is stated only as: NC State's Edibility field says ripe fruits are sweet, juicy, and can be eaten raw or made into pies, jellies, jams, breads, muffins, and cakes, and its body prose says fruit eaten when ripe is harmless; no broader edibility claim is made beyond that.",
+        "Missouri Botanical Garden PlantFinder page (missouribotanicalgarden.org, taxonid=282738) returned a connection error (ConnectError) on every fetch attempt with the required tool -- skipped, not used as a source, and no content from it is guessed at.",
+        "is_edible is CONDITIONAL, not an unqualified true: NC State states the ripe fruit is 'sweet, juicy, and can be eaten raw or made into pies, jellies, or jams,' but also that the fruit 'if eaten when unripe, are poisonous as is the milky white sap that all parts of the tree produces' and that ripe fruit is 'harmless.' The same NC State page assigns the plant 'low severity poison characteristics' and tags it both '#edible fruits' and '#poisonous', while separately tagging it non-toxic for cats, dogs, and horses. All of this belongs alongside the true value.",
+        "Mature size fields are drawn from NC State's structured Dimensions block (the designated anchor) rather than from RHS ('Max Height 8-12 metres', 'Max Spread 4-8 metres') or EDIS's prose ('reaches heights of 15 to 70 feet', no width given) -- both of the latter were checked and read, but NC State's structured block takes priority per instructions.",
+        "EDIS (fr326) had zero hits for 'Edible', 'Poison', 'Toxic', and 'pollinat' -- it addresses palatability to wildlife/humans generally but offers no field-specific edibility or toxicity statement usable as a distinct citation.",
+        "RHS had zero hits for 'Poison', 'Toxic', and 'pollinat', and no 'Attracts' field -- it was searched for pollinator-attraction language but carries none for this species page."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 300,
+      "mature_height_in_max": 720,
+      "mature_spread_in_min": 420,
+      "mature_spread_in_max": 480
     }
   ],
   "audit_summary": [
@@ -1191,6 +1344,7 @@
   ],
   "normalizations": [
     "2026-09-05: forty-eighth batch (cruise throttle) -- a fourth native tree set: American Bladdernut, Hoptree, Green Ash, Black Locust, Slippery Elm, and Red Mulberry. Clean first run (12/12 agents, 1.28M subagent tokens). land_check.py and covered.py ran clean; verify_quotes.py 88/94 reachable quotes before repair, the six MISSes all fixed here: four abbreviated NC State Light strings ('Full sun (6+ hours)', 'Partial Shade (2-6 hours)', a bare three-word list) replaced by the rendered values, Slippery Elm's soil_base citation -- a semicolon-joined synthesis attributed to a 'Habitat' field the page does not have -- replaced by the real Landscape Location values, and Hoptree's confused-with citation dropped with its sub-claim. Sun values: Black Locust and Slippery Elm drop part_shade (single NC State tags against MoBot's and RHS's full-sun-only structured fields, with MoBot's 'avoid shady locations' and both sources' tolerance clauses), while Hoptree carries full_sun on NC State's Light field plus RHS's Position field with MoBot's omission disclosed. Four nulled citation-form fields were restored with values unchanged: Green Ash's scientific_name_accepted (RHS H1 paired with the Name Status value) and soil_base (uncited; now on NC State's Soil Texture and MoBot's Suggested Use), Black Locust's and Slippery Elm's is_houseplant (a Plant Type list missing Woody Plant; a label carrying a synthesized siting string), and Slippery Elm's soil_base. Every name_note was replaced with the auditor's corrected wording (invented 'N entries marks no primary' conventions, overstated leads, RHS title strings called subtitles, a look-alike module read as taxonomy); three toxicity_detail fields were repaired as trimmed safety fields with the auditor's verbatim additions -- Black Locust's spines and its full Problems and Plant Type fields, Red Mulberry's Poisonous-beside-Edible plant type, its whole-tree sap clause and UF/IFAS's pollen allergen warning, Hoptree's odor-bearing parts and #malodorous tag -- and Black Locust's original recital was recovered from the research agent's journal output. toxic_to_pets=true on Black Locust rests on NC State's cat and dog tags (children and horses disclosed); Red Mulberry is false on explicit non-toxic-for-cats/dogs tags; the other four are null (no cat/dog-scoped source).",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Hoptree -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Hoptree -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
