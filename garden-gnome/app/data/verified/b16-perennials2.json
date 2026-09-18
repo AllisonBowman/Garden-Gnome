@@ -52,7 +52,15 @@
         "fertilize_interval_days / fertilize_strength: Clemson HGIC gives specific calendar timing (early-to-mid March and September) and a per-area application rate (1 lb, then ½ lb per 100 sq ft), but not a day-count interval or a full/half/quarter dilution-strength category.",
         "direct_sun_hours_max: NC State and Clemson both define 'full sun' as a minimum threshold ('6 or more hours' / 'greater than 6 hours' of direct sunlight) for the exposure category — that's a floor, not a stated maximum tolerated, so it wasn't mapped to this field.",
         "water_regime — removed on audit: Value 'dry_surface_between' overstates dryness beyond what the cited sources say for this species. Clemson's own quote is 'moist to slightly dry conditions' (average-leaning, not a let-the-surface-dry-out regime), and Missouri Botanical Garden's page carries its own STRUCTURED attribute 'Water: Medium' immediately adjacent to the prose the record quoted ('Typically grown in medium moisture... Tolerant of drought') -- MOBOT's own Dry/Dry-to-medium/Medium/Medium-to-wet/Wet scale rates this plant 'Medium,' not a drought/xeric tier. The record cited only the prose and never reconciled it against MOBOT's own structured water tag or Clemson's non-committal phrasing -- the subtler case flagged in structural check 1, where a cited source's own structured field contradicts the prose quote actually used. Given the genuine tension between 'moist'-leaning primary language and a 'dry' categorical value, this should have been left null.",
-        "soil_drainage — removed on audit: Value 'moderate' is not supported by any of the four sources, all of which converge on well-drained soil being a firm requirement with a stated failure mode. NC State's own structured field reads 'Soil Drainage: Good Drainage Moist' (a 'Good Drainage' tag, not 'moderate'), RHS says 'Moist but well-drained,' MOBOT states 'Well-drained soil is the key to growing this plant well' and warns 'Crown rot may occur if grown in moist, poorly drained soils,' and Clemson recommends amending poor soils 'to enhance drainage' because the plant does 'not tolerate excessive moisture.' No source uses 'moderate' language for drainage; the record softened a unanimous well-drained-required signal into a category that could read as 'average garden soil is fine,' with a real plant-harm consequence (crown/root rot) if followed."
+        "soil_drainage — removed on audit: Value 'moderate' is not supported by any of the four sources, all of which converge on well-drained soil being a firm requirement with a stated failure mode. NC State's own structured field reads 'Soil Drainage: Good Drainage Moist' (a 'Good Drainage' tag, not 'moderate'), RHS says 'Moist but well-drained,' MOBOT states 'Well-drained soil is the key to growing this plant well' and warns 'Crown rot may occur if grown in moist, poorly drained soils,' and Clemson recommends amending poor soils 'to enhance drainage' because the plant does 'not tolerate excessive moisture.' No source uses 'moderate' language for drainage; the record softened a unanimous well-drained-required signal into a category that could read as 'average garden soil is fine,' with a real plant-harm consequence (crown/root rot) if followed.",
+        "is_edible left null: neither NC State (species-specific Plant Toolbox page) nor RHS addresses eating this plant; searched 'Edible' on both pages (0 hits each) and found no statement that it is or is not eaten.",
+        "Searched NC State and RHS for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- 0 hits on NC State for all three; RHS had 1 hit for 'Problem' but it was a navigation link ('Problems, pests & diseases'), not plant-specific toxicity text. No toxicity language found, consistent with is_edible staying null rather than true or false.",
+        "Candytuft (Iberis sempervirens) is a low subshrub/ground cover, not a vine, liana, or other climber, so the climber-size rule does not apply; all four size fields are populated normally.",
+        "Size fields are taken from NC State's Plant Toolbox page for this exact species (not a genus page, not a cultivar page) -- its structured 'Dimensions:' block gives Height and Width for the species itself.",
+        "https://hgic.clemson.edu/factsheet/iberis-candytuft/ returned HTTP 403 via qc.py -- skipped, not read, no content used from it.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=k620 returned a connection error (this host is known to refuse this machine) -- skipped, not read, no content used from it.",
+        "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/B-944_7.pdf returned a 'pdf' fetch status with no extracted text via qc.py's fetch-and-extract path -- skipped, not read, no content used from it.",
+        "RHS (https://www.rhs.org.uk/plants/9066/iberis-sempervirens/details) was read but not used as the size anchor since NC State has a species-specific page; RHS's own Max Height/Max Spread (0.1-0.5 metres each) are consistent in order of magnitude with the NC State figures and its 'Plants for pollinators' tag corroborates attracts_pollinators, but no RHS citation was needed once NC State supplied the anchor values."
       ],
       "citations": [
         {
@@ -132,8 +140,31 @@
           "quote": "It is best in full sun, but will tolerate light shade, and is fairly drought tolerant once established.",
           "source": "UGA Cooperative Extension (CAES Field Report), Flowering Perennials for Georgia Gardens, Bulletin 977",
           "url": "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/B-944_7.pdf"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Dimensions Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches: 0 ft. 6 in. = 6 in., 1 ft. 0 in. = 12 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox: Iberis sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/iberis-sempervirens/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-18 (NC State Dimensions Width: 0 ft. 6 in. - 1 ft. 6 in., converted to inches: 0 ft. 6 in. = 6 in., 1 ft. 6 in. = 18 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox: Iberis sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/iberis-sempervirens/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Play Value field for this species lists Attracts Pollinators, and its Attracts field lists Butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox: Iberis sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/iberis-sempervirens/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Purple Coneflower",
@@ -428,6 +459,24 @@
           "quote": "Full sun (6 or more hours of direct sunlight a day)",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/coreopsis-lanceolata/"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Dimensions -- Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Coreopsis lanceolata",
+          "url": "https://plants.ces.ncsu.edu/plants/coreopsis-lanceolata/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Dimensions -- Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Coreopsis lanceolata",
+          "url": "https://plants.ces.ncsu.edu/plants/coreopsis-lanceolata/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: the plant attracts butterflies, bees, and other pollinators)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Coreopsis lanceolata",
+          "url": "https://plants.ces.ncsu.edu/plants/coreopsis-lanceolata/",
+          "quote": "Attracts butterflies, bees, and other pollinators. Seeds provide food for birds"
         }
       ],
       "unknowns": [
@@ -439,8 +488,20 @@
         "fertilize_strength/fertilize_interval_days/fertilize_active_months: UF/IFAS only says to use 'a low rate of a controlled-release fertilizer' if desired, with no interval, month, or dilution ratio given.",
         "light_fc_min/light_fc_good/direct_sun_hours_max: outdoor sources give only a full-sun/partial-shade duration category, not footcandle values or an explicit maximum hour count.",
         "toxicity_detail: NC State's toxicity information is a categorical non-toxic tag for cats/dogs/horses with no mechanism or symptom detail given.",
-        "cool_rest_note: not addressed by any admissible source."
-      ]
+        "cool_rest_note: not addressed by any admissible source.",
+        "is_edible left null: none of the readable pages (NC State Plant Toolbox, RHS, ask.ifas.ufl.edu EP058) state that the plant or any part of it is eaten, used for food, or inedible/poisonous to eat.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (fetch status: error:ConnectError) -- not read, and no data from it is used.",
+        "RHS lists Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres (about 3.9-19.7 inches), narrower and lower than NC State's Height 1 ft. 0 in.-3 ft. 0 in. and Width 1 ft. 0 in.-2 ft. 0 in.; NC State's Plant Toolbox 'Dimensions' block was used as the anchor per instructions, so RHS's figures were not used for mature_height_in/mature_spread_in.",
+        "ask.ifas.ufl.edu (EP058) gives a size figure only for the 'Florida ecotype' (about 6-8 inches tall), explicitly distinguished from the 'common garden variety' which it says is 'two to three times greater' -- this is an ecotype-specific figure, not a clean species-wide range, so it was not used for mature_height_in.",
+        "NC State's tag list includes 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- this addresses pet toxicity, not human edibility, and no page addresses human consumption, so is_edible stays null rather than being inferred from these tags.",
+        "Coreopsis lanceolata is a herbaceous perennial wildflower, not a vine/liana/climber, so the climber-size exclusion (rule 4) does not apply.",
+        "No cultivar-specific figures were used; all size and pollinator data cited is for the species Coreopsis lanceolata itself, not a named cultivar."
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Dahlia",
@@ -494,7 +555,19 @@
         "water_regime — removed on audit: Fetched the RHS growing-guide page directly: it never mentions Dahlia pinnata anywhere and explicitly frames itself around dahlias that 'have been widely bred to produce thousands of cultivars.' The moisture quote used ('won't thrive in very dry conditions... may rot in waterlogged soil') is generic garden-cultivar advice, not evidence specific to the species this record claims to describe.",
         "fertilize_interval_days — removed on audit: The claim label states 30 (days), but the cited Clemson quote never contains that number -- it says 'Fertilize monthly ... or apply 2 to 3 pounds ... in July,' offering monthly water-soluble feeding as one option alongside a single granular application in July as an alternative. Translating 'monthly' to the literal number 30 without flagging that the source actually poses two different schedules is an unverified numeric conversion, and Clemson's own page captions this as generic 'Dahlia species' guidance, not Dahlia pinnata.",
         "soil_drainage — removed on audit: Both quotes actually used ('Good Drainage' from NC State's tag, 'free-draining' from RHS) describe well-drained/good-drainage soil, not the 'moderate' drainage category the record assigned -- the category label doesn't match what either quote literally says. On top of that, both sources are the same genus/hybrid-level pages flagged for chill_damage_f and water_regime, not Dahlia-pinnata-specific.",
-        "cool_rest_note — removed on audit: The 35-45 F tuber storage detail is quoted accurately, but its only source is NC State's genus/hybrid-complex Dahlia page (self-described as covering hybrids of mixed parentage, previously Dahlia x hortensis), so this describes common garden-hybrid tuber-storage practice rather than something verified for the species Dahlia pinnata."
+        "cool_rest_note — removed on audit: The 35-45 F tuber storage detail is quoted accurately, but its only source is NC State's genus/hybrid-complex Dahlia page (self-described as covering hybrids of mixed parentage, previously Dahlia x hortensis), so this describes common garden-hybrid tuber-storage practice rather than something verified for the species Dahlia pinnata.",
+        "is_edible is TRUE but conditional/historical only: NC State's Edibility field reads exactly 'Were grown as a food crop by Aztecs, but the practice has died out.' -- this documents historical food use, not a current culinary practice; no page states dahlia is eaten today.",
+        "Toxicity context required alongside is_edible=true (NC State, same page): 'This plant has low severity poison characteristics.' Poison Severity: Low. Poison Symptoms: 'Foliage is toxic if eaten in large quantities.  Skin irritation following repeated handling of the tubers and contact with leaves and sunlight (phototoxicity). Mild gastrointestinal signs.' Poison Toxic Principle: 'Phototoxic polyacetylene compounds'. Causes Contact Dermatitis: Yes. Poison Part: Leaves. Tags/Problems also list: Poisonous to Humans, Problem for Cats, Problem for Dogs, Problem for Horses, Contact Dermatitis.",
+        "RHS species details page (rhs.org.uk/plants/183726/dahlia-pinnata/details) was searched for both 'Max Height'/'Max Spread' and 'Height'/'Spread'/'Ultimate' wordings -- none returned any numeric size value; the page's Size filter widget renders with no data behind it. Not used as a size source.",
+        "RHS growing guide (rhs.org.uk/plants/dahlia/growing-guide) is genus-level cultivation advice, not a species page; it was checked and contains only anecdotal cultivar remarks ('A few grow very tall, over 2m (6½ft)') and cultivar-level pollinator notes ('Single flowers are best for pollinators'), so it was not used for size or for attracts_pollinators -- NC State's structured, unconditional 'Attracts' field was used instead.",
+        "ask.ifas.ufl.edu/publication/FP169 refused this machine (fetch status: error:ReadError, 0 bytes) -- skipped, not guessed.",
+        "hgic.clemson.edu/factsheet/summer-and-fall-flowering-bulbs/ refused this machine (fetch status: http-403) -- skipped, not guessed.",
+        "Dahlia pinnata is not a climber/vine, so all four size fields were filled normally from NC State's structured Dimensions block rather than left null.",
+        "Size figures came from NC State's Dimensions block, a species-level (not cultivar-level) field, so rule 3 (cultivar sizes excluded) does not apply here.",
+        "mature_height_in_min removed on audit: Scope. The arithmetic is right (NC State reads exactly 'Height: 1 ft. 0 in. - 6 ft. 0 in.', = 12-72 in, and the quote is verbatim and contiguous on one rendered line), but the source page is a GENUS page, not the species page. plants.ces.ncsu.edu/plants/dahlia/ titles itself 'Dahlia (Bedding Dahlia, Dahlia)', its Attributes block carries 'Genus: Dahlia' with no Species field at all, and the string 'pinnata' returns 0 hits on the whole page; the description says 'There are 41 accepted species of dahlias in an array of flower colors, sizes and shapes, but cultivated dahlias are hybrids of mixed parentage.' So 12-72 in is the envelope across the genus and its bedding hybrids, not Dahlia pinnata's stature. This run's own sourcing rule is explicit that a genus page is not a substitute because its range spans every species in the genus. The researcher's unknowns line asserting the opposite -- 'Size figures came from NC State's Dimensions block, a species-level (not cultivar-level) field' -- is factually wrong about this page. The species-level authority, rhs.org.uk/plants/183726/dahlia-pinnata/details ('Dahlia pinnata'), carries no size: I re-searched it for 'Max Height', 'Max Spread', 'metre', 'Height', 'Spread' and 'Ultimate' and got 0 hits for every one; its only 'Size' hit is the empty filter widget. No page in this set gives a height for the species, so both ends go null.",
+        "mature_height_in_max removed on audit: Scope. The arithmetic is right (NC State reads exactly 'Height: 1 ft. 0 in. - 6 ft. 0 in.', = 12-72 in, and the quote is verbatim and contiguous on one rendered line), but the source page is a GENUS page, not the species page. plants.ces.ncsu.edu/plants/dahlia/ titles itself 'Dahlia (Bedding Dahlia, Dahlia)', its Attributes block carries 'Genus: Dahlia' with no Species field at all, and the string 'pinnata' returns 0 hits on the whole page; the description says 'There are 41 accepted species of dahlias in an array of flower colors, sizes and shapes, but cultivated dahlias are hybrids of mixed parentage.' So 12-72 in is the envelope across the genus and its bedding hybrids, not Dahlia pinnata's stature. This run's own sourcing rule is explicit that a genus page is not a substitute because its range spans every species in the genus. The researcher's unknowns line asserting the opposite -- 'Size figures came from NC State's Dimensions block, a species-level (not cultivar-level) field' -- is factually wrong about this page. The species-level authority, rhs.org.uk/plants/183726/dahlia-pinnata/details ('Dahlia pinnata'), carries no size: I re-searched it for 'Max Height', 'Max Spread', 'metre', 'Height', 'Spread' and 'Ultimate' and got 0 hits for every one; its only 'Size' hit is the empty filter widget. No page in this set gives a height for the species, so both ends go null.",
+        "mature_spread_in_min removed on audit: Same defect as height. 'Width: 1 ft. 0 in. - 3 ft. 0 in.' is on the page verbatim and 12-36 in is the correct conversion with min <= max, but it sits in the same genus-level Dimensions block on plants.ces.ncsu.edu/plants/dahlia/ (Genus: Dahlia, no Species field, no occurrence of 'pinnata'), so it describes the genus/bedding-dahlia hybrids rather than Dahlia pinnata. The RHS Dahlia pinnata page returns no numeric spread under either the 'Max Spread' or the 'Spread'/'Ultimate' wording. Both ends go null.",
+        "mature_spread_in_max removed on audit: Same defect as height. 'Width: 1 ft. 0 in. - 3 ft. 0 in.' is on the page verbatim and 12-36 in is the correct conversion with min <= max, but it sits in the same genus-level Dimensions block on plants.ces.ncsu.edu/plants/dahlia/ (Genus: Dahlia, no Species field, no occurrence of 'pinnata'), so it describes the genus/bedding-dahlia hybrids rather than Dahlia pinnata. The RHS Dahlia pinnata page returns no numeric spread under either the 'Max Spread' or the 'Spread'/'Ultimate' wording. Both ends go null."
       ],
       "citations": [
         {
@@ -562,8 +635,22 @@
           "quote": "To grow dahlias as perennials in zones below 7, dig up the tubers in fall, dry carefully (do not wash), and store in vermiculite or dry sand at 35 to 45 degrees F.",
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/dahlia/"
+        },
+        {
+          "claim": "is_edible true, conditional/historical (NC State Edibility field: grown as a food crop by Aztecs, practice since died out)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dahlia/",
+          "quote": "Were grown as a food crop by Aztecs, but the practice has died out."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: dahlia attracts bees, butterflies, and hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dahlia/",
+          "quote": "They attract bees, butterflies, and hummingbirds."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Shasta Daisy",
@@ -698,6 +785,30 @@
           "quote": "hardy in most places throughout the UK even in severe winters (-15 to -10)",
           "source": "Royal Horticultural Society Plant Profile",
           "url": "https://www.rhs.org.uk/plants/98781/leucanthemum-x-superbum/details"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field: plant attracts butterflies, bees, and other insects; structured Attracts field lists Bees, Butterflies, Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Leucanthemum x superbum",
+          "url": "https://plants.ces.ncsu.edu/plants/leucanthemum-x-superbum/",
+          "quote": "The plant attracts butterflies, bees, and other insects."
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field states the plant is toxic if ingested, not edible)",
+          "source": "NC State Extension Gardener Plant Toolbox — Leucanthemum x superbum",
+          "url": "https://plants.ces.ncsu.edu/plants/leucanthemum-x-superbum/",
+          "quote": "Mildly toxic if ingested"
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Dimensions Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Leucanthemum x superbum",
+          "url": "https://plants.ces.ncsu.edu/plants/leucanthemum-x-superbum/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Dimensions Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Leucanthemum x superbum",
+          "url": "https://plants.ces.ncsu.edu/plants/leucanthemum-x-superbum/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -710,8 +821,19 @@
         "day_f_min/max, night_f_min/max, cool_rest_note: no source gives day/night temperature setpoints or dormancy/cool-rest guidance for this species; only broad winter-hardiness zone/rating figures are given, which answer a different question.",
         "water_growing_days_est / water_dormant_days_est / water_estimate_basis / water_check_depth_cm / water_dry_down_target: no source gives a specific watering-interval day count or soil-check depth for this species.",
         "toxicity_detail — removed on audit: Every substantive piece of toxicity_detail (the hypersalivation/mouth irritation/vomiting/diarrhea symptom list, the 'sesquiterpene lactones and pyrethrins' toxic principle, and the flowers/leaves/roots/stems part list) is drawn from NC State's page, but I fetched the raw HTML and confirmed all of it sits under a block explicitly headed <span class=\"group_name\">Poisonous to Humans:</span> (containing Poison Severity, Poison Symptoms, Poison Toxic Principle, Causes Contact Dermatitis, Poison Part — all under that heading, id=\"poison\"). There is no separate 'Poisonous to Pets/Dogs/Cats' structured section anywhere on the page. The only content that actually names an animal is a bare, unelaborated tag list ('Problem for Cats', 'Problem for Dogs') with zero symptom or mechanism detail attached, plus one general species-specific sentence ('Shasta daisies are mildly toxic to humans and pets if ingested'). I cross-checked NC State's own template on a related species (Chrysanthemum x morifolium), which uses the identical 'Poisonous to Humans:' heading/structure for its own (different) symptom text, confirming this is a deliberate, consistent human-only categorization on NC State's site, not incidental phrasing. The record took the human-labeled mechanism/symptom data and presented it as the detail behind toxic_to_pets=true, which the source never establishes for animals specifically. A pet owner reading toxicity_detail would believe hypersalivation/vomiting/diarrhea and the sesquiterpene-lactone/pyrethrin mechanism are documented outcomes in dogs or cats, when NC State only documents that mechanism for humans and only tags (without elaborating) that the plant is a problem for cats and dogs.",
-        "name_note — removed on audit: The note states RHS 'lists Chrysanthemum maximum, Chrysanthemum superbum, and Leucanthemum maximum as (misapplied) synonyms,' implying all three carry the misapplied qualifier. I fetched the RHS page directly: the synonym list actually reads 'Chrysanthemum maximum misapplied, Chrysanthemum superbum, Leucanthemum maximum misapplied' — only two of the three (Chrysanthemum maximum and Leucanthemum maximum) are tagged 'misapplied'; Chrysanthemum superbum is listed as a plain synonym without that qualifier. The record's own citation quote for this claim reproduces the correct RHS text, but the name_note prose then mischaracterizes it by applying '(misapplied)' uniformly to all three names, overstating what RHS actually says about Chrysanthemum superbum."
-      ]
+        "name_note — removed on audit: The note states RHS 'lists Chrysanthemum maximum, Chrysanthemum superbum, and Leucanthemum maximum as (misapplied) synonyms,' implying all three carry the misapplied qualifier. I fetched the RHS page directly: the synonym list actually reads 'Chrysanthemum maximum misapplied, Chrysanthemum superbum, Leucanthemum maximum misapplied' — only two of the three (Chrysanthemum maximum and Leucanthemum maximum) are tagged 'misapplied'; Chrysanthemum superbum is listed as a plain synonym without that qualifier. The record's own citation quote for this claim reproduces the correct RHS text, but the name_note prose then mischaracterizes it by applying '(misapplied)' uniformly to all three names, overstating what RHS actually says about Chrysanthemum superbum.",
+        "is_edible set false rather than left null or true because NC State's Edibility field and prose both directly state the plant is toxic if ingested (not that it is grown/used for food); this is a poisoning statement, not a food-use statement, so per the rules it counts as FALSE (poisonous to eat) rather than NULL.",
+        "Toxicity detail from the anchor NC State page, surfaced here since it bears on the is_edible determination: plant carries a 'low severity poison characteristics' rating; tags include 'poisonous if ingested', 'problem for cats', 'problem for children', 'problem for dogs'; Poison Toxic Principle: Sesquiterpene lactones and pyrethrins; Poison Part: Flowers; Causes Contact Dermatitis: Yes; symptoms listed include excessive salivation, mouth irritation, vomiting, and diarrhea if ingested, plus skin irritation (contact dermatitis) from handling leaves and flowers. No page among the four addressed food use of Shasta Daisy at all -- only toxicity.",
+        "Shasta Daisy is not a climber/vine, so the climber-size exclusion (rule 4) does not apply; all four size fields were populated normally from NC State's structured Dimensions block.",
+        "Corroborating (not used as primary) size data: RHS gives Max Height 0.5-1 metres and Max Spread 0.5-1 metres (about 19.7-39.4 in each) -- overlaps with but is not identical to NC State's range; NC State was used as the citation source because it carries the structured Dimensions block that is the designated anchor. UGA CAES's Georgia Gardens page states 'Heights range from 1 to 3 feet depending on variety' (about 12-36 in) for the species across its varieties, again roughly consistent with but not identical to NC State's figure; not used as the citation since NC State is the anchor and this UGA figure is explicitly variety-dependent prose rather than a structured field.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) returned a connection error (ConnectError) when fetched via the required qc.py tool -- this host refuses this machine, consistent with the task's warning. No content from this page could be read or used; nothing was guessed in its place."
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Bee delphinium",
@@ -759,7 +881,12 @@
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: NC State says 'Frequent feedings are necessary to support the growth and heavy blooming of this plant' but gives no interval, month range, or dilution strength.",
         "cool_rest_note: no admissible source describes a dormancy or rest period for this species.",
         "soil_ph_max: NC State's structured tag is 'Alkaline (>8.0)', a floor with no stated ceiling.",
-        "day_f/night_f/chill_damage_f were also not filled from UGA's note that 'D. elatum types... seldom perform well in Georgia' -- that is a regional-performance comment, not a temperature value."
+        "day_f/night_f/chill_damage_f were also not filled from UGA's note that 'D. elatum types... seldom perform well in Georgia' -- that is a regional-performance comment, not a temperature value.",
+        "Delphinium elatum is not a climber (herbaceous perennial), so the climber-no-size rule does not apply.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ConnectError) -- skipped per instructions, not guessed.",
+        "RHS and UGA pages were not needed for these six fields since NC State (the anchor) carries a full structured Dimensions block and Attracts/Edibility fields covering all of them; not separately queried.",
+        "is_edible set false because NC State's Edibility field states 'Toxic if eaten' with no part of the plant described as eaten or used for food anywhere on the page.",
+        "Although is_edible is false (so the full-toxicity-dump rule does not strictly apply), NC State also lists: medium severity poison characteristics; Poison Symptoms: Digestive issues; Poison Toxic Principle: Alkaloids; Causes Contact Dermatitis: Yes; Poison Part: Flowers, Leaves; and tags/fields for Problem for Dogs, Problem for Horses, Problem for Cats."
       ],
       "citations": [
         {
@@ -863,8 +990,38 @@
           "quote": "The stately D. elatum types, which grow to 4 or 5 feet, are exquisite but seldom perform well in Georgia and are not recommended.",
           "source": "UGA Cooperative Extension (CAES Field Report)",
           "url": "https://fieldreport.caes.uga.edu/publications/B944/flowering-perennials-for-georgia-gardens/"
+        },
+        {
+          "claim": "mature_height_in 36-60 (NC State Height 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Delphinium elatum",
+          "url": "https://plants.ces.ncsu.edu/plants/delphinium-elatum",
+          "quote": "Height: 3 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Delphinium elatum",
+          "url": "https://plants.ces.ncsu.edu/plants/delphinium-elatum",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field states the plant is toxic if eaten)",
+          "source": "NC State Extension Plant Toolbox - Delphinium elatum",
+          "url": "https://plants.ces.ncsu.edu/plants/delphinium-elatum",
+          "quote": "Toxic if eaten."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value and Attracts fields)",
+          "source": "NC State Extension Plant Toolbox - Delphinium elatum",
+          "url": "https://plants.ces.ncsu.edu/plants/delphinium-elatum",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -922,6 +1079,30 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/105495/dianthus-barbatus/details",
           "quote": "Potentially harmful Humans/Pets: Skin allergen; wear gloves and other protective equipment when handling."
+        },
+        {
+          "claim": "is_edible false (NC State: plant has poison characteristics, described as low toxicity if eaten — no page states an edible use)",
+          "source": "NC State Extension Plant Toolbox — Dianthus barbatus",
+          "url": "https://plants.ces.ncsu.edu/plants/dianthus-barbatus/",
+          "quote": "This plant has poison characteristics: low toxicity only if eaten and minor skin irritation iasting only for a few minutes."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value tag 'Attracts Pollinators'; structured Attracts field also lists Bees, Butterflies, Hummingbirds, Moths)",
+          "source": "NC State Extension Plant Toolbox — Dianthus barbatus",
+          "url": "https://plants.ces.ncsu.edu/plants/dianthus-barbatus/",
+          "quote": "Attracts Pollinators"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Dianthus barbatus",
+          "url": "https://plants.ces.ncsu.edu/plants/dianthus-barbatus/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Dianthus barbatus",
+          "url": "https://plants.ces.ncsu.edu/plants/dianthus-barbatus/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
         }
       ],
       "common_name": "Sweet William",
@@ -963,14 +1144,24 @@
         "water_regime, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_dry_down_target, water_estimate_basis: MOBOT gives only an unelaborated qualitative 'Water: Medium' tag; no source describes a dry-down pattern, watering frequency, or day-count basis for an estimate.",
         "fertilize_interval_days/fertilize_active_months/fertilize_strength: no admissible source gives fertilizing rate, frequency, or season guidance for this species.",
         "cool_rest_note: no source describes a winter dormancy/rest care routine beyond general cold-hardiness zone listings.",
-        "soil_base — removed on audit: The claim label states the plant is 'grown in-ground in beds/borders, not a potting mix,' but both cited quotes contradict that exclusion within the same sentence: RHS's quote includes 'Patio and container plants' among suggested planting locations, and MOBOT's quote reads 'Uses Cottage gardens. Beds and borders. Containers.' I re-fetched the live MOBOT page (taxonid=279027, via a proper search session so it doesn't fall back to an unrelated plant) and confirmed the Uses field is verbatim 'Cottage gardens. Beds and borders. Containers.' RHS's live page likewise lists 'Patio and container plants' under Suggested planting locations. The record extracted only the garden-bed portion of each quote and then wrote a claim asserting the opposite of the container use stated right next to it -- the same kind of cherry-picking the outdoor_sun_exposure field correctly avoided by keeping both full_sun and part_shade from an analogous list."
+        "soil_base — removed on audit: The claim label states the plant is 'grown in-ground in beds/borders, not a potting mix,' but both cited quotes contradict that exclusion within the same sentence: RHS's quote includes 'Patio and container plants' among suggested planting locations, and MOBOT's quote reads 'Uses Cottage gardens. Beds and borders. Containers.' I re-fetched the live MOBOT page (taxonid=279027, via a proper search session so it doesn't fall back to an unrelated plant) and confirmed the Uses field is verbatim 'Cottage gardens. Beds and borders. Containers.' RHS's live page likewise lists 'Patio and container plants' under Suggested planting locations. The record extracted only the garden-bed portion of each quote and then wrote a claim asserting the opposite of the container use stated right next to it -- the same kind of cherry-picking the outdoor_sun_exposure field correctly avoided by keeping both full_sun and part_shade from an analogous list.",
+        "plantfinder.mobot.org refused this machine (ConnectError, non-ok status) — page was not read, no data recorded from it.",
+        "is_edible set to false because NC State states the plant has poison characteristics: Poisonous to Humans yes, Poison Severity Low, Poison Symptoms 'No reports of ingestion. Skin irritation reported from contact with clove pinks and vomiting.', Poison Toxic Principle Triterpenoid saponins, Causes Contact Dermatitis Yes, Poison Part Leaves, and the summary line 'This plant has poison characteristics: low toxicity only if eaten and minor skin irritation...'. No page states any edible use of the plant or any part of it.",
+        "RHS lists Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres (3.9-19.7 in each), a narrower range than NC State's Height 1 ft.-2 ft. / Width 0.5-1 ft.; NC State's structured Dimensions block was used as the anchor per instructions and RHS's figures were not used for the size fields.",
+        "Not a climber, so all four size fields were filled normally rather than left null."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     },
     {
       "chill_damage_f": null,
@@ -1076,6 +1267,30 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286969",
           "quote": "Digitalis\npurpurea"
+        },
+        {
+          "claim": "mature_height_in 24-60 (NC State Height: 2 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Digitalis purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/digitalis-purpurea/",
+          "quote": "Height: 2 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-30 (NC State Width: 1 ft. 0 in. - 2 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Digitalis purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/digitalis-purpurea/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states nectar attracts bumblebees and hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox - Digitalis purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/digitalis-purpurea/",
+          "quote": "Nectar attracts bumblebees and hummingbirds."
+        },
+        {
+          "claim": "is_edible false (RHS Potentially harmful field states the plant is TOXIC if eaten, not grown or used for food)",
+          "source": "RHS - Digitalis purpurea",
+          "url": "https://www.rhs.org.uk/Plants/5862/i-Digitalis-purpurea-i/Details",
+          "quote": "TOXIC if eaten."
         }
       ],
       "common_name": "Foxglove",
@@ -1118,13 +1333,24 @@
         "soil_ph_min/soil_ph_max: NC State tags soil pH as 'Acid (<6.0)' and Missouri Botanical Garden says it 'prefers... acidic soils,' but RHS lists pH tolerance as 'Acid or Alkaline or Neutral' (i.e., broad tolerance rather than an acid preference), and none of the three gives a precise numeric range; left null given the differing characterizations and lack of numbers to pin down.",
         "cool_rest_note: no source discusses a dormancy/rest period distinct from its normal biennial winter rosette stage.",
         "toxicity_detail intentionally omits the human-specific symptom list (nausea, vomiting, irregular pulse, convulsions, etc.) that NC State scopes to its 'Poisonous to Humans' section, to avoid presenting human symptom data as if it described pets.",
-        "toxicity_detail — removed on audit: The 'cardiac glycosides' toxic-principle and 'toxic parts: flowers, leaves, roots, stems' data are drawn exclusively from NC State's structured toxicity block, which I confirmed via raw HTML inspection is wrapped entirely under a group header literally labeled `<span class=\"group_name ... bg_poison_1\">Poisonous to Humans:</span>` -- Poison Severity, Poison Symptoms, Poison Toxic Principle, and Poison Part are all nested inside that single human-scoped block. NC State provides no separate structured toxicity block for animals anywhere on the page; 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' are flat, undetailed tags in an unrelated 'Problems:' list with zero associated severity/principle/part data. The record's own unknowns note shows it recognized this exact scoping issue and deliberately excluded NC State's human symptom list ('nausea, vomiting... convulsions... death') as human-specific -- but it did not apply that same discipline to the toxic-principle and toxic-parts data, which comes from the identical 'Poisonous to Humans:'-headed block. The record instead presents 'cardiac glycosides' and the flowers/leaves/roots/stems part list as general, plant-wide facts implicitly supporting the pet-toxicity claim, when the source itself files that detail only under the human-toxicity heading, sitting directly beside the undetailed pet-specific tags. This is the exact 'subtler case' the audit's structural check #3 warns about: mechanism/part detail copied from a human-toxicity section of a source that happens to sit near a separate, undetailed pet-specific tag. (Note: toxic_to_pets itself is NOT refuted -- it is independently and directly supported by NC State's species-specific 'Problem for Cats/Dogs/Horses' tags and by RHS's explicit, species-specific 'TOXIC to pets' statement, both verified against clean, identity-confirmed page fetches.)"
+        "toxicity_detail — removed on audit: The 'cardiac glycosides' toxic-principle and 'toxic parts: flowers, leaves, roots, stems' data are drawn exclusively from NC State's structured toxicity block, which I confirmed via raw HTML inspection is wrapped entirely under a group header literally labeled `<span class=\"group_name ... bg_poison_1\">Poisonous to Humans:</span>` -- Poison Severity, Poison Symptoms, Poison Toxic Principle, and Poison Part are all nested inside that single human-scoped block. NC State provides no separate structured toxicity block for animals anywhere on the page; 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' are flat, undetailed tags in an unrelated 'Problems:' list with zero associated severity/principle/part data. The record's own unknowns note shows it recognized this exact scoping issue and deliberately excluded NC State's human symptom list ('nausea, vomiting... convulsions... death') as human-specific -- but it did not apply that same discipline to the toxic-principle and toxic-parts data, which comes from the identical 'Poisonous to Humans:'-headed block. The record instead presents 'cardiac glycosides' and the flowers/leaves/roots/stems part list as general, plant-wide facts implicitly supporting the pet-toxicity claim, when the source itself files that detail only under the human-toxicity heading, sitting directly beside the undetailed pet-specific tags. This is the exact 'subtler case' the audit's structural check #3 warns about: mechanism/part detail copied from a human-toxicity section of a source that happens to sit near a separate, undetailed pet-specific tag. (Note: toxic_to_pets itself is NOT refuted -- it is independently and directly supported by NC State's species-specific 'Problem for Cats/Dogs/Horses' tags and by RHS's explicit, species-specific 'TOXIC to pets' statement, both verified against clean, identity-confirmed page fetches.)",
+        "Not a climber: NC State lists Habit/Plant Type as Annual/Perennial and RHS lists Habit: Bushy, a biennial/short-lived perennial rosette — the no-size-for-climbers rule does not apply.",
+        "Before setting is_edible, the NC State anchor page's Poison fields were read in full: Poisonous to Humans — Poison Severity: High; Poison Symptoms: 'Nausea, vomiting, diarrhea, stomach pain, severe headache, irregular and slow pulse, tremors, unusual color visions, convulsions, Cardiac arrhythmias, death'; Poison Toxic Principle: cardiac glycosides; Poison Part: Flowers, Leaves, Roots, Stems; Causes Contact Dermatitis: No. RHS adds 'TOXIC if eaten' and 'TOXIC to pets'. No page on any of the four target pages states the plant or any part is grown or used for food, and RHS explicitly states it is toxic if eaten, so is_edible is set to false rather than null.",
+        "hgic.clemson.edu/foxglove/ refused this machine (qc.py returned http-403) — not read, no claims sourced from it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286969 refused this machine (qc.py returned a connection error) — not read, no claims sourced from it.",
+        "RHS also carries a structured size block ('Max Height 1.5-2.5 metres', 'Max Spread 0.1-0.5 metres' = approx 59-98 in height, 4-19.7 in spread) that is not the range used here — since the species has its own NC State Plant Toolbox page with a structured Dimensions block, NC State was used as the anchor for mature_height_in and mature_spread_in per the task's precedence rule, and the RHS figures were left unused rather than merged or averaged."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 30
     }
   ],
   "audit_summary": [
@@ -1165,6 +1391,7 @@
     "2026-08-21: landed with zero manual fixes. Both species flagged in advance -- Foxglove (cardiac glycosides, one of the best-documented genuinely dangerous garden plants) and Delphinium (toxic alkaloids) -- correctly resolved toxic_to_pets=true, each grounded in genuinely pet-inclusive language (RHS's explicit 'TOXIC to pets' for Foxglove; RHS's 'Humans/Pets: Harmful if eaten' for Delphinium) rather than borrowed from a human-only section. Foxglove's audit went a level deeper than seen before: even the toxic-principle/plant-parts detail that looked properly structured turned out, on raw HTML inspection, to be nested entirely under a 'Poisonous to Humans' group header on the source page -- correctly stripped from toxicity_detail despite reading as legitimate mechanism data at a glance.",
     "Candytuft's audit caught two costed-consequence errors: water_regime was set to a drier category than Clemson's own 'moist to slightly dry' phrasing supports, with Missouri Botanical Garden's structured 'Water: Medium' tag sitting right next to the prose the record actually quoted and never reconciled against it. soil_drainage was softened to 'moderate' against a unanimous well-drained-required signal across all four sources, with Missouri Botanical Garden and Clemson both naming the specific failure mode (crown/root rot) that following the softer reading risks causing.",
     "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

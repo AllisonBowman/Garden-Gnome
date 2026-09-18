@@ -117,6 +117,24 @@
           "quote": "Full sun (6 or more hours of direct sunlight a day)",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/salvia-splendens/"
+        },
+        {
+          "claim": "attracts_pollinators true — NC State: \"Flowers attract hummingbirds and butterflies.\" (also a structured Attracts field listing Butterflies, Hummingbirds, Pollinators)",
+          "source": "NC State Extension Plant Toolbox — Salvia splendens",
+          "url": "https://plants.ces.ncsu.edu/plants/salvia-splendens/",
+          "quote": "Flowers attract hummingbirds and butterflies."
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Dimensions Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Salvia splendens",
+          "url": "https://plants.ces.ncsu.edu/plants/salvia-splendens/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 8-10 (NC State Dimensions Width: 0 ft. 8 in. - 0 ft. 10 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Salvia splendens",
+          "url": "https://plants.ces.ncsu.edu/plants/salvia-splendens/",
+          "quote": "Width: 0 ft. 8 in. - 0 ft. 10 in."
         }
       ],
       "common_name": "Scarlet Sage",
@@ -159,14 +177,27 @@
         "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no source gives a watering-depth check method or a day-interval estimate for this outdoor bedding annual.",
         "fertilize_interval_days/fertilize_active_months/fertilize_strength: Clemson and UGA recommend a slow-release fertilizer at planting (UGA adds a light feeding about a month later), but neither gives an ongoing interval in days or specific calendar months.",
         "cool_rest_note: no source discusses a cool dormancy/rest period for this warm-season annual/tender perennial.",
-        "water_regime — removed on audit: The record asserts \"keep_moist\" citing only MOBOT's prose (\"evenly moist, well-drained soils\") and RHS's prose (\"moist but well-drained... water in dry weather\"). But MOBOT's own page has a separate STRUCTURED field, sitting directly above the quoted prose paragraph, reading `Water: Medium` (verified in raw HTML: div id=WaterRow -> \"Water: Medium\") — a categorical rating that contradicts the elevated \"keep moist\" claim drawn only from the adjacent prose. This is exactly the subtler defect pattern the audit brief flags: a cited source's own structured field contradicts the prose quote actually used. Additionally, two other sources already cited elsewhere in this same record for this species independently point away from a constant-moisture regime: Clemson's factsheet (used in this record for outdoor_sun_exposure and fertilizing) states, in its only growing-guidance section (there is no separate section for annual salvias, so this guidance covers them) — \"Once established, most salvia species are quite drought-tolerant and require little care\" and \"Excessive water and fertilizer can increase fungal disease problems for salvias\" — and UGA's article (used in this record for soil drainage) recommends \"Water deeply, once a week, particularly during long, dry periods,\" a moderate/infrequent-deep-watering pattern, not an evenly-moist one. With a genuine, source-documented conflict on this harm-capable field, water_regime should have been left null rather than set to keep_moist."
+        "water_regime — removed on audit: The record asserts \"keep_moist\" citing only MOBOT's prose (\"evenly moist, well-drained soils\") and RHS's prose (\"moist but well-drained... water in dry weather\"). But MOBOT's own page has a separate STRUCTURED field, sitting directly above the quoted prose paragraph, reading `Water: Medium` (verified in raw HTML: div id=WaterRow -> \"Water: Medium\") — a categorical rating that contradicts the elevated \"keep moist\" claim drawn only from the adjacent prose. This is exactly the subtler defect pattern the audit brief flags: a cited source's own structured field contradicts the prose quote actually used. Additionally, two other sources already cited elsewhere in this same record for this species independently point away from a constant-moisture regime: Clemson's factsheet (used in this record for outdoor_sun_exposure and fertilizing) states, in its only growing-guidance section (there is no separate section for annual salvias, so this guidance covers them) — \"Once established, most salvia species are quite drought-tolerant and require little care\" and \"Excessive water and fertilizer can increase fungal disease problems for salvias\" — and UGA's article (used in this record for soil drainage) recommends \"Water deeply, once a week, particularly during long, dry periods,\" a moderate/infrequent-deep-watering pattern, not an evenly-moist one. With a genuine, source-documented conflict on this harm-capable field, water_regime should have been left null rather than set to keep_moist.",
+        "is_edible left null: none of the three reachable pages (NC State, RHS, UGA CAES Field Report) address eating or edibility of Salvia splendens at all — no statement it is grown/used for food, and none says it is inedible or poisonous.",
+        "No toxicity language found on any reachable page: searched 'Poison', 'Toxic', and 'Problem for' on the NC State, RHS, and UGA CAES pages and got 0 hits on all three for all three terms.",
+        "hgic.clemson.edu/factsheet/salvia/ refused this machine (http-403) — not read, not guessed.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a606 refused this machine (connection error) — not read, not guessed.",
+        "Scarlet splendens is not a climber, so the no-size-for-climbers rule does not apply; all four size fields are populated from NC State's species-level Dimensions block.",
+        "RHS's Max Height/Max Spread figures (0.1-0.5 metres each) were NOT used: the RHS page's own title renders the plant as Salvia splendens 'Scarlet Sage' (single-quoted, cultivar-style naming) rather than the straight species, so its size figures were treated as cultivar-attributable and excluded per the cultivar rule. NC State's dedicated species page was used as the size anchor instead, consistent with NC State being the designated anchor when available.",
+        "UGA CAES Field Report gives sizes only for named commercial series — 'Saucy series ... growing 2 to 3 feet tall and 2 to 3 feet wide' and 'Vista series ... reaching only 1 foot in height and 8 to 10 inches in width' — both cultivar/series-specific, not species-level, so neither was used for the size fields.",
+        "attracts_pollinators set true on NC State's plain-text statement 'Flowers attract hummingbirds and butterflies.' and corroborated by NC State's structured Attracts field (Butterflies, Hummingbirds, Pollinators) and RHS's 'Plants for pollinators' tag; UGA CAES also independently states hummingbirds and butterflies are drawn to it."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 8,
+      "mature_spread_in_max": 10
     },
     {
       "common_name": "Sweet Pea",
@@ -301,6 +332,24 @@
           "quote": "Unlike edible vegetable peas (see Pisum sativum), sweet pea fruits are inedible and poisonous to humans.",
           "source": "Missouri Botanical Garden (Plant Finder)",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b734"
+        },
+        {
+          "claim": "is_edible false (NC State: sweet pea fruits stated inedible and poisonous to humans)",
+          "quote": "Sweet pea fruits are inedible and poisonous to humans.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lathyrus-odoratus/"
+        },
+        {
+          "claim": "is_edible false (RHS: pods and seeds stated not edible)",
+          "quote": "Pods and seeds are not edible.",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/25520/lathyrus-odoratus/details"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies)",
+          "quote": "Butterflies",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lathyrus-odoratus/"
         }
       ],
       "unknowns": [
@@ -314,8 +363,18 @@
         "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis — RHS gives a qualitative watering-check frequency ('every 3-4 days' in the ground in dry weather vs. daily in pots) rather than one clean day-count estimate, and this species is an annual with no dormancy period described by any source.",
         "cool_rest_note — sources describe it only as an annual that completes its life cycle in one season (dies after flowering); no cold-rest/dormancy period is discussed.",
         "toxic_to_pets/toxicity_detail were deliberately sourced only from RHS's separate 'Pets:' tag ('Pods and seeds are not edible'); the fuller Lathyrism/paralysis symptom write-up on NC State and Missouri Botanical Garden is explicitly framed on those pages as toxicity 'to Humans', and that human-specific detail was withheld from the pet-facing fields to avoid blending targets.",
-        "toxicity_detail — removed on audit: The value embeds the human-specific Lathyrism mechanism/symptom list ('paralysis, slow and weak pulse, shallow breathing, convulsions') sourced from NC State's 'Poisonous to Humans' block and MoBOT's human-toxicity prose, directly inside the pet-facing toxicity_detail string -- the exact anti-pattern audit check #3 targets (mechanism/symptom content copied from a human-toxicity section into a pet-tagged field). The record's own text claims this human write-up 'was NOT carried into this pet-facing field,' but the symptom list is literally present in the field value, just wrapped in a disclaiming sentence. The only genuinely pet-specific admissible source (RHS's 'Pets:' tag) says nothing more than 'Pods and seeds are not edible' -- no mechanism, no symptoms. Failure scenario: a downstream consumer (e.g. a pet-safety UI) surfaces toxicity_detail verbatim to a worried pet owner, who reads 'paralysis... convulsions' inside the pet toxicity field and reasonably concludes these are the symptoms sweet pea causes in animals, when no admissible source makes that claim for pets at all. The field should state only what RHS's pet-specific tag supports ('pods and seeds are not edible') and omit the human symptom list rather than quoting-then-disclaiming it."
-      ]
+        "toxicity_detail — removed on audit: The value embeds the human-specific Lathyrism mechanism/symptom list ('paralysis, slow and weak pulse, shallow breathing, convulsions') sourced from NC State's 'Poisonous to Humans' block and MoBOT's human-toxicity prose, directly inside the pet-facing toxicity_detail string -- the exact anti-pattern audit check #3 targets (mechanism/symptom content copied from a human-toxicity section into a pet-tagged field). The record's own text claims this human write-up 'was NOT carried into this pet-facing field,' but the symptom list is literally present in the field value, just wrapped in a disclaiming sentence. The only genuinely pet-specific admissible source (RHS's 'Pets:' tag) says nothing more than 'Pods and seeds are not edible' -- no mechanism, no symptoms. Failure scenario: a downstream consumer (e.g. a pet-safety UI) surfaces toxicity_detail verbatim to a worried pet owner, who reads 'paralysis... convulsions' inside the pet toxicity field and reasonably concludes these are the symptoms sweet pea causes in animals, when no admissible source makes that claim for pets at all. The field should state only what RHS's pet-specific tag supports ('pods and seeds are not edible') and omit the human symptom list rather than quoting-then-disclaiming it.",
+        "Lathyrus odoratus is a climber (NC State: Plant Type includes 'Vine', Habit/Form includes 'Climbing', Stem Description 'Herbaceous vine with winged stems'; RHS: Habit 'Climbing') -- per the climber rule, all four size fields are left null even though NC State publishes a Dimensions block ('Height: 3 ft. 0 in. - 8 ft. 0 in.', 'Width: 2 ft. 0 in. - 3 ft. 0 in.') and RHS publishes 'Max Height 1.5-2.5 metres' / 'Max Spread 0.1-0.5 metres', because a climber's published height/spread conflates its own stature with how far it runs on a support.",
+        "mature_height_in_min left null: climber rule (see above).",
+        "mature_height_in_max left null: climber rule (see above).",
+        "mature_spread_in_min left null: climber rule (see above).",
+        "mature_spread_in_max left null: climber rule (see above).",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ConnectError: fetch status error) -- not consulted, not guessed at.",
+        "is_edible set false based on NC State ('Sweet pea fruits are inedible and poisonous to humans') and RHS ('Pods and seeds are not edible'). Related toxicity information found on the same pages, included here for completeness though not mandatory since is_edible is false rather than true: NC State lists 'This plant has low severity poison characteristics', Poison Part 'Seeds', Poison Toxic Principle 'Amine, phenol, and glycoside', the syndrome '\"Lathyrism\": paralysis, slow and weak pulse, shallow breathing, convulsions', and the plain-text warning 'Sweet Peas are poisonous and should not be planted near edible peas'; RHS lists the plant under 'Potentially harmful', advises 'Wear gloves and other protective equipment when handling', and gives a pets warning that pods and seeds are not edible.",
+        "attracts_pollinators set true based on NC State's structured 'Attracts: Butterflies' field; RHS's page for this species did not carry an attracts/pollinator field or tag."
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Vinca",
@@ -516,6 +575,24 @@
           "quote": "Synonyms Zinnia violacea",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/159688/zinnia-elegans/details"
+        },
+        {
+          "claim": "mature_height_in 6-36 (NC State Height: 0 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/zinnia-elegans/",
+          "quote": "Height: 0 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 8-12 (NC State Width: 0 ft. 8 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/zinnia-elegans/",
+          "quote": "Width: 0 ft. 8 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: Attracts butterflies, hummingbirds, bees, and pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/zinnia-elegans/",
+          "quote": "Attracts butterflies, hummingbirds, bees, and pollinators"
         }
       ],
       "common_name": "Common Zinnia",
@@ -556,14 +633,24 @@
         "cool_rest_note/water_dormant_days_est: no admissible source discusses a dormancy or rest period for this annual species.",
         "water_regime/water_growing_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: sources give non-equivalent water descriptors that don't resolve to one schema category -- NC State and Penn State tag it 'drought tolerant,' Clemson recommends about 1 inch/week watered at the base, Missouri Botanical Garden's structured field says 'Water: Medium,' and UGA says it needs 'ample moisture to thrive' -- so left null rather than guessed.",
         "toxicity_detail: NC State's toxicity information is a bare non-toxic tag (cats/dogs/horses) with no mechanism or symptom text to quote, so no detail was taken.",
-        "soil_drainage — removed on audit: The record sets soil_drainage=\"fast\" citing MOBOT's quote \"Easily grown in humusy, evenly moist, well-drained soils in full sun.\" (verbatim-confirmed by direct fetch of plantfinder.mobot.org). That quote pairs 'well-drained' with 'evenly moist' -- language that does not cleanly resolve to the catalog's 'fast' drainage tier. MOBOT's own structured field on the same page (also verbatim-confirmed) reads \"Water: Medium\", reinforcing a moderate/moisture-retentive read rather than fast-draining. No admissible source ever uses the literal words fast/moderate/moisture_retentive for this species, so 'fast' is the record's own translation of ambiguous, moisture-qualified language -- exactly the situation this same catalog's other verified records (e.g. app/data/verified/b14-annual-flowers2.json, the water_regime/soil_drainage unknowns entries) treat by leaving soil_drainage null when 'well-drained' is paired with 'moist' rather than standing alone. The record should have left soil_drainage null (as it correctly did for water_regime, citing the same kind of cross-source moisture ambiguity) instead of asserting 'fast'."
+        "soil_drainage — removed on audit: The record sets soil_drainage=\"fast\" citing MOBOT's quote \"Easily grown in humusy, evenly moist, well-drained soils in full sun.\" (verbatim-confirmed by direct fetch of plantfinder.mobot.org). That quote pairs 'well-drained' with 'evenly moist' -- language that does not cleanly resolve to the catalog's 'fast' drainage tier. MOBOT's own structured field on the same page (also verbatim-confirmed) reads \"Water: Medium\", reinforcing a moderate/moisture-retentive read rather than fast-draining. No admissible source ever uses the literal words fast/moderate/moisture_retentive for this species, so 'fast' is the record's own translation of ambiguous, moisture-qualified language -- exactly the situation this same catalog's other verified records (e.g. app/data/verified/b14-annual-flowers2.json, the water_regime/soil_drainage unknowns entries) treat by leaving soil_drainage null when 'well-drained' is paired with 'moist' rather than standing alone. The record should have left soil_drainage null (as it correctly did for water_regime, citing the same kind of cross-source moisture ambiguity) instead of asserting 'fast'.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page addresses eating the plant at all -- no 'Edible' text found on either page, and no statement that it is poisonous to eat.",
+        "plantfinder.mobot.org (Missouri Botanical PlantFinder) refused this machine (fetch status: error:ConnectError) -- could not be read, so it contributes nothing here; not guessed at.",
+        "NC State's tag list carries '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' -- this is a pet-toxicity tag, not a statement about human edibility, so it was not used to set is_edible.",
+        "Zinnia elegans is a bushy annual, not a climber (RHS: 'A bushy, half-hardy annual'), so the climber-exclusion rule does not apply and all four size fields were filled normally.",
+        "Size figures used are the species-level NC State 'Dimensions:' block, not any of the many cultivar figures listed elsewhere on the same page under 'Cultivars / Varieties' (e.g. 'State Fair' Heights to 4', 'Thumbelina' Dwarf form 4-6\") -- those cultivar figures were excluded per the cultivar-size rule."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 8,
+      "mature_spread_in_max": 12
     },
     {
       "chill_damage_f": null,
@@ -633,6 +720,30 @@
           "quote": "Contact Dermatitis Problem for Cats Problem for Dogs Problem for Horses Weedy",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/achillea-millefolium/"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Dimensions Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Achillea millefolium",
+          "url": "https://plants.ces.ncsu.edu/plants/achillea-millefolium/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-46 (NC State Dimensions Width: 1 ft. 0 in. - 3 ft. 10 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Achillea millefolium",
+          "url": "https://plants.ces.ncsu.edu/plants/achillea-millefolium/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 10 in."
+        },
+        {
+          "claim": "is_edible true: NC State Edibility field states leaves and flowers can be eaten raw or cooked in moderation, used in salads and teas",
+          "source": "NC State Extension Plant Toolbox - Achillea millefolium",
+          "url": "https://plants.ces.ncsu.edu/plants/achillea-millefolium/",
+          "quote": "Leaves and flowers are bitter, but can be eaten raw or cooked in moderation. They are used in salads and to make teas. The flowers and leaves are used in making some liquors and bitters."
+        },
+        {
+          "claim": "attracts_pollinators true: NC State's structured Attracts field lists Bees, Butterflies, Pollinators, and Predatory Insects",
+          "source": "NC State Extension Plant Toolbox - Achillea millefolium",
+          "url": "https://plants.ces.ncsu.edu/plants/achillea-millefolium/",
+          "quote": "Attracts butterflies and bees and other insects."
         }
       ],
       "common_name": "Yarrow",
@@ -676,8 +787,19 @@
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source discusses fertilizing this species.",
         "toxicity_detail: NC State's structured Problems field flags 'Problem for Cats/Dogs/Horses,' but the only mechanism/detail given on that same page ('wear gloves to prevent contact dermatitis') is framed as a human skin-contact issue, not a pet-specific symptom, so it was not copied into this field per the no-blending rule.",
         "scientific_name_accepted — removed on audit: The citation's claim label asserts 'Achillea millefolium (no synonym or name change indicated)', but the quoted MBG text ('Achillea millefolium, commonly called common yarrow, is a rhizomatous, spreading, upright to mat-forming perennial...') never addresses synonymy or taxonomic status at all -- it is simply a descriptive sentence that happens to use the name. Per audit criterion 1 ('does the quote ACTUALLY state this value, or does it merely sound related'), the quote does not establish the negative claim ('no synonym or name change indicated') the record attached to it; that portion of the claim has zero textual support in its own cited source. (Independently fetching MBG, NC State, and Clemson confirmed none of them flag a synonym for this species, and the RHS page -- found via search since the URL implied elsewhere in the record 404s -- lists Achillea millefolium as 'Name Status: Correct', so the underlying value is likely right, but the record's own citation does not demonstrate this.)",
-        "name_note — removed on audit: name_note claims 'All four admissible sources (NC State Extension, Clemson HGIC, Missouri Botanical Garden Plant Finder, and RHS) consistently use \"Achillea millefolium\"... none flag it as a synonym or note a taxonomic revision.' But the citations array contains zero citations for RHS, and zero citations establishing NC State's or Clemson's name/synonym status specifically (only one MBG citation exists for scientific_name_accepted, and per the finding above even that citation doesn't address synonymy). RHS is invoked here, and again in the unknowns entry for chill_damage_f ('RHS rating H7, \"hardy in the severest European continental climates <-20C\"'), with no citation URL anywhere in the record backing either mention -- the only RHS URL pattern implied by the record (rhs.org.uk/plants/achillea-millefolium/details) returns a 404; the real RHS page is at a different, numeric-ID URL the record never cites. The record asserts a four-source consensus its own evidence trail cannot substantiate."
-      ]
+        "name_note — removed on audit: name_note claims 'All four admissible sources (NC State Extension, Clemson HGIC, Missouri Botanical Garden Plant Finder, and RHS) consistently use \"Achillea millefolium\"... none flag it as a synonym or note a taxonomic revision.' But the citations array contains zero citations for RHS, and zero citations establishing NC State's or Clemson's name/synonym status specifically (only one MBG citation exists for scientific_name_accepted, and per the finding above even that citation doesn't address synonymy). RHS is invoked here, and again in the unknowns entry for chill_damage_f ('RHS rating H7, \"hardy in the severest European continental climates <-20C\"'), with no citation URL anywhere in the record backing either mention -- the only RHS URL pattern implied by the record (rhs.org.uk/plants/achillea-millefolium/details) returns a 404; the real RHS page is at a different, numeric-ID URL the record never cites. The record asserts a four-source consensus its own evidence trail cannot substantiate.",
+        "Clemson HGIC page (hgic.clemson.edu) refused this machine with http-403 -- not used for any field, no size/edibility/pollinator text read from it.",
+        "MoBot Plant Finder (plantfinder.mobot.org) refused this machine with error:ConnectError -- not used for any field.",
+        "is_edible is TRUE but conditional: NC State's Edibility field says leaves and flowers are bitter but can be eaten raw or cooked in moderation, used in salads and teas, with flowers/leaves also used in liquors and bitters -- this is a moderation/bitterness condition, not an unconditional edible claim.",
+        "Pets/toxicity warning found on the same NC State page while confirming is_edible: the page tags the species 'problem for cats', 'problem for dogs', 'problem for horses', and 'contact dermatitis', and states in the landscape-use text: 'Avoid planting where your pets are and wear gloves to prevent contact dermatitis.' No searches for 'Poison' or 'Toxic' returned any hits on this page (0 hits each), so no named toxic principle or severity beyond the pets/dermatitis warning above was found.",
+        "attracts_pollinators is TRUE from NC State's structured 'Attracts' field (Bees, Butterflies, Pollinators, Predatory Insects) and its 'Wildlife Value' text ('Attracts butterflies and bees and other insects'); this is not a vine/climber so the size fields are populated normally."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 46
     },
     {
       "common_name": "Black-Eyed Susan",
@@ -884,7 +1006,14 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: NC State says 'Amend the soil with humus and keep evenly moist' while Missouri Botanical Garden's structured field reads 'Water: Dry to medium' and both sources also describe drought tolerance once established — a genuine cross-source difference on a harm-capable field, so no single water-regime value was chosen.",
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: no cited source addresses fertilizing frequency, timing, or strength for this species.",
         "toxic_to_pets, toxicity_detail: none of the consulted sources (NC State, Missouri Botanical Garden, RHS) mention toxicity of Gaillardia x grandiflora to pets or humans; Clemson HGIC and UGA CAES pet-toxic-plant-list pages were also checked and do not include Gaillardia. Absence of a mention is not treated as evidence of non-toxicity.",
-        "soil_base — removed on audit: The cited quote ('A short-lived perennial, easily grown in average, medium, well-drained soils in full sun.') is generic MBG culture-note boilerplate about soil texture and moisture, and never states or implies in-ground bed cultivation as opposed to container cultivation — it does not actually say 'garden bed.' Worse, another citation already in this same record (the is_houseplant citation, also NC State) explicitly states the plant is used 'to add bright colors to the front of the border, in containers, on the patio or along walkways,' i.e., the same sources the record relies on treat container growing as a normal, co-equal use case alongside garden beds. Categorizing soil_base as strictly 'garden_bed' from a quote that never mentions beds, while ignoring the record's own container-use evidence, is an unsupported categorical pick rather than something the citation actually states."
+        "soil_base — removed on audit: The cited quote ('A short-lived perennial, easily grown in average, medium, well-drained soils in full sun.') is generic MBG culture-note boilerplate about soil texture and moisture, and never states or implies in-ground bed cultivation as opposed to container cultivation — it does not actually say 'garden bed.' Worse, another citation already in this same record (the is_houseplant citation, also NC State) explicitly states the plant is used 'to add bright colors to the front of the border, in containers, on the patio or along walkways,' i.e., the same sources the record relies on treat container growing as a normal, co-equal use case alongside garden beds. Categorizing soil_base as strictly 'garden_bed' from a quote that never mentions beds, while ignoring the record's own container-use evidence, is an unsupported categorical pick rather than something the citation actually states.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS 'Kobold' page addresses whether Blanket Flower or any part of it is eaten or used for food; no statement either way.",
+        "Searched NC State and RHS pages for 'Poison', 'Toxic', and 'Problem for' before setting is_edible — 0 hits on both pages, so no toxicity information exists to report (moot since is_edible is null, not true).",
+        "mature_spread_in_min and mature_spread_in_max left null: NC State's only spread figure is the unqualified '2-foot spread' in 'Most grow 1-3 feet tall with a 2-foot spread' — no directional wording ('up to'/'at least') ties it to either the low or high end of a range, so it was not forced into either field.",
+        "RHS page (https://www.rhs.org.uk/plants/234001/gaillardia-grandiflora-kobold/details) is for the cultivar 'Kobold', not the species: its 'Max Height 0.1-0.5 metres' and 'Max Spread 0.1-0.5 metres' were NOT used for mature size per the cultivar-size rule.",
+        "RHS 'Kobold' page also carries a 'Plants for pollinators' tag, consistent with attracts_pollinators=true, but was not cited since it is cultivar-page evidence and NC State's own species-level Wildlife Value text already supports the field.",
+        "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a579) refused this machine (fetch status: error:ConnectError) — skipped, no data read or guessed from it.",
+        "Not a climber/vine, so the climber size-suppression rule does not apply; size fields were evaluated normally."
       ],
       "citations": [
         {
@@ -928,8 +1057,23 @@
           "quote": "A short-lived perennial, easily grown in average, medium, well-drained soils in full sun.",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a579",
           "source": "Missouri Botanical Garden Plant Finder"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State: \"Most grow 1-3 feet tall with a 2-foot spread\" — 1-3 ft converted to inches: low end 12, high end 36)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gaillardia-x-grandiflora/",
+          "quote": "Most grow 1-3 feet tall with a 2-foot spread and if kept deadheaded will bloom most of the season."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states flowers attract butterflies and bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gaillardia-x-grandiflora/",
+          "quote": "Flowers attract butterflies and bees. Gold Finches will eat the seeds."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36
     },
     {
       "common_name": "Butterfly Weed",
@@ -1116,6 +1260,7 @@
   "normalizations": [
     "2026-08-21: landed after one registry fix (garden-gnome commit 9afdde5), not a data fix. Black-Eyed Susan cited ask.ifas.ufl.edu/fp512 -- attributed in the researcher's own source string to the identical EDIS document edis.ifas.ufl.edu hosts -- which the loader correctly refused since the domain wasn't registered. Registered it alongside UF/IFAS's known domain, same authority, and the citations resolved cleanly on re-check.",
     "All three species flagged in advance for toxicity attention -- Sweet Pea (a different genus from the already-landed edible garden pea, despite the name), Vinca (source of the vinca alkaloids), and Butterfly Weed (a milkweed, cardiac glycosides) -- correctly resolved toxic_to_pets=true. Sweet Pea and Vinca both kept toxicity_detail null rather than borrow their sources' human-toxicity writeups -- Sweet Pea's audit explicitly caught and stripped an embedded Lathyrism symptom list that had been copied from a 'Poisonous to Humans' section into the pet-facing field, the same anti-pattern found in b14 now generalizing correctly across unrelated species without being re-taught per batch. Scarlet Sage's record separately cross-checked its own common name against a real collision -- a different species (Salvia coccinea) shares the name 'scarlet sage' in some sources.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

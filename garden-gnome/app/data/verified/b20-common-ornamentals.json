@@ -53,7 +53,12 @@
         "cool_rest_note: no admissible source addresses a dormancy/cool-rest period.",
         "toxic_to_pets, toxicity_detail: no admissible source addresses pet toxicity for Rosa rugosa specifically. NC State's Plant Toolbox profile (which carries Poisonous-to-Humans/Poisonous-to-Pets sections for many species) has none for this species. RHS's only 'Potentially harmful' note found appears on the unrelated cultivar page for Rosa rugosa 'Alba,' and it only warns that the ornamental fruit isn't for eating and to wear gloves for the thorns -- it names no toxic principle or symptoms, so it doesn't establish toxicity either way and wasn't used.",
         "scientific_name_accepted — removed on audit: The only citation attached to this field (NC State Extension, claim 'scientific_name_accepted Rosa rugosa (previous synonyms)') has a quote that reads only 'Previously known as: Rosa andreae / Rosa coruscans / Rosa pubescens.' That text never states that Rosa rugosa itself is the currently accepted name -- it only lists three other names that were once used. The value 'Rosa rugosa' is being read off the page's URL/title (/plants/rosa-rugosa/), not off any quoted sentence. No citation in the record contains an explicit statement of current taxonomic acceptance, so per the 'does the quote ACTUALLY state this value' test this field fails to trace to supporting text, not just to a supporting page.",
-        "name_note — removed on audit: name_note asserts 'Rosa rugosa is the currently accepted name for this species ... No admissible source disputes Rosa rugosa as the accepted binomial.' This repeats the same unsupported leap as scientific_name_accepted: the single backing citation only lists three prior synonyms and never itself affirms that Rosa rugosa is the current name. Absence of a disputing source is not the same as an admissible source affirmatively confirming acceptance, so the note overstates what was actually found."
+        "name_note — removed on audit: name_note asserts 'Rosa rugosa is the currently accepted name for this species ... No admissible source disputes Rosa rugosa as the accepted binomial.' This repeats the same unsupported leap as scientific_name_accepted: the single backing citation only lists three prior synonyms and never itself affirms that Rosa rugosa is the current name. Absence of a disputing source is not the same as an admissible source affirmatively confirming acceptance, so the note overstates what was actually found.",
+        "Edibility is conditional: only the fruits/hips are edible/used (for jams and jellies) per the NC State page — the plant as a whole is not described as edible, so is_edible=true carries this qualification rather than a bare/whole-plant claim.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' per rule 5 before setting is_edible — 0 hits for each. No poisonous part, severity, toxic principle, preparation requirement, or pets warning was found anywhere on the page, so none is added to unknowns despite is_edible being true.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) returned a non-ok fetch status (ConnectError) when queried via qc.py — it refused this machine. Could not check it for corroborating or conflicting size, edibility, pollinator, or toxicity information; all six researched fields rely solely on the NC State Plant Toolbox page.",
+        "Rosa rugosa is a shrub, not a vine/liana/climber, so the climber-size exclusion (rule 4) does not apply and all four size fields were populated normally.",
+        "No cultivar-specific sizing was used — the 4-6 ft. height/width figures on the NC State page are given for the species Rosa rugosa itself, not for a named cultivar."
       ],
       "citations": [
         {
@@ -103,8 +108,38 @@
           "quote": "Previously known as:\nRosa andreae\nRosa coruscans\nRosa pubescens",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/rosa-rugosa/"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: \"The fruits or hips are used to make jams and jellies.\")",
+          "source": "NC State Extension Gardener Plant Toolbox — Rosa rugosa",
+          "url": "https://plants.ces.ncsu.edu/plants/rosa-rugosa/",
+          "quote": "The fruits or hips are used to make jams and jellies."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: \"The plant attracts pollinating insects and butterflies.\")",
+          "source": "NC State Extension Gardener Plant Toolbox — Rosa rugosa",
+          "url": "https://plants.ces.ncsu.edu/plants/rosa-rugosa/",
+          "quote": "The plant attracts pollinating insects and butterflies."
+        },
+        {
+          "claim": "mature_height_in 48-72 (NC State Height: 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Rosa rugosa",
+          "url": "https://plants.ces.ncsu.edu/plants/rosa-rugosa/",
+          "quote": "Height: 4 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-72 (NC State Width: 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Rosa rugosa",
+          "url": "https://plants.ces.ncsu.edu/plants/rosa-rugosa/",
+          "quote": "Width: 4 ft. 0 in. - 6 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Common Garden Tulip",
@@ -161,7 +196,13 @@
         "is_houseplant — removed on audit: The sole citation (Clemson) supports only that South Carolina gardeners treat tulips as single-season, dug-and-discarded bedding plants -- it never addresses indoor cultivation or houseplant status one way or the other. No admissible source in the record addresses whether tulips are or aren't grown as houseplants (e.g., the well-known practice of forcing tulip bulbs to bloom indoors in pots is never mentioned). The record conflates 'grown outdoors and replaced annually' with 'not a houseplant' -- two different axes the citation doesn't actually bridge.",
         "toxicity_detail — removed on audit: The phrase 'All parts are harmful if eaten' overstates the RHS quote, which is an unqualified 'Harmful if eaten; skin allergen' that never specifies 'all parts.' This sits in tension with the same field's own Penn State-sourced statement that the bulb carries 'by far' the highest toxin concentration of any part -- a distribution that undercuts, rather than supports, a claim that literally all parts are (implicitly equally) harmful. The core toxic-if-eaten / bulb-risk conclusion is well sourced; the 'All parts' framing specifically is not literally stated by any cited source and should be softened (e.g. to 'the plant').",
         "cool_rest_note — removed on audit: The 12-14 week / 33-40F figures come from University of Maryland Extension's guide to commercial greenhouse cut-flower forcing production, not general garden-bed cultivation. The record's own unknowns section acknowledges this same UMD document's temperature data describes 'a commercial forcing/storage technique for controlling bloom timing in cut-flower production' and explicitly excludes it from day_f/night_f fields on that basis -- yet cool_rest_note uses the same document's same-context storage figure as if it were general garden-bulb chilling guidance. This is an inconsistent application of the record's own exclusion principle and risks telling a home gardener their in-ground bulbs need 12-14 weeks of active refrigeration, when Clemson (the properly garden-context source) is the only citation actually describing home-garden bulb-chilling practice.",
-        "common_name: restored as \"Common Garden Tulip\" -- the audit's objection was to \"Garden Tulip\" dropping the word \"common\" from RHS's exact listed name (\"common garden tulip, late tulip\"), not to the name being wrong; using the source's literal wording resolves it."
+        "common_name: restored as \"Common Garden Tulip\" -- the audit's objection was to \"Garden Tulip\" dropping the word \"common\" from RHS's exact listed name (\"common garden tulip, late tulip\"), not to the name being wrong; using the source's literal wording resolves it.",
+        "is_edible left null: none of the six read pages (both RHS detail pages, RHS growing guide, Penn State Extension, UMD Extension, and the attempted Clemson HGIC page) state that Tulipa x gesneriana or any part of it is grown or used for food, and none state it is not edible for humans -- no page addresses human consumption at all, so per the null-is-no-record rule this stays null rather than being inferred.",
+        "attracts_pollinators left null: searched both RHS detail pages and the RHS growing guide for 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird' and 'Wildlife' -- the only 'Wildlife' hits were generic RHS site-navigation links ('Wildlife gardening' menu item), not a structured attracts field or a statement about this species. No page names a pollinator for tulip, so this stays null rather than false.",
+        "Toxicity note found while checking is_edible: Penn State Extension's page states 'tulip, hyacinth, and daffodil bulbs can damage a dog's mouth and esophagus, leading to drooling, vomiting, severe diarrhea, and even abnormal heart rhythms' -- this is a pet-toxicity warning, not a statement about human edibility, so it did not change is_edible from null, but is recorded here per the rule that toxic-part information found while checking edibility must be preserved.",
+        "hgic.clemson.edu/factsheet/spring-flowering-bulbs/ refused this machine (http-403) -- not read, and nothing from it is guessed or recorded as a property of the page.",
+        "Both RHS pages (18512 and 367435) carry identical size data: Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres. No NC State Plant Toolbox page exists for this species, so RHS is the source per the anchor rule. Not a cultivar figure and not a climber, so all four size fields are populated normally.",
+        "UMD Extension's production-of-cut-flowers page and the RHS growing guide contained no size, edibility, or pollinator information usable for this record; searched 'Height', 'size', 'edible', 'Poison', 'Toxic', 'pollinat', 'bee', 'butterfl', 'Attracts', 'Wildlife', 'Problem for' on each with no relevant hits beyond what is noted above."
       ],
       "citations": [
         {
@@ -235,8 +276,24 @@
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/tulip/growing-guide",
           "quote": "Once in growth (March onwards) feed plants weekly with a potassium-rich liquid fertiliser like tomato feed."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches: 0.1m x 39.37 = 3.9in, 0.5m x 39.37 = 19.7in)",
+          "source": "RHS: Tulipa gesneriana (15) common garden tulip (Late Tulip)",
+          "url": "https://www.rhs.org.uk/plants/18512/tulipa-gesneriana-(15)-common-garden-tulip-late-tulip/details",
+          "quote": "Max Height         0.1-0.5 metres                 Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1m x 39.37 = 3.9in, 0.5m x 39.37 = 19.7in)",
+          "source": "RHS: Tulipa x gesneriana (15)",
+          "url": "https://www.rhs.org.uk/plants/367435/tulipa-x-gesneriana-15/details",
+          "quote": "Max Height         0.1-0.5 metres                 Max Spread         0.1-0.5 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Daffodil",
@@ -286,7 +343,13 @@
         "fertilize_interval_days/fertilize_active_months/fertilize_strength: NC State mentions bone meal or superphosphate at planting time and RHS mentions a high-potassium liquid feed for container bulbs timed to shoot emergence through foliage die-down, but neither gives a specific day interval, named calendar months, or dilution strength.",
         "is_houseplant set to false: RHS lists this species for outdoor patio/container planting and NC State's genus-level page and RHS's genus-level growing guide both describe 'forcing' bulbs indoors for a single holiday bloom cycle, which is seasonal/one-time rather than the sustained long-term indoor growing the field requires.",
         "cool_rest_note: not addressed by any admissible source.",
-        "is_houseplant — removed on audit: The record sets is_houseplant=false but no entry in the citations array addresses indoor/houseplant status at all — the only supporting text is a sentence in `unknowns` referencing an un-cited 'RHS's genus-level growing guide' and NC State's 'genus-level page' describing bulb-forcing, neither of which exists as a URL+quote citation object. This fails structural check 1 (every non-null field must trace to at least one citations entry). The value is plausibly correct (RHS's own species page only lists outdoor/patio/container use, per live fetch), but as written it is an unsupported assertion, not a sourced one."
+        "is_houseplant — removed on audit: The record sets is_houseplant=false but no entry in the citations array addresses indoor/houseplant status at all — the only supporting text is a sentence in `unknowns` referencing an un-cited 'RHS's genus-level growing guide' and NC State's 'genus-level page' describing bulb-forcing, neither of which exists as a URL+quote citation object. This fails structural check 1 (every non-null field must trace to at least one citations entry). The value is plausibly correct (RHS's own species page only lists outdoor/patio/container use, per live fetch), but as written it is an unsupported assertion, not a sourced one.",
+        "attracts_pollinators left null: searched NC State Plant Toolbox for 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' (0 relevant hits — page has no Attracts/wildlife field for this species) and RHS for 'Attracts' and 'pollinator' (0 hits, no pollinator tag on this RHS page); no page found makes any statement about pollinator visitation, so per rule 7 this is null, not false.",
+        "is_edible set FALSE, not merely toxic: NC State's own 'Poisonous to Humans' field (Poison Severity: Low; Poison Symptoms: vomiting, salivation, diarrhea; large ingestions cause convulsions, low blood pressure, tremors, and cardiac arrhythmias; Bulbs are the most poisonous part; Poison Toxic Principle: Lycorine and other alkaloids; Poison Part: Flowers, Leaves) states the plant is poisonous to eat, satisfying rule 6's FALSE condition. Corroborated by the three pet/toxicity pages: CAES 'Keep these toxic plants away from your pets' lists Daffodil (bulb), Narcissus spp., Toxicity class: Minor Toxicity, Dermatitis; CAES 'These 25+ plants are toxic to pets' states daffodils contain lycorine, causing vomiting and diarrhea when ingested plus a skin rash on contact; Penn State Extension states consuming parts of daffodils causes gastrointestinal symptoms in cats and dogs and that high amounts can cause seizures. None of the five pages contains any statement that the plant or a part of it is grown or used for food.",
+        "Not a climber (NC State Plant Type: Bulb, Herbaceous Perennial), so rule 4's zero-out-all-four-size-fields provision does not apply.",
+        "Size figures used are the species page's own Dimensions block, not a named cultivar: the NC State page's 'February Gold' reference appears only in the unrelated Tags list, not attached to the Dimensions block, so no cultivar substitution occurred (rule 3 not triggered).",
+        "RHS page (https://www.rhs.org.uk/plants/11388/narcissus-pseudonarcissus-13/details) was searched for 'Max Height', 'Max Spread', 'Ultimate height', 'Attracts', 'pollinator', 'Edible', 'Poison', 'Toxic', 'edible' — it does carry Max Height (0.1-0.5 metres) and Max Spread (0-0.1 metre) but was not used for size since NC State (the anchor, with a structured Dimensions block) already supplies it; RHS had zero hits for edibility, toxicity, or pollinator terms.",
+        "All five assigned pages returned an ok fetch status; none refused this machine, so there is no unknowns entry for a blocked source."
       ],
       "citations": [
         {
@@ -360,8 +423,31 @@
           "quote": "Suggested planting locations and garden types: City and courtyard gardens, Cottage and informal garden, Patio and container plants, Wildflower meadow, Flower borders and beds, Cut flowers",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/11388/narcissus-pseudonarcissus-13/details"
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Dimensions Height: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Narcissus pseudonarcissus",
+          "url": "https://plants.ces.ncsu.edu/plants/narcissus-pseudonarcissus/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 9-12 (NC State Dimensions Width: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Narcissus pseudonarcissus",
+          "url": "https://plants.ces.ncsu.edu/plants/narcissus-pseudonarcissus/",
+          "quote": "Width: 0 ft. 9 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State's Poisonous to Humans field documents ingestion symptoms, establishing the plant is poisonous to eat rather than grown or used for food)",
+          "source": "NC State Extension Gardener Plant Toolbox — Narcissus pseudonarcissus",
+          "url": "https://plants.ces.ncsu.edu/plants/narcissus-pseudonarcissus/",
+          "quote": "Vomiting, salvation, diarrhea; large ingestions cause convulsions, low blood pressure, tremors, and cardiac arrhythmias. Bulbs are the most poisonous part"
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Poinsettia",
@@ -1057,7 +1143,10 @@
         "is_houseplant: Clemson documents outdoor container use ('Cascading from window boxes or planters') alongside garden-bed uses, but no admissible source describes indoor/houseplant growing, so is_houseplant is set to false. soil_base is set to garden_bed as the dominant, clearly-supported setting since the schema has no separate value for outdoor-container use; the container evidence is preserved here rather than silently dropped.",
         "Methodology note: an initial non-browser fetch of the RHS species page (both the WebFetch tool and a direct curl) intermittently returned content for a completely different plant (Narcissus pseudonarcissus) under the Vinca minor URL, with soil-moisture, pH, and hardiness-rating figures that were not actually on the real page. Only the Position, Soil Types, Max Height, and Max Spread values used above were independently re-confirmed by loading the live page in a real browser; unverified moisture/pH/hardiness figures from the unreliable fetches were discarded rather than used.",
         "soil_drainage — removed on audit: The record asserts 'moderate' from three citations, but none of the underlying quotes say 'moderate' — NC State says 'moist soil with good drainage,' Clemson says 'moist, well-drained soil ... rich in organic matter,' and MOBOT says 'well-drained soil' (I re-verified all three live). A live re-check of the RHS Vinca minor page — not even cited for this field — independently corroborates 'well-drained' a fourth time ('Moisture: Moist but well–drained'). This repo's own SoilDrainage enum is fast/moderate/moisture_retentive (app/models/models.py), and this exact defect pattern — 'well-drained' quotes mislabeled as 'moderate' — was already caught and reverted to null in a prior audit in this same repo (app/data/verified/b11-veg-round4.json, onion record: \"'moderate' does not appear in any cited source — the quotes only say 'well-drained' ... well-drained typically indicates better-than-moderate drainage\"). Other verified batches (b10-veg-round3.json, b14-annual-flowers2.json) consistently leave soil_drainage null rather than guess when sources pair 'moist' with 'well-drained' without using the catalog's own vocabulary — this record should have done the same instead of asserting 'moderate.'",
-        "name_note — removed on audit: name_note claims Missouri Botanical Garden, RHS, and Clemson HGIC also 'treat Vinca minor as the current, correct binomial' and that none of them 'flag it as a synonym,' but the citations array contains zero entries from those three sources with a naming/scientific_name claim — only citation 1 (NC State) addresses scientific_name_accepted. This fails structural check 1: the multi-source-agreement portion of name_note has no citation trace at all. (Live-checking RHS and MOBOT didn't turn up a synonym flag either, so the underlying claim happens to be true, but the record supplies no evidence for it.)"
+        "name_note — removed on audit: name_note claims Missouri Botanical Garden, RHS, and Clemson HGIC also 'treat Vinca minor as the current, correct binomial' and that none of them 'flag it as a synonym,' but the citations array contains zero entries from those three sources with a naming/scientific_name claim — only citation 1 (NC State) addresses scientific_name_accepted. This fails structural check 1: the multi-source-agreement portion of name_note has no citation trace at all. (Live-checking RHS and MOBOT didn't turn up a synonym flag either, so the underlying claim happens to be true, but the record supplies no evidence for it.)",
+        "is_edible left null: none of the three accessible pages (NC State Plant Toolbox, RHS, Clemson HGIC) address eating Vinca minor, and none names a poison, toxic principle, or pets warning either -- searched 'Edible', 'Poison', 'Toxic', 'Problem for', 'pet', 'cat', 'dog', 'skin', 'irritant', 'ingest', 'alkaloid', 'eat' on the anchor and on Clemson with no relevant hits.",
+        "Not a climber: NC State lists Plant Type as Ground Cover, RHS Habit is Matforming, and Clemson describes it as an evergreen groundcover spreading by trailing/rooting stems -- so the size fields are recorded normally rather than left null under the climber rule.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276078&isprofile=0&letter=V (Missouri Botanical Garden Plant Finder) refused this machine (fetch status: error:ConnectError) -- not read, not guessed."
       ],
       "citations": [
         {
@@ -1101,8 +1190,31 @@
           "claim": "outdoor_sun_exposure full_sun and part_shade; soil_drainage moderate",
           "quote": "Easily grown in average, dry to medium, well-drained soil in full sun to part shade. Tolerates close to full shade.",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276078&isprofile=0&letter=V"
+        },
+        {
+          "claim": "mature_height_in 3-6 (NC State Height: 0 ft. 3 in. - 0 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vinca-minor/",
+          "quote": "Height: 0 ft. 3 in. - 0 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 6-18 (NC State Width: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vinca-minor/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field names bumblebees as a pollinator)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vinca-minor/",
+          "quote": "Attracts bumblebees."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3,
+      "mature_height_in_max": 6,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 18
     }
   ],
   "audit_summary": [
@@ -1143,6 +1255,7 @@
     "2026-08-22: second batch of the \"blind spots\" pass -- common garden and houseplant staples that were, oddly, never in the original 129-species curated catalog: rose, tulip, daffodil, poinsettia, cyclamen, Spanish moss (air plant), lemon tree, and periwinkle. Poinsettia and cyclamen carry real mild-to-moderate toxicity that popular myth often gets wrong in both directions; tulip and daffodil bulbs are a documented dog-digs-up-and-chews hazard distinct from the flowers/leaves.",
     "This batch's verify prompt was rewritten after b19 exposed a real bug: the landing script nulled an entire field whenever any single finding on it was refuted, even when the value was independently supported by other, unflagged citations. The rewrite told the auditor to distinguish a citation-level defect from a value-level one and only refute the field when the value itself is in doubt. It worked -- every one of the 15 fields removed in this batch is a genuine value-level defect (a category the quote doesn't literally support, a genus-level figure presented as species-specific, human-toxicity content bleeding into a pet field, or an internal contradiction the record didn't surface), not an over-broad null over one bad citation among several good ones.",
     "One cosmetic fix at landing: Tulip's common_name was nulled because the record wrote \"Garden Tulip,\" dropping \"common\" from RHS's exact listed name (\"common garden tulip, late tulip\") -- restored using the source's literal wording rather than left null, since the underlying fact was never in question.",
-    "Two genuinely toxic, commonly pet-accessible species -- Vinca minor (periwinkle) and Rosa rugosa -- correctly landed with toxic_to_pets null rather than guessed: the only admissible toxicity source found for periwinkle (UGA) is explicitly scoped to human toxicity, and no admissible source addresses rugosa rose at all. Left as honest gaps rather than repaired, since general veterinary-toxicology knowledge of Vinca alkaloids isn't an admissible extension-service citation."
+    "Two genuinely toxic, commonly pet-accessible species -- Vinca minor (periwinkle) and Rosa rugosa -- correctly landed with toxic_to_pets null rather than guessed: the only admissible toxicity source found for periwinkle (UGA) is explicitly scoped to human toxicity, and no admissible source addresses rugosa rose at all. Left as honest gaps rather than repaired, since general veterinary-toxicology knowledge of Vinca alkaloids isn't an admissible extension-service citation.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -601,7 +601,15 @@
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: left null. No admissible source gives a fertilizer schedule for Water Lettuce. Both UF/IFAS (free-floating plants are \"entirely dependent on the water for their nutrient supply\") and Missouri Botanical Garden's Water Gardening factsheet (floating plants \"do not need soil. They simply absorb nutrients directly from the water\") indicate the plant draws nutrients from the water column itself, which likely explains why no source gives an applied-fertilizer schedule for it.",
         "Regulatory/legal status -- no dedicated field exists for this in the schema, so it is recorded here per the species note, since it materially affects whether a home gardener could or should grow, buy, sell, or transport this plant. Water Lettuce is restricted or banned across much of its likely US market. NC State: \"This plant is listed as invasive in NY, LA, TX, CA, SC, AL, CT, NH, DE, MI and FL and is on watch lists in other states. The EU has banned the sale of this plant.\" Clemson HGIC lists \"Water lettuce (Pistia stratiotes)\" among the plants under the heading \"The following plants are listed with South Carolina and federal agencies as illegal plants.\" UF/IFAS (ask.ifas.ufl.edu, IN1386): \"It is listed as a class II prohibited aquatic plant in the State of Florida, which means it is highly invasive and noxious in particular areas of Florida.\" Missouri Botanical Garden: the species \"is included on the Federal Noxious Weed List.\" RHS, for the UK: \"This plant is listed on Schedule 9 of the Wildlife & Countryside Act (1981), the Wildlife (Northern Ireland) Order 1985 and the EU list of Invasive Alien Species of Union Concern (applies in NI) as an invasive non-native species. It should not be planted or caused to grow in the wild in the UK. It is also banned from sale in Northern Ireland.\" A prospective grower should check current state/federal (or, in the UK, national) rules before acquiring, growing, selling, or transporting this species -- in many US states, and in the UK, doing so may simply be illegal regardless of horticultural suitability.",
         "is_houseplant — removed on audit: Both admissible sources' own categorical classification tags for this species exclude 'houseplant': NC State's structured Plant Type field reads 'Herbaceous Perennial, Poisonous, Water Plant' (NC State Plant Toolbox does use a 'Houseplant' Plant Type tag elsewhere; it is absent here), and RHS's Type field is 'Aquatic' only with no indoor/houseplant designation or indoor-growing guidance anywhere on the page. The two citations actually supporting is_houseplant=true are weak: (1) 'It is sometimes used in aquariums' is an incidental aside inside a sentence primarily about herbicide/physical/biological control of the plant as an invasive weed, not a designation of houseplant status; (2) mere row-membership in MOBOT's generic terrarium-plant table, which the record itself elsewhere distrusts as reused boilerplate that lumps true houseplants, carnivorous bog plants, and floating pond plants together indiscriminately. Combined with the species being invasive-listed/banned across most of its likely US market and in the UK, marking it true for a houseplant-care flow based on incidental mentions -- when both primary sources' own classification schemes place it outside that category -- is an overreach.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/pistia-stratiotes/, https://www.rhs.org.uk/plants/13171/pistia-stratiotes-water-lettuce-shell-flower/details, https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/, https://hgic.clemson.edu/factsheet/aquatic-shoreline-plant-selection/, https://fieldreport.caes.uga.edu/news/these-25-plants-are-toxic-to-pets/, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276427); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/pistia-stratiotes/, https://www.rhs.org.uk/plants/13171/pistia-stratiotes-water-lettuce-shell-flower/details, https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/, https://hgic.clemson.edu/factsheet/aquatic-shoreline-plant-selection/, https://fieldreport.caes.uga.edu/news/these-25-plants-are-toxic-to-pets/, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276427); none found, so the value stays null. Audited live.",
+        "attracts_pollinators left null: none of the readable anchor pages (NC State Plant Toolbox, RHS, Clemson HGIC) mention bees, butterflies, moths, hummingbirds, or any other pollinator/wildlife attraction for this species; there is no structured 'Attracts' field on the NC State page for this record.",
+        "is_edible set to false because the NC State Plant Toolbox anchor page states water lettuce 'has medium severity poison characteristics' and describes it as 'a floating aquatic, poisonous plant'; Poison Severity: Medium, Poison Part: Flowers, Poison Toxic Principle: Calcium oxalate crystals plus unknown toxins, Causes Contact Dermatitis: No, Poison Symptoms: 'Intense burning and swelling of lips, tongue, and throat. Nausea vomiting and diarrhea may also occur when eaten in large quantities.' No page states any edible use.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276427 refused this machine (fetch status: error:ConnectError) -- skipped, not guessed.",
+        "https://ask.ifas.ufl.edu/publication/IN1386 refused this machine (fetch status: error:ReadError) -- skipped, not guessed.",
+        "https://ask.ifas.ufl.edu/publication/FA163 refused this machine (fetch status: error:ReadError) -- skipped, not guessed.",
+        "https://www.missouribotanicalgarden.org/Portals/0/Gardening/Gardening%20Help/Factsheets/Terrariums44.pdf and https://www.missouribotanicalgarden.org/Portals/0/Gardening/Gardening%20Help/Factsheets/Water%20Gardening27.pdf both returned as PDFs that qc.py could not extract text from (fetch status: pdf, 0 bytes) -- skipped, not guessed.",
+        "RHS page was searched for both 'Max Height'/'Max Spread' and 'Ultimate height' wordings; it carries structured 'Max Height 0.1-0.5 metres' and 'Max Spread 0.1-0.5 metres', but this was not used because NC State's species-specific (non-genus) page is the anchor and already carries a structured Height/Width Dimensions block, per the stated priority rule.",
+        "Water lettuce (Pistia stratiotes) is a free-floating aquatic rosette plant, not a vine/liana/climber, so the climber-size-nulling rule does not apply and all four size fields were filled normally."
       ],
       "citations": [
         {
@@ -699,8 +707,31 @@
           "quote": "Larger free-floating plants, including water hyacinth and water lettuce (Pistia stratiotes), are the number one targets for aquatic plant management in Florida. Free-floating species are entirely dependent on the water for their nutrient supply. In fact, some (e.g., water hyacinth) have been used in wastewater treatment to remove excess nutrients. If nutrient limitation will work for macrophyte management, this is the group for which it will most likely work. Free-floating plants are also the only aquatic plants not constrained by water depth. The location of these plants is at the whim of wind, waves, and current, so they will likely be found in quiet locations and embayments.",
           "source": "UF/IFAS Extension",
           "url": "https://ask.ifas.ufl.edu/publication/FA163"
+        },
+        {
+          "claim": "mature_height_in 3-6 (NC State Height: 0 ft. 3 in. - 0 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pistia-stratiotes/",
+          "quote": "Height: 0 ft. 3 in. - 0 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 6-18 (NC State Width: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pistia-stratiotes/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "is_edible false (NC State describes water lettuce as a poisonous plant with poison symptoms occurring when eaten)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pistia-stratiotes/",
+          "quote": "Intense burning and swelling of lips, tongue, and throat.  Nausea vomiting and diarrhea may also occur when eaten in large quantities."
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 3,
+      "mature_height_in_max": 6,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Jack-in-the-Pulpit",
@@ -754,7 +785,12 @@
         "is_houseplant false rests on the complete absence of indoor/container culture instructions anywhere in the admissible sources, combined with Missouri Botanical Garden's explicit outdoor-only framing; consistent with this being a temperate species with a genuine winter dormancy requirement per this batch's species note, rather than a plant suited to year-round indoor culture.",
         "RHS's dedicated Arisaema triphyllum species page (plant id 1566) was fetched directly and confirmed to contain only 'Other common names' and 'Synonyms' sections -- no Name Status tag, and no cultivation, position, soil, hardiness-rating, or toxicity content, unlike the fuller RHS profiles used for other species in this catalog. RHS therefore contributes only to the name_note/synonym point here, not to any care-parameter field.",
         "Clemson HGIC's only two admissible hits for this species ('Plants for Shade' and 'Plants for Damp or Wet Areas') are both bare plant-list entries -- the shade list marks it with an asterisk meaning only 'will tolerate more shade,' and the wet-areas list gives no detail beyond the plant's name -- so Clemson was checked but yielded no field-level data usable as a citation.",
-        "Penn State Extension and UF/IFAS Extension: no dedicated Arisaema triphyllum page or fact sheet was found on either domain. Both publishers mention the species only in passing within unrelated articles (Penn State: forest-understory ecology, jumping-worm impact, juglone tolerance; UF/IFAS: only Araceae-family topic index pages turned up, with no species-level content), so neither contributes field data to this record."
+        "Penn State Extension and UF/IFAS Extension: no dedicated Arisaema triphyllum page or fact sheet was found on either domain. Both publishers mention the species only in passing within unrelated articles (Penn State: forest-understory ecology, jumping-worm impact, juglone tolerance; UF/IFAS: only Araceae-family topic index pages turned up, with no species-level content), so neither contributes field data to this record.",
+        "plantfinder.mobot.org refused this machine's fetch (ConnectError, 0 bytes) — skipped, not guessed.",
+        "The UMD Native Plants of Maryland PDF returns fetch status 'pdf' with no extractable text through qc.py's fetch-and-extract path — no quote from it could be mechanically verified, so no citation was drawn from it and it contributed nothing to any field.",
+        "RHS (rhs.org.uk/plants/1566/arisaema-triphyllum) carries no 'Max Height'/'Max Spread'/'Ultimate height' size data, no wildlife/pollinator/attracts content, and no Edible/Poison/Toxic content for this species page — searched all those terms, zero hits each.",
+        "is_edible set to false, not null: NC State's Poison Symptoms field states 'CAUSES SEVERE PAIN IN THE MOUTH IF EATEN! Poisonous through ingestion. (Poisonous parts: all parts).' Poison Severity: Low. Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems. Poison Toxic Principle: Calcium oxalate crystals. Causes Contact Dermatitis: No (per structured field), though the page's own tag list includes '#contact dermatitis'. Tags also list '#problem for dogs #problem for horses #problem for cats'. No page among the four searched states the plant or any part is grown/used for food, so despite folk names like 'Indian Turnip' and an '#edible garden' design-category tag (not an edibility claim about the plant itself), the poisoning statement controls per rule 6.",
+        "mature_height_in and mature_spread_in are taken from NC State's structured Dimensions block (the anchor); RHS had no size data to cross-check or supersede it with, and the species is not a climber (herbaceous perennial), so all four size fields are populated rather than left null."
       ],
       "citations": [
         {
@@ -858,8 +894,38 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/arisaema-triphyllum/",
           "quote": "Allow heavy, leafy cover should be allowed to remain through the winter months."
+        },
+        {
+          "claim": "is_edible false (NC State Poison Symptoms field on the same page states it is poisonous through ingestion, not that any part is eaten by people)",
+          "source": "NC State Extension Gardener Plant Toolbox — Arisaema triphyllum",
+          "url": "https://plants.ces.ncsu.edu/plants/arisaema-triphyllum/",
+          "quote": "CAUSES SEVERE PAIN IN THE MOUTH IF EATEN! Poisonous through ingestion. (Poisonous parts: all parts)."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field names Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Arisaema triphyllum",
+          "url": "https://plants.ces.ncsu.edu/plants/arisaema-triphyllum/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 12-36 range not applicable; actual: mature_height_in 12-30 (NC State Height: 1 ft. 0 in. - 2 ft. 6 in., converted to inches: 1 ft. 0 in. = 12 in., 2 ft. 6 in. = 30 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox — Arisaema triphyllum",
+          "url": "https://plants.ces.ncsu.edu/plants/arisaema-triphyllum/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches: 1 ft. 0 in. = 12 in., 2 ft. 0 in. = 24 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox — Arisaema triphyllum",
+          "url": "https://plants.ces.ncsu.edu/plants/arisaema-triphyllum/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 30,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -895,6 +961,7 @@
     "Pistia stratiotes (Water Lettuce) also landed with is_houseplant correctly null: both admissible sources' own structured classification fields exclude \"houseplant\" (NC State: \"Herbaceous Perennial, Poisonous, Water Plant\"; RHS: \"Aquatic\" only), and the species is invasive-listed/restricted across most of its likely US market -- the audit caught the record trying to mark it a houseplant based on incidental terrarium-table mentions against both primary sources' own classifications.",
     "One landing-time repair: Xanthosoma's common_name was nulled because \"Elephant Ear\" wasn't actually the name either source gave (a shape simile got mistaken for a naming statement) -- restored as \"Tannia\", the name both sources actually use, already quoted in an existing citation.",
     "Several removals in this batch cited specific precedent from earlier batches for consistency (e.g. how NC State's bare \"Good Drainage\"/\"Moist\" tag pairing has been handled in b10/b12/b15/b21) -- the audit is now checking its own decisions against the catalog's established conventions, not just each record in isolation.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Water Lettuce -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Water Lettuce -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

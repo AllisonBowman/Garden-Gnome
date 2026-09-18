@@ -49,7 +49,14 @@
         "water_check_depth_cm / water_dry_down_target / water_growing_days_est / water_dormant_days_est / water_estimate_basis: no admissible source gives numeric watering-interval, check-depth, or dormancy-duration estimates for this species.",
         "soil_ph is well supported (Clemson 6.5-7.0) but note RHS separately describes the species more broadly as tolerant of 'Acid or Alkaline or Neutral' soil -- not a numeric conflict, but the broader RHS tolerance statement was not used to override Clemson's specific target range.",
         "cool_rest_note — removed on audit: The six-week chilling-requirement claim traces to exactly one citation: Penn State's 'Easter Lily, a Herald of Spring.' I fetched that page directly and its body text repeatedly names the plant 'Lilium wallichianum' (not just in the photo caption already quoted in name_note, but in the descriptive sentence 'The Easter lily (Lilium wallichianum) is a member of the Liliaceae family'). The record's own name_note already distrusts this exact article's species identification enough to exclude it from scientific_name_accepted -- yet the same conflicted article is the sole support for a specific numeric horticultural claim (six weeks) with no independent corroboration. I checked both Clemson's and NC State's full Easter Lily pages directly for any chilling/vernalization language and found none on either page. A number resting solely on a source the record itself flags as unreliable for basic species ID, with zero cross-source corroboration, should not have been accepted as confidently as a plain unknowns-free field.",
-        "toxicity_detail — removed on audit: Minor traceability gap: toxicity_detail states cats 'may also show disorientation, staggering, and seizures.' I fetched the Clemson page and confirmed this sentence does appear there verbatim ('They may also experience disorientation, staggering, and seizures') -- so the underlying fact is accurate -- but the citation entry's own quote field is truncated and stops at '...will occur within 6 to 12 hours of ingestion,' omitting that clause entirely. Per the structural check ('does every non-null field value trace to at least one entry in citations'), this clause of the field's prose is not actually present in any citation's quote text, even though the source itself supports it. This is a citation-completeness defect, not a factual error."
+        "toxicity_detail — removed on audit: Minor traceability gap: toxicity_detail states cats 'may also show disorientation, staggering, and seizures.' I fetched the Clemson page and confirmed this sentence does appear there verbatim ('They may also experience disorientation, staggering, and seizures') -- so the underlying fact is accurate -- but the citation entry's own quote field is truncated and stops at '...will occur within 6 to 12 hours of ingestion,' omitting that clause entirely. Per the structural check ('does every non-null field value trace to at least one entry in citations'), this clause of the field's prose is not actually present in any citation's quote text, even though the source itself supports it. This is a citation-completeness defect, not a factual error.",
+        "Easter lily is reported toxic to cats (all parts, including pollen), potentially causing kidney failure/death: NC State Plant Toolbox tags it 'Problem for Cats', Penn State Extension's 'Spring Holiday Plants and Pets' and 'Easter Lily, a Herald of Spring' both describe it as extremely toxic to cats, and RHS flags it 'TOXIC to pets if eaten (cats)'. This did not change is_edible from its value (false) since RHS separately and directly states the bulbs are not for human consumption; noted here as decision-relevant context, not a condition on an edible=true record.",
+        "hgic.clemson.edu/factsheet/easter-lily/ returned http-403 (refused this machine) and was not read; no data from it is included or guessed.",
+        "missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=e953 returned a connection error (refused this machine) and was not read; no data from it is included or guessed.",
+        "Searched the RHS page for 'pollinator' (0 hits) and 'Edible' (0 hits) explicitly; RHS carries no Attracts/pollinator field and no edibility statement for this record, so attracts_pollinators is sourced from NC State's structured 'Attracts: Bees, Pollinators' field alone, and is_edible from RHS's 'Ornamental bulbs - not to be eaten' line alone.",
+        "Searched both Penn State Extension pages ('easter-lily-a-herald-of-spring' and 'spring-holiday-plants-and-pets') for edible/food/eat; neither addresses human edibility of Easter lily at all -- both discuss only toxicity to cats.",
+        "No field was left null: NC State's structured Dimensions block gives species-level height and width figures for Lilium longiflorum (not a cultivar, not a genus page), NC State's Attracts field gives an unconditional pollinator statement, and RHS gives a direct, unconditional edibility statement -- all four size bounds, the pollinator flag, and the edibility flag are populated.",
+        "Easter lily is a bulbous herbaceous perennial (NC State Plant Type: Bulb, Herbaceous Perennial), not a vine/liana/climber, so the climber-nulling rule (rule 4) does not apply and all four size fields were populated normally."
       ],
       "citations": [
         {
@@ -171,8 +178,38 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/lilium-longiflorum/common-name/easter-lily/",
           "quote": "#non-toxic for horses#non-toxic for dogs#problem for cats"
+        },
+        {
+          "claim": "is_edible false (RHS: bulbs are ornamental, 'not to be eaten')",
+          "source": "RHS - Lilium longiflorum (IXb/a) details page",
+          "url": "https://www.rhs.org.uk/plants/75002/lilium-longiflorum-ixb-a/details",
+          "quote": "Ornamental bulbs - not to be eaten."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field: Bees, Pollinators)",
+          "source": "NC State Extension Plant Toolbox - Lilium longiflorum, Easter Lily",
+          "url": "https://plants.ces.ncsu.edu/plants/lilium-longiflorum/common-name/easter-lily/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Lilium longiflorum, Easter Lily",
+          "url": "https://plants.ces.ncsu.edu/plants/lilium-longiflorum/common-name/easter-lily/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-28 (NC State Width: 1 ft. 0 in. - 2 ft. 4 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Lilium longiflorum, Easter Lily",
+          "url": "https://plants.ces.ncsu.edu/plants/lilium-longiflorum/common-name/easter-lily/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 4 in."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 28
     },
     {
       "common_name": "Indian Azalea",
@@ -639,7 +676,14 @@
         "toxicity_detail — removed on audit: Verified NC State's actual page structure by fetching it directly: 'Poison Severity: Low', 'Poison Symptoms: nausea, stomach pain, vomiting, sweating', and 'Poison Toxic Principle: hydracyanosides (cyanogenic glycosides)' sit in one shared 'Poison Details' block, while 'Poisonous to Humans', 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' are listed as parallel sibling tags in the same hazards list -- NOT nested inside a human-only 'Poisonous to Humans' section that structurally excludes pets. The record's toxicity_detail invents that humans-only/pets-excluded structure ('documented specifically under a Poisonous to Humans section... not for pets') to justify omitting the symptom/toxic-principle detail from the pet field, misrepresenting the source's actual layout -- this is exactly the 'structured fields contradict the prose used' failure mode. Separately, none of the specific facts stated in toxicity_detail's prose (severity rating, the four-symptom list, or the 'hydracyanosides/cyanogenic glycosides' toxic-principle name) appear in any `quote` field anywhere in the citations array, so this content does not trace to a citation entry as required.",
         "water_regime — removed on audit: Two of the three citations backing 'keep_moist' are genus-level boilerplate, not species-specific evidence. Fetched Clemson's factsheet directly: the quoted sentence ('Maintain consistent moisture to prevent wilting and flower loss.') sits under a 'Watering Considerations for Hydrangeas' heading, and the same factsheet explicitly covers six hydrangea species/types (bigleaf, climbing, oakleaf, smooth, peegee, mountain) with the caveat 'Each hydrangea species thrives in slightly different growing conditions' -- this is not a bigleaf-only passage. The UGA CAES citation never names Hydrangea macrophylla anywhere in the article and uses 'hydrangeas' generically throughout, confirmed by direct fetch. Only the UMD citation is confirmed (via fetch) to sit specifically under a 'Bigleaf hydrangea (Hydrangea macrophylla)' section heading -- the other two citations are reused genus-wide statements improperly presented as species-specific support.",
         "water_growing_days_est — removed on audit: water_estimate_basis explicitly asserts the '7' figure is 'Based on Clemson Cooperative Extension's landscape watering guidance for in-ground bigleaf hydrangea,' but direct fetch of the Clemson page shows the sourced sentence ('Water deeply once per week, or more often during dry conditions.') sits inside a general 'Watering Considerations for Hydrangeas' section that the factsheet applies across all the hydrangea species/types it documents, not a bigleaf-specific passage. The field mischaracterizes generic once-per-week genus guidance as bigleaf-macrophylla-specific evidence.",
-        "outdoor_sun_exposure — removed on audit: The array includes 'full_sun' unconditionally alongside 'deep_shade', but direct fetch confirms NC State's species-specific structured Light field for Hydrangea macrophylla lists only 'Dappled Sunlight', 'Deep shade', and 'Partial Shade' -- Full Sun is not offered as an option at all for this species on that source. The record's own Missouri Botanical Garden citation only supports full sun conditionally ('Tolerates full sun only if grown in consistently moist soils'), a caveat that is dropped when 'full_sun' is added as an unqualified member of the flat exposure array. This is a case where a species-specific structured source (NC State) omits the value entirely and another source supports it only conditionally, yet the record encodes it as an unconditional option -- a plant-harm-relevant overstatement (full sun without consistent moisture risks scorch/wilt for this species)."
+        "outdoor_sun_exposure — removed on audit: The array includes 'full_sun' unconditionally alongside 'deep_shade', but direct fetch confirms NC State's species-specific structured Light field for Hydrangea macrophylla lists only 'Dappled Sunlight', 'Deep shade', and 'Partial Shade' -- Full Sun is not offered as an option at all for this species on that source. The record's own Missouri Botanical Garden citation only supports full sun conditionally ('Tolerates full sun only if grown in consistently moist soils'), a caveat that is dropped when 'full_sun' is added as an unqualified member of the flat exposure array. This is a case where a species-specific structured source (NC State) omits the value entirely and another source supports it only conditionally, yet the record encodes it as an unconditional option -- a plant-harm-relevant overstatement (full sun without consistent moisture risks scorch/wilt for this species).",
+        "is_edible left null: no page consulted (NC State Plant Toolbox, RHS, UMD Extension) states that Hydrangea macrophylla or any part of it is eaten or grown for food, nor states it is inedible. NC State instead documents it as poisonous: 'This plant has low severity poison characteristics', Poison Part: Bark, Poison Toxic Principle: hydracyanosides (cyanogenic glycosides), effect: 'Consuming large quantities can lead to nausea, stomach pain, vomiting, and sweating', Causes Contact Dermatitis: No, and tags include #problem for dogs #problem for horses #problem for cats #problem for children.",
+        "Clemson HGIC factsheet (https://hgic.clemson.edu/factsheet/hydrangea/) returned an http-403 status and refused this machine; it was not used for any field.",
+        "Missouri Botanical Garden Plant Finder (plantfinder.mobot.org) returned a connection error and refused this machine; it was not used for any field.",
+        "UMD Extension's problem page notes only that the fertile (non-showy) flower parts of hydrangea blooms support pollinators while the sterile/showy parts do not -- a conditional, unstructured statement about the genus generally. It was not used to set attracts_pollinators; that field is set true on NC State's structured Play Value field 'Attracts Pollinators', an unconditional, species-specific listing.",
+        "CAES Field Report page (fieldreport.caes.uga.edu) contained no size, edibility, or species-specific pollinator statement -- its 'Pollinator' hits were only generic site-navigation links (a 'Pollinators' topic category), not content about this species.",
+        "Bigleaf Hydrangea is a shrub, not a vine/liana/climber, so the climber size exclusion does not apply; NC State's structured Dimensions block (Height: 3 ft. 0 in. - 6 ft. 0 in.; Width: 3 ft. 0 in. - 6 ft. 0 in.) was used directly for the species (not a cultivar) and converted to inches (3 ft = 36 in, 6 ft = 72 in).",
+        "RHS gives a different size range for the species/genus entry (Max Height 1.5-2.5 metres, Max Spread 1.5-2.5 metres = 59.1-98.4 in) but was not used because NC State, which carries a species-specific structured Dimensions block, is the anchor per instructions."
       ],
       "citations": [
         {
@@ -767,8 +811,31 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/hydrangea-macrophylla/",
           "quote": "Problem for Cats\nProblem for Dogs\nProblem for Horses"
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hydrangea macrophylla",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-macrophylla/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hydrangea macrophylla",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-macrophylla/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox lists this species' Play Value as including Attracts Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hydrangea macrophylla",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-macrophylla/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Autumn Crocus",
@@ -820,7 +887,12 @@
         "PSU Extension ('The Unexpected Delight of Fall-Blooming Bulbs') discusses 'Colchicum species' generically -- including a statement that 'All parts of the colchicum plant are poisonous to humans and animals' -- but never names the binomial Colchicum autumnale on that page, so per the genus-vs-species rule it was excluded as a citation here even though its content is consistent with the NCSU/RHS/UGA species-specific sources used.",
         "name_note — removed on audit: The parenthetical calling Crocus sativus 'a different genus, family Iridaceae, and non-toxic' has no supporting citation for the 'non-toxic' claim anywhere in the array — none of the cited quotes make any toxicity statement about Crocus sativus. This smuggles an unsourced toxicity assertion about a different genus into a field that's supposed to be scoped to Colchicum autumnale naming/confusion, and it's exactly the kind of claim that needs an admissible-source citation given the record's own emphasis on toxicity accuracy.",
         "is_houseplant — removed on audit: is_houseplant:false leans on citation 17's NC State quote 'Landscape Location: Container Lawn Meadow Woodland,' with the claim label asserting 'landscape placements are all outdoor' — but 'Container' is not inherently an outdoor category (container/patio growing commonly includes indoor use) and the quote never states outdoor-only. The false value is derived from the absence of an explicit 'Houseplant' tag rather than any source affirmatively saying this species isn't grown indoors, which is an inference from silence rather than a sourced fact.",
-        "toxic_to_pets and toxicity_detail: restored after the first audit pass nulled the field over a defect in one of three supporting citations (NC State's claim label over-asserted \"dogs\" when its quote only names cats). The audit's own reasoning confirmed the true/false direction is independently supported by RHS (\"TOXIC to pets\") and UGA (species-named \"Major Toxicity, Dermatitis\"); toxicity_detail is rebuilt from those two citations' quotes only, dropping the unsupported dogs/horses claim and the \"toxic alkaloid\" editorial gloss the audit flagged on citation 10."
+        "toxic_to_pets and toxicity_detail: restored after the first audit pass nulled the field over a defect in one of three supporting citations (NC State's claim label over-asserted \"dogs\" when its quote only names cats). The audit's own reasoning confirmed the true/false direction is independently supported by RHS (\"TOXIC to pets\") and UGA (species-named \"Major Toxicity, Dermatitis\"); toxicity_detail is rebuilt from those two citations' quotes only, dropping the unsupported dogs/horses claim and the \"toxic alkaloid\" editorial gloss the audit flagged on citation 10.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) — not consulted; no size, edibility, or pollinator claim was drawn from it, and none was guessed.",
+        "RHS separately gives Max Height 0.1-0.5 metres (3.9-19.7 in) and Max Spread 0-0.1 metre (0-3.9 in); NC State carries a structured Dimensions block (Height 0 ft. 6 in.-0 ft. 8 in., Width 0 ft. 6 in.-0 ft. 8 in.) and was used as the anchor per instructions instead of RHS for the size fields.",
+        "is_edible set to false, not null: NC State's Edibility field states 'Highly toxic and can be fatal if ingested,' RHS states 'TOXIC if eaten,' and the UGA CAES pet-safety page lists Colchicum autumnale under 'Major Toxicity, Dermatitis' — no page on this species states any part of it is grown or eaten as food.",
+        "Colchicum autumnale is a cormous/bulb perennial, not a vine, liana, or other climber, so the climber size-nulling rule does not apply and all four size fields are populated from NC State's Dimensions block.",
+        "Not researched/not touched per task scope: taxonomy, description, care/growing conditions, hardiness, toxicity detail fields beyond is_edible, and any other already-cited fields on this record."
       ],
       "citations": [
         {
@@ -930,8 +1002,38 @@
           "quote": "Wildflower meadow\nCottage and informal garden\nRock garden\nWildlife gardens\nUnderplanting of roses and shrubs\nFlower borders and beds",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/4190/i-colchicum-autumnale-i/details"
+        },
+        {
+          "claim": "mature_height_in 6-8 (NC State Height: 0 ft. 6 in. - 0 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/colchicum-autumnale/",
+          "quote": "Height: 0 ft. 6 in. - 0 ft. 8 in."
+        },
+        {
+          "claim": "mature_spread_in 6-8 (NC State Width: 0 ft. 6 in. - 0 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/colchicum-autumnale/",
+          "quote": "Width: 0 ft. 6 in. - 0 ft. 8 in."
+        },
+        {
+          "claim": "is_edible false (NC State's Edibility field reads: \"Highly toxic and can be fatal if ingested.\")",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/colchicum-autumnale/",
+          "quote": "Highly toxic and can be fatal if ingested."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species \"Plants for pollinators\"; NC State's structured Attracts field separately lists Bees and Butterflies)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/4190/i-colchicum-autumnale-i/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 8,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 8
     },
     {
       "common_name": "Rhubarb",
@@ -984,7 +1086,13 @@
         "scientific_name_accepted: NC State Extension and Missouri Botanical Garden both use 'Rheum rhabarbarum' as a standing name with their own dedicated records, while RHS uses 'Rheum × hybridum' for the same cultivated garden plant and never uses 'rhabarbarum'; no source states one is a synonym of the other, so the given name was kept rather than asserting a change (see name_note).",
         "toxicity_detail — removed on audit: Two problems verified against the live NC State page (plants.ces.ncsu.edu/plants/rheum-rhabarbarum/). (1) The closing sentence 'Does not cause contact dermatitis' is real content on the source (a 'Causes Contact Dermatitis: No' field) but is not present in any of the citation quotes (citations 3-6 never mention dermatitis) -- it fails structural check #1 that every non-null field value trace to a citation entry; it was smuggled into the field from the source without being logged as a citation. (2) The bulk of the symptom list used -- 'abdominal cramps, burning of the mouth and throat, headache, weakness, nausea and vomiting, and possibly fatal coma' -- comes verbatim from NC State's Human Toxicity section (confirmed live: the page groups this text under 'Human Toxicity Severity: Medium severity poison characteristics'), not from pet-specific data. Only the trailing clause ('Kidney failure (in grazing animals), salivation in dogs/cats') is animal-specific. toxicity_detail presents the whole block as one undifferentiated toxicity narrative supporting toxic_to_pets=true, which risks implying pets show symptoms like 'headache' and 'weakness' that are documented only for human poisoning victims -- exactly the human/animal conflation the audit's check #3 warns against.",
         "is_houseplant — removed on audit: The only support is a single NC State 'Found In' tag ('Houseplant or interiorscape'), which conflicts with the rest of the same record: cool_rest_note (from RHS) states rhubarb needs 'exposure to cold... to trigger new growth in spring' and 'needs no protection over winter'; RHS separately calls it a hardy perennial that 'thrives in even the coldest sites'; MOBOT gives it USDA zones 3-8 and a 2-5 ft outdoor spread. soil_base is asserted only as garden_bed, with no container/indoor pairing. Neither of the other two admissible sources (RHS, MOBOT) mentions indoor or houseplant culture at all. A cold-dormancy-requiring, multi-foot perennial with documented leaf/root toxicity is not a plausible houseplant, and the record never reconciles this internal contradiction before asserting true.",
-        "outdoor_sun_exposure: restored to full_sun/part_shade using Missouri Botanical Garden's citation alone (\"full sun to part shade,\" an exact match to both enum values). The first pass had paired this with an RHS citation whose quote says \"light shade,\" not \"part shade\" -- that citation's claim label was narrowed to the soil-moisture point it actually supports rather than re-asserting a sun-exposure claim its quote doesn't make."
+        "outdoor_sun_exposure: restored to full_sun/part_shade using Missouri Botanical Garden's citation alone (\"full sun to part shade,\" an exact match to both enum values). The first pass had paired this with an RHS citation whose quote says \"light shade,\" not \"part shade\" -- that citation's claim label was narrowed to the soil-moisture point it actually supports rather than re-asserting a sun-exposure claim its quote doesn't make.",
+        "is_edible is TRUE but conditional: only the leaf stalks (petioles) are eaten, and only cooked. NC State Plant Toolbox tags this plant type as both 'Edible' and 'Poisonous', with 'This plant has medium severity poison characteristics,' Poison Symptoms 'TOXIC ONLY IF LARGE QUANTITIES EATEN. Abdominal cramps, burning of mouth and throat, headache, weakness, nausea and vomiting, coma; may be fatal / Kidney failure (in grazing animals), salivation in dogs/cats. Most toxic parts are leaves and roots,' Poison Toxic Principle 'Anthraquinone glycosides and soluble oxalates, also possibly calcium oxylate crystals,' Poison Part 'Leaves' and 'Roots,' and Causes Contact Dermatitis 'No.' Both RHS pages separately note the leaves contain poisonous oxalic acid (which breaks down in compost) and that stem/stalk oxalic-acid levels are not sufficient to be toxic, while the leaf itself is explicitly 'not edible.'",
+        "attracts_pollinators left null: no structured 'Attracts' field and zero hits for 'Attracts' on the NC State anchor page; zero hits for 'Attracts,' 'pollinator,' and 'butterfl' on both RHS pages. The 2 'bee' hits on each RHS page were the word 'may be'/‘has been’, not references to bees — no pollinator support found anywhere.",
+        "mature_height_in_min and mature_spread_in_min left null: the only published size figure is RHS's single 'up to' maximum ('Height and spread: Up to 75cm (2½ft) high and 1m (3ft) wide'); per the one-figure-fills-one-end rule, no minimum was invented.",
+        "NC State's Rheum rhabarbarum page carries no structured 'Dimensions' block and zero hits for 'Height,' 'Max Height,' or 'Ultimate height'; its only 'Width' hit was a leaf-width descriptor ('Leaf Width: > 6 inches'), not whole-plant size, so it could not be used for mature size and RHS was used instead.",
+        "plantfinder.mobot.org (taxonid 298908) refused this machine (fetch status: error:ConnectError) and could not be checked for any field.",
+        "Rhubarb is an herbaceous perennial vegetable, not a vine/liana/climber, so the climber size-suppression rule does not apply here."
       ],
       "citations": [
         {
@@ -1064,8 +1172,29 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/vegetables/rhubarb/grow-your-own",
           "quote": "Rhubarb (Rheum × hybridum) is a hardy perennial"
+        },
+        {
+          "claim": "is_edible true — NC State Plant Toolbox lists Plant Type 'Edible' and states the petioles are 'fleshy and edible when cooked'",
+          "source": "NC State Extension Gardener Plant Toolbox — Rheum rhabarbarum",
+          "url": "https://plants.ces.ncsu.edu/plants/rheum-rhabarbarum/",
+          "quote": "Red petioles which are fleshy and edible when cooked."
+        },
+        {
+          "claim": "mature_height_in max 29.5 in (min null) — RHS gives 'Up to 75cm (2½ft) high', converted 75 cm ÷ 2.54 = 29.5 in; a single 'up to' figure supplies only the maximum, no minimum published",
+          "source": "RHS Grow Your Own — Rhubarb (fruit)",
+          "url": "https://www.rhs.org.uk/fruit/rhubarb/grow-your-own",
+          "quote": "Height and spread:  Up to 75cm (2½ft) high and 1m (3ft) wide"
+        },
+        {
+          "claim": "mature_spread_in max 39.4 in (min null) — RHS gives '...and 1m (3ft) wide', converted 100 cm ÷ 2.54 = 39.4 in; a single 'up to' figure supplies only the maximum, no minimum published",
+          "source": "RHS Grow Your Own — Rhubarb (fruit)",
+          "url": "https://www.rhs.org.uk/fruit/rhubarb/grow-your-own",
+          "quote": "Height and spread:  Up to 75cm (2½ft) high and 1m (3ft) wide"
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_max": 29.5,
+      "mature_spread_in_max": 39.4
     },
     {
       "common_name": "Boxwood",
@@ -1120,7 +1249,13 @@
         "toxicity_detail — removed on audit: The field states a specific toxic principle and symptom list ('steroidal alkaloids'; 'nausea, vomiting, diarrhea, dizziness, convulsions, respiratory failure'; toxic part 'leaves') attributed to a 'Poisonous to Humans' section of the NC State page. None of the 15 entries in `citations` contains this quote or anything resembling it -- there is no source entry backing this specific content at all. Regardless of the field's own disclaimer that this data isn't being reused to support the pets conclusion, the content's mere presence in a non-null field with zero citation trace violates the basic citations-must-support-every-field-value rule.",
         "soil_drainage — removed on audit: The NC State citation's parenthetical gloss reads '(good drainage, tolerates occasional wetness)', but its quote is just the categorical tag 'Good Drainage' -- nothing about wetness tolerance. Worse, this directly contradicts the very next citation (Clemson) used for the same field: 'Never plant boxwood near downspouts or in any area that stays wet. They require well-drained soil.' One citation's added interpretive text says the plant tolerates occasional wetness while the paired citation for the same field says the opposite; the record didn't surface or resolve this contradiction, just merged both into 'moderate.'",
         "soil_base — removed on audit: The record commits to a definitive 'garden_bed' value from a single MOBOT in-ground/loam description, yet its own unknowns note admits RHS ('Patio and container plants'), Clemson ('used in containers'), NC State ('Landscape Location: Container'), and MOBOT ('large containers') all also document container cultivation for this species. That's a genuinely disclosed source disagreement about primary growing context that got resolved by picking one value instead of leaving the field null or otherwise flagging the mixed evidence.",
-        "is_houseplant — removed on audit: No entry in `citations` supports this field at all -- there is no quote or source addressing indoor vs. outdoor cultivation status. While the value (false) is plausible given the outdoor-shrub context of every other field, it fails the basic requirement that every non-null field trace to a citation."
+        "is_houseplant — removed on audit: No entry in `citations` supports this field at all -- there is no quote or source addressing indoor vs. outdoor cultivation status. While the value (false) is plausible given the outdoor-shrub context of every other field, it fails the basic requirement that every non-null field trace to a citation.",
+        "hgic.clemson.edu/factsheet/boxwood/ refused this machine (fetch status: http-403) — skipped, not guessed.",
+        "plantfinder.mobot.org (PlantFinderDetails.aspx?taxonid=243283) refused this machine (fetch status: error:ConnectError) — skipped, not guessed.",
+        "Species is a shrub/small tree, not a climber, so all four size fields are populated normally (rule 4 does not apply).",
+        "RHS also lists Max Height 4-8 metres and Max Spread 4-8 metres (157.5-315 in) for the species; NC State's Dimensions block was used instead per the anchor priority rule, so this RHS figure was not recorded as a separate citation.",
+        "is_edible set false because NC State's Plant Toolbox states the plant has low-severity poison characteristics with ingestion symptoms (nausea, vomiting, diarrhea, dizziness, convulsions, respiratory failure), contact with cell sap causing skin irritation/contact dermatitis, toxic principle steroidal alkaloids, poison part leaves, and tags 'problem for cats', 'problem for dogs', 'problem for horses' — no page states any part is grown or used for food.",
+        "attracts_pollinators set true from RHS's 'Plants for pollinators' tag on the species page; NC State's page had no Attracts field and no unconditional pollinator statement."
       ],
       "citations": [
         {
@@ -1212,8 +1347,38 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/buxus-sempervirens/",
           "quote": "#problem for cats #problem for dogs #problem for horses"
+        },
+        {
+          "claim": "mature_height_in 60-240 (NC State Height 5 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Buxus sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/buxus-sempervirens/",
+          "quote": "Height: 5 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-180 (NC State Width 5 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Buxus sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/buxus-sempervirens/",
+          "quote": "Width: 5 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State: plant has low severity poison characteristics; ingestion causes nausea, vomiting, diarrhea, dizziness, convulsions, respiratory failure)",
+          "source": "NC State Extension Gardener Plant Toolbox — Buxus sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/buxus-sempervirens/",
+          "quote": "This plant has  low severity  poison characteristics."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species 'Plants for pollinators')",
+          "source": "RHS — Buxus sempervirens (common box)",
+          "url": "https://www.rhs.org.uk/plants/2579/buxus-sempervirens/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 180
     }
   ],
   "audit_summary": [
@@ -1254,6 +1419,7 @@
     "2026-08-22: first batch of the post-curated-catalog \"blind spots\" pass -- 8 species chosen by direct inspection of coverage gaps (no true lilies, azalea/rhododendron, oleander, sago palm, or hydrangea were in the catalog; rhubarb, boxwood and colchicum were also absent), prioritizing the single largest safety gap: no pet-toxic ornamentals beyond the food-crop cases already covered.",
     "The batch's own post-audit cleanup nulls a field wholesale whenever any finding on it is refuted, even when the auditor's own reasoning says the value is independently supported by other, unflagged citations and only one supporting citation among several had a narrower defect. This wrongly zeroed out toxic_to_pets for Colchicum autumnale (Autumn Crocus) -- one of the more dangerous plants in this batch -- over a single citation's mislabeled \"Problem for Dogs\" claim, while its RHS \"TOXIC to pets\" and UGA \"Major Toxicity, Dermatitis\" citations (species-named, unflagged) went untouched. Restored directly at landing using only those two clean citations, not new research. The same pattern nulled Rhubarb's outdoor_sun_exposure over one mislabeled RHS citation while Missouri Botanical Garden's clean, unambiguous \"full sun to part shade\" citation was left standing unused -- also restored at landing. Future batch scripts should have the verify pass check remaining support before nulling, or refute per-citation rather than per-field.",
     "Azalea (Rhododendron simsii) needed a second, targeted research pass: the first pass's only toxicity citation was a truncated, boilerplate-flavored RHS pet-safety tag with no species-specific content, and no citation established the accepted binomial at all. The retry found solid independent corroboration for toxicity (UGA and UF/IFAS, both naming azalea/Rhododendron spp. with a documented grayanotoxin mechanism), but on the naming question it surfaced a genuine, unresolved conflict rather than closing the gap: two distinct historical \"Azalea indica\" epithets (Linnaeus 1753 vs. Sims 1817) resolve to two different modern binomials (Rhododendron indicum vs. R. simsii), and RHS and NC State each independently anchor to a different one. scientific_name_accepted stays null on this species pending a source that resolves the conflict -- the right outcome per this catalog's own rule of refusing rather than picking a side on a genuine disagreement, now correctly reached for a naming question rather than only for a numeric one.",
-    "Sago Palm's own citations establish it is a cycad, not a true palm (UF/IFAS: \"unrelated to true palms, which are actually angiosperms\") -- confirmed no citation in this batch conflates its toxicity data with the unrelated palm genus already in the catalog (Chamaedorea/Chrysalidocarpus)."
+    "Sago Palm's own citations establish it is a cycad, not a true palm (UF/IFAS: \"unrelated to true palms, which are actually angiosperms\") -- confirmed no citation in this batch conflates its toxicity data with the unrelated palm genus already in the catalog (Chamaedorea/Chrysalidocarpus).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

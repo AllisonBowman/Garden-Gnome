@@ -53,7 +53,16 @@
         "toxic_to_pets (dogs specifically): NC State's own species page tags Hemerocallis fulva 'non-toxic for dogs,' while UF/IFAS EP648 states all parts are toxic to dogs and cats -- a genuine disagreement on dogs specifically. Cat toxicity is unanimous across every admissible source, so toxic_to_pets is kept true and toxicity_detail is scoped to cats only rather than asserting dog toxicity either way.",
         "soil_drainage: reported as 'moderate' by mapping 'well-drained soil' / 'good drainage' / 'moist but well-drained' language (NC State, HGIC, RHS) onto the enum's middle category; no source uses the literal word 'moderate,' and this is a judgment call distinguishing it from the enum's 'fast' (gritty/succulent-style) and 'moisture_retentive' (boggy) options.",
         "name_note — removed on audit: name_note asserts that 'Missouri Botanical Garden's Plant Finder' independently treats Hemerocallis fulva as the accepted binomial, but no plantfinder.mobot.org or missouribotanicalgarden.org citation exists anywhere in the citations array -- only NC State and RHS entries are present. This is a specific factual claim about a named source with zero supporting citation entry, violating the requirement that every non-null field value trace to at least one citations entry (structural check 1).",
-        "soil_drainage — removed on audit: Value 'moderate' does not literally appear in any cited quote in relation to drainage. Citation 13's 'moderate' modifies 'water requirements,' not drainage; citation 14 (RHS) never uses 'moderate' at all. I fetched NC State's live H. fulva page directly and found it carries an explicit structured field, 'Soil Drainage: Good Drainage,' which the record never cites and which contradicts the 'moderate' value chosen -- the record substituted a looser prose-based inference for the source's own more specific and directly-relevant structured drainage tag."
+        "soil_drainage — removed on audit: Value 'moderate' does not literally appear in any cited quote in relation to drainage. Citation 13's 'moderate' modifies 'water requirements,' not drainage; citation 14 (RHS) never uses 'moderate' at all. I fetched NC State's live H. fulva page directly and found it carries an explicit structured field, 'Soil Drainage: Good Drainage,' which the record never cites and which contradicts the 'moderate' value chosen -- the record substituted a looser prose-based inference for the source's own more specific and directly-relevant structured drainage tag.",
+        "is_edible is TRUE but only for the buds and flowers, per the NC State anchor page: 'Buds and flowers are edible and have been described as having a sweet-spicy or peppery flavor.' The SAME anchor page also names a pets toxicity warning that must travel with this true value: 'Insects, Diseases, and Other Plant Problems:   No significant problems. The plant is reportedly toxic to cats.' Its tag list also carries '#problem for cats' and '#non-toxic for dogs', and its structured Problems field lists 'Problem for Cats'. So edibility here is conditional/part-specific (buds and flowers only) on a plant otherwise flagged toxic to cats.",
+        "attracts_pollinators is TRUE from NC State's structured 'Attracts' field, which lists 'Butterflies' and 'Hummingbirds' (quoted individually as rendered, since the field label and values are separate text nodes on the page); hummingbirds count as pollinators per task rule 7.",
+        "hgic.clemson.edu/factsheet/daylily/ refused this machine (qc.py returned http-403, 0 bytes) — skipped, not used for any field.",
+        "edis.ifas.ufl.edu/publication/EP648 failed to fetch via qc.py (error:ReadError) — skipped, not used for any field.",
+        "ask.ifas.ufl.edu/publication/EP639 loaded fine (http ok) but only mentions Hemerocallis at genus level inside a general cat-toxicity discussion ('many species of the genus Lilium and Hemerocallis (day lilies) are considered potentially toxic to cats'); not species-specific and not used as a citation for any field.",
+        "plants.ces.ncsu.edu/plants/hemerocallis/common-name/day-lilies is the GENUS page (Day Lilies - Hemerocallis) and was read only for corroboration; its Dimensions block (Height 1 ft-3 ft, Width 1 ft-3 ft) was NOT used for size since a genus page is not a substitute for the species-specific orange-daylily page used here.",
+        "The RHS page (rhs.org.uk/plants/8622) gives Max Height 0.5-1 metres and Max Spread 0.5-1 metres (about 19.7-39.4 in each) and independently confirms 'TOXIC to pets (cats)', but the NC State species-specific page was used as the primary size citation per the anchor-page rule, so RHS size figures were not cited.",
+        "Hemerocallis fulva is a clump-forming herbaceous perennial, not a vine/liana/climber, so the climber size-nulling rule (rule 4) does not apply; all four size fields were filled normally.",
+        "No page among those read described this record's plant as a named cultivar, so the cultivar-exclusion rule (rule 3) does not apply to the size figures used."
       ],
       "citations": [
         {
@@ -145,8 +154,38 @@
           "quote": "USDA Plant Hardiness Zone: 3a, 3b, 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b",
           "source": "NC State Extension Plant Toolbox — Hemerocallis fulva (Orange Daylily)",
           "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/"
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Orange Daylily (Hemerocallis fulva)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-30 (NC State Width 2 ft. 0 in. - 2 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Orange Daylily (Hemerocallis fulva)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/",
+          "quote": "Width: 2 ft. 0 in. - 2 ft. 6 in."
+        },
+        {
+          "claim": "is_edible true (NC State: buds and flowers are edible)",
+          "source": "NC State Extension Gardener Plant Toolbox — Orange Daylily (Hemerocallis fulva)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/",
+          "quote": "Buds and flowers are edible and have been described as having a sweet-spicy or peppery flavor."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies and Hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox — Orange Daylily (Hemerocallis fulva)",
+          "url": "https://plants.ces.ncsu.edu/plants/hemerocallis-fulva/common-name/orange-daylily/",
+          "quote": "Butterflies"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 30
     },
     {
       "common_name": "String of Hearts",
@@ -467,7 +506,15 @@
         "Invasive-species concern (no dedicated schema field): multiple admissible sources flag Wisteria sinensis as invasive/regulated outside cultivation. NC State Extension states 'This plant is an invasive species in North Carolina' and describes 'rampant growth and invasive tendency.' Missouri Botanical Garden states the plant 'is listed as a noxious weed in one or more Midwestern states outside Missouri and should not be moved or grown under conditions that would involve danger of dissemination' and separately notes it 'Can be invasive (rampant growth plus rooting surface runners).' Clemson HGIC states 'Chinese wisteria (Wisteria sinensis) is a highly invasive vine and should not be planted in the landscape,' appearing on the 'South Carolina Exotic Pest Plant Council Invasive Plant List.' University of Maryland Extension reports the Maryland Department of Agriculture designates it a 'Tier 2' invasive under a law making 'these three Asian species of wisteria...prohibited under Maryland law,' with populations 'as far south as Louisiana and as far west as Wisconsin.' Penn State Extension calls it an 'introduced invasive vine' and separately states 'the seeds are poisonous.' NC State's separate Wisteria frutescens (American Wisteria) page corroborates that the native alternative 'is not as aggressive a spreader as Wisteria sinensis.'",
         "toxicity_detail — removed on audit: The field's value embeds NC State's human-toxicity-section specifics verbatim -- 'Poison Severity (\"Low\") / Symptoms (\"Vomiting (sometimes with blood), diarrhea, depression\") / Toxic Principle (\"Lectin, wisterin glycoside\")' -- inside a field that is supposed to describe toxicity to PETS. Wrapping it in a disclaimer ('was deliberately not carried into this pet-facing field') doesn't stop the human clinical symptom/mechanism data from sitting in the toxicity_detail text itself; a consumer of this field is exposed to human-scoped poisoning detail as if it were relevant pet context. This is exactly the human-vs-animal-toxicity contamination the audit's check 3 warns about, just achieved through a disclaimer rather than a direct copy. Separately, none of that quoted NC State language ('Poison Severity: Low', the symptom list, 'Lectin, wisterin glycoside') appears anywhere in the citations array -- citation #5's quote is only the bare tag line 'Problems: Invasive Species Problem for Cats Problem for Dogs Problem for Horses Weedy' -- so this portion of the field fails citation-traceability (check 1) independent of the scoping problem. The one genuinely pet-scoped, cited fact ('Pets: Harmful if eaten' from RHS) is sound on its own, but the field as authored goes well beyond it.",
         "soil_drainage — removed on audit: The value 'moderate' does not match the actual drainage language in its own citation. Citation #9's quote reads 'slightly acidic, humusy, moderately fertile, medium moisture, well-drained soils' -- the word 'moderately' there modifies FERTILITY, not drainage, and the quote's actual drainage descriptor is 'well-drained.' 'Moderate' appears to be a mapping error (borrowing 'moderately fertile' or 'medium moisture' language onto the wrong attribute). This is compounded by a second admissible source the record itself is aware of: its own unknowns text cites NC State's explicit 'Soil Drainage: Good Drainage, Moist' tag, which also does not say 'moderate' -- both available sources describe drainage as good/well-drained, and neither was reconciled with or cited in support of the chosen 'moderate' value.",
-        "unknowns — removed on audit: The invasive-species paragraph in unknowns attributes specific, quotation-styled claims to Clemson HGIC ('highly invasive vine and should not be planted in the landscape'), University of Maryland Extension ('Tier 2', 'prohibited under Maryland law', the Louisiana/Wisconsin range), and Penn State Extension ('introduced invasive vine', 'the seeds are poisonous') -- but none of these three sources appear anywhere in the citations array: no URL, no independently checkable quote entry. I independently verified all three via web search and found the substance accurate (including confirming the Penn State 'seeds are poisonous' line actually describes 'Japanese and Chinese wisteria species' collectively, which does still cover sinensis by name), but the record itself provides no way to verify any of it -- a real citation-traceability gap on a populated field, per the audit's structural check 1."
+        "unknowns — removed on audit: The invasive-species paragraph in unknowns attributes specific, quotation-styled claims to Clemson HGIC ('highly invasive vine and should not be planted in the landscape'), University of Maryland Extension ('Tier 2', 'prohibited under Maryland law', the Louisiana/Wisconsin range), and Penn State Extension ('introduced invasive vine', 'the seeds are poisonous') -- but none of these three sources appear anywhere in the citations array: no URL, no independently checkable quote entry. I independently verified all three via web search and found the substance accurate (including confirming the Penn State 'seeds are poisonous' line actually describes 'Japanese and Chinese wisteria species' collectively, which does still cover sinensis by name), but the record itself provides no way to verify any of it -- a real citation-traceability gap on a populated field, per the audit's structural check 1.",
+        "Wisteria sinensis is a vine (NC State Plant Toolbox lists Plant Type: Vine, and describes it as a 'Counterclockwise-twining, woody vine'). Per the climber rule, all four size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null even though NC State publishes a structured Dimensions block ('Height: 10 ft. 0 in. - 25 ft. 0 in.' / 'Width: 4 ft. 0 in. - 30 ft. 0 in.') and RHS publishes Max Height/Max Spread figures -- for a climber this distance is how far it runs on its support, not the plant's own stature, so it is not recorded as size.",
+        "RHS's own size figures for Wisteria sinensis are open-ended in any case: 'Max Height Higher than 12 metres' and 'Max Spread wider than 8 metres' give no usable bound, reinforcing the null on both ends.",
+        "is_edible set to TRUE but is conditional, not a bare edibility claim: NC State's Edibility field states only 'Flowers edible raw or cooked (stems removed).' -- the flowers alone, after removing the stems; no other part of the plant is described as food.",
+        "The same NC State anchor page names toxicity for this species, required in unknowns whenever is_edible is true: 'This plant has low severity poison characteristics.' Poison Severity: Low. Poison Symptoms: 'Vomiting (sometimes with blood), diarrhea, depression.' Poison Toxic Principle: 'Lectin, wisterin glycoside.' Poison Part: Bark, Flowers, Leaves, Roots, Sap/Juice, Seeds, Stems. Causes Contact Dermatitis: No. The page also tags the species 'problem for dogs', 'problem for horses', and 'problem for cats'.",
+        "attracts_pollinators set to TRUE from NC State's structured Landscape 'Attracts: Butterflies, Pollinators' field and its Play Value tag 'Attracts Pollinators'; the Wildlife Value note ('Very few wildlife species use wisteria because of the large seed size, whoever does attract butterflies') is consistent with this.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280632 returned a connection error (fetch status: error:ConnectError) -- this host refused the machine, so it was not read and no data was drawn from it.",
+        "https://plants.ces.ncsu.edu/plants/wisteria-frutescens/ describes a different species (American Wisteria, Wisteria frutescens). It was searched for 'sinensis' and only returned comparative text about growth habit and twining direction relative to Wisteria sinensis -- no size, edibility, or pollinator data about Wisteria sinensis itself -- so nothing from it was used for any field.",
+        "The RHS Wisteria sinensis page (rhs.org.uk) was searched for 'Attracts', 'pollinators', 'Edible', 'Poison', and 'Toxic' and returned zero hits for all of them -- it carries no structured attracts/wildlife tag and no edibility or toxicity text, so it contributed nothing to is_edible or attracts_pollinators."
       ],
       "citations": [
         {
@@ -529,8 +576,22 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
           "quote": "Soil Texture: Clay Loam (Silt) Sand"
+        },
+        {
+          "claim": "is_edible true: Flowers edible raw or cooked (stems removed) -- a conditional edibility limited to the flowers only, with the stems removed",
+          "source": "NC State Extension Gardener Plant Toolbox -- Wisteria sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Flowers edible raw or cooked (stems removed)."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Landscape/Play Value fields: Attracts Pollinators, and Attracts: Butterflies, Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Wisteria sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Jackman's Clematis",
@@ -583,7 +644,13 @@
         "is_houseplant = false and soil_base = garden_bed are classification calls based on the plant being documented only as a cold-hardy (USDA Zones 4-8/9), full-sun-to-part-shade outdoor deciduous climbing vine; the container mentions in the sources (NC State's 'Container' landscape-location tag, Missouri Botanical Garden's 'Containers' use note) are for outdoor patio containers among trellises/fences/arbors, not indoor long-term houseplant growing -- no admissible source discusses indoor cultivation of this species.",
         "is_houseplant — removed on audit: The only citation supporting is_houseplant=false quotes text ('Clematis can be trained to climb a wall, trellis, fence, arbor, porch, lamppost or other stationary structure... Containers.') that does not appear anywhere on the cited URL (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280) -- I fetched the full live page and confirmed zero matches for 'lamppost', 'trellis, fence', 'stationary structure', 'framework for small gardens', or 'scramble over old stumps'. A web search traced this exact phrasing to Missouri Botanical Garden's page for a different cultivar, Clematis 'Henryi', not 'Jackmanii'. This is reused sibling-cultivar boilerplate misattributed to the Jackmanii URL, so the field's only citation is invalid.",
         "soil_base — removed on audit: The NC State quote ('Use Jackman's clematis where it can grow vertically such as on a rock wall, a patio trellis, or trees and shrubs in a woodland area') does not establish in-ground garden_bed as opposed to container growing -- a trellis or rock wall can equally be container-based. I fetched the live NC State page and confirmed its own structured 'Landscape Location' field lists 'Container' as the first tag, ahead of Patio, Rock Wall, Vertical Spaces, and Woodland. The record's unknowns note cites this Container tag only to justify is_houseplant=false but never reconciles it against soil_base=garden_bed, effectively picking the vaguer narrative sentence while ignoring the source's own container designation for this specific field.",
-        "name_note — removed on audit: The note asserts 'The hybrid-formula name \"Clematis × jackmanii\" is used as the working scientific name on both NC State Extension's and Missouri Botanical Garden's plant pages.' This is false for Missouri Botanical Garden: I fetched the live MOBOT page (kempercode=a280) and it is titled 'Clematis 'Jackmanii'' (cultivar-style name, matching what RHS calls accepted) -- a full-text search of the page for 'Clematis × jackmanii' / 'Clematis x jackmanii' returns zero matches anywhere. MOBOT never uses the hybrid-formula name at all, contradicting the note's premise that only RHS resolves accepted/synonym status while the other two sources are neutral, silent users of the hybrid-formula name."
+        "name_note — removed on audit: The note asserts 'The hybrid-formula name \"Clematis × jackmanii\" is used as the working scientific name on both NC State Extension's and Missouri Botanical Garden's plant pages.' This is false for Missouri Botanical Garden: I fetched the live MOBOT page (kempercode=a280) and it is titled 'Clematis 'Jackmanii'' (cultivar-style name, matching what RHS calls accepted) -- a full-text search of the page for 'Clematis × jackmanii' / 'Clematis x jackmanii' returns zero matches anywhere. MOBOT never uses the hybrid-formula name at all, contradicting the note's premise that only RHS resolves accepted/synonym status while the other two sources are neutral, silent users of the hybrid-formula name.",
+        "mature_height_in and mature_spread_in (all four fields) left null: NC State's own Dimensions field (\"Height: 10 ft. 0 in. - 15 ft. 0 in.\", \"Width: 3 ft. 0 in. - 6 ft. 0 in.\") and RHS's Max Height 2.5-4 metres / Max Spread 0.5-1 metres are NOT used, per rule 4 -- NC State lists Climbing Method: Twining and Plant Type: Vine, and RHS lists Habit: Climbing, so this is a climber and its height/width figures describe how far it runs along a support, not its own stature.",
+        "is_edible set false rather than null because NC State states, under Poison, that the plant has 'high severity' poison characteristics, names Toxic Principle protoanemonin, Poison Part Flowers and Fruits, and lists exposure routes 'Dermatitis, ingestion, inhalation' with symptoms including mouth ulcers, skin redness/burning, salivation, vomiting, and diarrhea; the plant is also tagged 'problem for dogs', 'problem for horses', 'problem for cats'. No page (NC State or RHS) states any part of this plant is grown or used for food, and the poisoning-by-ingestion language is treated as an is-not-edible statement.",
+        "RHS separately notes under Botanical Details: 'Potentially harmful ... Skin irritant. Wear gloves and other protective equipment when handling. Pets (rabbits): Harmful if eaten.' -- consistent with the NC State toxicity finding, recorded here for completeness even though is_edible is not true.",
+        "attracts_pollinators set true from NC State's structured Attracts field, which lists Bees, Butterflies, Hummingbirds unconditionally (not tied to seed-eating or browsing). RHS's own page was searched for both 'Attracts' and 'pollinators' and returned 0 hits for each -- RHS carries no pollinator claim for this cultivar page, positive or negative.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280 refused this machine (fetch status: error:ConnectError, 0 bytes) -- not read, and nothing from it is represented in this record.",
+        "RHS page was also searched for 'Ultimate height', 'Poisonous', 'Toxic', and 'Edible' -- all 0 hits; RHS carries no edibility or toxicity statement of its own for this record."
       ],
       "citations": [
         {
@@ -675,8 +742,22 @@
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/96731/clematis-jackmanii-(ll)/details",
           "quote": "Skin irritant.  Wear gloves and other protective equipment when handling.  Pets (rabbits): Harmful if eaten.  For further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Bees, Butterflies, Hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Clematis x jackmanii",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Butterflies"
+        },
+        {
+          "claim": "is_edible false (NC State: high severity poison; Toxic Principle protoanemonin; Poison Part Flowers, Fruits; exposure routes include ingestion -- 'Dermatitis, ingestion, inhalation'; no page states any part of this plant is eaten)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Clematis x jackmanii",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Dermatitis, ingestion, inhalation"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Chinese Hibiscus",
@@ -983,7 +1064,14 @@
         "is_houseplant: RHS's Cultivation section does include container-growing instructions ('In a container grow in a peat-free, loam-based compost...') and lists 'Patio and container plants' among 'Suggested planting locations and garden types' -- but this describes an outdoor patio container, not indoor houseplant culture, and sits alongside outdoor-only guidance (full sun/partial shade position, south- or west-facing aspect, 'protect from cold drying winds', RHS hardiness H5). No admissible source supports growing this species indoors long-term, so is_houseplant is recorded as false rather than left null.",
         "Habit/growth-form conflict found on NC State's own page: its 'Quick ID Hints' list tags this species 'Clump forming bamboo', but the same page's own description paragraph states 'This plant spreads aggressively by rhizomes and will form large stands preventing native plants to grow' and separately lists it as invasive. Every other admissible source addressing growth habit agrees with the rhizome-spreading/running characterization and disagrees with the 'clump forming' tag: RHS's genus note ('Phyllostachys are attractive, large, evergreen bamboos with running rhizomes') and its species-specific Cultivation caveat ('May remain clump-forming in poor or dry soils but can become invasive in warm, moist or favourable conditions'); Clemson HGIC ('Running bamboos can be problematic once established, as they spread by thick, tough, underground stems called rhizomes'); and UMD ('Golden bamboo spreads through underground rhizomes which grow quickly, spreading out horizontally from the parent plant'). NC State's 'Clump forming bamboo' Quick ID tag was treated as an unreliable outlier that contradicts its own page's prose and was not used for any field.",
         "Running-bamboo containment and invasiveness (no dedicated field in this schema, captured here per task instructions because it materially affects whether a home gardener should plant this species directly in the ground): this is a running, rhizome-spreading bamboo, not a clumping one. The South Carolina Exotic Plant Pest Council designates it 'a severe environmental threat' capable of being 'highly detrimental to the composition, structure, and function of natural areas from South Carolina's Piedmont through the Coastal Plain' (Clemson HGIC, Bamboo Control factsheet). NC State lists it as invasive in North Carolina; UMD reports it is 'now considered an invasive species in Maryland, Pennsylvania, Virginia, West Virginia and Georgia'; Penn State Extension's 'Don't Plant a Pest' fact sheet lists 'Golden bamboo - Phyllostachys aurea' among its partial list of invasive plants; and RHS's own species page cautions it 'can become invasive in warm, moist or favourable conditions.' Rhizomes are hard to contain: Clemson says they 'can spread more than 100 feet from the mother plant and are very resistant to adverse environmental conditions and most herbicides'; UMD similarly says rhizomes 'allow the plant to spread for a hundred or more feet in any unobstructed direction' and 'can run indefinitely unless damaged at the growing tip.' Physical barriers only redirect rather than stop growth and need ongoing upkeep: Clemson recommends a barrier 'made of concrete, metal, high density polyethylene (HDPE), or pressure-treated wood installed about 18 inches deep' but warns 'bamboo rhizomes are not stopped by barriers but are merely reflected,' so surrounding areas must be 'monitored regularly'; UMD specifies barrier material of 'a minimum thickness of 60 mil... polypropylene [PP] or high-density polyethylene [HDPE]' installed so 'About 6 to 8 inches of the barrier should remain above-ground,' warning 'Any break in the barrier can allow rhizomes to spread undetected.' For an already-established stand, UMD says 'all rhizomes must be removed through excavation' and 'repeated treatment of the area will likely be necessary to ensure complete eradication.' Given this, a home gardener considering this species should plan for a permanent physical barrier plus ongoing monitoring, or grow it in a large container instead of directly in open ground.",
-        "toxicity_detail — removed on audit: The field asserts a specific cross-check — 'Checked against other Phyllostachys species pages on the same site (P. aureosulcata, P. nigra) to rule out genus-wide boilerplate: neither page carries any toxicity tag at all' — that is not backed by any entry in the citations array; the array's only toxicity citation is the bare NC State tag quote for P. aurea itself ('#non-toxic for cats #non-toxic for horses #non-toxic for dogs'), with no citation object for the aureosulcata/nigra comparison. I independently fetched plants.ces.ncsu.edu/plants/phyllostachys-aureosulcata/ and confirmed it indeed carries no toxicity tags, matching the claim — but the P. nigra slug given implicitly (plants.ces.ncsu.edu/plants/phyllostachys-nigra/) 404s, so that half of the claim is unverifiable as stated and may reference a page that doesn't exist under that name. Per structural check 1, this portion of the field's own text does not trace to any citations array entry. The underlying toxic_to_pets=false value itself is fine (directly, affirmatively supported by the single NC State citation, which is species-specific and not silence), so only toxicity_detail's embedded verification claim is unsound, not the boolean."
+        "toxicity_detail — removed on audit: The field asserts a specific cross-check — 'Checked against other Phyllostachys species pages on the same site (P. aureosulcata, P. nigra) to rule out genus-wide boilerplate: neither page carries any toxicity tag at all' — that is not backed by any entry in the citations array; the array's only toxicity citation is the bare NC State tag quote for P. aurea itself ('#non-toxic for cats #non-toxic for horses #non-toxic for dogs'), with no citation object for the aureosulcata/nigra comparison. I independently fetched plants.ces.ncsu.edu/plants/phyllostachys-aureosulcata/ and confirmed it indeed carries no toxicity tags, matching the claim — but the P. nigra slug given implicitly (plants.ces.ncsu.edu/plants/phyllostachys-nigra/) 404s, so that half of the claim is unverifiable as stated and may reference a page that doesn't exist under that name. Per structural check 1, this portion of the field's own text does not trace to any citations array entry. The underlying toxic_to_pets=false value itself is fine (directly, affirmatively supported by the single NC State citation, which is species-specific and not silence), so only toxicity_detail's embedded verification claim is unsound, not the boolean.",
+        "attracts_pollinators left null: no pollinator/wildlife-attraction statement found on any of the three cited pages (NC State's structured 'Attracts' field returned 0 hits; RHS's 'Attracts'/'pollinator' searches also returned 0 hits).",
+        "is_edible is conditional, not unconditional: NC State's Edibility field states only 'Young shoots are edible' -- it does not say the whole plant, canes, or leaves are edible, only the young shoots.",
+        "Checked NC State (the anchor page) for 'Poison', 'Toxic', and 'Problem for' before setting is_edible, per the toxicity-before-edibility rule. 'Poison' and 'Problem for' returned 0 hits. 'Toxic' returned 6 hits, all from the same plant-tag list: '#non-toxic for cats #non-toxic for horses #non-toxic for dogs'. No poisonous part, severity, toxic principle, or preparation requirement is named anywhere on the page.",
+        "RHS reports larger dimensions than NC State: RHS Max Height 4-8 metres (157.5-314.9 in) and Max Spread 2.5-4 metres (98.4-157.5 in), versus NC State's Height 15-20 ft (180-240 in) and Width 12-25 ft (144-300 in). NC State was used as the size anchor per instructions because it carries a species-specific structured Dimensions block; RHS's figures were not merged in or averaged.",
+        "The UMD Extension page (extension.umd.edu) also gives a height figure in prose ('can reach heights of 30 feet but more typically... 10-20 foot range') but has no structured Dimensions field and was not used for the size fields, consistent with treating NC State as the anchor. It offered nothing on Edibility, Attracts, or Toxic/Poison (all 0 hits) and was not usable for any of the six target fields.",
+        "Golden Bamboo (Phyllostachys aurea) is an upright running bamboo (a grass), not a vine, liana, or other climber, so the climber size-nulling rule (rule 4) does not apply; all four size fields were populated from NC State.",
+        "No page named was refused by the fetch tool; all three URLs returned an ok fetch status."
       ],
       "citations": [
         {
@@ -1069,8 +1157,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
           "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
+        },
+        {
+          "claim": "mature_height_in 180-240 (NC State Dimensions: Height 15 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Phyllostachys aurea",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Height: 15 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 144-300 (NC State Dimensions: Width 12 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Phyllostachys aurea",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Width: 12 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: Young shoots are edible)",
+          "source": "NC State Extension Gardener Plant Toolbox — Phyllostachys aurea",
+          "url": "https://plants.ces.ncsu.edu/plants/phyllostachys-aurea/",
+          "quote": "Young shoots are edible"
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 144,
+      "mature_spread_in_max": 300
     },
     {
       "common_name": "Showy Stonecrop",
@@ -1263,6 +1374,7 @@
     "One landing-time fix: Ceropegia woodii's scientific_name_accepted was written as the literal string \"null\" instead of JSON null by the research agent -- would have landed as if \"null\" were an actual species name. Corrected to real null; the field is genuinely unresolved anyway (RHS and NC State anchor to two different accepted names for the same plant with neither resolving to the other).",
     "The audit caught a striking cross-species contamination: NC State's toxicity block for Ceropegia woodii (a non-woody succulent vine) turned out to be byte-for-byte identical to its Wisteria sinensis block elsewhere in this same batch, down to \"wisterin glycoside\" (a compound named for Wisteria) and \"Bark\" as a poisoned part -- a templating/caching defect on the source site, not real data, and correctly excluded from both records.",
     "Chinese Hibiscus landed with toxic_to_pets correctly null after a genuinely thorough four-source search found no toxicity data at all for this species -- not assumed toxic by Malvaceae-family association, not assumed safe by silence. Zero fields were removed by the audit on this record, a rare clean pass.",
-    "Golden Bamboo (Phyllostachys aurea) continues this catalog's running theme of common-name naming traps -- true bamboo (a grass, Poaceae), unrelated to \"Lucky Bamboo\" (Dracaena sanderiana, already covered) the way Sago Palm isn't a true palm and Mini Monstera isn't a Monstera. It's also a running, rhizome-spreading, invasive-listed species in multiple states -- captured at length in unknowns even though the schema has no dedicated field for it, since it materially affects whether a home gardener should plant it directly in the ground versus in a contained pot."
+    "Golden Bamboo (Phyllostachys aurea) continues this catalog's running theme of common-name naming traps -- true bamboo (a grass, Poaceae), unrelated to \"Lucky Bamboo\" (Dracaena sanderiana, already covered) the way Sago Palm isn't a true palm and Mini Monstera isn't a Monstera. It's also a running, rhizome-spreading, invasive-listed species in multiple states -- captured at length in unknowns even though the schema has no dedicated field for it, since it materially affects whether a home gardener should plant it directly in the ground versus in a contained pot.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -317,7 +317,18 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # neither size nor flags: every value it came back with was read off NC
     # State's Tagetes GENUS page, and its edibility text is about two cultivars
     # of a different species.
-    assert report.claims_written == 4395
+    #
+    # 4395 -> 4578 is chunk 5, and with it wave 1 is done: 183 fields over 39
+    # species, perennials and bulbs. Six took no size -- the sweet pea, the
+    # wisteria and the clematis under the climber rule, and Dahlia and Primrose
+    # because the audit refuted every size they came back with.
+    #
+    # Wave 1 in total: 198 species asked, 3,629 -> 4,578 claims, and mature
+    # size from 6/600 to 180/600. The woody plants went first because a missing
+    # size does real damage there -- the fit engine recommended American Beech for a
+    # 32 sq ft raised bed, and did it because a 60-80 ft tree and a 2 ft
+    # perennial were equally unknown to it.
+    assert report.claims_written == 4578
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

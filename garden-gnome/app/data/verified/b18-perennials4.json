@@ -53,7 +53,12 @@
         "Container/patio use: RHS lists 'Patio and container plants' among suggested garden types for this species, alongside borders/beds/meadows/prairie plantings; since soil_base is single-valued and every source's primary cultivation description is outdoor garden soil, soil_base is recorded as garden_bed rather than a potting category. Clemson separately notes only specific cultivars ('City Garden', 'Little Goldstar') as 'ideal for container gardening,' not the species itself.",
         "soil_drainage — removed on audit: Record asserts 'moderate', but NC State's own page has an explicit structured attribute — 'Soil Drainage: Good Drainage Moist Occasionally Dry' (verified via live fetch of plants.ces.ncsu.edu/plants/rudbeckia-fulgida/) — none of which is 'moderate.' Neither the NC State prose cited ('thriving in any but soggy soils') nor the RHS quote cited ('moist but well-drained') contains the word 'moderate' either. The researcher had a precise, directly quotable categorical field available on the cited source and instead inferred an unsupported term from vaguer prose.",
         "name_note — removed on audit: name_note claims 'glowing coneflower' is used by both MOBOT and RHS. I fetched the cited RHS page (rhs.org.uk/plants/112261) directly and searched the full text: zero occurrences of 'glowing' or 'coneflower' anywhere on the page. Only MOBOT's common-names list actually contains 'glowing coneflower' (confirmed present: 'orange coneflower / black-eyed Susan / glowing coneflower'). The RHS attribution is fabricated, and no citation in the array supports the 'glowing coneflower' claim for either source.",
-        "soil_base — removed on audit: The record picks the single value 'garden_bed' despite acknowledging in unknowns that RHS lists 'Patio and container plants' among suggested garden types (confirmed via live fetch: 'Cottage and informal garden, Patio and container plants, Wildlife gardens, Wildflower meadow, Prairie planting, Cut flowers, Flower borders and beds') and Clemson names two R. fulgida cultivars as container-ideal. This is a real cross-source signal resolved by picking a side rather than reflecting the ambiguity. Additionally, citation 9 is labeled as supporting 'soil_base garden_bed' but its quoted text ('Grow in humus rich, moist but well-drained soil...') only describes soil texture, not bed/placement usage — the label overclaims what the quote shows."
+        "soil_base — removed on audit: The record picks the single value 'garden_bed' despite acknowledging in unknowns that RHS lists 'Patio and container plants' among suggested garden types (confirmed via live fetch: 'Cottage and informal garden, Patio and container plants, Wildlife gardens, Wildflower meadow, Prairie planting, Cut flowers, Flower borders and beds') and Clemson names two R. fulgida cultivars as container-ideal. This is a real cross-source signal resolved by picking a side rather than reflecting the ambiguity. Additionally, citation 9 is labeled as supporting 'soil_base garden_bed' but its quoted text ('Grow in humus rich, moist but well-drained soil...') only describes soil texture, not bed/placement usage — the label overclaims what the quote shows.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page addresses eating this plant (no 'edible', 'food', or similar language found on either); no source states it is either edible or inedible.",
+        "Missouri Botanical Garden Plant Finder (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=g630) refused this fetch (ConnectError) and was not used for any field -- not guessed at.",
+        "Searched NC State and RHS pages for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: zero hits on both pages, so no toxicity information exists on either cited page to fold into unknowns.",
+        "Rudbeckia fulgida is an herbaceous perennial wildflower, not a vine/liana/climber, so the climber size-suppression rule does not apply; all four size fields are filled from NC State's Dimensions block.",
+        "NC State's own 'Attracts' field (Butterflies, Pollinators, Songbirds) independently corroborates attracts_pollinators=true alongside the RHS 'Plants for pollinators' tag used as the citation quote; songbirds eating seed is not itself treated as pollination support."
       ],
       "citations": [
         {
@@ -115,8 +120,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=g630",
           "quote": "Mass in bold drifts in the perennial border, cottage garden, meadow, rain garden, native plant garden or naturalized area."
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Height 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-fulgida/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-fulgida/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species Plants for pollinators; NC State's structured Attracts field separately lists Butterflies, Pollinators, Songbirds)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/112261/i-rudbeckia-fulgida-i/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Tansy",
@@ -165,7 +193,12 @@
         "day_f_min/max, night_f_min/max, chill_damage_f, cool_rest_note: sources give cold-hardiness ratings (USDA zones 3a-8b; RHS H7) but no Fahrenheit day/night range or specific chill-damage threshold.",
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: no admissible source gives a fertilizer schedule or strength for Tanacetum vulgare.",
         "soil_base — removed on audit: The citation supporting soil_base='garden_bed' quotes MoBot's 'rhizomatous spread in beds and borders can pose significant problems of control and removal' -- but in full context this sentence is a caution about invasive spread, not a statement that the plant is grown in beds/borders. MoBot's own Uses section (not cited) states the opposite directly: 'Not recommended for beds or borders where the spreading rhizomes can be difficult to remove,' recommending 'Naturalized areas or cottage gardens' instead, and the page banner even reads 'Midwest Noxious Weed: Do Not Plant.' The citation's parenthetical '(grown outdoors in garden beds and borders)' reframes a warning as an endorsement, misrepresenting what the source actually says.",
-        "toxicity_detail — nulled on landing review: the field was populated with human/livestock toxicology content (NC State's 'Poisonous to Humans' block: severity, toxic part, 'can be fatal in large quantities'; horse/cow toxicity; contact dermatitis) even though the record correctly left toxic_to_pets null for lacking any cat/dog/companion-pet-specific evidence. This is the human/pet blending pattern the b14 rule targets, just moved into the detail field instead of the boolean -- toxicity_detail is the pet-facing companion to toxic_to_pets and should stay null alongside it. The underlying reasoning is preserved in the unknowns entry above."
+        "toxicity_detail — nulled on landing review: the field was populated with human/livestock toxicology content (NC State's 'Poisonous to Humans' block: severity, toxic part, 'can be fatal in large quantities'; horse/cow toxicity; contact dermatitis) even though the record correctly left toxic_to_pets null for lacking any cat/dog/companion-pet-specific evidence. This is the human/pet blending pattern the b14 rule targets, just moved into the detail field instead of the boolean -- toxicity_detail is the pet-facing companion to toxic_to_pets and should stay null alongside it. The underlying reasoning is preserved in the unknowns entry above.",
+        "is_edible left null: neither NC State nor RHS states the plant or any part of it is eaten or used for food (searched 'Edible'/'edible' on both, 0 hits); plantfinder.mobot.org refused this machine so could not be checked for an edibility statement.",
+        "NC State's Plant Toolbox page names this species as having 'high severity poison characteristics': Poison Toxic Principle 'Thujone', Poison Part 'Leaves', Causes Contact Dermatitis 'Yes', and tags including 'problem for cattle' and 'problem for horses' -- this is recorded here per the toxicity-check rule even though is_edible is not set true (it is null), since it is decision-relevant and the page is the one already cited for this record.",
+        "plantfinder.mobot.org (taxonid=277250) refused this machine (ConnectError, non-ok fetch status) -- skipped, not guessed.",
+        "Plant confirmed not a climber (NC State Plant Type: Herbaceous Perennial), so the four size fields were filled normally rather than left null under the climber rule.",
+        "mature_spread_in uses NC State's structured Width field (0 ft. 9 in. - 1 ft. 6 in.) rather than RHS's Max Spread (0.1-0.5 metres / ~3.9-19.7 in) since NC State is the designated anchor with a structured Dimensions block; the RHS figure was checked and is consistent in order of magnitude but not used as the recorded value."
       ],
       "citations": [
         {
@@ -215,8 +248,31 @@
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/17990/tanacetum-vulgare-tansy-buttons/details",
           "quote": "Full sun"
+        },
+        {
+          "claim": "mature_height_in 12-60 (NC State Height 1 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Tanacetum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/tanacetum-vulgare/",
+          "quote": "Height: 1 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 9-18 (NC State Width 0 ft. 9 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Tanacetum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/tanacetum-vulgare/",
+          "quote": "Width: 0 ft. 9 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS 'Plants for pollinators' designation)",
+          "source": "RHS: Tanacetum vulgare (tansy, buttons)",
+          "url": "https://www.rhs.org.uk/plants/17990/tanacetum-vulgare-tansy-buttons/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Horned Violet",
@@ -357,6 +413,30 @@
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/18990/viola-cornuta/details",
           "quote": "baby faces, bedding pansy, horned violet, Pyrenean violet, tufted pansy, viola"
+        },
+        {
+          "claim": "mature_height_in 6-9 (NC State Height 0 ft. 6 in. - 0 ft. 9 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola cornuta",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-cornuta/",
+          "quote": "Height: 0 ft. 6 in. - 0 ft. 9 in."
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola cornuta",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-cornuta/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field states the plant is edible)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola cornuta",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-cornuta/",
+          "quote": "Flowers and leaves are edible."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value tag names pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola cornuta",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-cornuta/",
+          "quote": "Attracts Pollinators"
         }
       ],
       "unknowns": [
@@ -373,8 +453,19 @@
         "cool_rest_note: no admissible source describes a dormancy or cool-rest requirement for this species.",
         "toxic_to_pets / toxicity_detail: no admissible source assesses pet toxicity for Viola cornuta. NC State notes 'Flowers and leaves are edible' under its 'Edibility' field, but that is a human-edibility claim in a section distinct from any toxicity assessment, not a pet-safety determination, so it was not used to fill a pet-facing field.",
         "Clemson HGIC's 'Pansies, Violas, and Panolas' article and UGA CAES's 'Violas best choice for coloring winter landscape' both use the common name 'viola' but explicitly attach it to Viola tricolor ('viola flowers (Viola tricolor)'; 'The viola is closer to Georgia's native plant species, viola tricolor'), so their care claims (fertilizing every 2-3 weeks, cold tolerance to below 0F, etc.) were excluded from this Viola cornuta record despite surface name overlap.",
-        "soil_drainage — removed on audit: Value is \"moderate\", but every quote attached to it says otherwise: NC State's structured tag reads \"Good Drainage\" (with a separate \"Moist\" tag, confirmed live on plants.ces.ncsu.edu/plants/viola-cornuta/), RHS's Moisture field reads \"Moist but well–drained\" (confirmed live on rhs.org.uk), and MBG's culture text reads \"evenly moist, well-drained soils\" (confirmed live on plantfinder.mobot.org). None of the three sources uses the word \"moderate\" or anything synonymous with it — \"well-drained\"/\"Good Drainage\" is a distinct, stronger drainage rating, and pairing it with \"moist\" describes a moisture-retention property, not a drainage-rate downgrade. This is not a one-off judgment call: it is the single most frequently reverted defect in this exact repository's own audit history — the identical \"well-drained (+moist) mapped to moderate\" pattern was caught and nulled across at least ten prior verified batches (app/data/verified/b5, b6, b7, b8, b9, b11, b12, b13, b14, b16, b17), each time citing the same \"the quote says well-drained/Good Drainage, not moderate\" reasoning. Most directly on point: the Pansy record (Viola × wittrockiana, the closest sibling species) in the very same b14-annual-flowers2.json batch had soil_drainage removed on audit for word-for-word the same NC State \"consistently moist and well-drained\" / structured \"Good Drainage\"/\"Moist\" tag pattern, with the note \"'Good Drainage' does not map to 'moderate'\". Per that established precedent this field should be null (the ambiguous well-drained+moist combination doesn't map cleanly to fast/moderate/moisture_retentive), not asserted as 'moderate'."
-      ]
+        "soil_drainage — removed on audit: Value is \"moderate\", but every quote attached to it says otherwise: NC State's structured tag reads \"Good Drainage\" (with a separate \"Moist\" tag, confirmed live on plants.ces.ncsu.edu/plants/viola-cornuta/), RHS's Moisture field reads \"Moist but well–drained\" (confirmed live on rhs.org.uk), and MBG's culture text reads \"evenly moist, well-drained soils\" (confirmed live on plantfinder.mobot.org). None of the three sources uses the word \"moderate\" or anything synonymous with it — \"well-drained\"/\"Good Drainage\" is a distinct, stronger drainage rating, and pairing it with \"moist\" describes a moisture-retention property, not a drainage-rate downgrade. This is not a one-off judgment call: it is the single most frequently reverted defect in this exact repository's own audit history — the identical \"well-drained (+moist) mapped to moderate\" pattern was caught and nulled across at least ten prior verified batches (app/data/verified/b5, b6, b7, b8, b9, b11, b12, b13, b14, b16, b17), each time citing the same \"the quote says well-drained/Good Drainage, not moderate\" reasoning. Most directly on point: the Pansy record (Viola × wittrockiana, the closest sibling species) in the very same b14-annual-flowers2.json batch had soil_drainage removed on audit for word-for-word the same NC State \"consistently moist and well-drained\" / structured \"Good Drainage\"/\"Moist\" tag pattern, with the note \"'Good Drainage' does not map to 'moderate'\". Per that established precedent this field should be null (the ambiguous well-drained+moist combination doesn't map cleanly to fast/moderate/moisture_retentive), not asserted as 'moderate'.",
+        "Plant is not a climber (Plant Type tags: Annual, Ground Cover, Herbaceous Perennial), so the size-suppression rule for climbers does not apply.",
+        "Searched anchor page (NC State Plant Toolbox) for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: 'Poison' returned 0 hits, 'Problem for' returned 0 hits, and the 2 'Toxic' hits were both the unrelated tag phrase 'black walnut toxicity tolerant' (the plant's own tolerance of juglone, not a toxicity warning about the plant itself). No poisonous part, severity, toxic principle, preparation requirement, or pets warning was found anywhere on the page.",
+        "is_edible is set true unconditionally: NC State's structured Edibility field states plainly 'Flowers and leaves are edible.' with no caveat about cooking, ripeness, or a toxic counterpart part.",
+        "attracts_pollinators is set true from two independent structured NC State fields: the Play Value tag 'Attracts Pollinators' and the Attracts field listing 'Bees', 'Butterflies', 'Pollinators'.",
+        "Only plants.ces.ncsu.edu/plants/viola-cornuta/ was queried; it is NC State's own species-specific page (not a genus page) and carries a structured Dimensions block with explicit Height and Width ranges, so RHS and Missouri Botanical Garden PlantFinder were not needed as a fallback for size, edibility, or pollinator data and were not fetched for this task."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 9,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     }
   ],
   "audit_summary": [
@@ -395,6 +486,7 @@
     "2026-08-21: the final batch of this collection run. Two fixes before landing. Horned Violet's first pass returned an empty citations array while still asserting four field values -- the same defect class as b17's Poppy -- recovered with a cheap single-species retry (299K tokens) rather than losing the work; the retry additionally caught a source-attribution ambiguity worth keeping in mind for future batches: Clemson's watering/fertilizing schedule was written under a 'Pansies' heading on a page that separately covers Viola cornuta under 'Johnny-Jump-Ups', and the record correctly declined to assume data under one species heading on a shared page applies to a different heading on the same page.",
     "Tansy's toxicity_detail was nulled on landing review -- it held substantial human/livestock toxicology content (NC State's 'Poisonous to Humans' block, horse/cow toxicity, contact dermatitis) even though the record had correctly left toxic_to_pets null for lacking any cat/dog-specific evidence. Same human/pet blending pattern the b14 rule targets, just moved into the detail field instead of the boolean; the underlying reasoning is preserved in unknowns.",
     "Rudbeckia's audit caught something more serious than the usual prose-vs-structured-data overreach: a fabricated citation attribution. The record's name_note claimed 'glowing coneflower' was used by both Missouri Botanical Garden and RHS; the audit fetched the cited RHS page directly and found zero occurrences of 'glowing' or 'coneflower' anywhere on it. Only MOBOT actually uses that name. Caught by direct verification against the live page rather than trusting the researcher's claim about what a source says -- which is the discipline this whole pipeline depends on.",
-    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched."
+    "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
