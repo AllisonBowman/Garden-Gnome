@@ -1,4 +1,4 @@
-"""Weather service (Apple WeatherKit REST) + the environment weather endpoint.
+"""Weather service (Apple WeatherKit REST) + the growing area weather endpoint.
 
 The WeatherKit HTTP call is never made in tests — we test the pure normalizer,
 the JWT construction (with a generated EC key), the unconfigured/no-location
@@ -271,7 +271,7 @@ def api(migrated_db_url):
 
     from app.db.database import get_session
     from app.main import app
-    from app.models.models import Environment, EnvironmentType, User
+    from app.models.models import GrowingArea, GrowingAreaType, User
     from app.services import tokens
 
     engine = create_engine(migrated_db_url, connect_args={"check_same_thread": False})
@@ -286,9 +286,9 @@ def api(migrated_db_url):
         user = User(email="weather@example.com")
         s.add(user)
         s.flush()
-        located = Environment(name="Balcony", type=EnvironmentType.balcony,
+        located = GrowingArea(name="Balcony", type=GrowingAreaType.balcony,
                               user_id=user.id, lat=39.29, lng=-76.61)
-        no_loc = Environment(name="Desk", type=EnvironmentType.home, user_id=user.id)
+        no_loc = GrowingArea(name="Desk", type=GrowingAreaType.home, user_id=user.id)
         s.add(located)
         s.add(no_loc)
         s.commit()
@@ -305,7 +305,7 @@ def api(migrated_db_url):
 
 def test_weather_endpoint_no_location(api):
     client, headers, ids = api
-    resp = client.get(f"/environments/{ids['no_loc']}/weather", headers=headers)
+    resp = client.get(f"/growing-areas/{ids['no_loc']}/weather", headers=headers)
     assert resp.status_code == 200
     body = resp.json()
     assert body["available"] is False
@@ -320,8 +320,8 @@ def test_weather_endpoint_happy_path(api, monkeypatch):
         assert (round(lat, 2), round(lng, 2)) == (39.29, -76.61)
         return weather.normalize(SAMPLE_WEATHERKIT)
 
-    monkeypatch.setattr("app.routers.environments.fetch_weather", fake_fetch)
-    resp = client.get(f"/environments/{ids['located']}/weather", headers=headers)
+    monkeypatch.setattr("app.routers.growing_areas.fetch_weather", fake_fetch)
+    resp = client.get(f"/growing-areas/{ids['located']}/weather", headers=headers)
     assert resp.status_code == 200
     body = resp.json()
     assert body["available"] is True
@@ -331,24 +331,24 @@ def test_weather_endpoint_happy_path(api, monkeypatch):
 
 def test_weather_endpoint_requires_auth(api):
     client, _, ids = api
-    assert client.get(f"/environments/{ids['located']}/weather").status_code == 401
+    assert client.get(f"/growing-areas/{ids['located']}/weather").status_code == 401
 
 
 def test_adding_a_location_later_turns_weather_on(api, monkeypatch):
-    """An environment created without coordinates can be given them afterwards.
+    """An growing area created without coordinates can be given them afterwards.
 
-    This is the path that made weather look broken on device: environments
+    This is the path that made weather look broken on device: growing_areas
     predating the address picker had no lat/lng, and nothing in the app could
     add them, so the forecast never appeared no matter what the caretaker did
     with location permission. The server always supported the PATCH — only the
     screen was missing — so this pins the half that has to keep working."""
     client, headers, ids = api
 
-    before = client.get(f"/environments/{ids['no_loc']}/weather", headers=headers)
+    before = client.get(f"/growing-areas/{ids['no_loc']}/weather", headers=headers)
     assert before.json()["available"] is False
 
     patched = client.patch(
-        f"/environments/{ids['no_loc']}",
+        f"/growing-areas/{ids['no_loc']}",
         json={"city": "Baltimore", "region": "MD", "country": "US",
               "lat": 39.29, "lng": -76.61},
         headers=headers,
@@ -359,6 +359,6 @@ def test_adding_a_location_later_turns_weather_on(api, monkeypatch):
     async def fake_fetch(lat, lng, lang="en"):
         return weather.normalize(SAMPLE_WEATHERKIT)
 
-    monkeypatch.setattr("app.routers.environments.fetch_weather", fake_fetch)
-    after = client.get(f"/environments/{ids['no_loc']}/weather", headers=headers)
+    monkeypatch.setattr("app.routers.growing_areas.fetch_weather", fake_fetch)
+    after = client.get(f"/growing-areas/{ids['no_loc']}/weather", headers=headers)
     assert after.json()["available"] is True

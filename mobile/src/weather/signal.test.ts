@@ -1,7 +1,7 @@
 import { computeWeatherSignal } from './signal';
-import { Environment, Weather, WeatherDay } from '../types';
+import { GrowingArea, Weather, WeatherDay } from '../types';
 
-function makeEnv(partial: Partial<Environment> = {}): Environment {
+function makeEnv(partial: Partial<GrowingArea> = {}): GrowingArea {
   return {
     id: 1, uuid: 'u', name: 'Balcony', type: 'community_garden',
     city: '', region: '', country: '',

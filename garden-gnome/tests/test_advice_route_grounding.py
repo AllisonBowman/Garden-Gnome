@@ -9,7 +9,7 @@ import pytest
 from sqlmodel import Session, create_engine, select
 
 from app.models.models import (
-    CareSchedule, CareType, Environment, EnvironmentType, Plant, Species, User,
+    CareSchedule, CareType, GrowingArea, GrowingAreaType, Plant, Species, User,
 )
 from app.services import advisor, tokens
 
@@ -47,12 +47,12 @@ def api(migrated_db_url):
         user = User(email="guard@example.com")
         s.add(user)
         s.flush()
-        env = Environment(name="home", type=EnvironmentType.home, user_id=user.id)
+        env = GrowingArea(name="home", type=GrowingAreaType.home, user_id=user.id)
         s.add(env)
         s.flush()
         plant = Plant(
             nickname="Ferny", species_id=species.id,
-            environment_id=env.id, user_id=user.id,
+            growing_area_id=env.id, user_id=user.id,
         )
         s.add(plant)
         s.flush()

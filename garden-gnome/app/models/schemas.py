@@ -1,11 +1,15 @@
 from datetime import date, datetime
 from typing import Optional
 
+from pydantic import field_validator
 from sqlmodel import Field, SQLModel
 
+from app.data.claims.recompute import SERVER_ONLY_FIELDS
 from app.models.models import (
-    MaturityStage, CareOutcome, CareType, LightNeed, SoilMoisture, LeafCondition, EnvironmentType,
+    MaturityStage, CareOutcome, CareType, LightNeed, SoilMoisture, LeafCondition, GrowingAreaType,
     ReviewStatus, SpeciesSource, Shelter, TempExposure, SunExposure,
+    CareDataStatus, FertilizeStrength, HumidityNeed, OutdoorSunExposure,
+    SoilBase, SoilDrainage, WaterRegime, GrowingSurface, GrowingGoal,
 )
 
 
@@ -52,11 +56,11 @@ class AuthTokensOut(SQLModel):
     user: UserOut
 
 
-# --- Environment ---
+# --- GrowingArea ---
 
-class EnvironmentCreate(SQLModel):
+class GrowingAreaCreate(SQLModel):
     name: str
-    type: EnvironmentType = EnvironmentType.home
+    type: GrowingAreaType = GrowingAreaType.home
     city: str = ""
     region: str = ""
     country: str = ""
@@ -66,10 +70,18 @@ class EnvironmentCreate(SQLModel):
     temp_exposure: TempExposure = TempExposure.indoor
     sun_exposure: SunExposure = SunExposure.partial_sun
 
+    # Real estate. Unset means unanswered, never a default dimension -- see
+    # GrowingArea in models.py.
+    surface: Optional[GrowingSurface] = None
+    area_sqft: Optional[float] = None
+    headroom_in: Optional[float] = None
+    soil_depth_in: Optional[float] = None
+    goals: Optional[list[GrowingGoal]] = None
 
-class EnvironmentPatch(SQLModel):
+
+class GrowingAreaPatch(SQLModel):
     name: Optional[str] = None
-    type: Optional[EnvironmentType] = None
+    type: Optional[GrowingAreaType] = None
     city: Optional[str] = None
     region: Optional[str] = None
     country: Optional[str] = None
@@ -78,13 +90,18 @@ class EnvironmentPatch(SQLModel):
     shelter: Optional[Shelter] = None
     temp_exposure: Optional[TempExposure] = None
     sun_exposure: Optional[SunExposure] = None
+    surface: Optional[GrowingSurface] = None
+    area_sqft: Optional[float] = None
+    headroom_in: Optional[float] = None
+    soil_depth_in: Optional[float] = None
+    goals: Optional[list[GrowingGoal]] = None
 
 
-class EnvironmentRead(SQLModel):
+class GrowingAreaRead(SQLModel):
     id: int
     uuid: str
     name: str
-    type: EnvironmentType
+    type: GrowingAreaType
     city: str
     region: str
     country: str
@@ -93,8 +110,52 @@ class EnvironmentRead(SQLModel):
     shelter: Shelter
     temp_exposure: TempExposure
     sun_exposure: SunExposure
+    surface: Optional[GrowingSurface]
+    area_sqft: Optional[float]
+    headroom_in: Optional[float]
+    soil_depth_in: Optional[float]
+    goals: Optional[list[GrowingGoal]]
     created_at: datetime
     plant_count: int = 0  # computed in the router, not stored
+
+
+# --- Fit (growing area <-> species) ---
+
+class FitFindingRead(SQLModel):
+    """One axis's verdict, and the sentence a person reads for it.
+
+    `sentence` is the whole point: a bare verdict says a plant is wrong for a
+    spot without saying how, which is not something anyone can act on. It
+    already carries the genus-borrowed label when the value it rests on was
+    inherited (ADR 0002), so a client renders it as-is.
+    """
+    axis: str
+    verdict: str      # fits | misfits | unknown
+    sentence: str
+    borrowed: bool = False
+
+
+class CandidateRead(SQLModel):
+    """A species put forward for a growing area, with why.
+
+    `fits` holds only the confirmed axes -- never the unknown ones. A reader
+    should be able to count the reasons, and "we have no idea about its
+    mature size" is not a reason to plant something.
+    """
+    species_id: int
+    common_name: str
+    scientific_name: str
+    score: int        # how many axes actually confirmed; unknowns never count
+    fits: list[FitFindingRead]
+
+
+class PlantMisfitRead(SQLModel):
+    """A plant already in the area, and what specifically doesn't suit it."""
+    plant_id: int
+    nickname: str
+    species_id: int
+    common_name: str
+    misfits: list[FitFindingRead]
 
 
 # --- Plant ---
@@ -107,7 +168,7 @@ class PlantCreate(SQLModel):
     nickname: str = ""
     species_id: int
     quantity: int = Field(default=1, ge=1)
-    environment_id: Optional[int] = None  # defaults to the installation's primary environment
+    growing_area_id: Optional[int] = None  # defaults to the installation's primary growing_area
     location: str = ""
     maturity_stage: MaturityStage = MaturityStage.juvenile
     acquired_on: Optional[date] = None
@@ -117,17 +178,41 @@ class PlantCreate(SQLModel):
     intake_notes: str = ""
 
 
+class CareSourceRead(SQLModel):
+    """Who said so, as much as a client may see: the authority's name, the
+    page, and which fields that page settled. `inferred` marks a page whose
+    every field came in at genus scope. No title -- the per-citation title is
+    researcher prose, not a document name -- and never the quote (ADR 0003)."""
+    authority: str
+    url: str
+    fields: list[str] = []
+    inferred: bool = False
+
+
 class SpeciesRead(SQLModel):
+    """A species as a client sees it: identity, the resolved care values with
+    their provenance, and the legacy columns where nothing better exists.
+
+    Server-side only, deliberately absent: `toxicity_detail` and
+    `water_dry_down_target` (verbatim passages, ADR 0003),
+    `water_estimate_basis` and `cool_rest_note` (the researcher's
+    assumptions), `resolver_version`, and the review trail (operator state)."""
     id: int
     common_name: str
     scientific_name: str
-    light_need: LightNeed
-    humidity_pct_min: int
-    humidity_pct_max: int
-    temp_f_min: int
-    temp_f_max: int
-    soil_type: str
-    toxic_to_pets: bool
+    # The tranche's accepted name when it differs from `scientific_name`; how
+    # a row the catalog holds under an older name is linked to its evidence.
+    # Never a rename.
+    scientific_name_accepted: Optional[str] = None
+    # Nullable since migration 0015: a claims-minted row (ADR 0005) carries
+    # none of these, and a null toxic_to_pets means "no record", not "safe".
+    light_need: Optional[LightNeed] = None
+    humidity_pct_min: Optional[int] = None
+    humidity_pct_max: Optional[int] = None
+    temp_f_min: Optional[int] = None
+    temp_f_max: Optional[int] = None
+    soil_type: Optional[str] = None
+    toxic_to_pets: Optional[bool] = None
     # Derived on the model — the sentence a person should read. toxic_to_pets
     # remains the raw flag for filtering.
     toxicity_description: str = ""
@@ -135,7 +220,58 @@ class SpeciesRead(SQLModel):
     # rather than a source (imported rows). Clients hide the stat and stop
     # sorting on it; the advisor omits it from the fact block.
     humidity_sourced: bool = True
-    care_notes: str
+    care_notes: str = ""
+    # Derived by the recompute (ADR 0001): how well-backed the values are
+    # and, per field, whether it was cited to this species or borrowed from
+    # its genus -- which every surface must label (ADR 0002).
+    care_data_status: Optional[CareDataStatus] = None
+    care_provenance: Optional[dict[str, str]] = None
+    # The resolved care columns, exactly as the claims settled them.
+    light_fc_min: Optional[int] = None
+    light_fc_good: Optional[int] = None
+    direct_sun_hours_max: Optional[float] = None
+    outdoor_sun_exposure: Optional[list[OutdoorSunExposure]] = None
+    water_regime: Optional[WaterRegime] = None
+    water_check_depth_cm: Optional[float] = None
+    # Floats, although the model says int: the day counts are estimates and
+    # the tranche carries a half-day (Carica papaya, 3.5), which SQLite keeps
+    # as written. A serializer that refused it would 500 the whole list.
+    water_growing_days_est: Optional[float] = None
+    water_dormant_days_est: Optional[float] = None
+    humidity_need: Optional[HumidityNeed] = None
+    day_f_min: Optional[int] = None
+    day_f_max: Optional[int] = None
+    night_f_min: Optional[int] = None
+    night_f_max: Optional[int] = None
+    chill_damage_f: Optional[int] = None
+    soil_base: Optional[SoilBase] = None
+    soil_drainage: Optional[SoilDrainage] = None
+    soil_ph_min: Optional[float] = None
+    soil_ph_max: Optional[float] = None
+    fertilize_active_months: Optional[list[int]] = None
+    fertilize_interval_days: Optional[int] = None
+    fertilize_strength: Optional[FertilizeStrength] = None
+    outdoor_temp_min_f: Optional[float] = None
+
+    # Fit fields (0019) -- matched against a growing area's real estate.
+    is_houseplant: Optional[bool] = None
+    is_edible: Optional[bool] = None
+    attracts_pollinators: Optional[bool] = None
+    mature_height_in_min: Optional[float] = None
+    mature_height_in_max: Optional[float] = None
+    mature_spread_in_min: Optional[float] = None
+    mature_spread_in_max: Optional[float] = None
+
+    @field_validator("care_provenance", mode="before")
+    @classmethod
+    def _only_columns_the_client_has(cls, value):
+        """The row's provenance names every resolved column, the server-only
+        ones included. A client has no such column to attach an entry to, and
+        the name alone announces what is being held back -- so those entries
+        are dropped, and a provenance left empty reads as absent."""
+        if not value:
+            return value
+        return {k: v for k, v in value.items() if k not in SERVER_ONLY_FIELDS} or None
 
 
 class PlantRead(SQLModel):
@@ -145,7 +281,7 @@ class PlantRead(SQLModel):
     species_id: int
     quantity: int = 1
     split_from_uuid: Optional[str] = None
-    environment_id: Optional[int]
+    growing_area_id: Optional[int]
     location: str
     maturity_stage: MaturityStage
     acquired_on: Optional[date]
@@ -179,17 +315,17 @@ class PlantSplitRequest(SQLModel):
     previously counted under one, so the new row records where it came from and
     the original's count drops by the same amount — the total is conserved."""
     quantity: int = Field(ge=1)
-    to_environment_id: Optional[int] = None
+    to_growing_area_id: Optional[int] = None
     location: Optional[str] = None
     notes: str = ""
 
 
 class PlantTransferRequest(SQLModel):
-    """Move a plant to a different environment and open a new stewardship record.
+    """Move a plant to a different growing area and open a new stewardship record.
 
     The plant's plant_uuid is preserved so census aggregators treat it as the
     same physical plant, not a new one."""
-    to_environment_id: int
+    to_growing_area_id: int
     transfer_notes: str = ""
 
 
@@ -215,7 +351,7 @@ class AdviceRequest(SQLModel):
 class StewardshipRecordRead(SQLModel):
     id: int
     plant_id: int
-    environment_id: int
+    growing_area_id: int
     installation_uuid: str
     started_at: datetime
     ended_at: Optional[datetime]
@@ -249,7 +385,9 @@ class SpeciesCreate(SQLModel):
     temp_f_min: int
     temp_f_max: int
     soil_type: str
-    toxic_to_pets: bool = False
+    # None rather than False: an omitted flag is "no record". A default False
+    # would mint the safety verdict ADR 0005 made the column nullable to avoid.
+    toxic_to_pets: Optional[bool] = None
     care_notes: str = ""
     source: SpeciesSource = SpeciesSource.curated
     source_ref: str = ""
@@ -282,26 +420,36 @@ class SpeciesTraitRead(SQLModel):
     unit: str
 
 
-class SpeciesDetail(SQLModel):
-    id: int
-    common_name: str
-    scientific_name: str
-    light_need: LightNeed
-    humidity_pct_min: int
-    humidity_pct_max: int
-    temp_f_min: int
-    temp_f_max: int
-    soil_type: str
-    toxic_to_pets: bool
-    toxicity_description: str = ""
-    humidity_sourced: bool = True
-    care_notes: str
-    source: SpeciesSource = SpeciesSource.curated
-    source_ref: str = ""
-    review_status: ReviewStatus = ReviewStatus.approved
-    review_note: str = ""
+class SpeciesDetail(SpeciesRead):
+    """The list shape plus what only the detail screen shows: the pages the
+    values came from, the care schedules and the traits. The review trail
+    (source, source_ref, review_status, review_note) is operator state and
+    stays on the server, as it already did for the list."""
+    care_sources: list[CareSourceRead] = []
     care_schedules: list[CareScheduleRead] = []
     traits: list[SpeciesTraitRead] = []
+
+    @field_validator("care_sources", mode="before")
+    @classmethod
+    def _only_pages_and_fields_the_client_can_see(cls, value):
+        """A row the recompute has not reached holds null, not an empty
+        list; a client gets the list either way, so nothing can 500 on it.
+
+        And each entry credits a page for the fields it settled. The
+        recompute withholds the server-only ones when it writes the list
+        (ADR 0003), but the row is what ships, and a row is only as clean as
+        the resolver that last touched it -- so the same rule is applied here
+        at the door, the way care_provenance is. A page left with nothing a
+        reader can check is not listed at all, as the recompute would not
+        list it."""
+        kept = []
+        for source in value or []:
+            entry = source if isinstance(source, dict) else source.model_dump()
+            fields = [f for f in entry.get("fields") or []
+                      if f not in SERVER_ONLY_FIELDS]
+            if fields:
+                kept.append({**entry, "fields": fields})
+        return kept
 
 
 # --- Timeline ---

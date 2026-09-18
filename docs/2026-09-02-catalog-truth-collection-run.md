@@ -1,0 +1,514 @@
+# Catalog-truth collection run — b19 through b46, and the tooling it produced
+
+For the next session. Follows `docs/2026-08-03-catalog-truth-handoff.md`. The
+plan is still `~/.claude/plans/the-app-needs-a-twinkling-crown.md`; this is the
+state of the evidence-collection half of it as of 2026-09-02.
+
+## Where things are
+
+Branch `care-advice-honesty`, pushed with this note. The claim graph
+(`Authority` + `Claim` tables, resolved into `Species` columns by an idempotent
+`recompute`, ADRs 0001–0004) is built, tested, and populated from
+`garden-gnome/app/data/verified/b1..b46.json`:
+
+- **83 batches, 3,120 claims, 600 species, 8 authorities** (b47–b83 landed
+  after this note was first written, at the overnight throttle described
+  below; the per-batch breakdown in the test comment is current). The running total
+  is asserted in
+  `tests/test_claim_ingest.py::test_the_whole_verified_tranche_lands_and_resolves`,
+  with a per-batch breakdown in the comment above it. (b1–b18 covered the
+  original 129-species curated catalog; b19 onward is a "blind spots" pass —
+  toxic ornamentals, trees, shrubs, vines, bulbs, fruit and nut crops, grasses,
+  groundcovers, ferns, succulents, palms, gesneriads, conifers, carnivores.)
+- Every batch was produced by a research → adversarial-verify Workflow (one
+  extraction agent and one auditor per species, the auditor instructed to
+  live-fetch and refute), then re-verified locally before landing. Each batch
+  file carries a `normalizations` entry saying what that pass caught.
+- **Nothing in the claim graph is wired into `SpeciesRead` or the mobile
+  `Species` type.** None of this is visible to a user yet. That is the next
+  phase, and the reason no TestFlight build has been cut since 1.1.2 (Aug 2) —
+  the user chose to wait until the database is closer to complete.
+
+## What was added this run besides data
+
+1. **`tests/test_tranche_invariants.py`** — corpus-wide shape guards the
+   pipeline genuinely cannot tolerate: the five strict-enum columns
+   (`SoilBase`, `SoilDrainage`, `WaterRegime`, `HumidityNeed`,
+   `FertilizeStrength`) hold a token from the model's own enum,
+   `outdoor_sun_exposure` items are `OutdoorSunExposure` members, no keys
+   outside the 35-field research schema, no string-`"null"`, non-null
+   `common_name`, every citation has claim/source/url/quote, and no species
+   appears in more than one batch. `recompute.py` writes with a bare
+   `setattr` — no enum coercion — so a sentence in `soil_drainage` would land
+   in the column silently; this is what stops it. Its first run over b1–b45
+   found 7 legacy records (b6, b16, b17, b18) with free-text sun-exposure
+   phrases from before the token convention settled; they were normalized in
+   place (values only, quotes untouched, dated note in each file).
+2. **A mechanical citation verifier** (session scratchpad, not in the repo —
+   see below): fetches every cited URL (cached raw HTML, throttled per host,
+   browser UA), strips `aria-hidden` tooltips, and checks the quote is on the
+   page. Proven on b43–b45 at 0 misses across every reachable quote, and it
+   independently caught the one synthesized quote the b44 auditor also caught.
+   ~19% of citations can't be checked from here: `plantfinder.mobot.org` and
+   `ask.ifas.ufl.edu` refuse non-browser clients, and 31 citations are PDFs.
+   A corpus-wide backfill was run at the end of this session; its findings are
+   in the "Verifier backfill" section below.
+3. **Model split** (from b46): research agents on Sonnet, verify agents on
+   Opus, orchestration on Fable 5.1 — after b46's first attempt died on a
+   session limit with all eight research agents refused. From b47 the loop
+   ran at an overnight throttle the user asked for: six species per batch,
+   research at medium effort, one batch in flight at a time, a checkpoint
+   push every batch or two (`80e420e`, `51714e7`, `feb62e3`). Audit quality
+   went up, not down, on the split — the Opus auditor's findings come with
+   corrected wording and it caught a wrong-species common name (b46), a
+   truncated poison-part list on a plant people dig up as a ginger
+   substitute (b50), and several safety fields trimmed of a co-listed tag or
+   a dose sentence. Two usage-limit incidents: b46's research stage (all
+   agents refused → empty batch; `land_check.py` now exits 1 on zero
+   records) and b51's verify stage (four of six audits refused; the fix is
+   a resume, which replays the cached research and re-runs only the failed
+   audits). b52's verify stage then failed on a DNS outage rather than a
+   limit, and the null-verdict guard added to that batch's script did its
+   job: every record came back flagged UNVERIFIED in the output's
+   `unverified` list instead of the pipeline throwing, and a plain resume
+   re-ran only the six audits. Keep that guard in every script from here.
+   b58 added a third infrastructure class: API 529 Overloaded on the Opus
+   verify tier, four attempts over about an hour with the research cached
+   throughout (five of six audits on the first run, all six with zero
+   tokens on three resumes). The loop stopped and reported; the user's
+   "resume" completed all six audits on the fifth attempt. Back off in
+   10/20/30-minute steps, never switch the verify model unasked, and stop
+   after about four tries with the one-call resume path written down.
+   b59 hit a second DNS outage (two audits); one resume finished it.
+   The recurring defect themes across b47–b64, each now guarded in
+   the prompts: "moist but well-drained" read as the wet end of the drainage
+   scale rather than the middle; a watering cadence read off a soil
+   adjective or a drought-tolerance trait; a shade token added from a
+   conditional clause or a UK-calibrated RHS tag that both North American
+   structured fields exclude; an open-ended NC State pH band read as a
+   ceiling; a name_note that calls RHS's botanical-name H1 a common-name
+   lead, or MoBot's displayed Common Name field "single" when a longer
+   list sits behind it; and — found by the mechanical check, missed by the
+   Opus auditor — raw `</dt> <dd><span class=…>` markup pasted into quotes
+   around NC State field values (b52, six quotes). Landing review also
+   has to check common_name collisions across batches: b52's Dicentra
+   eximia came back as "Bleeding-heart", which b36 already uses for
+   Lamprocapnos spectabilis, and landed as "Fringed Bleeding Heart"
+   (RHS's lead name, attested by all three sources). b53 added the
+   naming lesson that decides most of these: NC State's Common Name(s)
+   field is strictly alphabetical and marks no primary (b53's Eutrochium
+   purpureum came back as "Gravel Weed", the list's first entry, and
+   landed as MoBot's designated "Joe Pye Weed"); MoBot's `Common Name:`
+   field is the one affirmative primacy designation among the three
+   sources, with a tooltip list behind it; RHS's H1 is the botanical
+   name and its common name is the plant-profile subtitle. RHS's "Name
+   Status" is a label/value pair — quote the value "Correct" alone, or
+   the H1 binomial. Note that the mechanical verifier cannot catch a
+   label+value concatenation (the normalized page text is contiguous), so
+   the auditor is the only check for that class. b54 confirmed those
+   guards took (every record quoted "Correct" alone and stacked NC
+   State's lists) and added the drainage lesson: a Penn State rain-garden
+   "Soil:" label is a stormwater-basin siting field, not cultivation
+   drainage — both of b54's `moisture_retentive` tokens landed as
+   `moderate` on the sources' own cultivation sentences. Landing also
+   title-cases common names, since MoBot and RHS render them lower-case.
+   b55 refined the naming rule: NC State auto-generates one alias page
+   per Common Name(s) entry (none carries primacy), and a two-entry NC
+   State list whose order matches the page-title parenthetical IS a lead
+   (Senna hebecarpa: American Senna) — "alphabetized, no primary" only
+   holds for longer lists. It also left one open safety item: Sneezeweed
+   (Helenium autumnale) is tagged Poisonous by NC State but its Poison
+   block was never captured; the record's toxicity_detail says so. b56,
+   the last batch before the user paused the loop, changed three common
+   names at landing on the lead-name rule — Coreopsis tripteris to "Golden
+   Crown" (RHS's lead; MoBot's "tickseed" is a genus umbrella by MoBot's
+   own sentence), Ratibida pinnata to "Grey-head Coneflower" (MoBot's
+   labelled field, the only designation), and Amsonia hubrichtii to
+   "Arkansas Bluestar" ("Blue Star" is the genus umbrella and the very
+   name both NC State and MoBot give Eastern Bluestar in b51) — and one
+   accepted name: Coreopsis tripteris landed as Anacis tripteris, the
+   2024 placement NC State already carries, on the b11 garden-pea
+   precedent that the catalog follows the reclassification, not a
+   particular website; RHS's still-"Correct" entry is disclosed as lag.
+   The loop paused after b56 and **resumed on 2026-09-03 at the same
+   throttle** ("throttle on cruise"). b57 landed the prairie set (Indian
+   Grass, Little Bluestem, Rattlesnake Master, Purple Prairie Clover,
+   White False Indigo, Rough Goldenrod); Baptisia alba's name changed at
+   landing because its only support was a synthesized heading from a
+   multi-species UGA publication while RHS's dedicated page, Clemson and
+   MoBot all lead with white false indigo. b58 landed the second prairie
+   set after the 529 stall (Big Bluestem, Sideoats Grama, Wild Quinine,
+   Canada Anemone, Prairie Smoke, Purple Poppy Mallow), with two value
+   changes on the sources' own sentences: a drainage token read from a
+   drought-tolerance tag list went from fast to moderate, and a
+   full_shade token read from a suggested-use plant list was dropped.
+   The batch script lives in the session scratchpad; if it is gone, every
+   rule it carries is listed in this note and in each batch file's
+   normalizations entry.
+
+## Defect classes found and closed (each now guarded in the prompts or tests)
+
+- `toxic_to_pets` asserted from evidence scoped to rabbits/birds/horses or an
+  unscoped "pets" — the field tracks cats and/or dogs only (b31/b32).
+- Prose landing in strict-enum columns (b36) — invariant test.
+- Stray scaffolding keys in a record (b38) — `additionalProperties: false`
+  plus the invariant test.
+- `common_name` and list fields nulled wholesale when one entry or one
+  citation was refuted (b39/b40) — the script now flags these for review
+  instead of nulling.
+- Fabricated citations: an invented NC State poisoning entry and invented
+  drainage tags (b42), a synthesized RHS "Winter resting period:" label
+  presented as a quote (b44) — caught by the auditor's live fetch, now also
+  by the verifier.
+- Freeze-survival threshold conflated with chill-damage onset (b43) —
+  prompts now state the distinction; Pomegranate in b45 is the model record.
+- HTML markup pasted into quotes (b52) — the verifier catches it (the
+  page's rendered text never contains the tags); prompts now forbid it.
+- A label+value concatenation quoted as if contiguous ("Name Status
+  Correct", b52; four more in b53) — the value alone is the quote; the
+  research prompt says so from b54, not just the auditor's.
+- The first entry of an alphabetized NC State Common Name(s) list taken
+  as the lead name (b53) — prompts now say the list marks no primary.
+- A pH floor or ceiling applied asymmetrically against RHS's pH field
+  (b53: RHS "Acid or Alkaline or Neutral" was used to refuse the 8.0
+  ceiling but not the 6.0 floor) — both directions, always.
+- A rain-garden siting label read as cultivation drainage (b54, Swamp
+  Milkweed) — the species page's cultivation sentence wins.
+- NC State `<dt>` labels joined to their `<dd>` values ("USDA Plant
+  Hardiness Zone: 4a, …", b54) — the RHS Name Status defect in NC State
+  form; quote values only, newline-stacked.
+- "A longer list was not found" asserted about a MoBot tooltip the
+  researcher could not open (b54) — say "not inspected", never "not
+  present".
+- A multi-name string quoted from a UMD page that carries no such string
+  (b55, False Aster) — caught by the verifier, removed; the page's real
+  caption is cited instead.
+- A safety tag dropped from a recital of a structured list (b55,
+  Sneezeweed's Plant Type "Poisonous") — the record also shipped
+  toxicity null; now flagged for follow-up in the record itself.
+- A genus-umbrella common name that collides with a sibling already in
+  the catalog (b56, "Blue Star" for Amsonia hubrichtii vs. Eastern
+  Bluestar) — landing review checks collisions and umbrella names.
+- An editorial rule invented and attributed to a source (b56, "per its
+  own convention, marks no primary"; auditors kept writing it in b57) —
+  describe what the page shows; never cite a convention the page does
+  not state. From b58 the verify prompt forbids it too.
+- A section heading inside a multi-species publication quoted as a
+  synthesized parenthetical and counted as a "dedicated page" (b57,
+  UGA's "White Wild Indigo / Baptisia alba …" heading) — quote it as it
+  renders, and a section is not a dedicated single-species page.
+- A drainage token read from a drought-tolerance tag list or a dry-soil
+  preference (b58, Sideoats Grama "fast") — neither mentions drainage;
+  MoBot's own "sandy soils to heavy clays" sentence rules sharp drainage
+  out.
+- A light token read from a suggested-use plant list in a multi-species
+  article (b58, Canada Anemone full_shade from a "Dry Shade Perennials"
+  list) — not a species light rating; the species page's own warning
+  ("stems flop in too much shade") wins.
+- A table row that leads with the binomial counted as leading with a
+  common name (b58, Penn State's "Bouteloua curtipendula, (sideoats
+  grama)") — a parenthetical after the binomial is not a lead.
+- Entity-encoded markup in a quote (b59, two MoBot tooltip quotes pasted
+  from the page's `onmouseover` attribute: `&lt;/b&gt;`, `&bull;`,
+  `<br/>`) — the plain-tag scan missed the encoded form; the landing
+  dump now scans for entities too, and prompts forbid attribute text.
+  The prompt ban did not hold in b60 (four more reconstructed tooltip
+  lists); the auditor catches them, and the repair is MoBot's rendered
+  prose sentence, never the tooltip.
+- Citation-level audit findings never reaching the record (b60): the
+  batch script only acts on findings whose `field` is a schema field, so
+  an auditor finding filed as `citations[...]` (seven in b60 — stitched
+  RHS chrome, scraper newlines inside a binomial, an invented inner
+  quotation) was invisible in the record's unknowns. The landing dump now
+  reads every refuted finding from the run's `journal.jsonl` and repairs
+  those too.
+- A genus-level commercial crop page read as species care (b60, UMD's
+  alternative-crops Aronia page supplying a fertilizer schedule) — a
+  yield program for bred stock is not a species care source; none of the
+  four species pages prescribed fertilization.
+- **An RHS URL serving a cached page for a different species** (b61):
+  the auditor found Rhus aromatica's RHS URL intermittently returns the
+  Corylus americana page to unauthenticated fetches, and a fabricated
+  "Full sun, Partial shade" sun citation was the result — the RHS page
+  for Rhus aromatica carries no sun data at all. The mechanical verifier
+  cannot catch this (its cached copy may be the wrong page too). Rule:
+  confirm the RHS response title names the species before using any of
+  its content; prompts say so from b62. It happened again in b63:
+  Sourwood's six RHS citations pointed at `/plants/12060/wd/details`,
+  which is Populus tremula — the slug did not even contain the epithet.
+  From b64 the prompt requires the RHS URL slug to contain the species
+  epithet as well.
+- Pipe-joined label+value quotes (b61, "Moisture | | Moist but
+  well–drained", "H4: | hardy through…") — the same label/value class in
+  a new form; the landing dump now scans quotes for " | " and the rule
+  is the rendered value alone.
+- A structured-field quote that absorbs the next field's label (b62,
+  NC State Plant Type "Native Plant, Shrub, Woody Plant" where "Woody
+  Plant" is the start of "Woody Plant Leaf Characteristics:") — a naive
+  text extraction reproduces the error, so only the auditor's raw-markup
+  check catches it; quote each field's values newline-stacked and stop
+  at the next label.
+- A body-prose fragment relabelled as a structured field (b62, "Deciduous
+  shrub or small tree" cited as NC State's Plant Type) — the field's real
+  values were "Edible / Native Plant / Shrub / Tree / Woody Plant".
+- Sun tokens resting on tolerance-range tags against species-specific
+  scorch warnings (b62, Pinxterbloom Azalea full_sun) — the page's own
+  "protection from afternoon sun which can scorch the leaves" and MoBot's
+  "Prefers a sun dappled or high open shade" win; the token is disclosed,
+  not carried.
+- A sun list built from the UK and Florida fields while both North
+  American structured fields said otherwise (b63, American Hornbeam
+  landed full_sun/part_shade; NC State's Light field carries only Deep
+  shade and Partial Shade and MoBot reads "Part shade to full shade") —
+  the list reversed to part_shade/full_shade at landing. Check every sun
+  list against both North American structured fields.
+- The common name written into `scientific_name_given` (b63, Sassafras)
+  — the loader keys on that field; the landing dump now prints every
+  record's given name, and the prompt says the field must equal the
+  binomial given. The b63 guards held in b64.
+- A wet drainage token set without citing NC State's own structured
+  Soil Drainage field (b64, Sweetbay Magnolia moisture_retentive; the
+  field reads Good Drainage / Moist / Occasionally Wet and every other
+  source reads moderate) — cite that field first; wet-tolerance
+  sentences are disclosed counterpoints, not the basis.
+- A single NC State shade tag carried on a canopy tree against both
+  other structured fields (b64, Common Hackberry full_shade, American
+  Yellowwood part_shade) — one structured tag excluded by the other two
+  is disclosed, not carried; and "shade-loving plants grow underneath
+  it" describes the tree casting shade, not growing in it.
+- The invented "three or more entries" convention migrating into
+  citation claim labels (b64) — the landing dump now greps claims for
+  it; prompts ban it in labels as well as notes.
+- **A weekly usage limit behaves like the session limit** (b46/b51), not like
+  DNS or a 529: b65 lost one research agent and four Opus audits to it mid-run
+  (2026-09-03), the null-verdict guard held four records as UNVERIFIED, nothing
+  was landed, and a plain `resumeFromRunId` two days later re-ran only the
+  refused agents. The only remedy is waiting for the stated reset.
+- **Species scorch warnings beat structured sun tags, both directions** (b65):
+  both buckeyes dropped `full_sun` on NC State's own species-specific leaf-scorch
+  sentences (corroborated by MoBot's Culture text) even though MoBot's and
+  RHS's structured fields list full sun unconditionally; the excluded value is
+  disclosed in unknowns, not carried. A one-word RHS `Correct` quote cannot
+  carry `scientific_name_accepted` on its own — pair it with the H1 binomial.
+  Nulled prose (toxicity_detail, name_note) is recovered from the research
+  agents' own return values in the workflow journal and repaired with the
+  auditor's verbatim additions, never re-authored.
+- **Abbreviated structured strings are synthesized quotes** (b66): 'Full sun (6+
+  hours)' and 'Partial Shade (2-6 hours)' compress NC State's rendered values
+  ('Full sun (6 or more hours of direct sunlight a day)', 'Partial Shade (Direct
+  sunlight only part of the day, 2-6 hours)') and fail the mechanical check even
+  when the auditor lets them pass; a semicolon-joined 'Habitat' string attributed
+  to a field the page does not have was a fabricated quote around a correct value.
+  The label is 'Light:', not 'Light Requirements'. A look-alike ('is often confused
+  with') module states confusion, not taxonomy — rest a not-a-true-ash point on the
+  Family field. Two structured sun fields outrank one omission (Hoptree keeps
+  full_sun with MoBot's omission disclosed); one structured tag against two
+  full-sun-only fields plus tolerance-only prose is dropped and disclosed (Black
+  Locust, Slippery Elm).
+- **A group name is not a common name, and the auditor's fetches are evidence**
+  (b67): 'Snakebark Maple' for Acer pensylvanicum was a section-level umbrella
+  all three pages describe as covering more than the species ('only species of
+  snakebark maple native to North America'), so the record landed as Moosewood,
+  RHS's subtitle lead; 'Sweet Crabapple' rested on one prose sentence against
+  a list/title/RHS lead of American Crabapple. When a researcher reports RHS or
+  MoBot unreachable, the Opus auditor usually reaches them — recover the exact
+  URLs from the auditor transcript's fetch calls (RHS 20902, MoBot c337) and cite
+  only text the auditor quoted verbatim. RHS Position/Growing-Conditions blocks
+  do not survive the mechanical quote check on every page; disclose rather than
+  cite when they miss.
+- **A placeholder RHS slug is the wrong-species shape** (b68): a researcher cited
+  rhs.org.uk/plants/91239/wd/details — the same '/wd/' slug that once returned
+  Populus for Sourwood. The page happened to be right; the URL is rewritten to the
+  epithet slug at landing (RHS resolves by id) so the guard is checkable. A
+  fabricated NC State Plant Type entry ('Woody Plant', really the head of the
+  next field's label 'Woody Plant Leaf Characteristics') recurred (Crossvine) —
+  a Plant Type list ending in 'Woody Plant' deserves a second look. A fruit
+  profile bled in from a berry crop ('Fruit Value To Gardener: Edible / Berry' on
+  American Wisteria) was a fabricated source conflict; the auditor's live fetch
+  is still the only defence. RHS's 'Pets (dogs, cats)' lines corroborate
+  toxic_to_pets; its unscoped 'Pets:' lines do not.
+- **Guard every agent() result before dereferencing it** (b69 / the wiring
+  workflow, 2026-09-05): a session limit returned null from one agent and a
+  `log('fix: ' + fix.summary)` crashed the whole orchestration after six of
+  seven agents had finished. The research scripts already degrade a null
+  verdict to an UNVERIFIED record; every workflow script must do the same.
+  Also from b69: a soil-preference sentence ('Prefers moist ... soils') is not
+  a watering statement even when the audit lets it pass — water_regime needs
+  an instruction about watering; a regional-climate sentence ('hot and humid
+  summers') is not a humidity requirement; and a Plant Type quote of a single
+  tag ('Tree') truncates an enum-defining list.
+- **A floor read off an absent checkbox is not a floor** (b70): Water Tupelo's
+  soil_ph_min 6.0 came from NC State's Soil pH field not ticking Acid, while
+  RHS's pH field and both sources' prose say acidic soils. A bound needs a
+  stated limit. Also: when a researcher reports RHS or MoBot unreachable, the
+  auditor's transcript in the run directory usually has the fetch URL and the
+  verbatim fields — recover them there rather than re-crawling. MoBot Common
+  Names tooltips reconstructed from overlib markup appeared four more times;
+  the rendered Noteworthy Characteristics prose carries the same names and is
+  the citable text.
+- **An author abbreviation is not part of a name, and a third list entry is
+  not a lead** (b71): Northern Maidenhair Fern's accepted name arrived as
+  'Adiantum pedatum L.', copied from RHS's H1; a claim subject and a minted
+  species row must carry the bare binomial. Dryopteris marginalis was
+  researched as Marginal Shieldfern — NC State's third alphabetized entry,
+  propped up by the invented 'three or more entries marks no primary'
+  convention — while both dedicated pages lead with Evergreen Woodfern /
+  evergreen wood fern; landed as Evergreen Wood Fern. Also: a sentence scoped
+  out for one field (RHS's under-glass humidity line) cannot feed the next
+  field from the same run (fertilize_strength 'half'); RHS's hardiness legend
+  is site-wide text, so quote the page's bare rating ('H6'); and when MoBot is
+  unreachable from this machine at landing, say so in the batch note and lean
+  on the auditor's live fetches rather than re-crawling.
+- **A conditional clause is not a recommendation, and genus boilerplate is
+  not species text** (b72): Common Rush's is_houseplant true rested on MoBot's
+  'Foliage remains evergreen in warm winter climates or when grown indoors as
+  a houseplant.', a foliage-persistence clause inside an outdoor Culture
+  section; every source sites the rush in bogs and pond margins. Common Rose
+  Mallow's is_houseplant citation quoted RHS's Hibiscus genus text ('May be
+  grown outdoors in mild, frost-free areas...'), identical on the H.
+  rosa-sinensis page and contradicted by the page's own H4 rating — the value
+  was right, the evidence was a sibling's. Also: NC State's 'Neutral
+  (6.0-8.0)' band cannot ceiling a species RHS grows in acid soil; a safety
+  quote cut mid-item with a stray '..' is a truncation (RHS's Potentially
+  harmful field is now quoted to its end, with MoBot's rhizome and gloves
+  warnings added); and NC State now titles Hibiscus moscheutos 'Muenchhusia
+  moscheutos' — the accepted name follows RHS's Correct, split disclosed.
+- **A worry is not a source, and a scrape that merges labels invents
+  values** (b73): Cyrilla racemiflora was researched as Swamp Titi on an
+  unsourced concern that Leatherwood also names Dirca palustris; both
+  dedicated pages lead with leatherwood, so it lands as Leatherwood. The
+  auditor's own 'fifth Plant Type value' for Swamp Azalea ('Woody Plant') was
+  the start of the next NC State label — check the cached page (qc.py) before
+  applying a repair. Also: an RHS species page the researcher reported
+  missing (Aronia arbutifolia) was found live by the auditor and supplied an
+  accepted name and an 8.0 pH ceiling; two sun tolerances ('It tolerates
+  partial shade but will flower best...', 'Avoid afternoon sun which can
+  scorch the leaves.') pruned a value each; Swamp Rose's boggy-soil prose
+  moved to water_regime while the Good Drainage / Moist / Occasionally Wet
+  field kept drainage moderate, per the b64 rule.
+
+## Do next, in order
+
+> **Research loop paused 2026-09-11** for the weekly usage limit, with b81–b88 researched in part and nothing from
+> them landed. Resume from `docs/2026-09-11-catalog-loop-handoff.md`.
+
+1. ~~Wire the claim graph into the app.~~ **Done 2026-09-05** (ADR 0005,
+   migration 0015, `app/data/claims/sync.py`, `app/services/care_facts.py`,
+   `mobile/src/care/facts.ts`): the cold-start seed now ingests the tranche,
+   mints a row for every species the catalog lacked (legacy columns and
+   `toxic_to_pets` null, never defaulted), links rows held under older names
+   by `scientific_name_accepted`, and recomputes; `SpeciesRead`/`SpeciesDetail`
+   carry the resolved columns, `care_data_status`, per-field provenance and
+   `care_sources` (authority name + link + fields, never the quote); the
+   advisor, vision and stub read one shared fact block with genus-borrowed
+   values labelled; the mobile screens show a Care facts card, a status line,
+   captioned legacy stats only where nothing resolved replaces them, and a
+   Sources card. **Post-deploy check**: run
+   `flyctl ssh console -a garden-gnome-api -C "python -m app.data.claims.sync --dry-run"`
+   and read the `ambiguous:` lines — the ~1,900 Perenual rows on the volume
+   were never inspected locally, and a tranche subject matching two of them
+   links neither. The review's open policy question (`NEVER_INHERIT` held
+   only `toxic_to_pets` while CONTEXT.md said every harm-capable field
+   refuses inferred values) was settled 2026-09-10 in ADR 0007: every
+   harm-capable field now refuses genus inference. Also open: the
+   36 records with `toxic_to_pets` null but a cited `toxicity_detail` naming
+   harm need verdicts from the research loop.
+2. ~~Decide the verifier's home.~~ **Done 2026-09-05**: `covered.py`,
+   `land_check.py` and `verify_quotes.py` live in `garden-gnome/scripts/catalog/`
+   (README there; repo-relative paths, run from `garden-gnome/` with the
+   venv), with the verifier's raw-HTML cache gitignored beside them and a
+   smoke test in `tests/test_catalog_scripts.py`.
+3. ~~Rename `hardiness_zones` to what USDA PLANTS actually publishes.~~
+   **Done 2026-09-10** (ADR 0006, migration 0016): the column is
+   `outdoor_temp_min_f`, the "Temperature, Minimum (°F)" PLANTS states, kept
+   distinct from `chill_damage_f`.
+4. ~~Phase 4.1 name resolution for the 2 skipped curated-catalog mismatches.~~
+   **Done 2026-09-10, by deciding rather than renaming.** The two were
+   Alocasia 'Polly' (curated `Alocasia x amazonica 'Polly'`, accepted
+   `Alocasia × mortfontanensis 'Polly'` per NC State) and Dragon Tree (curated
+   `Dracaena marginata`, accepted `Dracaena reflexa var. angustifolia` per NC
+   State, with Missouri Botanical Garden still publishing under the trade
+   name, so probable rather than verified). ADR 0005 already settles the
+   shape: the curated row keeps the name plants and the toxicity table key
+   on and links to its evidence through `scientific_name_accepted`, which the
+   cold-start sync has done for both since 2026-09-05. Pinned by
+   `tests/test_claim_sync.py::test_the_two_curated_name_mismatches_link_by_accepted_name`.
+5. ~~Re-research Sneezeweed's Poison block.~~ **Done 2026-09-10** in the
+   toxicity verdict pass below: `toxicity_detail` rewritten from NC State's
+   live Poison block (severity Medium, full symptoms, sesquiterpene lactone,
+   flowers/leaves/seeds), one citation per sub-claim, audited live.
+6. **Then plan the next TestFlight build** — see
+   `docs/2026-08-08-testflight-1.1.3-handoff.md` for the ship sequence; 1.1.3
+   was never built or submitted.
+
+## Toxicity verdict pass (2026-09-10, every record null beside a cited toxicity_detail)
+
+Forty-three landed records held `toxic_to_pets` null with a `toxicity_detail`
+that cited a poison block, almost always NC State's human-scoped one. The
+wiring review (item 1 above) asked for verdicts. Each record went through a
+Workflow of its own: a Sonnet researcher asked one question, whether any
+admissible dedicated page carries a statement scoped to cats or dogs
+specifically (NC State's `#problem for cats` / `#non-toxic for dogs` tag
+chips, RHS's `Pets (dogs, cats)` line, extension prose naming either
+animal), and an Opus auditor re-fetched every page and every proposed
+quote. The landing script (`land_tox.py`, session scratchpad) applied only
+verdicts the audit did not refute, dropped any citation it did, and
+preserved each file's own JSON indentation and escaping.
+
+- **Two values changed.** Red Maple → false: NC State renders `#non-toxic
+  for dogs` and `#non-toxic for cats`; the b25 audit had nulled it over the
+  horse hazard, which the catalog rule set on that very record keeps in
+  `toxicity_detail`. Money Tree → true: NC State tags it `Problem for Cats`
+  and its Poison Symptoms name cats; the seeds-only, "houseplants never
+  produce seeds" caveat that had been used to keep it null now lives in the
+  prose, because the rule has no practical-risk carve-out.
+- **Forty stay null, now as searched-and-absent.** Each carries a dated
+  `unknowns` entry listing the pages checked, and each file a
+  `normalizations` entry, so a null reads as a verdict rather than a gap.
+  Buttonbush's audit hit a session limit on the first run and was re-run
+  alone: null, NC State tags it only a problem for horses.
+- **What the auditors caught, this time on the researcher's side:** a
+  MoBot taxon id that served a different species (Tagetes patula for Acer
+  rubrum), a UF/IFAS straight-species sheet the researcher missed, and
+  over-stated "all pages fetched" claims. None changed a verdict; the
+  landing note keeps only the URL list, not the researcher's prose.
+- **A landing-script lesson worth keeping:** the batch files are not one
+  format. b1–b45 were written with two-space indentation and escaped
+  Unicode, later batches with one space and raw UTF-8. A rewrite must read
+  each file's own indentation and `\u` usage back off the file, or the diff
+  is the whole file. And a workflow `resumeFromRunId` after a partial
+  failure re-ran the entire audit stage, not the one failed audit; stop it
+  and run the one item in a fresh script instead.
+
+## Verifier backfill (2026-09-02, all batches through b45)
+
+Of 5,309 citations: **3,752 verified verbatim on the live page, 52 could not
+be settled mechanically, 1,505 unreachable** from the sandbox (MOBOT and Ask
+IFAS refuse non-browser clients; 31 are PDFs).
+
+The 52 are all readbacks of structured fields — NC State tag lists and
+`Common Name(s): … Scientific Name: …` label composites, RHS `Synonyms … Name
+Status` blocks, UGA table coding keys — where every word is on the page but
+the page renders them as separate elements, often in another order. A
+substring check can't confirm or refute those; the b19+ auditors' live
+fetches remain the check for that class. Nothing in the 52 is a prose
+sentence.
+
+What the backfill actually changed:
+- **1 fabricated citation removed** — Leyland Cypress (b42) drainage tags the
+  page doesn't carry; the value was already nulled at landing but the citation
+  had been left behind.
+- **1 fabricated-tag citation found, field nulled** — Common Morning Glory
+  (b14) `soil_drainage` cited `Occasionally Dry Occasionally Wet` tags; the
+  page has only `Good Drainage` and `Moist`. Same shape as Leyland Cypress,
+  from before the fabrication check existed. Claim count 2086 → 2085.
+- **3 unverifiable corroborating quotes dropped, values kept** — Bloodroot
+  (Penn State), Bay Laurel (a UGA guide-scope sentence that isn't on the
+  page; NC State's own `Problem for Cats / Problem for Dogs` tags carry the
+  cat/dog scoping), African Violet (Penn State). Each value has an
+  independent, verified primary citation.
+- **5 lightly paraphrased quotes replaced with the page's verbatim sentence** —
+  Butterfly Bush, Beets, Cowpea, Angel's Trumpet, Castor Bean. Facts
+  unchanged; the quotes had been rewritten as if verbatim.
+
+Every change carries a dated line in the record's `unknowns`.

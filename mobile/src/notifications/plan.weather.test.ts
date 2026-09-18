@@ -20,7 +20,7 @@ function species(): Species {
 function plant(): Plant {
   return {
     id: 1, plant_uuid: 'p', nickname: 'Ferny', species_id: 100,
-    environment_id: ENV_ID, location: '', maturity_stage: 'mature', intake_notes: '',
+    growing_area_id: ENV_ID, location: '', maturity_stage: 'mature', intake_notes: '',
   } as Plant;
 }
 
@@ -82,7 +82,7 @@ test('only watering is shifted — fertilize is untouched', () => {
   expect(shifted).toBe(base);
 });
 
-test('a plant whose environment has no signal is unchanged', () => {
+test('a plant whose growing area has no signal is unchanged', () => {
   const base = dateFor(run(), 'water');
   const shifted = dateFor(run({ 999: { waterShiftDays: 2 } }), 'water');
   expect(shifted).toBe(base);
