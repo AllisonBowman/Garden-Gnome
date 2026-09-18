@@ -537,8 +537,21 @@
         "fertilize_interval_days, fertilize_strength, fertilize_active_months: Clemson describes only a single application, 'a slow-release fertilizer formulated for annuals can be incorporated at the time of planting' — not a recurring interval, a strength/dilution, or specific active months — so left null.",
         "toxic_to_pets, toxicity_detail: no admissible source states pet-specific toxicity for Tagetes patula. NC State's Tagetes genus page (covering four species together, not patula specifically) describes toxicity to humans only — contact dermatitis from sap plus sunlight, and harm if eaten 'in large amounts' — with no mention of pets or animals, so no value was taken for this field rather than inferring pet toxicity from a genus-level, human-only source.",
         "is_houseplant is recorded false based on the three species-specific sources (Clemson, Missouri Botanical Garden, RHS), which describe only outdoor garden/bedding/container use; NC State's Tagetes genus page separately lists 'Houseplant or interiorscape' and 'Houseplants' among general genus uses, but that is stated for the genus (T. erecta, T. lucida, T. patula, T. tenuifolia together) rather than for T. patula specifically, so it was not treated as support for true.",
-        "is_houseplant — removed on audit: Record asserts false based only on absence of houseplant framing in three sources (MOBOT sowing instructions, RHS 'Bedding' tag, Clemson garden-bed prep) — a negative claim built from absence of evidence, not a source stating T. patula is never grown indoors. Meanwhile the record's own cited NC State Extension page (plants.ces.ncsu.edu/plants/tagetes/common-name/marigold/, admissible domain, already used elsewhere in this record for the toxicity citation) carries structured fields directly on point: 'Uses (Ethnobotany): Houseplant or interiorscape; landscape in flower gardens as tender, herbaceous annual' and 'Landscape Location: Container, Houseplants, Patio, ...'. I fetched the live page and confirmed these are genuine structured attribute fields, not prose. The record's unknowns section acknowledges this citation exists and dismisses it as 'genus-level' (the page's own Species field literally reads 'spp.'), but T. patula is one of the specific cultivars pictured/discussed on that same page, so the dismissal is a judgment call, not a settled fact — exactly the kind of genuine cross-source tension the audit instructions say should default to null rather than a confident false."
-      ]
+        "is_houseplant — removed on audit: Record asserts false based only on absence of houseplant framing in three sources (MOBOT sowing instructions, RHS 'Bedding' tag, Clemson garden-bed prep) — a negative claim built from absence of evidence, not a source stating T. patula is never grown indoors. Meanwhile the record's own cited NC State Extension page (plants.ces.ncsu.edu/plants/tagetes/common-name/marigold/, admissible domain, already used elsewhere in this record for the toxicity citation) carries structured fields directly on point: 'Uses (Ethnobotany): Houseplant or interiorscape; landscape in flower gardens as tender, herbaceous annual' and 'Landscape Location: Container, Houseplants, Patio, ...'. I fetched the live page and confirmed these are genuine structured attribute fields, not prose. The record's unknowns section acknowledges this citation exists and dismisses it as 'genus-level' (the page's own Species field literally reads 'spp.'), but T. patula is one of the specific cultivars pictured/discussed on that same page, so the dismissal is a judgment call, not a settled fact — exactly the kind of genuine cross-source tension the audit instructions say should default to null rather than a confident false.",
+        "Poisonous to Humans / Poison Severity Low, Poison Symptoms 'Skin redness, burning pain, and blisters when broken skin is in contact with cell sap plus sunlight; nose and eye irritation from aroma of flowers.', Poison Toxic Principle 'Phototoxic thiophene derivatives', Causes Contact Dermatitis: Yes, Poison Part: Flowers, Leaves, Roots -- recorded here per rule 5 because is_edible is true.",
+        "is_edible condition: NC State Edibility field states \"'Lemon Gem’ and ‘Tangerine Gem’ have the best flavor; remove the bitter, white base of the petal. May be harmful if eaten in large amounts. Used in tea, coloring foods, substitute for tarragon.\" The named-cultivar flavor claim ('Lemon Gem', 'Tangerine Gem') is cultivar-specific and not recorded as the species' own trait per rule 3; the edibility itself (flowers used in tea/food coloring/tarragon substitute) is stated for the species/genus generally, with the large-amount caution included as the required condition.",
+        "attracts_pollinators based on NC State 'Attracts: Butterflies, Songbirds' -- only Butterflies counted per rule 7; Songbirds is bird/seed-eating, not pollination, and was not used as support.",
+        "RHS (https://www.rhs.org.uk/plants/105531/tagetes-patula/details), Clemson HGIC (https://hgic.clemson.edu/factsheet/marigold/), Penn State Extension (https://extension.psu.edu/programs/master-gardener/counties/luzerne/news/october-birth-flower-marigold-tagetes-spp) were read via qc.py but did not contain additional size, edibility, or pollinator data beyond/independent of the NC State anchor page for this record; NC State (plants.ces.ncsu.edu) was used as the anchor per task instructions since it carries a structured Dimensions block for this species.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a611 was not fetched separately in this pass since NC State provided a complete structured Dimensions/Attracts/Poison/Edibility record for the species; no attempt was made to fetch it and no failure is reported for it -- treat this citation set as anchored solely to the NC State page actually queried.",
+        "French marigold (Tagetes patula) is not a climber/vine, so rule 4 does not apply and all four size fields are populated.",
+        "mature_height_in_min removed on audit: Wrong taxon (check C), not a unit slip. The cited URL https://plants.ces.ncsu.edu/plants/tagetes/common-name/marigold/ is the NC State GENUS page for Tagetes (page <title> 'Marigold - Tagetes'), not Tagetes patula. Its 'Height: 1 ft. 0 in. - 4 ft. 0 in.' spans the whole genus, and the 4 ft top end is Tagetes erecta: Penn State's page says 'African marigolds (Tagetes erecta) ... reaching 3 to 4 feet in height' while 'French marigolds (Tagetes patula) ... grow from 6 to 24 inches tall.' NC State does have a species page, https://plants.ces.ncsu.edu/plants/tagetes-patula/ (<title> 'Tagetes patula (French Marigold)'), and it reads 'Height: 0 ft. 6 in. - 1 ft. 0 in.' with the description sentence 'It is 6 to 12 inches high and 6 to 18 inches wide.' RHS agrees: 'A compact, bushy annual to 30cm tall and wide', Max Height 0.1-0.5 metres. So the correct species height is 6-12 in, not 12-48 in; the recorded max is 4x the published figure for this species. Check A: the 1ft/4ft to 12/48 arithmetic itself is right, so this is not an unconverted-feet defect. Check B: min<=max holds and both ends do trace to text, just to the wrong page. Check H: the quote is also defective - it contains U+23CE and glues the 'Dimensions:' label to 'Height:' across a newline boundary, so it is not one rendered run.",
+        "mature_height_in_max removed on audit: Wrong taxon (check C), not a unit slip. The cited URL https://plants.ces.ncsu.edu/plants/tagetes/common-name/marigold/ is the NC State GENUS page for Tagetes (page <title> 'Marigold - Tagetes'), not Tagetes patula. Its 'Height: 1 ft. 0 in. - 4 ft. 0 in.' spans the whole genus, and the 4 ft top end is Tagetes erecta: Penn State's page says 'African marigolds (Tagetes erecta) ... reaching 3 to 4 feet in height' while 'French marigolds (Tagetes patula) ... grow from 6 to 24 inches tall.' NC State does have a species page, https://plants.ces.ncsu.edu/plants/tagetes-patula/ (<title> 'Tagetes patula (French Marigold)'), and it reads 'Height: 0 ft. 6 in. - 1 ft. 0 in.' with the description sentence 'It is 6 to 12 inches high and 6 to 18 inches wide.' RHS agrees: 'A compact, bushy annual to 30cm tall and wide', Max Height 0.1-0.5 metres. So the correct species height is 6-12 in, not 12-48 in; the recorded max is 4x the published figure for this species. Check A: the 1ft/4ft to 12/48 arithmetic itself is right, so this is not an unconverted-feet defect. Check B: min<=max holds and both ends do trace to text, just to the wrong page. Check H: the quote is also defective - it contains U+23CE and glues the 'Dimensions:' label to 'Height:' across a newline boundary, so it is not one rendered run.",
+        "mature_spread_in_min removed on audit: Same wrong-taxon defect (check C) plus a wrong max. 6-12 was taken from the genus page's 'Width: 0 ft. 6 in. - 1 ft. 0 in.' The Tagetes patula species page at https://plants.ces.ncsu.edu/plants/tagetes-patula/ reads 'Width: 0 ft. 6 in. - 1 ft. 6 in.' and its description says 'It is 6 to 12 inches high and 6 to 18 inches wide.' The species max spread is 18 in, not 12 in. Checks A and B are clean (0ft6in=6, conversion fine; min<=max; a real published range, not a single figure inflated into one). Check C's climber clause does not apply - the species page lists Habit/Form 'Clumping', so it is not a vine. Check H: the quote again carries U+23CE and welds 'Dimensions:' to 'Height:'/'Width:' across newlines.",
+        "mature_spread_in_max removed on audit: Same wrong-taxon defect (check C) plus a wrong max. 6-12 was taken from the genus page's 'Width: 0 ft. 6 in. - 1 ft. 0 in.' The Tagetes patula species page at https://plants.ces.ncsu.edu/plants/tagetes-patula/ reads 'Width: 0 ft. 6 in. - 1 ft. 6 in.' and its description says 'It is 6 to 12 inches high and 6 to 18 inches wide.' The species max spread is 18 in, not 12 in. Checks A and B are clean (0ft6in=6, conversion fine; min<=max; a real published range, not a single figure inflated into one). Check C's climber clause does not apply - the species page lists Habit/Form 'Clumping', so it is not a vine. Check H: the quote again carries U+23CE and welds 'Dimensions:' to 'Height:'/'Width:' across newlines.",
+        "is_edible and attracts_pollinators left unset. The only page cited for either was NC State's Tagetes GENUS page, not the Tagetes patula species page -- the same wrong-taxon defect the audit caught on this record's size, and the edibility text there is about the 'Lemon Gem' and 'Tangerine Gem' cultivars of a different species. Both need re-researching against https://plants.ces.ncsu.edu/plants/tagetes-patula/."
+      ],
+      "is_edible": null,
+      "attracts_pollinators": null
     },
     {
       "common_name": "Moonflower",
@@ -587,7 +600,13 @@
         "soil_drainage: NC State tags the soil as both \"Good Drainage\" and \"Moist\", and MOBOT's culture text says \"moist, well-drained soils\" -- this doesn't map cleanly onto a single fast/moderate/moisture_retentive value without interpretation, so left null",
         "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no source gives a specific watering depth, dry-down target, or interval to base a day-count estimate on",
         "cool_rest_note: no source addresses a dormant or rest period",
-        "water_regime — removed on audit: The record asserts water_regime = 'keep_moist' citing only MOBOT's prose 'grown as an annual in moist, well-drained soils.' But I fetched the raw MOBOT page and confirmed it carries its own dedicated structured attribute field, printed right alongside the 'Sun: Full sun' line the record DID cite for outdoor_sun_exposure: 'Water: Medium'. This is a distinct, source-native rating that the record never quotes, cites, or reconciles, and 'Medium' is not self-evidently the same thing as 'keep constantly moist' (MOBOT uses a Dry/Medium/Wet-style scale elsewhere, where 'Medium' is the middle/average category, not the wettest one). This is exactly the 'structured field vs. quoted prose' conflict the audit brief specifically instructs checking for on harm-capable fields -- the record picked a value from one part of the source while ignoring a directly conflicting structured field on the same page. Should be null or should surface the conflict rather than asserting keep_moist outright."
+        "water_regime — removed on audit: The record asserts water_regime = 'keep_moist' citing only MOBOT's prose 'grown as an annual in moist, well-drained soils.' But I fetched the raw MOBOT page and confirmed it carries its own dedicated structured attribute field, printed right alongside the 'Sun: Full sun' line the record DID cite for outdoor_sun_exposure: 'Water: Medium'. This is a distinct, source-native rating that the record never quotes, cites, or reconciles, and 'Medium' is not self-evidently the same thing as 'keep constantly moist' (MOBOT uses a Dry/Medium/Wet-style scale elsewhere, where 'Medium' is the middle/average category, not the wettest one). This is exactly the 'structured field vs. quoted prose' conflict the audit brief specifically instructs checking for on harm-capable fields -- the record picked a value from one part of the source while ignoring a directly conflicting structured field on the same page. Should be null or should surface the conflict rather than asserting keep_moist outright.",
+        "Moonflower is a climbing vine (NC State Plant Type: Vine; Habit/Form: Climbing; Climbing Method: Scrambler, Twining) — per the climber rule, all four size fields (mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max) are left null even though NC State publishes a structured Dimensions block (Height: 10 ft. 0 in. - 30 ft. 0 in.; Width: 3 ft. 0 in. - 6 ft. 0 in.) and body text says it \"can grow to 15 feet in height and 3 to 6 feet in width\" — for a vine that figure is ambiguous between plant stature and climbing run, so it is deliberately excluded, not overlooked.",
+        "mature_height_in_min/max and mature_spread_in_min/max left null for the reason above; RHS was checked as the alternate size source but returned no Max Height/Max Spread text on this fetch anyway (see below), so it would not have resolved the ambiguity even if the species were not a climber.",
+        "RHS (https://www.rhs.org.uk/plants/101906/ipomoea-alba/details) was searched for both 'Max Height'/'Max Spread' and 'Ultimate height' wordings, plus Attracts, pollinator, edible, toxic, and poison terms — none were found on this fetch; the only species-relevant text returned was a generic Genus-level description, so RHS contributed no data or citations for this record.",
+        "plantfinder.mobot.org refused the fetch (ConnectError) — skipped per instructions; no guess is made about what it would have shown.",
+        "is_edible is set false, not null, because NC State explicitly names poisoning from the plant (see the is_edible citation) rather than staying silent on eating it. Full toxicity text found while checking Poison/Toxic before setting the field: 'This plant has  low severity  poison characteristics.' Poisonous to Humans: yes, Poison Severity: Low, Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations, Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine), Causes Contact Dermatitis: No, Poison Part: Seeds.",
+        "NC State also tags the plant 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' — a pets-toxicity warning worth keeping alongside the human toxicity data even though it doesn't map to a field in this schema."
       ],
       "citations": [
         {
@@ -655,8 +674,22 @@
           "quote": "Poison Severity: Low Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine) Causes Contact Dermatitis: No Poison Part: Seeds",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ipomoea-alba/"
+        },
+        {
+          "claim": "attracts_pollinators true — NC State's structured Attracts field lists Moths and Pollinators, and the Wildlife Value text independently confirms nectar draws night-flying moths",
+          "source": "NC State Extension Plant Toolbox — Ipomoea alba",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-alba/",
+          "quote": "Nectar from flowers attracts night-flying moths."
+        },
+        {
+          "claim": "is_edible false — before setting this field, the anchor page was searched for Poison/Toxic/Problem for text; it names poisoning symptoms from ingesting the seeds (vomiting, and hallucinations in large amounts), i.e. it states the plant is poisonous to eat rather than edible, and names no edible use of any part",
+          "source": "NC State Extension Plant Toolbox — Ipomoea alba",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-alba/",
+          "quote": "Vomiting, large amounts of seeds may cause hallucinations"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "chill_damage_f": null,
@@ -738,6 +771,12 @@
           "source": "UGA Cooperative Extension",
           "url": "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf",
           "quote": "Morning Glory Ipomoea spp. seeds, root hallucinations, vomiting, diarrhea, muscle tightness"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies, Hummingbirds, Pollinators, Specialized Bees)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Ipomoea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Common Morning Glory",
@@ -781,14 +820,20 @@
         "soil_base/soil_drainage are inferred categorical readings (garden_bed; moderate) from qualitative planting-location and drainage-tag text rather than an exact enum-label match in the source text; flagged here in case a stricter reading would prefer null.",
         "toxicity_detail — removed on audit: The severity/symptom/mechanism content is misattributed across target organism. NC State's page (confirmed by direct fetch) has two distinct sections: 'Poisonous to Humans' (Poison Severity: Low; Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations; Poison Toxic Principle: Indole alkaloids...) and a separate 'Problems:' section (Problem for Cats / Problem for Dogs / Problem for Horses / Weedy) that carries NO severity, symptom, mechanism, or plant-part detail at all. Citation #3's own quote literally begins with the words 'Poisonous to Humans:' yet its claim label repurposes that human-toxicology content to support toxic_to_pets/toxicity_detail. The UGA citation (#14) is the same problem one level worse: I fetched the actual PDF and its table is titled 'Ornamental Plants Reported To Be Toxic When Ingested by HUMANS' (confirmed on p.3 of the PDF) -- it is not a pet/animal toxicity table at all, on top of already being genus-level (Ipomoea spp.), which the record does disclose but the human-vs-pet mismatch it does not. As a result, toxicity_detail's lead sentence 'Seeds are the specifically implicated toxic part' is not established by any source that actually addresses pet toxicity -- the two sources that do speak to pets (RHS 'Pets: Harmful if eaten' and NC State's Problem-for-Cats/Dogs/Horses tags) name no plant part and no severity at all. The seed-specific attribution and the 'Low' severity rating are both imported wholesale from human-poisoning data without disclosing that gap, which is exactly the kind of over-reach the audit is meant to catch given seeds' well-documented toxicity/psychoactivity in this genus. toxic_to_pets=true itself is fine (independently supported by RHS's explicit pets line and NC State's Problem tags), but the elaborated toxicity_detail overstates what is actually known about the pet-specific picture.",
         "water_regime — removed on audit: This is the 'structured field contradicts the prose quote' trap the audit specifically warns about. I fetched the live MoBot page and its structured 'Growing Conditions' summary reads: Sun: Full sun / Water: Medium / Maintenance: Low -- MoBot's own middle/average moisture tier, not their wettest category. The record's citation #7 quotes only the prose culture line ('consistently moist, well-drained soils,' which is MoBot's standard boilerplate phrasing for plants in its Water:Medium tier) and on that basis alone settles on water_regime = keep_moist, without ever surfacing or reconciling MoBot's own 'Water: Medium' structured rating on the very same page. RHS's structured 'Moisture: Moist but well-drained' field (citation #11) is internally consistent with the RHS prose quoted, but 'moist but well-drained' is RHS's default/most-common moisture category for ordinary garden plants and does not resolve the tension with MoBot's explicitly moderate 'Medium' rating for this same species -- a genuine unflagged cross-source disagreement on a harm-capable field.",
-        "2026-09-02 corpus-wide quote verification: soil_drainage 'moderate' rested on an NC State Soil Drainage quote claiming 'Good Drainage Occasionally Dry Occasionally Wet'; the live page carries only 'Good Drainage' and 'Moist' -- the same fabricated-tag pattern caught on Leyland Cypress in b42. Citation removed and the value left null rather than re-derived without an auditor."
+        "2026-09-02 corpus-wide quote verification: soil_drainage 'moderate' rested on an NC State Soil Drainage quote claiming 'Good Drainage Occasionally Dry Occasionally Wet'; the live page carries only 'Good Drainage' and 'Moist' -- the same fabricated-tag pattern caught on Leyland Cypress in b42. Citation removed and the value left null rather than re-derived without an auditor.",
+        "All four mature size fields left null: Ipomoea purpurea is a twining climber (NC State: \"Climbing Method: Twining\"; RHS: \"Habit: Climbing\" and \"A short-lived perennial twining climber to 5m tall\"), so per the climber rule no height/spread figure is recorded even though RHS publishes Max Height 4-8 metres and Max Spread 0.5-1 metres and NC State has no Height/Width dimensions block at all.",
+        "is_edible left null: none of the readable sources (NC State, RHS) states the plant or any part of it is eaten or grown for food. NC State's page has no Edible field (0 hits searching 'Edible'); RHS has no edibility statement either (0 hits searching 'Edible').",
+        "Not used because is_edible is null, but recorded for the next researcher: NC State lists the plant as \"Poisonous to Humans\" with \"Poison Severity: Low\", \"Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations\", and \"Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine)\"; RHS separately flags \"Potentially harmful. Harmful if eaten\" for people and \"Harmful if eaten\" for pets.",
+        "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf refused this machine: qc.py's fetch path returns status 'pdf' with 0 bytes (the quote-checker pipeline does not fetch/extract PDF content), so it could not be searched for size, edibility, or pollinator text -- skipped rather than guessed.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b754 refused this machine: fetch returned status error:ConnectError, so it could not be searched -- skipped rather than guessed."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Nasturtium",
@@ -835,7 +880,14 @@
         "fertilize_interval_days, fertilize_strength, fertilize_active_months: NC State (\"Fertilizing will increase foliage, however, will also decrease flowering.\") and Missouri Botanical Garden (\"Avoid fertilization which tends to increase foliage output but decrease flower production.\") both advise minimizing/avoiding fertilizer, but neither gives an application rate, interval, or month range that would populate these fields.",
         "toxicity_detail: NC State's structured 'Problems:' field flags 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' for this species, but the page gives no toxic compound, plant part, or symptom detail beyond the tag itself, and no other admissible source addresses animal toxicity for this species at all (RHS's 'Potentially harmful' note is specifically about human skin contact/handling, not animals, so it neither corroborates nor conflicts).",
         "is_houseplant — removed on audit: Value is false, but the record's own citation admits the basis is silence, not a statement: 'no source describes indoor cultivation.' The quoted NC State text ('It is popular in various types of gardens') only describes outdoor garden popularity — it never says the species is unsuited to indoor growing. This is exactly the pattern the audit's structural check #3 warns about: a negative claim (is_houseplant=false) manufactured from absence of evidence and presented as a settled field value rather than left null or hedged.",
-        "outdoor_sun_exposure — removed on audit: One of the three citations behind full_sun/part_shade is University of Maryland Extension's page, which is titled generically 'Tropaeolum sp.' and covers the genus rather than confirming T. majus specifically — a fact the record itself flags as a reason to distrust that same UMD source for water_regime, but does not flag when reusing it here. The final full_sun+part_shade value happens to still be corroborated independently by NC State and RHS, so the value survives, but citing an admittedly non-species-confirmed source as plain supporting evidence in one field while treating it as suspect in another is an inconsistent evidentiary standard the record doesn't disclose."
+        "outdoor_sun_exposure — removed on audit: One of the three citations behind full_sun/part_shade is University of Maryland Extension's page, which is titled generically 'Tropaeolum sp.' and covers the genus rather than confirming T. majus specifically — a fact the record itself flags as a reason to distrust that same UMD source for water_regime, but does not flag when reusing it here. The final full_sun+part_shade value happens to still be corroborated independently by NC State and RHS, so the value survives, but citing an admittedly non-species-confirmed source as plain supporting evidence in one field while treating it as suspect in another is an inconsistent evidentiary standard the record doesn't disclose.",
+        "All four size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null because Tropaeolum majus is documented as a climber: NC State lists Habit/Form as 'Climbing' (alongside Clumping, Mounding) and Climbing Method as 'Twining', and RHS describes the species itself as 'A strong-growing, annual climber which will scramble over the ground or up a support.' Per the climber rule this applies regardless of the figures published.",
+        "NC State does publish a structured Dimensions block ('Height: 1 ft. 0 in. - 10 ft. 0 in.', 'Width: 1 ft. 0 in. - 3 ft. 0 in.') and RHS publishes 'Max Height 1.5-2.5 metres' / 'Max Spread 1.5-2.5 metres' -- neither was used, per the climber rule.",
+        "UGA CAES (fieldreport.caes.uga.edu) gives Nasturtium (Tropaeolum majus, described there as 'bush and trailing types') a height range of 1 to 6 ft, distinct from its separate mention of 'Canary Bird Vine' (Tropaeolum peregrinum, a different species) as a vine on the same page. This figure was not used because two of the three readable anchor pages (NC State, RHS) independently classify T. majus itself as a climber.",
+        "Because is_edible is true, note per the toxicity-honesty rule: NC State's tag list for this species includes '#problem for dogs #problem for horses #problem for cats' alongside its edible-garden tags. The page's body text does not explain which part, what severity, or what toxic principle underlies these pets-warning tags -- only the tags themselves were found. Searches for 'Poison' and 'Toxic' on the NC State anchor page returned zero hits.",
+        "NC State also lists common insect and disease problems for this species (aphids, mealybugs, whiteflies; Southern Bacterial Wilt) -- these are cultivation/pest problems, not a toxicity finding, and are not related to the pets-warning tags above.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ConnectError) and could not be read; nothing from it is recorded in this record.",
+        "is_edible removed on audit: Value is well sourced (NC State 'All parts, with exception of the roots, are edible.  It has a spicy flavor.' verifies verbatim; UMD 'Both the flowers and foliage have a peppery flavor and can be added to fresh salads.' verifies verbatim), but it fails the edibility-safety rule. The RHS anchor page carries a Botanical Details field reading 'Potentially harmful      Skin allergen.  Wear gloves and other protective equipment when handling' (verified verbatim on https://www.rhs.org.uk/plants/85362/i-tropaeolum-majus-i/details) -- a named harm plus a required handling precaution, and it appears nowhere in unknowns. The researcher only searched NC State for 'Poison'/'Toxic' and never checked RHS, so the unknowns assert the pet tags were the only warning found when they were not. Separately, NC State's own edibility sentence excludes the roots, and that exclusion is also absent from unknowns. Re-land is_edible: true only once both conditions (RHS skin-allergen/gloves warning, roots excepted from edibility) are written into unknowns."
       ],
       "citations": [
         {
@@ -933,8 +985,21 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/85362/i-tropaeolum-majus-i/details",
           "quote": "Potentially harmful Skin allergen. Wear gloves and other protective equipment when handling"
+        },
+        {
+          "claim": "attracts_pollinators: NC State's Wildlife Value field and Attracts field (Butterflies, Hummingbirds, Pollinators) name pollinators unconditionally",
+          "source": "NC State Extension Gardener Plant Toolbox — Tropaeolum majus",
+          "url": "https://plants.ces.ncsu.edu/plants/tropaeolum-majus/",
+          "quote": "Butterflies are attracted to this plant."
+        },
+        {
+          "claim": "attracts_pollinators: RHS tags this species 'Plants for pollinators'",
+          "source": "RHS — Tropaeolum majus",
+          "url": "https://www.rhs.org.uk/plants/85362/i-tropaeolum-majus-i/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true
     },
     {
       "common_name": "Pansy",
@@ -1054,6 +1119,30 @@
           "quote": "Pansy flowers are edible, but be advised that plants purchased from nurseries or garden centers may have been treated with systemic pesticides.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/viola-x-wittrockiana/"
+        },
+        {
+          "claim": "mature_height_in 4-9 (NC State Height: 0 ft. 4 in. - 0 ft. 9 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola x wittrockiana",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-x-wittrockiana/",
+          "quote": "Height: 0 ft. 4 in. - 0 ft. 9 in."
+        },
+        {
+          "claim": "mature_spread_in 9-12 (NC State Width: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola x wittrockiana",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-x-wittrockiana/",
+          "quote": "Width: 0 ft. 9 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State states pansy flowers are edible, with a pesticide-treatment caveat)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola x wittrockiana",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-x-wittrockiana/",
+          "quote": "Pansy flowers are edible, but be advised that plants purchased from nurseries or garden centers may have been treated with systemic pesticides."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: flowers are attractive to butterflies and other pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Viola x wittrockiana",
+          "url": "https://plants.ces.ncsu.edu/plants/viola-x-wittrockiana/",
+          "quote": "The flowers are attractive to butterflies and other pollinators."
         }
       ],
       "unknowns": [
@@ -1071,8 +1160,19 @@
         "RHS species-level profile page for Viola x wittrockiana (plant ID 156646) returned a 404/certificate error on every fetch attempt; only an individual cultivar series page (Matrix Series) on rhs.org.uk was reachable and is cited only for corroborating, non-cultivar-specific sun-exposure and soil-texture claims that matched the species-level sources.",
         "soil_drainage — removed on audit: Value 'moderate' is not stated anywhere. The NC State quote used says only 'consistently moist and well-drained' — never 'moderate.' Worse, the record's own unknowns section (water_regime entry) quotes NC State's own STRUCTURED Soil Drainage tag as 'Good Drainage'/'Moist' — a self-contradiction inside the same record. 'Good Drainage' does not map to 'moderate'; the record invented an intermediate value that contradicts both the quoted prose and the source's own structured field.",
         "name_note — removed on audit: Claims 'NC State, Missouri Botanical Garden, and RHS all use this binomial for the garden pansy.' The only RHS citation in the record is a sun-exposure quote ('Full sun, Partial shade') from a specific cultivar page (Viola wittrockiana Matrix Series) — the quote never states the scientific name, and the page's own URL/title omits the hybrid marker entirely ('viola-wittrockiana-matrix-series', no x or ×). Nothing in the citations actually shows RHS using 'Viola × wittrockiana.' The naming claim for RHS is unsupported by any quote in the record.",
-        "outdoor_sun_exposure — removed on audit: The RHS citation offered as corroboration is for a single cultivar series (Matrix Series), not a species-level profile — a genus/cultivar-vs-species specificity problem (check #2). The record's own unknowns note acknowledges the true RHS species page (plant ID 156646) was unreachable and substitutes the cultivar page, but the citation label still presents it as 'corroborating' species-level evidence without flagging that it is cultivar-specific. The field value itself is fine on NC State + MBG alone, but this citation shouldn't be represented as species-level support."
-      ]
+        "outdoor_sun_exposure — removed on audit: The RHS citation offered as corroboration is for a single cultivar series (Matrix Series), not a species-level profile — a genus/cultivar-vs-species specificity problem (check #2). The record's own unknowns note acknowledges the true RHS species page (plant ID 156646) was unreachable and substitutes the cultivar page, but the citation label still presents it as 'corroborating' species-level evidence without flagging that it is cultivar-specific. The field value itself is fine on NC State + MBG alone, but this citation shouldn't be represented as species-level support.",
+        "is_edible is true but conditional: NC State's Plant Toolbox states 'Pansy flowers are edible, but be advised that plants purchased from nurseries or garden centers may have been treated with systemic pesticides' -- the pesticide caveat is the whole condition and must accompany the true value.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' -- zero hits for all three terms; no toxicity, poisonous-part, or pets-warning language appears anywhere on the page.",
+        "Only the NC State Plant Toolbox page (https://plants.ces.ncsu.edu/plants/viola-x-wittrockiana/) was fetched for this task: its structured 'Dimensions:' block (Height/Width) and its 'Attracts'/'Edibility'/Wildlife Value fields fully sourced all six requested fields, so the other four pages already cited on this record (Missouri Botanical PlantFinder, RHS, UGA CAES field report, Clemson HGIC) were not re-fetched -- they were not needed to fill these fields and nothing on them was consulted or guessed at.",
+        "The height (4-9 in.) and spread/width (9-12 in.) figures on the NC State page are given for the species Viola x wittrockiana generally (both in the narrative description and the structured Dimensions block), not for a named cultivar, so rule 3 (cultivar exclusion) does not apply.",
+        "Pansy is an annual/ground-cover bedding plant, not a vine, liana, or other climber, so the climber size-exclusion rule (rule 4) does not apply and all four size fields were populated normally."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 4,
+      "mature_height_in_max": 9,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 12
     },
     {
       "chill_damage_f": null,
@@ -1154,6 +1254,24 @@
           "quote": "Its hardiness zones range from 10a to 11b, which results in it being an annual in North Carolina gardens.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/petunia-x-hybrida/common-name/petunia/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox structured Attracts field lists Butterflies, Hummingbirds, Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Petunia x hybrida",
+          "url": "https://plants.ces.ncsu.edu/plants/petunia-x-hybrida/common-name/petunia/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 6-18 (NC State Dimensions Height: 0 ft. 6 in. - 1 ft. 6 in., converted to inches: 0 ft 6 in = 6 in, 1 ft 6 in = 18 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Petunia x hybrida",
+          "url": "https://plants.ces.ncsu.edu/plants/petunia-x-hybrida/common-name/petunia/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Dimensions Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1 ft 0 in = 12 in, 3 ft 0 in = 36 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Petunia x hybrida",
+          "url": "https://plants.ces.ncsu.edu/plants/petunia-x-hybrida/common-name/petunia/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Petunia",
@@ -1198,14 +1316,26 @@
         "is_houseplant set false: NC State and Missouri Botanical Garden each mention occasional indoor overwintering of favorite/unique plants ('interior sunrooms in the winter, depending on the hybrid'; 'may be overwintered indoors in a bright cool location') but neither describes petunia as commonly grown indoors long-term, so this was not treated as houseplant support.",
         "soil_drainage — removed on audit: The record sets soil_drainage to \"moderate\" citing Clemson's quote \"Best growth occurs in well-drained, light soil of medium fertility\" -- but the word/category \"moderate\" never appears in that quote; \"well-drained\" is not synonymous with a moderate-drainage rating. Worse, I re-fetched the very NC State Extension page that is cited elsewhere in this same record for other fields, and it carries its own dedicated structured field: \"Soil Drainage: Good Drainage, Moist\" -- a first-party structured rating that was never checked or cited, and that points to \"Good Drainage,\" not \"moderate.\" This is exactly the check-1 pattern: a cited source's own structured field was not checked before a value was picked, and the picked value (\"moderate\") isn't literally supported by either source's language.",
         "fertilize_interval_days — removed on audit: The citation's claim label states \"fertilize_interval_days 30,\" but the only quote backing it is Clemson's \"Fertilize petunias monthly with a balanced fertilizer...\" -- the digit 30 (or any spelled-out equivalent) never appears in the quote. \"Monthly\" was silently converted to an exact 30-day interval, which is a specific inserted number not present in the source, failing the audit's own re-derivation test (every number in a claim label must be literally traceable to the quote).",
-        "is_houseplant — removed on audit: is_houseplant is set to a definite false, but the only supporting citation is qualitative and self-hedging -- its own claim label reads \"...no value taken for is_houseplant true,\" i.e., the citation itself frames this as unresolved, yet the top-level field was still populated with a confident false rather than left null. More importantly, re-fetching the cited NC State page turns up a structured Tags field the record never checked or cited: among the tags is \"#interiorscape\" (NC State's own indoor/interior-landscape-use tag), sitting alongside the prose about \"interior sunrooms in the winter\" that the record did quote. A false determination that ignores the source's own structured indoor-use tag, while quoting only the softer prose, is an absence of contrary evidence dressed up as a stated negative fact -- precisely the pattern structural check 3 asks to catch."
+        "is_houseplant — removed on audit: is_houseplant is set to a definite false, but the only supporting citation is qualitative and self-hedging -- its own claim label reads \"...no value taken for is_houseplant true,\" i.e., the citation itself frames this as unresolved, yet the top-level field was still populated with a confident false rather than left null. More importantly, re-fetching the cited NC State page turns up a structured Tags field the record never checked or cited: among the tags is \"#interiorscape\" (NC State's own indoor/interior-landscape-use tag), sitting alongside the prose about \"interior sunrooms in the winter\" that the record did quote. A false determination that ignores the source's own structured indoor-use tag, while quoting only the softer prose, is an absence of contrary evidence dressed up as a stated negative fact -- precisely the pattern structural check 3 asks to catch.",
+        "is_edible left null: none of the readable pages (NC State Plant Toolbox, RHS Petunia atkinsiana, RHS 'Storm Lavender', UGA CAES B954) state that petunia or any part of it is eaten or is poisonous to eat; searched 'Edible', 'Poison', 'Toxic' on each and found no statement addressing human/animal consumption of petunia specifically (NC State's 'Toxic' hits were only tag labels 'non-toxic for cats/horses/dogs', not an eating claim).",
+        "hgic.clemson.edu/factsheet/petunia/ returned HTTP 403 (refused this machine) via qc.py -- not read, not guessed.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a601 returned a connection error via qc.py -- not read, not guessed.",
+        "RHS 'Petunia x hybrida Storm Lavender' page (https://www.rhs.org.uk/plants/149054/...) does carry Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres, but this is a named cultivar ('Storm Lavender'), not the species Petunia x atkinsiana, so per the cultivar rule it was NOT used for mature_height_in/mature_spread_in.",
+        "RHS species page (https://www.rhs.org.uk/plants/303682/petunia-atkinsiana/details) was searched for both 'Max Height'/'Max Spread' and 'Ultimate height' wording and neither appears on that page -- it carries no size data at all, so it was not used.",
+        "UGA CAES B954 lists petunia only under 'Annuals that Attract Birds' (seed-eating), not under its 'Annuals that Attract Hummingbirds and Butterflies' list; per the rule that bird seed-eating is not pollination evidence, this was not used to support attracts_pollinators (NC State's own structured Attracts field, listing Butterflies/Hummingbirds/Pollinators, was used instead).",
+        "Petunia is not a climber/vine, so the climber-exclusion rule for size fields does not apply here."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     }
   ],
   "audit_summary": [
@@ -1244,6 +1374,7 @@
   ],
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Two findings worth keeping in mind for future name-resolution work. Annual Geranium's scientific_name_accepted was set to Pelargonium x hybridum on a single source's say-so, but the audit fetched the record's other cited sources directly and found RHS explicitly rates the name status 'Unresolved' while Clemson, MOBOT and UF/IFAS all still use the given name (x hortorum) as their working name -- a genuine cross-source dispute, not a settled reclassification. Nulled, along with a name_note whose own final sentence contradicted the evidence it had just laid out. Petunia's resolution to Petunia x atkinsiana was left alone as a materially different situation: one source (RHS) makes an explicit accepted/synonym determination that the other sources are simply silent about, not actively disputing.",
-    "Common Morning Glory's toxicity handling separated two questions the source itself keeps apart: NC State's page has a distinct 'Poisonous to Humans' section (with mechanism and symptoms) and a separate, undetailed 'Problem for Cats/Dogs/Horses' tag. The record had cross-attributed the human section's specific content to toxicity_detail; the audit correctly stripped only that text, leaving toxic_to_pets=true standing on the tag that actually supports it. Nasturtium's toxic_to_pets=true rests on a bare but specific three-animal tag with no mechanism given -- thinner than most, but a different evidentiary situation from Kohlrabi's b10 case, where the tag named only an animal (horses) unrelated to the field's actual question and left cats/dogs unaddressed."
+    "Common Morning Glory's toxicity handling separated two questions the source itself keeps apart: NC State's page has a distinct 'Poisonous to Humans' section (with mechanism and symptoms) and a separate, undetailed 'Problem for Cats/Dogs/Horses' tag. The record had cross-attributed the human section's specific content to toxicity_detail; the audit correctly stripped only that text, leaving toxic_to_pets=true standing on the tag that actually supports it. Nasturtium's toxic_to_pets=true rests on a bare but specific three-animal tag with no mechanism given -- thinner than most, but a different evidentiary situation from Kohlrabi's b10 case, where the tag named only an animal (horses) unrelated to the field's actual question and left cats/dogs unaddressed.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

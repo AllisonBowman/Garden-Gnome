@@ -306,6 +306,24 @@
           "source": "RHS Plants",
           "url": "https://www.rhs.org.uk/plants/161035/salix-discolor/details",
           "quote": "Salix discolor | American glaucous willow"
+        },
+        {
+          "claim": "mature_height_in 120-240 (NC State Height 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/salix-discolor/",
+          "quote": "Height: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 96-144 (NC State Width 8 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/salix-discolor/",
+          "quote": "Width: 8 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value field names Attracts Pollinators, and the structured Attracts field lists Butterflies, Pollinators, Songbirds, Specialized Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/salix-discolor/",
+          "quote": "Attracts Pollinators"
         }
       ],
       "common_name": "Pussy Willow",
@@ -344,14 +362,24 @@
         "chill_damage_f, cool_rest_note, day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, and direct_sun_hours_max are left null: no admissible source states a numeric damage-onset temperature, a day/night temperature range, a humidity target, or a footcandle value for this species. NC State's '6 or more hours' (full sun) and '2-6 hours' (partial shade) figures are the site-wide light-category legend text, not species-specific prose, so they were not used for direct_sun_hours_max.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: no admissible source gives a fertilizing schedule, interval, or dilution strength for Salix discolor.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are left null: Salix discolor is an in-ground shrub and no admissible source frames its watering as a dry-down or day-interval schedule.",
-        "Species scoping: confirmed this record covers Salix discolor and not Salix caprea, S. gracilistyla, or florist cut-stem pages. MoBot's Noteworthy Characteristics section explicitly distinguishes S. discolor's smaller catkins from 'the European/Asian native plant commonly called goat willow (Salix caprea)'. All three fetched pages' URL slugs contain 'discolor' and their page titles/headings name Salix discolor specifically (RHS title verified as 'Salix discolor | American glaucous willow' at /plants/161035/salix-discolor/details)."
+        "Species scoping: confirmed this record covers Salix discolor and not Salix caprea, S. gracilistyla, or florist cut-stem pages. MoBot's Noteworthy Characteristics section explicitly distinguishes S. discolor's smaller catkins from 'the European/Asian native plant commonly called goat willow (Salix caprea)'. All three fetched pages' URL slugs contain 'discolor' and their page titles/headings name Salix discolor specifically (RHS title verified as 'Salix discolor | American glaucous willow' at /plants/161035/salix-discolor/details).",
+        "is_edible left null: no page among the three cited (NC State Plant Toolbox, Missouri Botanical Garden Plant Finder, RHS) states that Salix discolor or any part of it is eaten or grown for food, and none states it is poisonous to eat. Missouri Botanical Garden's page only shows a generic 'Edible Gardening' site-navigation menu link, not a statement about this species, so it was not treated as evidence either way.",
+        "Checked NC State's anchor page for 'Poison', 'Toxic', and 'Problem for' per the edibility-safety rule: zero hits for all three, so no toxicity warning exists to carry into unknowns.",
+        "Species is a shrub (NC State Plant Type: Shrub), not a vine/liana/climber, so the climber exception does not apply and all four size fields were filled.",
+        "Size fields are taken from NC State Plant Toolbox's structured Dimensions block (the anchor, since it exists for this species) rather than from RHS (Max Height 4-8 metres / Max Spread 2.5-4 metres = ~157-315 in / ~98-157 in) or Missouri Botanical Garden (Height 6-15 ft / Spread 4-12 ft = 72-180 in / 48-144 in), per the rule that NC State's own Dimensions block takes priority when present.",
+        "plantfinder.mobot.org and the RHS page both loaded successfully via qc.py (fetch status: ok) -- neither refused this machine, so no page is recorded as refused."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 96,
+      "mature_spread_in_max": 144
     },
     {
       "common_name": "Fetterbush",
@@ -627,7 +655,12 @@
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: no admissible source (NC State, RHS, or MoBot) gives a fertilizing schedule, dilution strength, or active-month window for this species; left null.",
         "toxic_to_pets/toxicity_detail: NC State's Problems tags name cats, dogs, and horses, but the page carries no dedicated Poison block (no severity, symptom, toxic-principle, or poison-part fields), so toxicity_detail is limited to reproducing the tag list rather than clinical detail.",
         "RHS's page for this species (https://www.rhs.org.uk/plants/353615/eubotrys-racemosa/details) had no Position/Light, Soil, Aspect, Exposure, or Hardiness fields populated at the time of research, so RHS could not corroborate sun exposure, soil pH, or soil drainage beyond the Name Status and common-name fields used above.",
-        "common_name researched as 'Fetter Bush' (RHS's lead); landed as 'Swamp Doghobble' (NC State's lead) because fetter bush is the name Lyonia lucida carries in the same batch."
+        "common_name researched as 'Fetter Bush' (RHS's lead); landed as 'Swamp Doghobble' (NC State's lead) because fetter bush is the name Lyonia lucida carries in the same batch.",
+        "is_edible left null: neither the NC State anchor page nor the RHS page states the plant or any part of it is eaten, grown for food, or explicitly inedible/poisonous to eat -- 'Edible' had 0 hits on both pages.",
+        "NC State page carries tags 'Problem for Cats', 'Problem for Dogs', 'Problem for Horses' (pet toxicity warning) but no 'Poison'/'Toxic' text and no edibility statement -- noted here since it is decision-relevant even though is_edible stays null.",
+        "RHS page (https://www.rhs.org.uk/plants/353615/eubotrys-racemosa/details) carries no size data at all: searches for 'Max Height', 'Max Spread', 'Ultimate height', 'metres', 'eight', 'pread' all returned 0 hits or only unrelated membership/navigation boilerplate containing 'ft'.",
+        "RHS page also had 0 hits for 'Attracts', 'pollinators', 'Poison', 'Toxic', 'Edible' -- it simply does not carry this content for this species.",
+        "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e664) refused this machine (fetch status: error:ConnectError) -- not consulted, not guessed."
       ],
       "citations": [
         {
@@ -743,8 +776,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e664",
           "quote": "Does not tolerate drought or windy conditions."
+        },
+        {
+          "claim": "mature_height_in 48-72 (NC State Height 4 ft. 0 in. - 6 ft. 0 in., converted to inches); mature_spread_in 48-72 (NC State Width 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/leucothoe-racemosa/",
+          "quote": "Height: 4 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators is true",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/leucothoe-racemosa/",
+          "quote": "Flowers are attractive to bees, butterflies, and other pollinators."
+        },
+        {
+          "claim": "attracts_pollinators is true (Wildlife Value)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/leucothoe-racemosa/",
+          "quote": "Flowers are attractive to bees, butterflies, and other pollinators."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 72
     },
     {
       "chill_damage_f": null,
@@ -868,6 +924,30 @@
           "source": "Missouri Botanical Garden Plant Finder - Ilex decidua",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=k630",
           "quote": "Native Range: Southeastern and central United States"
+        },
+        {
+          "claim": "mature_height_in 84-180 (NC State Height 7 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ilex decidua",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-decidua/",
+          "quote": "Height: 7 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-144 (NC State Width 5 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ilex decidua",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-decidua/",
+          "quote": "Width: 5 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field: fruits are wildlife food only, human ingestion of berries causes a minor toxic reaction; no food use stated)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ilex decidua",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-decidua/",
+          "quote": "Fruits eaten by songbirds and small mammals. Use caution. Human ingestion of berries can cause minor toxic reaction."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field names Pollinators, along with Bees, Butterflies, Specialized Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ilex decidua",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-decidua/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Possumhaw",
@@ -908,14 +988,26 @@
         "UF/IFAS (edis.ifas.ufl.edu) publications found for Ilex decidua were all cultivar-specific fact sheets ('Council Fire', 'Hunter', 'Byers Golden') rather than a species page, so per the task's cultivar-page caveat they were not used as sources for species-level care facts.",
         "Clemson HGIC's 'Holly' factsheet mentions Ilex decidua only inside a multi-species genus roundup (not a dedicated single-species page) and contains no toxicity-to-pets information; it was not used to support any field.",
         "water_regime is left null: the only watering-adjacent statement found is Missouri Botanical Garden's structured 'Water: Medium' field, which is mid-scale and disclosed only as a counterpoint, not a basis for any of the four enum values; no source gave a dry-down or moisture-target instruction.",
-        "is_houseplant false rests on NC State's Plant Type field, which carries exactly four values (Native Plant, Perennial, Shrub, Tree), plus its USDA Plant Hardiness Zone range and MoBot's Type field. The audit asked for a fifth Plant Type value, 'Woody Plant'; the live page does not carry one — that string begins NC State's next label, 'Woody Plant Leaf Characteristics', and a naive text scrape merges the two. The repair was declined, as the same claim was declined in b73."
+        "is_houseplant false rests on NC State's Plant Type field, which carries exactly four values (Native Plant, Perennial, Shrub, Tree), plus its USDA Plant Hardiness Zone range and MoBot's Type field. The audit asked for a fifth Plant Type value, 'Woody Plant'; the live page does not carry one — that string begins NC State's next label, 'Woody Plant Leaf Characteristics', and a naive text scrape merges the two. The repair was declined, as the same claim was declined in b73.",
+        "Possumhaw is a shrub/tree (NC State Whole Plant Traits lists Shrub, Tree), not a vine/climber, so all four size fields are populated normally.",
+        "Size figures (Height 7-15 ft, Width 5-12 ft) are given for the species itself on the NC State species page (not a genus page, not a named cultivar), so they were used as-is.",
+        "is_edible set false rather than conditional: NC State's Edibility text only describes wildlife (songbirds, small mammals) eating the fruit and warns that human ingestion causes a minor toxic reaction — no part of the plant is described as grown or used for human food, so this reads as 'not edible for humans,' not a conditional edible case.",
+        "Per the poison check on the anchor page before setting is_edible: NC State lists Poison Severity Low, Poison Symptoms 'Minor toxicity. Ingestion may cause vomiting, diarrhea, or other illness in humans,' Poison Toxic Principle Saponins, Poison Part Fruits, Causes Contact Dermatitis No. Recorded here for completeness even though is_edible is false (rule 5 requires this specifically when is_edible is true).",
+        "Missouri Botanical Garden PlantFinder page (https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=k630) refused/failed this machine (fetch status: error:ConnectError) — not used, and its content was not guessed at.",
+        "RHS page (https://www.rhs.org.uk/plants/9127/ilex-decidua/details) fetched successfully (status ok) but qc.py found zero hits for 'Max Height', 'Max Spread', 'Ultimate height', 'Attract', 'Edib', 'Poison', 'Toxic', and 'Pollinat' in the extracted text — this record's size/edibility/pollinator data was not sourced from RHS; NC State (the species-specific anchor page) was used instead, consistent with the priority rule."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 84,
+      "mature_height_in_max": 180,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 144
     },
     {
       "chill_damage_f": null,
@@ -1075,6 +1167,30 @@
           "source": "NC State Extension",
           "url": "https://plants.ces.ncsu.edu/plants/aesculus-sylvatica/",
           "quote": "This plant has high severity poison characteristics."
+        },
+        {
+          "claim": "mature_height_in 120-240 (NC State Height 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Aesculus sylvatica",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-sylvatica/",
+          "quote": "Height: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-180 (NC State Width 6 ft. 0 in. - 15 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Aesculus sylvatica",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-sylvatica/",
+          "quote": "Width: 6 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Bees, Butterflies, Hummingbirds, Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Aesculus sylvatica",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-sylvatica/",
+          "quote": "Bees"
+        },
+        {
+          "claim": "is_edible false (NC State poison profile states the plant is poisonous if ingested)",
+          "source": "NC State Extension Gardener Plant Toolbox — Aesculus sylvatica",
+          "url": "https://plants.ces.ncsu.edu/plants/aesculus-sylvatica/",
+          "quote": "Poisonous if ingested. Symptoms may include muscular weakness and paralysis, dilated pupils, vomiting, diarrhea, depression, paralysis, and stupor."
         }
       ],
       "common_name": "Painted Buckeye",
@@ -1117,14 +1233,26 @@
         "No admissible source gives a humidity requirement (percentage or qualitative) for this outdoor woody species; humidity_need, humidity_pct_min, and humidity_pct_max are left null.",
         "This is an in-ground landscape tree/shrub, not a container/houseplant, so per the schema rule water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis, and cool_rest_note are left null as no source frames watering or dormancy in those terms.",
         "The research brief's characterization of this species as a 'summer-dormant understory tree' was checked against all admissible sources but no source uses the phrase 'summer dormant' or 'summer dormancy.' The closest supported facts are: NC State says it 'leafs out early in March-April' and 'usually drops its leaves by September'; MoBot says its leaves are 'among the first to emerge in spring and among the first to drop in late summer to early fall'; and Clemson's multi-species Buckeyes and Horsechestnuts factsheet calls it 'an understory plant.' These describe early/late-summer leaf senescence and understory habit, not a stated summer-dormancy period, so no schema field was populated with a 'summer dormant' claim.",
-        "soil_base was set to garden_bed by inference from RHS's Soil Types field (Chalk, Clay, Loam, Sand -- garden soil textures) and the consistent description across all three sources of this species as an outdoor landscape/native tree-shrub; no source uses the term 'garden bed' itself."
+        "soil_base was set to garden_bed by inference from RHS's Soil Types field (Chalk, Clay, Loam, Sand -- garden soil textures) and the consistent description across all three sources of this species as an outdoor landscape/native tree-shrub; no source uses the term 'garden bed' itself.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) — skipped, no guess made about its content.",
+        "RHS (rhs.org.uk/plants/88590/aesculus-sylvatica) gives Max Height 8-12 metres and Max Spread 1.5-2.5 metres, well outside NC State's range — not used for size fields since NC State's species-specific structured Dimensions block is the anchor per instructions when it exists.",
+        "is_edible set false on the strength of NC State's Poison Symptoms field ('Poisonous if ingested...'); no page on the citation list states the plant or any part is grown or used for food.",
+        "NC State rates this species 'high severity' poison, Poison Severity: High, Poison Toxic Principle: Glycoside aesculin, saponin aesin, possibly alkaloids, Poison Part: Bark, Flowers, Fruits, Leaves, Sap/Juice, Seeds, Stems; tags also include 'problem for cats', 'problem for dogs', 'problem for horses'.",
+        "UGA CAES field report (fieldreport.caes.uga.edu) calls this species 'Georgia buckeye' and gives a single figure ('reach 25 feet in height') with no low end and no source methodology — not used for mature_height_in since NC State's anchor range already covers this field and a single informal figure should not be centered into an invented range.",
+        "Species is a tree/shrub, not a climber, so rule 4 (no size for climbers) does not apply."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 180
     }
   ],
   "audit_summary": [
@@ -1155,6 +1283,7 @@
   ],
   "normalizations": [
     "2026-09-10: b74 landed by a second session (branch claude/database-build-goals-e548af) from the loop session's own post-audit records and its half-written repair script, after that session stalled on a session limit at 09:56. Six native shrubs and small trees: Dusty Zenobia, Pussy Willow, Fetterbush, Swamp Doghobble, Possumhaw, Painted Buckeye. Auditor-supplied corrected wording used verbatim; the loop session had ground-truthed each citation substitute with qc.py (its auditor again offered 'Woody Plant' as a fifth Plant Type value; declined). Landing decisions here: Leucothoe racemosa lands as Swamp Doghobble, NC State's lead (a two-entry Common Name(s) list in page-title order that its prose opens with), because the 'fetter bush' RHS and MoBot lead with is the name Lyonia lucida carries in this same batch; three NC State label-glued quotes on Fetterbush (Light, Soil pH, Soil Drainage) trimmed to their values; Possumhaw's five-field poison quote re-quoted as the page's contiguous Poison block with its labels. verify_quotes: every reachable quote verified after repair; MoBot pages skipped from this machine (ConnectError).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

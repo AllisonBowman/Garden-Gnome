@@ -48,7 +48,14 @@
         "cool_rest_note: not addressed for this outdoor annual/biennial vegetable crop by any admissible source.",
         "soil_drainage was mapped to the catalog's 'moderate' category by interpreting repeated 'well-drained' language (Clemson, NC State, RHS); no source uses the catalog's own drainage vocabulary directly.",
         "soil_base — removed on audit: The cited quote ('If you are not limited by equipment space restrictions, multiple (up to four) rows of onions can be planted on raised beds covered with black plastic mulch.') is from Penn State Extension's onion-production guide, which is explicitly framed for small-scale/part-time COMMERCIAL farming operations (the surrounding section discusses 75,000-120,000 plants/acre spacing and drip-tape irrigation). It is a conditional, equipment-driven description of one commercial raised-bed configuration among several, not a general statement that onion's soil_base is 'garden_bed.' No source was actually cited establishing a general garden-bed (in-ground, non-container) growing categorization for the species; the specific quote chosen doesn't support the general field value it's attached to.",
-        "soil_drainage — removed on audit: The value 'moderate' does not appear in any cited source — the quotes only say 'well-drained' (Clemson, and NC State/RHS per the record's own unknowns note). 'Well-drained' and 'moderate drainage' are not interchangeable in standard garden-drainage vocabulary (well-drained typically indicates better-than-moderate drainage), and the record itself admits in unknowns that 'no source uses the catalog's own drainage vocabulary directly' — i.e., this is the researcher's own unverified translation into the catalog's category set, asserted as a factual field value rather than left null or hedged."
+        "soil_drainage — removed on audit: The value 'moderate' does not appear in any cited source — the quotes only say 'well-drained' (Clemson, and NC State/RHS per the record's own unknowns note). 'Well-drained' and 'moderate drainage' are not interchangeable in standard garden-drainage vocabulary (well-drained typically indicates better-than-moderate drainage), and the record itself admits in unknowns that 'no source uses the catalog's own drainage vocabulary directly' — i.e., this is the researcher's own unverified translation into the catalog's category set, asserted as a factual field value rather than left null or hedged.",
+        "attracts_pollinators left null: no page states an unconditional pollinator-attraction claim naming bees, butterflies, moths, or hummingbirds; NC State's only pollinator-related mention is the landscape-use tag 'Vegetable, Herb and Mostly Native Pollinator Garden', which is a garden-placement category, not an attracts statement.",
+        "is_edible is true but conditional: NC State lists this species as 'Poisonous to Humans' with Poison Severity: Low; Poison Symptoms: Vomiting, breakdown of red blood cells (hemolytic anemia, Heinz body anemia), blood in urine, weakness, high heart rate, panting; Poison Toxic Principle: N-propyl disulfide; Causes Contact Dermatitis: No. The record is also tagged Problem for Cats, Problem for Dogs, and Problem for Horses.",
+        "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/ returned an http-403 status through qc.py -- this host refused the fetch, so it was not read and contributed nothing.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282056&isprofile=1&basic=onion returned a connection error through qc.py -- this host refused the fetch, so it was not read and contributed nothing.",
+        "https://extension.umd.edu/resource/growing-onions-home-garden fetched successfully (39,933 bytes) but contained zero hits for Height, Width, bee, butterfl, hummingbird, Pollinator, Attracts, Edible, or Toxic -- it addresses none of the six target fields.",
+        "https://extension.psu.edu/onion-production fetched successfully (402,765 bytes) but every hit on Pollinator/bee/Height fell inside site-navigation menu boilerplate, not the article body; the page addresses none of the six target fields with usable content.",
+        "Neither read source separates a species-level figure from a cultivar figure for size, and Allium cepa is not a climber, so all four size fields were filled normally per NC State's structured Dimensions block."
       ],
       "citations": [
         {
@@ -116,8 +123,31 @@
           "quote": "Hardy (can withstand heavy spring frosts).",
           "source": "University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/growing-onions-home-garden"
+        },
+        {
+          "claim": "is_edible true (NC State: bulb and tops edible raw or cooked)",
+          "quote": "The bulbs and tops are edible raw or cooked.",
+          "source": "NC State Extension Gardener Plant Toolbox — Allium cepa",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-cepa/"
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Allium cepa",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-cepa/"
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Allium cepa",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-cepa/"
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     },
     {
       "chill_damage_f": null,
@@ -193,6 +223,18 @@
           "quote": "Full sun; requires direct light at least 6 hours/day; prefers 8 - 10 hours/day.",
           "source": "University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/growing-green-peas-home-garden"
+        },
+        {
+          "claim": "is_edible: Seeds, pods, flowers, and shoots can all be eaten raw, stir-fried, or cooked.",
+          "source": "NC State Extension Plant Toolbox, Lathyrus oleraceus",
+          "url": "https://plants.ces.ncsu.edu/plants/pisum-sativum/",
+          "quote": "Edibility: Seeds, pods, flowers, and shoots can all be eaten raw, stir-fried, or cooked. Pods and seeds vary in size and edibility with variety as well as harvesting times; they are roughly divided into shelling peas (garden peas) that are harvested when the seeds are almost or completely mature and edible pod peas (snow peas and sugar snap peas) that are harvested when the pods and seeds are young and not fully mature."
+        },
+        {
+          "claim": "is_edible corroboration: garden peas include the common green English pea, shelled and eaten as seed, and edible-podded peas eaten whole.",
+          "source": "Clemson Cooperative Extension HGIC, Garden Peas factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/garden-peas/",
+          "quote": "Garden peas ( Pisum sativum L.) are cool-season crops that include the common green English pea and the edible-podded pea. English peas are shelled and only the seed eaten, whereas edible-podded peas are eaten whole."
         }
       ],
       "common_name": "Garden Pea",
@@ -235,14 +277,19 @@
         "cool_rest_note: not applicable — no source describes a winter dormancy/rest period for this fast-cycling annual vegetable.",
         "soil_drainage (moderate) and soil_base (garden_bed): no source uses these exact schema category words; the values are inferred from qualitative descriptions of well-drained, moisture-retentive garden soil (NC State: 'Good Drainage'/'Moist'; Clemson: organic matter to loosen clay and retain moisture in sand) and explicit in-ground/row sowing instructions (UMD: 'Sow seed in garden'), so treat as a categorical read rather than a literal source term.",
         "chill_damage_f — removed on audit: Value 32 is sourced from the UGA CAES quote 'temperatures below 32 degrees can kill young blooms' — verified live against fieldreport.caes.uga.edu, which explicitly scopes the 32F kill point to young blooms/flowers only ('the plant will endure some cold weather' generally). The record's own Clemson citation in this same record confirms the general plant 'can withstand frosts and light freezes, although the blossoms cannot' — i.e. the whole plant tolerates temperatures at/below 32F and only the blooms are lost. Populating chill_damage_f (a whole-plant field) with a reproductive-tissue-specific kill temperature conflates 'this flower dies here' with 'this plant sustains chill damage here,' which is exactly the kind of survival-floor/scope mismatch the audit calls out. The digit itself is quoted correctly, but the field it was mapped onto over-generalizes a narrower claim.",
-        "scientific_name_accepted — removed on audit: The supporting citation's quote — 'Synonym(s): Pisum abyssinicum, Pisum arvense, Pisum sativum, Pisum sativum subsp. arvense, Pisum sativum subsp. elatius' — is not verbatim from the cited NC State page. I fetched https://plants.ces.ncsu.edu/plants/pisum-sativum/ directly (three independent checks, including an explicit search for the literal string 'Synonym'): the page's actual heading for that list is 'Previously known as:', and the word 'Synonym' does not appear anywhere on the page. The underlying substantive conclusion (page titled 'Lathyrus oleraceus,' with Pisum sativum listed as a prior name) does check out and scientific_name_accepted='Lathyrus oleraceus' is verbatim from the source's own title, so the field value itself survives — but the citation's quote text was fabricated/paraphrased rather than lifted from the source, which fails the 'does the quote actually state this' verbatim-fidelity check regardless of whether the conclusion happens to be right."
+        "scientific_name_accepted — removed on audit: The supporting citation's quote — 'Synonym(s): Pisum abyssinicum, Pisum arvense, Pisum sativum, Pisum sativum subsp. arvense, Pisum sativum subsp. elatius' — is not verbatim from the cited NC State page. I fetched https://plants.ces.ncsu.edu/plants/pisum-sativum/ directly (three independent checks, including an explicit search for the literal string 'Synonym'): the page's actual heading for that list is 'Previously known as:', and the word 'Synonym' does not appear anywhere on the page. The underlying substantive conclusion (page titled 'Lathyrus oleraceus,' with Pisum sativum listed as a prior name) does check out and scientific_name_accepted='Lathyrus oleraceus' is verbatim from the source's own title, so the field value itself survives — but the citation's quote text was fabricated/paraphrased rather than lifted from the source, which fails the 'does the quote actually state this' verbatim-fidelity check regardless of whether the conclusion happens to be right.",
+        "mature_height_in and mature_spread_in left null: NC State (the anchor for this species) lists Habit/Form: Climbing and Climbing Method: Tendrils, i.e. this is a climber, so per rule all four size fields are left null even though the page publishes a structured Dimensions block (Height: 1 ft. 0 in. - 1 ft. 6 in.; Width: 0 ft. 6 in. - 1 ft. 0 in.) -- that figure cannot be trusted to mean the plant's own stature versus its climbing run.",
+        "attracts_pollinators left null: searched NC State for 'Attracts', 'bee', 'butterfl', 'hummingbird', 'Wildlife', 'pollinat' -- no structured Attracts/wildlife field and no statement of bees/butterflies/hummingbirds visiting; the only pollination-related hit was 'Flowers can self-pollinate', which is about the flower's own pollination mechanism, not a pollinator attraction claim, so it does not count as support. Also checked Clemson (hgic.clemson.edu/factsheet/garden-peas/) for 'bee', 'butterfl', 'hummingbird', 'pollinat', 'Attracts' -- same result, no attraction statement found.",
+        "Checked NC State for 'Poison' and 'Toxic' before setting is_edible: 0 hits for both. Also checked 'Problem' (5 hits) -- all describe insect and disease problems (cutworms, aphids, powdery mildew, root rot, damping-off), none describe toxicity, a poisonous part, or a pets warning. No toxicity caveat was found to carry into unknowns.",
+        "extension.umd.edu/resource/growing-green-peas-home-garden and fieldreport.caes.uga.edu/news/plant-cold-tolerant-peas-now/ were not queried in this pass; is_edible and the size/pollinator nulls are already settled by NC State (and corroborated for edibility by Clemson), so no additional page was needed to fill or contradict those six fields."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": "Keep the root zone consistently moist; water deeply enough to moisten soil to about 6 in (15 cm) depth rather than light sprinklings, which encourage shallow rooting.",
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true
     },
     {
       "chill_damage_f": null,
@@ -427,6 +474,30 @@
           "source": "RHS",
           "url": "https://www.rhs.org.uk/vegetables/potatoes/grow-your-own",
           "quote": "Potatoes need an open, sunny growing site, not prone to late frosts, as the young shoots are susceptible to frost damage in April and May."
+        },
+        {
+          "claim": "is_edible: NC State states the plant produces edible underground tubers",
+          "source": "NC State Extension Plant Toolbox — Solanum tuberosum",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-tuberosum/",
+          "quote": "The plant produces stolon's that bear edible underground tubers. All green parts of the potato plant are inedible because they contain a toxin known as solanine."
+        },
+        {
+          "claim": "attracts_pollinators: NC State's structured Attracts field lists Bees",
+          "source": "NC State Extension Plant Toolbox — Solanum tuberosum",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-tuberosum/",
+          "quote": "Bees"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Height 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Solanum tuberosum",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-tuberosum/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Solanum tuberosum",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-tuberosum/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
         }
       ],
       "unknowns": [
@@ -439,8 +510,20 @@
         "water_growing_days_est/water_dormant_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: UGA gives a watering interval ('Heavier soil needs watering at least once every 5 to 7 days, but sandy soils may need even more frequent irrigation') but it is soil-texture-dependent and given as a range, not a single species-level day count, so left null rather than picking a bound.",
         "cool_rest_note: no admissible source discusses a dormancy/rest-period care note for this crop.",
         "is_houseplant — removed on audit: The citation's claim text says the RHS quote shows container potatoes 'positioned in full sun outdoors/in a greenhouse, not grown as an indoor houseplant,' but the actual quoted sentence ('Plant one seed potato in a 30cm pot, position it in full sun and keep it well watered') only says 'full sun' -- it says nothing about outdoors or a greenhouse. Those words are pulled from an unquoted, different part of the RHS page (a frost-protection passage about keeping containers in a frost-free greenhouse until risk of frost passes) and spliced into the claim as if the cited quote supported them. The underlying value (is_houseplant: false) is almost certainly correct for potatoes regardless, but the citation as written attributes to its quote more than the quote actually says.",
-        "soil_base — removed on audit: The value 'garden_bed' is backed by the same citation used for outdoor_sun_exposure/soil_drainage, whose quote ('Potatoes grow best in full sun and well-drained, sandy and acidic soil...') describes soil texture and drainage, not a growing-location category. Nothing in the quote distinguishes garden-bed cultivation from the container/pot cultivation the RHS source (also in this record's citation list) documents as a legitimate alternative method. The claim label bundles 'soil_base garden_bed' onto a quote that doesn't establish it."
-      ]
+        "soil_base — removed on audit: The value 'garden_bed' is backed by the same citation used for outdoor_sun_exposure/soil_drainage, whose quote ('Potatoes grow best in full sun and well-drained, sandy and acidic soil...') describes soil texture and drainage, not a growing-location category. Nothing in the quote distinguishes garden-bed cultivation from the container/pot cultivation the RHS source (also in this record's citation list) documents as a legitimate alternative method. The claim label bundles 'soil_base garden_bed' onto a quote that doesn't establish it.",
+        "Habit/Form on NC State is listed as Erect, Spreading — not a vine, liana, or other climber — so full mature height and spread data applies normally.",
+        "is_edible is true but conditional: only the underground tubers are edible. NC State states all green parts of the plant are inedible, containing the toxin solanine, found in the sprouts, stems, leaves, berries, and the green skin of the tuber.",
+        "Because is_edible is true, the poison/toxicity information on the same NC State page is recorded in full per instructions: Poison Severity: High. Poison Symptoms: Nausea, vomiting, salivation, drowsiness, abdominal pain, diarrhea, weakness, respiratory depression; may be fatal. Poison Toxic Principle: Solanine and other alkaloids. Poison Part: Fruits, Leaves, Roots, Stems. Causes Contact Dermatitis: No.",
+        "NC State also tags the species Problem for Cats, Problem for Dogs, Problem for Horses, and Problem for Children, and separately states of the berries: 'EXTREMELY TOXIC, DO NOT EAT.'",
+        "NC State notes tubers exposed to light turn green and develop toxic compounds if not sufficiently covered during growth; UGA and RHS both separately confirm that light-exposed potatoes turn green and inedible, though neither page carries any dimension, pollinator, or edibility-grant data of its own for this species.",
+        "UGA (fieldreport.caes.uga.edu) and RHS (rhs.org.uk) pages were both fetched successfully (not refused) but contain no structured height/spread, 'Attracts'/pollinator, or edibility-grant text for Solanum tuberosum — searched for 'Height', 'Max Height', 'Max Spread', 'Ultimate', 'Attracts', 'pollinat', 'bee', 'Edible', 'Poison', 'Toxic' on each with no relevant additional hits beyond the light/greening note. NC State Plant Toolbox is therefore the sole source used for all six researched fields."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Radish",
@@ -539,6 +622,24 @@
           "quote": "The optimum temperature is 50 to 65 °F.",
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/carrot-beet-radish-parsnip/"
+        },
+        {
+          "claim": "mature_height_in 6-36 (NC State Height: 0 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/raphanus-raphanistrum-subsp-sativus/",
+          "quote": "Height: 0 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/raphanus-raphanistrum-subsp-sativus/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true: NC State lists the plant as Edible and states its roots, pods, flowers and leaves can be eaten",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/raphanus-raphanistrum-subsp-sativus/",
+          "quote": "While most commonly grown for its spicy root, the leaves and flowers are edible as well.  Some varieties grow large edible seed pods.  Roots and pods can be eaten raw, cooked, or pickled.  Flowers are eaten raw and leaves are best cooked due to their coarse texture."
         }
       ],
       "unknowns": [
@@ -552,8 +653,19 @@
         "water_growing_days_est, water_dormant_days_est, water_estimate_basis, water_check_depth_cm, water_dry_down_target: sources describe watering only qualitatively (consistent moisture needed); none give a check-interval, dry-down depth, or day-count estimate to build a numeric estimate from.",
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: Clemson gives a 5-10-10 fertilizer rate and a sidedress instruction, but states it for 'these root crops' as a group (carrot, beet, radish, parsnip together) rather than confirming it specifically for radish, and gives no month/interval/strength breakdown, so it was not used.",
         "cool_rest_note: no admissible source describes a dormancy or rest period for this annual crop.",
-        "is_houseplant: kept false -- NC State's container-growing note gives a pot size/depth but is presented in an outdoor garden-planting-dates context, not as indoor/houseplant cultivation."
-      ]
+        "is_houseplant: kept false -- NC State's container-growing note gives a pot size/depth but is presented in an outdoor garden-planting-dates context, not as indoor/houseplant cultivation.",
+        "attracts_pollinators left null: no 'Attracts' or wildlife/pollinator field found on the NC State page (0 hits for 'Attracts', 'Pollinator', 'Wildlife', 'insect' referred only to pest problems, not pollination), and no 'attracts_pollinators' tag or pollinator statement on the RHS page (0 hits for 'Attracts', 'pollinator'). Clemson HGIC page could not be checked (see below).",
+        "https://hgic.clemson.edu/factsheet/carrot-beet-radish-parsnip/ returned an http-403 status via qc.py -- this machine was refused. Not used for any field; nothing from it was guessed.",
+        "is_edible is true and the NC State anchor page also names toxicity, per rule 5: 'This plant has low severity poison characteristics.' Poison Severity: Low. Poison Symptoms: 'May cause mild irritation to hands when handling.' Poison Toxic Principle: Isothiocyanate. Causes Contact Dermatitis: Yes. Poison Part: Leaves, Roots. Separately, the pest/disease section notes swede midge damage to leaves 'may cause contact dermatitis in some people.'",
+        "The 'Caudatus' (Rat's Tail) cultivar is described by NC State as grown for large, fleshy, edible pods with 'no edible taproot' -- this is cultivar-specific and was not used to set any field for the species per rule 3.",
+        "mature_height_in and mature_spread_in are taken from NC State's structured Dimensions block for the species as a whole (not a cultivar), and the species is not a climber/vine, so all four size fields are populated rather than left null.",
+        "RHS gives Max Height and Max Spread of 0.1-0.5 metres (about 3.9-19.7 in) for its Raphanus sativus page, but NC State's Dimensions block was used as the anchor per instructions since NC State has a species-specific page; the RHS figures were not merged in or averaged with NC State's."
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
@@ -635,6 +747,18 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/spinacia-oleracea/",
           "quote": "It can be grown at home in containers or beds and tolerates areas too shady for most other vegetables to thrive."
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spinacia-oleracea/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spinacia-oleracea/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
         }
       ],
       "common_name": "Spinach",
@@ -678,14 +802,24 @@
         "fertilize_interval_days: Clemson describes a single side-dress application of calcium nitrate timed three to four weeks after planting (possibly split into two applications on sandy soil), which is not a repeating fertilization interval, so left null.",
         "fertilize_strength / fertilize_active_months: no admissible source gives fertilizer dilution/strength guidance or specific calendar months for fertilizing.",
         "cool_rest_note: no admissible source discusses a dormancy or winter-rest period for this annual crop; not applicable/found.",
-        "soil_base — removed on audit: The record sets soil_base='garden_bed' and cites Clemson HGIC's 'Spinach grows well on a variety of soils, but it prefers a fertile sandy loam high in organic matter' as support. That quote is about soil texture/fertility only — it never addresses bed vs. container cultivation, so it does not actually establish 'garden_bed' as opposed to any other soil_base bucket. Worse, the record's own separate NC State citation ('It can be grown at home in containers or beds') directly documents container cultivation as an equally valid, non-exclusive setting, which is confirmed by NC State's page text stating spinach 'can be grown in containers as small as 1 gallon and as shallow as 4 to 6 inches.' This same catalog has an established, audited precedent for exactly this situation: when admissible sources document both in-ground/garden-bed cultivation and container cultivation as separate, non-exclusive settings, soil_base is left null rather than picking one bucket, specifically 'to avoid overstating one setting as the only one' (see garden-gnome/app/data/verified/b10-veg-round3.json, Cucumber and Eggplant records). The Spinach record breaks with that precedent, picking 'garden_bed' exclusively on a citation that doesn't even speak to the question, while its own other citation shows containers are equally valid."
+        "soil_base — removed on audit: The record sets soil_base='garden_bed' and cites Clemson HGIC's 'Spinach grows well on a variety of soils, but it prefers a fertile sandy loam high in organic matter' as support. That quote is about soil texture/fertility only — it never addresses bed vs. container cultivation, so it does not actually establish 'garden_bed' as opposed to any other soil_base bucket. Worse, the record's own separate NC State citation ('It can be grown at home in containers or beds') directly documents container cultivation as an equally valid, non-exclusive setting, which is confirmed by NC State's page text stating spinach 'can be grown in containers as small as 1 gallon and as shallow as 4 to 6 inches.' This same catalog has an established, audited precedent for exactly this situation: when admissible sources document both in-ground/garden-bed cultivation and container cultivation as separate, non-exclusive settings, soil_base is left null rather than picking one bucket, specifically 'to avoid overstating one setting as the only one' (see garden-gnome/app/data/verified/b10-veg-round3.json, Cucumber and Eggplant records). The Spinach record breaks with that precedent, picking 'garden_bed' exclusively on a citation that doesn't even speak to the question, while its own other citation shows containers are equally valid.",
+        "attracts_pollinators left null: no page (NC State Plant Toolbox, RHS, Penn State Extension, UMD Extension) contains a structured Attracts/wildlife field or an unconditional statement naming bees, butterflies, moths, hummingbirds or other pollinators for Spinacia oleracea; searched 'Attracts' and 'Pollinator' on each with zero relevant hits.",
+        "is_edible is true, and per rule 5 the full toxicity text from the anchor (NC State) is reproduced here rather than summarized: 'This plant has low severity poison characteristics.' Poisonous to Humans / Poison Severity: Low. Poison Symptoms: 'Only toxic in large quantities over time or with low calcium intake. Can interfere with absorption of iron and calcium as well as increase the risk of developing gout and kidney stones.' Poison Toxic Principle: Oxalic acid. Poison Part: Flowers, Leaves. Causes Contact Dermatitis: No. NC State also states: 'Raw spinach leaves, while edible and safe to eat, contain oxalates that can prevent the absorption of iron and calcium. Cooking spinach in several changes of water can reduce the levels of oxalates.'",
+        "hgic.clemson.edu/factsheet/spinach/ refused this machine (fetch status http-403 via qc.py); not read, and no content from it is used or guessed.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279157 is a known host that refuses this machine; not read, and no content from it is used or guessed.",
+        "Spinach is not a vine/liana/climber, so the climber size exclusion (rule 4) does not apply; mature_height_in and mature_spread_in are populated from NC State's structured Dimensions block, which is the anchor page for this species. RHS separately gives Max Height and Max Spread of 0.1-0.5 metres (3.94-19.7 inches) for spinach, consistent in order of magnitude with the NC State figures used, but NC State's structured Dimensions block is used as the anchor per the task rules rather than RHS.",
+        "is_edible removed on audit: The value true is itself well supported, but the mandated safety disclosure is incomplete and misquotes the anchor. NC State's structured block reads 'Poison Part:' followed by three entries - Flowers, Leaves, Stems - and the record's unknowns entry, which states it reproduces the full toxicity text from the anchor 'rather than summarized', renders it as 'Poison Part: Flowers, Leaves.' The third named toxic part, Stems, is silently dropped. Under rule F a toxic part named by a page must appear in unknowns; Stems does not, so the disclosure understates which parts of the plant NC State flags. Re-land is_edible once the unknowns text carries all three parts (Flowers, Leaves, Stems) exactly as the page lists them."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Squash",
@@ -736,7 +870,12 @@
         "soil_base: RHS notes compact summer-squash varieties can also be grown in large containers of multi-purpose or soil-based compost, but the field holds one value; recorded as garden_bed because RHS calls in-ground growing the usual method ('Squashes are usually grown in the ground... but compact varieties of summer squash can be grown in large containers').",
         "soil_ph: Clemson's winter squash/pumpkin factsheet gives a slightly different pH window (6.2-6.5) than its summer squash factsheet (6.0-6.5) used here, and NC State's general species tag is broader ('Neutral (6.0-8.0)'); the summer squash figures were used as the recorded value since they are the most specific numeric statement found.",
         "fertilize_interval_days — removed on audit: The only source for this number is RHS: 'Apply an organic-based, high potassium liquid fertiliser every 10 to 14 days once the first fruits start to swell' — and RHS explicitly qualifies this to container-grown plants only, immediately preceded by 'Squashes growing in the ground shouldn't need feeding.' The record's own soil_base field is 'garden_bed' (RHS: 'usually grown in the ground'), i.e. the record has already picked in-ground as the representative growing method — yet fertilize_interval_days=14 is populated as a general, unqualified field for that same record, which per the very same source needs NO feeding at all. A downstream consumer reading soil_base=garden_bed + fertilize_interval_days=14 would tell an in-ground grower to fertilize every 14 days, directly contradicting the cited source's guidance for that exact scenario. The 14-day figure is real (drawn from a genuine 10-14 day range) but its applicability condition (container-grown, post-fruit-set only) was dropped from the general field instead of being reflected as a caveat or left null/conditional.",
-        "is_houseplant — removed on audit: The cited RHS quote ('Squashes are usually grown in the ground... but compact varieties of summer squash can be grown in large containers') distinguishes ground vs. container growing — it says nothing about indoor vs. outdoor placement, so it does not literally state 'not a houseplant.' The conclusion is very likely correct in reality (squash needs 6+ hours direct sun, per the record's own full_sun citations, which is a far more direct basis for ruling out houseplant status), but the specific quote chosen for this claim only sounds related to the field rather than actually asserting it. The record should have cited the full-sun/outdoor-siting language (e.g. RHS's 'Choose a warm growing site in full sun') rather than the ground-vs-container sentence, which addresses a different axis (location type, not indoor/outdoor)."
+        "is_houseplant — removed on audit: The cited RHS quote ('Squashes are usually grown in the ground... but compact varieties of summer squash can be grown in large containers') distinguishes ground vs. container growing — it says nothing about indoor vs. outdoor placement, so it does not literally state 'not a houseplant.' The conclusion is very likely correct in reality (squash needs 6+ hours direct sun, per the record's own full_sun citations, which is a far more direct basis for ruling out houseplant status), but the specific quote chosen for this claim only sounds related to the field rather than actually asserting it. The record should have cited the full-sun/outdoor-siting language (e.g. RHS's 'Choose a warm growing site in full sun') rather than the ground-vs-container sentence, which addresses a different axis (location type, not indoor/outdoor).",
+        "mature_height_in and mature_spread_in left null (all four fields): NC State's Dimensions block for Cucurbita pepo lists Climbing Method: Tendrils, with Height: 1 ft. 0 in. - 3 ft. 0 in. and Width: 2 ft. 0 in. - 25 ft. 0 in. — per the climber rule, a vine/tendril climber's extension height/spread field does not distinguish stature from run, so no size figures are recorded for this species even though the page publishes numbers.",
+        "attracts_pollinators left null: searched NC State for 'Attracts' (0 hits) and RHS grow-your-own page for 'Pollinator', 'bee', 'butterfl', 'hummingbird', 'Attracts', and 'Wildlife' (only an unrelated nav-menu 'Wildlife gardening' link, 0 species-specific hits) — no page makes any pollinator statement for this species.",
+        "is_edible is conditional, not a bare true: NC State's Fruit Description states some Cucurbita pepo fruits have edible flesh while others are 'too hard or insipid to eat,' though the seeds of all are edible; NC State also tags the species #edible fruits, #edible garden, #edible landscaping, #edible flowers, #non-toxic for cats, #non-toxic for dogs, and #non-toxic for horses. Searched NC State for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: 'Poison' and 'Problem for' returned 0 hits, and the only 'Toxic' hits were the non-toxic-to-pets tags above — no poisonous part, severity, toxic principle, preparation requirement, or pets warning was found on the anchor page.",
+        "hgic.clemson.edu/factsheet/summer-squash/ and hgic.clemson.edu/factsheet/pumpkins-winter-squash/ both returned http-403 (refused this machine) and could not be searched for any field; skipped rather than guessed.",
+        "RHS grow-your-own page carries no structured 'Max Height'/'Max Spread' (or 'Ultimate height') field for this species — it is a how-to-grow guide, not a plant-database entry — and only gives cultivar-type text ('spread to 90cm (3ft) across' for bush types vs. 'spread for several metres' for trailing types), which would be excluded anyway both as cultivar/type-specific figures (rule 3) and because the species is a climber (rule 4)."
       ],
       "citations": [
         {
@@ -822,8 +961,15 @@
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/vegetables/squash/grow-your-own",
           "quote": "Squashes are tender plants, so are susceptible to cold and frost."
+        },
+        {
+          "claim": "is_edible true (NC State Plant Toolbox: Cucurbita pepo fruit has edible flesh in some forms and edible seeds in all forms; species tagged Edible/Vegetable/edible garden/edible landscaping)",
+          "source": "NC State Extension Gardener Plant Toolbox — Cucurbita pepo",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-pepo/",
+          "quote": "A type of berry called a pepo that has a hard rind. Fruits may be long or round, large or small, smooth or warty– some have edible flesh and some are too hard or insipid to eat, though the seeds of all are edible."
         }
-      ]
+      ],
+      "is_edible": true
     },
     {
       "common_name": "Turnip",
@@ -874,7 +1020,12 @@
         "water_dry_down_target: not populated; the sourced regime is continuous even moisture rather than a stated dry-down point between waterings, and no source frames it that way.",
         "cool_rest_note: not applicable / no admissible source describes a dormancy or cool-rest period for turnip distinct from its normal cool-season growing window.",
         "soil_ph: RHS classifies turnip's pH preference only in the broad category 'Alkaline or Neutral', which does not fully align with Clemson's specific 6.0–6.5 target range; this reads as a difference in precision (categorical vs. numeric) rather than a stated factual conflict, so Clemson's specific figure was used and RHS's categorical note is flagged here for transparency.",
-        "scientific_name_accepted — removed on audit: The citation backing this field quotes RHS's page field 'Name Status: Accepted', but RHS's own page writes the taxon without parentheses ('Brassica rapa Rapifera Group') -- confirmed via both AI extraction and raw HTML title of https://www.rhs.org.uk/plants/157219/brassica-rapa-rapifera-group/details. The actual value placed in the field, 'Brassica rapa (Rapifera Group)' with parentheses, is not literally present in that quote -- it matches MOBOT's exact formatting instead (verified verbatim in MOBOT's raw HTML: 'Brassica rapa (Rapifera Group) ... Common Name: turnip'). MOBOT is cited elsewhere in the record (common_name, water_regime) but never cited for the scientific-name claim itself, so the citation attached to scientific_name_accepted does not actually support the specific string it's labeled as backing -- a quote/claim mismatch even though the value is independently verifiable from a different source in the record."
+        "scientific_name_accepted — removed on audit: The citation backing this field quotes RHS's page field 'Name Status: Accepted', but RHS's own page writes the taxon without parentheses ('Brassica rapa Rapifera Group') -- confirmed via both AI extraction and raw HTML title of https://www.rhs.org.uk/plants/157219/brassica-rapa-rapifera-group/details. The actual value placed in the field, 'Brassica rapa (Rapifera Group)' with parentheses, is not literally present in that quote -- it matches MOBOT's exact formatting instead (verified verbatim in MOBOT's raw HTML: 'Brassica rapa (Rapifera Group) ... Common Name: turnip'). MOBOT is cited elsewhere in the record (common_name, water_regime) but never cited for the scientific-name claim itself, so the citation attached to scientific_name_accepted does not actually support the specific string it's labeled as backing -- a quote/claim mismatch even though the value is independently verifiable from a different source in the record.",
+        "No page addresses pollinator visitation (bees, butterflies, hummingbirds) for this species; RHS details page, RHS grow-your-own page, and UGA CAES field report were all searched for 'Attracts', 'Pollinator', 'bee', 'butterfl' with no unconditional pollinator statement found, so attracts_pollinators is left null rather than inferred from the genus.",
+        "hgic.clemson.edu/factsheet/turnips-rutabagas/ refused this machine (HTTP 403) -- not read, not guessed.",
+        "plantfinder.mobot.org (NC State Plant Toolbox equivalent anchor candidate) refused this machine (ConnectError) -- not read, not guessed. RHS was used as the size/edibility source in its place per the no-NC-State-page rule.",
+        "Searched RHS details page, RHS grow-your-own page, and UGA CAES field report for 'Poison', 'Toxic', and 'Problem for' before setting is_edible true. RHS pages had zero hits for 'Poison'/'Toxic'. UGA CAES had 2 'Toxic' hits but both referred to pesticide/fertilizer application safety, not plant toxicity to humans -- no toxic part, severity, principle, preparation requirement, or pets warning was found on any read page, so no toxicity caveat is added to unknowns.",
+        "mature_height_in and mature_spread_in both come from RHS 'Max Height 0.1-0.5 metres' / 'Max Spread 0.1-0.5 metres' (0.1 m x 39.37 = 3.9 in; 0.5 m x 39.37 = 19.7 in) -- no NC State Plant Toolbox page exists for this species so RHS is used as specified."
       ],
       "citations": [
         {
@@ -942,8 +1093,31 @@
           "source": "Clemson HGIC Factsheet 1324: Turnips & Rutabagas",
           "url": "https://hgic.clemson.edu/factsheet/turnips-rutabagas/",
           "quote": "Turnips ( Brassica rapa ) and rutabagas ( Brassica napus ) have edible leaves and roots, though turnip greens are more commonly eaten than rutabaga greens."
+        },
+        {
+          "claim": "is_edible true (RHS: leaves and swollen roots eaten)",
+          "source": "RHS Brassica rapa Rapifera Group details page",
+          "url": "https://www.rhs.org.uk/plants/157219/brassica-rapa-rapifera-group/details",
+          "quote": "Both leaves and the swollen roots are edible."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches: 0.1 m x 39.37 = 3.9 in, 0.5 m x 39.37 = 19.7 in)",
+          "source": "RHS Brassica rapa Rapifera Group details page",
+          "url": "https://www.rhs.org.uk/plants/157219/brassica-rapa-rapifera-group/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1 m x 39.37 = 3.9 in, 0.5 m x 39.37 = 19.7 in)",
+          "source": "RHS Brassica rapa Rapifera Group details page",
+          "url": "https://www.rhs.org.uk/plants/157219/brassica-rapa-rapifera-group/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     }
   ],
   "audit_summary": [
@@ -982,6 +1156,7 @@
   ],
   "normalizations": [
     "2026-08-21: two loader-found defects fixed before landing, both the same class as b8's Artichoke -- Garden Pea and Turnip each had a citation and name_note that already established a specific accepted name (Lathyrus oleraceus, cited to NC State's synonymy listing; Brassica rapa (Rapifera Group), cited to RHS's own 'Name Status: Accepted' field) but left scientific_name_accepted null despite the prompt explicitly warning against this after b8. Populated from evidence already in each record, not invented. Neither left the record without a usable subject -- claims_from_record falls back to scientific_name_given -- but both are now correctly named.",
-    "The batch's more important result is a negative one: the conflict- resolution fix added after b10 (a genuine cross-source disagreement on a harm-capable field must be nulled, not decided by preference) held across the whole batch. Onion's water_regime resolved to null with Missouri Botanical Garden's 'Dry to medium' rating explicitly left in conflict against Clemson and UMD's 'ample moisture during bulb enlargement' -- exactly the shape of the Cucumber defect from b10, this time handled correctly at the source. Potato's toxicity call is solid and correctly separates the edible tuber from the genuinely toxic green parts (solanine)."
+    "The batch's more important result is a negative one: the conflict- resolution fix added after b10 (a genuine cross-source disagreement on a harm-capable field must be nulled, not decided by preference) held across the whole batch. Onion's water_regime resolved to null with Missouri Botanical Garden's 'Dry to medium' rating explicitly left in conflict against Clemson and UMD's 'ample moisture during bulb enlargement' -- exactly the shape of the Cucumber defect from b10, this time handled correctly at the source. Potato's toxicity call is solid and correctly separates the edible tuber from the genuinely toxic green parts (solanine).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

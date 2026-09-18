@@ -49,7 +49,14 @@
         "cool_rest_note: not applicable/not addressed; watermelon is grown as an annual in these sources, with no winter-chill requirement discussed (unlike a fruiting perennial).",
         "soil_drainage — removed on audit: Value 'moderate' is not stated by either cited source. Live-fetched NC State page shows the literal tags 'Good Drainage' and 'Moist' (matching the quote used), and MOBOT's quote says 'well-drained loams' and 'Intolerant of wet soils.' Neither source uses 'moderate' or a synonym for it; NC State's 'Good Drainage' is its favorable/top drainage category, not obviously 'moderate.' This is an uncredited categorical translation, not a value the sources actually state.",
         "soil_base — removed on audit: The primary citation attached to this claim (NC State: 'Soil Texture: Loam (Silt) ... Soil Drainage: Good Drainage Moist') says nothing about planting location or bed type -- it only describes soil composition/drainage. The only textual support for 'garden_bed' is the secondary MOBOT citation's mention of planting 'in hills' 6-8' apart, so the citation presented as primary support for this field does not actually address it.",
-        "is_houseplant — removed on audit: The MOBOT quote ('Seed can also be started indoors about 3 weeks before the last spring frost date, with young plants set out after last frost date') describes seed-starting logistics, not whether the mature plant is or isn't grown as a houseplant. It does not actually state that watermelon is not a houseplant -- the false value is inferred by the researcher, not asserted by the source, even though the researcher's own annotation frames it as if directly supported."
+        "is_houseplant — removed on audit: The MOBOT quote ('Seed can also be started indoors about 3 weeks before the last spring frost date, with young plants set out after last frost date') describes seed-starting logistics, not whether the mature plant is or isn't grown as a houseplant. It does not actually state that watermelon is not a houseplant -- the false value is inferred by the researcher, not asserted by the source, even though the researcher's own annotation frames it as if directly supported.",
+        "All four size fields left null: NC State Plant Toolbox tags Citrullus lanatus's Whole Plant Traits as 'Vine' and its Description calls it a 'prostrate, vining vegetable.' The page does publish Height: 0 ft. 4 in. - 0 ft. 8 in. and Width: 5 ft. 0 in. - 10 ft. 0 in., but per the climber rule these figures are not recorded because for a vine the field cannot distinguish the plant's own stature from the distance it runs.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279562&isprofile=1&basic=citrullus+lanatus refused this machine (fetch status: error:ConnectError, 0 bytes) -- skipped, not guessed.",
+        "https://hgic.clemson.edu/factsheet/watermelons/ refused this machine (fetch status: http-403, 0 bytes) -- skipped, not guessed.",
+        "https://www.rhs.org.uk/plants/157831/citrullus-lanatus/details carries no relevant content: searched 'Max Height', 'Max Spread', 'Ultimate height', 'Edible', 'Poison', 'Toxic', 'pollinator', and 'Attracts' -- zero hits for every term.",
+        "https://www.rhs.org.uk/fruit/melons/grow-your-own is a general melon-growing guide with no species size data (zero hits for 'Height' and 'Spread'); it does state 'Melons are primarily insect-pollinated, with bees serving as key pollinators,' which corroborates attracts_pollinators, but the NC State structured Attracts field was used as the citation since it is species-specific and more direct.",
+        "Before setting is_edible, the NC State anchor page was searched for 'Poison', 'Toxic', and 'Problem for' -- zero hits for each, so no toxic part, severity, or preparation warning applies to this record.",
+        "is_edible removed on audit: Rule F violation. NC State's Edibility field reads, in one run, \"The fruit can be eaten raw or pickled. The rind is edible after cooking.\" — the rind carries a required preparation (cooking). The record's unknowns instead assert the opposite: \"no toxic part, severity, or preparation warning applies to this record,\" reached by searching only for 'Poison', 'Toxic' and 'Problem for'. I reproduced those three searches (0 hits each, confirmed), but the preparation condition does not live under any of those words — it is in the Edibility text the researcher themselves quoted. Since the condition is named on a page and is absent from unknowns, is_edible is nulled. The value itself is well supported; the fix is to carry \"rind edible only after cooking\" into unknowns, after which is_edible true with this same NC State quote stands."
       ],
       "citations": [
         {
@@ -141,8 +148,15 @@
           "source": "Clemson Cooperative Extension Home & Garden Information Center",
           "url": "https://hgic.clemson.edu/factsheet/watermelons/",
           "quote": "Watermelons need a lot of water. In fact, water comprises 92 percent of the watermelon fruit."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Citrullus lanatus",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Bees"
         }
-      ]
+      ],
+      "attracts_pollinators": true
     },
     {
       "common_name": "Blackberry",
@@ -235,6 +249,30 @@
           "quote": "Blackberries (Rubus fruticosus) are native to the Southeastern United States",
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/blackberry/"
+        },
+        {
+          "claim": "attracts_pollinators (NC State Attracts: Butterflies, Pollinators, Small Mammals, Songbirds, Specialized Bees)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/",
+          "quote": "Attracts Pollinators"
+        },
+        {
+          "claim": "is_edible (NC State Edibility: Fruits are edible)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/",
+          "quote": "Fruits are edible. The fruit is seedy and has a sweet flavor when fully ripened. Eaten fresh or preserved or frozen. Often made into pies, syrups, jams, or other desserts."
+        },
+        {
+          "claim": "mature_height_in 48-96 (NC State Height: 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/",
+          "quote": "Height: 4 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-120 (NC State Width: 4 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-allegheniensis/",
+          "quote": "Width: 4 ft. 0 in. - 10 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -249,8 +287,20 @@
         "soil_ph_min: the source gives only an upper-bound category ('Acid (<6.0)'), with no lower pH bound stated.",
         "Penn State Extension's raspberry/blackberry production page returned a 404 and could not be checked. UF/IFAS's blackberry cultivar publication (edis.ifas.ufl.edu/hs1352) redirected off the admissible edis.ifas.ufl.edu domain to ask.ifas.ufl.edu, which is not on the admissible list, so it was not used. Missouri Botanical Garden's Plant Finder has entries for several other Rubus species but no dedicated entry for Rubus allegheniensis, so it could not be used either.",
         "is_houseplant — removed on audit: The cited quote ('Shrub, Woody Plant, Native Plant, Edible, Deciduous') is a plant-type tag list; it never states the plant is not grown as a houseplant. The claim's parenthetical ('no container or indoor cultivation listed on the species page') infers absence-of-mention as the basis for the value, which is the same category of reasoning error the audit brief flags for toxicity (silence isn't evidence). Practically very likely correct for a native bramble, but not literally sourced.",
-        "soil_base — removed on audit: The cited quote ('Clay, High Organic Matter, Loam (Silt), Shallow Rocky') is a soil-texture tolerance list, not a statement about cultivation method. The claim's added gloss ('grown in-ground in native soil types, not a container medium') asserts a container-vs-bed distinction the quote never addresses -- it 'sounds related' but doesn't state the value."
-      ]
+        "soil_base — removed on audit: The cited quote ('Clay, High Organic Matter, Loam (Silt), Shallow Rocky') is a soil-texture tolerance list, not a statement about cultivation method. The claim's added gloss ('grown in-ground in native soil types, not a container medium') asserts a container-vs-bed distinction the quote never addresses -- it 'sounds related' but doesn't state the value.",
+        "Searched the NC State anchor page for \"Poison\", \"Toxic\", and \"Problem for\": zero hits on all three. No toxicity, poisonous-part, severity, preparation requirement, or pets warning is stated anywhere on the page, so is_edible=true carries no toxicity caveat to report.",
+        "is_edible is unconditionally true per NC State's structured \"Edibility:\" field (\"Fruits are edible... Eaten fresh or preserved or frozen. Often made into pies, syrups, jams, or other desserts\") -- this describes the fruit specifically, not other plant parts, but the page states no restriction or condition (e.g. no 'ripe only' qualifier, no toxic-part warning), so no condition text was withheld.",
+        "attracts_pollinators=true per NC State's structured 'Attracts' field (Butterflies, Pollinators, Small Mammals, Songbirds, Specialized Bees) and separately its 'Play Value: Attracts Pollinators' tag -- both are structured fields, not inferred from genus.",
+        "Species is a woody shrub (NC State: 'It is a woody shrub with canes...', Habit/Form: Arching, Erect, Spreading) -- NOT a climber/vine/liana, so rule 4 (climber gets no size) does not apply and size fields were populated normally.",
+        "Size figures (Height 4-8 ft, Width 4-10 ft) are given for the species Rubus allegheniensis itself on the NC State species-specific page, not a named cultivar -- no 'Cultivars / Varieties' entries were listed with distinct dimensions, so rule 3 does not apply.",
+        "Did not need to consult the Clemson HGIC page (https://hgic.clemson.edu/factsheet/blackberry/) since the NC State anchor page already supplied verbatim, structured-field support for all six requested fields; it was read/available if cross-checking is wanted but was not required to fill any field here."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -332,6 +382,30 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/blueberry/",
           "quote": "this requirement means that the blueberry plants need to be exposed to a sufficient number of hours of winter temperatures below 45 °F in order to produce flowers. The chilling hours in SC range between 1000 to 1200 hours in the upper Piedmont to as low as 400 to 600 hours near the coast."
+        },
+        {
+          "claim": "attracts_pollinators (NC State Attracts field: Bees, Butterflies, Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+          "quote": "Flowers attract butterflies and bees. This plant provides nectar for pollinators and supports Brown Elfin (Callophrys augustinus) larvae which have one flight and appear from May to July in the North and March to April in the South."
+        },
+        {
+          "claim": "is_edible (NC State: berries are edible)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+          "quote": "The berries are edible and have been used raw, sun-dried. smoke-dried, and baked. They have high iron content."
+        },
+        {
+          "claim": "mature_height_in 72-144 (NC State Height 6 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+          "quote": "Height: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-120 (NC State Width 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+          "quote": "Width: 6 ft. 0 in. - 10 ft. 0 in."
         }
       ],
       "common_name": "Highbush Blueberry",
@@ -374,14 +448,25 @@
         "water_check_depth_cm: UMD instructs checking soil moisture by 'feeling the soil several inches deep' without giving an exact depth number.",
         "water_dormant_days_est / water_dry_down_target: no admissible source describes a dormant-season watering interval or a specific dry-down target (e.g., top-inch-dry) for this species.",
         "cool_rest_note — removed on audit: Clemson HGIC's own text says 'This fact sheet focuses on the rabbiteye and Southern highbush types, as they are more adapted to the South Carolina climate and soils.' Northern highbush (Vaccinium corymbosum, the species under audit) is named only once as one of three types and is then excluded from the rest of the page. The 400-600/1000-1200 chilling-hour figures the record cites sit in the section introducing rabbiteye cultivar tables (Climax, etc.) and Southern highbush, not Northern highbush -- a sibling-species/cultivar mismatch per audit check #2. Rabbiteye and Southern highbush chill requirements are known to run lower than typical Northern highbush requirements, so applying this range to V. corymbosum risks understating its real dormancy needs. The dormancy-vs-frost-damage concept separation itself was handled correctly; the numeric range attributed to this species is not what the cited source actually gives for it.",
-        "is_houseplant — removed on audit: Both citations supporting is_houseplant=true describe OUTDOOR container/raised-bed cultivation (RHS: 'containers or raised beds filled with peat-free, ericaceous compost' as an alternative to in-ground planting for a full-sun, winter-chill-dormant fruiting shrub; UMD: 'compact cultivars for container blueberry growing' on a patio), not indoor houseplant cultivation. Neither source calls this a houseplant. This is internally contradicted by the record's own unknowns entries for light_fc_min/light_fc_good and humidity_need, which state that 'all admissible sources treat this as an outdoor garden/landscape shrub' -- the opposite conclusion from is_houseplant=true elsewhere in the same record. 'Grown in a container' was conflated with 'grown indoors as a houseplant.'"
+        "is_houseplant — removed on audit: Both citations supporting is_houseplant=true describe OUTDOOR container/raised-bed cultivation (RHS: 'containers or raised beds filled with peat-free, ericaceous compost' as an alternative to in-ground planting for a full-sun, winter-chill-dormant fruiting shrub; UMD: 'compact cultivars for container blueberry growing' on a patio), not indoor houseplant cultivation. Neither source calls this a houseplant. This is internally contradicted by the record's own unknowns entries for light_fc_min/light_fc_good and humidity_need, which state that 'all admissible sources treat this as an outdoor garden/landscape shrub' -- the opposite conclusion from is_houseplant=true elsewhere in the same record. 'Grown in a container' was conflated with 'grown indoors as a houseplant.'",
+        "Searched NC State anchor page for 'Poison', 'Toxic', and 'Problem for' -- 0 hits each; no toxicity, poisonous part, severity, toxic principle, preparation requirement, or pets warning found on the cited page.",
+        "is_edible is unconditionally true per NC State: 'planted for its edible fruit' and 'The berries are edible and have been used raw, sun-dried. smoke-dried, and baked.' No cultivar, part-specific, or preparation caveat was found on the anchor page.",
+        "attracts_pollinators set true from NC State's structured Attracts field (Bees, Butterflies, Pollinators); this is an unconditional structured field, not inferred from genus.",
+        "Did not read hgic.clemson.edu, rhs.org.uk, extension.umd.edu, or plantfinder.mobot.org for this task since the NC State anchor page already provided a species-level Dimensions block (Height and Width) with both range ends and unconditional edibility/pollinator statements, satisfying all six target fields without need for secondary sources.",
+        "Plant is a multi-stemmed deciduous shrub (not a vine, liana, or other climber), so all four size fields were populated normally per the climber exception rule."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": "Estimate derived from Clemson HGIC's guidance to water raised-bed/mound-planted blueberries thoroughly two to three times per week during dry spells in summer and early fall, under South Carolina growing conditions; this is an estimate, and actual frequency depends on rainfall, mulch, and soil type.",
       "water_growing_days_est": 3,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "American Cranberry",
@@ -480,6 +565,30 @@
           "source": "RHS Grow Your Own",
           "url": "https://www.rhs.org.uk/advice/grow-your-own/features/fascinating-facts-cranberries",
           "quote": "They prefer a sunny site and thrive beside a river or pond but can also grow well in pots. ... Good for containers: Yes, particularly the 'Pilgrim' and 'Redstar' varieties."
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 18-28 (NC State Width 1 ft. 6 in. - 2 ft. 4 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Width: 1 ft. 6 in. - 2 ft. 4 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field states Edible berries)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Edible berries"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Pollinators among the wildlife the plant attracts)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/vaccinium-macrocarpon/",
+          "quote": "Pollinators"
         }
       ],
       "unknowns": [
@@ -492,8 +601,20 @@
         "fertilize_interval_days, fertilize_strength, fertilize_active_months: none of the admissible sources address fertilizing practices for cranberry.",
         "water_growing_days_est, water_dormant_days_est, water_check_depth_cm, water_dry_down_target, water_estimate_basis: no admissible source gives a watering frequency, check depth, or dry-down target in days; only the qualitative regime (moist/boggy, tolerates periodic flooding) is stated, captured in water_regime.",
         "toxic_to_pets, toxicity_detail: no source among the admissible extension/garden domains addresses toxicity of Vaccinium macrocarpon to pets or humans. Notably, the RHS plant profile format includes a 'Potentially harmful' field on some species pages (e.g. it flags Vitis vinifera as harmful to dogs), but no such field appears on the Vaccinium macrocarpon (F) profile page, and no other admissible source discusses toxicity at all, so the field is left null rather than inferred as safe.",
-        "is_houseplant: no admissible source describes indoor/houseplant cultivation. NC State and RHS both describe an outdoor boggy-garden/bog shrub that is 'intolerant of heat and drought' (NC State); a separate RHS feature article mentions cranberries can 'grow well in pots,' but describes outdoor container growing beside a river or pond (not indoor use), and that article covers two species (Vaccinium oxycoccos and V. macrocarpon) jointly, so it was treated as a descriptive note rather than grounds for setting is_houseplant true."
-      ]
+        "is_houseplant: no admissible source describes indoor/houseplant cultivation. NC State and RHS both describe an outdoor boggy-garden/bog shrub that is 'intolerant of heat and drought' (NC State); a separate RHS feature article mentions cranberries can 'grow well in pots,' but describes outdoor container growing beside a river or pond (not indoor use), and that article covers two species (Vaccinium oxycoccos and V. macrocarpon) jointly, so it was treated as a descriptive note rather than grounds for setting is_houseplant true.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) -- could not check that page at all, not attempted to guess its content.",
+        "RHS species page (rhs.org.uk/plants/18694) gives Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres (about 3.9-19.7 in), a narrower range than NC State's; NC State's own species-specific page (with a structured Dimensions block) was used as the primary source per the anchor rule since a real NC State species page exists for this plant.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- 0 hits for all three, so no toxicity/poison warning was found on that page to carry into unknowns.",
+        "RHS 'fascinating facts about cranberries' feature page (rhs.org.uk/advice/.../fascinating-facts-cranberries) had zero hits for edib/pollinat/Poison/Toxic search terms -- it did not contribute usable evidence for any of the six fields.",
+        "American Cranberry is a low, mat-forming/ground-cover shrub, not a vine, liana, or climber (NC State lists Plant Type as Edible, Ground Cover, Native Plant, Perennial), so the climber-exclusion rule for size fields does not apply and all four size fields were populated normally.",
+        "No page addressed a named cultivar for the size figures used -- the NC State Dimensions block is given for the species Vaccinium macrocarpon itself, not a cultivar, so the cultivar-exclusion rule does not apply here."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 28
     },
     {
       "common_name": "Grape",
@@ -546,7 +667,13 @@
         "soil_drainage: no admissible source uses the schema's exact categories (fast/moderate/moisture_retentive); 'moderate' is inferred from consistently repeated 'well-drained' language (RHS, Clemson, Penn State, NC State) combined with Missouri Botanical Garden's more specific 'medium moisture, well-drained soil' phrasing, which reads closer to moderate than to a fast/gritty-draining mix.",
         "soil_base: no source uses the term 'garden bed'; 'garden_bed' is inferred from every admissible source uniformly describing outdoor, in-ground vineyard/garden cultivation (spacing, planting depth, trellising/support systems) with no source mentioning container growing.",
         "is_houseplant: set false because every admissible source frames Vitis vinifera exclusively as an outdoor vine requiring full sun, structural support, and vineyard/garden-style pruning; none mentions container or indoor growing.",
-        "cool_rest_note — removed on audit: The UMD 'Grape 100-600' chilling-hours figure is not Vitis-vinifera-specific. I fetched extension.umd.edu/resource/starting-home-fruit-garden directly: its own species table lists 'Grape | Vitis labrusca, Vitis vinifera | North America, Europe, SW Asia | Various hybrids' as one combined row, and the page separately notes Muscadine (Vitis rotundifolia) is 'too cold-sensitive for most of Maryland' — signaling the home-garden 'Grape' entries on this Maryland extension page are dominated by American/hybrid cultivars typically grown in that climate, not European wine grapes specifically. The cited '100-600' range is a blended figure spanning multiple species/hybrids under one common-name row, not a Vitis-vinifera-derived number, so presenting it in cool_rest_note as 'the chilling requirement...for grape' (in a record specifically about Vitis vinifera) overstates how specific this source is to the species being profiled — this is the genus/common-name-vs-species conflation the audit brief warns about. (The record does correctly keep this separate from chill_damage_f, and the 32-45°F parenthetical is genuinely sourced from the same UMD page's definition of chilling hours, so those parts are sound — only the species-specificity of the 100-600 figure is the issue.)"
+        "cool_rest_note — removed on audit: The UMD 'Grape 100-600' chilling-hours figure is not Vitis-vinifera-specific. I fetched extension.umd.edu/resource/starting-home-fruit-garden directly: its own species table lists 'Grape | Vitis labrusca, Vitis vinifera | North America, Europe, SW Asia | Various hybrids' as one combined row, and the page separately notes Muscadine (Vitis rotundifolia) is 'too cold-sensitive for most of Maryland' — signaling the home-garden 'Grape' entries on this Maryland extension page are dominated by American/hybrid cultivars typically grown in that climate, not European wine grapes specifically. The cited '100-600' range is a blended figure spanning multiple species/hybrids under one common-name row, not a Vitis-vinifera-derived number, so presenting it in cool_rest_note as 'the chilling requirement...for grape' (in a record specifically about Vitis vinifera) overstates how specific this source is to the species being profiled — this is the genus/common-name-vs-species conflation the audit brief warns about. (The record does correctly keep this separate from chill_damage_f, and the 32-45°F parenthetical is genuinely sourced from the same UMD page's definition of chilling hours, so those parts are sound — only the species-specificity of the 100-600 figure is the issue.)",
+        "mature_height_in and mature_spread_in (all four fields) left null: Vitis vinifera is a woody vine/climber (NC State tags '#woody vine', Climbing Method: Tendrils; RHS Habit: Climbing, Genus note 'vigorous deciduous climbing shrubs with tendrils'), so per the climber rule no size field is recorded even though figures exist on the pages (NC State's own Dimensions/Height block was absent for this species -- searched 'Dimensions', 'Height', 'Width', 'Max Height', 'Max Spread', 'Ultimate height' and found no structured size block; RHS lists Max Height 'Higher than 12 metres' and Max Spread '2.5-4 metres', but for a climber that height is the distance the vine travels along its support, not the plant's own stature, so it is not usable as mature_height_in/mature_spread_in).",
+        "attracts_pollinators left null: no page carries a structured Attracts/wildlife field or an unconditional statement naming bees, butterflies, moths, or hummingbirds for this species specifically. Searched 'Attracts', 'pollinator', 'bee', 'butterfl', 'hummingbird', 'Wildlife' on NC State (0 hits for Attracts/Wildlife) and RHS (0 hits for 'pollinator'). Penn State's backyard-grape-growing page only surfaces generic site navigation links ('Pollination and Bees') with no grape-specific pollinator-attraction statement in body text. UMD's 'Starting a Home Fruit Garden' discusses pollination requirements (bees needed for fruit set) generically across all listed fruit species, not as a grape-specific attracts-pollinators claim, so it was not used as support.",
+        "is_edible true is not unconditional: RHS lists a pets warning under Botanical Details -- 'Potentially harmful -- Pets (dogs): Harmful if eaten whether fruits are edible or ornamental -- for further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants.' No poisonous-part-to-humans, severity, or toxic-principle statement was found on the NC State anchor page (searched 'Poison', 'Toxic', 'Problem for' -- 0 hits each) or on RHS (searched 'Poisonous', 'Toxic' -- 0 hits each) regarding human consumption; the only toxicity-adjacent finding anywhere is the RHS dog-toxicity note above.",
+        "https://hgic.clemson.edu/factsheet/bunch-grapes/ refused this machine (http-403 status from qc.py) -- skipped, not guessed.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287551 refused this machine (connection error from qc.py) -- skipped, not guessed.",
+        "https://extension.umd.edu/resource/understanding-grapevine-bud-damage carried no relevant text for any of the six fields (searched 'pollinat', 'Toxic', 'Poison', 'edible' -- 0 hits each)."
       ],
       "citations": [
         {
@@ -650,8 +777,15 @@
           "quote": "Grapes are high maintenance plants that require regular pruning, structural support, and pesticide treatments to produce significant yields.",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287551"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: fruits edible raw, cooked, or dried to make raisins; some cultivars fermented for wine and vinegar)",
+          "source": "NC State Extension Plant Toolbox: Vitis vinifera",
+          "url": "https://plants.ces.ncsu.edu/plants/vitis-vinifera/",
+          "quote": "Fruits edible raw, cooked, or dried to make raisins.  Some cultivars are grown to be fermented and used to make wine and vinegar."
         }
-      ]
+      ],
+      "is_edible": true
     },
     {
       "chill_damage_f": null,
@@ -733,6 +867,30 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
           "quote": "#non-toxic for cats; #non-toxic for horses; #non-toxic for dogs"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true: NC State Edibility field states the fruit is edible",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Edible fruits used raw or cooked."
+        },
+        {
+          "claim": "attracts_pollinators true: NC State structured Attracts field names Pollinators and Specialized Bees",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/fragaria-x-ananassa/",
+          "quote": "Members of the genus Fragaria support the following specialized bee: Andrena (Micrandrena) melanochroa."
         }
       ],
       "common_name": "Strawberry",
@@ -777,14 +935,24 @@
         "soil_drainage — removed on audit: The quote literally says 'Good Drainage, Moist' -- an NC State Soil Drainage tag reading 'Good,' not 'moderate.' The record silently downgrades a stated 'Good Drainage' rating to 'moderate' with no citation or reasoning bridging that gap, and also folds in a separate 'Moist' moisture tag as if it supported the drainage rating. The label doesn't survive re-derivation from its own quote.",
         "is_houseplant — removed on audit: Both citations only establish that strawberries can be grown in outdoor pots/hanging baskets (patio containers, groundcover use) -- neither UMD nor NC State's 'Container, Hanging Baskets' tag says or implies indoor houseplant cultivation. This is reinforced by internal inconsistency: the record's own outdoor_sun_exposure requires 6+ hours of direct sunlight (full_sun) with no light_fc/humidity data populated for indoor conditions, which is inconsistent with true houseplant status. Container-capable outdoors is not the same claim as 'is_houseplant.'",
         "chill_damage_f — removed on audit: The UGA quote states a threshold for open BLOSSOMS specifically ('strawberry blossoms don't freeze until 28 degrees') during spring bloom, not a general whole-plant cold-damage floor. Dormant strawberry crowns are considerably more cold-hardy than open flowers; collapsing a bloom-stage, flower-specific frost point into a general chill_damage_f field risks misapplying it outside the bloom window (e.g., implying the whole plant is damaged at 28°F when only exposed blossoms are at that specific risk). The number (28) is accurately quoted, but the scope of what it measures is narrower than what the field name implies.",
-        "name_note — removed on audit: The note asserts a specific factual claim -- 'Per Clemson HGIC, the species arose as a hybrid cross of Fragaria virginiana ... and Fragaria chiloensis' -- that is attributed to a named source but has no corresponding entry in the citations array (no URL, no quote). None of the actual Clemson HGIC citations in the record mention virginiana or chiloensis. This is an unverifiable, uncited assertion smuggled into a supposedly source-grounded field."
+        "name_note — removed on audit: The note asserts a specific factual claim -- 'Per Clemson HGIC, the species arose as a hybrid cross of Fragaria virginiana ... and Fragaria chiloensis' -- that is attributed to a named source but has no corresponding entry in the citations array (no URL, no quote). None of the actual Clemson HGIC citations in the record mention virginiana or chiloensis. This is an unverifiable, uncited assertion smuggled into a supposedly source-grounded field.",
+        "Only the NC State Plant Toolbox page (anchor) carried a structured Dimensions/Edibility/Attracts block; searched Clemson HGIC, UMD Extension, and the UGA CAES field report for size, edibility, and pollinator language and found none relevant to this species (Clemson's only 'Poison'/'Toxic' hits were an unrelated 'Poison Ivy' related-post link, not content about strawberry).",
+        "Searched the NC State page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible=true, as required: 'Poison' returned 0 hits, 'Problem for' returned 0 hits, and the only 'Toxic' hits were tag-list entries reading 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- i.e. an explicit non-toxicity statement, not a warning. No poisonous part, severity, toxic principle, preparation requirement, or pets warning was found on the anchor page for this species.",
+        "mature_height_in and mature_spread_in are not left null; both bounds came from a single NC State Dimensions block giving explicit low and high figures for each ('Height: 0 ft. 6 in. - 1 ft. 0 in.' -> 6-12 in; 'Width: 1 ft. 0 in. - 2 ft. 0 in.' -> 12-24 in), and Fragaria x ananassa is a low-growing herbaceous groundcover, not a vine/liana/climber, so the climber-exclusion rule does not apply.",
+        "Did not read plantfinder.mobot.org or ask.ifas.ufl.edu for this record -- neither was in the assigned page list."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": "Estimate for an outdoor garden-bed strawberry planting in full sun during the active growing season, based on Clemson HGIC's stated rate of 1 to 1.5 inches of water per week (that weekly figure is converted here to an approximate 7-day check interval); this is an estimate, not a source-stated watering interval in days.",
       "water_growing_days_est": 7,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Ageratum",
@@ -883,6 +1051,24 @@
           "quote": "Soil Texture: High Organic Matter",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Dimensions Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Ageratum houstonianum",
+          "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 10-12 (NC State Dimensions Width: 0 ft. 10 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Ageratum houstonianum",
+          "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/",
+          "quote": "Width: 0 ft. 10 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states the plant attracts butterflies, and its structured Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox: Ageratum houstonianum",
+          "url": "https://plants.ces.ncsu.edu/plants/ageratum-houstonianum/",
+          "quote": "Plant is seldom damaged by deer or rabbits and attracts butterflies."
         }
       ],
       "unknowns": [
@@ -896,8 +1082,18 @@
         "fertilize_interval_days/fertilize_strength/fertilize_active_months: no admissible source gives fertilizing guidance for this species.",
         "water_growing_days_est/water_dormant_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: no source gives a specific watering interval or check depth; only the qualitative 'keep moist, don't let dry out' guidance was found, captured in water_regime.",
         "cool_rest_note: not applicable/no source; this is a warm-season bedding annual, not a fruiting perennial with a winter-chill requirement.",
-        "water_regime — removed on audit: Record sets water_regime='keep_moist' citing only MOBOT ('Plants tend to wilt quickly if soils are allowed to dry out'), but NC State Extension -- an admissible source already cited elsewhere in this same record (for soil_drainage and soil_base) -- states on that same page 'This plant is moderately drought tolerance but prefers rich, moist, well-drained soil', tags it '#drought tolerant', and lists it as 'Particularly Resistant To ... drought.' This is a genuine opposing claim on a harm-capable field (over- vs under-watering guidance) from a source the researcher demonstrably already read; per the audit's structural check 1, the record should have reconciled or nulled the field rather than silently adopting the stricter MOBOT value while omitting NC State's contrary drought-tolerance language from the citations/unknowns."
-      ]
+        "water_regime — removed on audit: Record sets water_regime='keep_moist' citing only MOBOT ('Plants tend to wilt quickly if soils are allowed to dry out'), but NC State Extension -- an admissible source already cited elsewhere in this same record (for soil_drainage and soil_base) -- states on that same page 'This plant is moderately drought tolerance but prefers rich, moist, well-drained soil', tags it '#drought tolerant', and lists it as 'Particularly Resistant To ... drought.' This is a genuine opposing claim on a harm-capable field (over- vs under-watering guidance) from a source the researcher demonstrably already read; per the audit's structural check 1, the record should have reconciled or nulled the field rather than silently adopting the stricter MOBOT value while omitting NC State's contrary drought-tolerance language from the citations/unknowns.",
+        "is_edible left null: neither the NC State page, the RHS page, nor the UGA Extension fieldreport states that Ageratum houstonianum (or any part of it) is eaten or grown for food, and none states it is inedible or poisonous to eat -- no record either way.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a557 refused this machine (fetch status: error:ConnectError) -- could not check it for size, edibility, or pollinator data; not guessed.",
+        "RHS page (rhs.org.uk/plants/156126/ageratum-houstonianum/details) was searched for 'Max Height', 'Max Spread', and 'Ultimate height' -- zero hits for all three, so it carries no structured size data for this species. Also searched for 'Edible', 'Poison', 'Toxic', 'pollinator', 'Attracts' on that page -- zero hits for each.",
+        "NC State page was searched for 'Poison', 'Toxic', and 'Problem for' before setting any edibility-adjacent field -- zero hits; no toxicity, poisonous part, or pets warning is named on the anchor page.",
+        "UGA CAES fieldreport corroborates a height range of 6-12 in. for Ageratum houstonianum in its Quick Reference table and body text, consistent with the NC State figure used for the citation, but it gives no width/spread figure and makes no edibility or pollinator statement specific to Ageratum (it discusses other species' edibility and pollinator value in the same document)."
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 10,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Sweet Alyssum",
@@ -1032,6 +1228,24 @@
           "source": "Penn State Extension",
           "url": "https://extension.psu.edu/how-hardy-are-your-annuals",
           "quote": "We define annuals as hardy if they can withstand light frost in winter and spring... Sweet alyssum (Lobularia maritima)"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Lobularia maritima",
+          "url": "https://plants.ces.ncsu.edu/plants/lobularia-maritima/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 3-10 (NC State Height: 0 ft. 3 in. - 0 ft. 10 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Lobularia maritima",
+          "url": "https://plants.ces.ncsu.edu/plants/lobularia-maritima/",
+          "quote": "Height: 0 ft. 3 in. - 0 ft. 10 in."
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Lobularia maritima",
+          "url": "https://plants.ces.ncsu.edu/plants/lobularia-maritima/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -1045,8 +1259,20 @@
         "soil_base: sources describe tolerated soil textures (clay, loam, sand) but none recommend a specific soil-mix formulation (e.g. standard potting vs. garden bed), so left null to avoid over-specifying.",
         "fertilize_active_months, fertilize_strength: Clemson gives only 'monthly... throughout the growing season' with no specific calendar months or product-strength/dilution guidance.",
         "cool_rest_note: not applicable/not discussed by any admissible source — this is an annual/short-lived bedding perennial and no source describes a winter-chill dormancy requirement for it.",
-        "fertilize_interval_days — removed on audit: Claim label states 'fertilize_interval_days 30 (fertilize monthly)' but the Clemson HGIC quote only says 'Fertilize monthly with an all-purpose fertilizer throughout the growing season' -- the digit 30 (or any spelled-out number) never appears in the quote. Verified against the live page: no numeric interval is stated anywhere on hgic.clemson.edu/sweet-alyssum/. The 30-day figure is a silent month-to-days conversion, not a value literally present in the source. Per the audit's own rule, a number in the claim label that isn't literally in the quote is a refutable defect on its own, even though the real-world risk of this particular rounding is negligible."
-      ]
+        "fertilize_interval_days — removed on audit: Claim label states 'fertilize_interval_days 30 (fertilize monthly)' but the Clemson HGIC quote only says 'Fertilize monthly with an all-purpose fertilizer throughout the growing season' -- the digit 30 (or any spelled-out number) never appears in the quote. Verified against the live page: no numeric interval is stated anywhere on hgic.clemson.edu/sweet-alyssum/. The 30-day figure is a silent month-to-days conversion, not a value literally present in the source. Per the audit's own rule, a number in the claim label that isn't literally in the quote is a refutable defect on its own, even though the real-world risk of this particular rounding is negligible.",
+        "is_edible left null: none of the read pages (NC State, RHS, PSU) state that Lobularia maritima or any part of it is eaten, or that it is not edible/poisonous to eat — no page addresses eating at all.",
+        "NC State's tag list includes 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' — this is a pet-toxicity note, not a human-edibility statement, and no 'Poison'/'Toxic'/'Problem for' text on the page describes a poisonous part, severity, toxic principle, or preparation requirement, so it does not bear on is_edible either way.",
+        "https://hgic.clemson.edu/sweet-alyssum/ refused this machine (http-403 via qc.py) — not read, no data taken from it.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a103 refused this machine (ConnectError via qc.py) — not read, no data taken from it.",
+        "https://extension.psu.edu/how-hardy-are-your-annuals mentions Lobularia maritima only in a plant-hardiness list; searched for 'Height', 'Width', 'Edible', 'Poison', 'Toxic', 'Attracts', and 'pollinator' and found no size, edibility, or pollinator-attraction information specific to this species on that page.",
+        "RHS (https://www.rhs.org.uk/plants/124133/lobularia-maritima/details) was read but not used as the size citation because NC State has a species-specific page (the designated anchor); for reference RHS gives Max Height 'Up to 10 cm' (~3.9 in, open-ended/single figure) and Max Spread '0.1-0.5 metres' (~3.9-19.7 in), broadly consistent with the NC State range used.",
+        "NC State's Dimensions block ('Height: 0 ft. 3 in. - 0 ft. 10 in.', 'Width: 0 ft. 6 in. - 1 ft. 0 in.') is given for the species Lobularia maritima generally, not a named cultivar, and the plant is a low, mat-forming annual/short-lived perennial, not a vine or climber, so all four size fields are populated rather than left null."
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3,
+      "mature_height_in_max": 10,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     }
   ],
   "audit_summary": [
@@ -1084,6 +1310,7 @@
     }
   ],
   "normalizations": [
-    "2026-08-21: landed with zero manual fixes. First batch to run after the conflict-resolution and always-populate-scientific_name_accepted fixes from b10/b11 -- both held, and a batch-wide scan for the conflict pattern specifically found nothing. Watermelon's audit caught a subtler variant of source-overreach than seen before: is_houseplant was set false on a citation that only described seed-starting-indoors-for-later-outdoor-transplant, which the source never actually used to assert the plant isn't grown indoors -- the researcher's own annotation framed an absence of evidence as a stated fact. Grape's toxicity call is correctly captured (RHS: potentially harmful to dogs) despite being a common food crop, and correctly distinguished from a genuine conflict: the other sources are silent on pet toxicity, not contradicting, so nothing was nulled. This was the first successful run after a mid-run account-wide weekly usage limit forced a retry; the batch's 8 species were restored to the front of the collection queue and re-run in full once the limit cleared, rather than silently dropped."
+    "2026-08-21: landed with zero manual fixes. First batch to run after the conflict-resolution and always-populate-scientific_name_accepted fixes from b10/b11 -- both held, and a batch-wide scan for the conflict pattern specifically found nothing. Watermelon's audit caught a subtler variant of source-overreach than seen before: is_houseplant was set false on a citation that only described seed-starting-indoors-for-later-outdoor-transplant, which the source never actually used to assert the plant isn't grown indoors -- the researcher's own annotation framed an absence of evidence as a stated fact. Grape's toxicity call is correctly captured (RHS: potentially harmful to dogs) despite being a common food crop, and correctly distinguished from a genuine conflict: the other sources are silent on pet toxicity, not contradicting, so nothing was nulled. This was the first successful run after a mid-run account-wide weekly usage limit forced a retry; the batch's 8 species were restored to the front of the collection queue and re-run in full once the limit cleared, rather than silently dropped.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

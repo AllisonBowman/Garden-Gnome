@@ -726,7 +726,13 @@
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: NC State gives only qualitative guidance ('moderate fertility...avoid excess nitrogen'); RHS's specific fertilizing instructions (amount, product, season) are given for the Rudbeckia genus generally, not stated as R. hirta-specific, and don't specify a repeat interval.",
         "toxic_to_pets, toxicity_detail: none of the eight admissible sources checked, including targeted searches of Clemson's and UMD's pet-safe-plant material, address toxicity of Rudbeckia hirta to pets or to humans.",
         "is_houseplant set false: no admissible source describes long-term indoor growing of the species; the container mentions found (Clemson's 'Toto' cultivars, RHS's 'Toto', Penn State's 'Autumn Colors'/'Cherry Brandy') are all for outdoor patio/garden containers, not indoor houseplant use.",
-        "name_note — removed on audit: name_note asserts that all eight admissible sources were checked and 'use \"Rudbeckia hirta\" consistently with no synonym or proposed name change flagged anywhere.' This is contradicted by the record's own cited UMD Extension page (used for citations 12 and 13, extension.umd.edu/resource/black-eyed-susan), which I fetched directly: it explicitly states that Maryland's R. hirta populations 'used to be classified as R. serotina, R. monticola, and R. brittonii' -- i.e. it does flag former synonyms, directly within a source the record itself relied on. Separately, 3 of the 8 sources the note claims were 'checked' (Clemson, Penn State, UGA) never appear anywhere in the citations array, so the sweeping 'checked ... no synonym flagged anywhere' claim is partly undocumented and, where it could be verified, is simply false. (The final scientific_name_accepted value of 'Rudbeckia hirta' itself still appears correct -- this is a soundness problem with the note's overclaimed certainty, per structural check #2, not with the chosen name.)"
+        "name_note — removed on audit: name_note asserts that all eight admissible sources were checked and 'use \"Rudbeckia hirta\" consistently with no synonym or proposed name change flagged anywhere.' This is contradicted by the record's own cited UMD Extension page (used for citations 12 and 13, extension.umd.edu/resource/black-eyed-susan), which I fetched directly: it explicitly states that Maryland's R. hirta populations 'used to be classified as R. serotina, R. monticola, and R. brittonii' -- i.e. it does flag former synonyms, directly within a source the record itself relied on. Separately, 3 of the 8 sources the note claims were 'checked' (Clemson, Penn State, UGA) never appear anywhere in the citations array, so the sweeping 'checked ... no synonym flagged anywhere' claim is partly undocumented and, where it could be verified, is simply false. (The final scientific_name_accepted value of 'Rudbeckia hirta' itself still appears correct -- this is a soundness problem with the note's overclaimed certainty, per structural check #2, not with the chosen name.)",
+        "is_edible left null: none of the five source pages (NC State, RHS growing guide, UMD extension) mention eating, edibility, food use, poisoning, or toxicity for this species; searched 'Edible', 'Poison', 'Toxic', and 'Problem for' on each with zero hits.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (ConnectError) -- not read, not guessed.",
+        "ask.ifas.ufl.edu/fp512 refused this machine (ReadError) -- not read, not guessed.",
+        "RHS growing guide (https://www.rhs.org.uk/plants/rudbeckia/growing-guide) is a GENUS page for Rudbeckia, not a species page for R. hirta -- per instructions it is not used as a size or attracts_pollinators source since NC State already provides species-specific data for both; RHS mentions 'good for pollinators' and 'good for wildlife' only at genus level, not used as citation support.",
+        "Rudbeckia hirta is not a climber/vine, so the size fields were populated normally (rule 4 does not apply).",
+        "Size figures are for the species (not a named cultivar) per NC State's species-level page."
       ],
       "citations": [
         {
@@ -806,8 +812,31 @@
           "quote": "Soil: Moist to dry. Soil texture and pH preferences, if any, are unknown.",
           "source": "University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/black-eyed-susan"
+        },
+        {
+          "claim": "attracts_pollinators (NC State Attracts: Butterflies, Pollinators)",
+          "source": "NC State Extension Plant Toolbox, Rudbeckia hirta",
+          "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-hirta/",
+          "quote": "Attracts: | Butterflies | Pollinators"
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Rudbeckia hirta",
+          "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-hirta/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Rudbeckia hirta",
+          "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-hirta/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Blanket Flower",
@@ -1087,6 +1116,7 @@
   "normalizations": [
     "2026-08-21: landed after one registry fix (garden-gnome commit 9afdde5), not a data fix. Black-Eyed Susan cited ask.ifas.ufl.edu/fp512 -- attributed in the researcher's own source string to the identical EDIS document edis.ifas.ufl.edu hosts -- which the loader correctly refused since the domain wasn't registered. Registered it alongside UF/IFAS's known domain, same authority, and the citations resolved cleanly on re-check.",
     "All three species flagged in advance for toxicity attention -- Sweet Pea (a different genus from the already-landed edible garden pea, despite the name), Vinca (source of the vinca alkaloids), and Butterfly Weed (a milkweed, cardiac glycosides) -- correctly resolved toxic_to_pets=true. Sweet Pea and Vinca both kept toxicity_detail null rather than borrow their sources' human-toxicity writeups -- Sweet Pea's audit explicitly caught and stripped an embedded Lathyrism symptom list that had been copied from a 'Poisonous to Humans' section into the pet-facing field, the same anti-pattern found in b14 now generalizing correctly across unrelated species without being re-taught per batch. Scarlet Sage's record separately cross-checked its own common name against a real collision -- a different species (Salvia coccinea) shares the name 'scarlet sage' in some sources.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

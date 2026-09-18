@@ -307,7 +307,17 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # held back rather than landed -- four climbers, because the catalog has no
     # way to say a vine's published "height" is its run along a support and not
     # its stature, and two whose quotes spliced elements the page renders apart.
-    assert report.claims_written == 4221
+    #
+    # 4221 -> 4395 is chunk 4: 174 fields over 40 species, and the first chunk
+    # run under a climber rule that is a rule rather than a judgement. Chunk 3
+    # ended with two auditors reading the identical NC State height field
+    # opposite ways on two vines, so a climber now takes no size at all,
+    # whatever the page publishes, and the auditor refutes one on sight. Eight
+    # species here are climbers and carry flags only. French marigold kept
+    # neither size nor flags: every value it came back with was read off NC
+    # State's Tagetes GENUS page, and its edibility text is about two cultivars
+    # of a different species.
+    assert report.claims_written == 4395
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

@@ -45,6 +45,18 @@
           "source": "Clemson Cooperative Extension HGIC — Cucumber",
           "url": "https://hgic.clemson.edu/factsheet/cucumber/",
           "quote": "Cucumbers are very tender and can be killed by light frosts"
+        },
+        {
+          "claim": "is_edible true (RHS: fruit of Cucumis sativus is stated edible)",
+          "source": "RHS - Cucumis sativus (Cucumber, Gherkin) details",
+          "url": "https://www.rhs.org.uk/plants/105568/cucumis-sativus-cucumber-gherkin/details",
+          "quote": "bearing the familiar, cylindrical, dark green, edible fruit, up to 40cm (16in) in length"
+        },
+        {
+          "claim": "attracts_pollinators true (UMD Extension: bees required to carry pollen for cucumber flower fertilization)",
+          "source": "University of Maryland Extension - Growing Cucumbers in a Home Garden",
+          "url": "https://extension.umd.edu/resource/growing-cucumbers-home-garden",
+          "quote": "pollen must be carried by bees from male flowers, on the same plant or on different plants, to the female flower (the one with the tiny fruit below the flower). It takes 8 to 12 bee visits per flower to ensure pollination and fertilization of the ovule, sufficient to form a straight, full-size fruit."
         }
       ],
       "common_name": "Cucumber",
@@ -88,8 +100,15 @@
         "cool_rest_note: not applicable -- cucumber is an annual warm-season crop and no source discussed a dormancy or cool-rest period.",
         "toxicity_detail beyond pets/bitterness: no admissible source discussed human toxicity for normal ripe cucumber fruit; RHS's warning is specifically about bitter fruit and is filed under a 'Pets' heading.",
         "direct_sun_hours_max — removed on audit: Verified by fetching the UMD page: the quote 'Full sun requires direct light at least 6 hours/day; prefers 8 - 10 hours/day' is correctly transcribed, but it is not cucumber-specific data — it is UMD Extension's fixed, byte-for-byte-identical definition of the 'Full Sun' exposure category, reused verbatim on UMD's tomato ('Growing Tomatoes in a Home Garden') and pepper ('Growing Peppers in a Home Garden') pages as well. The record presents '10' as though it were a researched fact about cucumbers' particular sun preference, when it is actually just the generic upper bound UMD assigns to any crop it labels 'full sun.' This is exactly the generic-boilerplate failure mode the audit brief warns about (criterion 2) — the outdoor_sun_exposure='full_sun' categorization itself is plausibly a real per-crop editorial choice, but the numeric direct_sun_hours_max=10 riding on the same quote is not evidence of anything cucumber-specific.",
-        "toxic_to_pets/toxicity_detail — nulled on landing review, not the field-level audit: two admissible sources give directly opposing answers (RHS: bitter fruit can be toxic; NC State: non-toxic for cats/dogs/horses) and the record picked RHS over NC State rather than nulling. The tranche format has no way to store this as two competing claims for the resolver's own material-disagreement rule to arbitrate -- a single record asserts one value per field -- so a genuine cross-source conflict on a harm-capable field has to be resolved the same way the system-level resolver would resolve it if it could see both: null, not a researcher's preference between sources. Original citations and reasoning preserved above/in citations for whoever revisits this."
-      ]
+        "toxic_to_pets/toxicity_detail — nulled on landing review, not the field-level audit: two admissible sources give directly opposing answers (RHS: bitter fruit can be toxic; NC State: non-toxic for cats/dogs/horses) and the record picked RHS over NC State rather than nulling. The tranche format has no way to store this as two competing claims for the resolver's own material-disagreement rule to arbitrate -- a single record asserts one value per field -- so a genuine cross-source conflict on a harm-capable field has to be resolved the same way the system-level resolver would resolve it if it could see both: null, not a researcher's preference between sources. Original citations and reasoning preserved above/in citations for whoever revisits this.",
+        "Cucumis sativus is a climbing/vining plant (RHS Habit: Climbing; described by RHS as 'a deciduous, annual, vining plant to 2m (6½ft) high, climbing by means of thin tendrils at the leaf nodes'; RHS grow-your-own guide: 'Cucumbers are tender climbing or scrambling plants'). Per the climber rule, all four mature size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null even though RHS's structured Size block lists 'Max Height 0.1-0.5 metres' and 'Max Spread 1.5-2.5 metres' for this species -- those figures describe the vine's stature/run, not a usable plant-height bound.",
+        "is_edible is TRUE, but the RHS species page also carries a toxicity note that must travel with it: 'Pets: Bitter fruit can be TOXIC if eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers.' This is a pets/bitter-fruit warning, not a statement that the normal ripe fruit is unsafe for people, but it is recorded here per the edibility-plus-toxicity rule.",
+        "https://hgic.clemson.edu/factsheet/cucumber/ returned an http-403 status to this machine (fetch blocked) and could not be read; no data was drawn from it and none of its content was guessed.",
+        "attracts_pollinators is TRUE based on UMD Extension's unconditional description of bee-mediated pollination ('pollen must be carried by bees from male flowers... It takes 8 to 12 bee visits per flower to ensure pollination...'). Neither RHS page carries a structured 'attracts pollinators' tag or wildlife field for this species -- searches for 'Pollinator' and 'attractive to pollinators' on both RHS pages returned 0 hits -- so this value rests solely on the UMD bee-pollination text, not a dedicated attracts/wildlife field.",
+        "No page among the four searched addressed height/spread with a non-climber-caveat framing, so the null size fields reflect the climber rule, not absence of any published figure."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "chill_damage_f": null,
@@ -153,6 +172,30 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
           "quote": "The fruits and seeds are edible; however, the remainder of the plant is poisonous. The fruits should not be consumed raw. Preferably, they should be baked, stewed, or fried. The flowers, leaves, and roots of the plant are toxic and should not be consumed."
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Height 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Solanum melongena",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Width 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Solanum melongena",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "is_edible is true: the fruits and seeds are edible, though the rest of the plant is poisonous and fruit must be cooked, not eaten raw",
+          "source": "NC State Extension Gardener Plant Toolbox - Solanum melongena",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "The fruits and seeds are edible; however, the remainder of the plant is poisonous . The fruits should not be consumed raw."
+        },
+        {
+          "claim": "attracts_pollinators is true: the plant's flowers attract bumblebees and the page's structured Attracts field lists Bees",
+          "source": "NC State Extension Gardener Plant Toolbox - Solanum melongena",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+          "quote": "The plant's flowers attract bumblebees."
         }
       ],
       "common_name": "Eggplant",
@@ -192,14 +235,26 @@
         "soil_drainage: NC State's soil-drainage tags for this species are 'Good Drainage' and 'Moist' listed together, which doesn't map cleanly onto a single fast/moderate/moisture_retentive value.",
         "water_growing_days_est / water_dormant_days_est / water_dry_down_target / water_check_depth_cm / water_estimate_basis: UGA states a weekly water volume ('1 to 2 inches of water per week'), not a watering-frequency-in-days or a soil-check depth, so it was not converted into a days estimate.",
         "fertilize_active_months / fertilize_strength: no source ties fertilizing to specific calendar months or states a liquid-feed dilution strength.",
-        "fertilize_interval_days — removed on audit: The value 14 is drawn solely from RHS's container-grown, liquid-feed instruction ('Feed aubergines in containers every two weeks with an organic high-potassium liquid fertiliser'). This is scoped explicitly to container culture -- the record's own citation label even says so -- yet the field is populated as a general fertilize_interval_days with no container caveat carried into the value itself, despite the record elsewhere (soil_base unknowns) acknowledging it could not determine whether this plant is grown in containers or in ground. Worse, a same-tier admissible source for in-ground culture directly conflicts: Clemson HGIC's eggplant factsheet specifies granular side-dressing 'three to four weeks after planting' and again 'three to four weeks after that' -- i.e. a ~21-28 day interval, not 14. I also checked RHS's own tomato page and found the 'feed every two weeks (container) / fortnightly (ground)' language is a template RHS reuses with minor variation across vegetable pages, reinforcing that this is generic container-feeding boilerplate rather than an eggplant-specific finding that should override the conflicting in-ground guidance from Clemson. Presenting 14 as the record's single fertilize_interval_days, without reconciling or scoping around this conflict, is an over-reach."
+        "fertilize_interval_days — removed on audit: The value 14 is drawn solely from RHS's container-grown, liquid-feed instruction ('Feed aubergines in containers every two weeks with an organic high-potassium liquid fertiliser'). This is scoped explicitly to container culture -- the record's own citation label even says so -- yet the field is populated as a general fertilize_interval_days with no container caveat carried into the value itself, despite the record elsewhere (soil_base unknowns) acknowledging it could not determine whether this plant is grown in containers or in ground. Worse, a same-tier admissible source for in-ground culture directly conflicts: Clemson HGIC's eggplant factsheet specifies granular side-dressing 'three to four weeks after planting' and again 'three to four weeks after that' -- i.e. a ~21-28 day interval, not 14. I also checked RHS's own tomato page and found the 'feed every two weeks (container) / fortnightly (ground)' language is a template RHS reuses with minor variation across vegetable pages, reinforcing that this is generic container-feeding boilerplate rather than an eggplant-specific finding that should override the conflicting in-ground guidance from Clemson. Presenting 14 as the record's single fertilize_interval_days, without reconciling or scoping around this conflict, is an over-reach.",
+        "is_edible is conditional/true with a serious caveat: NC State states 'The fruits and seeds are edible; however, the remainder of the plant is poisonous.' The fruits should not be eaten raw -- they should be baked, stewed, or fried. NC State separately gives Poisonous to Humans / Poison Severity: High; Poison Symptoms: 'If the leaves, flowers, stems, or roots are ingested, throat burning, nausea, vomiting, and irregular heart rhythm can occur which may be fatal.'; Poison Toxic Principle: 'Alkaloids including solanine'; Poison Part: Flowers, Leaves, Roots, Stems; Causes Contact Dermatitis: No. The page also tags the plant Problem for Cats, Problem for Dogs, Problem for Horses, and Problem for Children, and says 'If you consider growing eggplant in your vegetable garden, caution should be taken to protect children and pets.'",
+        "attracts_pollinators is supported by NC State's structured 'Attracts: Bees' field and the narrative statement 'The plant's flowers attract bumblebees.' No mention of butterflies, moths, or hummingbirds was found or claimed.",
+        "Eggplant (Solanum melongena) is not a vine, liana, or other climber (NC State lists Plant Type as Annual / Herbaceous Perennial / Vegetable, with a shrubby, multi-branched habit), so the climber-height exclusion in rule 4 does not apply and all four size fields are filled normally.",
+        "Size figures (Height: 2 ft. 0 in. - 4 ft. 0 in.; Width: 1 ft. 0 in. - 3 ft. 0 in.) are given for the species/plant type generally, not for a named cultivar, so rule 3 does not require nulling them.",
+        "Only the NC State Plant Toolbox page (the anchor) was needed to source all six fields, since its structured Dimensions, Attracts, and Edible/Poison blocks fully covered them; the other four listed pages (UMD, UGA, Clemson, RHS) were not queried for this pass because the anchor already supplied verbatim, checker-matchable text for every field.",
+        "No host in the assigned list refused this machine during this session, so there is nothing to report as skipped due to a blocked fetch."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Garlic",
@@ -251,7 +306,12 @@
         "fertilize_interval_days: Clemson's schedule (mid-Nov, early Jan, mid-Feb, early March) has irregular gaps between applications (about 7 weeks, then 6 weeks, then 3 weeks), so no single day-interval number is supportable without inventing an average the source doesn't state.",
         "fertilize_strength: the sourced fertilizer applications are granular soil amendments (calcium nitrate, 5-10-10, sulfur) measured in lbs per 1,000 sq ft, not a diluted liquid feed with a full/half/quarter strength concept, so this field doesn't apply.",
         "water_dormant_days_est, water_dry_down_target, water_check_depth_cm: no source gave a distinct dormant/winter watering estimate or a specific dry-down depth or moisture-check depth.",
-        "water_regime — removed on audit: The cited Clemson quote is truncated mid-sentence. Verified against the live page, the full sentence reads: \"Consistent soil moisture is important and is especially critical during the bulbing period. Monitor moisture, and water the plot as necessary. However, when the crop is nearing maturity, somewhat dry soil is best.\" The record dropped the final clause, which directly contradicts a blanket 'keep_moist' label — the source actually describes a two-phase regime (moist during bulbing, then deliberately dry near maturity), and the record's own water_estimate_basis field separately confirms irrigation is stopped after mid-June specifically to avoid bulb disease. A flat 'keep_moist' value for the whole season misrepresents the source and could lead to overwatering during the maturation phase, which the source explicitly warns against."
+        "water_regime — removed on audit: The cited Clemson quote is truncated mid-sentence. Verified against the live page, the full sentence reads: \"Consistent soil moisture is important and is especially critical during the bulbing period. Monitor moisture, and water the plot as necessary. However, when the crop is nearing maturity, somewhat dry soil is best.\" The record dropped the final clause, which directly contradicts a blanket 'keep_moist' label — the source actually describes a two-phase regime (moist during bulbing, then deliberately dry near maturity), and the record's own water_estimate_basis field separately confirms irrigation is stopped after mid-June specifically to avoid bulb disease. A flat 'keep_moist' value for the whole season misrepresents the source and could lead to overwatering during the maturation phase, which the source explicitly warns against.",
+        "is_edible is true and the anchor (NC State Plant Toolbox) page names a poisonous part/severity as required by rule 5: the page states 'This plant has low severity poison characteristics,' lists Poison Severity: Low, Poison Symptoms: vomiting, breakdown of red blood cells (hemolytic anemia, Heinz body anemia), blood in urine, weakness, high heart rate, panting, Poison Toxic Principle: N-propyl disulfide, diallyl disulfide, and Causes Contact Dermatitis: Yes. The page also states: 'the plant also has poisonous characteristics as noted in the \"Poisonous to Humans\" section of this record. Toxicity can depend on the age of the person or animal, the age of the plant, the part of the plant ingested, how much is ingested, whether the person or animal has sensitivities or allergies, whether it's eaten raw or cooked, and so forth. Consult with a medical professional for further details.' Edibility itself is described unconditionally elsewhere on the same page (bulbs eaten raw or cooked, young leaves/scapes edible raw or cooked in small quantities, grown in the home edible garden), so is_edible is set true rather than conditional, but this toxicity information is preserved here per the rule.",
+        "attracts_pollinators left null: NC State Plant Toolbox has an 'Attracts' field with 0 hits for this species. Searched extension.psu.edu/growing-and-using-garlic and extension.psu.edu/garlic-production for 'pollinator', 'bee', 'butterfl', 'Attracts', and 'Wildlife' -- every hit was site navigation-menu boilerplate (e.g. 'Pollination and Bees', 'Landscaping for Wildlife' category links), not species-specific content about garlic attracting pollinators. No page addresses garlic and pollinators directly, so this is null (no record), not false.",
+        "hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/ refused this machine (fetch status http-403, 0 bytes returned) -- it was not used for any field and no content from it was guessed.",
+        "Garlic is a bulb/herbaceous plant, not a vine, liana, or other climber, so rule 4 (no size for climbers) does not apply -- all four size fields were filled from the NC State Dimensions block as normal.",
+        "mature_height_in and mature_spread_in are for the species as grown (not a named cultivar) -- the NC State Dimensions block gives a plain species-level range, not a cultivar-specific figure."
       ],
       "citations": [
         {
@@ -301,8 +361,31 @@
           "quote": "Mid-November: 4 lbs. calcium nitrate (15.5-0-0) per 1,000 sq. ft. Early January: 10 lbs. 5-10-10 per 1,000 sq. ft., 0.50 lb. sulfur per 1,000 sq. ft. Mid-February: 4 lbs. calcium nitrate per 1,000 sq. feet. Early March: 4 lbs. calcium nitrate per 1,000 sq. ft.",
           "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
           "source": "Clemson Cooperative Extension HGIC"
+        },
+        {
+          "claim": "is_edible true (NC State: garlic bulbs, and in small quantities the young leaves/scapes, are grown and used for food)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-sativum/",
+          "quote": "Garlic is an edible bulb of the amaryllis family (Amaryllidaceae) native to Asia."
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-sativum/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 8-12 (NC State Width 0 ft. 8 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-sativum/",
+          "quote": "Width: 0 ft. 8 in. - 1 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 8,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Gourds",
@@ -353,7 +436,12 @@
         "is_houseplant — removed on audit: Fetched the cited RHS page directly: its full 'Suggested planting locations and garden types' list is only 'Patio and container plants', 'City and courtyard gardens', 'Wildlife gardens' — no Houseplant/Indoors/Conservatory tag exists. 'Patio and container plants' is RHS's outdoor container-gardening category, not evidence of indoor houseplant status. The claim also contradicts the rest of the record, which describes a frost-tender, full-sun annual vine with no cool-rest/dormancy behavior — the opposite of a typical houseplant profile in this schema.",
         "toxic_to_pets — removed on audit: Verified via direct fetch that RHS's 'Potentially harmful' section for this page contains no 'Toxic to: Humans/Cats/Dogs/Livestock' category tags — just a general 'TOXIC if eaten; fruit intended for decoration only' warning, which reads as aimed at people mistaking an ornamental gourd for food. The record's own toxicity_detail admits the source 'does not specify whether it is directed at humans, pets, or both,' yet the boolean field still asserts true as a settled pet-toxicity fact. Source silence on animals/pets specifically should not be encoded as a confirmed pets claim.",
         "toxicity_detail — removed on audit: Same underlying defect as toxic_to_pets: the text is honest that the source is ambiguous about the intended audience (human vs. pet), but that honesty doesn't rescue the paired boolean field from overclaiming, and the detail itself never establishes an animal-specific toxicity mechanism or dose — it's a decoration-safety warning, not a veterinary toxicity statement.",
-        "water_regime — removed on audit: The UGA quote qualifies the >1 inch/week moisture requirement as occurring 'during peak development' (i.e., fruiting stage), not as a season-long directive. The record's own water_estimate_basis text preserves that qualifier, but the categorical water_regime value 'keep_moist' drops it and generalizes a stage-specific watering note into a blanket regime for the whole crop cycle — a mild overreach beyond what the source actually states."
+        "water_regime — removed on audit: The UGA quote qualifies the >1 inch/week moisture requirement as occurring 'during peak development' (i.e., fruiting stage), not as a season-long directive. The record's own water_estimate_basis text preserves that qualifier, but the categorical water_regime value 'keep_moist' drops it and generalizes a stage-specific watering note into a blanket regime for the whole crop cycle — a mild overreach beyond what the source actually states.",
+        "mature_height_in and mature_spread_in left null on purpose: this is a vine/scrambling climber, not a self-supporting plant with a stature. RHS: 'An annual which naturally scrambles along the ground and over other low plants, reaching about 3m. It can be trained up a sturdy support'; Habit listed as 'Spreading branched, Trailing'. CAES/UGA corroborates: 'Cucurbita gourds have vines that reach 12-15 feet.' Per the climber rule, all four size fields are left null even though RHS publishes structured Max Height (0.1-0.5 metres) and Max Spread (2.5-4 metres) figures -- those numbers describe a sprawling/trained run, not plant stature, so they were not converted or recorded.",
+        "is_edible set to false rather than null: the RHS anchor page states, in its Potentially harmful field, 'TOXIC if eaten; fruit intended for decoration only. Wear gloves and other protective equipment when handling,' and separately describes the fruit in its body text as 'inedible but decorative fruit in different shapes and colours.' The CAES/UGA page corroborates at genus level: 'Gourds of the Cucurbita species all have yellow flowers, and most are inedible.'",
+        "RHS also carries a structured 'Fruit Edible' plant-info tag on the same page, which contradicts the page's own explicit toxic/inedible prose. That tag looks like a genus-level default rather than a species-specific claim, so it was not used to set is_edible true -- flagging the contradiction here rather than silently picking one signal.",
+        "Toxicity detail found while checking Poison/Toxic/Problem-for text on the anchor page (recorded here for visibility even though is_edible ended up false): 'TOXIC if eaten; fruit intended for decoration only. Wear gloves and other protective equipment when handling.'",
+        "Both target pages (RHS and CAES/UGA fieldreport) fetched successfully via qc.py; no page refused the fetch, so there is nothing to report as blocked."
       ],
       "citations": [
         {
@@ -409,8 +497,22 @@
           "quote": "Gourds of the Cucurbita species all have yellow flowers, and most are inedible. They are easily damaged by frost, have a thick shell and are difficult to cure.",
           "source": "University of Georgia Cooperative Extension — CAES Field Report, 'Growing gourds in Georgia' by W. Terry Kelley",
           "url": "https://fieldreport.caes.uga.edu/news/growing-gourds-in-georgia/"
+        },
+        {
+          "claim": "is_edible false (RHS states the fruit is TOXIC if eaten and intended for decoration only, not for food; CAES/UGA corroborates most Cucurbita gourds are inedible)",
+          "quote": "TOXIC if eaten; fruit intended for decoration only.",
+          "source": "RHS Plants: Cucurbita pepo var. ovifera details page",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS structured plant-info tag: Plants for pollinators)",
+          "quote": "Plants for pollinators",
+          "source": "RHS Plants: Cucurbita pepo var. ovifera details page",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Kohlrabi",
@@ -459,7 +561,13 @@
         "toxic_to_pets, toxicity_detail: NC State tags this species 'Problem for Horses' with no mechanism, plant part, or acute-toxicity detail given, and no source addresses cats or dogs, so left null rather than guess",
         "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_dry_down_target, water_estimate_basis: no source gives a watering frequency in days or a check depth, only a qualitative 'keep consistently moist' regime",
         "cool_rest_note: no source discusses a dormancy/rest period for kohlrabi",
-        "day_f_min — removed on audit: The cited RHS quote ('wait until temperatures are above 10°C (50°F), as cold conditions can make plants more prone to bolting') is a spring-SOWING timing rule to avoid premature flowering, not a statement that the growing plant is damaged or grows poorly below 50°F. The citation's own claim label even admits this ('spring sowing threshold to avoid bolting, not a general growth minimum'), yet the number was still used to populate day_f_min, a field whose sibling day_f_max was correctly sourced from an actual growth-impairment threshold (MBG: 'Plants generally grow poorly when daytime temperatures consistently exceed 80 degrees F'). Worse, this value directly conflicts with other citations in the same record: MBG states kohlrabi 'needs cool temperatures to produce the best crop' and 'is typically grown in the cool temperatures of spring or fall,' and NC State states it 'can tolerate frost but not a hard freeze' — both describing a plant that performs well well below 50°F daytime temps, the opposite of what a 50°F 'day_f_min' floor implies. The researcher treated night_f_min/max and chill_damage_f correctly by leaving them null when no true damage-onset value existed; day_f_min should have received the same treatment (null, with an unknowns entry) instead of being filled with a mismatched proxy number."
+        "day_f_min — removed on audit: The cited RHS quote ('wait until temperatures are above 10°C (50°F), as cold conditions can make plants more prone to bolting') is a spring-SOWING timing rule to avoid premature flowering, not a statement that the growing plant is damaged or grows poorly below 50°F. The citation's own claim label even admits this ('spring sowing threshold to avoid bolting, not a general growth minimum'), yet the number was still used to populate day_f_min, a field whose sibling day_f_max was correctly sourced from an actual growth-impairment threshold (MBG: 'Plants generally grow poorly when daytime temperatures consistently exceed 80 degrees F'). Worse, this value directly conflicts with other citations in the same record: MBG states kohlrabi 'needs cool temperatures to produce the best crop' and 'is typically grown in the cool temperatures of spring or fall,' and NC State states it 'can tolerate frost but not a hard freeze' — both describing a plant that performs well well below 50°F daytime temps, the opposite of what a 50°F 'day_f_min' floor implies. The researcher treated night_f_min/max and chill_damage_f correctly by leaving them null when no true damage-onset value existed; day_f_min should have received the same treatment (null, with an unknowns entry) instead of being filled with a mismatched proxy number.",
+        "attracts_pollinators left null: no page checked (NC State Plant Toolbox, RHS 'Grow your own' kohlrabi guide, RHS 'Quickstar' cultivar page) has an Attracts/wildlife field or an unconditional statement naming pollinators for kohlrabi; the RHS guide mentions bees and butterflies only in pest-control context (cabbage caterpillars/butterflies as pests, aphids), not as pollinators of the plant.",
+        "is_edible is true. The same NC State Plant Toolbox record that supplies the Edibility field also tags this record 'Problem for Horses' under its Problems field -- included here per the rule that any poison/toxic/problem-for text on the cited page must go to unknowns whenever is_edible is true, even though no specific toxic part, principle, or severity is spelled out beyond that tag.",
+        "The RHS 'Quickstar' cultivar page (https://www.rhs.org.uk/plants/124565/brassica-oleracea-(gongylodes-group)-quickstar/details) gives Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres, but this is a named cultivar's published figure, not the species', so it was not used for mature_height_in/mature_spread_in.",
+        "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=257407&isprofile=0 returned a connection error (ConnectError, 0 bytes) via qc.py and was skipped entirely; not used for any field.",
+        "RHS 'Grow your own' kohlrabi guide (https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own) has no Height/Spread/Max Height/Max Spread field of any kind, and no Poison/Toxic text -- searched 'Height', 'Spread', 'Edible', 'eaten', 'Poison', 'Toxic', 'Attracts', 'Pollinator', 'bee', 'butterfl' with no relevant hits beyond pest descriptions.",
+        "Kohlrabi is not a climber, so all four size fields were filled normally (rule 4 does not apply)."
       ],
       "citations": [
         {
@@ -551,8 +659,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
           "quote": "They can tolerate frost but not a hard freeze."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: Edible vegetable.)",
+          "source": "NC State Extension, Plant Toolbox: Brassica oleracea Kohlrabi Group",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "Edible vegetable."
+        },
+        {
+          "claim": "mature_height_in 9-12 (NC State Height: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension, Plant Toolbox: Brassica oleracea Kohlrabi Group",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "Height: 0 ft. 9 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 9-12 (NC State Width: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension, Plant Toolbox: Brassica oleracea Kohlrabi Group",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-kohlrabi-group/",
+          "quote": "Width: 0 ft. 9 in. - 1 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 9,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Leek",
@@ -608,7 +739,13 @@
         "is_houseplant: no admissible source discusses indoor or container cultivation of leeks; recorded false per the expected outdoor-vegetable default.",
         "toxicity_detail — removed on audit: The severity rating and symptom description in toxicity_detail ('Poison Severity Low; vomiting and digestive problems ... in large quantities') are lifted verbatim from the NC State Plant Toolbox page's 'Poisonous to Humans' subsection, not from any dog/cat/horse-specific entry. Direct verification of the page shows there is only ONE poison subsection with a severity rating and symptom text, and it is the Human one (framed around eating/food safety and oxalic acid/contact dermatitis). The animal side of the page consists solely of bare tags ('#problem for dogs', '#problem for cats', '#problem for horses') with no elaborated severity or symptoms attached to them. So toxic_to_pets=true has some tag-level support, but toxicity_detail misattributes a human food-safety statement (severity, symptoms) to pets -- exactly the human-vs-pet conflation the audit brief warns about, just in the reverse direction (human text presented as pet detail rather than 'safe to eat' being read as 'safe for pets').",
         "soil_ph_min — removed on audit: Verified the source paragraph: 'Although garlic and related Alliums have no specific recommendations based on soil testing ... The soil pH should be between 6.0 and 6.5.' This sentence names 'garlic and related Alliums' generically, not 'leek' specifically -- unlike the neighboring water-regime sentence in the same document, which does explicitly list 'Garlic, elephant garlic, and leek' by name. There is no leek-specific pH subsection anywhere in the UGA publication; leek is mentioned later in Land Preparation only for planting depth/spacing, not pH. Applying this genus-level, garlic-anchored figure to leek's own soil_ph_min/max fields is an inference from generic Allium guidance, not a value the source states for leek specifically.",
-        "soil_ph_max — removed on audit: Same defect as soil_ph_min: the 6.0-6.5 range is stated for 'garlic and related Alliums' generically in the UGA Land Preparation section, not attributed to leek by name in that sentence, and no leek-specific pH guidance exists elsewhere in the source."
+        "soil_ph_max — removed on audit: Same defect as soil_ph_min: the 6.0-6.5 range is stated for 'garlic and related Alliums' generically in the UGA Land Preparation section, not attributed to leek by name in that sentence, and no leek-specific pH guidance exists elsewhere in the source.",
+        "Size figures (mature_height_in / mature_spread_in) are taken from RHS's structured Max Height / Max Spread field (0.1-0.5 metres each), which is a garden-size band, not the flowering-stem height; the same RHS page separately notes flowering stems can reach up to 1.5m, but that figure is not a Max Height/Max Spread value and was left out per the rule to only fill fields from the structured size fields.",
+        "is_edible is set true based on RHS's own classification of leek as 'Herbs - Culinary' and text stating it is grown as an annual vegetable; the two RHS pages checked (106043 and 186099) contain zero hits for 'Poison', 'Toxic', or 'Problem for', so no toxicity caveat appears on the pages actually cited for this record.",
+        "Out of caution: one of the six assigned reference pages, NC State's plants.ces.ncsu.edu page, turns out to be titled 'Broadleaf Wild Leek - Allium ampeloprasum' -- a related but distinct taxon (the wild/parent species) from this record's Allium porrum, not a page for the cultivated leek itself. Per the rule that a different taxon's data does not go into a species record, its Height/Width dimensions (3-4 ft x 1-2 ft) were NOT used for mature_height_in/mature_spread_in. That page does list 'low severity' poison characteristics for Allium ampeloprasum (Poison Severity: Low; Poison Symptoms: 'Eating in large quantities can cause vomiting and digestive problems. Contact dermatitis can occur in some people. Cooking decreases the oxalic acid content.'; Toxic Principle: oxalic acid; Causes Contact Dermatitis: Yes; tags include '#problem for dogs #problem for horses #problem for cats'). This is flagged here for caution given the close taxonomic relationship, but it was not used as citation evidence for this Allium porrum record because it describes a different taxon.",
+        "Clemson's hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/ page returned an http-403 status when fetched through qc.py -- it refused this machine. It was not read, and nothing from it was guessed or recorded.",
+        "UGA CAES fieldreport.caes.uga.edu leek/garlic production page: searches for size, poison, edibility, and pollinator terms turned up only site-navigation/table boilerplate (a soil-nutrient toxicity table, a 'Pollinators' nav link) with no leek-specific size, edibility, or pollinator statement, so it was not used as a citation source.",
+        "Penn State Extension's season-extenders/fall-vegetables page mentions 'leek' only as one item in general vegetable planting-date lists (e.g. 'Common cool-season vegetables include ... leek ...' and a July 10 planting-date list including 'Leeks'); it contains no structured size, edibility-condition, or pollinator statement specific to leek, so it was not used as a citation source for any of the six fields."
       ],
       "citations": [
         {
@@ -688,8 +825,38 @@
           "source": "Penn State Extension",
           "url": "https://extension.psu.edu/season-extenders-and-growing-fall-vegetables",
           "quote": "Note that there is considerable variation in the freezing susceptibility of leek varieties; although most leeks are very cold-tolerant, the darker, blue-green varieties are most likely to survive plunges to 0°F (-18°C)."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches at x39.37)",
+          "source": "RHS - Allium porrum (leek)",
+          "url": "https://www.rhs.org.uk/plants/106043/allium-porrum/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches at x39.37)",
+          "source": "RHS - Allium porrum (leek)",
+          "url": "https://www.rhs.org.uk/plants/106043/allium-porrum/details",
+          "quote": "Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "is_edible true (RHS classes leek as a culinary herb/vegetable): Leeks are herbaceous perennials usually grown as annual vegetables",
+          "source": "RHS - Allium porrum (leek)",
+          "url": "https://www.rhs.org.uk/plants/106043/allium-porrum/details",
+          "quote": "Leeks are herbaceous perennials usually grown as annual vegetables"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS states leek flowers are visited by bees)",
+          "source": "RHS - Allium porrum (leek)",
+          "url": "https://www.rhs.org.uk/plants/106043/allium-porrum/details",
+          "quote": "flowerheads 5-9cm across of hundreds of star-like pale pink to white flowers which are visited by bees, in summer"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Lettuce",
@@ -788,6 +955,24 @@
           "quote": "Lettuce can also be grown in containers that are a minimum of 2 quarts volume and 6 to 8 inches deep.",
           "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
           "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Lactuca sativa (Lettuce)",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Lactuca sativa (Lettuce)",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State describes lettuce as an edible vegetable plant and tags it Edible)",
+          "source": "NC State Extension Gardener Plant Toolbox - Lactuca sativa (Lettuce)",
+          "url": "https://plants.ces.ncsu.edu/plants/lactuca-sativa/common-name/lettuce/",
+          "quote": "Lettuce is an erect, edible, annual, cool season vegetable plant in the daisy family (Asteraceae)."
         }
       ],
       "unknowns": [
@@ -803,8 +988,18 @@
         "soil_base/soil_drainage/soil_ph reflect in-ground or raised-bed garden cultivation as described by the Clemson and NC State home-garden guides; NC State also separately supports container growing (see citations) but the catalog's soil_base field only takes one value, so container-specific media was not asserted.",
         "direct_sun_hours_max — removed on audit: Value 4 comes from NC State's quote 'If grown during summer, give the plant 3 to 4 hours of sun daily and shade the rest of the day' -- a summer-specific heat-avoidance instruction, not a general sun-hours ceiling. Fetching the same NC State page's structured Cultural Conditions data shows it defines 'Full Sun' as '6 or more hours of direct sunlight a day' and 'Partial Shade' as '2-6 hours'; UMD (also cited) says lettuce 'tolerates partial shade (4-6 hours of direct light/day) but grows well with full sun in spring and fall.' The record's own outdoor_sun_exposure includes full_sun, which by the cited source's own definition means 6+ hours -- directly contradicting a year-round direct_sun_hours_max of 4. The citation was generalized out of its seasonal heat-protection context.",
         "soil_base — removed on audit: The Clemson quote used to support garden_bed ('This crop prefers a loamy soil with a high organic matter content') is a statement about soil texture/composition, not about growing location or base type -- it says nothing distinguishing garden bed from container or raised bed. The claim's real justification, per the record's own parenthetical, is that the source is 'a home garden vegetable factsheet,' i.e. inferred from the source's title/scope rather than from the quote's content. No cited quote for this claim actually asserts a location/base fact, and the record's own NC State citation shows lettuce is also grown in containers.",
-        "water_growing_days_est — removed on audit: water_estimate_basis frames the 4-5 day UGA irrigation interval as applying to lettuce 'grown in a garden bed/raised bed' and states 'containers need more frequent irrigation than beds.' Fetching the UGA source directly shows its Irrigation section actually groups 'raised beds or containers' together as needing MORE frequent irrigation than the general 4-to-5-day guidance, which applies to ordinary in-ground garden plantings. By lumping raised bed into the 4-5 day group and singling out only containers as needing more, the basis text misstates its own source -- a meaningful risk since raised beds are a very common home-lettuce setup that this framing would under-water."
-      ]
+        "water_growing_days_est — removed on audit: water_estimate_basis frames the 4-5 day UGA irrigation interval as applying to lettuce 'grown in a garden bed/raised bed' and states 'containers need more frequent irrigation than beds.' Fetching the UGA source directly shows its Irrigation section actually groups 'raised beds or containers' together as needing MORE frequent irrigation than the general 4-to-5-day guidance, which applies to ordinary in-ground garden plantings. By lumping raised bed into the 4-5 day group and singling out only containers as needing more, the basis text misstates its own source -- a meaningful risk since raised beds are a very common home-lettuce setup that this framing would under-water.",
+        "attracts_pollinators left null: no page states or structurally tags lettuce as attracting bees, butterflies, moths, hummingbirds, or other pollinators. NC State's 'Attracts' field returned 0 hits. UMD growing-lettuce page had 0 hits for Attracts/Pollinator/bee/butterfl/Wildlife. UGA field report's 'Pollinator' and 'bee' hits were unrelated site navigation/menu links and other-article teasers (e.g. a 'Pollinators' topic link, a black soldier fly article, a general insects-and-disease paragraph about aphids/armyworms/beetles/cabbage loopers) -- none is a statement about lettuce attracting pollinators.",
+        "Clemson HGIC factsheet (https://hgic.clemson.edu/factsheet/lettuce/) returned http-403 and refused this machine's fetch; not used for any field.",
+        "is_edible is true, but per the anchor NC State page lettuce also carries low-severity poison characteristics that belong alongside the edibility claim: 'This plant has low severity poison characteristics.' Poisonous to Humans / Poison Severity: Low. Poison Symptoms: Skin irrigation after exposure to sap [as rendered; likely a site typo for 'irritation']. Poison Toxic Principle: Lactucin and lactucopicrin. Causes Contact Dermatitis: Yes. Poison Part: Sap/Juice.",
+        "Size figures (height and width, both 0 ft. 6 in. - 1 ft. 0 in.) come from NC State's structured Dimensions block for the species page itself (not a named cultivar) and lettuce is not a vine/climber, so all four size fields are populated normally.",
+        "UMD (growing-lettuce-home-garden) and UGA (C1018 home-garden-lettuce) pages were checked for Edible/Poison/Toxic/size terms and contributed no additional field-level facts beyond what NC State already provided; UGA's single 'Edible' hit was an unrelated 'Edible landscaping' article teaser, not a statement about Lactuca sativa's edibility."
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Okra",
@@ -850,7 +1045,11 @@
         "soil_drainage: sources describe soil as 'well-drained' and 'moist' in qualitative terms (NC State: 'Good Drainage, Moist'; MoBot: 'moist, moderately fertile, well-drained') but none map cleanly to the fast/moderate/moisture_retentive enum without guessing, so left null.",
         "humidity_need, humidity_pct_min/max, light_fc_min/good, fertilize_interval_days, fertilize_active_months, fertilize_strength, water_check_depth_cm, water_dry_down_target, cool_rest_note, night_f_max: no admissible source gives species-specific figures for these; all left null.",
         "day_f_min/day_f_max were taken from Clemson's general 'grows best at temperatures between 75F and 90F' statement, which is not explicitly split into day vs night — used per the day_f convention since no separate day-specific quote exists, but flagged here since the source itself doesn't use the word 'day'.",
-        "night_f_min — removed on audit: Verified the Missouri Botanical Garden Plant Finder page directly and the quote is accurate, but its context is being misapplied. The full sentence is: 'Seeds are sensitive to cold temperatures and should not be planted outside until soil temperatures have risen to 60°F. and night temperatures no longer dip below 55°F.' This is a seed/seedling planting-timing threshold ('when is it safe to direct-seed this cold-sensitive crop outdoors'), not a statement about the ongoing night temperature a growing/established okra plant needs or tolerates — which is what a night_f_min field should represent by analogy to day_f_min/day_f_max. Using a germination-establishment guideline as a general night-temperature-requirement figure overstates what the source supports. This mismatch is corroborated by the record's own RHS citation (citation 13, rhs.org.uk/plants/71839), which independently rates the species H2 hardiness — 'tolerant of low temperatures but not surviving being frozen; 1-5°C minimum' (~34-41°F) — for the mature plant, a floor well below the 55°F figure used, showing 55°F is a planting-window recommendation rather than the plant's actual night-temperature floor."
+        "night_f_min — removed on audit: Verified the Missouri Botanical Garden Plant Finder page directly and the quote is accurate, but its context is being misapplied. The full sentence is: 'Seeds are sensitive to cold temperatures and should not be planted outside until soil temperatures have risen to 60°F. and night temperatures no longer dip below 55°F.' This is a seed/seedling planting-timing threshold ('when is it safe to direct-seed this cold-sensitive crop outdoors'), not a statement about the ongoing night temperature a growing/established okra plant needs or tolerates — which is what a night_f_min field should represent by analogy to day_f_min/day_f_max. Using a germination-establishment guideline as a general night-temperature-requirement figure overstates what the source supports. This mismatch is corroborated by the record's own RHS citation (citation 13, rhs.org.uk/plants/71839), which independently rates the species H2 hardiness — 'tolerant of low temperatures but not surviving being frozen; 1-5°C minimum' (~34-41°F) — for the mature plant, a floor well below the 55°F figure used, showing 55°F is a planting-window recommendation rather than the plant's actual night-temperature floor.",
+        "plantfinder.mobot.org refused this machine (ConnectError) and was not read; no data from it is represented here.",
+        "Clemson HGIC and both RHS pages were not needed to fill any field once the NC State anchor supplied structured Height/Width, Attracts, and edibility text, so they were not consulted for this pass.",
+        "Because is_edible is true, per rule 5: the NC State anchor page also states 'The hairs on the seed pods can be an irritant, gloves should be used when handling. The hairs easily wash off.' and lists 'Contact Dermatitis' under Problems/tags. This is a contact-skin irritant from handling the pods, not a poisoning-if-eaten warning -- searches for 'Poison', 'Toxic', and 'Problem for' on the anchor page returned 0 hits each -- but it is recorded here per the rule's instruction to carry forward any toxic/irritant-adjacent text found on the cited page.",
+        "Okra is an upright annual vegetable, not a vine/climber, so the climber-exclusion rule (rule 4) does not apply and all four size fields are populated."
       ],
       "citations": [
         {
@@ -930,8 +1129,38 @@
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/71839/abelmoschus-esculentus/details",
           "quote": "Best grown under glass or in a polytunnel but can be planted outside in a warm, sunny, sheltered position in a container or in the ground when soil temperature has risen to 15°C."
+        },
+        {
+          "claim": "is_edible: NC State Plant Toolbox states 'Use this plant in the vegetable garden. Fruits, flowers and leaves are edible.' and 'Pods may be cooked, pickled or eaten raw. Leaves may be cooked or eaten raw. Flowers are edible with a mild, slightly sweet flavor but add more color than flavor. Roasted seeds are a coffee substitute'",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Use this plant in the vegetable garden. Fruits, flowers and leaves are edible."
+        },
+        {
+          "claim": "attracts_pollinators: NC State Plant Toolbox structured 'Attracts:' field lists 'Bees'",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Bees"
+        },
+        {
+          "claim": "mature_height_in 36-60 (NC State Height 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Height: 3 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-60 (NC State Width 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/abelmoschus-esculentus/",
+          "quote": "Width: 3 ft. 0 in. - 5 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 60
     }
   ],
   "audit_summary": [
@@ -969,6 +1198,7 @@
     }
   ],
   "normalizations": [
-    "2026-08-21: one fix applied after landing review, upstream of the usual loader sweep. Cucumber's record asserted toxic_to_pets=true, picking RHS's 'bitter fruit can be TOXIC if eaten' warning over NC State's blanket 'non-toxic for cats/dogs/horses' tag -- a genuine disagreement between two admissible sources on a harm-capable field, which the record's own unknowns correctly flagged but then resolved by researcher preference rather than nulling. This is exactly the case resolve.py's material-disagreement rule exists to catch, but the tranche format asserts one value per field per record, so a real cross-source conflict discovered during research never reaches the system as two competing claims for that rule to see -- it has to be caught and nulled at landing time instead. Nulled toxic_to_pets and toxicity_detail, removed the now-orphaned citations, and kept the disagreement documented in unknowns. Future batch prompts should tell agents explicitly: a genuine cross-source conflict on a harm-capable field is nulled, not decided by preference."
+    "2026-08-21: one fix applied after landing review, upstream of the usual loader sweep. Cucumber's record asserted toxic_to_pets=true, picking RHS's 'bitter fruit can be TOXIC if eaten' warning over NC State's blanket 'non-toxic for cats/dogs/horses' tag -- a genuine disagreement between two admissible sources on a harm-capable field, which the record's own unknowns correctly flagged but then resolved by researcher preference rather than nulling. This is exactly the case resolve.py's material-disagreement rule exists to catch, but the tranche format asserts one value per field per record, so a real cross-source conflict discovered during research never reaches the system as two competing claims for that rule to see -- it has to be caught and nulled at landing time instead. Nulled toxic_to_pets and toxicity_detail, removed the now-orphaned citations, and kept the disagreement documented in unknowns. Future batch prompts should tell agents explicitly: a genuine cross-source conflict on a harm-capable field is nulled, not decided by preference.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

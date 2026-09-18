@@ -128,6 +128,24 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/142633/i-amaranthus-tricolor-i/details",
           "quote": "Synonyms Amaranthus gangeticus, Amaranthus mangostanus, Amaranthus melancholicus, Amaranthus tristis"
+        },
+        {
+          "claim": "mature_height_in 18-60 (NC State Height: 1 ft. 6 in. - 5 ft. 0 in., converted to inches)",
+          "quote": "Height: 1 ft. 6 in. - 5 ft. 0 in.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/amaranthus-tricolor/"
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in.",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/amaranthus-tricolor/"
+        },
+        {
+          "claim": "is_edible true (NC State Extension Edibility field lists the parts eaten)",
+          "quote": "Seeds, leaves",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/amaranthus-tricolor/"
         }
       ],
       "unknowns": [
@@ -142,8 +160,17 @@
         "is_houseplant: no admissible source describes Amaranthus tricolor being grown indoors long-term as a houseplant; every source treats it as an outdoor bedding/border annual (beds, borders, edging, containers, sunny border), so this was set to false rather than guessed.",
         "cool_rest_note: not stated -- sources describe this as a warm-season annual that dies back at frost and is replanted yearly, not a plant with a dormancy/rest cycle to note.",
         "water_regime — removed on audit: Verified live against all four cited pages. The record sets water_regime='keep_moist' citing only MOBOT's boilerplate prose 'Easily grown in moist, average, well-drained soils' — but MOBOT's own structured fields on that SAME page say 'Water: Medium' and 'Tolerate: Drought', which the record never cites. This isn't an isolated omission: every single admissible source used elsewhere in this record independently rates the species as drought-tolerant via a dedicated structured field, not just incidental prose — NC State: tags '#drought tolerant', 'Particularly Resistant To...: Heat, drought, poor soil', 'Resistance To Challenges: Drought Heat Poor Soil', 'Landscape Theme: Drought Tolerant Garden' (and its own Issues line warns 'subject to root rot if kept too moist' — the record used this exact quote for the fertilizer field but never let it inform water_regime); UF/IFAS: dedicated field 'Drought tolerance: moderate'; RHS: dedicated field 'Drought Resistance: Yes' (confirmed via full page text, alongside 'Moisture: Moist but well-drained'). This is precisely the structural-check-1 scenario: genuinely opposing signals on a harm-capable field (moist-soil prose vs. four independent drought-tolerance ratings, plus an explicit root-rot-from-overwatering warning) were resolved by picking one value instead of reflecting the conflict or leaving it null. 'keep_moist' risks steering a caregiver toward overwatering a plant every source calls at least moderately drought-tolerant, with NC State explicitly warning that overwatering causes root rot in this species.",
-        "is_houseplant — removed on audit: false is asserted with ZERO citation entry in the citations array — no quote anywhere backs this field. The record's own 'unknowns' text admits 'no admissible source describes Amaranthus tricolor being grown indoors long-term as a houseplant' and then converts that silence into a stated 'false' rather than null, which is exactly the negative-claim-dressed-as-absence-of-evidence pattern the audit brief calls out (is_houseplant=false 'cited to a source that only discussed seed-starting logistics' / an unaddressed field should be null). I fetched all four source pages directly: none of NC State, MOBOT, UF/IFAS, or RHS discusses indoor/houseplant cultivation in either direction. If anything cuts against the blanket claim, it's RHS's cultivation note that the plant 'can be grown under glass in full light in a peat-free, loam-based potting compost' (protected/greenhouse pot culture) — not proof of houseplant use, but it shows the sources don't actually foreclose indoor-adjacent cultivation either. This field should be null, not false."
-      ]
+        "is_houseplant — removed on audit: false is asserted with ZERO citation entry in the citations array — no quote anywhere backs this field. The record's own 'unknowns' text admits 'no admissible source describes Amaranthus tricolor being grown indoors long-term as a houseplant' and then converts that silence into a stated 'false' rather than null, which is exactly the negative-claim-dressed-as-absence-of-evidence pattern the audit brief calls out (is_houseplant=false 'cited to a source that only discussed seed-starting logistics' / an unaddressed field should be null). I fetched all four source pages directly: none of NC State, MOBOT, UF/IFAS, or RHS discusses indoor/houseplant cultivation in either direction. If anything cuts against the blanket claim, it's RHS's cultivation note that the plant 'can be grown under glass in full light in a peat-free, loam-based potting compost' (protected/greenhouse pot culture) — not proof of houseplant use, but it shows the sources don't actually foreclose indoor-adjacent cultivation either. This field should be null, not false.",
+        "attracts_pollinators left null: no page (NC State, EDIS, RHS) contains an unconditional pollinator statement or an Attracts/wildlife field naming bees, butterflies, moths, or hummingbirds for this species; RHS's only 'bee' and 'Wildlife' hits are unrelated site-navigation menu items ('Wildlife gardening'), not plant description text, so they were not read as support.",
+        "Before setting is_edible, searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' — 0 hits for each — so no toxic part, severity, preparation requirement, or pets warning was found on the cited page to carry into this note.",
+        "Amaranthus tricolor is an upright annual herb (NC State: Plant Type Annual; EDIS: 'upright growth habit'), not a vine, liana, or other climber, so rule 4's climber exclusion does not apply and the four size fields were populated normally.",
+        "plantfinder.mobot.org (kempercode=a559) refused the machine (ConnectError, 0 bytes returned via qc.py) and could not be read; skipped per instructions rather than guessed."
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "China Aster",
@@ -248,6 +275,24 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/156433/callistephus-chinensis/details",
           "quote": "Name Status\nCorrect"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Callistephus chinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/callistephus-chinensis/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Callistephus chinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/callistephus-chinensis/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State states the plant will also attract bees and other pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Callistephus chinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/callistephus-chinensis/",
+          "quote": "it will also attract bees and other pollinators."
         }
       ],
       "unknowns": [
@@ -262,8 +307,19 @@
         "soil_ph qualitative discrepancy: NC State categorizes tolerance as Acid/Neutral while RHS separately describes preferred soil as neutral to alkaline; neither gives a precise range that reconciles cleanly with the other, so only the one directly-quoted number (8.0, from NC State) was kept.",
         "cool_rest_note: no admissible source discusses a cool/dormancy rest period for this species.",
         "is_houseplant — removed on audit: is_houseplant is asserted as false but has zero entries in the citations array -- no source is cited for it anywhere in the record. This is the exact pattern the audit warns against (a negative claim dressed up as fact): even though NC State's page (verified live) does treat this species purely as an outdoor bedding/cut-flower annual and never discusses indoor cultivation, the record itself never cites that or any other source for this field, and it is also conspicuously absent from the 'unknowns' list even though every other unaddressed field was logged there. An asserted false value with no supporting citation and no acknowledgment in unknowns should be null, not false.",
-        "soil_drainage — removed on audit: soil_drainage is set to 'moderate,' but neither cited quote uses that word or supports that category -- MOBOT says 'well-drained soils' and RHS says 'moist but well-drained soil,' both of which describe good/fast drainage, not a middling one. Worse, I fetched the NC State Plant Toolbox page directly and found it has an explicit categorical 'Soil Drainage' attribute for this exact species reading 'Good Drainage' and 'Moist' -- not 'Moderate' -- and the record never cited that field at all, instead inferring 'moderate' from adjectival language in two other sources. The value contradicts the one admissible source that actually gives a categorical drainage rating for this species."
-      ]
+        "soil_drainage — removed on audit: soil_drainage is set to 'moderate,' but neither cited quote uses that word or supports that category -- MOBOT says 'well-drained soils' and RHS says 'moist but well-drained soil,' both of which describe good/fast drainage, not a middling one. Worse, I fetched the NC State Plant Toolbox page directly and found it has an explicit categorical 'Soil Drainage' attribute for this exact species reading 'Good Drainage' and 'Moist' -- not 'Moderate' -- and the record never cited that field at all, instead inferring 'moderate' from adjectival language in two other sources. The value contradicts the one admissible source that actually gives a categorical drainage rating for this species.",
+        "is_edible left null: neither the NC State page, the RHS page, nor a working MoBot fetch addresses eating this plant; no record of edibility either way.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b729 refused this machine (fetch status: error:ConnectError) -- skipped, not guessed.",
+        "Searched NC State anchor page for 'Poison', 'Toxic', and 'Problem for': 0 hits for Poison and Problem for; the 6 Toxic hits are all from the tag list stating 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs'. No toxic part, severity, or pets-warning text found on the anchor page.",
+        "Not a cultivar-only figure: NC State's Dimensions block (Height 1 ft. 0 in. - 3 ft. 0 in.; Width 1 ft. 0 in. - 1 ft. 6 in.) is given for the species/Whole Plant Traits, not a named cultivar -- the page separately lists a Cultivars section with individual cultivar heights (8-36 in.) which was NOT used.",
+        "Not a climber: NC State lists Plant Type Annual and Habit/Form Erect, so the size fields were populated normally.",
+        "RHS also carries size in metres (Max Height 0.5-1 metres = 19.7-39.4 in.; Max Spread 0.1-0.5 metres = 3.9-19.7 in.) and a 'Plants for pollinators' tag, but per source priority NC State's structured Dimensions block was used as the anchor for the size fields since NC State has a species page here (RHS was not needed for size)."
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Bachelor's Button",
@@ -362,6 +418,30 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/centaurea-cyanus/",
           "quote": "Cornflower is very adaptable and will tolerate poor soils and no fertilization. It tolerates low water conditions but prefers medium moisture, well-drained soils."
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Dimensions Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Centaurea cyanus",
+          "url": "https://plants.ces.ncsu.edu/plants/centaurea-cyanus/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Dimensions Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Centaurea cyanus",
+          "url": "https://plants.ces.ncsu.edu/plants/centaurea-cyanus/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State lists the species under Edibility as Edible, with no toxicity, poisonous part, or pets warning found on the same page)",
+          "source": "NC State Extension Gardener Plant Toolbox - Centaurea cyanus",
+          "url": "https://plants.ces.ncsu.edu/plants/centaurea-cyanus/",
+          "quote": "Edible"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field names Pollinators alongside Butterflies and Songbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox - Centaurea cyanus",
+          "url": "https://plants.ces.ncsu.edu/plants/centaurea-cyanus/",
+          "quote": "Pollinators"
         }
       ],
       "unknowns": [
@@ -375,8 +455,20 @@
         "water_regime / water_dry_down_target / water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis: Missouri Botanical Garden's summary table rates water need 'Medium' and NC State Extension says it 'tolerates low water conditions but prefers medium moisture, well-drained soils' — qualitative only; no source gives a dry-down target, checking depth, or day-interval watering estimate to support these fields.",
         "fertilize_interval_days / fertilize_active_months / fertilize_strength: NC State Extension states the plant 'will tolerate poor soils and no fertilization,' but gives no schedule, interval, or dosage strength.",
         "cool_rest_note: not addressed by any admissible source; this field is oriented at houseplants with a winter dormancy period, and this species is grown outdoors as an annual with no indoor-culture source.",
-        "is_houseplant — removed on audit: The sole citation (Missouri Botanical Garden Plant Finder, verified live) only describes outdoor garden/cut-flower uses ('Beds, borders, cottage gardens, meadows and prairies. Cutting gardens.') and, in the fuller page text the record's quote elides, mentions only that seed can be started indoors 6-8 weeks before last frost -- seed-starting logistics, not an assessment of whether the mature plant is grown as a houseplant. NC State's page (also checked live) likewise only mentions indoor seed-starting. No admissible source states or implies the plant cannot be grown indoors. This is an unaddressed field asserted as a negative fact; per structural check 3 it should be null, not false."
-      ]
+        "is_houseplant — removed on audit: The sole citation (Missouri Botanical Garden Plant Finder, verified live) only describes outdoor garden/cut-flower uses ('Beds, borders, cottage gardens, meadows and prairies. Cutting gardens.') and, in the fuller page text the record's quote elides, mentions only that seed can be started indoors 6-8 weeks before last frost -- seed-starting logistics, not an assessment of whether the mature plant is grown as a houseplant. NC State's page (also checked live) likewise only mentions indoor seed-starting. No admissible source states or implies the plant cannot be grown indoors. This is an unaddressed field asserted as a negative fact; per structural check 3 it should be null, not false.",
+        "Habit/Form on the NC State page is 'Erect' (not a vine/climber), so all four size fields were recorded per the normal rule.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible true: 'Poison' and 'Problem for' returned 0 hits on content about this species; the 6 'Toxic' hits were all non-toxic-for-pets tags belonging to an unrelated plant shown in a related-plants/tag widget elsewhere on the page, not a statement about Centaurea cyanus. No toxicity, poisonous part, severity, or pets warning was found tied to this species on the anchor page.",
+        "is_edible is based only on NC State's structured tags ('Edibility: Edible', 'Plant Type: ... Edible', 'Flower Value To Gardener: Edible'); the page gives no detail on which part is edible, preparation, or ripeness condition -- so no conditional text exists to record beyond the toxicity check above.",
+        "RHS (https://www.rhs.org.uk/plants/46174/centaurea-cyanus/details) gives 'Max Height 0.5-1 metres' (19.7-39.4 in) and 'Max Spread 0.1-0.5 metres' (3.9-19.7 in), roughly corroborating NC State's range, but NC State's structured Dimensions block was used as the anchor per the sourcing rule since an NC State species page exists.",
+        "RHS page was also searched for 'Attracts', 'Edible', 'Poisonous', and 'Toxic': 'Attracts' had 0 hits (RHS uses a 'Plants for pollinators' tag instead, found under 'pollinator' search) and 'Edible'/'Poisonous'/'Toxic' all had 0 hits -- RHS does not address edibility or toxicity for this species.",
+        "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277177) refused the fetch (ConnectError) -- skipped per instructions; not used for any field and its content was not guessed."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Baby's Breath",
@@ -457,6 +549,24 @@
           "quote": "Name Status Correct",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/121180/gypsophila-elegans/details"
+        },
+        {
+          "claim": "mature_height_in 18-24 (NC State Height: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gypsophila-elegans/common-name/babys-breath/",
+          "quote": "Height: 1 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 18-24 (NC State Width: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gypsophila-elegans/common-name/babys-breath/",
+          "quote": "Width: 1 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators is true (NC State Wildlife Value)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/gypsophila-elegans/common-name/babys-breath/",
+          "quote": "Flowers attract bees and butterflies"
         }
       ],
       "unknowns": [
@@ -470,8 +580,19 @@
         "soil_ph_max: NC State's 'Alkaline (>8.0)' category is open-ended with no stated upper bound.",
         "water_check_depth_cm/water_dry_down_target/cool_rest_note: not addressed by either source.",
         "is_houseplant: neither source frames this species as suitable for long-term indoor/container growing; both describe it strictly as an outdoor garden annual (RHS: 'Grow in a deep, light... soil in full sun; dislikes winter wet'), so is_houseplant is set to false rather than assumed true.",
-        "is_houseplant — removed on audit: Set to false with zero supporting citation in the citations array — no entry addresses is_houseplant at all. The only justification lives in the unknowns array, and it is inference from absence: NC State and RHS describe outdoor cultivation (sun exposure categories, 'grow in... soil in full sun; dislikes winter wet') but neither source ever states or implies that the mature plant is unsuitable for indoor/container growing. Being profiled as an outdoor garden annual is not the same as a source affirmatively ruling out houseplant use. Verified directly: fetched both plants.ces.ncsu.edu/plants/gypsophila-elegans and rhs.org.uk/plants/121180/gypsophila-elegans — neither page contains any statement about indoor suitability, containers, or houseplant use in either direction. This is exactly the 'absence of evidence dressed up as a stated fact' pattern the audit calls out; per the field's own unknowns-array reasoning this should be null, not false."
-      ]
+        "is_houseplant — removed on audit: Set to false with zero supporting citation in the citations array — no entry addresses is_houseplant at all. The only justification lives in the unknowns array, and it is inference from absence: NC State and RHS describe outdoor cultivation (sun exposure categories, 'grow in... soil in full sun; dislikes winter wet') but neither source ever states or implies that the mature plant is unsuitable for indoor/container growing. Being profiled as an outdoor garden annual is not the same as a source affirmatively ruling out houseplant use. Verified directly: fetched both plants.ces.ncsu.edu/plants/gypsophila-elegans and rhs.org.uk/plants/121180/gypsophila-elegans — neither page contains any statement about indoor suitability, containers, or houseplant use in either direction. This is exactly the 'absence of evidence dressed up as a stated fact' pattern the audit calls out; per the field's own unknowns-array reasoning this should be null, not false.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page contains any statement about Gypsophila elegans being eaten or used for food -- no 'Edible' hits on either page.",
+        "NC State's tag list includes 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- these are not toxicity warnings (they state the opposite) and there is no 'Poison'/'Toxic'/'Problem for' warning text on the page; the 6 'Toxic' hits are all the same repeated tag-list block, not a warning.",
+        "RHS gives Max Height 0.5-1 metres (19.7-39.4 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in) for this species, a different range from NC State's structured Dimensions block (Height and Width both 1 ft. 6 in. - 2 ft. 0 in. = 18-24 in). NC State was used as the size source per instructions because it is the anchor page and carries a dedicated species-level Dimensions block; RHS's figures were not merged in.",
+        "Gypsophila elegans is an erect annual per both pages (RHS: 'An erect, branching annual to about 60cm'; NC State Habit/Form: Erect), not a vine/liana/climber, so the climber-exclusion rule does not apply and all four size fields are populated normally.",
+        "No figures on either page were attributed to a named cultivar; both describe the species.",
+        "Both target pages (NC State Plant Toolbox, RHS) returned ok fetch status -- no host refused this machine, so there is nothing to report as skipped."
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Cockscomb",
@@ -813,7 +934,13 @@
         "water_regime — removed on audit: Set to 'dry_thoroughly_between' on the UGA CAES quote 'water sparingly but when you do, water deeply, training those roots to go deep.' But the record's own Missouri Botanical Garden citation for the same plant says 'Appreciates even moisture, but tolerates some dry soils' -- i.e. the plant is described as preferring consistent moisture, not an infrequent deep-dry-down cycle. That is a genuine cross-source tension on the same harm-capable field (an owner following 'dry thoroughly between' waterings would be under-watering a plant MOBOT says appreciates even moisture). Additionally, the UGA piece is a journalistic 'Field Report' about roadside plantings ('Old-fashioned cosmos are breathtaking along Georgia highways') and the pasted quote never ties the advice specifically to Cosmos bipinnatus as opposed to cosmos plantings/genus generally. Given the unresolved conflict, this should be null rather than a picked value.",
         "scientific_name_accepted — removed on audit: The citation's claim label asserts RHS 'marks the name status \"Correct,\"' and name_note repeats this, but the citation's own quote text is only 'Synonyms Bidens formosa' -- no 'status: Correct' language appears anywhere in the quoted text. The quote supports that Bidens formosa is listed as a synonym, but it does not itself substantiate the specific 'name status: Correct' assertion built on top of it.",
         "soil_base — removed on audit: Second citation for 'soil_base garden_bed' quotes NC State's 'Soil Texture: Clay Loam (Silt) Sand' -- that is a soil-texture composition attribute (clay/loam/sand), not information about whether the plant is grown in garden beds versus containers or indoors. The quote does not actually speak to the field it's attached to.",
-        "name_note — removed on audit: name_note states 'Missouri Botanical Garden and RHS also list Mexican aster, purple Mexican aster, and Spanish needles' as common names, but no citation in the citations array is attributed to MOBOT or RHS for any of these names -- the only common-name citation in the array is the NC State one for Cut Leaf/Garden/Mexican Aster/Tall Cosmos. This is an uncited factual claim appended to the record."
+        "name_note — removed on audit: name_note states 'Missouri Botanical Garden and RHS also list Mexican aster, purple Mexican aster, and Spanish needles' as common names, but no citation in the citations array is attributed to MOBOT or RHS for any of these names -- the only common-name citation in the array is the NC State one for Cut Leaf/Garden/Mexican Aster/Tall Cosmos. This is an uncited factual claim appended to the record.",
+        "is_edible left null: none of the readable pages (NC State Plant Toolbox, RHS, UGA CAES field report) address whether Cosmos bipinnatus or any part of it is eaten or is poisonous -- no record either way.",
+        "Searched NC State, RHS, and the UGA field report for 'Poison', 'Toxic', 'Problem for', and 'Edible' -- zero hits on any of the three readable pages.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (fetch status error:ConnectError) -- could not check it for size, edibility, or pollinator data; not guessing what it would have shown.",
+        "RHS gives Max Height 1.5-2.5 metres (59-98 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in) for the species, but NC State's structured, species-specific 'Dimensions:' block (Height 2 ft.-4 ft., Width 2 ft.-3 ft.) was used as the anchor per instructions rather than RHS.",
+        "Cosmos bipinnatus is not a climber, so the climber size exclusion (rule 4) does not apply; all four size fields are populated.",
+        "No size or attracts figures used were tied to a named cultivar -- the NC State Dimensions and Attracts fields are for the species as a whole (cultivar list on the same page was excluded)."
       ],
       "citations": [
         {
@@ -875,8 +1002,31 @@
           "quote": "These are tough plants, so water sparingly but when you do, water deeply, training those roots to go deep.",
           "source": "UGA CAES Field Report, \"Old-fashioned cosmos are breathtaking along Georgia highways\"",
           "url": "https://fieldreport.caes.uga.edu/news/old-fashioned-cosmos-are-breathtaking-along-georgia-highways/"
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Cosmos bipinnatus",
+          "url": "https://plants.ces.ncsu.edu/plants/cosmos-bipinnatus/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Cosmos bipinnatus",
+          "url": "https://plants.ces.ncsu.edu/plants/cosmos-bipinnatus/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field states the plant attracts pollinators, birds and butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Cosmos bipinnatus",
+          "url": "https://plants.ces.ncsu.edu/plants/cosmos-bipinnatus/",
+          "quote": "Attracts pollinators, birds and butterflies."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "English Daisy",
@@ -927,7 +1077,12 @@
         "fertilize_active_months / fertilize_interval_days / fertilize_strength: NC State states the plant 'likes heavy fertility' but gives no schedule, interval, or dilution/strength figure.",
         "is_houseplant: set to false. No admissible source describes indoor/houseplant cultivation for this species; every source (RHS, Missouri Botanical Garden, NC State) describes it only as an outdoor bedding, border, rock-garden, lawn, or outdoor-container plant.",
         "is_houseplant — removed on audit: Set to false with no supporting citation at all -- there is no citations[] entry whose claim addresses is_houseplant, only a rationale buried in 'unknowns.' The stated rationale is that no admissible source describes indoor/houseplant cultivation and every source (RHS, MOBOT, NC State) discusses only outdoor bedding/border/rock-garden/lawn use. That is absence of evidence, not evidence of absence: none of the three sources make an affirmative claim that Bellis perennis is unsuited to or not grown as an indoor plant. This is exactly the anti-pattern the audit brief calls out -- a negative asserted as fact when the sources simply never addressed the question. Per instruction, an unaddressed field should be left null, not stated as false.",
-        "soil_drainage — removed on audit: Value 'moderate' is not what either citation's quote says. MOBOT's quote reads '...consistently moist, well-drained soils...' and RHS's quote reads 'Moist but well-drained or Well-drained' -- both are explicit, standard horticultural 'well-drained' classifications (RHS's own controlled-vocabulary soil-moisture field), not 'moderate' drainage. Neither quote uses or implies the word 'moderate,' and well-drained is normally its own distinct category from moderate/average drainage. The record silently reclassified 'well-drained' into 'moderate' without any source stating that value, which fails the 'does the quote ACTUALLY state this value' check."
+        "soil_drainage — removed on audit: Value 'moderate' is not what either citation's quote says. MOBOT's quote reads '...consistently moist, well-drained soils...' and RHS's quote reads 'Moist but well-drained or Well-drained' -- both are explicit, standard horticultural 'well-drained' classifications (RHS's own controlled-vocabulary soil-moisture field), not 'moderate' drainage. Neither quote uses or implies the word 'moderate,' and well-drained is normally its own distinct category from moderate/average drainage. The record silently reclassified 'well-drained' into 'moderate' without any source stating that value, which fails the 'does the quote ACTUALLY state this value' check.",
+        "is_edible is conditional: NC State's Edibility field says only the flowers (mildly bitter) and young leaves are eaten, and only 'in small quantities raw in salads and sandwiches or cooked in tea and soups' -- not the whole plant, not without limit.",
+        "Toxicity on the same page that supports is_edible=true: NC State lists this plant as having 'medium severity poison characteristics,' names Poison Part as Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, and Stems, gives Poison Toxic Principle as 'saponins, oxalates, and tannins,' Poison Symptoms as 'constipation, diarrhea, vomiting, and lethargy' (and that ingestion 'may even make you feel more hungry'), states it 'Causes Contact Dermatitis: Yes,' and warns 'Products with English Daisy should not be taken while pregnant or breast-feeding as not enough research has been done.'",
+        "RHS (rhs.org.uk/plants/94326/bellis-perennis/details) and Missouri Botanical Garden Plant Finder (plantfinder.mobot.org, kempercode=b749) were not queried for these six fields: NC State's Plant Toolbox page is the anchor and already carries a structured Dimensions block plus explicit Edibility/Poison/Attracts fields for the species (not a genus page), so no gap needed filling from the other two per-task instructions.",
+        "No cultivar-specific figures were used -- all size, edibility, and pollinator data came from the species-level NC State record for Bellis perennis, not a named cultivar.",
+        "Bellis perennis is not a vine/liana/climber (NC State describes it as a herbaceous perennial/tender biennial with rhizomes, low-growing), so the climber-exclusion rule does not apply and all four size fields are populated."
       ],
       "citations": [
         {
@@ -1025,8 +1180,38 @@
           "quote": "English Daisy likes heavy fertility.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/bellis-perennis/"
+        },
+        {
+          "claim": "mature_height_in 3-6 (NC State Height: 0 ft. 3 in. - 0 ft. 6 in., already in inches from the ft./in. figures given)",
+          "source": "NC State Extension Gardener Plant Toolbox, Bellis perennis",
+          "url": "https://plants.ces.ncsu.edu/plants/bellis-perennis/",
+          "quote": "Height: 0 ft. 3 in. - 0 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 3-9 (NC State Width: 0 ft. 3 in. - 0 ft. 9 in., already in inches from the ft./in. figures given)",
+          "source": "NC State Extension Gardener Plant Toolbox, Bellis perennis",
+          "url": "https://plants.ces.ncsu.edu/plants/bellis-perennis/",
+          "quote": "Width: 0 ft. 3 in. - 0 ft. 9 in."
+        },
+        {
+          "claim": "is_edible true, conditional: flowers and young leaves only, in small quantities, raw or cooked",
+          "source": "NC State Extension Gardener Plant Toolbox, Bellis perennis",
+          "url": "https://plants.ces.ncsu.edu/plants/bellis-perennis/",
+          "quote": "Flowers have a mildly bitter flavor and like young leaves can be eaten in small quantities raw in salads and sandwiches or cooked in tea and soups."
+        },
+        {
+          "claim": "attracts_pollinators true",
+          "source": "NC State Extension Gardener Plant Toolbox, Bellis perennis",
+          "url": "https://plants.ces.ncsu.edu/plants/bellis-perennis/",
+          "quote": "Butterflies and other pollinators are attracted to blooms as this plant is a nectar source."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3,
+      "mature_height_in_max": 6,
+      "mature_spread_in_min": 3,
+      "mature_spread_in_max": 9
     }
   ],
   "audit_summary": [
@@ -1065,6 +1250,7 @@
   ],
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. The audit caught a subtler variant of the b10 conflict-resolution failure than has shown up before: Joseph's Coat's water_regime was set to keep_moist citing one source's soft prose ('moist, well-drained soils'), while that same source's own structured fields ('Water: Medium', 'Tolerate: Drought') and three other independently-cited sources' dedicated drought-tolerance ratings all pointed the other way -- plus an explicit root-rot-from-overwatering warning the record had already quoted for a different field without letting it inform this one. Correctly recognized as the same structural conflict the rule exists for and nulled, even though the disagreement here was prose-vs-structured-data within and across sources rather than a flat boolean contradiction. Coleus resolved to Coleus scutellarioides (given as Plectranthus scutellarioides), backed independently by NC State and RHS on the same genus reclassification.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Coleus -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Coleus -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
