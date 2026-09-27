@@ -9,13 +9,13 @@ d = json.load(open(path))
 delta = sum(len(claims_from_record(r)[0]) for r in d['records'])
 TEST, DOCS = 'tests/test_claim_ingest.py', '../docs/2026-09-02-catalog-truth-collection-run.md'
 s = open(TEST).read()
-old = int(re.search(r'= (\d+)\. b18 was the', s).group(1))
-assert s.count(f'assert report.claims_written == {old}') == 1
+# The corpus total is whatever the LAST assertion in this file says: the running-sum
+# comment only tracks batch landings, while backfills add claims outside that chain.
+old = int(re.findall(r'assert report\.claims_written == (\d+)', s)[-1])
+assert s.count(f'assert report.claims_written == {old}') == 1, old
 new = old + delta
-anchor = f'= {old}. b18 was the'
-assert s.count(anchor) == 1, anchor
-s = s.replace(anchor, f'= {old}. + {delta} ({batch}) = {new}. b18 was the')
-s = s.replace(f'assert report.claims_written == {old}', f'assert report.claims_written == {new}')
+s = s.replace(f'assert report.claims_written == {old}',
+              f'# + {delta} ({batch}).\n    assert report.claims_written == {new}')
 open(TEST, 'w').write(s)
 # species/batches counted over COMMITTED files + this one, so other uncommitted landings don't inflate the header
 tracked = subprocess.run(['git', 'ls-files', 'app/data/verified'], capture_output=True, text=True).stdout.split()

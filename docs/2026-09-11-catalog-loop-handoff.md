@@ -1,5 +1,11 @@
 # Catalog loop handoff: paused 2026-09-11 for the weekly usage limit
 
+> **Closed 2026-09-27.** Every batch named below is landed. b81, b82 and b83 were landed on
+> `care-advice-honesty` by the session running the size backfill; b84–b88 were landed from this worktree on
+> 2026-09-27 (036a0dc, ec333e6, dd6ae80, 67b7c8b, 6d11466), each verified with `verify_and_commit.py`. The
+> catalog is at **4,840 claims over 637 species, 88 batches**, full backend gate green (4,457 tests). The
+> candidate queue from `batches-b81-b88.json` is now empty: a further cycle starts with `gap-finders.js`.
+
 The research loop was wound down on purpose, close to the end of the weekly usage. No agent was left running:
 every workflow had already ended, and everything landable was landed and committed first.
 
