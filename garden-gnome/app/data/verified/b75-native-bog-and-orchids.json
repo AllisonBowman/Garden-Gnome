@@ -556,6 +556,18 @@
           "source": "NC State Extension Gardener Plant Toolbox: Drosera rotundifolia",
           "url": "https://plants.ces.ncsu.edu/plants/drosera-rotundifolia/",
           "quote": "Moist\nOccasionally Wet"
+        },
+        {
+          "claim": "mature_height_in 2-10 (NC State Height 0 ft. 2 in. - 0 ft. 10 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/drosera-rotundifolia/",
+          "quote": "Height: 0 ft. 2 in. - 0 ft. 10 in."
+        },
+        {
+          "claim": "mature_spread_in 4-6 (NC State Width 0 ft. 4 in. - 0 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/drosera-rotundifolia/",
+          "quote": "Width: 0 ft. 4 in. - 0 ft. 6 in."
         }
       ],
       "common_name": "Round-leaved Sundew",
@@ -598,14 +610,24 @@
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, and water_dormant_days_est are left null: no admissible source frames watering in terms of a dry-down target, a check depth, or a day-count interval for this species; sources instead describe continuous moisture with reduced watering in winter dormancy.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: NC State explicitly instructs not to fertilize this carnivorous species at all ('Do not fertilize the plant; it will get all the nutrients it needs from the insects it traps'), so no interval or strength applies.",
         "plantfinder.mobot.org, hgic.clemson.edu, edis.ifas.ufl.edu, ask.ifas.ufl.edu, extension.psu.edu, extension.umd.edu, and fieldreport.caes.uga.edu did not return a dedicated single-species page for Drosera rotundifolia in search; only NC State and RHS provided admissible dedicated-page content for this species.",
-        "RHS's Cultivation paragraph ('Under glass grow in a mix of equal parts fertiliser-free peat substitute and sand... The compost should be kept continually moist to wet during the growing season... During the winter, plants enter a period of dormancy so keep just moist during the winter and do not stand the plants in water.') was ruled 'Under glass grow in...' cultivation prose under the scope-discipline rule and, for consistency, was not used for cool_rest_note or water_regime either (the research record had cited it for both while excluding it for soil_base); both values rest on NC State's species text. RHS's winter instruction is disclosed here as an unused corroboration of the dormancy period."
+        "RHS's Cultivation paragraph ('Under glass grow in a mix of equal parts fertiliser-free peat substitute and sand... The compost should be kept continually moist to wet during the growing season... During the winter, plants enter a period of dormancy so keep just moist during the winter and do not stand the plants in water.') was ruled 'Under glass grow in...' cultivation prose under the scope-discipline rule and, for consistency, was not used for cool_rest_note or water_regime either (the research record had cited it for both while excluding it for soil_base); both values rest on NC State's species text. RHS's winter instruction is disclosed here as an unused corroboration of the dormancy period.",
+        "is_edible: no page addresses eating this plant at all (searched 'Edible', 'Poison', 'Toxic', 'Problem for' on both RHS and NC State) -- left null per no-record rule.",
+        "attracts_pollinators: neither page has a structured Attracts/Pollinators field or an unconditional pollinator statement (searched 'Attracts', 'pollinat', 'bee', 'butterfl', 'moth', 'hummingbird', 'Wildlife', 'Value' on both pages); RHS only offers a generic 'Wildlife gardens' planting-location tag and NC State only tags '#food source fall #food source summer' (wildlife food source, not pollination) and '#Audubon' -- none of these name bees/butterflies/moths/hummingbirds visiting flowers, so left null rather than inferred.",
+        "mature_height_in / mature_spread_in: used NC State Plant Toolbox as the species-specific anchor page, which carries a structured Dimensions block: 'Height: 0 ft. 2 in. - 0 ft. 10 in.' (2-10 in) and 'Width: 0 ft. 4 in. - 0 ft. 6 in.' (4-6 in).",
+        "RHS also gives size ('Max Height 0.1-0.5 metres' = 3.9-19.7 in; 'Max Spread 0.1-0.5 metres' = 3.9-19.7 in) but was not used since NC State's species-specific page takes precedence as the anchor; both sources agree the plant is a small (under 1 ft) rosette, well within houseplant/indoor headroom, so no indoor-vs-outdoor size conflict applies.",
+        "Not a cultivar-specific figure and not a climber -- both pages describe D. rotundifolia as a basal-rosette carnivorous perennial, so the size-field restrictions in rules 3 and 4 do not apply.",
+        "No page refused this machine; both RHS and NC State fetched with status ok."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 2,
+      "mature_height_in_max": 10,
+      "mature_spread_in_min": 4,
+      "mature_spread_in_max": 6
     },
     {
       "chill_damage_f": null,
@@ -1271,6 +1293,7 @@
   ],
   "normalizations": [
     "2026-09-10: b75 landed by the second session (branch claude/database-build-goals-e548af) from the loop's post-audit records. Eight native bog shrubs, carnivorous plants and orchids: Bog Myrtle, Leatherleaf, Yellow Pitcher Plant, Round-leaved Sundew, Moccasin-flower, Nodding Ladies' Tresses, Orange Fringed Orchid, Bushy St. John's Wort. Auditor-supplied corrected wording used verbatim except where it attributed a ranking convention to NC State ('designates no primary', 'neither is marked primary'), which rule 11 forbids; every RHS <title> pipe string was replaced by the rendered subtitle or H1 the audit verified; bare RHS 'Correct' quotes keep the CORR claim paired with the H1 binomial rather than being dropped. Landing decisions: Platanthera ciliaris lands as Orange Fringed Orchid (NC State's prose lead; the researched Yellow Fringed Orchid was the last of five alphabetized names and a Clemson photo-roundup caption) with soil_drainage moderate under the structured-field rule (tags span Occasionally Dry and Occasionally Wet); is_houseplant set false on cited fields for the four records the researcher left null; Drosera rotundifolia keeps is_houseplant true on NC State's 'can also be grown indoors' (b45's Cape Sundew precedent) and drops the RHS 'Under glass grow in...' paragraph from cool_rest_note and water_regime for scope consistency, resting both on NC State's species text; Sarracenia flava's NC State citations moved from the slug-parameterized common-name view to the canonical page; a name_note was written for Spiranthes cernua, whose three sources split; lower-case RHS leads title-cased. verify_quotes: MoBot skipped (ConnectError) and Clemson HGIC skipped (http-403) from this machine; every other quote verified after repair.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

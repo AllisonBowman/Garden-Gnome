@@ -50,7 +50,15 @@
         "soil_base: sources describe both garden soil ('rich, well-drained soil') and container potting mix with no specific categorical potting-mix name given, so left null rather than guessing between garden_bed and standard_potting.",
         "chill_damage_f — removed on audit: The number (40) matches the quote, but the quote is about the wrong subject. The Penn State 'Basil: A Summer Favorite' source reads in full: 'When cold weather is predicted, be sure to harvest all basil. Temperatures below 40°F will discolor leaves, which is why stems of basil picked for use in the kitchen are best held in a glass of water at room temperature instead of in the refrigerator.' This is post-harvest storage advice for cut stems (don't refrigerate harvested basil), not a statement about the chilling-injury threshold of the living, rooted plant in a garden or as a houseplant — which is what chill_damage_f is meant to capture (it sits alongside day_f/night_f/cool_rest_note, all live-plant environmental fields). No admissible source in the record gives a numeric chill-damage threshold for the growing plant; the only other cold-related citations (MOBOT 'Intolerant of frost', UMD 'not tolerant of chilly temperatures', RHS H1c ~5-10°C) are all qualitative and were correctly NOT used for this field. Using the cut-stem-refrigeration number here overreaches on context.",
         "soil_ph_min — removed on audit: The Clemson quote used ('bring the soil pH to between 6.0 and 6.5') is truncated right before the source's own qualifying sentence: 'This is also the best pH range for most vegetables.' Clemson is not reporting a basil-specific optimum — it is giving the generic vegetable-garden liming target and noting explicitly that it applies to 'most vegetables' generally, not basil in particular. This is a class-level ('most vegetables') figure presented as a species-specific value, the exact failure pattern the audit is meant to catch. No other admissible source in the record gives a numeric pH range for basil.",
-        "soil_ph_max — removed on audit: Same defect as soil_ph_min: the 6.0–6.5 figure comes from Clemson's generic 'best pH range for most vegetables' liming advice, not a basil-specific pH requirement, and the quote in the record stops just short of the sentence that discloses this."
+        "soil_ph_max — removed on audit: Same defect as soil_ph_min: the 6.0–6.5 figure comes from Clemson's generic 'best pH range for most vegetables' liming advice, not a basil-specific pH requirement, and the quote in the record stops just short of the sentence that discloses this.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ProxyError/blocked host); not used, no data guessed from it.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: no poisonous part, severity, toxic principle, preparation requirement, or pets warning was found on that page -- its tags instead read 'non-toxic for cats' and 'non-toxic for dogs', and the edibility statement ('fragrant edible leaves ... in soups, stews, and other meat dishes') is unconditional, so no toxicity caveat is recorded.",
+        "Size figures (height 4-36 in, spread 4-14 in) come from NC State's species-level Dimensions block, not a named cultivar -- the page's per-cultivar height notes (e.g. 'Nufar' 24 in, 'Purple Ruffles' 18 in from Clemson, 'Genovese' 3-4 ft from Clemson) were excluded per the cultivar rule.",
+        "Basil is an upright herb, not a vine/liana/climber, so the climber size-suppression rule does not apply.",
+        "Both height (36 in) and spread (14 in) are well under the 120 in / 10 ft houseplant-headroom threshold, so the outdoor/garden figures from NC State were recorded as published; no separate indoor/container figure was found on any of the read pages.",
+        "RHS gives Max Height/Max Spread of 0.1-0.5 metres (about 3.9-19.7 in) for basil, but NC State (the anchor) already carries a species-specific Dimensions block, so RHS was not used as the recorded size source (checked per the rule to search both 'Max Height'/'Max Spread' and 'Ultimate height' wording; RHS's page uses only the former, and neither of the checked pages says 'Ultimate height').",
+        "No page among the ones read addressed attracts_pollinators via a structured NC State 'Attracts' field (0 hits) or RHS pollinator tag (0 hits); the true value rests on Penn State Extension's unconditional prose statement naming bees and butterflies.",
+        "Clemson HGIC and Penn State (basil-a-summer-favorite) pages were read but contributed no size, edibility, or pollinator data beyond what NC State and Penn State (herb-garden-plants-basil) already supplied. (Corrected at landing, verified against the cached copies: UMD Extension does give a size, 'Basil ( Ocimum species) is an annual herb that matures about 18 inches tall.', worded for the genus, and the cited Penn State herb page gives 'Height is 12 to 24 inches; width is 12 to 24 inches.' Neither was used; NC State's species Dimensions block stays the size source, though Penn State's 12-24 in width is wider than NC State's 4-14 in.)"
       ],
       "citations": [
         {
@@ -226,8 +234,38 @@
           "quote": "Synonyms Ocimum album, Ocimum thyrsiflorum",
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/11649/i-ocimum-basilicum-i/details"
+        },
+        {
+          "claim": "attracts_pollinators true (Penn State Extension: nectar-bearing flowers attract bees, butterflies, and other pollinators)",
+          "source": "Penn State Extension - Herb Garden Plants: Basil",
+          "url": "https://extension.psu.edu/herb-garden-plants-basil",
+          "quote": "Nectar-bearing flowers attract bees, butterflies, and other pollinators."
+        },
+        {
+          "claim": "is_edible true (NC State: fragrant edible leaves used in soups, stews, and other meat dishes)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ocimum basilicum",
+          "url": "https://plants.ces.ncsu.edu/plants/ocimum-basilicum/",
+          "quote": "The fragrant edible leaves are great in soups, stews, and other meat dishes."
+        },
+        {
+          "claim": "mature_height_in 4-36 (NC State Height: 0 ft. 4 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ocimum basilicum",
+          "url": "https://plants.ces.ncsu.edu/plants/ocimum-basilicum/",
+          "quote": "Height: 0 ft. 4 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 4-14 (NC State Width: 0 ft. 4 in. - 1 ft. 2 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ocimum basilicum",
+          "url": "https://plants.ces.ncsu.edu/plants/ocimum-basilicum/",
+          "quote": "Width: 0 ft. 4 in. - 1 ft. 2 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 4,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 4,
+      "mature_spread_in_max": 14
     },
     {
       "common_name": "Chives",
@@ -277,7 +315,13 @@
         "soil_ph_min/max: RHS states chives tolerate 'Acid or Alkaline or Neutral' soil broadly but gives no numeric pH range.",
         "fertilize_active_months / fertilize_interval_days / fertilize_strength: no approved source gave a fertilizing schedule or rate specific to chives.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no approved source gave a specific watering-interval or dry-down estimate for chives, only the qualitative regime captured in water_regime.",
-        "water_regime — removed on audit: The record stores an unqualified water_regime: \"keep_moist\", but its own cited RHS quote (verified verbatim against the live page) gives three different answers depending on context: newly planted chives need watering during dry spells; established in-ground chives \"shouldn't need any additional watering – except during exceptionally prolonged dry spells\" (i.e. drought-tolerant once established); and only container-grown chives should be watered \"to keep the compost evenly moist.\" The record picked the container-only reading and presented it as the general field value. Since the record also carries outdoor_sun_exposure (full_sun/part_shade), in-ground/garden growing is clearly in scope, not just pots — so a reader of the stored value alone gets blanket \"keep moist\" guidance that directly contradicts the source's explicit statement for the established in-ground case, risking overwatering. The caveat is disclosed only in the citation's parenthetical, not in the value itself."
+        "water_regime — removed on audit: The record stores an unqualified water_regime: \"keep_moist\", but its own cited RHS quote (verified verbatim against the live page) gives three different answers depending on context: newly planted chives need watering during dry spells; established in-ground chives \"shouldn't need any additional watering – except during exceptionally prolonged dry spells\" (i.e. drought-tolerant once established); and only container-grown chives should be watered \"to keep the compost evenly moist.\" The record picked the container-only reading and presented it as the general field value. Since the record also carries outdoor_sun_exposure (full_sun/part_shade), in-ground/garden growing is clearly in scope, not just pots — so a reader of the stored value alone gets blanket \"keep moist\" guidance that directly contradicts the source's explicit statement for the established in-ground case, risking overwatering. The caveat is disclosed only in the citation's parenthetical, not in the value itself.",
+        "is_edible is TRUE but is conditional/qualified: NC State's Edibility field goes on to say 'However, the plant also has poisonous characteristics as noted in the \"Poisonous to Humans\" section of this record. Toxicity can depend on the age of the person or animal, the age of the plant, the part of the plant ingested, how much is ingested, whether the person or animal has sensitivities or allergies, whether it's eaten raw or cooked, and so forth.  Consult with a medical professional for further details.' (Corrected at landing, verified against the cached copy: the page carries no 'Poisonous to Humans' section -- no Poison Severity, Symptoms, Toxic Principle or Part fields -- so that sentence points at a section the page does not have.) The page's structured Problems field also lists 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses'.",
+        "Edibility is further qualified as: 'Flowers have a mildly bitter flavor and like young leaves can be eaten in small quantities raw in salads and sandwiches or cooked in tea and soups.'",
+        "Species is not a climber/vine (herbaceous bulb/clump-forming perennial per NC State Plant Type field), so the climber size-suppression rule does not apply.",
+        "Size figures (Height 1 ft. 0 in.-1 ft. 6 in.; Width 1 ft. 0 in.-1 ft. 5 in.) are for the species generally, not a named cultivar, and are well under the 10 ft / 120 in. indoor-headroom threshold, so they were recorded as published rather than suppressed or treated as houseplant-container-specific.",
+        "RHS (https://www.rhs.org.uk/herbs/chives/grow-your-own), UGA fieldreport and UMD Extension pages were not separately queried for these six fields because the NC State Plant Toolbox anchor page already carried a complete, structured answer (Dimensions, Attracts, and Edible fields plus narrative text) for all of mature_height_in, mature_spread_in, is_edible, and attracts_pollinators. (Corrected at landing: not every page loaded -- the Missouri Botanical Garden page refuses this machine and is not in the quote cache -- and UF/IFAS EDIS EP631 does bear on is_edible; see the next line.)",
+        "Pets and livestock (noted at landing, verified against the cached copy): UF/IFAS EDIS EP631 (Common Poisonous Weed and Invasive Plant Species in Florida Residential Landscapes), in its wild garlic entry, reads 'Dogs, cats, and cattle are highly susceptible to Allium toxicity.' and 'Other closely related Allium spp., such as onion grass ( Allium vineale ), onion ( Allium cepa ), garlic ( Allium sativum ), leek ( Allium porrum ), and chives ( Allium schoenoprasum ), have a similar effect on dogs, cats, and cattle.' It names no hazard to people and agrees with NC State's Problem for Cats/Dogs/Horses."
       ],
       "citations": [
         {
@@ -327,8 +371,38 @@
           "quote": "Chives can be started from seed or grown from transplants in spring in full sun and well-drained soil. ... Can be grown indoors.",
           "source": "University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/chives"
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Allium schoenoprasum",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-schoenoprasum/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-17 (NC State Width 1 ft. 0 in. - 1 ft. 5 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Allium schoenoprasum",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-schoenoprasum/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 5 in."
+        },
+        {
+          "claim": "is_edible true (NC State: chives have edible flowers and leaves used for flavoring)",
+          "source": "NC State Extension Gardener Plant Toolbox — Allium schoenoprasum",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-schoenoprasum/",
+          "quote": "Chives have edible flowers and leaves used for flavoring with eggs, soups, salads, butter, cheese, dips and spreads."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: high nectar volume, well suited as pollinator plants; structured Attracts field lists Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Allium schoenoprasum",
+          "url": "https://plants.ces.ncsu.edu/plants/allium-schoenoprasum/",
+          "quote": "Chives have a high nectar volume and are thus well suited as pollinator plants."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 17
     },
     {
       "common_name": "Dill",
@@ -439,6 +513,30 @@
           "quote": "pH: Acid or Alkaline or Neutral",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/43298/anethum-graveolens/details"
+        },
+        {
+          "claim": "mature_height_in 30-60 (NC State Height: 2 ft. 6 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/anethum-graveolens/",
+          "quote": "Height: 2 ft. 6 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/anethum-graveolens/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: leaves, seeds, and flowers are edible)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/anethum-graveolens/",
+          "quote": "Leaves (dill weed), seeds, and flowers are edible (used in teas, pickling, and as culinary seasoning)."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: attracts bees, wasps, hover flies and butterflies)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/anethum-graveolens/",
+          "quote": "Attracts beneficial insects such as bees, wasps, hover flies and butterflies."
         }
       ],
       "unknowns": [
@@ -455,8 +553,20 @@
         "fertilize_interval_days / fertilize_strength / fertilize_active_months: no admissible source gives dill-specific fertilizing guidance (Penn State's indoor-herbs page gives only a generic 'every 2 weeks' line for herbs broadly, not attributed to dill specifically, so it was not used).",
         "soil_ph precision: NC State's page separately shows broader checkbox pH categories (Acid <6.0 and Neutral 6.0-8.0) rather than a single number; Penn State's specific stated value (pH 6.5) was used for soil_ph_min/max instead, to avoid combining two different kinds of source data into one figure.",
         "soil_drainage — removed on audit: The record sets soil_drainage to 'moderate', but the only citation supporting it quotes Penn State Extension: 'Full sun; rich, moist but not constantly wet, well-drained soil with a pH of 6.5.' The source's own word for drainage is 'well-drained,' not 'moderate' — and this is corroborated by RHS's separate moisture note for the same species ('Well-drained soil'). No cited source describes dill's drainage need as 'moderate'; the researcher silently recategorized 'well-drained' into a different bucket ('moderate') that the quote does not support and that arguably understates the drainage the sources actually call for.",
-        "night_f_min — removed on audit: The value 45 comes from Penn State's line that dill 'is best sown directly outdoors ... when the night temperature is above 45°F' — a seed-sowing/planting-timing recommendation about safe germination conditions, not a statement about the minimum night temperature a growing or established dill plant needs or tolerates. The claim label itself concedes this scope ('minimum night temperature recommended before sowing dill seed outdoors'), yet the number was still written into a general night_f_min field. This is in tension with the record's own other citation from NC State ('Dill plants can survive low temperatures'), which suggests mature dill tolerates temperatures below the sowing threshold. A germination-timing guideline is being used to stand in for a general cold-tolerance figure the sources don't actually give — the same gap the record correctly left open for chill_damage_f."
-      ]
+        "night_f_min — removed on audit: The value 45 comes from Penn State's line that dill 'is best sown directly outdoors ... when the night temperature is above 45°F' — a seed-sowing/planting-timing recommendation about safe germination conditions, not a statement about the minimum night temperature a growing or established dill plant needs or tolerates. The claim label itself concedes this scope ('minimum night temperature recommended before sowing dill seed outdoors'), yet the number was still written into a general night_f_min field. This is in tension with the record's own other citation from NC State ('Dill plants can survive low temperatures'), which suggests mature dill tolerates temperatures below the sowing threshold. A germination-timing guideline is being used to stand in for a general cold-tolerance figure the sources don't actually give — the same gap the record correctly left open for chill_damage_f.",
+        "Size taken from NC State's structured Dimensions block (Height: 2 ft. 6 in. - 5 ft. 0 in.; Width: 2 ft. 0 in. - 3 ft. 0 in.), used as the anchor per instructions over PSU's differing figures -- the two sources disagree somewhat but NC State's structured field takes priority. (Corrected at landing, verified against the cached copy: PSU reads 'Height is 1-4 feet; width is 12-24 inches.', i.e. 12-48 in by 12-24 in; this line had given '12 ft-48 in'. PSU's only other figure is for the cultivar 'Fernleaf', '12-18 inches tall'.)",
+        "Dill is not a climber, so the size fields were recorded normally (no climber exclusion applies).",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: 'Poison' had 0 hits, 'Problem for' had 0 hits, and the 'Toxic' hits were only the site's non-toxicity tags ('#non-toxic for cats #non-toxic for horses #non-toxic for dogs') -- no poisonous part, severity, toxic principle, preparation requirement, or pets warning was named on the page, so no toxicity caveat applies to is_edible.",
+        "PSU's growing-herbs-indoors page was read looking for an indoor/houseplant-specific size figure for Dill; it only notes dill has a taproot and should be grown in deep pots, with no numeric height or spread given, so the outdoor NC State figures (all under 120 in) were recorded as published per the houseplant-headroom rule.",
+        "RHS gives Max Height 0.5-1 metres (19.7-39.4 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in) for dill; it was not used as the primary citation since NC State's structured Dimensions block is the designated anchor and was available. (Corrected at landing: this line had called RHS's figures 'in the same range' as NC State's. They are smaller: RHS's height overlaps only the bottom of NC State's 30-60 in, and RHS's spread and PSU's 12-24 in both fall below NC State's 24-36 in.)",
+        "RHS's page has an unconditional 'Plants for pollinators' tag and NC State separately lists 'Attracts: Bees, Butterflies, Hummingbirds, Pollinators' as a structured field, corroborating the attracts_pollinators=true citation drawn from NC State's Wildlife Value prose."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 30,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -568,6 +678,30 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/herbs/parsley/grow-your-own",
           "quote": "When growing in the ground, parsley shouldn't need feeding, but if plants in containers need a boost, consider applying an organic-based, balanced liquid feed every few weeks during the growing season."
+        },
+        {
+          "claim": "mature_height_in 8-36 (NC State Height: 0 ft. 8 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Petroselinum crispum",
+          "url": "https://plants.ces.ncsu.edu/plants/petroselinum-crispum/",
+          "quote": "Height: 0 ft. 8 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 8-12 (NC State Width: 0 ft. 8 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Petroselinum crispum",
+          "url": "https://plants.ces.ncsu.edu/plants/petroselinum-crispum/",
+          "quote": "Width: 0 ft. 8 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: Leaves as flavoring and garnish)",
+          "source": "NC State Extension Gardener Plant Toolbox - Petroselinum crispum",
+          "url": "https://plants.ces.ncsu.edu/plants/petroselinum-crispum/",
+          "quote": "Leaves as flavoring and garnish"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field: Butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox - Petroselinum crispum",
+          "url": "https://plants.ces.ncsu.edu/plants/petroselinum-crispum/",
+          "quote": "Butterflies"
         }
       ],
       "common_name": "Parsley",
@@ -613,8 +747,18 @@
         "UF/IFAS EDIS (edis.ifas.ufl.edu) was excluded entirely: its parsley publications (mv105, CV294, FY1556) now permanently 301-redirect to ask.ifas.ufl.edu, a domain not on the admissible publisher list, so no content could be cited from the admissible domain itself.",
         "Penn State Extension (extension.psu.edu) and UGA CAES fieldreport (fieldreport.caes.uga.edu) turned up no citable cultivation data for parsley beyond a black-swallowtail-host-plant mention and an unrelated apigenin research note.",
         "chill_damage_f — removed on audit: Value 20 is sourced only from MOBOT's \"Leaves remain harvestable until temperatures drop into the low 20s F.\" (verified live on plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276060). \"Low 20s\" is a fuzzy range (~20-23F), not a literal '20' -- the number in the claim label is not literally present in the quote, which the audit instructions flag as a refutable defect regardless of whether 20 is roughly in the right neighborhood. The quote also describes a harvestability/palatability cutoff ('leaves remain harvestable'), not an explicit tissue-damage threshold, so equating it 1:1 with a 'chill_damage_f' figure over-reads the source.",
-        "soil_base — removed on audit: The only citation, NC State's \"Parsley prefers consistently moist, well-drained rich soil in full sun or light shade\" (verified verbatim on plants.ces.ncsu.edu/plants/petroselinum-crispum/), is a pure soil-texture/moisture description and never mentions garden beds, in-ground planting, or location at all. The same NC State page's own 'Landscape Location' field lists Container, Hanging Baskets, and Houseplants alongside Patio, and RHS/Clemson both treat containers as an equally standard way to grow parsley (including for overwintering), so nothing in the cited quote actually supports singling out 'garden_bed' as the base growing context over a container/potting scenario."
-      ]
+        "soil_base — removed on audit: The only citation, NC State's \"Parsley prefers consistently moist, well-drained rich soil in full sun or light shade\" (verified verbatim on plants.ces.ncsu.edu/plants/petroselinum-crispum/), is a pure soil-texture/moisture description and never mentions garden beds, in-ground planting, or location at all. The same NC State page's own 'Landscape Location' field lists Container, Hanging Baskets, and Houseplants alongside Patio, and RHS/Clemson both treat containers as an equally standard way to grow parsley (including for overwintering), so nothing in the cited quote actually supports singling out 'garden_bed' as the base growing context over a container/potting scenario.",
+        "Only the NC State Plant Toolbox anchor page (plants.ces.ncsu.edu/plants/petroselinum-crispum/) was needed: it carries a structured Dimensions block plus Edibility and Attracts fields, so it supplied all six fields directly; the RHS, Clemson HGIC, and Missouri Botanical Garden pages were not additionally queried.",
+        "is_edible is TRUE because the anchor page's Edibility field states 'Leaves as flavoring and garnish' -- per rule 5, note that the SAME page also lists toxicity data that must travel with this true value: 'This plant has low severity poison characteristics.' Poisonous to Humans / Poison Severity: Low. Poison Symptoms: Photosensitization (sunburn, dermatitis), large amounts are needed to cause this effect. Poison Toxic Principle: Furanocoumarins. Causes Contact Dermatitis: No. The page's Problems field also lists 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses'. Separately, the Fruit Description states 'The fruit and seeds are poisonous to birds' (a different plant part, not the edible leaves).",
+        "attracts_pollinators is TRUE based on the NC State structured 'Attracts:' field listing 'Butterflies'. No bees, moths, or hummingbirds were mentioned; birds are only referenced as eating the poisonous seed, which per rule 7 is not pollination evidence and was not used to support this flag.",
+        "mature_height_in and mature_spread_in were recorded from the NC State Dimensions block (Height: 0 ft. 8 in. - 3 ft. 0 in.; Width: 0 ft. 8 in. - 1 ft. 0 in.), converted to inches (8 in low end already in inches; 3 ft = 36 in; 0 ft 8 in = 8 in; 1 ft = 12 in). Parsley is an herb, not a cultivar-specific or climbing figure, and the resulting range (max 36 in height, 12 in spread) is well under the 120 in houseplant headroom cap, so it was recorded as published without any indoor/outdoor distinction being available or needed."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 8,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 8,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Sage",
@@ -832,7 +976,11 @@
         "water_growing_days_est, water_dormant_days_est, water_estimate_basis: RHS instructs checking containers daily and watering 'as needed' rather than a day-interval number, so no defensible day-count estimate could be built without guessing.",
         "UF/IFAS (edis.ifas.ufl.edu) could not be used as a source: every edis.ifas.ufl.edu URL found (including the specific cilantro/coriander publications) now 301-redirects permanently to the ask.ifas.ufl.edu domain, which is outside the admissible domain list, so no citation from that publisher could be taken for this record.",
         "soil_base: populated from RHS's container-compost recommendation only; outdoor/garden-bed plantings (also documented by several sources) don't have a named soil-mix category to cite, so this field reflects the container-growing context specifically.",
-        "soil_drainage — removed on audit: The cited Missouri Botanical Garden quote is 'Easily grown in average, medium moisture, well-drained soils in full sun to light shade.' That sentence names two distinct soil attributes: a moisture-retention descriptor ('medium moisture') and a drainage-rate descriptor ('well-drained soils'). The record's soil_drainage field is set to 'moderate', which reads as though it was derived from the 'medium moisture' phrase rather than from the sentence's actual drainage statement, which is unambiguously 'well-drained' (i.e., fast/good drainage), not a moderate/average drainage rate. Every other source touching on drainage in this record's own citation set agrees with 'well-drained,' not 'moderate': the Clemson quote for outdoor_sun_exposure says 'rich, well-drained soil,' and the RHS quotes say 'free-draining conditions' / 'free-draining soil' / 'dislikes soggy conditions.' Verified directly against the live MoBot page (plantfinder.mobot.org, taxonid=275984, confirmed to be the Coriandrum sativum 'Slo-Bolt' entry) — the quote text matches verbatim, so this is a labeling/mapping error, not a fabricated quote: the researcher appears to have conflated the moisture-retention descriptor with the drainage-rate field the value was actually supposed to represent."
+        "soil_drainage — removed on audit: The cited Missouri Botanical Garden quote is 'Easily grown in average, medium moisture, well-drained soils in full sun to light shade.' That sentence names two distinct soil attributes: a moisture-retention descriptor ('medium moisture') and a drainage-rate descriptor ('well-drained soils'). The record's soil_drainage field is set to 'moderate', which reads as though it was derived from the 'medium moisture' phrase rather than from the sentence's actual drainage statement, which is unambiguously 'well-drained' (i.e., fast/good drainage), not a moderate/average drainage rate. Every other source touching on drainage in this record's own citation set agrees with 'well-drained,' not 'moderate': the Clemson quote for outdoor_sun_exposure says 'rich, well-drained soil,' and the RHS quotes say 'free-draining conditions' / 'free-draining soil' / 'dislikes soggy conditions.' Verified directly against the live MoBot page (plantfinder.mobot.org, taxonid=275984, confirmed to be the Coriandrum sativum 'Slo-Bolt' entry) — the quote text matches verbatim, so this is a labeling/mapping error, not a fabricated quote: the researcher appears to have conflated the moisture-retention descriptor with the drainage-rate field the value was actually supposed to represent.",
+        "NC State's anchor page (the only species-specific page fetched, and sufficient on its own for all six fields) was searched for 'Poison' (0 hits), 'Toxic' (6 hits), and 'Problem for' (0 hits): the only toxicity-related text found is the tag list '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' -- no poisonous part, severity, toxic principle, or preparation requirement is named anywhere on the page, so is_edible=true carries no toxicity caveat.",
+        "Cilantro is an annual herb, not a vine/liana/climber, so rule 4 (climbers get no size at all) does not apply; the NC State Dimensions block (Height 1-2 ft, Width 1-2 ft) is well under the 120-inch houseplant ceiling in rule 12, so the outdoor/garden figure was recorded as published with no indoor-specific figure needed.",
+        "The other 8 listed pages (Clemson x2, Missouri Botanical Garden PlantFinder, UGA CAES, RHS x2, Penn State Extension, UMD Extension) were not queried: NC State's species-specific page already supplies a structured Dimensions block plus unconditional edibility and Attracts fields, so no additional source was needed to fill or corroborate any of the six fields for this pass.",
+        "attracts_pollinators context (noted at landing, verified against the cached copy): NC State's Attracts field lists 'Butterflies' and 'Predatory Insects', and its Landscape Theme includes 'Pollinator Garden'; the page's other butterfly text is about caterpillars ('Larval host plant to swallow-tailed butterflies', '#butterfly caterpillar host'). The true value rests on the Attracts field."
       ],
       "citations": [
         {
@@ -960,8 +1108,38 @@
           "quote": "Can also be successfully grown in containers.",
           "source": "University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/cilantrocoriander"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/coriandrum-sativum/common-name/cilantro/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/coriandrum-sativum/common-name/cilantro/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State states leaves, stems, flowers and seeds are edible)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/coriandrum-sativum/common-name/cilantro/",
+          "quote": "Leaves, stems, flowers and seeds are edible.  Leaves/flowers as an herb and seeds (Coriander) as a spice."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/coriandrum-sativum/common-name/cilantro/",
+          "quote": "Butterflies"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Oregano",
@@ -1060,6 +1238,30 @@
           "quote": "Full sun, Partial shade",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/11923/i-origanum-vulgare-i/details"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: Leaves and flowers for tea, flavoring)",
+          "source": "NC State Extension Plant Toolbox — Origanum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/origanum-vulgare/",
+          "quote": "Leaves and flowers for tea, flavoring."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts: Bees, Butterflies, Moths, Pollinators)",
+          "source": "NC State Extension Plant Toolbox — Origanum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/origanum-vulgare/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Origanum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/origanum-vulgare/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Origanum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/origanum-vulgare/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -1078,8 +1280,20 @@
         "toxic_to_pets — removed on audit: The record's accepted taxon is Origanum vulgare (the straight species), and every other field in this record is sourced from NC State's species-level page (plants.ces.ncsu.edu/plants/origanum-vulgare/). I fetched that exact page and its 'Problems' field reads only: 'Root rot may occur in wet, poorly drained soils. Watch for fungal diseases. Aphids, leaf miners and spider mites may appear.' -- no cat/dog/horse tag at all. Missouri Botanical Garden's species-level page (already cited elsewhere in this record for soil/sun) likewise lists Problems as only 'Root rot... fungal diseases... Aphids, leaf miners and spider mites' with no animal-toxicity tag. The 'Problem for Cats, Problem for Dogs, Problem for Horses' tags used to justify toxic_to_pets=true come from a DIFFERENT, separately-curated NC State plant record for Origanum vulgare subsp. hirtum (a distinct URL: .../origanum-vulgare-subsp-hirtum/), which is a specific cultivated subspecies, not the species itself. NC State evidently curates Problems independently per taxon page (the species page omits what the subspecies page includes), so importing the subspecies' tag onto the species record is exactly the kind of species/subspecies-mismatch transfer the audit is meant to catch -- one taxonomic rank more specific than the classic genus-to-species error, but the same failure mode. I also confirmed via a direct fetch that NC State's page nowhere defines what 'Problem for Cats/Dogs/Horses' even means (no glossary/tooltip text), so even on its home page the tag is an unglossed category link, not a substantiated toxicity claim.",
         "toxicity_detail — removed on audit: Same root defect as toxic_to_pets: this text is built entirely on the subsp. hirtum page's bare 'Problem for Cats/Dogs/Horses' tags, which do not appear on the species-level (Origanum vulgare) page that is otherwise this record's authoritative NC State source. The detail text's own admission that 'No toxic compound, symptoms, or severity are given on the page' is accurate as a description of that subspecies page, but it does not rescue the underlying claim -- it is a bare, undefined category tag for a different taxon than the one this record represents, not evidence of toxicity for Origanum vulgare the species.",
         "water_dry_down_target — removed on audit: The cited Penn State Extension quote ('Once established, oregano requires little water... wait until the soil dries out between waterings') is real, but the record's added parenthetical scope -- '(established, in-ground or potted plants)' -- overreaches it. I fetched the same Penn State page and it explicitly distinguishes container care: 'Plants in pots require some supplemental irrigation,' as a separate statement from the in-ground 'requires little water' guidance. The source itself treats potted-plant watering as materially different from the in-ground drought-tolerant case; the citation's quote never mentions containers, so folding 'potted plants' into the dry-down target as if the same source endorsed it for both contexts is an unsupported extrapolation -- notable because this is a houseplant-flagged record (is_houseplant=true) where the container case is exactly the one likely to be acted on.",
-        "name_note — removed on audit: The name_note attributes the quote 'a robust but relatively common plant... seldom sold for a specific ornamental or culinary use' to 'NC State Extension.' I fetched NC State's origanum-vulgare page directly and searched it for this phrase -- it does not appear anywhere on that page. The phrase is instead verbatim text from the Missouri Botanical Garden Plant Finder page (plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=281411), under its 'Noteworthy Characteristics' section: 'The straight species is a robust but relatively common plant that is, as a general rule, seldom sold for a specific ornamental or culinary use.' This is a straightforward source misattribution -- citing NC State for a claim that is actually MBG's. The second half of the note (subsp. hirtum described on NC State's page as 'Greek oregano: the standard culinary oregano') is correctly attributed and verified present in NC State's Cultivars/Varieties section."
-      ]
+        "name_note — removed on audit: The name_note attributes the quote 'a robust but relatively common plant... seldom sold for a specific ornamental or culinary use' to 'NC State Extension.' I fetched NC State's origanum-vulgare page directly and searched it for this phrase -- it does not appear anywhere on that page. The phrase is instead verbatim text from the Missouri Botanical Garden Plant Finder page (plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=281411), under its 'Noteworthy Characteristics' section: 'The straight species is a robust but relatively common plant that is, as a general rule, seldom sold for a specific ornamental or culinary use.' This is a straightforward source misattribution -- citing NC State for a claim that is actually MBG's. The second half of the note (subsp. hirtum described on NC State's page as 'Greek oregano: the standard culinary oregano') is correctly attributed and verified present in NC State's Cultivars/Varieties section.",
+        "No poisonous part, toxic principle, or pets warning was found on the NC State anchor page (searched 'Poison', 'Toxic', 'Problem for' — zero hits), so is_edible=true is recorded with no toxicity caveat needed.",
+        "The other six listed pages (Clemson factsheet, RHS grow-your-own, Missouri Botanical PlantFinder, Penn State extension, NC State subsp. hirtum page, RHS species details page) were not queried by the researcher because the NC State Origanum vulgare species page already carries a full structured Dimensions block, an Attracts field, and an Edibility field for the species itself. (Corrected at landing, verified against the cached copies: this line had said no page contradicted these values, which the researcher had not checked. Penn State gives 'Height 12 to 24 inches; width 10 to 20 inches.' and the RHS species page 'Max Height 0.5-1 metres' and 'Max Spread 0.5-1 metres', broadly consistent with NC State's 12-36 in by 12-24 in. The Clemson herbs factsheet is cached here as http-403 and the Missouri Botanical Garden page refuses this machine, so neither could be read.)",
+        "Plant is an herbaceous perennial, not a vine/climber, so the climber-exclusion rule does not apply and all four size fields are recorded.",
+        "Figures used are for the species Origanum vulgare itself (not a named cultivar) as given on the NC State species page, satisfying rule 3.",
+        "Height (max 36 in) and spread (max 24 in) are both well under the 120-inch houseplant headroom ceiling, so the outdoor/garden figures published are used as-is per rule 12.",
+        "Pets (noted at landing, verified against the cached copy): NC State's page for the subspecies Origanum vulgare subsp. hirtum (Greek oregano) is tagged '#problem for dogs #problem for horses #problem for cats'; the species page has no Poison, Toxic or Problem text. It is a pet warning, not a condition on eating the herb."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Thyme",
@@ -1184,6 +1398,30 @@
           "source": "NC State Extension — North Carolina Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/thymus-vulgaris",
           "quote": "Previously known as: Origanum thymus Thymus collinus"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Dimensions Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Thymus vulgaris",
+          "url": "https://plants.ces.ncsu.edu/plants/thymus-vulgaris",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-16 (NC State Dimensions Width: 0 ft. 6 in. - 1 ft. 4 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Thymus vulgaris",
+          "url": "https://plants.ces.ncsu.edu/plants/thymus-vulgaris",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 4 in."
+        },
+        {
+          "claim": "is_edible true: the leaves are used fresh or dried as a culinary herb",
+          "source": "NC State Extension Gardener Plant Toolbox - Thymus vulgaris",
+          "url": "https://plants.ces.ncsu.edu/plants/thymus-vulgaris",
+          "quote": "The leaves are used fresh or dried to flavor soups, stews, sauces, meats, or fish."
+        },
+        {
+          "claim": "attracts_pollinators true: nectar attracts bees and butterflies",
+          "source": "NC State Extension Gardener Plant Toolbox - Thymus vulgaris",
+          "url": "https://plants.ces.ncsu.edu/plants/thymus-vulgaris",
+          "quote": "Nectar from the flowers attracts bees and butterflies."
         }
       ],
       "unknowns": [
@@ -1197,8 +1435,18 @@
         "cool_rest_note: no source describes a dormancy or cool-rest period for thyme.",
         "water_growing_days_est/water_dormant_days_est/water_check_depth_cm/water_dry_down_target/water_estimate_basis: no source gives a day-interval, check-depth, or pot/medium-specific watering estimate for a container or garden-bed scenario — only qualitative statements that thyme is drought-tolerant and needs little water once established.",
         "water_regime — removed on audit: The value 'dry_thoroughly_between' is a specific watering methodology, but its NC State citation ('It is frost and drought-tolerant.') only states a survivability trait -- that the plant CAN survive drought -- not a care instruction about letting the medium dry out thoroughly before rewatering. That is the classic 'sounds related but doesn't actually state this value' failure: drought-tolerant plants can still be recommended for light/frequent watering elsewhere; tolerance of drought is not the same claim as a prescribed dry-down-then-water-thoroughly regime. The companion RHS citation is meaningfully stronger (explicit root-rot-from-dampness warning, 'rarely needs watering') but is still an inference to the specific labeled cadence rather than a literal statement of it, and it describes outdoor/garden thyme rather than the container/houseplant context the record separately asserts (is_houseplant: true). Because one of the two supporting citations doesn't actually support the claim and the field is flagged as high-stakes, the field should be treated as unsound as sourced.",
-        "soil_ph_max — removed on audit: The NC State quote is two separate categorical tags on the page -- 'Alkaline (>8.0)' and 'Neutral (6.0-8.0)' -- not a single continuous range statement. The '>8.0' tag means the source considers pH above 8.0 ALSO tolerated (an open-ended/unbounded category), yet the claim converts that same number into a hard ceiling of exactly 8.0. The digit '8.0' does appear in the quote, but not in the role assigned to it -- it marks the bottom of a further-tolerated alkaline range, not the top of the plant's tolerance. Presenting it as soil_ph_max therefore understates what the source itself says the plant tolerates and isn't literally asserted by the quote."
-      ]
+        "soil_ph_max — removed on audit: The NC State quote is two separate categorical tags on the page -- 'Alkaline (>8.0)' and 'Neutral (6.0-8.0)' -- not a single continuous range statement. The '>8.0' tag means the source considers pH above 8.0 ALSO tolerated (an open-ended/unbounded category), yet the claim converts that same number into a hard ceiling of exactly 8.0. The digit '8.0' does appear in the quote, but not in the role assigned to it -- it marks the bottom of a further-tolerated alkaline range, not the top of the plant's tolerance. Presenting it as soil_ph_max therefore understates what the source itself says the plant tolerates and isn't literally asserted by the quote.",
+        "Only NC State Plant Toolbox (plants.ces.ncsu.edu/plants/thymus-vulgaris) was needed/used to fill these fields; it carried a structured Dimensions block plus explicit Attracts and Edibility fields, so the other four assigned pages (Clemson HGIC herbs factsheet, Penn State Extension thyme page, RHS grow-your-own thyme page, Missouri Botanical Garden PlantFinder) were not needed to source any of the six fields.",
+        "NC State's page tags this species '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' and no 'Poison'/'Toxic'/'Problem for' text on the page names any poisonous part, severity, toxic principle, preparation requirement, or pets warning for Thymus vulgaris itself (the toxic-sounding hits were only these non-toxic tags), so is_edible=true carries no toxicity caveat.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (non-ok fetch status) and was not read; no figures from it are recorded or guessed.",
+        "Fetch status (noted at landing): the Clemson HGIC herbs factsheet is cached here as http-403, so it could not be read either. The cached Penn State and RHS pages agree with NC State's size: 'Height 12 inches; width 10 to 12 inches.' and 'Some form small mounded shrubs up to 30cm (1ft) tall, such as T. vulgaris'."
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 16
     }
   ],
   "audit_summary": [
@@ -1237,6 +1485,7 @@
   ],
   "normalizations": [
     "2026-08-19: landed with zero loader-found defects, unlike b6. The research and audit prompts were tightened after b6's two findings -- auditors were told explicitly to re-derive every label number from its own quote, and to distinguish a 'safe to eat' (human/culinary) claim from a 'safe for pets' claim. Chives correctly resolved toxic_to_pets true (N-propyl disulfide, UF/IFAS, species explicitly named) despite being a kitchen herb -- the scenario the prompt change targeted.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
