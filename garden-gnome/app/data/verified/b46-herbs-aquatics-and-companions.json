@@ -50,7 +50,17 @@
         "soil_base: sources describe well-drained garden or container soil (e.g. RHS's peat-free soil-based compost with added grit for containers) but never name a specific medium category such as standard potting mix vs. garden bed, so left null.",
         "water_dry_down_target / water_check_depth_cm: no source gives a specific drying target or soil-check depth.",
         "water_growing_days_est / water_dormant_days_est / water_estimate_basis: no source gives a watering-interval day count for either active growth or dormancy.",
-        "fertilize_interval_days / fertilize_active_months / fertilize_strength: no admissible source addresses fertilizing tarragon specifically."
+        "fertilize_interval_days / fertilize_active_months / fertilize_strength: no admissible source addresses fertilizing tarragon specifically.",
+        "attracts_pollinators left null: none of the ten readable pages contain any pollinator/wildlife-attraction language for Artemisia dracunculus specifically (searched 'Attracts', 'pollinator', 'bee', 'butterfl', 'hummingbird', 'Wildlife' on NC State and RHS pages; the UGA field report uses 'attracts' only for other herbs like Monarda and mountain mint, not tarragon).",
+        "is_edible is TRUE but the same NC State Plant Toolbox page that supports it also names toxicity: 'This plant has low severity poison characteristics'; 'This plant is known to be poisonous to dogs, cats, and horses if ingested in sufficient quantity. In humans, occasional consumption of the plant in small culinary quantities is thought to be safe. Scientific literature regarding toxicity from other uses is inconclusive. Essential oils in the plant, particularly its roots, has the potential to cause contact dermatitis in humans.'; Poison Toxic Principle is listed as 'Artemisinin essential oil- estragole, methyleugenol, thujone, and furanocoumarin toxic constituents'; Causes Contact Dermatitis is listed as 'Yes'; Poison Severity is listed as Low; Poison Symptoms: 'In Dogs/Cats/Horses - Vomiting, hypersalivation, diahrrea, incoordination, dilated pupils, low blood pressure, low body temperature, sleepiness or excitation, coma.'; Poison Part is listed as Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems (seven separate list entries on the page -- every part, including the leaves used as the herb; corrected at landing from 'Bark, Flowers, Fruits'). Net: edibility is conditional on culinary-quantity use of the leaves (the page tags #edible leaves), with low-severity poison characteristics listed for every part, toxicity to pets, and a contact-dermatitis risk from essential oils.",
+        "Tarragon is an herbaceous perennial forb/subshrub, not a vine, liana, or other climber, so the rule-4 climber exception does not apply; all four size fields were populated normally.",
+        "Size anchor is NC State's species page (plants.ces.ncsu.edu/plants/artemisia-dracunculus/ and its /common-name/tarragon/ alias, which return identical structured content and the same Dimensions block), not a genus page.",
+        "RHS species-level page (rhs.org.uk/plants/1632/artemisia-dracunculus/details) reports Max Height 0.5-1 metres (19.7-39.4 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in), consistent with but not used in place of the NC State structured Dimensions block, which was treated as the anchor per instructions.",
+        "RHS French tarragon (rhs.org.uk/plants/217000/artemisia-dracunculus-french/details, Max Height 0.5-1m, Max Spread 0.5-1m) and RHS Russian tarragon (rhs.org.uk/plants/217003/artemisia-dracunculus-russian/details, Max Height 0.5-1m, Max Spread 0.1-0.5m) are named-cultivar pages; their size figures were deliberately excluded per rule 3 (cultivar size is not species size).",
+        "UMD Extension (extension.umd.edu/resource/tarragon) gives only a single unbounded figure, 'grows to a height of about 2'', with no stated range and no companion low or high bound; it was not used for mature_height_in to avoid inventing a range from one figure (rule 2), since NC State already supplies an actual published low-high range.",
+        "RHS grow-your-own guide (rhs.org.uk/herbs/tarragon/grow-your-own?type=h) was fetched successfully but contains no Height, Spread, pollinator, edibility, or poison/toxic content on any of the searched terms.",
+        "UGA CAES Field Report B1170 'Herbs in Southern Gardens' (fieldreport.caes.uga.edu/publications/B1170/herbs-in-southern-gardens/) was fetched successfully; it mentions French tarragon only in propagation/container-growing context and has no species-specific size, pollinator, or edibility/toxicity statement for tarragon usable as a citation.",
+        "Both Missouri Botanical Garden PlantFinder pages (plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277563 and taxonid=256946) refused this machine (ProxyError/sandbox denial on plantfinder.mobot.org) on every attempt, including with the host explicitly allow-listed; they were skipped and nothing from them was guessed or recorded."
       ],
       "citations": [
         {
@@ -256,8 +266,37 @@
           "quote": "Avoid wet soils.",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277563"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1 ft = 12 in, so 1 ft 0 in = 12 in and 3 ft 0 in = 36 in)",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Artemisia dracunculus (Tarragon)",
+          "url": "https://plants.ces.ncsu.edu/plants/artemisia-dracunculus/common-name/tarragon/"
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches: 1 ft 0 in = 12 in and 1 ft 6 in = 18 in)",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Artemisia dracunculus (Tarragon)",
+          "url": "https://plants.ces.ncsu.edu/plants/artemisia-dracunculus/common-name/tarragon/"
+        },
+        {
+          "claim": "is_edible true — leaves are used as a culinary herb per University of Maryland Extension",
+          "quote": "Tarragon leaves have a distinctive flavor similar to anise and are used in salads, marinades, chicken salad, and sauces.",
+          "source": "University of Maryland Extension — Tarragon",
+          "url": "https://extension.umd.edu/resource/tarragon"
+        },
+        {
+          "claim": "is_edible true — NC State tags the species with edible leaves",
+          "quote": "#problem for horses #problem for dogs #problem for cats #herbaceous perennial #edible leaves #rock garden #drought tolerant garden #dry soils tolerant #fragrant leaves #summer flowers #full sun tolerant #containers #slopes",
+          "source": "NC State Extension Gardener Plant Toolbox — Artemisia dracunculus (Tarragon)",
+          "url": "https://plants.ces.ncsu.edu/plants/artemisia-dracunculus/common-name/tarragon/"
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Fennel",
@@ -310,7 +349,14 @@
         "toxic_to_pets / toxicity_detail: NC State's tags are the only admissible-source toxicity information found for fennel; no admissible source discusses a toxic principle, symptoms, or any distinction between raw/culinary fennel and concentrated fennel oil or extract.",
         "Clemson HGIC's 'How to Grow Fall Herbs in South Carolina' states generally that most of the herbs it covers 'are drought-tolerant and require full sun,' but this is a blanket statement about that guide's whole herb list, not a fennel-specific claim, so it was not used as a fennel-specific citation.",
         "name_note is limited to the scientific-name and bulb/herb-variety points that different admissible sources actually draw distinctions on; it does not restate general fennel cultivation facts that belong in other fields.",
-        "name_note — removed on audit: Four of the five sub-claims hold; one is wrong and must be dropped/rewritten.\n\nCOVERED AND ACCURATE: (1) NC State treats \"Foeniculum vulgare var. azoricum\" as a previously used name — verbatim on the live page (\"Previously known as: Foeniculum vulgare var. azoricum\"). (2) NC State folds Florence Fennel in as one of this species' common names — verbatim (\"Common Name(s): Bronze Fennel, Fennel, Finocchio, Florence Fennel, Sweet Fennel\"). (3) MBG keeps var. azoricum as a separate entry called Florence fennel / finocchio / bulbing fennel — the quoted sentence is verbatim; the live page renders it as \"Var. azoricum is called Florence fennel, finocchio or bulbing fennel. It is noted for the mild anise-like flavor of its stems, leaves and bulbous bases.\" (4) UMD gives the name as \"Foeniculum dulce\" and says \"Don’t confuse with bulb fennel.\" — both verbatim on https://extension.umd.edu/resource/fennel/.\n\nWRONG: the trailing clause \"— grown for its swollen, bulb-like stem base rather than for leaves and seed as common fennel is.\" The cited quote says the opposite of the \"rather than leaves\" part (it lists \"stems, leaves and bulbous bases\"), and the MBG page explicitly states of Florence fennel: \"Feathery, fern-like, light green foliage and seeds may also be harvested for a variety of culinary applications.\" So MBG does NOT say Florence fennel is grown instead of for leaves and seed. The citation label carrying the same error (\"grown for its bulb-like base rather than for leaves and seed as common fennel is\") is a label defect and must be corrected too.\n\nCORRECTED WORDING for the clause: \"…describing it as Florence fennel, finocchio, or bulbing fennel, distinguished by swollen basal stems that common fennel does not produce.\" CORRECTED LABEL for the existing quote: \"name_note: Missouri Botanical Garden treats Foeniculum vulgare var. azoricum as a distinct variety called Florence fennel, finocchio or bulbing fennel, noted for the anise-like flavour of its stems, leaves and bulbous bases.\" If the bulb-vs-common distinction is to be kept, cite MBG's actual sentences from the same page: \"Florence fennel is distinguished by its swelling basal stems that form at ground level a bulb-like structure suggestive of celery.\" and \"Common fennel does not produce the swollen basal stems that are the signature of Florence fennel.\""
+        "name_note — removed on audit: Four of the five sub-claims hold; one is wrong and must be dropped/rewritten.\n\nCOVERED AND ACCURATE: (1) NC State treats \"Foeniculum vulgare var. azoricum\" as a previously used name — verbatim on the live page (\"Previously known as: Foeniculum vulgare var. azoricum\"). (2) NC State folds Florence Fennel in as one of this species' common names — verbatim (\"Common Name(s): Bronze Fennel, Fennel, Finocchio, Florence Fennel, Sweet Fennel\"). (3) MBG keeps var. azoricum as a separate entry called Florence fennel / finocchio / bulbing fennel — the quoted sentence is verbatim; the live page renders it as \"Var. azoricum is called Florence fennel, finocchio or bulbing fennel. It is noted for the mild anise-like flavor of its stems, leaves and bulbous bases.\" (4) UMD gives the name as \"Foeniculum dulce\" and says \"Don’t confuse with bulb fennel.\" — both verbatim on https://extension.umd.edu/resource/fennel/.\n\nWRONG: the trailing clause \"— grown for its swollen, bulb-like stem base rather than for leaves and seed as common fennel is.\" The cited quote says the opposite of the \"rather than leaves\" part (it lists \"stems, leaves and bulbous bases\"), and the MBG page explicitly states of Florence fennel: \"Feathery, fern-like, light green foliage and seeds may also be harvested for a variety of culinary applications.\" So MBG does NOT say Florence fennel is grown instead of for leaves and seed. The citation label carrying the same error (\"grown for its bulb-like base rather than for leaves and seed as common fennel is\") is a label defect and must be corrected too.\n\nCORRECTED WORDING for the clause: \"…describing it as Florence fennel, finocchio, or bulbing fennel, distinguished by swollen basal stems that common fennel does not produce.\" CORRECTED LABEL for the existing quote: \"name_note: Missouri Botanical Garden treats Foeniculum vulgare var. azoricum as a distinct variety called Florence fennel, finocchio or bulbing fennel, noted for the anise-like flavour of its stems, leaves and bulbous bases.\" If the bulb-vs-common distinction is to be kept, cite MBG's actual sentences from the same page: \"Florence fennel is distinguished by its swelling basal stems that form at ground level a bulb-like structure suggestive of celery.\" and \"Common fennel does not produce the swollen basal stems that are the signature of Florence fennel.\"",
+        "Toxicity check: searched the NC State anchor page (plants.ces.ncsu.edu/plants/foeniculum-vulgare/) for \"Poison\", \"Toxic\", and \"Problem for\" — no poisonous-part, severity, toxic-principle, preparation-requirement, or pets-warning text was found; the only \"Toxic\" hits were the tags \"non-toxic for cats\", \"non-toxic for horses\", \"non-toxic for dogs\". is_edible is set true unconditionally on that basis.",
+        "is_edible is supported by NC State's structured Plant Type = Edible field plus tags #edible seeds #edible leaves #edible flowers #easy edibles #edible; no page in the assigned set gave a more specific condition (e.g. cooked-only, one-part-only) for the species as a whole, so no additional condition text was added.",
+        "mature_height_in and mature_spread_in are taken from the NC State species page (plants.ces.ncsu.edu/plants/foeniculum-vulgare/), which is a species-level page (title lists Bronze Fennel, Fennel, Finocchio, Florence Fennel, Sweet Fennel as common names under Foeniculum vulgare) and not a genus page, so it is used per the anchor rule.",
+        "Did not use the RHS var. azoricum page (id 158862) or the RHS Florence Fennel grow-your-own page for size, since those describe var. azoricum (Florence fennel), a named botanical variety/cultivar-type distinct from the straight species this record is for; any size figures on those pages were not merged in per rule 3. Corrected at landing: this line also listed plants.ces.ncsu.edu/plants/foeniculum-vulgare/common-name/fennel/ as a var. azoricum page, but it is the same NC State Foeniculum vulgare page as the anchor, with an identical Dimensions block (both URLs note the plant was 'Previously known as: Foeniculum vulgare var. azoricum').",
+        "plantfinder.mobot.org (both taxonid 275990 and 245761 URLs) was not fetched with qc.py in this session because Missouri Botanical Garden's PlantFinder is noted in the task instructions as a host that refuses this machine; not reading it is consistent with that note, but it was not independently re-verified as refusing in this run.",
+        "ask.ifas.ufl.edu is not among the assigned URLs for this task, so it was not attempted.",
+        "No climber/vine determination was needed: NC State lists Habit/Form as Erect, Multi-stemmed, Spreading — fennel is not a climber, so rule 4 (no size for climbers) does not apply and all four size fields are populated."
       ],
       "citations": [
         {
@@ -444,8 +490,38 @@
           "quote": "If you fertilize, do so gently, it should not be pushed to grow.",
           "source": "Penn State Extension, Bronze Fennel — Warren County Master Gardener",
           "url": "https://extension.psu.edu/programs/master-gardener/counties/warren/demonstration-gardens/betts-demonstration-garden/bronze-fennel"
+        },
+        {
+          "claim": "mature_height_in 48-72 (NC State Height 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Foeniculum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/foeniculum-vulgare/",
+          "quote": "Height: 4 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 18-39 (NC State Width 1 ft. 6 in. - 3 ft. 3 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Foeniculum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/foeniculum-vulgare/",
+          "quote": "Width: 1 ft. 6 in. - 3 ft. 3 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Bees, Butterflies, Pollinators, Predatory Insects; Wildlife Value text also names bees and swallowtail butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox — Foeniculum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/foeniculum-vulgare/",
+          "quote": "Attracts bees and other beneficial insects, feeds caterpillars that morph into swallowtail butterflies."
+        },
+        {
+          "claim": "is_edible true (NC State lists Plant Type as Edible and tags edible seeds, edible leaves, edible flowers; no Poison, Toxic-to-eat, or Problem for text found on this page, only non-toxic-for-pets tags)",
+          "source": "NC State Extension Gardener Plant Toolbox — Foeniculum vulgare",
+          "url": "https://plants.ces.ncsu.edu/plants/foeniculum-vulgare/",
+          "quote": "Edible"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 39
     },
     {
       "common_name": "Sacred Lotus",
@@ -499,7 +575,13 @@
         "is_houseplant is recorded false based on this species being fundamentally an outdoor aquatic/pond plant across all admissible sources. RHS's cultivation notes do mention it can also be grown 'under glass, in large containers in an indoor pool in full light,' and RHS tags it 'Conservatory Greenhouse' as well as 'Aquatic' -- but this describes greenhouse pool cultivation, not container-in-potting-mix houseplant care on a windowsill, so it wasn't treated as contradicting is_houseplant=false.",
         "Decision-relevant but outside the schema: Nelumbo nucifera is flagged as a regulated/invasive plant by multiple admissible sources. Missouri Botanical Garden and NC State both note it 'is listed as a noxious weed in one or more Midwestern states' with planting 'prohibited' in Wisconsin. Penn State Extension separately lists 'Sacred Lotus, Asian Lotus, Indian Lotus' as invasive in several Great Lakes states ('Dense floating mats inhibit growth of native aquatic vegetation and decrease biodiversity') and recommends native Fragrant Water Lily (Nymphaea odorata) as a replacement. Clemson HGIC's aquatic-plant-selection factsheet marks 'Asian lotus (Nelumbo nucifera)' as 'may be aggressive' and recommends it be planted in pots rather than anchored directly in pond soil.",
         "Content-bleed check: confirmed this record does not reuse or duplicate any data point from the catalog's existing Water Lily (Nymphaea) record. Nelumbo (family Nelumbonaceae) and Nymphaea (family Nymphaeaceae) are unrelated genera despite the similar floating-leaved-pond-plant habit; all citations here are drawn fresh from Nelumbo-nucifera-specific or Nelumbo-nucifera-naming source pages (NC State's nelumbo-nucifera page, Missouri Botanical Garden's Nelumbo nucifera Plant Finder entry, RHS's Nelumbo nucifera/sacred lotus profile, UF/IFAS's FP424 Nelumbo nucifera fact sheet, and Penn State's Nelumbo-nucifera-specific invasive-species entry), none of which is the Nymphaea/water-lily material cited in the existing Water Lily record.",
-        "name_note — removed on audit: Refuted on a count error the record makes about its own list. name_note says NC State \"lists ten alternates alongside Sacred Lotus\" and then enumerates only nine: Chinese Arrowroot, Chinese Waterlily, Eastern Lotus, East Indian Lotus, Egyptian Sacred Bean, Indian Lotus, Padma, Water Bean, Water Lotus. The live NC State H1 carries ten common names TOTAL, of which Sacred Lotus is one -- so there are nine alternates, not ten. Corrected wording: \"NC State Extension's dedicated page lists nine alternates alongside Sacred Lotus\" (or \"lists ten common names including Sacred Lotus\"). Sub-claim breakdown as requested. COVERED AND ACCURATE: the nine-name list, cited to NC State, whose quote is verbatim and in the page's exact order. COVERED AND ACCURATE: the three scientific synonyms, cited to Penn State, whose four-name row appears on the page verbatim -- with two wording caveats that should be tightened rather than dropped. First, the Penn State page never uses the word \"synonyms\"; it prints the four binomials as an unlabeled name row under the heading \"Invasive: Sacred Lotus, Asian Lotus, Indian Lotus\", so \"lists ... as synonyms\" is a (botanically correct) inference the page does not itself state. Second, the page is titled \"Mid-Atlantic Pocket Guide to Water Garden Species\", not an invasive-species guide; the relevant section is \"Invasive Aquatic Plants and Their Native Alternatives\". UNCITED BUT TRUE, available as corroboration: MOBOT's own dedicated page carries the same alternate set behind its Common Names control -- \"sacred lotus, water lotus, Chinese arrowroot, Chinese waterlily, East Indian lotus, Egyptian sacred bean, padma, water bean, Indian lotus, Eastern lotus\" -- and RHS lists \"Chinese arrowroot, Chinese waterlily, East Indian lotus, Eastern lotus, Egyptian sacred bean, Indian lotus, padma, water bean\" under \"Other common names\". Nothing in name_note is WRONG and needs dropping; only the number \"ten\" is wrong."
+        "name_note — removed on audit: Refuted on a count error the record makes about its own list. name_note says NC State \"lists ten alternates alongside Sacred Lotus\" and then enumerates only nine: Chinese Arrowroot, Chinese Waterlily, Eastern Lotus, East Indian Lotus, Egyptian Sacred Bean, Indian Lotus, Padma, Water Bean, Water Lotus. The live NC State H1 carries ten common names TOTAL, of which Sacred Lotus is one -- so there are nine alternates, not ten. Corrected wording: \"NC State Extension's dedicated page lists nine alternates alongside Sacred Lotus\" (or \"lists ten common names including Sacred Lotus\"). Sub-claim breakdown as requested. COVERED AND ACCURATE: the nine-name list, cited to NC State, whose quote is verbatim and in the page's exact order. COVERED AND ACCURATE: the three scientific synonyms, cited to Penn State, whose four-name row appears on the page verbatim -- with two wording caveats that should be tightened rather than dropped. First, the Penn State page never uses the word \"synonyms\"; it prints the four binomials as an unlabeled name row under the heading \"Invasive: Sacred Lotus, Asian Lotus, Indian Lotus\", so \"lists ... as synonyms\" is a (botanically correct) inference the page does not itself state. Second, the page is titled \"Mid-Atlantic Pocket Guide to Water Garden Species\", not an invasive-species guide; the relevant section is \"Invasive Aquatic Plants and Their Native Alternatives\". UNCITED BUT TRUE, available as corroboration: MOBOT's own dedicated page carries the same alternate set behind its Common Names control -- \"sacred lotus, water lotus, Chinese arrowroot, Chinese waterlily, East Indian lotus, Egyptian sacred bean, padma, water bean, Indian lotus, Eastern lotus\" -- and RHS lists \"Chinese arrowroot, Chinese waterlily, East Indian lotus, Eastern lotus, Egyptian sacred bean, Indian lotus, padma, water bean\" under \"Other common names\". Nothing in name_note is WRONG and needs dropping; only the number \"ten\" is wrong.",
+        "is_edible is conditional: NC State names only the leaves, seeds, and rhizomes as edible (not the whole plant), so the true value covers those parts specifically, not an unconditional claim.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: zero hits on all three, so no toxic-part, severity, preparation, or pets warning was found on that page to report.",
+        "attracts_pollinators left null: searched NC State (Attracts, Wildlife, Pollinator, bee, butterfl, hummingbird), RHS (Attracts, pollinator, bee, butterfl), UF/IFAS (Attracts, pollinator, bee, butterfl, hummingbird, Wildlife, Uses), and the PSU pocket guide's sacred-lotus entry specifically. The only hit was a photo caption on the NC State page ('Nelumbo nucifera with bees' / 'flower with bees'), which is an image credit, not a structured attracts/wildlife field or an unconditional statement of pollinator attraction, so it was not used as support.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282911 refused this machine (network proxy error on the taxon-detail fetch); it was not read and nothing from it was used.",
+        "Size fields use NC State (a species-specific page with a structured Dimensions block) as the anchor per instructions. RHS's page for Nelumbo nucifera ('sacred lotus') gives Max Height/Max Spread of 1-1.5 metres (39.4-59.1 in) and UF/IFAS gives Height 5-8 ft / Spread 4-8 ft -- neither was used for the recorded values, kept as the NC State figures per the anchor rule. Corrected at landing: this line also credited the PSU pocket guide's 'Max Growth Height (ft): 5' to sacred lotus, but on that page the figure sits under the entry's Native Replacement, Fragrant Water Lily (Nymphaea odorata), not under Nelumbo nucifera.",
+        "ask.ifas.ufl.edu (fp424) and rhs.org.uk (details page) both fetched successfully in this run (contrary to the task's expectation that they would refuse this machine) and were checked for edibility, toxicity, and pollinator content; neither addressed edibility, toxicity/poison, or pollinator attraction for this species."
       ],
       "citations": [
         {
@@ -573,8 +655,31 @@
           "quote": "overwinter in frost-free conditions, keeping the rhizomes just moist.",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/11438/sacred-lotus/details"
+        },
+        {
+          "claim": "is_edible true: Asian cooking uses the edible leaves, seeds, or rhizomes of sacred lotus in foods",
+          "source": "NC State Extension Gardener Plant Toolbox — Nelumbo nucifera",
+          "url": "https://plants.ces.ncsu.edu/plants/nelumbo-nucifera/",
+          "quote": "Asian cooking, as well as other cooking, may use the edible leaves, seeds, or even the rhizomes in foods."
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Nelumbo nucifera",
+          "url": "https://plants.ces.ncsu.edu/plants/nelumbo-nucifera/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-48 (NC State Width: 3 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Nelumbo nucifera",
+          "url": "https://plants.ces.ncsu.edu/plants/nelumbo-nucifera/",
+          "quote": "Width: 3 ft. 0 in. - 4 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 48
     },
     {
       "chill_damage_f": 60,
@@ -1395,6 +1500,36 @@
           "quote": "Young plants should be fertilized every 14 days with 1/4 lb of a complete fertilizer with the amounts increasing as trees become larger.",
           "source": "UF/IFAS EDIS MG054 (Papaya Growing in the Florida Home Landscape)",
           "url": "https://ask.ifas.ufl.edu/publication/MG054"
+        },
+        {
+          "claim": "mature_height_in 120-180 (UF/IFAS FP106 Height: 10 to 15 feet, converted to inches: 10 ft = 120 in, 15 ft = 180 in)",
+          "source": "ask.ifas.ufl.edu FP106: Carica papaya: Papaya",
+          "url": "https://ask.ifas.ufl.edu/publication/FP106",
+          "quote": "Height:  10 to 15 feet"
+        },
+        {
+          "claim": "mature_spread_in 60-84 (UF/IFAS FP106 Spread: 5 to 7 feet, converted to inches: 5 ft = 60 in, 7 ft = 84 in)",
+          "source": "ask.ifas.ufl.edu FP106: Carica papaya: Papaya",
+          "url": "https://ask.ifas.ufl.edu/publication/FP106",
+          "quote": "Spread:  5 to 7 feet"
+        },
+        {
+          "claim": "is_edible true -- fruit characteristic listed as suited for human consumption",
+          "source": "ask.ifas.ufl.edu FP106: Carica papaya: Papaya",
+          "url": "https://ask.ifas.ufl.edu/publication/FP106",
+          "quote": "Fruit characteristic:  suited for human consumption"
+        },
+        {
+          "claim": "is_edible true -- fruit may be eaten green (as a vegetable) or ripe",
+          "source": "ask.ifas.ufl.edu MG054: Papaya Growing in the Florida Home Landscape",
+          "url": "https://ask.ifas.ufl.edu/publication/MG054",
+          "quote": "Papaya fruit may be harvested green for use as a vegetable and ripe when full yellow to orange color"
+        },
+        {
+          "claim": "attracts_pollinators true -- pollinators include bees and butterflies",
+          "source": "ask.ifas.ufl.edu MG054: Papaya Growing in the Florida Home Landscape",
+          "url": "https://ask.ifas.ufl.edu/publication/MG054",
+          "quote": "Pollinators include honey bees, wasps, midges, thrips, surphid flies, and butterflies."
         }
       ],
       "common_name": "Papaya",
@@ -1438,14 +1573,25 @@
         "soil_drainage — removed on audit: REFUTED. Value is `moisture_retentive` — the wettest of the three tokens (models.py SoilDrainage = fast | moderate | moisture_retentive) — and every source's drainage language actually leads with WELL-DRAINED.\n\nThe cited quote is real and verbatim. FPS106's Culture block reads in full: \"Soil tolerances: acidic; slightly alkaline; sand; loam; clay; well-drained to occasionally wet\". But the record reads only the tail of that range and adds an inference the page does not make (\"with no occasionally-dry counterpart listed\") — absence of a tag is not a positive statement, and the tag's LEAD term is \"well-drained\".\n\nThe other two sources contradict `moisture_retentive` outright:\n- MG054, Soils: \"Papaya plants grow and fruit well in many well drained soil types.\"\n- MG054, Papaya Trees and Lawn Care: \"The use of lawn sprinkler systems on a timer may result in over watering and cause papaya trees to decline. This is because too much water too often applied causes root rot.\" MG054 also tells growers within 7 ft of the water table to plant on a 2-to-3-ft mound.\n- Missouri Botanical Garden, Culture: \"It is best grown in tropical or semi-tropical climates in rich, humusy, consistently moist but well-drained organic loams in full sun.\" Its structured field is \"Water: Medium\", not high.\n\nThis catalog's own precedent maps the IDENTICAL UF/IFAS string to `moderate`, not `moisture_retentive`: garden-gnome/app/data/verified/b26-toxic-and-more-trees.json:1147 (\"soil_drainage moderate (well-drained to occasionally wet)\"), b35-ginkgo-and-more.json:148 (\"soil_drainage moderate (well-drained to occasionally wet soil tolerance)\"), plus b24:639, b25:334 and b31:576 on the same wording.\n\nRepair: set soil_drainage to `moderate` (well-drained preference plus an occasionally-wet tolerance), or null it if the reviewer wants the FP106/MoBot \"well-drained\" lead to dominate. Drop the \"no occasionally-dry counterpart\" reasoning from the claim label either way.",
         "water_estimate_basis — removed on audit: REFUTED on scope. MG054's actual sentence is: \"Plants growing in soil with a capacity to hold water (loams, sandy loams) should not be overwatered and therefore should be watered at 3- to 4-day intervals, especially during hot weather.\"\n\nThe record restates this as \"...a literal 3-to-4-day watering interval for papaya grown in water-holding soils (loams, sandy loams) during hot weather, especially to avoid overwatering\". Two shifts, both misattributions:\n1. It moves \"especially\" off hot weather and onto overwatering, then recasts \"during hot weather\" as the CONDITION under which the interval applies. In the source, 3–4 days is the baseline interval for water-holding soils, merely emphasized in hot weather. The record narrows a year-round baseline into a hot-weather-only figure — a seasonal qualifier the cited sentence does not carry.\n2. \"especially to avoid overwatering\" is not the source's emphasis; the source's construction is \"should not be overwatered and THEREFORE should be watered at 3- to 4-day intervals.\"\n\nEverything else in the field is accurate and verified: the 3–4 day figure is literal, and \"No literal day count is given for a reduced cool-season interval in these soils\" is correct — MG054 gives the cool-season reduction only for the OTHER soil class (\"Plants growing in sandy or rocky soils that are well drained and do not hold much water should be watered every other day or every day during hot, dry conditions and less often during cool parts of the year (late fall, winter).\").\n\nCorrected wording: \"UF/IFAS EDIS MG054 gives a literal 3-to-4-day watering interval for papaya grown in water-holding soils (loams, sandy loams), which it frames as the interval that avoids overwatering and emphasizes especially during hot weather; averaged to 3.5 days for the growing-season estimate. No literal day count is given for a reduced cool-season interval in these soils.\"",
         "outdoor_sun_exposure — FLAGGED on audit (left as-is, needs manual review before landing): REFUTED, one entry only. `full_sun` STAYS — it is supported by two independent structured fields and MG054 prose. `part_shade` should GO.\n\nWhat backs full_sun (all verified live): FPS106 Culture, \"Light requirement: full sun\"; FPS106 Use and Management, \"Plant in the full sun for fastest growth and best fruit production.\"; MG054 Site Selection, \"In general, papaya trees should be planted in full sun for best growth and fruit production.\"; MG054 Spacing and Pruning, \"Papaya plants should be planted in full sun...\"; Missouri Botanical Garden's structured row, \"Sun: Full sun\".\n\nWhy part_shade fails: its sole support is a prose aside in MoBot's Culture note — \"Plants tolerate light shade if grown ornamentally instead of for fruit.\" (verified verbatim on the live page) — which (a) is contradicted by that same page's own structured \"Sun: Full sun\" field, (b) is conditional on abandoning fruit production, the entire point of growing this species, and (c) is contradicted by MG054's Climate paragraph, which names shade as a growth suppressant: \"Any climatic factor such as cool or cold temperatures, lack of water (drought), high constant winds, or shade will reduce papaya growth and production.\" MoBot also states \"Best fruit develops in full sun.\"\n\nThis is the exact pattern this catalog already removed once on audit — see garden-gnome/app/data/verified/b17-perennials3.json:351, which struck part_shade because it \"rests solely on softer narrative asides on two of those same pages that their own structured fields do not corroborate.\" Separately, even if a shade entry were kept, \"light shade\" is the mildest shade band and would map to `part_sun`, not `part_shade`, in the OutdoorSunExposure ladder (full_sun / part_sun / part_shade / full_shade).\n\nRepair: outdoor_sun_exposure = [\"full_sun\"]; delete the MoBot light-shade citation from this field (it can stay in unknowns as a documented ornamental-only tolerance).",
-        "outdoor_sun_exposure narrowed to full_sun: Missouri Botanical Garden's aside that plants 'tolerate light shade if grown ornamentally instead of for fruit' is contradicted by its own structured 'Sun: Full sun' field and by MG054 naming shade as a growth suppressant, and would map to part_sun at most."
+        "outdoor_sun_exposure narrowed to full_sun: Missouri Botanical Garden's aside that plants 'tolerate light shade if grown ornamentally instead of for fruit' is contradicted by its own structured 'Sun: Full sun' field and by MG054 naming shade as a growth suppressant, and would map to part_sun at most.",
+        "plantfinder.mobot.org refused this machine (ProxyError, 0 bytes) when fetched via qc.py -- could not check it for size, edibility, or pollinator data; not used for any field.",
+        "Size data (mature_height_in, mature_spread_in) taken from ask.ifas.ufl.edu/publication/FP106's structured 'Description' field (Height: 10 to 15 feet, Spread: 5 to 7 feet) -- this is species-level, not a named-cultivar figure, so it was used as published.",
+        "Papaya (Carica papaya) is a single-trunked, tree-like herbaceous plant, not a vine/liana/climber, so the climber size-nulling rule does not apply; all four size fields are populated.",
+        "Searched FP106, MG054, and the RHS page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- no hits on any of the three reachable pages, so no toxic-part or pets-warning text needed to accompany is_edible.",
+        "RHS also gives size (Max Height 2.5-4 metres, Max Spread 2.5-4 metres = 98.4-157.5 in) and UF/IFAS MG054 gives no explicit height/spread figures (only 'to 33 ft (10 m)' for the tree overall in a narrative, non-structured sentence) -- FP106's structured Description field was preferred as the cleaner species-level figure and is the only one cited."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": "Keep the root zone uniformly moist at all times; do not let it dry down between waterings.",
       "water_estimate_basis": "UF/IFAS EDIS MG054 gives a literal 3-to-4-day watering interval for papaya grown in water-holding soils (loams, sandy loams), which it frames as the interval that avoids overwatering and emphasizes especially during hot weather; the lower bound is taken as the growing-season check cadence. No literal day count is given for a reduced cool-season interval in these soils (MG054 gives that reduction only for sandy or rocky soils). In-ground guidance; a container plant dries faster.",
       "water_growing_days_est": 3.5,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 180,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 84
     },
     {
       "common_name": "Apricot",
@@ -1495,7 +1641,14 @@
         "Clemson HGIC coverage: Clemson's only Prunus-adjacent factsheet, 'Ornamental Cherry, Plum, Apricot & Almond' (HGIC 1018), covers ornamental flowering Prunus species; its apricot-labeled section is entirely about Japanese Flowering Apricot (Prunus mume), a different species, and states plainly that 'the yellow fruit is not edible' for that species. The page has no toxicity, soil, water, or sun content about Prunus armeniaca at all, so it was checked but not used anywhere in this record -- deliberately avoiding the genus/species bleed this catalog's Apricot entry was designed to guard against.",
         "MOBOT coverage: plantfinder.mobot.org has no plain-species Prunus armeniaca profile, only cultivar profiles (e.g. 'Wilson Delicious,' 'Homedale,' 'Garden Annie'). General cultivation facts (soil, sun, moisture-retentive-soil language) were drawn from the 'Wilson Delicious' cultivar profile's Culture and Noteworthy Characteristics text, which explicitly describes the species Prunus armeniaca rather than cultivar-specific traits. That page's 'Common Name: apricot' and 'commonly called dwarf apricot' language was NOT used to determine common_name, per this catalog's rule to prefer a dedicated single-species page's own lead name -- common_name was instead taken from NC State's and RHS's dedicated Prunus armeniaca species pages, which both independently lead with 'Apricot'/'apricot.'",
         "toxic_to_pets/toxicity_detail: toxic_to_pets true is supported by two independent, genuinely animal-scoped citations -- NC State's own 'Problem for Cats' and 'Problem for Dogs' tags on the plain species page, and RHS's 'Potentially harmful' section, which separately states 'Pets (dogs, rabbits, rodents): Harmful if eaten' regarding the seed kernels. Unlike this catalog's earlier Prunus entries (Peach, European Plum, Sweet Cherry), where the only elaborated poison mechanism/symptom text sat under NC State's human-only 'Poisonous to Humans' heading and had to be excluded from toxicity_detail entirely, RHS's pets-scoped sentence here let toxicity_detail be populated without borrowing any human-scoped content. NC State's own 'Poisonous to Humans' text for this species (poison part leaves/seeds/stems, toxic principle cyanogenic glycoside/amygdalin, symptoms gasping/convulsions/etc.) was deliberately kept out of toxicity_detail, since it is documented for humans, not for cats or dogs. NC State also tags 'Problem for Horses,' which per this catalog's established convention is not treated as within toxic_to_pets' scope.",
-        "toxicity_detail — removed on audit: SCOPE DEFECT, narrow. The field says 'RHS's Potentially Harmful assessment states apricot's seed kernels (not the edible fruit flesh) are harmful if eaten'. The parenthetical is a qualifier the cited sentence does not carry. RHS's Potentially harmful block says only that the seed kernels are harmful; it makes no statement at all about the flesh. Attributing an affirmative safety claim about the edible portion to a toxicity assessment that never made it is a misattribution, and it matters more than usual because this is a harm-capable field. The underlying FACT is true and is sourced -- just from elsewhere. On the same RHS page: the plant is categorised 'Fruit Edible' and described as bearing 'succulent, edible, red-tinged, yellow-orange fruit'. And NC State's own structured field reads 'Poison Part:' -> 'Leaves / Seeds / Stems' -- fruit flesh is not listed. Corrected wording: \\\"RHS's Potentially harmful assessment states apricot's seed kernels are harmful if eaten, and separately names pets -- dogs, rabbits, and rodents -- as harmed if eaten. RHS's own page categorises the plant 'Fruit Edible' and NC State lists the poison part as leaves, seeds and stems, not the fruit flesh.\\\" Everything else in this field checks out: the pets line does sit inside the same single <span> as the kernel line (the dd concatenates 'Seed kernels harmful if eaten...' + 'Pets (dogs, rabbits, rodents): Harmful if eaten - ...HTA guide to potentially harmful plants' + '...the kernels of the fruit are harmful if eaten'), so binding the pets line to the kernels is a fair reading of RHS's own block. And the record's discipline in keeping NC State's human-scoped poison text (severity Medium; cyanogenic glycoside/amygdalin; 'Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure') OUT of a pet-scoped field is correct and should be preserved."
+        "toxicity_detail — removed on audit: SCOPE DEFECT, narrow. The field says 'RHS's Potentially Harmful assessment states apricot's seed kernels (not the edible fruit flesh) are harmful if eaten'. The parenthetical is a qualifier the cited sentence does not carry. RHS's Potentially harmful block says only that the seed kernels are harmful; it makes no statement at all about the flesh. Attributing an affirmative safety claim about the edible portion to a toxicity assessment that never made it is a misattribution, and it matters more than usual because this is a harm-capable field. The underlying FACT is true and is sourced -- just from elsewhere. On the same RHS page: the plant is categorised 'Fruit Edible' and described as bearing 'succulent, edible, red-tinged, yellow-orange fruit'. And NC State's own structured field reads 'Poison Part:' -> 'Leaves / Seeds / Stems' -- fruit flesh is not listed. Corrected wording: \\\"RHS's Potentially harmful assessment states apricot's seed kernels are harmful if eaten, and separately names pets -- dogs, rabbits, and rodents -- as harmed if eaten. RHS's own page categorises the plant 'Fruit Edible' and NC State lists the poison part as leaves, seeds and stems, not the fruit flesh.\\\" Everything else in this field checks out: the pets line does sit inside the same single <span> as the kernel line (the dd concatenates 'Seed kernels harmful if eaten...' + 'Pets (dogs, rabbits, rodents): Harmful if eaten - ...HTA guide to potentially harmful plants' + '...the kernels of the fruit are harmful if eaten'), so binding the pets line to the kernels is a fair reading of RHS's own block. And the record's discipline in keeping NC State's human-scoped poison text (severity Medium; cyanogenic glycoside/amygdalin; 'Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure') OUT of a pet-scoped field is correct and should be preserved.",
+        "NC State (the anchor page, with a structured Dimensions block) is the sole source used for size, edibility, and pollinator fields here. RHS grow-your-own and the Penn State frost-critical-temperatures page add nothing for these six fields, and Missouri Botanical PlantFinder could not be read (it refused this machine). Corrected at landing: this line first said the RHS species page added no usable figures either; it does, and they disagree with NC State's (recorded in the size line below).",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (non-ok fetch status) -- skipped, not guessed.",
+        "is_edible is TRUE but conditional/hazardous: NC State's anchor page lists Prunus armeniaca with medium-severity poison characteristics -- Poison Part: Leaves, Seeds, Stems; Poison Toxic Principle: Cyanogenic glycoside, amygdalin; Poison Symptoms: 'The pits contain cyanide compounds, which are poisonous. If a couple of pits are accidentally swallowed, it will not cause poisoning. The pits are more poisonous if they are ground up/crushed or the seeds are chewed. Fruit that has not been pitted should not be blended into a smoothie. Symptoms include Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure.' The page's own Edibility field reads only 'Fruit edible raw, dried, or cooked' (flesh only, pitted) -- the pits/seeds, leaves and stems are the poisonous parts and are NOT the edible part.",
+        "Page also tags Problem for Cats, Problem for Dogs, Problem for Horses, and Causes Contact Dermatitis: No -- included above for completeness since is_edible is true.",
+        "No field was left null: NC State supplied both size dimensions (Height and Width, each a real low-high range, not a single figure) and both flag fields (Edibility text and an explicit Attracts: Butterflies, Pollinators, Small Mammals field).",
+        "Sources disagree on size: the RHS species page (rhs.org.uk/plants/13949) gives 'Max Height 4-8 metres' and 'Max Spread 4-8 metres' (about 157-315 in) and describes 'A small, round-headed tree to 8m', well below NC State's 'Height: 20 ft. 0 in. - 40 ft. 0 in.' and 'Width: 20 ft. 0 in. - 40 ft. 0 in.' (240-480 in). The NC State anchor values are kept, not blended with RHS's -- noted at landing, verified against the cached copy.",
+        "RHS's Potentially harmful field names the same seed hazard as NC State's poison block: 'Seed kernels harmful if eaten; wear gloves and other protective equipment when handling', and for pets 'Pets (dogs, rabbits, rodents): Harmful if eaten' -- noted at landing, verified against the cached copy."
       ],
       "citations": [
         {
@@ -1611,8 +1764,38 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/prunus-armeniaca/",
           "quote": "Poison Part: Leaves Seeds Stems"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: Fruit edible raw, dried, or cooked)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus armeniaca",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-armeniaca/",
+          "quote": "Fruit edible raw, dried, or cooked."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Pollinators and Butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus armeniaca",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-armeniaca/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 240-480 (NC State Height: 20 ft. 0 in. - 40 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus armeniaca",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-armeniaca/",
+          "quote": "Height: 20 ft. 0 in. - 40 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 240-480 (NC State Width: 20 ft. 0 in. - 40 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus armeniaca",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-armeniaca/",
+          "quote": "Width: 20 ft. 0 in. - 40 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 240,
+      "mature_height_in_max": 480,
+      "mature_spread_in_min": 240,
+      "mature_spread_in_max": 480
     }
   ],
   "audit_summary": [
@@ -1651,6 +1834,7 @@
   ],
   "normalizations": [
     "2026-09-02: twenty-eighth batch, and the first on the new model split (research on Sonnet, verify on Opus, orchestration on Fable) -- Tarragon, Fennel, Sacred Lotus (this catalog's second aquatic), Satin Pothos (a companion to Golden Pothos, no genus bleed), Monstera adansonii (a companion to Monstera deliciosa), Pineapple, Papaya, and Apricot (a fourth Prunus, no bleed from Peach/Plum/Cherry). Its first attempt died on a session limit with all eight research agents refused and an empty records array; this is the relaunch. The Opus audit was markedly sharper than earlier batches -- sixteen removals, every one with corrected wording supplied -- and land_check.py, covered.py and verify_quotes.py (158/158 reachable quotes) all ran clean before and after repair. Repairs, each from the auditor's own live-verified text: Monstera adansonii's common_name was corrected from 'Swiss Cheese Plant' -- the sibling species' name, which NC State's page explicitly assigns to M. deliciosa -- to 'Swiss Cheese Vine', unique to this species and on NC State's own list; its direct_sun_hours_max was corrected from 6 (a read of NC State's site-wide Partial Shade legend) to 0 on the same page's species prose ('Direct sun can cause scorched leaves'), matching the b1 Monstera deliciosa precedent; its water_regime was set to dry_surface_between on three species-level sources (NC State, RHS's own adansonii page, Penn State's 'let the top 1 to 2 inches dry out') over one genus-guide sentence, now disclosed as a counterpoint. Pineapple's toxicity_detail was restored with the two NC State symptom clauses and the handling-injury/gloves instruction the record had silently dropped -- a real safety understatement, not a trim; its soil_ph_max and water_regime were left null on genuine cross-source conflicts (NC State's own paragraph contradicts itself on watering; two UF/IFAS documents put the pH ceiling above NC State's 6.0). Papaya's soil_drainage was set to moderate, the mapping this catalog already uses for UF/IFAS's identical 'well-drained to occasionally wet' string (b26, b35), and its outdoor_sun_exposure narrowed to full_sun after the only part_shade support was a MOBOT aside contradicted by MOBOT's own structured field and by MG054. Four name_notes were restored after one sub-claim each was corrected or dropped: Fennel (MOBOT does not say Florence fennel is grown instead of for leaves and seed), Satin Pothos (a genus-contrast clause Clemson never states), Sacred Lotus (nine alternates, not ten), Pineapple (the record had inverted NC State's comosus etymology). Apricot's toxicity_detail was reworded so the 'not the fruit flesh' point is carried by RHS's 'Fruit Edible' category and NC State's poison-part list rather than attributed to RHS's harm assessment. toxic_to_pets: Tarragon, Satin Pothos, Monstera adansonii and Apricot true on explicit NC State Problem for Cats/Dogs tags (Apricot also RHS naming dogs); Fennel false on explicit non-toxic tags; Sacred Lotus, Pineapple and Papaya null with no cat/dog-scoped source.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Pineapple -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Pineapple -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -75,6 +75,24 @@
           "quote": "Water them regularly during the growing season to ensure the soil stays moist",
           "source": "Clemson HGIC Factsheet",
           "url": "https://hgic.clemson.edu/factsheet/foamflower/"
+        },
+        {
+          "claim": "mature_height_in 5-12 (NC State Height: 0 ft. 5 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Tiarella cordifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/tiarella-cordifolia/",
+          "quote": "Height: 0 ft. 5 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Tiarella cordifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/tiarella-cordifolia/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Bees, Butterflies, Moths, Pollinators, Songbirds)",
+          "source": "NC State Extension Plant Toolbox — Tiarella cordifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/tiarella-cordifolia/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Foamflower",
@@ -111,14 +129,24 @@
         "Soil pH: NC State's page did not present a structured pH field; RHS lists soil pH as 'Acid or Alkaline or Neutral' (open/unbounded), so soil_ph_min and soil_ph_max are left null per the rule against setting bounds from open-ended or all-inclusive pH descriptors.",
         "No admissible source gives numeric direct-sun-hour tolerance in species-specific prose (NC State's '2-6 hours' figure for Partial Shade is the site-wide generic light-category legend, not species-specific prose), so direct_sun_hours_max is left null.",
         "No admissible source gives light_fc (foot-candle) figures, day/night temperature ranges, chill-damage onset temperature, humidity percentage/need, fertilizer interval/strength, or water-check depth/day-interval data for this species -- all left null as an in-ground herbaceous perennial rather than a container/houseplant with such guidance.",
-        "This is a hardy outdoor woodland perennial (USDA zones per NC State: 3a-8b; per Clemson: 4-9), not a houseplant, so day/night temperature and humidity fields are not applicable and left null rather than guessed."
+        "This is a hardy outdoor woodland perennial (USDA zones per NC State: 3a-8b; per Clemson: 4-9), not a houseplant, so day/night temperature and humidity fields are not applicable and left null rather than guessed.",
+        "is_edible left null: no page addresses eating Tiarella cordifolia at all. NC State (Edible/Poison/Toxic/Problem for: 0 hits each), UMD Extension (Edible/Poison/Toxic/Problem for: 0 hits each), and RHS (Edible/Poison/Toxic/Problem for: 0 hits each) were searched and none mention edibility or toxicity.",
+        "Clemson HGIC factsheet (https://hgic.clemson.edu/factsheet/foamflower/) refused this machine -- qc.py returned fetch status error:ProxyError, 0 bytes -- and was not read; no claims were taken from it, per instructions to skip refusing hosts rather than guess.",
+        "Species is a herbaceous ground cover/wildflower per NC State's Plant Type field (Ground Cover, Herbaceous Perennial, Native Plant, Wildflower), not a vine/liana/climber, so the climber size exclusion (rule 4) does not apply and all four size fields were filled normally.",
+        "RHS also publishes a size for this species (Max Height 0.1-0.5 metres, Max Spread 0.1-0.5 metres = approx. 3.9-19.7 inches each), but NC State's structured Dimensions block was used as the anchor per instructions since NC State has a species-specific page; the RHS figures were not used and are noted here only for completeness.",
+        "No page's Attracts/wildlife language distinguished this from a genus-wide claim, but NC State's structured Attracts field is species-specific (on the Tiarella cordifolia page itself, not a genus page), so attracts_pollinators=true rests on that field directly, not an inferred genus trait."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 5,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "chill_damage_f": null,
@@ -260,6 +288,30 @@
           "source": "University of Maryland Extension - Wild Ginger",
           "url": "https://extension.umd.edu/resource/wild-ginger",
           "quote": "The foliage withers in late summer drought if not kept moist."
+        },
+        {
+          "claim": "attracts_pollinators (NC State Attracts: Butterflies, Pollinators, Songbirds)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/asarum-canadense/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Dimensions Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/asarum-canadense/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 4-6 (NC State Dimensions Width: 0 ft. 4 in. - 0 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/asarum-canadense/",
+          "quote": "Width: 0 ft. 4 in. - 0 ft. 6 in."
+        },
+        {
+          "claim": "is_edible false (UMD Extension states foliage is not grown for human consumption)",
+          "source": "University of Maryland Extension",
+          "url": "https://extension.umd.edu/resource/wild-ginger",
+          "quote": "The foliage withers in late summer drought if not kept moist. Not grown for human consumption."
         }
       ],
       "common_name": "Canadian Wild Ginger",
@@ -303,14 +355,26 @@
         "name_note reports only the common-name split across dedicated single-species pages; a possible cross-species contrast with culinary ginger (Zingiber officinale, mentioned in NC State's 'is often confused with' module and in Missouri Botanical Garden's prose) was left out of name_note because no admissible source's own dedicated Zingiber officinale page was fetched to support that specific cross-species claim.",
         "name_note — removed on audit: Prose is accurate but the third sub-claim is effectively uncited — its citation carries the wrong quote. Sub-claim by sub-claim, verified live: (1) \"NC State leads with 'Canadian Wild Ginger'\" — COVERED AND ACCURATE, citation 1 quote is verbatim from the page title. (2) \"Missouri Botanical Garden's Plant Finder leads with 'wild ginger'\" — COVERED AND ACCURATE; MOBOT kempercode=b460 is the Asarum canadense page and its field reads verbatim \"Common Name: wild ginger\". (3) \"RHS's own page title/lead uses 'Canada wild ginger'\" — UNCITED BUT TRUE. Its citation (citation 3) attaches the quote \"Full shade, Partial shade\", which is RHS's Position field and says nothing whatsoever about a common name; the quote does not support the claim it is filed under. The fact is real: RHS's H1 reads \"Asarum canadense | Canada wild ginger\". Notably \"Canada wild ginger\" appears ONLY in that H1/lead — RHS's own Common Names list on the same page runs \"Black snakeweed, Canadian snakeroot, colic root, false crowfoot, ginger root, heart-leaf, pigs, snake root, southern snakeroot, southern wild ginger, Vermont snakeroot\" and does not contain it — so the field's careful wording \"page title/lead\" is precise and should be kept. No sub-claim is WRONG; nothing needs dropping. Repair is citation-only: keep the name_note prose exactly as written and replace citation 3's quote with the page H1, \"Asarum canadense | Canada wild ginger\".",
         "toxicity_detail — removed on audit: The field PROSE is correct and complete — the defect is that its only supporting NC State citation truncates the load-bearing safety list, so the field asserts more than its evidence covers. Citation 6's quote ends \"...Poison Part: Leaves\". The live page reads \"Poison Part: Leaves, Roots, Stems\". The field text itself correctly says \"Poison Part: Leaves, Roots, Stems\", but no citation in the record supports \"Roots, Stems\" — a truncated safety quote on the rhizome, which is the part people actually dig up and taste as a ginger substitute, is the worst possible place to trim. Repair is citation-only: replace citation 6's quote tail with the page's real text, \"Poison Part: Leaves, Roots, Stems\". Everything else in the field verifies verbatim and is complete: Poison Severity \"Medium\" (correctly scoped in the prose as coming from the human-scoped \"Poisonous to Humans\" block), the full symptom text \"Aristolochic acid is nephrotoxic and a carcinogen. Do not consume any part of this plant.\" with no dose sentence dropped, Poison Toxic Principle \"Aristolochic acid\", Causes Contact Dermatitis \"No\", and the verified absence of any Problem-for-Cats / Problem-for-Dogs tag on the NC State page. The RHS \"Potentially harmful\" text is reproduced verbatim and correctly, including the handling warning \"Wear gloves and other protective equipment when handling\" — which is retained rather than softened even though NC State says Causes Contact Dermatitis: No, and the field puts the two adjacent so the tension is visible. The pets-scope disagreement is disclosed and reasoned. The source's own hazard words (nephrotoxic, carcinogen, TOXIC if eaten) are preserved rather than paraphrased.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/asarum-canadense/, https://www.rhs.org.uk/plants/1677/asarum-canadense/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b460, https://extension.umd.edu/resource/wild-ginger, https://hgic.clemson.edu/?s=Asarum+canadense); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/asarum-canadense/, https://www.rhs.org.uk/plants/1677/asarum-canadense/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b460, https://extension.umd.edu/resource/wild-ginger, https://hgic.clemson.edu/?s=Asarum+canadense); none found, so the value stays null. Audited live.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (ProxyError / non-ok status on every attempt); it was not read and its content is not reflected here.",
+        "is_edible is set FALSE, not left null, because two independent pages state it directly: NC State's poison text says 'Do not consume any part of this plant,' and UMD Extension states foliage is 'Not grown for human consumption.' Neither page describes any part of the plant as eaten or used for food.",
+        "Toxicity noted for completeness even though is_edible is false (rule 5 only mandates this when is_edible is true, but it is safety-relevant): NC State lists 'medium severity' poison, toxic principle Aristolochic acid, poison symptoms 'Aristolochic acid is nephrotoxic and a carcinogen. Do not consume any part of this plant,' poison part Leaves, Roots and Stems (corrected at landing from 'Leaves and Roots'), and 'Causes Contact Dermatitis: No.' RHS separately states 'TOXIC if eaten. Wear gloves and other protective equipment when handling. TOXIC to pets if eaten.'",
+        "Asarum canadense is not a climber/vine, so the climber exclusion (rule 4) does not apply; all four size fields are populated from NC State's structured Dimensions block, which is the anchor source per instructions.",
+        "RHS also carries size figures (Max Height 0.1-0.5 metres, Max Spread 0.5-1 metres) but NC State's structured Dimensions block was used as the anchor per instructions rather than RHS, since NC State has its own species page.",
+        "No figures encountered were attributed to a named cultivar; the NC State and UMD figures are both given for the species."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 4,
+      "mature_spread_in_max": 6
     },
     {
       "chill_damage_f": null,
@@ -434,6 +498,30 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/polygonatum-biflorum/",
           "quote": "Blue-black inedible (to humans) berries are very showy and appear in September to October, are blue-black and 1/4 to 1/2 inch wide."
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/polygonatum-biflorum/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-48 (NC State Width: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/polygonatum-biflorum/",
+          "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true, conditional: young shoots and rootstock are eaten only after boiling",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/polygonatum-biflorum/",
+          "quote": "Young shoots can be boiled for 10 minutes.  Rootstock can be eaten after boiled for 20 minutes."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Pollinators, along with Butterflies and Songbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/polygonatum-biflorum/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Solomon's Seal",
@@ -476,14 +564,25 @@
         "cool_rest_note left null: no admissible source describes a cool-rest/dormancy care regimen for this species beyond general herbaceous perennial dieback.",
         "toxicity_detail — removed on audit: The facts are true but the safety field is trimmed and softened in three ways, and one of its citations overreaches. (1) SOFTENED HAZARD, own-words rule: the field paraphrases NC State's Edibility entry as \"young shoots and rootstock are edible after boiling\", dropping the source's actual preparation requirement. NC State's real sentence is \"Young shoots can be boiled for 10 minutes.  Rootstock can be eaten after boiled for 20 minutes.\" The specific durations are the load-bearing part of an edibility-of-a-poisonous-plant note and must not be paraphrased away. (2) INCOMPLETE TAG LIST: NC State's Whole Plant Traits > Plant Type carries four tags — \"Herbaceous Perennial / Native Plant / Poisonous / Wildflower\" — and the field names only \"Poisonous\". Citation #8 compounds this: its quote \"Poisonous\\nWildflower\" is a genuine contiguous slice but is only 2 of the 4 tags, presented as though it were the tag list. (3) CITATION #8 CLAIM/QUOTE MISMATCH: the claim asserts NC State \"lists a 'Poisonous' Whole Plant Trait alongside an Edibility note describing the plant as also edible after preparation\", but the quote contains no Edibility text whatsoever — the quote does not say what the claim asserts. (4) UNDISCLOSED SOURCE DISAGREEMENT ON PART SCOPE: NC State confines the hazard to fruit — \"Poison Part: Fruits\", and its Fruit Description reads \"Blue-black inedible (to humans) berries are very showy and appear in September to October, are blue-black and 1/4 to 1/2 inch wide.\" — whereas RHS's warning is unrestricted (\"Harmful if eaten\", plus a handling warning implying whole-plant contact). The field discloses the human-vs-pet scope disagreement but not this part-scope disagreement. What IS correct and should be kept: the verbatim NC State Poisonous to Humans block (#7 verified exactly, including the complete symptom list \"Vomiting, diarrhea.\" — there is no dose sentence at NC State to omit); the explicit statement that the Low severity rating is human-scoped and separate from any cat/dog field (accurate — NC State has no pet field); and the full verbatim RHS string, which correctly carries the \"Wear gloves and and other protective equipment when handling\" handling warning. SUGGESTED REPAIR: replace the Edibility paraphrase with NC State's verbatim sentence, list all four Plant Type tags (Herbaceous Perennial, Native Plant, Poisonous, Wildflower), re-quote citation #8 against the real Edibility text rather than the 2-tag slice, and add one clause noting that NC State scopes the poison to Fruits while RHS's warning is unrestricted.",
         "outdoor_sun_exposure — FLAGGED on audit (left as-is, needs manual review before landing): DROP \"full_sun\"; KEEP \"part_shade\" and \"full_shade\". part_shade and full_shade are unanimous and cleanly cited: RHS Position lists \"Full shade / Full sun / Partial shade\"; MOBOT's structured field is \"Sun: Part shade to full shade\"; NC State's Light field is \"Deep shade (Less than 2 hours to no direct sunlight)\" and \"Partial Shade (Direct sunlight only part of the day, 2-6 hours)\". full_sun rests on exactly one source and is contradicted by the structured sun field of both others. NC State's Light field lists only Deep shade and Partial Shade — full sun is absent, and NC State's own description prose bounds it the same way: \"Plant it in medium to wet average soil in partial to full shade, though it does best with some sun.\" MOBOT's structured Sun field is \"Part shade to full shade\" and its Culture sentence — the very sentence this record quotes for soil_base — says \"in part shade to full shade\". So the record quotes a MOBOT sentence that excludes full sun while simultaneously asserting full sun from RHS. The lone support is RHS, whose guidance is UK-climate-calibrated (the same page states its ratings \"refer to the UK growing conditions unless otherwise stated\"), for a plant that both North American sources treat as a woodland-shade understory perennial. Citation #9 is not itself fabricated — RHS's Position field and Cultivation prose genuinely do list full sun unconditionally, and the quote is verbatim — but a 2-of-3 structured-field contradiction puts the value in genuine doubt for a US-facing care app, where advising full sun for a shade woodland perennial is a real care risk. Additionally, this disagreement is disclosed nowhere in the record: neither name_note nor unknowns mentions that NC State and MOBOT exclude full sun. If full_sun is retained over this objection, that disagreement must at minimum be surfaced in a note.",
-        "outdoor_sun_exposure narrowed to part_shade and full_shade: only RHS lists full sun; NC State's Light field carries Deep shade and Partial Shade only, and MOBOT's structured field is 'Sun: Part shade to full shade' -- both North American sources treat it as a woodland-shade perennial."
+        "outdoor_sun_exposure narrowed to part_shade and full_shade: only RHS lists full sun; NC State's Light field carries Deep shade and Partial Shade only, and MOBOT's structured field is 'Sun: Part shade to full shade' -- both North American sources treat it as a woodland-shade perennial.",
+        "is_edible=true is conditional, not a bare edibility claim: NC State states young shoots and rootstock are edible only after boiling (shoots 10 minutes, rootstock 20 minutes), while the same page lists the plant as having 'low severity poison characteristics' with Poison Part 'Fruits', Poison Symptoms 'Vomiting, diarrhea', and Poison Toxic Principle 'Anthraquinone'; the fruit description separately calls the berries 'inedible (to humans)'.",
+        "RHS also flags the species 'Harmful if eaten. Wear gloves and and other protective equipment when handling' and 'TOXIC to pets if eaten (dogs)', consistent with NC State's poison listing -- included here because it is decision-relevant to the true is_edible flag, not as a separate field.",
+        "Size fields use NC State as the anchor (species-specific Dimensions block: Height 3 ft. 0 in.-6 ft. 0 in.; Width 2 ft. 0 in.-4 ft. 0 in.) rather than RHS (Max Height 1.5-2.5 metres = 59.1-98.4 in; Max Spread 0.5-1 metres = 19.7-39.4 in), per the rule that a species-specific NC State page takes precedence over RHS when both exist.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) returned a non-ok fetch status (network refusal) and was not consulted; nothing from it is reflected in this record.",
+        "Polygonatum biflorum is an herbaceous perennial, not a climber, so all four size fields were researched and filled per the normal rule (rule 4 on climbers does not apply)."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 48
     },
     {
       "chill_damage_f": null,
@@ -589,6 +688,24 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/46789/mertensia-virginica/details",
           "quote": "Moist but well–drained"
+        },
+        {
+          "claim": "mature_height_in 18-24 (NC State Height 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mertensia-virginica/",
+          "quote": "Height: 1 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mertensia-virginica/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field names pollinators)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/mertensia-virginica/",
+          "quote": "The flowers attract pollinators such as bumblebees, long-tongued bees, butterflies, skippers, moths, and hummingbirds."
         }
       ],
       "common_name": "Virginia bluebells",
@@ -629,14 +746,26 @@
         "Penn State Extension's rain-garden page separately notes the species is 'Moist, inundation tolerant' under a 'Hydrologic zone' field (i.e., tolerates occasional flooding in a rain-garden context), consistent with the 'moderate' soil_drainage reading (occasionally wet tolerated alongside a well-drained preference) rather than indicating a consistently wet/boggy requirement.",
         "name_note — removed on audit: The value contains a false statement. The note justifies the choice by saying \"it is the name led by two of the three single-species dedicated pages (Missouri Botanical Garden and RHS).\" RHS does not lead with \"Virginia bluebells\" — its page title is \"Mertensia virginica | Virginian bluebells\" (Virginian, with an n), which the note itself quotes correctly two clauses earlier and then contradicts. Only ONE of the three dedicated pages (MoBOT) leads with the exact string \"Virginia bluebells\". Sub-claim audit: (a) \"NC State Extension's dedicated page lists its common-name set starting with 'Blue and Pink Ladies'\" — CORRECT and cited; the live list runs Blue and Pink Ladies, Bluebells, Chiming Bells, Eastern Bluebells, Kentucky Bluebells, Lungwort Oysterleaf, Mertensia, Roanoke Bells, Smooth Lungwort, Virginia Bluebells, Virginia Cowslip, Virginia Spiderwort. (b) MoBOT \"Common Name: Virginia bluebells\" — CORRECT and cited. (c) RHS title \"Mertensia virginica | Virginian bluebells\" — CORRECT and cited, verified against the raw <title>. (d) \"NC State's list ordering is alphabetical rather than a stated primary name\" — TRUE but uncited; it is directly checkable from the twelve-name list above and can stand as an observation on the already-cited list. (e) \"the name led by two of the three\" — WRONG; drop it, do not re-cite it. Corrected wording for the final sentence: \"'Virginia bluebells' is used here as the common_name because Missouri Botanical Garden's dedicated page states it as a single primary name ('Common Name: Virginia bluebells') and leads its own common-name list with it, and RHS leads with the near-identical spelling variant 'Virginian bluebells'; NC State's twelve-name list is ordered alphabetically rather than by a stated primary name, which is why 'Blue and Pink Ladies' heads it.\" No material omission otherwise — the note does disclose both competing lead names.",
         "water_regime — removed on audit: keep_moist is read off a soil adjective and is propped up by a structured field that does not corroborate it. Its only prose support is MoBOT's trailing preference clause \"Prefers moist, rich soils.\" — quoted in isolation, with the sentence that immediately precedes it on the same page (\"Easily grown in average, medium, well-drained soils in part shade to full shade.\") dropped from the water_regime evidence, even though the record quotes that full sentence under soil_drainage. That is a dropped scope. Worse, the other citation is MoBOT's structured \"Water: Medium\" — the MIDDLE band of MoBOT's Dry / Dry to medium / Medium / Medium to wet / Wet scale — presented as if it supports the wettest available token. It does not; it is at best neutral and reads as tension, and nothing in unknowns discloses that tension. There is also an internal inconsistency: the record maps RHS's \"moist but well-drained\" to moderate drainage (correctly), then treats the same moisture language as justifying keep_moist without saying why the two readings diverge. The value may well survive repair — the WaterRegime enum has no middle token (keep_moist, keep_barely_moist, dry_surface_between, dry_thoroughly_between) and four sources use the word \"moist\" — but as cited it is not established. Repair: re-ground keep_moist on the species-specific moisture statements rather than the Medium band, using NC State's structured \"Soil Drainage: Good Drainage / Moist\" and RHS's structured \"Moisture: Moist but well–drained\" (both verified verbatim), relabel the \"Water: Medium\" citation so it is not presented as support, and add an unknowns entry disclosing that MoBOT's structured Water field places this mid-scale and that MoBOT's Culture lead is \"average, medium, well-drained soils.\" Separately, consider whether keep_moist needs a dormancy qualifier: this plant is fully dormant from mid-summer, and a year-round keep-moist instruction is care guidance no source gives for the dormant half of the year — cool_rest_note flags the gap, but the water field itself carries no such scoping.",
-        "water_regime keep_moist rests on NC State's 'Moist' drainage tag, RHS's 'moist but well-drained' Moisture field and MOBOT's 'Prefers moist, rich soils'; MOBOT's structured Water field places the species mid-scale ('Water: Medium') and its Culture lead is 'average, medium, well-drained soils' -- disclosed as a counterpoint."
+        "water_regime keep_moist rests on NC State's 'Moist' drainage tag, RHS's 'moist but well-drained' Moisture field and MOBOT's 'Prefers moist, rich soils'; MOBOT's structured Water field places the species mid-scale ('Water: Medium') and its Culture lead is 'average, medium, well-drained soils' -- disclosed as a counterpoint.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page states the plant or any part of it is eaten or grown for food, and neither states it is inedible/poisonous to eat.",
+        "NC State's Ethnobotany note says Native Americans used the roots 'as an antidote for poisons' -- this is a historical medicinal-use claim, not a statement that the plant itself is edible or toxic to eat, so it was not used to set is_edible.",
+        "No structured Toxicity or Poison-warning field was found on the NC State page for this species (the word 'toxicity' appears only inside an unrelated hashtag/tag list about black-walnut tolerance).",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277984 refused this machine's connection (ProxyError) -- could not be read; not used for any field.",
+        "Size fields (mature_height_in, mature_spread_in) were taken from NC State's Plant Toolbox 'Dimensions:' block, the designated anchor, rather than RHS's narrower 'Max Height'/'Max Spread' figures (0.1-0.5 metres each), per the priority rule that NC State's structured Dimensions block is used when present.",
+        "Species is a herbaceous perennial wildflower, not a vine/liana/climber, so the climber-exclusion rule for size fields does not apply.",
+        "No named-cultivar figures were used; all size data comes from the species-level NC State entry for Mertensia virginica."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "chill_damage_f": null,
@@ -736,6 +865,18 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/athyrium-filix-femina/",
           "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Dimensions Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/athyrium-filix-femina/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Dimensions Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/athyrium-filix-femina/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Lady Fern",
@@ -775,14 +916,24 @@
         "soil_ph_min is left null because NC State's Acid pH band for this species is open-ended ('<6.0') with no stated floor.",
         "RHS also lists 'female polypody' as an 'other common name' for Athyrium filix-femina, but this is a secondary/other-names field rather than the page's lead name, so it was not used as common_name.",
         "outdoor_sun_exposure — FLAGGED on audit (left as-is, needs manual review before landing): REFUTED on one entry only: drop \"part_sun\"; keep \"part_shade\" and \"full_shade\". Correct value: [\"part_shade\", \"full_shade\"].\n\nThree separate defects converge on part_sun, and it rests on one citation (cit 10) alone:\n\n(a) RELABELED QUOTE. The Clemson quote is verbatim -- I confirmed the page reads \"Grow in light shade to full shade throughout South Carolina except for the coast.\" But the quote says \"light shade,\" not part sun. The claim label \"supports outdoor_sun_exposure part_sun (light shade) through full_shade\" performs the mapping inside the parenthetical and presents it as if the source said it. Light shade is at or below partial shade on this catalog's ladder, not above it; mapping it to part_sun brightens the plant by a full step.\n\n(b) CONDITIONAL CLAUSE. The sentence is geographically conditional -- \"throughout South Carolina except for the coast\" -- i.e. Clemson explicitly carves out a region where this guidance does not hold. A value resting on a conditional clause should go.\n\n(c) CONTRADICTED BY BOTH STRUCTURED FIELDS. NC State's Light field for this exact species carries exactly three tags and no others: \"Dappled Sunlight (Shade through upper canopy all day); Deep shade (Less than 2 hours to no direct sunlight); Partial Shade (Direct sunlight only part of the day, 2-6 hours)\" -- there is no Partial Sun or Full Sun tag. RHS's Position field is \"Full shade, Partial shade\" and nothing more. Two structured sources cap this species at partial shade; a single hedged prose sentence should not outvote both.\n\nAlso note the record never used the strongest available part_shade citation. NC State carries the literal tag \"Partial Shade (Direct sunlight only part of the day, 2-6 hours)\" for this species, which supports part_shade directly; the record instead leans on the Dappled Sunlight tag. part_shade is not in doubt (RHS Position plus two NC State tags), but at repair time add that tag as a citation.\n\nOne further trap correctly avoided, worth confirming: UMD's lady fern page says \"prefers full to partial shade; somewhat tolerant of sunlight as long as soil moisture remains high\" -- that is a tolerance clause AND it is about the sibling species Athyrium asplenioides. It must not be used to rescue part_sun.",
-        "outdoor_sun_exposure: an earlier part_sun entry rested only on Clemson's 'light shade', which maps at or below partial shade; NC State's Light field and RHS's Position field both cap this species at partial shade."
+        "outdoor_sun_exposure: an earlier part_sun entry rested only on Clemson's 'light shade', which maps at or below partial shade; NC State's Light field and RHS's Position field both cap this species at partial shade.",
+        "is_edible left null: none of the readable pages (NC State Plant Toolbox, RHS, UMD Extension) mention eating this plant or any part of it, or state it is poisonous to eat -- no page addresses edibility at all, so no citation was recorded.",
+        "attracts_pollinators left null: no page carries a structured Attracts/wildlife field or an unconditional pollinator statement for this species. UMD Extension's only 'Pollinator' hit is the unrelated related-link title 'Pollinator Gardens', not a claim about Athyrium; NC State's page has zero hits for 'Attracts'; RHS has zero hits for 'Attracts' or 'Pollinator'.",
+        "hgic.clemson.edu/factsheet/hardy-ferns/ returned error:ProxyError on every fetch attempt through qc.py (with and without the host added to allowed_domains) -- this machine could not reach it, so it was not read and contributed nothing to this record.",
+        "Not a climber, so size fields were populated normally per the climber rule: NC State lists Habit/Form and RHS lists Habit: Clump forming for this species -- it is a clumping herbaceous perennial fern, not a vine or liana.",
+        "Size anchor: NC State Plant Toolbox has a species-specific page for Athyrium filix-femina with a structured Dimensions block (Height: 2 ft. 0 in. - 3 ft. 0 in.; Width: 1 ft. 0 in. - 3 ft. 0 in.), so it was used as the anchor per instructions rather than RHS. RHS separately gives Max Height and Max Spread of 0.5-1 metres (19.7-39.4 in) for the same species; that figure was not used since the NC State species page took priority, but it is broadly consistent with the NC State range.",
+        "UMD Extension's page is titled 'Lady Fern' but identifies the plant it actually describes as 'Athyrium asplenioides (formerly Athyrium filix-femina)' -- a related species since split out from A. filix-femina. Its size text ('Height: 1 - 3 feet') was therefore not used for any field on this A. filix-femina record; the page was only checked for edibility/toxicity/pollinator mentions relevant to ruling nothing in."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -876,6 +1027,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a240",
           "quote": "northern sea oats, Indian woodoats, North America wild oats, sea oats, spangel grass, river oats, creek oats, Indian sea-oats, inland oats, wild oats, woodland oats"
+        },
+        {
+          "claim": "mature_height_in 24-60 (NC State Plant Toolbox Dimensions block: Height: 2 ft. 0 in. - 5 ft. 0 in., converted to inches: 2 ft = 24 in, 5 ft = 60 in)",
+          "source": "NC State Extension Plant Toolbox - Chasmanthium latifolium",
+          "url": "https://plants.ces.ncsu.edu/plants/chasmanthium-latifolium/",
+          "quote": "Height: 2 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-30 (NC State Plant Toolbox Dimensions block: Width: 1 ft. 0 in. - 2 ft. 6 in., converted to inches: 1 ft = 12 in, 2 ft 6 in = 30 in)",
+          "source": "NC State Extension Plant Toolbox - Chasmanthium latifolium",
+          "url": "https://plants.ces.ncsu.edu/plants/chasmanthium-latifolium/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox structured Attracts field lists Pollinators, alongside Butterflies, Small Mammals and Songbirds, as an unconditional wildlife attribute of the species)",
+          "source": "NC State Extension Plant Toolbox - Chasmanthium latifolium",
+          "url": "https://plants.ces.ncsu.edu/plants/chasmanthium-latifolium/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Northern Sea Oats",
@@ -917,14 +1086,26 @@
         "Per the task's flag on aggressive self-seeding: NC State's species page states the plant 'can be a bit weedy as it self seeds easily' and warns gardeners to 'Watch its placement especially in smaller gardens as may spread aggressively by rhizomes and seeds.' Missouri Botanical Garden's Culture note likewise says it 'Self-seeds and may spread aggressively,' and its Uses note recommends naturalizing or mass plantings in home landscapes 'due to its tendency to spread.' Clemson HGIC frames the same rhizome spread positively, as erosion and sediment control along streambanks, rather than as a weediness warning. No schema field captures aggressive self-seeding or spread, so it is recorded here as decision-relevant for gardeners choosing this plant.",
         "is_houseplant is recorded as false on the consistent outdoor/landscape framing across all three profile sources (USDA hardiness zones, naturalized/streamside garden uses, RHS's outdoor Position/Aspect/Exposure fields); no admissible source explicitly states the plant is unsuitable indoors, so this reflects the plant's outdoor-only profile rather than a direct statement to that effect.",
         "light_fc_min/light_fc_good and direct_sun_hours_max are left null: no admissible source gives species-specific foot-candle figures, and NC State's 2-6 hour figure for its Partial Shade tag is the site-wide generic legend for that light category rather than species-specific prose, per instructions.",
-        "name_note — removed on audit: Refuted on one wrong sub-claim plus a material omission, though most of the bundle checks out. COVERED AND ACCURATE (verified verbatim, keep as-is): RHS titles the profile \"Chasmanthium latifolium | North America wild oats\" (exact <title>); RHS's \"Other common names\" paragraph reads exactly \"northern sea oats, sea oats, spangle grass\" and river oats is genuinely absent from every RHS name field; RHS Synonyms is \"Uniola latifolia\"; MOBOT's Noteworthy Characteristics contains \"This grass was once known as Uniola latifolia\"; NC State does publish parallel common-name alias pages, and https://plants.ces.ncsu.edu/plants/chasmanthium-latifolium/common-name/river-oats/ returns HTTP 200 with the exact title \"River Oats - Chasmanthium latifolium\" (siblings \"Northern Sea Oats - Chasmanthium latifolium\" and \"Inland Sea Oats - Chasmanthium latifolium\" also return 200, so that sub-claim is sound; there is at least a fourth, \"Indian Wood Oats - Chasmanthium latifolium\", so \"one titled River Oats and others titled Northern Sea Oats and Inland Sea Oats\" understates the set but says nothing false). WRONG — drop, do not re-cite: \"Missouri Botanical Garden's Plant Finder gives its single structured Common Name field as 'northern sea oats'\" mis-describes the source's structure. MOBOT's page carries the \"Common Name: northern sea oats\" line AND an expandable \"Common Names\" list of eleven names rendered on the same page — verbatim: \"northern sea oats, Indian woodoats, North America wild oats, sea oats, spangel grass, river oats, creek oats, Indian sea-oats, inland oats, wild oats, woodland oats\" (MOBOT's own spelling, \"spangel\"). River oats is the sixth entry. In a note whose entire subject is which sources do and do not carry \"river oats,\" calling MOBOT's structure \"single\" implies MOBOT does not recognize the name, which is false. UNCITED BUT TRUE — the material omission: name_note says NC State \"does not designate a single primary name among them,\" which is fair for the alias-page layer, but it omits that NC State's base species page has its own structured \"Common Name(s):\" field listing six names alphabetically — Indian Wood Oats, Inland Sea Oats, Northern Sea Oats, River Oats, Wild Oats, Wood-oat — mirrored in the H1 parenthetical, and that the same page's prose leads with the queried name: \"River Oats is a native, clump-forming, upright grass in the Poaceae (grass) family.\" With common_name landing as \"Northern Sea Oats,\" a reader deserves to know that of the three sources one leads with that name, one leads with \"North America wild oats,\" and the third runs its prose on \"River Oats.\" CORRECTED WORDING: \"Admissible sources split on the lead common name for this species. Missouri Botanical Garden's Plant Finder heads its profile with 'Common Name: northern sea oats,' though the same page's expandable Common Names list carries eleven names — 'northern sea oats, Indian woodoats, North America wild oats, sea oats, spangel grass, river oats, creek oats, Indian sea-oats, inland oats, wild oats, woodland oats' — river oats among them. RHS titles its dedicated species profile 'Chasmanthium latifolium | North America wild oats' and lists 'northern sea oats, sea oats, spangle grass' as other common names; river oats does not appear among RHS's names at all. NC State's Extension Gardener Plant Toolbox lists six names alphabetically in its 'Common Name(s):' field — Indian Wood Oats, Inland Sea Oats, Northern Sea Oats, River Oats, Wild Oats, Wood-oat — and publishes a parallel alias page for each, so its structured field designates no single primary name; its description prose, however, runs on River Oats: 'River Oats is a native, clump-forming, upright grass in the Poaceae (grass) family.' RHS and Missouri Botanical Garden both also record the older synonym Uniola latifolia.\""
+        "name_note — removed on audit: Refuted on one wrong sub-claim plus a material omission, though most of the bundle checks out. COVERED AND ACCURATE (verified verbatim, keep as-is): RHS titles the profile \"Chasmanthium latifolium | North America wild oats\" (exact <title>); RHS's \"Other common names\" paragraph reads exactly \"northern sea oats, sea oats, spangle grass\" and river oats is genuinely absent from every RHS name field; RHS Synonyms is \"Uniola latifolia\"; MOBOT's Noteworthy Characteristics contains \"This grass was once known as Uniola latifolia\"; NC State does publish parallel common-name alias pages, and https://plants.ces.ncsu.edu/plants/chasmanthium-latifolium/common-name/river-oats/ returns HTTP 200 with the exact title \"River Oats - Chasmanthium latifolium\" (siblings \"Northern Sea Oats - Chasmanthium latifolium\" and \"Inland Sea Oats - Chasmanthium latifolium\" also return 200, so that sub-claim is sound; there is at least a fourth, \"Indian Wood Oats - Chasmanthium latifolium\", so \"one titled River Oats and others titled Northern Sea Oats and Inland Sea Oats\" understates the set but says nothing false). WRONG — drop, do not re-cite: \"Missouri Botanical Garden's Plant Finder gives its single structured Common Name field as 'northern sea oats'\" mis-describes the source's structure. MOBOT's page carries the \"Common Name: northern sea oats\" line AND an expandable \"Common Names\" list of eleven names rendered on the same page — verbatim: \"northern sea oats, Indian woodoats, North America wild oats, sea oats, spangel grass, river oats, creek oats, Indian sea-oats, inland oats, wild oats, woodland oats\" (MOBOT's own spelling, \"spangel\"). River oats is the sixth entry. In a note whose entire subject is which sources do and do not carry \"river oats,\" calling MOBOT's structure \"single\" implies MOBOT does not recognize the name, which is false. UNCITED BUT TRUE — the material omission: name_note says NC State \"does not designate a single primary name among them,\" which is fair for the alias-page layer, but it omits that NC State's base species page has its own structured \"Common Name(s):\" field listing six names alphabetically — Indian Wood Oats, Inland Sea Oats, Northern Sea Oats, River Oats, Wild Oats, Wood-oat — mirrored in the H1 parenthetical, and that the same page's prose leads with the queried name: \"River Oats is a native, clump-forming, upright grass in the Poaceae (grass) family.\" With common_name landing as \"Northern Sea Oats,\" a reader deserves to know that of the three sources one leads with that name, one leads with \"North America wild oats,\" and the third runs its prose on \"River Oats.\" CORRECTED WORDING: \"Admissible sources split on the lead common name for this species. Missouri Botanical Garden's Plant Finder heads its profile with 'Common Name: northern sea oats,' though the same page's expandable Common Names list carries eleven names — 'northern sea oats, Indian woodoats, North America wild oats, sea oats, spangel grass, river oats, creek oats, Indian sea-oats, inland oats, wild oats, woodland oats' — river oats among them. RHS titles its dedicated species profile 'Chasmanthium latifolium | North America wild oats' and lists 'northern sea oats, sea oats, spangle grass' as other common names; river oats does not appear among RHS's names at all. NC State's Extension Gardener Plant Toolbox lists six names alphabetically in its 'Common Name(s):' field — Indian Wood Oats, Inland Sea Oats, Northern Sea Oats, River Oats, Wild Oats, Wood-oat — and publishes a parallel alias page for each, so its structured field designates no single primary name; its description prose, however, runs on River Oats: 'River Oats is a native, clump-forming, upright grass in the Poaceae (grass) family.' RHS and Missouri Botanical Garden both also record the older synonym Uniola latifolia.\"",
+        "is_edible left null: neither NC State Plant Toolbox page (canonical and common-name URLs, identical content) nor the RHS page addresses eating, food use, or edibility of Chasmanthium latifolium at all (searched \"Edible\" on both NC State URLs and on RHS with 0 hits on each) -- no record of edibility either way.",
+        "Searched NC State (both URLs) and RHS for \"Poison\", \"Toxic\", and \"Problem\"/\"Problems\" per rule 5 before setting is_edible: NC State's Problems field lists only \"Weedy\" and its narrative Problems text says only that it self-seeds easily and can be weedy; RHS has no Poison/Toxic field at all (0 hits). No toxicity, poisonous part, severity, or pets warning was found on any page, consistent with is_edible being null (no record) rather than false.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a240 could not be reached from this machine (network sandbox refused the connection to plantfinder.mobot.org) -- skipped per instructions, not used for any field or as a basis for any null.",
+        "Species is a clump-forming, upright grass (Poaceae), not a vine, liana, or other climber, so rule 4 (no size for climbers) does not apply -- all four size fields were researched normally from NC State's Dimensions block.",
+        "RHS's own Max Height (0.5-1 metres) and Max Spread (0.1-0.5 metres) figures were found but not used, since NC State's structured Dimensions block is the anchor and takes precedence per the sourcing rule; RHS was checked for edibility/toxicity/pollinator language instead, with 0 hits on \"Edible\", \"Poison\", \"Toxic\", \"Attracts\", and \"pollinat\".",
+        "attracts_pollinators set true from NC State's structured Attracts field naming Pollinators and Butterflies unconditionally (not from seed-eating by Small Mammals/Songbirds, which is also listed in the same field but does not count as pollination support).",
+        "attracts_pollinators rests on NC State's structured Attracts field (Butterflies, Pollinators, Small Mammals, Songbirds). The same page says 'Flowers bloom from June to October and are wind pollinated.' and tags the plant #wind pollinated, and its Wildlife Value names the butterfly link as larval hosting (Northern Pearly-Eye and several skipper butterflies) and mentions no flower visits -- noted at landing, verified against the cached copy."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 30
     }
   ],
   "audit_summary": [
@@ -955,6 +1136,7 @@
   ],
   "normalizations": [
     "2026-09-02: thirty-second batch (overnight throttle; 1.22M subagent tokens) -- a native woodland set: Foamflower, Canadian Wild Ginger, Solomon's Seal, Virginia Bluebells, Lady Fern, and Northern Sea Oats (researched as River Oats; landed under MOBOT's Common Name line, with the name_note recording that river oats sits sixth in MOBOT's own eleven-name list and that NC State publishes a River Oats alias page). land_check.py and covered.py ran clean; verify_quotes.py 78/79 reachable quotes, the miss a benign RHS title-plus-list. Repairs, each from the auditor's live-verified text: Canadian Wild Ginger's toxicity citation had truncated NC State's 'Poison Part: Leaves, Roots, Stems' to 'Leaves' -- the rhizome being the part people dig up as a ginger substitute -- and its RHS name citation carried a Position-field quote; both citations corrected, prose kept. Solomon's Seal's toxicity_detail restored with NC State's exact preparation times ('boiled for 10 minutes' / 'boiled for 20 minutes'), its full four-trait Plant Type list, its fruit-only poison-part scope disclosed against RHS's unrestricted 'Harmful if eaten', and its outdoor_sun_exposure narrowed to shade after both North American structured fields excluded full sun (only UK-calibrated RHS lists it); toxic_to_pets=true rests on RHS naming dogs. Virginia Bluebells' name_note had claimed two of three sources lead with 'Virginia bluebells' when RHS leads with 'Virginian' -- corrected; its water_regime keep_moist re-grounded on NC State's Moist tag and RHS's 'moist but well-drained' field with MOBOT's mid-scale 'Water: Medium' disclosed rather than presented as support. Lady Fern lost a part_sun that rested on Clemson's 'light shade' (at or below partial shade, and regionally conditional). Foamflower's 'ground cover' quote was a paraphrase, replaced with the page's sentence, and a stray escaped-quote artifact in its drainage quote cleaned. toxic_to_pets: Solomon's Seal true (RHS: dogs); the other five null with no cat/dog-scoped source -- including Wild Ginger, whose aristolochic-acid hazard is human-scoped on NC State and unscoped on RHS.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Canadian Wild Ginger -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Canadian Wild Ginger -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
