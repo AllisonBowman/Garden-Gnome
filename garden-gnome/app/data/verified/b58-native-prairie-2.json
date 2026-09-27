@@ -123,6 +123,30 @@
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/62079/andropogon-gerardii/details",
           "quote": "beard grass, shepherd's beard"
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field states non-edible)",
+          "source": "NC State Extension Gardener Plant Toolbox — Andropogon gerardi",
+          "url": "https://plants.ces.ncsu.edu/plants/andropogon-gerardi/",
+          "quote": "non-edible"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field entry)",
+          "source": "NC State Extension Gardener Plant Toolbox — Andropogon gerardi",
+          "url": "https://plants.ces.ncsu.edu/plants/andropogon-gerardi/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 48-96 (NC State Height 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Andropogon gerardi",
+          "url": "https://plants.ces.ncsu.edu/plants/andropogon-gerardi/",
+          "quote": "Height: 4 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Andropogon gerardi",
+          "url": "https://plants.ces.ncsu.edu/plants/andropogon-gerardi/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Big Bluestem",
@@ -164,14 +188,24 @@
         "Clemson HGIC's only relevant content is a subsection heading ('Big Bluestem (Andropogon gerardii)') inside the multi-species factsheet 'Ornamental Grasses and Grass-like Plants,' not a dedicated single-species page.",
         "ask.ifas.ufl.edu and edis.ifas.ufl.edu were searched; no dedicated or section-level content specifically on Andropogon gerardii was found there (a UF/IFAS South Florida landscape-plants publication's grasses table did not surface a big bluestem entry in the fetched content), so no UF/IFAS citations appear in this record.",
         "MoBot's Common Names tooltip/list behind the displayed 'Common Name:' field was not inspected (it did not render in the fetched static page content).",
-        "2026-09-03 landing: name_note restored with the auditor's corrections -- the UGA heading is quoted in full (it carries the binomial), the MoBot 'tooltip not inspected' hedge is gone (the page has no list), MoBot's one-i spelling and RHS's synonym and other names are now cited, and rubric shorthand is removed."
+        "2026-09-03 landing: name_note restored with the auditor's corrections -- the UGA heading is quoted in full (it carries the binomial), the MoBot 'tooltip not inspected' hedge is gone (the page has no list), MoBot's one-i spelling and RHS's synonym and other names are now cited, and rubric shorthand is removed.",
+        "Only https://plants.ces.ncsu.edu/plants/andropogon-gerardi/ was needed: it is a species-specific NC State Plant Toolbox page (not a genus page) carrying structured Dimensions, Edibility, and Attracts fields covering all six requested fields, so it served as the anchor for every field per the task's precedence rule and the other three listed pages (Missouri Botanical PlantFinder, RHS, UGA Extension) were not queried.",
+        "Searched the anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: zero hits for all three, so no toxicity/pets warning exists on this page to carry into unknowns.",
+        "Big Bluestem is a perennial bunchgrass, not a vine/liana/climber, so the climber-null rule (rule 4) does not apply and all four size fields were populated normally.",
+        "No cultivar name is associated with the size or edibility/pollinator statements on the anchor page; the figures are given for the species."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -661,6 +695,18 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286153",
           "quote": "Flowering stems tend to flop in too much shade."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS Anemone canadensis details page",
+          "url": "https://www.rhs.org.uk/plants/86513/anemone-canadensis/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS Anemone canadensis details page",
+          "url": "https://www.rhs.org.uk/plants/86513/anemone-canadensis/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
       ],
       "common_name": "Canada Anemone",
@@ -700,14 +746,24 @@
         "humidity_need, humidity_pct_min/max, light_fc_min/good, direct_sun_hours_max, day/night temperature fields, chill_damage_f, cool_rest_note, and all fertilize_* fields left null: no admissible source frames Anemone canadensis in these terms — it is treated throughout as a hardy in-ground perennial (USDA zones 3-8 per MoBot, RHS hardiness H6) rather than with houseplant-style humidity/light-meter/feeding guidance.",
         "Aggressive-spreading behavior is documented by both MoBot ('Rhizomatous plant that can spread aggressively in the landscape') and RHS ('may have the potential to become a nuisance in favourable conditions') but there is no schema field to capture it; noted here as decision-relevant context per the task description.",
         "outdoor_sun_exposure carries full_sun and part_shade only: Penn State's 'Dry Shade Perennials' list mentioned the species, but that is a suggested-use list in a multi-species article, MoBot's Sun field tops out at part shade, RHS's Position is Partial shade, and MoBot warns that flowering stems flop in too much shade; part_sun is not included because no admissible source uses that term for this species.",
-        "2026-09-03 landing: outdoor_sun_exposure trimmed from full_sun/part_shade/full_shade to full_sun/part_shade on the auditor's finding (full_shade rested on a Penn State suggested-use list and is contradicted by MoBot's flop warning and both structured sun fields). scientific_name_accepted and soil_base restored (values confirmed) with honest citations: the RHS Name Status claim now describes the two elements, MoBot's binomial sentence and Uses section are cited, and the false 'MoBot and RHS both' attribution is scoped to RHS. name_note rewritten: RHS files American meadow anemone under Other common names and does not lead with it; the tooltip pseudo-quote is replaced by the rendered field. common_name cased Canada Anemone."
+        "2026-09-03 landing: outdoor_sun_exposure trimmed from full_sun/part_shade/full_shade to full_sun/part_shade on the auditor's finding (full_shade rested on a Penn State suggested-use list and is contradicted by MoBot's flop warning and both structured sun fields). scientific_name_accepted and soil_base restored (values confirmed) with honest citations: the RHS Name Status claim now describes the two elements, MoBot's binomial sentence and Uses section are cited, and the false 'MoBot and RHS both' attribution is scoped to RHS. name_note rewritten: RHS files American meadow anemone under Other common names and does not lead with it; the tooltip pseudo-quote is replaced by the rendered field. common_name cased Canada Anemone.",
+        "plantfinder.mobot.org refused this machine (ProxyError on direct fetch and again with plantfinder.mobot.org added to allowed_domains) -- could not read the Missouri Botanical Garden Plant Finder page for this species; no Height/Spread/Attracts/Edible/Poison data from that source could be checked.",
+        "is_edible left null: neither the RHS details page nor the PSU underplanting-trees page contains any 'edible', 'Edible', 'food', or eating-related language for Anemone canadensis. No page addresses eating it at all.",
+        "attracts_pollinators left null: RHS page has no 'Attracts', 'Pollinator', 'butterfl', 'bee', or 'hummingbird' hits for this species (only one unrelated 'Wildlife' hit, from an RHS site-navigation link to a general 'Wildlife gardening' section, not a species-specific attracts field). PSU page only lists Canada anemone by name in a 'Dry Shade Perennials' list with no attributes attached.",
+        "Searched RHS page for 'Poison', 'Toxic', and 'Problem for' per the toxicity-check step before considering is_edible: zero hits for all three. No toxicity information is present on the anchor pages, so it is not being withheld from unknowns -- it simply isn't there.",
+        "PSU 'Underplanting Trees - Respect the Roots' page mentions 'Canada anemone (Anemone canadensis)' only as a list entry under 'Dry Shade Perennials'; it carries no height, spread, edibility, or pollinator text specific to this species and contributed no field values.",
+        "mature_height_in and mature_spread_in taken from RHS 'Max Height 0.1-0.5 metres' and 'Max Spread 0.1-0.5 metres' (this is the species page, not a genus page, so RHS applies directly per the sourcing rule). Converted: 0.1 m x 39.37 = 3.937 in (rounded to 3.9, one decimal, as this chunk rounds the same bound for Prairie Smoke and Grey-head Coneflower and as the corpus's earlier RHS conversions do; corrected at landing from 3.94), 0.5 m x 39.37 = 19.685 in (rounded to 19.7)."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "chill_damage_f": null,
@@ -795,6 +851,24 @@
           "quote": "hardy in the severest European continental climates (< -20)",
           "source": "RHS Plant Profile — Geum triflorum | grandfather's beard",
           "url": "https://www.rhs.org.uk/plants/7984/geum-triflorum/details"
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches via x39.37)",
+          "source": "RHS Geum triflorum details page",
+          "url": "https://www.rhs.org.uk/plants/7984/geum-triflorum/details",
+          "quote": "Max Height         0.1-0.5 metres                 Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches via x39.37)",
+          "source": "RHS Geum triflorum details page",
+          "url": "https://www.rhs.org.uk/plants/7984/geum-triflorum/details",
+          "quote": "Max Height         0.1-0.5 metres                 Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS structured tag on the species page)",
+          "source": "RHS Geum triflorum details page",
+          "url": "https://www.rhs.org.uk/plants/7984/geum-triflorum/details",
+          "quote": "Plants for pollinators"
         }
       ],
       "common_name": "Prairie Smoke",
@@ -835,14 +909,25 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are all left null: MoBot's only moisture field is the mid-scale structured rating 'Water: Dry to medium,' which does not map cleanly onto the keep_moist/keep_barely_moist/dry_surface_between/dry_thoroughly_between enum without guessing, and neither admissible source frames watering for this in-ground perennial as a cadence or dry-down-depth statement.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: neither admissible source discusses fertilizing this species.",
         "outdoor_sun_exposure includes only full_sun: MoBot's own structured Sun field lists only 'Full sun' (its body text mentioning shade tolerance is a conditional/hot-summer aside, not an unconditional statement), while RHS's structured Position field lists 'Full sun, Partial shade' unconditionally. Per the rule that a value excluded by another admissible source's structured sun field is left out, partial_shade was not included here despite RHS supporting it on its own.",
-        "2026-09-03 landing: common_name cased as Prairie Smoke (catalog title case)."
+        "2026-09-03 landing: common_name cased as Prairie Smoke (catalog title case).",
+        "is_edible left null: the RHS details page has no mention of eating, edibility, poison, toxicity, or 'problem for' text for Geum triflorum; searched for 'Edible', 'Poison', 'Toxic' with zero hits on all three.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, the intended anchor page) refused this machine with a ProxyError on every attempt -- could not fetch it, so its content is not reflected here at all; not guessed.",
+        "No NC State Plant Toolbox page exists for this species in the two pages supplied, so RHS is the size source per the fallback rule; RHS labels the fields 'Max Height' / 'Max Spread' in metres, not 'Ultimate height' (which had zero hits).",
+        "The RHS page's only pollinator support is the structured 'Plants for pollinators' tag; there is no unconditional bee/butterfly/hummingbird text and no 'Attracts' field, but the tag itself is sufficient per the rules.",
+        "The figures used (0.1-0.5 metres for both Max Height and Max Spread) are for the species Geum triflorum itself, not for the cultivar named in the page's Synonyms line ('Geum triflorum 'Prairie Smoke''), so the cultivar-exclusion rule does not apply here.",
+        "Geum triflorum is a clump-forming herbaceous perennial, not a vine/liana/climber, so the climber-null rule does not apply and all four size fields were filled normally."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "chill_damage_f": null,
@@ -1049,6 +1134,7 @@
   ],
   "normalizations": [
     "2026-09-03: fortieth batch (cruise throttle) -- a second native prairie set: Big Bluestem, Sideoats Grama, Wild Quinine, Canada Anemone, Prairie Smoke, and Purple Poppy Mallow. Research completed on the first run; the Opus verify stage then hit API 529 Overloaded on four attempts over about an hour (five of six audits on the first run, all six with zero tokens on three resumes), the null-verdict guard flagging the records unverified each time. The loop was stopped and the user said 'resume'; the fifth, user-directed resume replayed the cached research and completed all six audits (633k subagent tokens). land_check.py and covered.py ran clean; verify_quotes.py 63/63 reachable quotes after repair (MoBot-heavy batch, 42 unreachable from the sandbox). Nine audit findings and one flagged list field. Two changed a value: Sideoats Grama's soil_drainage came back fast and lands as moderate -- no admissible source states a sharp-drainage requirement, MoBot's Culture says 'average, dry to medium moisture soils' and tolerance 'from well-drained sandy soils to heavy clays', and the two citations carrying 'fast' (a tolerance tag list and a dry-soil pH preference) said nothing about drainage; Canada Anemone's outdoor_sun_exposure drops full_shade, which rested on a Penn State suggested-use list in a multi-species article and is contradicted by MoBot's 'Flowering stems tend to flop in too much shade' and by both structured sun fields. The rest were description and citation-form defects with values kept: an invented NC State 'alphabetization convention' (three records), a MoBot 'tooltip not inspected' hedge on a page with no tooltip (Big Bluestem), a UGA heading quoted as 'exactly' when truncated, a Penn State table row counted as leading with a common name when it leads with the binomial, RHS's 'American meadow anemone' called a lead when it sits under Other common names, a false 'MoBot and RHS both' attribution on a single RHS citation, a synthesized two-line tooltip pseudo-quote, an 'exactly one dedicated page' count that conflated prose with lead names (Wild Quinine), and a prose citation whose sentence did not contain the name it was cited for. Five NC State dt labels stripped. Prairie Smoke landed with zero findings. Three common names cased to catalog title case. No collisions with landed batches; Anemone canadensis has no NC State page, so its toxicity fields stay null on silence.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
