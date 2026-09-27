@@ -65,12 +65,38 @@ def wave_of(batch_name: str, record) -> int:
     return 2
 
 
-def collect():
+def _name_key(name):
+    return " ".join((name or "").replace("\u00d7", "x").lower().split())
+
+
+def asked(extra_dirs=()):
+    """Every species a previous backfill round already researched AND audited.
+
+    A species that is still missing a size after being asked is almost always one
+    whose pages have no size to give -- a climber under the no-size rule, or a page
+    with no Dimensions block -- and asking again costs the same ~160k tokens and
+    returns the same null. Round 2 re-asked fifteen such species and gained no
+    size for any of them. A species whose research or audit never came back is
+    NOT in `landed`, so it stays eligible.
+    """
+    seen = set()
+    for d in (OUT, *extra_dirs):
+        for p in glob.glob(str(Path(d) / "size-*result.json")):
+            for e in json.loads(Path(p).read_text()).get("landed", []):
+                rec = e.get("record") or {}
+                seen.add(_name_key(rec.get("scientific_name_accepted")))
+    seen.discard("")
+    return seen
+
+
+def collect(skip=frozenset()):
     rows = []
     for path in sorted(glob.glob(str(VERIFIED / "b*.json"))):
         batch = Path(path).name
         for r in json.loads(Path(path).read_text())["records"]:
             if has_size(r):
+                continue
+            if _name_key(r.get("scientific_name_accepted") or r.get("scientific_name_given")) in skip:
                 continue
             urls = []
             for c in r.get("citations", []):
@@ -92,9 +118,16 @@ def main() -> int:
     ap.add_argument("--waves", type=int, default=3)
     ap.add_argument("--batch", type=int, default=8, help="species per workflow run")
     ap.add_argument("--write", action="store_true", help="write the wave files")
+    ap.add_argument("--include-asked", action="store_true",
+                    help="plan species a previous round already asked about too")
+    ap.add_argument("--asked-dir", action="append", default=[],
+                    help="another directory of size-*result.json files to count as asked")
     args = ap.parse_args()
 
-    rows = collect()
+    skip = frozenset() if args.include_asked else asked(args.asked_dir)
+    rows = collect(skip)
+    if skip:
+        print(f"skipping {len(skip)} species a previous round already asked (--include-asked to plan them)")
     # Sort by the priority band, then by batch so one workflow run touches as
     # few files as possible -- a merge that rewrites one file is easier to
     # review than one that rewrites eight.
