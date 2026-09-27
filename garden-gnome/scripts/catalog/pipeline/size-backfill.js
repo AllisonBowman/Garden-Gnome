@@ -161,7 +161,15 @@ const results = await pipeline(
 //    other. Quote repairs go to `review` for the landing step to ground-truth
 //    with qc.py, which is what the landing brief has always prescribed.
 const landed = []
+// An audit that never came back (usage limit, network, a crashed agent) is NOT an audit
+// that found nothing. Before this guard, a null verdict fell through `verdict?.findings || []`
+// as zero refutations and the unaudited record landed as if it had passed.
+const unverified = []
 for (const r of results.filter(Boolean)) {
+  if (!r.verdict || !Array.isArray(r.verdict.findings)) {
+    unverified.push(r.species.latin)
+    continue
+  }
   const { species, record, verdict } = r
   const rec = { ...record }
   const applied = []
@@ -206,4 +214,7 @@ for (const r of results.filter(Boolean)) {
 const nulled = landed.reduce((n, e) => n + e.applied.length, 0)
 const flagged = landed.reduce((n, e) => n + e.review.length, 0)
 log(`${landed.length} species; ${nulled} field(s) nulled on audit, ${flagged} item(s) for landing review.`)
-return { landed }
+if (unverified.length) log(`UNVERIFIED, held back (audit missing): ${unverified.join(', ')}`)
+const noResearch = SPECIES.filter((s) => !results.some((r) => r && r.species.latin === s.latin)).map((s) => s.latin)
+if (noResearch.length) log(`NO RESEARCH, held back: ${noResearch.join(', ')}`)
+return { landed, unverified, no_research: noResearch }
