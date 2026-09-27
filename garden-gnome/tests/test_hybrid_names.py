@@ -125,8 +125,13 @@ def test_the_pre_landing_dedup_catches_a_hybrid_already_in_the_corpus():
     for spelling in ("Abelia × grandiflora", "Abelia ×grandiflora",
                      "Abelia x grandiflora"):
         assert covered.key(spelling) in landed, spelling
+    # The nine were dropped before research and landed in b89 (2026-09-27). Before that this asserted the
+    # opposite -- that none was in the corpus yet. Now the dedup must find every one of them, whichever of
+    # the three spellings a future candidate list uses, or a second research run could land a duplicate.
     for name in DROPPED_NINE:
-        assert covered.key(name) not in landed, name
+        assert covered.key(name) in landed, name
+        assert covered.key(name.replace("× ", "×")) in landed, name
+        assert covered.key(name.replace("×", "x")) in landed, name
 
 
 def test_the_dedup_key_still_strips_a_cultivar_tail_from_a_hybrid():
