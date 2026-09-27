@@ -705,6 +705,30 @@
           "source": "NC State Extension Gardener Plant Toolbox - Viburnum nudum",
           "url": "https://plants.ces.ncsu.edu/plants/viburnum-nudum/",
           "quote": "5a, 6a, 6b, 7a, 7b, 8a, 8b, 9a, 9b"
+        },
+        {
+          "claim": "mature_height_in 60-144 (NC State Height: 5 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/viburnum-nudum/",
+          "quote": "Height: 5 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-144 (NC State Width: 5 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/viburnum-nudum/",
+          "quote": "Width: 5 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Pollinators alongside Butterflies)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/viburnum-nudum/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible true, conditional on ripe fruit only (NC State: ripe drupes are used in jams)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/viburnum-nudum/",
+          "quote": "Ripe drupes can be used in jams."
         }
       ],
       "common_name": "Smooth Witherod",
@@ -745,14 +769,24 @@
         "direct_sun_hours_max left null per the task rule against using NC State's site-wide light-category legend text (the '6 or more hours' / '2-6 hours' figures in the Light field are the generic category legend, not a species-specific sun-hours statement).",
         "hgic.clemson.edu, edis.ifas.ufl.edu, ask.ifas.ufl.edu, extension.psu.edu, extension.umd.edu, and fieldreport.caes.uga.edu were each searched (via site-restricted web search) for Viburnum nudum-specific content; none returned an admissible dedicated page or section for this species, so this record relies on NC State Extension and Missouri Botanical Garden's Plant Finder only.",
         "MoBot's family placement (Adoxaceae) differs from NC State's (Viburnaceae) -- a modern-classification difference between the two sources' pages, noted here for transparency though it is not one of the requested schema fields.",
-        "common_name researched as Possumhaw Viburnum; landed as Smooth Witherod on MoBot's single-value Common Name field and NC State's Description opening (NC State's alphabetized list leads with Possumhaw Viburnum; disclosed in name_note)."
+        "common_name researched as Possumhaw Viburnum; landed as Smooth Witherod on MoBot's single-value Common Name field and NC State's Description opening (NC State's alphabetized list leads with Possumhaw Viburnum; disclosed in name_note).",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) -- could not check RHS's size, edibility, or pollinator wording; all six fields rest on the NC State page alone.",
+        "is_edible is conditional, not unconditional: NC State says 'Ripe drupes can be used in jams' and describes the fruit as 'acidic but edible' -- only the ripe fruit is the edible part, not foliage/bark/unripe fruit, and no other part of the plant is described as food.",
+        "Searched the NC State page for 'Poison', 'Toxic', and 'Problem for' -- zero hits for all three, so no toxic-part or pets warning was found to carry into this record.",
+        "Viburnum nudum is a shrub, not a climber (NC State Plant Type lists Woody, Perennial, Shrub), so rule 4's climber exclusion does not apply and the size fields were filled normally."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 144
     },
     {
       "chill_damage_f": null,
@@ -1280,6 +1314,7 @@
   ],
   "normalizations": [
     "2026-09-05: fifty-fifth batch (cruise throttle) -- native wetland shrubs: Hazel Alder, Red Chokeberry, Swamp Rose, Smooth Witherod, Swamp Azalea, and Leatherwood. Clean first run (12/12 agents, 1.37M subagent tokens); land_check.py and covered.py clean; verify_quotes.py 79 hit / 0 MISS before repair with 37 skipped, all MoBot connection errors from this machine (third batch running; the MoBot quotes stand on the auditor's live fetches). Value changes on the audit's findings: Cyrilla racemiflora lands as Leatherwood -- MoBot's Common Name field and RHS's page header both lead with it, while the researched 'Swamp Titi' was NC State's body-prose name and the seventh of eight alphabetized entries, chosen on an unsourced worry about Dirca palustris; Red Chokeberry gains its accepted name and an 8.0 pH ceiling (Penn State 'can tolerate a pH of up to 8.0', RHS pH 'Acid or Neutral') from the RHS species page the research pass missed and the auditor found; Swamp Rose drops part_shade (a tolerance in both sources' species prose, excluded by MoBot's Sun field) and, at landing under the structured-field-first drainage rule, moves from moisture_retentive to moderate (NC State's field pairs Good Drainage with Moist; the boggy-soil requirement prose is carried by water_regime keep_moist and disclosed); Swamp Azalea drops full_sun on two species scorch warnings ('Avoid afternoon sun which can scorch the leaves.'; 'Foliage may scorch in full sun unless soils are kept uniformly moist.') and MoBot's Part-shade-only Sun field. is_houseplant false was restored for Smooth Witherod and Swamp Azalea on completed Plant Type lists plus USDA zone fields. One auditor repair was declined: the fifth Plant Type value it wanted for Swamp Azalea ('Woody Plant') is the start of NC State's next label, Woody Plant Leaf Characteristics, not a value -- the cached page shows four values, as the record had them. Two researched names changed on the researchers' own findings (Tag Alder -> Hazel Alder on MoBot's single-value field and NC State's prose; Possumhaw Viburnum -> Smooth Witherod on the same pattern), each disclosed. Every name_note was replaced with the auditor's corrected wording (the invented 'three or more entries marks no primary' convention appeared in four records; a false 'only ... never' claim for Tag Alder; an overstated 'both lead with' for Smooth Witherod; an invented 'genus-umbrella' reading of MoBot's bare 'chokeberry'). Three more MoBot tooltip quotes reconstructed from overlib markup were removed or replaced with rendered prose; six NC State label+value stacks were trimmed to the value; an eight-name space-joined run-on was replaced with the stacked field and the H1 parenthetical; an orphan 'handling statement' citation quoting a morphology sentence and a fertilize citation quoting a pest sentence were dropped; every one-word 'Correct' Name Status citation was paired with the page title or header. water_regime keep_moist stands on explicit requirements for Swamp Azalea ('Roots must never be allowed to dry out.'), Swamp Rose (MoBot Water: Wet plus 'Best grown in ... boggy to wet soils') and Leatherwood ('evenly moist to wet ... soils'; 'adequate moisture is provided during dry periods'), and is null for Hazel Alder, Red Chokeberry and Smooth Witherod. Swamp Azalea is toxic_to_pets=true on NC State's cat- and dog-scoped Problems tags and RHS's 'Pets (dogs, cats, rabbits, tortoises)'; the other five are null (Leatherwood's only toxicity statement concerns honeybees).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

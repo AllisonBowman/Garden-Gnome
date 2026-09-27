@@ -573,6 +573,30 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/plantfinderdetails.aspx?kempercode=a868",
           "quote": "Suggested Use: Shade Tree, Street Tree"
+        },
+        {
+          "claim": "mature_height_in 600-840 (NC State Height: 50 ft. 0 in. - 70 ft. 0 in., converted to inches: 50x12=600, 70x12=840)",
+          "source": "NC State Extension Gardener Plant Toolbox — Fraxinus pennsylvanica",
+          "url": "https://plants.ces.ncsu.edu/plants/fraxinus-pennsylvanica/",
+          "quote": "Height: 50 ft. 0 in. - 70 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 420-600 (NC State Width: 35 ft. 0 in. - 50 ft. 0 in., converted to inches: 35x12=420, 50x12=600)",
+          "source": "NC State Extension Gardener Plant Toolbox — Fraxinus pennsylvanica",
+          "url": "https://plants.ces.ncsu.edu/plants/fraxinus-pennsylvanica/",
+          "quote": "Width: 35 ft. 0 in. - 50 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Pollinators, alongside Butterflies and Moths)",
+          "source": "NC State Extension Gardener Plant Toolbox — Fraxinus pennsylvanica",
+          "url": "https://plants.ces.ncsu.edu/plants/fraxinus-pennsylvanica/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: bark used in cooking as a thickener)",
+          "source": "NC State Extension Gardener Plant Toolbox — Fraxinus pennsylvanica",
+          "url": "https://plants.ces.ncsu.edu/plants/fraxinus-pennsylvanica/",
+          "quote": "Bark can be used in cooking as a thickener for soups or mixed with grain in making bread."
         }
       ],
       "common_name": "Green Ash",
@@ -609,14 +633,27 @@
         "day_f_min/max, night_f_min/max, chill_damage_f, humidity fields, light_fc fields, direct_sun_hours_max, water_regime, water_dry_down_target, water_check_depth_cm, water_growing/dormant_days_est, water_estimate_basis, and all fertilize_* fields left null: this is an in-ground native shade tree and no admissible source frames watering, fertilizing, or temperature/humidity tolerance in these terms (rule 6 also directs leaving day-interval/dry-down fields null for an in-ground tree absent a source framing watering that way).",
         "soil_ph_min left null: NC State's Soil pH field shows a closed Neutral (6.0-8.0) band plus an open-ended Acid (<6.0) band, so no floor can be set; the RHS species page for this species carries no cultivation/pH section to cross-check against, so per rule 6 the floor is left null and disclosed rather than assumed.",
         "The RHS species page (rhs.org.uk/plants/7320/fraxinus-pennsylvanica/details) was confirmed by both URL slug and page title ('Fraxinus pennsylvanica | green ash') to be this species, but unlike RHS cultivar pages it carries no cultivation/growing-conditions section (no Position, Soil, pH, Hardiness, or Ultimate height fields) -- only Botanical Details (Family, Native to GB/Ireland, Genus, Name Status, Plant Range) and Other common names/Synonyms. This is why no soil/light/hardiness data was drawn from RHS for this species.",
-        "No admissible-source content found distinguishing Green Ash from Red Ash as separate taxa for care purposes -- NC State treats 'Red Ash' and 'Water Ash' as auto-generated alias pages of this same Fraxinus pennsylvanica record, not a split species, so no Red-Ash-specific values were sought or included."
+        "No admissible-source content found distinguishing Green Ash from Red Ash as separate taxa for care purposes -- NC State treats 'Red Ash' and 'Water Ash' as auto-generated alias pages of this same Fraxinus pennsylvanica record, not a split species, so no Red-Ash-specific values were sought or included.",
+        "Fraxinus pennsylvanica is a tree, not a climber, so rule 4 (no size for climbers) does not apply; all four size fields are filled from the NC State anchor page's structured Dimensions block.",
+        "Searched the anchor NC State page (and its identical common-name-slug duplicate) for 'Poison', 'Toxic', and 'Problem for' -- 0 hits for Poison/Toxic; 'Problem' hits refer only to insect and disease problems (e.g. emerald ash borer, fungal leaf spots), not human/pet toxicity or a poisonous plant part. No toxicity, pets warning, severity, toxic principle, or preparation requirement was found on the cited page, so none is added despite is_edible being true.",
+        "https://plantfinder.mobot.org/plantfinderdetails.aspx?kempercode=a868 refused this machine (error:ConnectError) -- skipped; did not guess what it would have said.",
+        "https://www.rhs.org.uk/plants/7320/fraxinus-pennsylvanica/details fetched successfully (title matched) but is JS-rendered from this fetch path: searched for both 'Max Height'/'Max Spread' and 'Ultimate height', plus 'Edible', 'Poison', 'Toxic', 'Attracts', 'pollinator', 'bee', 'butterfl', 'wildlife', 'insects', 'award' -- all 0 hits except boilerplate nav text ('Wildlife gardening' menu item, generic genus blurb). No usable size, edibility, or pollinator data was recoverable from this page via the fetch-and-extract path, so it contributed nothing (not used as a null-basis for anything since NC State already anchors those fields).",
+        "https://plants.ces.ncsu.edu/plants/fraxinus-pennsylvanica/common-name/green-ash/ is the same NC State species record under a different URL slug (identical Dimensions/Attracts/Edibility text) -- read and confirmed but not treated as an independent second source.",
+        "https://plants.ces.ncsu.edu/plants/fraxinus-americana/ is a different species (Fraxinus americana, White Ash: Height 60-120 ft., Width 50-75 ft.), not a genus page and not Green Ash -- correctly excluded from Green Ash's size fields per the instruction that another species' page is not a substitute.",
+        "No cultivar-specific figures were used: the Dimensions block on the anchor page precedes the cultivar list ('Marshall's Seedless', 'Patmore', 'Summit', 'Urbanite') and applies to the species."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 600,
+      "mature_height_in_max": 840,
+      "mature_spread_in_min": 420,
+      "mature_spread_in_max": 600
     },
     {
       "common_name": "Black Locust",
@@ -1345,6 +1382,7 @@
   "normalizations": [
     "2026-09-05: forty-eighth batch (cruise throttle) -- a fourth native tree set: American Bladdernut, Hoptree, Green Ash, Black Locust, Slippery Elm, and Red Mulberry. Clean first run (12/12 agents, 1.28M subagent tokens). land_check.py and covered.py ran clean; verify_quotes.py 88/94 reachable quotes before repair, the six MISSes all fixed here: four abbreviated NC State Light strings ('Full sun (6+ hours)', 'Partial Shade (2-6 hours)', a bare three-word list) replaced by the rendered values, Slippery Elm's soil_base citation -- a semicolon-joined synthesis attributed to a 'Habitat' field the page does not have -- replaced by the real Landscape Location values, and Hoptree's confused-with citation dropped with its sub-claim. Sun values: Black Locust and Slippery Elm drop part_shade (single NC State tags against MoBot's and RHS's full-sun-only structured fields, with MoBot's 'avoid shady locations' and both sources' tolerance clauses), while Hoptree carries full_sun on NC State's Light field plus RHS's Position field with MoBot's omission disclosed. Four nulled citation-form fields were restored with values unchanged: Green Ash's scientific_name_accepted (RHS H1 paired with the Name Status value) and soil_base (uncited; now on NC State's Soil Texture and MoBot's Suggested Use), Black Locust's and Slippery Elm's is_houseplant (a Plant Type list missing Woody Plant; a label carrying a synthesized siting string), and Slippery Elm's soil_base. Every name_note was replaced with the auditor's corrected wording (invented 'N entries marks no primary' conventions, overstated leads, RHS title strings called subtitles, a look-alike module read as taxonomy); three toxicity_detail fields were repaired as trimmed safety fields with the auditor's verbatim additions -- Black Locust's spines and its full Problems and Plant Type fields, Red Mulberry's Poisonous-beside-Edible plant type, its whole-tree sap clause and UF/IFAS's pollen allergen warning, Hoptree's odor-bearing parts and #malodorous tag -- and Black Locust's original recital was recovered from the research agent's journal output. toxic_to_pets=true on Black Locust rests on NC State's cat and dog tags (children and horses disclosed); Red Mulberry is false on explicit non-toxic-for-cats/dogs tags; the other four are null (no cat/dog-scoped source).",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Hoptree -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

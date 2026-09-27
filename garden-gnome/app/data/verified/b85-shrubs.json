@@ -147,6 +147,24 @@
           "source": "NC State Extension Gardener Plant Toolbox — Hydrangea quercifolia",
           "url": "https://plants.ces.ncsu.edu/plants/hydrangea-quercifolia/",
           "quote": "#poisonous if ingested"
+        },
+        {
+          "claim": "mature_height_in 48-96 (NC State Dimensions Height: 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-quercifolia/",
+          "quote": "Height: 4 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-120 (NC State Dimensions Width: 4 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-quercifolia/",
+          "quote": "Width: 4 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies, Pollinators, Songbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-quercifolia/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Oakleaf Hydrangea",
@@ -186,14 +204,25 @@
         "outdoor_sun_exposure includes only full_sun and part_shade, matching the structured fields on both NC State (Light: Full sun, Partial Shade) and RHS (Position: Full sun, Partial shade). Clemson's HGIC 'Native Hydrangeas' page (a multi-species page, not a dedicated single-species page, so not used to confirm identity or as a primary citation) describes the species as thriving in shaded conditions, which could suggest full_shade or part_sun tolerance, but this is excluded because it is not corroborated by either species-specific structured sun field and the page is not species-dedicated.",
         "Cyanogenic glycoside was not found stated for this species on any of the ten admissible domains searched (NC State's own Poison Toxic Principle field for this species reads 'Unknown'); ASPCA, which is commonly cited for that claim, is not an admissible domain, so toxicity_detail relies only on NC State's and RHS's stated toxic-principle/handling language.",
         "chill_damage_f (-10°F) comes from Missouri Botanical Garden's Culture paragraph describing harsh-winter flower-bud loss/dieback, not from a hardiness-zone rating.",
-        "RHS's species page does render a hardiness rating of H5, but H5 is a hardiness band (roughly -15 to -10 degrees C), not a damage-onset temperature, so it was not used for chill_damage_f, which rests on Missouri Botanical Garden's explicit harsh-winter damage sentence instead."
+        "RHS's species page does render a hardiness rating of H5, but H5 is a hardiness band (roughly -15 to -10 degrees C), not a damage-onset temperature, so it was not used for chill_damage_f, which rests on Missouri Botanical Garden's explicit harsh-winter damage sentence instead.",
+        "Plant Type is listed as Shrub (not a vine/climber), so the climber exclusion in rule 4 does not apply and all four size fields are populated.",
+        "is_edible is TRUE based on NC State's Play Value tag 'Edible fruit', but this is conditional/partial: the same NC State page lists the plant as having low-severity poison characteristics, tagged 'problem for dogs' and 'problem for cats' and 'poisonous if ingested', with Poison Severity: Low, Poison Symptoms: Nausea, stomach pain, vomiting, sweating, Poison Toxic Principle: Unknown, Causes Contact Dermatitis: No, and Poison Part: Bark, Flowers, Leaves. So only the fruit is indicated as edible while bark, flowers, and leaves are named as the poisonous parts -- this is a partial/conditional edibility, not a blanket safe-to-eat claim.",
+        "RHS gives Max Height 1-1.5 metres (39.4-59.1 in.) and Max Spread 1.5-2.5 metres (59.1-98.4 in.), which conflicts somewhat with NC State's Height 4-8 ft (48-96 in.) / Width 4-10 ft (48-120 in.); NC State's structured Dimensions block was used as the anchor per instructions and RHS was not used for the size citation.",
+        "plantfinder.mobot.org refused this machine's fetch (error:ConnectError) and was not read; no data from that source is reflected in this record.",
+        "RHS page (https://www.rhs.org.uk/plants/8949/hydrangea-quercifolia/details) had no hits for 'Attracts', 'Edible', 'Poison', 'Toxic', or 'pollinator' when searched, so it contributed no citations to this record; only the size fields (Max Height / Max Spread) were found there and were not used since NC State's Dimensions block took priority as the anchor source.",
+        "is_edible removed on audit: The only support is the 'Edible fruit' tag inside NC State's 'Play Value' list, which is a children's-garden list. The same page contradicts reading it as human food. Plant Type lists 'Poisonous'. The tags include '#poisonous' and '#poisonous if ingested', with no restriction to a part. 'Poisonous to Humans' gives Poison Severity Low and symptoms 'Nausea, stomach pain, vomiting, sweating.'. Fruit Type is 'Capsule', a dry seed capsule. The 'Wildlife Value' line ('Songbirds eat the seeds'), the 'Wildlife Food Source' tag and the '#edible seeds' tag point to edibility for birds, not people. No part of the page describes eating the fruit or any preparation. The unknowns entry turns 'Poison Part: Bark, Flowers, Leaves' into an implied claim that the fruit is safe, which the page never states. RHS (re-read) says 'Potentially harmful: Skin allergen. Wear gloves...' and 'Pets (dogs, cats): Harmful if eaten.'. The researcher's unknowns say RHS had no toxicity hits, which misses this text, so under check F an RHS-named hazard is absent from unknowns. Recording a poisonous-typed hydrangea as edible on a play-value tag is unsafe. Null it; do not set it to false."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 120
     },
     {
       "attracts_pollinators": true,
@@ -466,6 +495,30 @@
           "source": "NC State Extension Gardener Plant Toolbox - Syringa vulgaris",
           "url": "https://plants.ces.ncsu.edu/plants/syringa-vulgaris/",
           "quote": "3a, 3b, 4a, 4b, 5a, 5b, 6a, 6b, 7a"
+        },
+        {
+          "claim": "mature_height_in 96-192 (NC State Height: 8 ft. 0 in. - 16 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/syringa-vulgaris/",
+          "quote": "Height: 8 ft. 0 in. - 16 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-144 (NC State Width: 6 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/syringa-vulgaris/",
+          "quote": "Width: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: flowers can be eaten raw or folded into a batter and fried to make fritters; condition noted in unknowns)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/syringa-vulgaris/",
+          "quote": "Flowers can be eaten raw or folded into a batter and fried to make fritters."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value and structured Attracts field name hummingbirds, butterflies, bees, and moths)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/syringa-vulgaris/",
+          "quote": "Lilac attracts hummingbirds and butterflies."
         }
       ],
       "common_name": "Common Lilac",
@@ -510,14 +563,25 @@
         "Scope discipline applied per task instructions: 'lilac' is also used for unrelated species (chinaberry; Buddleja davidii/summer lilac, already cataloged separately as Butterfly Bush). Every citation here was drawn from a page specifically titled/headed Syringa vulgaris (NC State, RHS, MoBot) or from PSU/UMD article text that names Syringa vulgaris directly -- never from the loose common name 'lilac' alone. NC State's cultivar note also confirms most garden lilacs sold are S. vulgaris cultivars.",
         "No dedicated single-species Syringa vulgaris or 'lilac' page was found on hgic.clemson.edu, edis.ifas.ufl.edu, ask.ifas.ufl.edu, or extension.psu.edu's plant-profile format (PSU's page is a general 'Lilac Care' care article rather than a structured species profile, but it names Syringa vulgaris directly and was treated as admissible for its explicit statements). The only fieldreport.caes.uga.edu hit (a European Hornet article) mentions lilac only as one item in a host-plant list on a multi-species pest page, not a dedicated lilac page, so it was excluded entirely.",
         "RHS's page did not render a structured 'is often confused with' module for Syringa vulgaris in this session's fetch, so no cross-species-confusion citation is included.",
-        "Web search budget was exhausted partway through this research session (200/200 calls used), which limited further searches for admissible-source toxicity/edibility content specific to cats and dogs; the toxic_to_pets/toxicity_detail nulls above reflect what could be confirmed from the sources actually retrieved (NC State, RHS, PSU, UMD, MoBot), not an exhaustive canvass of every admissible domain."
+        "Web search budget was exhausted partway through this research session (200/200 calls used), which limited further searches for admissible-source toxicity/edibility content specific to cats and dogs; the toxic_to_pets/toxicity_detail nulls above reflect what could be confirmed from the sources actually retrieved (NC State, RHS, PSU, UMD, MoBot), not an exhaustive canvass of every admissible domain.",
+        "Syringa vulgaris is a shrub, not a vine/liana/climber, so the climber size-suppression rule does not apply and all four size fields are filled normally.",
+        "is_edible is TRUE but CONDITIONAL: only the flowers are stated as edible (\"eaten raw or folded into a batter and fried to make fritters\"); no other plant part is addressed as food on the anchor page.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- 0 hits for all three; the page names no poisonous part, severity, toxic principle, preparation requirement, or pets warning for this species.",
+        "RHS page (https://www.rhs.org.uk/plants/99011/syringa-vulgaris/details) reports Max Height 4-8 metres and Max Spread 4-8 metres, but NC State Plant Toolbox has a species-specific page for Syringa vulgaris and is therefore the anchor per rule; the RHS figures were not used for the size fields.",
+        "RHS page was also searched for 'Attracts', 'Edible', 'Pollinator', 'Poison', 'Toxic', 'Problem for', and 'Wildlife' -- no relevant edibility, toxicity, or pollinator-attraction content was found there for this species."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 192,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 144
     },
     {
       "common_name": "Creeping Juniper",
@@ -563,7 +627,12 @@
         "water_regime is sourced from Clemson's Juniperus spp. groundcover/small-shrub factsheet, which covers J. horizontalis among several species rather than being J. horizontalis-exclusive prose; no dedicated single-species watering statement was found on NC State or RHS.",
         "day_f_min/max, night_f_min/max, chill_damage_f, cool_rest_note, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, fertilize_interval_days, fertilize_active_months, fertilize_strength, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are all left null: none of the researched pages (NC State, RHS, Clemson) frame this in-ground landscape shrub with houseplant-style temperature schedules, humidity targets, footcandle values, dry-down depth/day-interval watering cadences, or fertilizer dilution strength.",
         "soil_base set to garden_bed based on NC State's Plant Type ('Shrub') and outdoor landscape-use fields for this in-ground groundcover species; no source frames this plant in container/potting-mix terms since it is not grown as a houseplant.",
-        "hgic.clemson.edu's factsheet used for water_regime is titled 'Growing and Using Juniper Groundcovers and Small Shrubs' (Factsheet HGIC 1107) -- a multi-species factsheet covering several Juniperus species, not a dedicated Juniperus horizontalis page; it was used only as a disclosed genus/multi-species source since no admissible single-species watering statement exists."
+        "hgic.clemson.edu's factsheet used for water_regime is titled 'Growing and Using Juniper Groundcovers and Small Shrubs' (Factsheet HGIC 1107) -- a multi-species factsheet covering several Juniperus species, not a dedicated Juniperus horizontalis page; it was used only as a disclosed genus/multi-species source since no admissible single-species watering statement exists.",
+        "Clemson HGIC page (hgic.clemson.edu) returned an http-403 refusal to this machine's fetch; it was not read and nothing on it was guessed at.",
+        "attracts_pollinators left null: NC State's Plant Toolbox page has no 'Attracts' field for this species, and the RHS details page has no pollinator/wildlife-attraction statement anywhere on the page; searched both 'Attracts' and 'pollinator' with zero hits.",
+        "is_edible set false rather than left null because RHS's Botanical Details block names this species 'Potentially harmful: Harmful if eaten/skin allergen' -- a direct statement it is not safe to eat, not merely an absence of an edibility claim; NC State's page has no Edible/Poison/Toxic/'Problem for' language at all (all searched, zero hits).",
+        "mature_height_in and mature_spread_in come from NC State's own structured Dimensions block for this species (Height: 0 ft. 6 in. - 1 ft. 6 in. -> 6-18 in; Width: 4 ft. 0 in. - 10 ft. 0 in. -> 48-120 in), used as the anchor because NC State has its own species-level page. RHS's Max Height (0.1-0.5 m = ~3.9-19.7 in) is broadly consistent, but RHS's Max Spread (4-8 m = ~157-315 in) diverges sharply from NC State's Width figure; per the anchor rule, NC State's own dimensions were used and the RHS spread figure was not merged in or averaged.",
+        "This is a low, ground-hugging, mat-forming/trailing shrub per both NC State ('Shrub') and RHS ('Habit: Matforming, Trailing') -- not a vine, liana, or other climber -- so the climber exclusion (rule 4) does not apply and all four size fields were populated normally."
       ],
       "citations": [
         {
@@ -649,8 +718,31 @@
           "source": "Clemson HGIC",
           "url": "https://hgic.clemson.edu/factsheet/growing-and-using-juniper-juniperus-spp-groundcovers-and-small-shrubs-2/",
           "quote": "Water regularly until rooted; minimal once established"
+        },
+        {
+          "claim": "mature_height_in 6-18 (NC State Height 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juniperus-horizontalis/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 48-120 (NC State Width 4 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/juniperus-horizontalis/",
+          "quote": "Width: 4 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (RHS notes this species is potentially harmful if eaten)",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/20493/juniperus-horizontalis/details",
+          "quote": "Harmful if eaten/skin allergen."
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -774,6 +866,18 @@
           "source": "NC State Extension Plant Toolbox — Euonymus fortunei",
           "url": "https://plants.ces.ncsu.edu/plants/euonymus-fortunei/",
           "quote": "Ground Cover\nPerennial\nPoisonous\nShrub\nVine"
+        },
+        {
+          "claim": "is_edible false -- NC State's Poison Symptoms field states the plant is toxic if eaten and the berries should not be eaten by humans",
+          "source": "NC State Extension Gardener Plant Toolbox -- Euonymus fortunei",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-fortunei/",
+          "quote": "Toxic if eaten in large quantities. Can cause vomiting, diarrhea, weakness, chills, coma, and convulsions."
+        },
+        {
+          "claim": "attracts_pollinators true -- NC State's structured Attracts field names Bees",
+          "source": "NC State Extension Gardener Plant Toolbox -- Euonymus fortunei",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-fortunei/",
+          "quote": "Bees"
         }
       ],
       "common_name": "Climbing Euonymus",
@@ -816,14 +920,20 @@
         "Invasive status and climbing behavior (not schema fields but decision-relevant): NC State Extension states this species 'readily escapes into native forests' and is 'listed as invasive in North Carolina and in other states of the southeast and northeast'; it also states the vine 'can form new rootlets when its branches contact moist soil' and 'produces aerial rootlets along its branches' when climbing trees, distinguishing its groundcover-spreading habit from its rootlet-climbing habit.",
         "Clemson HGIC has only a genus-level, multi-species 'Euonymus' factsheet, not a dedicated Euonymus fortunei page, so it was excluded under the single-species-page requirement. No dedicated Euonymus fortunei page was located on hgic.clemson.edu, edis.ifas.ufl.edu, ask.ifas.ufl.edu, extension.umd.edu, extension.psu.edu, or fieldreport.caes.uga.edu during this research pass (a WebSearch budget limit and a TLS certificate error on plantfinder.mobot.org's direct species page also constrained further verification within this session), so any facts unique to those domains could not be confirmed and are not included.",
         "mature_height_in_min/max and mature_spread_in_min/max are not carried on this record. NC State's Plant Type field lists this species as a Vine and its Description calls it 'an evergreen woody vine or sprawling shrub' that 'produces aerial rootlets along its branches' when climbing; under the pipeline's climber rule a climber takes no size at all, all four fields null and disclosed, whatever figures the page publishes, because a published height for a climber is the distance it travels along its support rather than the plant's own stature.",
-        "common_name researched as 'Wintercreeper'; landed as 'Climbing Euonymus' on the audit's finding that 'Wintercreeper' is the fourth of six items in NC State's rendered Common Name(s) list and is led by neither dedicated page. 'Climbing Euonymus' is that list's first item and the name NC State's species prose uses throughout. No collision with an already-landed common_name."
+        "common_name researched as 'Wintercreeper'; landed as 'Climbing Euonymus' on the audit's finding that 'Wintercreeper' is the fourth of six items in NC State's rendered Common Name(s) list and is led by neither dedicated page. 'Climbing Euonymus' is that list's first item and the name NC State's species prose uses throughout. No collision with an already-landed common_name.",
+        "Species confirmed a climber: NC State's Description reads \"an evergreen woody vine or sprawling shrub\" with Habit/Form \"Climbing\" and page tags including #vine and #climber; RHS lists Habit \"Trailing, Climbing\" and categorizes it \"Climber Wall Shrub.\" Per rule 4 all four mature-size fields are left null even though NC State publishes a Dimensions block (Height 14 ft. 0 in. - 32 ft. 0 in., Width 2 ft. 0 in. - 10 ft. 0 in.) and RHS publishes Max Height/Max Spread 1.5-2.5 metres -- for a climber these figures describe how far it runs along a support, not the plant's own stature, so they are not usable for mature_height_in/mature_spread_in.",
+        "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max all left null: species is a climber (rule 4), not a judgement call, regardless of the size figures both pages publish.",
+        "is_edible set to false rather than left null: NC State's structured Poison Symptoms field states \"Toxic if eaten in large quantities. Can cause vomiting, diarrhea, weakness, chills, coma, and convulsions,\" gives Poison Severity \"Low\" and Poison Toxic Principle \"Unidentified, possibly a glycoside,\" and its narrative text adds \"the berries in particular should not be eaten by humans.\" RHS separately lists \"Potentially harmful -- Humans/Pets: Harmful if eaten; wear gloves and other protective equipment when handling.\" No text on either page states any part is grown or used for food.",
+        "Both cited pages (NC State Plant Toolbox and RHS) fetched successfully; no page refused this machine for this record."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "chill_damage_f": null,
@@ -1007,6 +1117,18 @@
           "source": "NC State Extension Gardener Plant Toolbox - Taxus cuspidata",
           "url": "https://plants.ces.ncsu.edu/plants/taxus-cuspidata/",
           "quote": "Causes Contact Dermatitis:\nNo"
+        },
+        {
+          "claim": "mature_height_in 120-300 (NC State Dimensions Height: 10 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "quote": "Height: 10 ft. 0 in. - 25 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Taxus cuspidata (Japanese Yew)",
+          "url": "https://plants.ces.ncsu.edu/plants/taxus-cuspidata/"
+        },
+        {
+          "claim": "mature_spread_in 60-120 (NC State Dimensions Width: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "quote": "Width: 5 ft. 0 in. - 10 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Taxus cuspidata (Japanese Yew)",
+          "url": "https://plants.ces.ncsu.edu/plants/taxus-cuspidata/"
         }
       ],
       "common_name": "Japanese Yew",
@@ -1049,14 +1171,26 @@
         "outdoor_sun_exposure excludes full_shade even though RHS's Position field lists it. NC State's Light field offers no full-shade value at all (Dappled Sunlight, Full sun, Partial Shade) and MoBot's structured Sun field reads only 'Full sun to part shade'. MoBot does endorse deeper shade, but only as tolerance -- its structured Tolerate field reads 'Rabbit, Drought, Heavy Shade' and its Culture paragraph says 'Tolerates shade and is considered to be one of the best of the needled evergreens for shady conditions' -- and per the rule a value resting on a tolerance clause is excluded rather than recorded as a sun category.",
         "soil_base is set to garden_bed as the enum value for an in-ground landscape shrub/tree (NC State's Landscape Location and Design Feature fields describe hedge, screen, specimen, and lawn/patio/woodland placements, and MoBot's Culture section discusses in-ground soil types) -- no admissible source uses container/potting terminology for this species.",
         "name_note is left null: all three admissible sources (NC State's single-item Common Name(s) list, MoBot's Common Name field, and RHS's page subtitle) agree the primary common name is 'Japanese Yew'/'Japanese yew,' with no split to reconcile.",
-        "Per the task's sibling-confusion warning, no content from any Taxus x media (Anglojap Yew) page was used to fill this record; NC State's dedicated Taxus cuspidata page's own 'is often confused with' module names Taxus chinensis, not Taxus x media, and was not otherwise relied on for any field."
+        "Per the task's sibling-confusion warning, no content from any Taxus x media (Anglojap Yew) page was used to fill this record; NC State's dedicated Taxus cuspidata page's own 'is often confused with' module names Taxus chinensis, not Taxus x media, and was not otherwise relied on for any field.",
+        "attracts_pollinators left null: no page states pollinator attraction. NC State's structured 'Attracts:' field lists only 'Songbirds' (birds eating the fruit is not pollination, per rule); RHS lists no attracts/pollinator field at all. Searched RHS for 'pollinat', 'butterfl', 'bee', 'Attract' -- 0 hits on all.",
+        "is_edible is TRUE but CONDITIONAL, not a bare yes: NC State Fruit Description states 'The red arils, in small amounts, are edible. The green seed is toxic.' Only the red fleshy aril, and only in small amounts, is edible; the seed inside it is toxic.",
+        "Toxicity on the SAME page cited for is_edible: NC State lists this plant as 'high severity' poison to humans. Poison Toxic Principle: Alkaloid taxine. Poison Part: Bark, Leaves, Seeds. Poison Symptoms: 'Nervousness, trembling, slow pulse, pupil dilation, difficult breathing, seizures (dogs), abdominal pain, vomiting, diarrhea, weakness, convulsions; may be fatal. Early signs: muscular tremors, dyspnea, seizures in dogs.' NC State tags also include #problem for dogs #problem for horses #problem for cats. RHS separately states 'TOXIC if eaten. Wear gloves and other protective equipment when handling. TOXIC to pets if eaten.'",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287306 refused this machine (error:ConnectError on every attempt) -- could not read it, and nothing from it was used or guessed.",
+        "Species confirmed NOT a climber: RHS 'Habit' field is 'Bushy, Spreading branched' and NC State lists Plant Type as 'Shrub'; size fields were therefore populated normally rather than left null under the climber rule.",
+        "mature_height_in / mature_spread_in were taken from NC State's species-specific structured Dimensions block (the anchor, per rule) rather than RHS's wider Max Height 4-8 metres / Max Spread 2.5-4 metres figures, since NC State has a species page with its own Dimensions data.",
+        "is_edible -- null at landing 2026-09-27, not true: the only edibility statement is NC State's Fruit Description, \"The red arils, in small amounts, are edible. The green seed is toxic.\" That is a caveat inside a toxicity description, not a statement that the plant is grown or used for food (backfill rule 6), and the app renders is_edible true as \"grown to eat\" with no room for the condition. This is one of the most poisonous plants in the catalog. The dropped citation quoted: 'The red arils, in small amounts, are edible. The green seed is toxic.'"
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": null,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -1240,6 +1374,24 @@
           "source": "RHS — Chaenomeles speciosa",
           "url": "https://www.rhs.org.uk/plants/3463/chaenomeles-speciosa/details",
           "quote": "These can be used to make jams and jellies but please see notes on toxicity for further advice"
+        },
+        {
+          "claim": "mature_height_in 72-144 (NC State Height: 6 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Chaenomeles speciosa",
+          "url": "https://plants.ces.ncsu.edu/plants/chaenomeles-speciosa/",
+          "quote": "Height: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-120 (NC State Width: 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Chaenomeles speciosa",
+          "url": "https://plants.ces.ncsu.edu/plants/chaenomeles-speciosa/",
+          "quote": "Width: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field: attracts hummingbirds and butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Chaenomeles speciosa",
+          "url": "https://plants.ces.ncsu.edu/plants/chaenomeles-speciosa/",
+          "quote": "Is occasionally browsed by deer. It attracts hummingbirds and butterflies."
         }
       ],
       "common_name": "Flowering Quince",
@@ -1281,14 +1433,26 @@
         "chill_damage_f and cool_rest_note left null: MoBot's Problems section notes 'Flower buds are susceptible to significant damage from early spring frosts' but gives no numeric onset temperature, so no damage-onset figure could be recorded.",
         "soil_base set to garden_bed on NC State's Design Feature values (Barrier, Border, Hedge, Mass Planting) and MoBot's Uses line ('Hedge, screen, barrier.'), even though NC State's Landscape Location list also offers 'Container'.",
         "mature_height_in_min/max and mature_spread_in_min/max are not carried on this record, which was researched before those fields existed and is left to the size backfill rather than filled here. The figures are available and disagree at the top end: NC State's species-page Dimensions block renders 'Height: 6 ft. 0 in. - 12 ft. 0 in.' (72-144 in) and 'Width: 6 ft. 0 in. - 10 ft. 0 in.' (72-120 in), MoBot renders 'Height: 6.00 to 10.00 feet' (72-120 in) and 'Spread: 6.00 to 10.00 feet' (72-120 in), and RHS's UK-conditions Size block gives Max Height 1.5-2.5 metres and Max Spread 2.5-4 metres, which should not be mixed with the US figures.",
-        "common_name researched as 'Flowering quince'; landed title-cased as 'Flowering Quince' after confirming MoBot's dedicated single-species Common Name field leads with that form. No collision with an already-landed common_name."
+        "common_name researched as 'Flowering quince'; landed title-cased as 'Flowering Quince' after confirming MoBot's dedicated single-species Common Name field leads with that form. No collision with an already-landed common_name.",
+        "RHS states 'please see notes on toxicity for further advice' regarding the fruit, but the extracted page text names no specific toxic part, principle, dose, or pets warning beyond that phrase; NC State (the anchor page, which carries the structured Dimensions block for this species) returned zero hits for 'Poison', 'Toxic', and 'Problem for'. Recorded here as a caution since is_edible is set true and the edibility is conditional.",
+        "is_edible is conditional, not unconditional: NC State states the fruit is normally inedible raw (hard and bitter) and becomes usable for preserves/jellies, or edible to some people, only after it is set out to ripen -- see the citation quote for the exact wording.",
+        "https://plants.ces.ncsu.edu/plants/chaenomeles-japonica/ was read but not used for any field: it describes a different species (C. japonica), and C. speciosa already has its own NC State Plant Toolbox species-level page (not a genus page) with structured Dimensions, Attracts, and Edibility fields, so no genus-page substitution was needed or used.",
+        "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=c298 refused this machine: the URL redirects to plantfinder.mobot.org, which the fetch path could not reach (network/proxy error). Skipped per instructions rather than guessed.",
+        "RHS separately gives Max Height 1.5-2.5 metres (59.1-98.4 in) and Max Spread 2.5-4 metres (98.4-157.5 in) for this species. These were not used because NC State is the anchor for size (C. speciosa has its own NC State species page with a structured Dimensions block), and the two sources' figures were not mixed within one field.",
+        "Confirmed this is not a climber (rule 4 exclusion does not apply): NC State's Plant Type is 'Shrub' and RHS's own description calls it a 'wide-spreading deciduous shrub', so the size fields were populated normally.",
+        "is_edible removed on audit: F (edibility safety): The RHS page (rhs.org.uk/plants/3463) has a 'Potentially harmful' field. It says the seeds contain toxins and should be removed if you are considering eating the fruit. It also says, for pets, that the fruit is ornamental and not to be eaten. So a page names a toxic part (seeds), a required preparation (remove the seeds) and a pets warning. None of this appears in unknowns. Worse, unknowns wrongly says the RHS text 'names no specific toxic part, principle, dose, or pets warning.' The only condition unknowns records is NC State's (hard and bitter raw, used for preserves or after ripening), which is correct but incomplete. The value is true with the seed-toxicity condition missing, so per rule F it is refuted. The NC State quotes themselves ('Used for making jellies and preserves' and the 'normally considered inedible right off of the tree...' sentence) are verbatim."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 120
     },
     {
       "attracts_pollinators": null,
@@ -1466,6 +1630,7 @@
     }
   ],
   "normalizations": [
-    "2026-09-27: b85 landed from the post-audit records by a session running alongside the b84 landing. Eight home-landscape shrubs and climbers; six were researched 2026-09-11 under the 35-field schema and two (Smooth Hydrangea, Koreanspice Viburnum) today under the grown schema, so only those two carry is_edible, attracts_pollinators and mature_*_in -- no size or flag was backfilled onto the other six, which the size backfill owns. Auditor CORRECTED WORDING used verbatim except in Smooth Hydrangea's name_note, where the phrase 'designates no primary entry' is banned outright by repair_lib and by the naming rule and was replaced with 'in alphabetical order'. Landing decisions: Euonymus fortunei lands as Climbing Euonymus, not the researched 'Wintercreeper' -- the audit FLAGGED that value because 'Wintercreeper' is the fourth of six items in NC State's rendered Common Name(s) list and RHS's only name for the taxon sits in an 'Other common names' field, while 'Climbing Euonymus' is that list's first item and the name NC State's own species prose uses throughout; the same record takes no mature size under the pipeline's climber rule (NC State Plant Type: Vine), disclosed in unknowns. Chaenomeles speciosa lands title-cased as Flowering Quince on MoBot's dedicated-page Common Name field, with the audit's requested size deferred to the backfill and the figures recorded in unknowns. Hydrangea quercifolia's water_regime stays null (refuted: MoBot's 'thrives in moist soils' is a soil adjective and NC State rates the species drought- and dry-soil-resistant) and its keep_moist citation was dropped. is_houseplant was false-and-cited on the four records that had left it null (Smooth Hydrangea, Common Lilac, Climbing Euonymus, plus the existing three). Seventeen quotes that were <title> metadata, raw markup, bare one-word name values, label+value splices or comma-joined runs of separately-stacked list items were replaced with the auditor's rendered substitutes, each re-fetched and re-verified through verify_quotes' own fetch+extract path before being applied. verify_quotes: every reachable quote verified; hgic.clemson.edu returns http-403 to this machine and plantfinder.mobot.org / www.missouribotanicalgarden.org refuse the connection, so those citations SKIP."
+    "2026-09-27: b85 landed from the post-audit records by a session running alongside the b84 landing. Eight home-landscape shrubs and climbers; six were researched 2026-09-11 under the 35-field schema and two (Smooth Hydrangea, Koreanspice Viburnum) today under the grown schema, so only those two carry is_edible, attracts_pollinators and mature_*_in -- no size or flag was backfilled onto the other six, which the size backfill owns. Auditor CORRECTED WORDING used verbatim except in Smooth Hydrangea's name_note, where the phrase 'designates no primary entry' is banned outright by repair_lib and by the naming rule and was replaced with 'in alphabetical order'. Landing decisions: Euonymus fortunei lands as Climbing Euonymus, not the researched 'Wintercreeper' -- the audit FLAGGED that value because 'Wintercreeper' is the fourth of six items in NC State's rendered Common Name(s) list and RHS's only name for the taxon sits in an 'Other common names' field, while 'Climbing Euonymus' is that list's first item and the name NC State's own species prose uses throughout; the same record takes no mature size under the pipeline's climber rule (NC State Plant Type: Vine), disclosed in unknowns. Chaenomeles speciosa lands title-cased as Flowering Quince on MoBot's dedicated-page Common Name field, with the audit's requested size deferred to the backfill and the figures recorded in unknowns. Hydrangea quercifolia's water_regime stays null (refuted: MoBot's 'thrives in moist soils' is a soil adjective and NC State rates the species drought- and dry-soil-resistant) and its keep_moist citation was dropped. is_houseplant was false-and-cited on the four records that had left it null (Smooth Hydrangea, Common Lilac, Climbing Euonymus, plus the existing three). Seventeen quotes that were <title> metadata, raw markup, bare one-word name values, label+value splices or comma-joined runs of separately-stacked list items were replaced with the auditor's rendered substitutes, each re-fetched and re-verified through verify_quotes' own fetch+extract path before being applied. verify_quotes: every reachable quote verified; hgic.clemson.edu returns http-403 to this machine and plantfinder.mobot.org / www.missouribotanicalgarden.org refuse the connection, so those citations SKIP.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

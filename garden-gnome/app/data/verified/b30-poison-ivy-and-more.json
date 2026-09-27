@@ -54,7 +54,14 @@
         "toxic_to_pets: this field reflects ingestion/systemic pet toxicity specifically (mirroring how this catalog encodes other species' 'Problem for Cats/Dogs/Horses' tags), and is explicitly false here per NC State's structured tags: 'non-toxic for cats,' 'non-toxic for horses,' 'non-toxic for dogs.' This is a separate axis from the contact-transfer hazard captured in toxicity_detail -- a pet is not poisoned by carrying urushiol, but can transfer the oil on its fur to a human who then develops contact dermatitis. No admissible source contradicts NC State's ingestion-toxicity tag.",
         "toxicity_detail: RHS's Toxicodendron genus page states only that 'Plants within this genus produce urushiol oil which can irritate the skin,' worded at the genus level in a way that reads as boilerplate likely reused verbatim across every species page in the genus (T. vernix, T. diversilobum, etc.); it was treated only as weak, non-species-specific corroboration for the general urushiol/skin-irritation mechanism, not as independent support, per the task's caution about genus-wide boilerplate text.",
         "Missouri Botanical Garden's own poison-ivy identification page (missouribotanicalgarden.org) and Plant Finder entry (plantfinder.mobot.org) were both located, but plantfinder.mobot.org could not be directly fetched (repeated TLS certificate verification failure), so no Plant Finder structured fields (Sun/Water/Zone/etc.) for this species are cited here; the general missouribotanicalgarden.org identification page was fetched successfully and reviewed but contained no fact not already independently covered by NC State, Clemson, UF/IFAS, Penn State, UMD, or UGA, so it was not cited separately.",
-        "name_note — removed on audit: Several specific claims inside name_note trace to no citation entry at all, failing structural check #1 (every non-null field value must trace to at least one citations entry). (a) The claim that NC State hosts this species page under three URL slugs -- 'poison-ivy,' 'eastern-poison-ivy,' and 'poison-oak' -- has zero supporting citation; I independently fetched https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/ and confirmed the header reads 'Toxicodendron radicans (Eastern Poison Ivy, Poison Ivy, Poison Oak)' with all three common-name slugs present, so the underlying fact is true, but the record itself never cites it. (b) The claim that the accepted name is 'used consistently across every admissible source consulted (NC State, Clemson, UF/IFAS, Missouri Botanical Garden, Penn State, UMD, UGA)' includes Missouri Botanical Garden, yet no citation entry anywhere in the array references missouribotanicalgarden.org or plantfinder.mobot.org -- the unknowns section admits MOBOT's identification page was reviewed but 'not cited separately.' (c) The claim 'RHS additionally lists Rhus toxicodendron as a synonym' is not supported by the record's own RHS citation, whose quote is only 'Name Status\\nCorrect' -- no citation quote anywhere captures the Rhus toxicodendron synonym text, even though I confirmed via direct fetch that RHS's synonym field does list both 'Rhus radicans, Rhus toxicodendron.' All three sub-claims happen to be factually accurate on independent verification, but the record as submitted provides no citation trail for any of them, which is exactly the documentation gap structural check #1 is meant to catch -- the researcher did the extra research but didn't log it as a citation."
+        "name_note — removed on audit: Several specific claims inside name_note trace to no citation entry at all, failing structural check #1 (every non-null field value must trace to at least one citations entry). (a) The claim that NC State hosts this species page under three URL slugs -- 'poison-ivy,' 'eastern-poison-ivy,' and 'poison-oak' -- has zero supporting citation; I independently fetched https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/ and confirmed the header reads 'Toxicodendron radicans (Eastern Poison Ivy, Poison Ivy, Poison Oak)' with all three common-name slugs present, so the underlying fact is true, but the record itself never cites it. (b) The claim that the accepted name is 'used consistently across every admissible source consulted (NC State, Clemson, UF/IFAS, Missouri Botanical Garden, Penn State, UMD, UGA)' includes Missouri Botanical Garden, yet no citation entry anywhere in the array references missouribotanicalgarden.org or plantfinder.mobot.org -- the unknowns section admits MOBOT's identification page was reviewed but 'not cited separately.' (c) The claim 'RHS additionally lists Rhus toxicodendron as a synonym' is not supported by the record's own RHS citation, whose quote is only 'Name Status\\nCorrect' -- no citation quote anywhere captures the Rhus toxicodendron synonym text, even though I confirmed via direct fetch that RHS's synonym field does list both 'Rhus radicans, Rhus toxicodendron.' All three sub-claims happen to be factually accurate on independent verification, but the record as submitted provides no citation trail for any of them, which is exactly the documentation gap structural check #1 is meant to catch -- the researcher did the extra research but didn't log it as a citation.",
+        "mature_height_in and mature_spread_in left null on all four fields: Toxicodendron radicans is a woody climber. NC State, UGA/CAES, UF/IFAS, Clemson/HGIC, Penn State, and UMD all describe it as growing as a high-climbing vine (in addition to sometimes a shrub) that attaches to trees/structures with aerial rootlets, so per the climber rule its published size figures are not recorded even though NC State's Dimensions block reads 'Height: 1 ft. 0 in. - 150 ft. 0 in.' and 'Width: 1 ft. 0 in. - 10 ft. 0 in.' -- that Height range mixes shrub-form stature (to 6 ft, per the same page's body text) with vine climb length (60-150 ft up a support), which is exactly the ambiguity the vine rule exists to avoid.",
+        "is_edible left null: none of the seven read pages (NC State, RHS, UGA/CAES, UF/IFAS, Clemson/HGIC, Penn State, UMD) state the plant or any part of it is eaten or grown for food -- searched for 'Edible' on every page and got 0 hits each time, and no page addresses eating it at all.",
+        "Before setting is_edible, searched every anchor page for 'Poison', 'Toxic', and 'Problem for'. All toxicity language across all seven pages describes urushiol causing contact/skin dermatitis (rash, blisters) from touching the plant or its smoke, not a food-poisoning or ingestion hazard; 'Problem for' returned 0 hits on every page. No page frames edibility/toxicity-by-eating either way, consistent with leaving is_edible null rather than false.",
+        "RHS page (https://www.rhs.org.uk/plants/357128/toxicodendron-radicans/details) carries no size data at all: searched 'Dimensions', 'Max Height', 'Max Spread', 'Ultimate height', 'Height:' and 'Width:' and got 0 hits for every pattern -- the extracted page text has no numeric size figure, only a 'Size' nav label and a 'Time to Maturity: No preference' field.",
+        "UMD notes poison ivy berries are eaten by birds ('its berries provide nutritious food for migrating birds') -- this is wildlife seed-feeding, not pollination, so it was not used to support attracts_pollinators, per the rule that bird/seed consumption does not count as pollinator evidence.",
+        "attracts_pollinators is set true from NC State's structured 'Attracts:' field, which lists Butterflies, Moths, and Songbirds; only Butterflies and Moths are pollinators and were relied on (Songbirds were not).",
+        "All seven target pages fetched successfully (fetch status: ok) on this run -- none refused this machine, so no page is being skipped for that reason."
       ],
       "citations": [
         {
@@ -164,8 +171,15 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
           "quote": "Light: Dappled Sunlight (Shade through upper canopy all day), Full sun (6 or more hours of direct sunlight a day), Partial Shade (Direct sunlight only part of the day, 2-6 hours)"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Extension Gardener Plant Toolbox structured 'Attracts:' field lists Butterflies and Moths among the pollinators/wildlife the plant draws)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Poison Ivy - Toxicodendron radicans",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Butterflies"
         }
-      ]
+      ],
+      "attracts_pollinators": true
     },
     {
       "common_name": "Pokeweed",
@@ -217,7 +231,14 @@
         "is_houseplant: set to false rather than left null because the schema field is a required boolean. No admissible source describes indoor or long-term container growing for this species; Missouri Botanical Garden's 'Suggested Use' field is 'Naturalize' (an outdoor landscape-use category, unlike other records in this catalog where MOBOT/RHS explicitly list a 'Houseplants' suggested-use value), and the same source notes 'Some nurseries refuse to sell this plant because of its toxic properties' and advises gardeners to 'think twice before growing it in the garden because of its poisonous qualities and weedy habit' -- consistently framing it as an outdoor/wild plant, never an indoor one. RHS's H7 hardiness rating (hardy below -20 C) is also inconsistent with it being cultivated as a tender indoor container species.",
         "soil_base garden_bed: this is an inferential enum mapping, not a literal quote match -- no source uses the phrase 'garden bed.' It was chosen because the plant is clearly and repeatedly described as grown in the open ground in ordinary soil ('Grow in any fertile moist soil in sun or partial shade,' RHS; 'grows easily in average, medium moisture, well-drained soils,' NC State) and none of this catalog's container/potting-mix soil_base categories (standard_potting, chunky_aroid, cactus_succulent, ericaceous, orchid_bark, african_violet, semi_hydro) fit an outdoor, cold-hardy-to-below-0F garden perennial.",
         "soil_drainage moderate: also an inferential mapping. RHS's 'Moist but well-drained' and NC State's tags 'Good Drainage, Moist, Occasionally Dry' don't cleanly match 'fast' (which implies a quick-draining, dry-leaning mix) or 'moisture_retentive' (which implies boggy/constantly wet); 'moderate' was chosen as the closest fit to the shared 'moist but well-drained' description across both sources.",
-        "outdoor_sun_exposure: 'part_sun' was not included even though it is an available enum value. All three sources describe the range as 'full sun to/or part(ial) shade' without naming an intermediate 'part sun' step, so only full_sun and part_shade were used."
+        "outdoor_sun_exposure: 'part_sun' was not included even though it is an available enum value. All three sources describe the range as 'full sun to/or part(ial) shade' without naming an intermediate 'part sun' step, so only full_sun and part_shade were used.",
+        "is_edible=true is CONDITIONAL, not a bare endorsement: per UF/IFAS AG254, only young shoots and leaves are eaten (like asparagus, 'poke salad'), and only after boiling the plant at least two times in water with the water discarded each time; an additional boiling is said to remove remaining toxins.",
+        "Toxicity context required whenever is_edible is true (per anchor-page check on NC State): NC State rates the whole species 'medium severity poison characteristics,' states 'All parts of this plant are poisonous to humans and pets,' lists Poison Toxic Principle as 'All parts of the plant are poisonous,' names Poison Part as Flowers, Fruits, Leaves, Roots, Seeds, and Stems, and notes it 'Causes Contact Dermatitis: Yes' with a recommendation to wear gloves when handling due to risk of 'serious blood aberrations.' UF/IFAS EP631 adds that the entire plant 'is poisonous' and can 'cause death in rare cases,' toxic to cattle, sheep, poultry, horses, dogs, and humans, with highest toxin concentration in seeds and roots. RHS separately states 'TOXIC if eaten' and 'Harmful to pets if eaten (dogs).' Penn State Extension states new leaves, roots, and berries 'should not be eaten because they are toxic.' NC State also flags that a seacoast variety (var. rigida) 'is highly toxic and may be fatal if eaten' -- that variety-level claim is not used for the species-level is_edible field.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (error:ConnectError) -- could not be read, so it contributes nothing to this record; not guessing at its content.",
+        "Size used NC State's species-level Dimensions block (the anchor). Corrected at landing: other cited pages do give sizes -- UF/IFAS EP631 'can grow 4 to 10 feet high' (up to 21 feet in optimal conditions), Penn State 'can grow up to 9 feet tall', RHS Max Height 2.5-4 metres and Max Spread 1-1.5 metres; none was used.",
+        "Pokeweed is an herbaceous perennial, not a vine/liana/climber, so the climber-exception rule (leave all four size fields null) does not apply here; NC State's own Height/Width figures were used as normal mature-size figures, not a climber's run distance.",
+        "RHS gives Max Height 2.5-4 metres and Max Spread 1-1.5 metres for this species, which would convert to roughly 98.4-157.5 in height and 39.4-59.1 in spread -- these were NOT used because NC State's own species page (the anchor) already supplies structured Height/Width figures; RHS is only the fallback source when no NC State species page exists.",
+        "is_edible -- null at landing 2026-09-27, not true: UF/IFAS AG254 does record that people cut young shoots and leaves and eat them as poke salad, but only after specific preparation, while every part is poisonous raw (see toxicity_detail). The app renders is_edible true as \"grown to eat\" with no room for that condition, so a true would read as unconditional. Left null pending a catalog decision on conditionally edible poisonous plants. The dropped citation quoted: 'many people cut young shoots and leaves and eat the plant as one would eat asparagus, thus the name poke salad. For human consumption, the plant must be boiled at least two times in water and the wate'"
       ],
       "citations": [
         {
@@ -369,8 +390,32 @@
           "quote": "The plant grows easily in average, medium moisture, well-drained soils in full sun to part shade.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/"
+        },
+        {
+          "claim": "mature_height_in 48-120 (NC State Dimensions Height: 4 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/",
+          "quote": "Height: 4 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-60 (NC State Dimensions Width: 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/",
+          "quote": "Width: 3 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Bees and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/phytolacca-americana/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "is_edible": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 60
     },
     {
       "common_name": "Japanese Honeysuckle",
@@ -418,7 +463,12 @@
         "Invasive-species status (flagged per task instructions; the schema has no dedicated field for it): nearly every admissible source calls this species invasive. NC State: 'This plant is an invasive species in North Carolina.' Missouri Botanical Garden Plant Finder (plantfinder.mobot.org, taxonid=245393, 'Halliana'): 'This vine can be quite invasive, and can rapidly cover and literally suffocate shrubs or small trees if allowed to climb on them. Not recommended. It is a dreadful weed.' Penn State Extension's dedicated article is titled 'The Invasive Japanese Honeysuckle' (extension.psu.edu/the-invasive-japanese-honeysuckle) and describes it as displacing native species and strangling trees/shrubs/structures. University of Maryland Extension (extension.umd.edu/resource/japanese-honeysuckle): 'Do not plant Japanese honeysuckle, and replace existing specimens when possible.' RHS's own structured plant description states: 'This plant is listed as an invasive non-native species in Northern Ireland' and the species is on Schedule 9 of the UK Wildlife & Countryside Act (Northern Ireland), making it an offence to plant or cause it to grow in the wild there.",
         "soil_base ('garden_bed') and soil_drainage ('moderate') are best-fit mappings rather than literal source vocabulary: the schema's soil_base enum is oriented toward container/potting substrates, but every admissible source describes L. japonica growing directly in outdoor garden soil (Clay/Loam/Sand per NC State; Clay/Loam, 'Moist but well-drained' per RHS), never in a pot or houseplant mix -- garden_bed/moderate are the closest defensible values given that.",
         "toxic_to_pets — removed on audit: Direct fetch of the RHS page confirms there is no dedicated Toxicity section for this plant; the sole basis is RHS's generic 'Potentially harmful' boilerplate ('Fruit are ornamental - not to be eaten... Pets: Fruit are ornamental - not to be eaten'), which never uses the words toxic/poisonous/harmful and is standard RHS advisory language applied broadly to ornamental-fruit plants regardless of actual toxicity. NC State's page (the record's other source) has a full 'Poisonous to Humans' section but explicitly no 'Poisonous to Pets' section, which the record itself admits in unknowns. No admissible source affirmatively states this species is toxic or non-toxic to animals, so per the task's own rule this should have been left null rather than inferred as true from ambiguous advisory language.",
-        "toxicity_detail — removed on audit: Built entirely on the same weak RHS 'not to be eaten' / 'wear gloves' advisory text, which is generic handling/eating caution (likely aimed at contact irritation and discouraging consumption of non-food berries), not a documented animal-toxicity mechanism or symptom set. No source names a toxic principle, symptom, or severity specific to pets/animals for this species -- unlike NC State's genuinely detailed human-toxicity entry (saponins, medium severity, specific symptoms), which the record correctly excluded as human-only. The pet-facing narrative here is a constructed inference from silence/boilerplate, not source-supported content, and should not exist as populated text."
+        "toxicity_detail — removed on audit: Built entirely on the same weak RHS 'not to be eaten' / 'wear gloves' advisory text, which is generic handling/eating caution (likely aimed at contact irritation and discouraging consumption of non-food berries), not a documented animal-toxicity mechanism or symptom set. No source names a toxic principle, symptom, or severity specific to pets/animals for this species -- unlike NC State's genuinely detailed human-toxicity entry (saponins, medium severity, specific symptoms), which the record correctly excluded as human-only. The pet-facing narrative here is a constructed inference from silence/boilerplate, not source-supported content, and should not exist as populated text.",
+        "mature_height_in and mature_spread_in (all four fields) left null: this species is a climber. NC State Plant Toolbox lists 'Plant Type: ... Vine', 'Habit/Form: Climbing', 'Climbing Method: Twining', and its own text calls it 'a twining, climbing vine or prostrate and trailing groundcover'; RHS likewise treats it as a climber. Both pages do publish size figures (NC State 'Dimensions: Height: 16 ft. 0 in. - 29 ft. 6 in. / Width: 3 ft. 0 in. - 6 ft. 0 in.'; RHS 'Max Height 8-12 metres / Max Spread 4-8 metres'), but per the climber rule these are run/spread-along-support distances, not plant stature, so none of the four size fields are populated.",
+        "is_edible=true is conditional, not a bare yes: NC State's 'Edibility' field states only that nectar and flowers are eaten ('Nectar can be sucked from flowers without harm. Flowers are an ingredient in some Chinese dishes.'). The same anchor page also documents this species as poisonous: 'This plant has medium severity poison characteristics', Poison Severity: Medium, Poison Part: Fruits, Poison Toxic Principle: Saponins, Poison Symptoms: 'Vomiting, diarrhea, pupil dilation, cold sweat, rapid heartbeat, respiratory failure, convulsions, and coma. TOXIC ONLY IF LARGE QUANTITIES EATEN.', Causes Contact Dermatitis: No, and it is tagged/traited 'Poisonous to Humans', 'Problem for Children', and 'poisonous fruits'. No pets-specific warning was found on the page.",
+        "attracts_pollinators=true is drawn from NC State's structured 'Attracts' field, which lists Butterflies, Hummingbirds, Moths, and Songbirds; only the first three (pollinators) support this flag -- Songbirds is not counted, consistent with the rule that birds/seed-eating is not pollination evidence.",
+        "RHS (rhs.org.uk/plants/10480/lonicera-japonica) carries no pollinator or size use here (climber), but it does address eating -- its Potentially harmful field reads 'Fruit are ornamental - not to be eaten. Wear gloves and other protective equipment when handling.' with 'Pets: Fruit are ornamental - not to be eaten'. Corrected at landing: the researcher's line said this page had no toxicity evidence.",
+        "No page refused this machine: both anchor URLs (NC State and RHS) fetched with status 'ok'."
       ],
       "citations": [
         {
@@ -468,8 +518,22 @@
           "quote": "Moist but well–drained",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/10480/lonicera-japonica-japanese-honeysuckle-gold-and-silver-flower/details"
+        },
+        {
+          "claim": "is_edible: NC State's Edibility field states nectar and flowers of this species are eaten, though the plant is separately documented as poisonous (fruits, medium severity) on the same page -- see unknowns for the full toxicity text.",
+          "source": "NC State Extension Gardener Plant Toolbox - Japanese Honeysuckle (Lonicera japonica)",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/",
+          "quote": "Nectar can be sucked from flowers without harm. Flowers are an ingredient in some Chinese dishes."
+        },
+        {
+          "claim": "attracts_pollinators: NC State's structured Attracts field names Butterflies among the wildlife this species attracts (the same field also separately lists Hummingbirds and Moths, each on its own line of the field).",
+          "source": "NC State Extension Gardener Plant Toolbox - Japanese Honeysuckle (Lonicera japonica)",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/",
+          "quote": "Butterflies"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Bald Cypress",
@@ -519,7 +583,13 @@
         "water_dry_down_target / water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis: left null. Sources describe soil moisture qualitatively (moist to wet, flood-tolerant) but none give a container-style watering interval or check-depth appropriate to an in-ground landscape tree.",
         "fertilize_interval_days / fertilize_active_months / fertilize_strength: left null. No admissible source gives a species-specific fertilizing schedule for Taxodium distichum; Clemson's factsheet has no fertilizing section, and UF/IFAS's only fertilizing mention ('Keep trees healthy with regular fertilization') is generic twig-blight disease-management advice, not a schedule with an interval, active months, or dose strength.",
         "USDA hardiness zone figures vary by source (NC State 4a-9b; Missouri Botanical Garden 4-9; Clemson 5-11; UF/IFAS 5A-10B) -- likely reflecting differing revision dates or scope (species vs. cultivars). No field in this schema captures hardiness zone directly, so it is noted here for context only and did not drive any field value.",
-        "water_regime — removed on audit: Value \"keep_moist\" is backed by three accurately-quoted citations (NC State flood tolerance; Clemson saturated-soils habitat; MOBOT moisture-retentive/prefers-moist), all verified verbatim against the live pages. But the record never discloses or reconciles directly conflicting evidence already present in the very pages it cites for other fields: UF/IFAS's own Culture table (same ask.ifas.ufl.edu/publication/ST620 URL used for soil_ph_max) explicitly rates \"Drought tolerance: high\"; NC State's own descriptive text (same plants.ces.ncsu.edu page cited for water_regime) states \"In cultivation, however, it grows very well in drier, upland soils\"; and NC State's own tag list carries both \"#drought tolerant\" and \"#flood tolerant.\" Unlike soil_ph_max and outdoor_sun_exposure, where the record carefully surfaced and reasoned through cross-source tension in `unknowns`, no equivalent disclosure exists here despite comparable or stronger countervailing evidence sitting in already-cited sources. Presenting \"keep_moist\" unqualified overstates the case for a species multiple admissible sources describe as tolerating both standing water and dry upland soil equally well."
+        "water_regime — removed on audit: Value \"keep_moist\" is backed by three accurately-quoted citations (NC State flood tolerance; Clemson saturated-soils habitat; MOBOT moisture-retentive/prefers-moist), all verified verbatim against the live pages. But the record never discloses or reconciles directly conflicting evidence already present in the very pages it cites for other fields: UF/IFAS's own Culture table (same ask.ifas.ufl.edu/publication/ST620 URL used for soil_ph_max) explicitly rates \"Drought tolerance: high\"; NC State's own descriptive text (same plants.ces.ncsu.edu page cited for water_regime) states \"In cultivation, however, it grows very well in drier, upland soils\"; and NC State's own tag list carries both \"#drought tolerant\" and \"#flood tolerant.\" Unlike soil_ph_max and outdoor_sun_exposure, where the record carefully surfaced and reasoned through cross-source tension in `unknowns`, no equivalent disclosure exists here despite comparable or stronger countervailing evidence sitting in already-cited sources. Presenting \"keep_moist\" unqualified overstates the case for a species multiple admissible sources describe as tolerating both standing water and dry upland soil equally well.",
+        "is_edible left null: no page among the five cited (NC State Plant Toolbox, Clemson HGIC) addresses eating this plant or any part of it; UF/IFAS ST620 and RHS also make no edibility statement. No poison/toxic/pets-warning language appears on the NC State anchor page either (searched for 'Poison', 'Toxic', 'Problem for' -- 0 hits each).",
+        "attracts_pollinators left null: NC State's structured 'Attracts:' field lists only 'Small Mammals' and 'Songbirds' -- no bees, butterflies, moths, or hummingbirds. Its separate 'Wildlife Value' text says wood ducks, wild turkey, evening grosbeak, squirrels, waterfowl and wading birds eat the seeds, and Yellow-throated warblers eat insects/food on hosted Spanish moss -- this is seed/foliage predation, not pollination, per instructions, so it is not read as support. Clemson and RHS pages contain no 'Attracts', 'pollinator', 'butterfly', 'bee', or 'hummingbird' language for this species either.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=m510 refused this machine (fetch status: error:ConnectError) -- not read, not guessed.",
+        "Size fields taken from the NC State Plant Toolbox anchor page's structured 'Dimensions:' block: 'Height: 50 ft. 0 in. - 70 ft. 0 in.' and 'Width: 20 ft. 0 in. - 30 ft. 0 in.' Clemson HGIC corroborates with the same landscape-specimen range ('Most landscape specimens tend to grow 50 to 70 feet tall and 20 to 30 feet wide'), though that page's text was not quoted as a citation since the NC State anchor already supplies a clean structured value. UF/IFAS ST620 gives a different figure ('Height: 60 to 80 feet', 'Spread: 25 to 35 feet') and RHS gives 'Max Height Higher than 12 metres' (open-ended, no usable bound) and 'Max Spread 4-8 metres'; per the instructions NC State is the anchor for size when it has a page for the species, so these alternate figures were not used and RHS/UF figures are not cited.",
+        "Taxodium distichum is a tree, not a vine/liana/climber, so the climber exclusion rule for size fields does not apply here.",
+        "Cultivar-specific sizes mentioned on Clemson's page (e.g. 'Peve Minaret' 10 ft x 6 ft, 'Skyward', 'Hursley Park' 4 ft x 6 ft, 'JFS-SGPN' 55 ft x 30 ft, 'Morris' 50 ft x 12 ft, 'Nutans' 50 ft x 16 ft, 'Prairie Sentinel') were excluded from the species-level size fields as cultivar figures, per instructions."
       ],
       "citations": [
         {
@@ -599,8 +669,24 @@
           "quote": "the trees will also grow remarkably well on almost any soil, including heavy, compacted, or poorly-drained muck, except alkaline soils with a pH above 7.5",
           "source": "UF/IFAS Extension (EDIS ENH-778/ST620)",
           "url": "https://ask.ifas.ufl.edu/publication/ST620"
+        },
+        {
+          "claim": "mature_height_in 600-840 (NC State Height 50 ft. 0 in. - 70 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Taxodium distichum",
+          "url": "https://plants.ces.ncsu.edu/plants/taxodium-distichum/",
+          "quote": "Height: 50 ft. 0 in. - 70 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 240-360 (NC State Width 20 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Taxodium distichum",
+          "url": "https://plants.ces.ncsu.edu/plants/taxodium-distichum/",
+          "quote": "Width: 20 ft. 0 in. - 30 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 600,
+      "mature_height_in_max": 840,
+      "mature_spread_in_min": 240,
+      "mature_spread_in_max": 360
     },
     {
       "common_name": "Trumpet Vine",
@@ -652,7 +738,11 @@
         "toxic_to_pets / toxicity_detail: the two admissible sources that address ingestion toxicity for this species are both explicitly scoped to humans, not pets. NC State's poison section is headed 'Poisonous to Humans' (Severity: Low; sap causes only minor, short-lived skin irritation; toxic principle unidentified). UGA's table is explicitly titled 'Ornamental Plants Reported To Be Toxic When Ingested by Humans' and separately lists this species (not a genus-level entry) with symptoms 'gastric irritation, dilated pupils, numbness in hands' for all parts except fruit. No admissible source addresses toxicity to dogs, cats, or other pets for this species, so per the task's instruction against blending human-only toxicity data into a pet-toxicity field, both fields were left null.",
         "soil_base: garden_bed was inferred from the plant's landscape/garden soil description (clay, sand, loam soil types; grown in-ground against walls, fences, arbors, and trellises) rather than any explicit potting-mix statement, since no admissible source frames this species as a container/indoor plant. One UF/IFAS 'Uses' tag lists 'hanging basket,' but this is presented as an outdoor landscape use alongside 'veils a trellis' and 'woodland garden,' not indoor cultivation, so it was not used to support is_houseplant=true.",
         "Common name breadth: NC State also lists Cow-itch, Cow Vine, Devil's Shoestring, Foxglove Vine, Hellvine, and Trumpet Creeper as common names for this same species; only 'Trumpet Vine' (the name given in the task) was recorded in common_name.",
-        "University of Maryland Extension's dedicated 'Trumpet Creeper' page (an admissible source) could not be reliably re-fetched for verbatim quotable text after an initial successful summary-only fetch (subsequent attempts returned HTTP 403 'Access denied'), so it was not cited to avoid using a non-verbatim paraphrase as a quote. Penn State Extension's 'Perennial Vines: Friend or Foe?' page was checked directly and does not characterize trumpet vine as invasive/aggressive or address containment, so it was not used for that claim."
+        "University of Maryland Extension's dedicated 'Trumpet Creeper' page (an admissible source) could not be reliably re-fetched for verbatim quotable text after an initial successful summary-only fetch (subsequent attempts returned HTTP 403 'Access denied'), so it was not cited to avoid using a non-verbatim paraphrase as a quote. Penn State Extension's 'Perennial Vines: Friend or Foe?' page was checked directly and does not characterize trumpet vine as invasive/aggressive or address containment, so it was not used for that claim.",
+        "mature_height_in and mature_spread_in left null on all four ends: NC State's Plant Type field lists this species as a Vine with Climbing Method: Clinging, so per the climber rule no size figures were recorded even though NC State's Dimensions block gives 'Height: 30 ft. 0 in. - 40 ft. 0 in.' and 'Width: 4 ft. 0 in. - 10 ft. 0 in.' -- for a clinging vine that figure is the distance it runs along its support, not a stature/spread the mature_height_in/mature_spread_in fields can safely represent yet. UF/IFAS corroborates the climber read: its Description literally lists 'Height: depends upon supporting structure' and 'Spread: depends upon supporting structure', giving no numeric bound at all for either.",
+        "is_edible set to false, not left null, because NC State's Poison Symptoms field states 'Causes low toxicity if eaten' -- an explicit statement that eating it causes toxicity, not merely no mention. Per the toxicity check required before setting is_edible: NC State also lists Poison Severity: Low, Poison Toxic Principle: Unidentified, Causes Contact Dermatitis: Yes, and Poison Part: Flowers, Leaves; contact with the sap causes minor skin irritation with redness and swelling lasting a few minutes.",
+        "RHS (rhs.org.uk), Clemson HGIC (hgic.clemson.edu), Missouri Botanical Garden Plant Finder (plantfinder.mobot.org), and the UGA CAES field report PDF (fieldreport.caes.uga.edu) were not queried for this pass -- the two anchor pages read (NC State Plant Toolbox and UF/IFAS ask.ifas.ufl.edu) independently agreed on both the climber-size read and on pollinator attraction (hummingbirds, bees, songbirds), so no conflict needed resolving against the remaining sources for these six fields.",
+        "attracts_pollinators set true on NC State's structured Attracts field (Bees, Hummingbirds, Pollinators, Songbirds) and its Wildlife Value sentence that hummingbirds are 'the principal pollinator of this plant'; UF/IFAS corroborates with 'This plant attracts pollinators, including hummingbirds' and notes visits from bees and songbirds. No genus-level inference was used -- the species page itself names pollinators unconditionally."
       ],
       "citations": [
         {
@@ -822,8 +912,22 @@
           "quote": "Problems: Contact Dermatitis Weedy",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/"
+        },
+        {
+          "claim": "is_edible false (NC State Poison Symptoms: Causes low toxicity if eaten)",
+          "source": "NC State Extension - North Carolina Extension Gardener Plant Toolbox, Campsis radicans",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/",
+          "quote": "Causes low toxicity if eaten."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: flowers attractive to hummingbirds, principal pollinator)",
+          "source": "NC State Extension - North Carolina Extension Gardener Plant Toolbox, Campsis radicans",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/",
+          "quote": "The flowers are attractive to hummingbirds which are the principal pollinator of this plant."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Hens and Chicks",
@@ -868,7 +972,14 @@
         "day_f_max/day_f_min/night_f_max/night_f_min, humidity_need, humidity_pct_min/max, light_fc_min/light_fc_good, direct_sun_hours_max: none of the admissible sources give numeric indoor temperature ranges, humidity targets, foot-candle figures, or a maximum direct-sun-hours cap for this species; left null.",
         "fertilize_interval_days/fertilize_strength/fertilize_active_months: no admissible source discusses fertilizing Sempervivum tectorum; left null.",
         "water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: sources describe watering only qualitatively (avoid overwatering, let dry between waterings, tolerates drought, needs sharp drainage) with no measurable depth or day-interval figures; left null.",
-        "is_houseplant — removed on audit: Neither citation cleanly supports classifying Sempervivum tectorum as a houseplant. Verified live: the Penn State citation (extension.psu.edu/propagating-houseplants) mentions hens and chicks only in passing, as one example of a 'clump-forming plant' alongside snake plant/orchids/bromeliads in the article's Division section ('Division is used to propagate clump-forming plants, such as snake plant, orchids, bromeliads, and hens and chicks (Sempervivum tectorum)') -- it never asserts the species is grown or kept indoors. The NC State citation only says 'Makes an excellent container plant,' which does not distinguish indoor houseplant use from outdoor patio/container gardening, and the same NC State page (verified) independently states this species needs 6+ hours of full sun and is hardy through USDA zone 3a, while RHS (verified) rates it H7, 'hardy in the severest European continental climates (< -20)'C -- all hallmarks of an outdoor alpine/rock-garden succulent rather than a plant routinely marketed as an indoor houseplant. The value is genuinely in doubt, not just one weak supporting citation among several solid ones."
+        "is_houseplant — removed on audit: Neither citation cleanly supports classifying Sempervivum tectorum as a houseplant. Verified live: the Penn State citation (extension.psu.edu/propagating-houseplants) mentions hens and chicks only in passing, as one example of a 'clump-forming plant' alongside snake plant/orchids/bromeliads in the article's Division section ('Division is used to propagate clump-forming plants, such as snake plant, orchids, bromeliads, and hens and chicks (Sempervivum tectorum)') -- it never asserts the species is grown or kept indoors. The NC State citation only says 'Makes an excellent container plant,' which does not distinguish indoor houseplant use from outdoor patio/container gardening, and the same NC State page (verified) independently states this species needs 6+ hours of full sun and is hardy through USDA zone 3a, while RHS (verified) rates it H7, 'hardy in the severest European continental climates (< -20)'C -- all hallmarks of an outdoor alpine/rock-garden succulent rather than a plant routinely marketed as an indoor houseplant. The value is genuinely in doubt, not just one weak supporting citation among several solid ones.",
+        "is_edible left null: none of the four cited pages (NC State Plant Toolbox, RHS, Penn State Extension, MOBOT) address whether Sempervivum tectorum or any part of it is eaten; NC State and RHS were searched for 'Edible' with 0 hits and no other page discusses food use.",
+        "attracts_pollinators left null: no cited page has a structured Attracts/Wildlife field or an unconditional pollinator statement for this species -- NC State ('Attracts', 'Pollinator', 'bee', 'butterfl', 'hummingbird', 'Wildlife') and RHS ('pollinator', 'bee', 'butterfl', 'hummingbird', 'Wildlife') were all searched and returned 0 real hits (RHS's one 'Wildlife' hit is a nav-menu link to 'Wildlife gardening', not species content).",
+        "Climber exclusion does not apply: RHS lists Habit as 'Matforming' and Habit/Form on NC State as 'Horizontal, Spreading' -- this is a mat-forming succulent rosette, not a vine/liana, so size fields were populated normally.",
+        "NC State Plant Toolbox (https://plants.ces.ncsu.edu/plants/sempervivum-tectorum/) carries no 'Dimensions:' block and no 'Height'/'Width' plant-size figures for this species (only a Leaf Length/Leaf Width of <1 inch, which is a leaf measurement, not the mature-plant size fields); it was not used for size.",
+        "Penn State Extension (https://extension.psu.edu/propagating-houseplants) mentions Sempervivum tectorum only once, as an example plant for the Division propagation method; it contains no size, edibility, or pollinator information for this species.",
+        "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b711) refused this machine (fetch status error:ConnectError, 0 bytes) -- it was skipped and not guessed at.",
+        "RHS gives Max Height as a single figure ('Up to 10 cm'), so per the one-figure-fills-one-end rule only mature_height_in_max is set; mature_height_in_min is left null rather than inventing a low end."
       ],
       "citations": [
         {
@@ -942,8 +1053,23 @@
           "quote": "Grow in moderately fertile well-drained soil in full sun. Protect from excessive winter wet.",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/17164/sempervivum-tectorum/details"
+        },
+        {
+          "claim": "mature_height_in_max 3.9, mature_height_in_min left null (RHS Max Height \"Up to 10 cm\" is a single published figure, not a range; converted to inches: 10 cm = 0.1 m x 39.37 = 3.9 in)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/17164/sempervivum-tectorum/details",
+          "quote": "Max Height         Up to 10 cm"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread \"0.1-0.5 metres\", converted to inches: 0.1 m x 39.37 = 3.9 in for mature_spread_in_min, 0.5 m x 39.37 = 19.7 in for mature_spread_in_max)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/17164/sempervivum-tectorum/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
-      ]
+      ],
+      "mature_height_in_max": 3.9,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Brazilian Orchid",
@@ -1191,7 +1317,12 @@
         "soil_drainage = moderate is mapped from Missouri Botanical Garden's prose ('well-drained soils', 'dry to medium moisture') rather than a literal 'moderate' quote; no admissible source uses stronger fast-drainage language (e.g. 'sharply drained' or 'gritty/sandy mix required'), so 'moderate' rather than 'fast' was used.",
         "soil_drainage — removed on audit: Value 'moderate' is backed by only one citation (Missouri Botanical Garden), and its own quote never says 'moderate' — it says 'Easily grown in average, dry to medium moisture, well-drained soils in full sun.' I fetched the live MOBOT page (plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277347) and the same Culture paragraph also states 'Performs well in light sandy soils' — a fast-drainage signal that the record's citation quote omits and that directly contradicts the record's own unknowns claim that 'no admissible source uses stronger fast-drainage language (e.g. ... gritty/sandy mix required).' 'Well-drained' + 'light sandy soils' reads more naturally as 'fast' than 'moderate.' The single supporting citation does not literally establish the value, and the researcher's own stated rationale for picking 'moderate' over 'fast' is contradicted by the source it cites.",
         "is_houseplant — removed on audit: Non-null value (false) traces to zero entries in the citations array — the unknowns list itself admits this is 'a product-classification default, not a directly sourced fact.' This fails structural check 1 (every non-null field value must trace to a citation). I verified via direct fetch of the NC State Plant Toolbox page that its Landscape Locations field does include 'Container,' which the record never addresses via any citation, formal or otherwise, for indoor/outdoor classification.",
-        "soil_base — removed on audit: Non-null value ('garden_bed') traces to zero entries in the citations array. The record's own unknowns note concedes it is 'a product classification, not a sourced fact -- inferred' rather than cited. Same structural check 1 failure as is_houseplant: a populated field with no citation backing it, only after-the-fact prose justification."
+        "soil_base — removed on audit: Non-null value ('garden_bed') traces to zero entries in the citations array. The record's own unknowns note concedes it is 'a product classification, not a sourced fact -- inferred' rather than cited. Same structural check 1 failure as is_houseplant: a populated field with no citation backing it, only after-the-fact prose justification.",
+        "is_edible is TRUE but conditional: NC State's Edibility field states only 'Flowers for tea and other culinary uses' -- not the whole plant. The same anchor page also carries toxicity warnings that must travel with this true value per the poison-check rule: 'This plant has low severity poison characteristics.' Poison Severity: Low. Poison Symptoms: 'If sensitive to allergens, may cause contact dermatitis, hives, oral swelling, and shortness of breath.' Poison Toxic Principle: Desacetylmatricarin. Poison Part: Flowers, Leaves. Free text on the page: 'Toxic to dogs, cats, and horses.' Page tags also include #contact dermatitis, #problem for cats, #problem for dogs, #problem for horses.",
+        "mature_height_in and mature_spread_in are both taken from NC State's structured Dimensions block (Height and Width each '0 ft. 6 in. - 2 ft. 0 in.' = 6-24 in). German chamomile is an annual herb, not a vine/liana/climber, so all four size fields were populated normally (climber-nulling rule does not apply).",
+        "RHS pages 43377 (Matricaria chamomilla) and 77703 (Matricaria recutita, a synonym) both give Max Height / Max Spread of 0.1-0.5 metres (about 3.9-19.7 in) for this species, which conflicts with NC State's 6-24 in. NC State has a species-specific page and is the designated anchor per the task's rule, so NC State's figures were used and RHS's size figures were not entered anywhere. RHS's 'Plants for pollinators' tag was used only as corroboration for attracts_pollinators=true, not as its citation.",
+        "hgic.clemson.edu/factsheet/herbs/ returned HTTP 403 and refused this machine -- not read, no field is based on it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277347 returned a connection error and refused this machine -- not read, no field is based on it."
       ],
       "citations": [
         {
@@ -1265,8 +1396,38 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/77703/matricaria-recutita-scented-mayweed-sweet-false-chamomile/details",
           "quote": "Name Status: Synonym"
+        },
+        {
+          "claim": "mature_height_in 6-24 (NC State Height: 0 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- German Chamomile (Matricaria chamomilla)",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Height: 0 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-24 (NC State Width: 0 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- German Chamomile (Matricaria chamomilla)",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Width: 0 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: flowers attract bees and flies, plus small butterflies, wasps, and beetles)",
+          "source": "NC State Extension Gardener Plant Toolbox -- German Chamomile (Matricaria chamomilla)",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "The flowers attract mostly bees and flies. Small butterflies, wasps, and beetles are seen less frequent."
+        },
+        {
+          "claim": "is_edible true, conditional on flowers only (NC State Edibility field)",
+          "source": "NC State Extension Gardener Plant Toolbox -- German Chamomile (Matricaria chamomilla)",
+          "url": "https://plants.ces.ncsu.edu/plants/matricaria-chamomilla/common-name/german-chamomile/",
+          "quote": "Flowers for tea and other culinary uses."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1307,6 +1468,7 @@
     "2026-08-23: twelfth batch of the \"blind spots\" pass. Poison Ivy is a genuinely new case for this catalog -- its hazard is contact dermatitis (urushiol), not ingestion, the first plant landed with that distinction. toxic_to_pets is correctly false (pets aren't poisoned by it) while toxicity_detail captures the real, well-documented risk that pets carry urushiol on their fur and transfer it to the humans who pet them -- a nuance five independent sources (Clemson, Penn State, UMD, UGA, UF/IFAS) converge on. Pokeweed confirmed toxic_to_pets=true (phytolaccatoxin, despite a folk food tradition of eating young shoots after extensive preparation, which the record correctly declined to read as a safety signal). Rounded out with Bald Cypress (completing a \"wet-tolerant tree\" trio alongside River Birch and Sycamore, both already in this catalog, all three named together in the same UMD source), Japanese Honeysuckle, Trumpet Vine, Hens and Chicks, a Cattleya orchid, and German Chamomile.",
     "Trumpet Vine's toxic_to_pets was correctly nulled after the audit found the record's sole support was RHS's generic ornamental-fruit \"not to be eaten\" advisory boilerplate, which never uses the words toxic/poisonous/harmful and is applied broadly regardless of actual toxicity -- a good example of the catalog's discipline against reading routine handling caution as a toxicity finding.",
     "One landing-time repair: Cattleya's common_name was nulled because \"Cattleya Orchid\" was a constructed label, not a name any source actually used -- restored as \"Brazilian Orchid\", the first of NC State's own listed common names, already directly quoted in an existing citation in this same record.",
-    "One defect this batch's own audit missed and this landing pass caught independently: Cattleya's water_growing_days_est=7 had no citation with a matching claim label anywhere in the record -- the quote it was supposedly derived from (MOBOT's 'about once a week or more') was never actually added to the citations array. Nulled to match this catalog's consistent standard."
+    "One defect this batch's own audit missed and this landing pass caught independently: Cattleya's water_growing_days_est=7 had no citation with a matching claim label anywhere in the record -- the quote it was supposedly derived from (MOBOT's 'about once a week or more') was never actually added to the citations array. Nulled to match this catalog's consistent standard.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

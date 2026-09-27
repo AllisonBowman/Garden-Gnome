@@ -166,7 +166,13 @@
         "is_houseplant: set false. RHS's only cultivation note is 'Under glass, grow in sharply-draining, peat-free, loam-based compost...' -- greenhouse/conservatory container cultivation -- for a plant that reaches 4-8 metres in height and spread at maturity. No admissible source describes sustained indoor/household houseplant use, so 'under glass' was read as protected/greenhouse growing rather than houseplant status (matching how this catalog has treated similar RHS 'under glass' language elsewhere: it supports houseplant status only when paired with an explicit 'indoor'/'houseplant' claim, which is absent here).",
         "toxic_to_pets/toxicity_detail scope: only dogs are named by RHS ('Pets (dogs): Skin/eye irritant'); no admissible source addresses toxicity to cats specifically for this species, so the true/detail values should be read as dog-specific, not confirmed for cats.",
         "Coverage gap across the rest of the admissible domain list: NC State Extension's genus-level 'Opuntia' Plant Toolbox page (plants.ces.ncsu.edu/plants/opuntia/) and UF/IFAS's 'Opuntia spp. Prickly Pear Cactus' factsheet (FP448, ask.ifas.ufl.edu/publication/fp448) both discuss the genus broadly ('Opuntia spp.') but never name Opuntia ficus-indica specifically, so their content was excluded as genus-wide boilerplate rather than species-specific evidence. No page was found addressing this species by name on hgic.clemson.edu, extension.psu.edu, extension.umd.edu, fieldreport.caes.uga.edu, or plantfinder.mobot.org/missouribotanicalgarden.org. RHS is the only admissible source located that names Opuntia ficus-indica directly.",
-        "is_houseplant — removed on audit: Neither cited quote actually states houseplant status: citation 9 (\"Max Height 4-8 metres... Time to Maturity 10-20 years\") is size data, and citation 10 (\"Under glass, grow in sharply-draining... cactus compost\") is a cultivation-medium note -- neither contains any statement about indoor/houseplant suitability, so 'false' is an inference, not a literal quote match. Worse, a live fetch of the same cited RHS URL (rhs.org.uk/plants/11871/opuntia-ficus-indica/details) shows the page carries 'Conservatory' and 'Greenhouse' category tags AND a direct link reading 'See houseplant cacti and succulent cultivation for further advice' -- confirmed verbatim on two independent fetches. This directly contradicts the record's own unknowns note, which asserts 'No admissible source describes sustained indoor/household houseplant use' from the very same source. The record over-reached into a confident 'false' while omitting contrary evidence sitting on the page it cites; this should at minimum be null, not a confident false."
+        "is_houseplant — removed on audit: Neither cited quote actually states houseplant status: citation 9 (\"Max Height 4-8 metres... Time to Maturity 10-20 years\") is size data, and citation 10 (\"Under glass, grow in sharply-draining... cactus compost\") is a cultivation-medium note -- neither contains any statement about indoor/houseplant suitability, so 'false' is an inference, not a literal quote match. Worse, a live fetch of the same cited RHS URL (rhs.org.uk/plants/11871/opuntia-ficus-indica/details) shows the page carries 'Conservatory' and 'Greenhouse' category tags AND a direct link reading 'See houseplant cacti and succulent cultivation for further advice' -- confirmed verbatim on two independent fetches. This directly contradicts the record's own unknowns note, which asserts 'No admissible source describes sustained indoor/household houseplant use' from the very same source. The record over-reached into a confident 'false' while omitting contrary evidence sitting on the page it cites; this should at minimum be null, not a confident false.",
+        "is_edible left null: RHS lists \"edible prickly pear\" only as an other-common-name entry; no text on the page states the plant or fruit is grown or used for food. Searched 'food', 'culinary', 'used for', 'grown for', 'fruit is', 'eaten', 'eat' -- no qualifying statement found, only the common-name occurrence and unrelated cultivation/how-to-grow text.",
+        "attracts_pollinators left null: no 'Attracts' field and no mention of bees, butterflies, moths, or hummingbirds anywhere on the page. Searched 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' -- the only 'Wildlife' hit was an unrelated nav-menu link ('Wildlife gardening').",
+        "Page's Botanical Details carries 'Potentially harmful: Skin/eye irritant. Wear gloves and other protective equipment when handling' and 'Pets (dogs): Skin/eye irritant' -- flagged here even though is_edible is null (so rule 5 does not strictly require it) because it is decision-relevant toxicity information on the anchor page.",
+        "Habit is given as 'Columnar upright' and the plant is described as 'A bushy, tree-like cactus' -- not a vine, liana, or other climber, so the climber exclusion (rule 4) does not apply and size fields were populated normally.",
+        "Size figures (Max Height 4-8 metres, Max Spread 4-8 metres) are stated directly on the Opuntia ficus-indica species page itself, not on a named-cultivar page, so the cultivar exclusion (rule 3) does not apply.",
+        "Only page read was the RHS anchor page; it fetched successfully (no refused hosts to report for this task)."
       ],
       "citations": [
         {
@@ -228,8 +234,24 @@
           "quote": "Under glass, grow in sharply-draining, peat-free, loam-based compost with added sharp sand, or a proprietary peat-free cactus compost.",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details"
+        },
+        {
+          "claim": "mature_height_in 157.48-314.96 (RHS Max Height 4-8 metres, converted to inches: 4 x 39.37 = 157.48, 8 x 39.37 = 314.96)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details",
+          "quote": "Max Height         4-8 metres                 Max Spread         4-8 metres"
+        },
+        {
+          "claim": "mature_spread_in 157.48-314.96 (RHS Max Spread 4-8 metres, converted to inches: 4 x 39.37 = 157.48, 8 x 39.37 = 314.96)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/11871/opuntia-ficus-indica/details",
+          "quote": "Max Height         4-8 metres                 Max Spread         4-8 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 157.48,
+      "mature_height_in_max": 314.96,
+      "mature_spread_in_min": 157.48,
+      "mature_spread_in_max": 314.96
     },
     {
       "common_name": "Catawba Rhododendron",
@@ -282,7 +304,12 @@
         "fertilize_active_months/fertilize_interval_days/fertilize_strength: Clemson's only fertilizing note ('very little fertilizer is necessary – particularly for older, established plants') is both non-numeric (no interval, calendar month, or dilution/strength figure) and explicitly genus-wide (its lead sentence is 'With proper soil preparation and mulching...' inside a page about 'Rhododendrons' generally, in a table that separately lists catawbiense as one of several species), so none of the fertilize_* fields were filled.",
         "toxicity_detail: left null despite toxic_to_pets=true being well supported. I fetched NC State's raw page HTML directly and confirmed its only detailed poison text (Poison Severity: Low; Poison Symptoms: 'While the plants are known to contain toxins, ingestion of moderate amounts of azalea (nectar or leaves) poses little toxic hazard.'; Poison Toxic Principle: Grayanotoxins; Causes Contact Dermatitis: No; Poison Part: Bark/Flowers/Fruits/Leaves/Roots/Seeds/Stems) is nested entirely inside a group literally headed 'Poisonous to Humans:' on the live page — structurally separate from the sibling 'Problem for Cats'/'Problem for Dogs' tags (in a different 'Problems:' list) that toxic_to_pets itself relies on. Per this catalog's own rule against blending a human-scoped toxicity section into a pet-scoped field, none of that severity/symptom/toxic-principle text was used for toxicity_detail. The Poison Symptoms sentence also names 'azalea' specifically rather than catawbiense — a second, independent reason to distrust it as catawbiense-specific pet-toxicity detail; it reads as boilerplate likely shared across sibling Rhododendron/Azalea pages on NC State's site. RHS's toxicity line ('Harmful if eaten... Pets (dogs, cats, rabbits, tortoises) Harmful if eaten') and MOBOT's ('All parts of this plant are highly toxic if ingested.') both support toxic_to_pets but are bare severity statements with no named toxin, symptom, or affected-part detail scoped to pets. No admissible source ties a specific toxin name or symptom list to pets (as opposed to humans) for this species, so toxicity_detail was left null rather than assembled from the human-scoped or unscoped fragments available.",
         "outdoor_sun_exposure: the 'part_sun' enum value was not used — no admissible source uses that specific gradation for this species; only full-sun, partial-shade/part-shade, and deep/full-shade categories appear across NC State, RHS, and MOBOT.",
-        "soil_ph_max — removed on audit: soil_ph_max=6 rests on exactly one citation: NC State's 'Soil pH: Acid (<6.0)' -- a coarse checkbox/category tag from the structured plant-database UI, not a continuous numeric range stated in prose for this species. I independently re-fetched plants.ces.ncsu.edu/plants/rhododendron-catawbiense/ and confirmed the tag reads exactly that (a single bucket, not a min-max sentence). No second, independent admissible source supplies a numeric ceiling to corroborate it: RHS's cultivation text (re-fetched, confirmed verbatim) says only 'acidic soil' qualitatively with no figure, and the one prose source that does give an actual numeric range -- Clemson's 'a soil pH between 4.5 and 6.0' -- was itself excluded by the record's own stated logic as genus-wide rather than species-specific. Since this field has no second, unproblematic citation to fall back on (unlike the catalog's check-2 escape hatch for fields with multiple supporting sources), converting a '<6.0' category boundary into a precise species-specific ceiling of exactly 6.0 pH units asserts more numeric precision than the single supporting citation actually states, so the value itself -- not just one citation among several -- is in doubt."
+        "soil_ph_max — removed on audit: soil_ph_max=6 rests on exactly one citation: NC State's 'Soil pH: Acid (<6.0)' -- a coarse checkbox/category tag from the structured plant-database UI, not a continuous numeric range stated in prose for this species. I independently re-fetched plants.ces.ncsu.edu/plants/rhododendron-catawbiense/ and confirmed the tag reads exactly that (a single bucket, not a min-max sentence). No second, independent admissible source supplies a numeric ceiling to corroborate it: RHS's cultivation text (re-fetched, confirmed verbatim) says only 'acidic soil' qualitatively with no figure, and the one prose source that does give an actual numeric range -- Clemson's 'a soil pH between 4.5 and 6.0' -- was itself excluded by the record's own stated logic as genus-wide rather than species-specific. Since this field has no second, unproblematic citation to fall back on (unlike the catalog's check-2 escape hatch for fields with multiple supporting sources), converting a '<6.0' category boundary into a precise species-specific ceiling of exactly 6.0 pH units asserts more numeric precision than the single supporting citation actually states, so the value itself -- not just one citation among several -- is in doubt.",
+        "is_edible left null: neither page says any part is grown or used for food. Corrected at landing: RHS does address eating -- its Potentially harmful field reads 'Harmful if eaten.' with a gloves note and a pets warning (dogs, cats, rabbits, tortoises) -- which could support false in a later pass; not re-proposed here.",
+        "The NC State page does carry toxicity information -- Poison Severity: Low, Poison Symptoms: \"While the plants are known to contain toxins, ingestion of moderate amounts of azalea (nectar or leaves) poses little toxic hazard.\", Poison Toxic Principle: Grayanotoxins, Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems, Causes Contact Dermatitis: No, and tags #problem for cats #problem for dogs #problem for horses -- noted here even though is_edible is null (not true), since this is exactly the kind of toxicity text that must not be dropped.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2 refused this machine (error:ConnectError) and could not be read; nothing from it was used or guessed at.",
+        "Mature size fields were taken from NC State Plant Toolbox, the anchor, because a species-specific NC State page exists for Rhododendron catawbiense (not a genus page). RHS separately gives Max Height 2.5-4 metres and Max Spread 2.5-4 metres (98.4-157.5 inches) for this species but was not used, since NC State takes priority when both exist.",
+        "Catawba Rhododendron is confirmed a shrub on the NC State page (Plant Type: Shrub), not a vine/liana/climber, so the climber size-exclusion rule does not apply and all four size fields were populated normally."
       ],
       "citations": [
         {
@@ -404,8 +431,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279982&isprofile=0&pt=2",
           "quote": "All parts of this plant are highly toxic if ingested."
+        },
+        {
+          "claim": "mature_height_in 72-120 (NC State Height 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Height: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 96-120 (NC State Width 8 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Width: 8 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states flowers attract pollinators, and the structured Attracts field lists Bees, Butterflies, Hummingbirds, Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+          "quote": "Nectar from flowers attracts hummingbirds, butterflies, and bees."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 96,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Japanese Privet",
@@ -453,7 +503,12 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. Sources give only qualitative drought/wet-soil tolerance language -- Clemson: 'adapted to adverse conditions of drought, heat, cold, many soil types and salt spray' and 'The only soils this shrub does not grow in well are those that are permanently wet'; UF/IFAS: tolerant of a wide range of soils 'as long as water is not allowed to stand in the root zone' -- with no explicit dry-down schedule, check-depth, or day-interval figure of the kind this schema's water fields require.",
         "humidity_need, humidity_pct_min/max, light_fc_min/light_fc_good, direct_sun_hours_max, cool_rest_note, fertilize_active_months/interval_days/strength: left null. No admissible source treats this species as a houseplant or gives greenhouse/indoor-style figures (footcandles, percent humidity, fertilizer interval, or a specific sun-hours ceiling) -- every admissible source documents it strictly as an outdoor hardy landscape/hedge shrub, consistent with is_houseplant being set false.",
         "is_houseplant: set false based on this species' outdoor cold-hardiness data (NC State: USDA zones 7a-10b; UF/IFAS: 7B-10A; RHS: Hardiness H5) and its landscape/hedge framing across every admissible source. UF/IFAS's Uses list does include 'container or planter' and 'Bonsai' among many clearly outdoor landscape-design uses (parking lot islands, highway median, street tree, tree lawn) -- this reads as outdoor container/patio and bonsai culture, not sustained indoor houseplant cultivation, so it was documented here rather than read as houseplant support.",
-        "name_note — removed on audit: Structural check #1 fails: name_note is non-null but no citation's claim label literally contains the string 'name_note.' The only citations touching this content (RHS 'Name Status Correct', NC State Genus/Species attributes) are labeled 'scientific_name_accepted' and 'scientific_name_given', not 'name_note' -- so the field, while factually accurate, is untraceable by the required literal-label test."
+        "name_note — removed on audit: Structural check #1 fails: name_note is non-null but no citation's claim label literally contains the string 'name_note.' The only citations touching this content (RHS 'Name Status Correct', NC State Genus/Species attributes) are labeled 'scientific_name_accepted' and 'scientific_name_given', not 'name_note' -- so the field, while factually accurate, is untraceable by the required literal-label test.",
+        "is_edible left null: no cited page says Ligustrum japonicum or any part of it is grown or used for food. Corrected at landing: RHS does address eating -- its Potentially harmful field reads 'Harmful if eaten.' with a gloves note and 'Pets (dogs): Harmful if eaten.' -- which could support false in a later pass; not re-proposed here.",
+        "Decision-relevant even though is_edible is null: the NC State anchor page rates this plant 'medium severity' poison characteristics for humans, lists Poison Symptoms as abdominal pain, nausea, vomiting, diarrhea, headache, weakness, incoordination, increased heart rate, death (rare), low blood pressure, cold and clammy skin possibly lasting 48 to 72 hours; Poison Toxic Principle as 'Glycosides: syringin (ligustrin), a glycoside; shikimic acid (lowest toxic dose 4,000mg); and others'; Poison Part as Fruits and Leaves; and tags including 'problem for dogs', 'problem for horses', 'problem for cats'.",
+        "Size fields were researched and filled (not left null): NC State's Plant Type field lists this species as Shrub/Tree, not a vine, liana, or other climber, so rule 4's climber exclusion does not apply.",
+        "Size used NC State (the anchor, which carries a structured Dimensions block) rather than RHS, per the instruction that NC State takes priority when present; RHS's Max Height/Max Spread of 2.5-4 metres (98-157 in) was read but not used for that reason.",
+        "No page among the six was refused by this machine in this run -- all six (including ask.ifas.ufl.edu/publication/ST352) returned fetch status 'ok'."
       ],
       "citations": [
         {
@@ -587,8 +642,31 @@
           "quote": "It can thrive in floodplains, fields, and woodland edges. ... it can outcompete native species for resources and take over a small area in just a few years. Privets in general are considered invasive in many parts of the United States. In Maryland, the family of plants is considered a Tier 2 invasive plant, which requires retail outlets to prominently display the plant’s status.",
           "source": "University of Maryland Extension — Invasives in Your Woodland: Japanese Privet",
           "url": "https://extension.umd.edu/resource/invasives-your-woodland-japanese-privet"
+        },
+        {
+          "claim": "mature_height_in 72-144 (NC State Dimensions Height: 6 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/",
+          "quote": "Height: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-72 (NC State Dimensions Width: 5 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/",
+          "quote": "Width: 5 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Landscape > Attracts field lists Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ligustrum-japonicum/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Bloodroot",
@@ -643,7 +721,14 @@
         "toxicity_detail — removed on audit: The field's own text correctly concedes that NC State's detailed mechanism/severity/symptom data (isoquinoline alkaloids, Poison Severity High, roots) is filed only under 'Poisonous to Humans' and is reported as human-toxicity context rather than pet-specific data. Once that concession is taken seriously, nothing pet-specific remains to justify the field: Clemson's contribution ('sap is caustic to the skin and poisonous if ingested,' verified) is also unscoped as to animal, and Penn State's line never names an animal illness, mechanism, or symptom for pets at all -- just a generic keep-away caution. A toxicity_detail field built to substantiate pet risk is resting on human-scoped mechanism data plus one non-specific caution sentence, which is not adequate grounding for the claim it's attached to.",
         "soil_ph_min — removed on audit: The citation quote is a truncated fragment. I fetched the Clemson page directly and the full sentence reads: 'Although bloodroot may tolerate various soil types and grow over a relatively wide soil pH range, many woodland wildflowers may excel in growth if the soil pH is adjusted to approximately 6.0.' The record dropped the first clause, which explicitly states bloodroot itself tolerates a WIDE soil pH range -- the opposite of a fixed 6.0 point value -- and the 6.0 figure is attributed to 'woodland wildflowers' as a category (classic reused-boilerplate framing per audit check 2/4), not to bloodroot specifically. Collapsing this into soil_ph_min=6 misrepresents both the species-specificity and the shape of the source's own claim.",
         "soil_ph_max — removed on audit: Same defect and same single citation as soil_ph_min: Clemson's full sentence ('bloodroot may tolerate various soil types and grow over a relatively wide soil pH range... many woodland wildflowers may excel... at approximately 6.0') explicitly rejects the idea of a single tight pH figure for bloodroot and attributes 6.0 to woodland wildflowers generally. Pinning soil_ph_max to exactly 6.0 (identical to soil_ph_min) converts a generic, hedged, category-level suggestion into a false precise species-level range.",
-        "2026-09-02 corpus-wide quote verification: the Penn State 'thrives in average to moist soils' corroborating quote for water_regime could not be found on the cited page and was removed; keep_moist still rests on RHS ('Moist but well-drained') and Clemson."
+        "2026-09-02 corpus-wide quote verification: the Penn State 'thrives in average to moist soils' corroborating quote for water_regime could not be found on the cited page and was removed; keep_moist still rests on RHS ('Moist but well-drained') and Clemson.",
+        "hgic.clemson.edu (Clemson HGIC) returned an http-403 status for this machine (real refusal, confirmed by re-fetch after clearing a stale cache entry, not stale cache); it was skipped and not read, so nothing from it is reflected here.",
+        "NC State Plant Toolbox, the anchor page for this record, carries no 'Dimensions', 'Height', or 'Width' field for Sanguinaria canadensis (searched both wordings plus 'Max Height'/'Max Spread' on that page; zero hits for all). Size figures were instead taken from RHS's 'Max Height'/'Max Spread' fields per the fallback rule, since NC State has no size data to anchor to.",
+        "Bloodroot is a perennial rhizomatous wildflower, not a vine/liana/climber, so the climber size-nulling rule does not apply; all four size fields are populated.",
+        "The RHS size figures (Max Height / Max Spread, 0.1-0.5 metres) are given for the species Sanguinaria canadensis itself on its species page, not for a named cultivar.",
+        "is_edible is set false (not null) because two of the read pages directly address eating it: extension.psu.edu states 'All parts of bloodroot are poisonous and may be fatal if ingested,' and NC State Plant Toolbox records 'This plant has high severity poison characteristics,' with Poison Toxic Principle: Isoquinoline alkaloids, Poison Part: Roots, Causes Contact Dermatitis: No, and lists 'Poisonous to Humans' under Problems. No page states any part of bloodroot is grown or used for food.",
+        "attracts_pollinators is set true from NC State's structured Attracts field, which lists Bees and Specialized Bees (both pollinators; the field's third entry, Songbirds, is birds and was not used as pollinator support), and from extension.psu.edu's unconditional statement that bloodroot's flowers provide nectar and pollen for native pollinators.",
+        "RHS's own page (the size source) has no edibility, toxicity, or pollinator/attracts content at all -- searched 'bee', 'butterfl', 'hummingbird', 'edib', 'poison', 'toxic', 'Attracts', 'attractive to pollinators': all zero hits except one unrelated nav-menu 'wildlife' hit."
       ],
       "citations": [
         {
@@ -765,8 +850,38 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/bloodroot/",
           "quote": "Water plants weekly during dry periods or as needed depending upon rainfall."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches: 0.1m x 39.37 = 3.9in, 0.5m x 39.37 = 19.7in)",
+          "source": "RHS (Royal Horticultural Society)",
+          "url": "https://www.rhs.org.uk/plants/16398/sanguinaria-canadensis/details",
+          "quote": "Max Height 0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1m x 39.37 = 3.9in, 0.5m x 39.37 = 19.7in)",
+          "source": "RHS (Royal Horticultural Society)",
+          "url": "https://www.rhs.org.uk/plants/16398/sanguinaria-canadensis/details",
+          "quote": "Max Spread 0.1-0.5 metres"
+        },
+        {
+          "claim": "is_edible is false: no source states any part of bloodroot is eaten or used for food, and the anchor pages state it is poisonous to ingest",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/spooktacular-flora-and-fungi",
+          "quote": "All parts of bloodroot are poisonous and may be fatal if ingested."
+        },
+        {
+          "claim": "attracts_pollinators is true based on a structured Attracts field and an explicit nectar/pollen statement",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/spooktacular-flora-and-fungi",
+          "quote": "provide an important nectar and pollen source for the native pollinators of eastern woodlands"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Bay Laurel",
@@ -963,7 +1078,15 @@
         "fertilize_active_months / fertilize_interval_days / fertilize_strength: no admissible source discusses fertilizing this species at all -- care guidance across all six consulted sources covers light, soil, moisture, and deadheading/pruning only, with no fertilizer schedule.",
         "is_houseplant: set false because none of the six admissible sources consulted (NC State, Clemson, Missouri Botanical Garden, RHS, UMD, Penn State) describe indoor or long-term container culture for this species -- all describe it exclusively in outdoor garden, woodland, or naturalized settings (e.g. NC State's landscape-uses list, RHS's suggested planting locations, Missouri Botanical Garden's 'Uses' list, none of which mention containers or indoor growing).",
         "soil_ph_max: only NC State gives an explicit numeric upper bound (8.0, via its 'Neutral (6.0-8.0)' structured field). UMD's 'slightly acid (pH 6.0) to alkaline' corroborates only the 6.0 lower bound -- 'alkaline' is not given a specific number in UMD's text, so that citation supports soil_ph_min but was not used to independently corroborate the 8.0 upper figure.",
-        "UF/IFAS Extension (edis.ifas.ufl.edu / ask.ifas.ufl.edu) was searched but no dedicated Aquilegia canadensis profile could be found on that domain, so it contributes no citations to this record. A UGA CAES Field Report article was found, but it is a general hummingbird-garden piece with only a brief passing mention of the species (used narrowly above for common name/bloom-timing corroboration), not a dedicated species profile."
+        "UF/IFAS Extension (edis.ifas.ufl.edu / ask.ifas.ufl.edu) was searched but no dedicated Aquilegia canadensis profile could be found on that domain, so it contributes no citations to this record. A UGA CAES Field Report article was found, but it is a general hummingbird-garden piece with only a brief passing mention of the species (used narrowly above for common name/bloom-timing corroboration), not a dedicated species profile.",
+        "is_edible left null: none of the seven cited pages (NC State, UMD, UGA CAES field report, RHS, Clemson HGIC, Penn State Extension, and Missouri Botanical Garden Plant Finder where reachable) address whether Aquilegia canadensis or any part of it is eaten or used for food.",
+        "Before setting is_edible, searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' -- zero hits for 'Poison' and 'Toxic'; the one 'Problem for' hit is a pest note ('Leaf miner is generally a problem for columbine, but this species is resistant'), so no toxicity caveat applies to the null value.",
+        "hgic.clemson.edu refused this machine (http-403 on fetch) -- not read, could not check it for size, edibility, or pollinator content.",
+        "plantfinder.mobot.org refused this machine (connection error on fetch, matching the task's noted list of hosts that refuse this machine) -- not read.",
+        "mature_height_in / mature_spread_in taken from NC State (the anchor, since a species-specific NC State page exists) rather than from RHS or UMD, per the rule that NC State is the anchor when present.",
+        "UMD gives only a single height figure ('Height: up to 30 inches', a max with no stated min) and no width figure at all; not used for the size fields since NC State's full structured range serves as the anchor for this species.",
+        "RHS gives 'Max Height 0.5-1 metres' (19.7-39.4 in) and 'Max Spread 0.1-0.5 metres' (3.9-19.7 in), which differ from NC State's figures; not used because NC State is the designated anchor when a species-specific NC State page exists.",
+        "Aquilegia canadensis is an herbaceous perennial (confirmed by NC State's 'Whole Plant Traits: Herbaceous Perennial'), not a vine/liana/climber, so the climber-exclusion rule for size fields does not apply here."
       ],
       "citations": [
         {
@@ -1085,8 +1208,31 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/1402/aquilegia-canadensis/details",
           "quote": "Suggested planting locations and garden types\nCity and courtyard gardens\nCottage and informal garden\nWildlife gardens\nFlower borders and beds\nUnderplanting of roses and shrubs"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Aquilegia canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Aquilegia canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies, Hummingbirds, Moths, Pollinators, and Songbirds)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Aquilegia canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/aquilegia-canadensis/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Burning Bush",
@@ -1135,7 +1281,14 @@
         "outdoor_sun_exposure omits part_sun: NC State's own bucketed Light field for this species lists only \"Full sun\" and \"Partial Shade\" (not a separate \"Partial Sun\" category), and no other admissible source draws a distinct part_sun line for this species, so that enum value was not used despite being available.",
         "toxic_to_pets — removed on audit: The only citation supporting toxic_to_pets=true is RHS's combined 'Humans/Pets: Harmful if eaten; wear gloves and other protective equipment when handling.' I fetched the live RHS page directly and confirmed it never names cats or dogs and is not scoped to any specific animal at all -- it's a bare, unqualified 'Pets' tag. This is exactly the over-generalization pattern flagged as the Avocado-batch defect: non-cat/dog-specific evidence being turned into a flat toxic_to_pets=true. The record's own unknowns note admits the reasoning ('RHS's generic Pets scope... was used to support toxic_to_pets=true per this catalog's own scoping rule'), i.e. it applied a more permissive rule than the audit calls for. I also fetched NC State, Penn State, and Clemson directly: none of them address pet toxicity in either direction (NC State's toxicity content is explicitly human-only, under a 'Poisonous to Humans' heading with detailed human symptoms and no pet section). With the sole supporting citation never naming cats or dogs, and no corroboration elsewhere, this should be null rather than true.",
         "toxicity_detail — removed on audit: Downstream of the toxic_to_pets problem: the clause 'Harmful if eaten, to both humans and pets' rests on RHS's unqualified 'Pets' tag, which (confirmed via direct fetch of the RHS page) never specifies which animals it covers. The parenthetical about NC State's human-only poisoning data is accurately scoped (confirmed via fetch -- NC State's toxicity section really is nested under 'Poisonous to Humans' with no parallel pet section), but the pet half of the field's main sentence has no species-specific support and should not be asserted as fact.",
-        "outdoor_sun_exposure — removed on audit: The full_shade element is unsound. NC State's own structured Light field for this species -- the same source used to establish full_sun and part_shade -- lists only 'Full sun' and 'Partial Shade' (confirmed via direct fetch: no Full Shade option is checked), and the record's own unknowns entry even acknowledges NC State's Light field is limited to those two buckets. Yet full_shade was added anyway, sourced from Penn State's passage about deep-shade tolerance driving the plant's success as a forest invader (framed as an invasion-ecology observation, not cultivation guidance) and MOBOT's own hedge, 'Tolerates close to full shade... but usually at the expense of diminished fall color quality' (confirmed close paraphrase pattern consistent with the rest of the record; note it says 'close to full shade,' not full shade). This is a case where the most authoritative structured source for exactly this field disagrees with the chosen value, and that disagreement was not resolved by leaving the category out or flagging it -- it was silently overridden by narrative text from other sources."
+        "outdoor_sun_exposure — removed on audit: The full_shade element is unsound. NC State's own structured Light field for this species -- the same source used to establish full_sun and part_shade -- lists only 'Full sun' and 'Partial Shade' (confirmed via direct fetch: no Full Shade option is checked), and the record's own unknowns entry even acknowledges NC State's Light field is limited to those two buckets. Yet full_shade was added anyway, sourced from Penn State's passage about deep-shade tolerance driving the plant's success as a forest invader (framed as an invasion-ecology observation, not cultivation guidance) and MOBOT's own hedge, 'Tolerates close to full shade... but usually at the expense of diminished fall color quality' (confirmed close paraphrase pattern consistent with the rest of the record; note it says 'close to full shade,' not full shade). This is a case where the most authoritative structured source for exactly this field disagrees with the chosen value, and that disagreement was not resolved by leaving the category out or flagging it -- it was silently overridden by narrative text from other sources.",
+        "hgic.clemson.edu/factsheet/euonymus/ returned http-403 (refused this machine); could not be read, skipped as instructed.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279120 returned error:ConnectError (refused this machine); could not be read, skipped as instructed.",
+        "extension.psu.edu/burning-bush was read successfully but does not state Euonymus alatus's own mature size, edibility, or pollinator value; its only 'edible' mention is about a different, comparison plant (red chokeberry), so nothing from it was used.",
+        "Sources disagree on size: RHS (rhs.org.uk/plants/6969) gives Max Height and Max Spread 1.5-2.5 metres (about 59-98 in) and Penn State says 'Up to 15 feet tall', against NC State's 15-20 ft used here as the anchor. Corrected at landing: the researcher's line called RHS 'the same range'.",
+        "is_edible is set false, not true, but the reasoning is recorded here for completeness: NC State states 'This plant has low severity poison characteristics,' names the plant 'Poisonous to Humans' and a 'Problem for Children,' lists Poison Part as Bark, Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds and Stems (corrected at landing from 'bark'), and describes ingestion symptoms of abdominal pain, nausea, vomiting, diarrhea, convulsions, weakness, chills, and coma, with toxic principle 'Unidentified, possibly a glycoside.'",
+        "attracts_pollinators is true based solely on NC State's structured 'Attracts' field listing 'Bees'; that same field also lists 'Songbirds,' but birds are not pollinators and that entry was disregarded per the pollinator rule.",
+        "Euonymus alatus is a deciduous shrub, not a climber, so the climber size-exclusion rule does not apply; all four size fields were filled normally from NC State's Dimensions block."
       ],
       "citations": [
         {
@@ -1227,8 +1380,38 @@
           "quote": "Humans/Pets: Harmful if eaten; wear gloves and other protective equipment when handling. For further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants",
           "source": "Royal Horticultural Society (RHS), Euonymus alatus plant profile",
           "url": "https://www.rhs.org.uk/plants/6969/euonymus-alatus/details"
+        },
+        {
+          "claim": "mature_height_in 180-240 (NC State Height: 15 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Euonymus alatus",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/",
+          "quote": "Height: 15 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-240 (NC State Width: 15 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Euonymus alatus",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/",
+          "quote": "Width: 15 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox — Euonymus alatus",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/",
+          "quote": "Bees"
+        },
+        {
+          "claim": "is_edible false (NC State states no part of this plant is edible, all parts poisonous)",
+          "source": "NC State Extension Gardener Plant Toolbox — Euonymus alatus",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-alatus/",
+          "quote": "No part of this plant is edible, including seeds: All parts are poisonous."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 240
     }
   ],
   "audit_summary": [
@@ -1269,6 +1452,7 @@
     "2026-08-23: fourteenth batch of the \"blind spots\" pass, and the first to explicitly prompt-guard against b31's non-cat/dog toxicity-scope defect (RHS \"Pets (rabbits/birds/horses)\" tags generalized into a flat toxic_to_pets=true). It worked on the research side for Weeping Fig -- the record correctly declined to rely on RHS's dogs-only tag alone and used NC State's explicit cats+dogs evidence instead -- but the SAME defect still slipped through the research pass on two other records (Burning Bush: an RHS unscoped \"Pets\" tag that never names any animal; Bloodroot: a Penn State \"keep away from pets\" listicle line, also unscoped) and was only caught by the verify pass's new explicit check. Confirms the guard needs to live in verification, not just the research prompt, since even an explicitly warned researcher can still make the mistake under a different citation's wording.",
     "Weeping Fig, Prickly Pear (dogs-specific, cats undocumented -- correctly reported as dog-scoped rather than generalized to both), Catawba Rhododendron, and Bay Laurel all confirmed toxic_to_pets=true with clean, properly-scoped cat and/or dog evidence. Bloodroot and Burning Bush both correctly landed toxic_to_pets=null after the audit found their only pet-relevant citations named no animal or the wrong one -- notably for Bloodroot, NC State (the source that normally adds explicit Problem-for-Cats/Dogs tags when warranted) carries no animal tag for this species at all, only human-scoped poison data, which the audit treated as a meaningful negative signal rather than mere silence.",
     "Prickly Pear's is_houseplant catch shows the audit checking a record against the very page it cites: the record asserted false with a claim that \"no admissible source describes indoor houseplant use,\" but the audit re-fetched the same cited RHS URL and found it carries a direct link reading \"See houseplant cacti and succulent cultivation for further advice\" -- contradicting the record's own claim about its own source.",
-    "Bay Laurel's soil_drainage catch is another example of the audit enforcing established cross-batch precedent by name: the same NC State \"Good Drainage / Occasionally Dry / Occasionally Wet\" tag mapped to 'moderate' here was already flagged as a defect twice over on the Common Morning Glory record in b14, and this record reproduced the identical mapping."
+    "Bay Laurel's soil_drainage catch is another example of the audit enforcing established cross-batch precedent by name: the same NC State \"Good Drainage / Occasionally Dry / Occasionally Wet\" tag mapped to 'moderate' here was already flagged as a defect twice over on the Common Morning Glory record in b14, and this record reproduced the identical mapping.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

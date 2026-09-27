@@ -53,7 +53,15 @@
         "soil_drainage — removed on audit: Value is 'moderate' but every citation actually offered for this field says the opposite emphasis: MOBOT (verified quote) says 'well-drained soils... will not tolerate flooding or soils saturated with moisture. Avoid poorly drained soils'; UF/IFAS says 'well-drained but moist'; RHS (re-fetched live and confirmed verbatim) says 'moist but well-drained... Not suited to chalky soils.' No quote in the record, and no live page text, uses 'moderate' or supports a mid-tier/poor-drainage-tolerant reading -- if anything the sources explicitly warn against poor drainage. The value contradicts its own citations.",
         "soil_base — removed on audit: The sole citation quote is 'Design Feature: Barrier Hedge Screen/Privacy Specimen' -- a landscape-use tag describing how the plant is used in design, not a statement about soil or growing medium. It does not say or imply in-ground vs. container growing. The record's own unknowns section admits garden_bed was chosen as 'the closest enum fit' by inference rather than by direct source support, failing the 'does the quote actually state this value' test.",
         "humidity_need — removed on audit: Sole support is one qualitative sentence from an informal Penn State Extension blog post ('Holly Jolly American Holly'), re-fetched and confirmed verbatim: 'It thrives in humid environments with good drainage and moist, slightly acidic soil, yet tolerates a wide range of conditions.' The clause 'yet tolerates a wide range of conditions' undercuts a firm 'high' requirement, no other admissible source corroborates any humidity signal, and the underlying text reads as general native-habitat description rather than an actionable cultivation requirement -- weak grounds for asserting 'high', especially since is_houseplant=false makes an ambient-humidity field questionable for an outdoor tree in the first place.",
-        "scientific_name_accepted — removed on audit: Populated as 'Ilex opaca' with a name_note claiming all admissible sources were checked and agree with no synonym conflict, but none of the 9 logged citations contains any quote about nomenclature, synonymy, or an 'accepted name' determination -- the claim isn't traceable to any citation entry as structural check 1/4 require. The value is very likely correct botanically, but as documented in this record it is asserted, not evidenced."
+        "scientific_name_accepted — removed on audit: Populated as 'Ilex opaca' with a name_note claiming all admissible sources were checked and agree with no synonym conflict, but none of the 9 logged citations contains any quote about nomenclature, synonymy, or an 'accepted name' determination -- the claim isn't traceable to any citation entry as structural check 1/4 require. The value is very likely correct botanically, but as documented in this record it is asserted, not evidenced.",
+        "is_edible left null: none of the readable cited pages (NC State Plant Toolbox, RHS, UF/IFAS ST304, UGA CAES 'Great hedges make great neighbors', Penn State Extension Allegheny) state that American Holly or any part of it is grown or used for food.",
+        "NC State lists this species with 'low severity poison characteristics': Poison Part: Fruits; Poison Toxic Principle: Illicin, possibly saponic glycosides, and triterpenoids; symptoms: Nausea, vomiting (not in horses), diarrhea, depression; tags also include #problem for cats #problem for dogs #problem for horses. Recorded for reference even though is_edible is null (no page states it is eaten).",
+        "plantfinder.mobot.org refused this machine (fetch status error:ConnectError) -- not read, per instructions, so it contributed nothing to this record.",
+        "RHS gives Max Height 'Higher than 12 metres' (open-ended, no usable upper bound) and Max Spread '4-8 metres' (roughly 157-315 in) -- not used as the primary size citation because NC State's Ilex opaca species page already carries a closed, species-specific Dimensions block and is the designated anchor.",
+        "UF/IFAS ST304 (ask.ifas.ufl.edu) was readable and gives Height: 35 to 50 feet, Spread: 15 to 25 feet, and fruit 'attracts birds' (not pollinators) -- broadly consistent with NC State but not used as the primary citation since NC State is the anchor.",
+        "UGA CAES 'Great hedges make great neighbors' gives American holly (Ilex opaca) as a 15- to 30-foot height, 10- to 20-foot width in a hedge/landscape-use context, with no edibility or pollinator-attraction statement for this species -- not used as primary citation; NC State anchor used instead for size.",
+        "Confirmed Ilex opaca is a tree, not a climber/vine/liana: NC State lists Plant Type 'Tree', and no 'climb', 'vine', or 'liana' hits were found on any fetched page, so rule 4 (no size for climbers) does not apply and all four size fields are populated from the anchor.",
+        "RHS (rhs.org.uk/plants/21251/ilex-opaca) does address eating: its Potentially harmful field reads 'Fruit are ornamental - not to be eaten.' with the same pets warning -- an explicit denial the line above misses. is_edible stays null in this landing (not re-proposed); noted at landing, verified against the cached copy."
       ],
       "citations": [
         {
@@ -109,8 +117,31 @@
           "quote": "It thrives in humid environments with good drainage and moist, slightly acidic soil, yet tolerates a wide range of conditions.",
           "url": "https://extension.psu.edu/programs/master-gardener/counties/allegheny/news/holly-jolly-american-holly",
           "source": "Penn State Extension"
+        },
+        {
+          "claim": "mature_height_in 480-720 (NC State Height: 40 ft. 0 in. - 60 ft. 0 in., converted to inches: 40 ft = 480 in, 60 ft = 720 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ilex opaca",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
+          "quote": "Height: 40 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-240 (NC State Width: 10 ft. 0 in. - 20 ft. 0 in., converted to inches: 10 ft = 120 in, 20 ft = 240 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ilex opaca",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
+          "quote": "Width: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field for Ilex opaca lists Bees, Butterflies, Pollinators, and Specialized Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ilex opaca",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 480,
+      "mature_height_in_max": 720,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 240
     },
     {
       "common_name": "Peach",
@@ -160,7 +191,13 @@
         "toxicity_detail — removed on audit: Two separate traceability failures. (1) The citation labeled 'toxicity_detail poison part Seeds, toxic principle cyanogenic glycoside/amygdalin, severity Medium (Poisonous to Humans section)' asserts 'severity Medium' in its claim, but its own quote text -- 'Poison Symptoms: Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure. Poison Toxic Principle: Cyanogenic glycoside, amygdalin. Poison Part: Seeds' -- contains no severity rating at all, so 'Medium' (which the toxicity_detail field text repeats verbatim) doesn't trace to any quote. (2) The toxicity_detail field text includes a direct quotation -- \"highest in both new growth and wilted leaves and branches\" -- attributed to the Penn State horse-pasture source, but no citation entry in the array contains this string; the only Penn State citation quotes just 'Apricot and peach trees are in the same genus (Prunus) and are thought to contain the same toxins in the leaves and seeds.' The field's own text further admits the wilted-leaf/new-growth detail describes 'related Prunus species,' not peach itself -- exactly the sibling-species-boilerplate problem the audit brief flags. On top of this, the field centers a full human-poisoning symptom list (gasping, pupil dilation, coma) inside what is supposed to be pet-toxicity detail, sourced explicitly from NC State's human-only 'Poisonous to Humans' section, with no animal-specific symptom data anywhere in the citations.",
         "water_estimate_basis — removed on audit: The field presents 'up to 50%... is allowable' (vegetative growth) and 'more than 50%... is acceptable' (dormancy) as quoted soil-water-depletion targets from UF/IFAS HS1316, but the only citation supporting this claim quotes solely 'soil water depletion should not exceed 25% of the available soil water.' No citation in the array contains the 50% figures for either growth stage, so two of the three stage-specific numbers in this field are untraceable to any source quote and should be treated as unverified. This also undermines the stated rationale for leaving water_regime null, since that rationale leans on the same unsupported 50% figures to argue the guidance is stage-dependent.",
         "fertilize_active_months — removed on audit: The sole supporting citation's quote is explicitly scoped to first-year trees: 'Do not fertilize newly planted, first year, peach trees until March... In May, broadcast... In July, broadcast...' The field generalizes this first-year-only fertilizer regimen into a blanket species-wide fertilize_active_months value with no age qualification, which would misapply a young-tree schedule to mature/bearing peach trees (extension sources typically differentiate fertilizer timing and amount by tree age).",
-        "soil_base — removed on audit: The citation backing 'garden_bed' quotes only 'Soil Drainage: Good Drainage / Moist' from NC State's structured data tags -- a drainage-rate characteristic, not any statement about whether the tree is grown in-ground, in a raised bed, or in a container. Nothing in that quote supports the claim label's parenthetical '(in-ground landscape/orchard tree).' No other citation in the array cleanly establishes in-ground growing as the primary substrate either -- one RHS citation used elsewhere in the record for is_houseplant even notes 'compact varieties can also be grown in containers,' which cuts against treating garden_bed as the uncontested default."
+        "soil_base — removed on audit: The citation backing 'garden_bed' quotes only 'Soil Drainage: Good Drainage / Moist' from NC State's structured data tags -- a drainage-rate characteristic, not any statement about whether the tree is grown in-ground, in a raised bed, or in a container. Nothing in that quote supports the claim label's parenthetical '(in-ground landscape/orchard tree).' No other citation in the array cleanly establishes in-ground growing as the primary substrate either -- one RHS citation used elsewhere in the record for is_houseplant even notes 'compact varieties can also be grown in containers,' which cuts against treating garden_bed as the uncontested default.",
+        "is_edible is true but conditional/qualified: NC State's Edibility field says 'Fruit edible raw or cooked. The seed contains hydrogen cyanide and should be discarded' -- the fruit is edible, the seed is not.",
+        "Full toxicity text present on the same anchor page (required in unknowns because is_edible is true): the page rates the plant 'medium severity' poison characteristics; Poison Severity: Medium; Poison Toxic Principle: Cyanogenic glycoside, amygdalin; Poison Part: Seeds; Causes Contact Dermatitis: No; Poison Symptoms: 'The pits contain cyanide compounds, which are poisonous. If a couple of pits are accidentally swallowed, it will not cause poisoning. The pits are more poisonous if they are ground up/crushed or the seeds are chewed. Fruit that has not been pitted should not be blended into a smoothie. Symptoms include Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure.' The page's Description also states 'While the fruit is edible the seeds and wilted leaves are poisonous especially if eaten in quantity.' The page's tag list also carries #problem for dogs, #problem for horses, #problem for cats (pets warning) and #poisonous seed.",
+        "Peach (Prunus persica) is a tree, not a vine/liana/climber (Plant Type: Tree; tagged #fruit tree), so the climber size-suppression rule does not apply and all four size fields were populated normally.",
+        "No field was left null: NC State's Plant Toolbox page for Prunus persica (the species page, not a genus page) carried a structured Dimensions block giving both height and width as ranges, a structured Edibility field, and a structured Attracts field listing Butterflies and Pollinators, so all six requested fields were fully supported by this single anchor page.",
+        "The height and width figures (15 ft. 0 in. - 25 ft. 0 in. for both) are given for the species Prunus persica itself on its dedicated species page, not for a named cultivar, so rule 3 (cultivar sizes excluded) does not disqualify them.",
+        "The other eight pages listed in the task (RHS, Penn State x2, Clemson, UGA, UF/IFAS x2, EDIS) were not fetched because the NC State anchor page fully and unambiguously supported all six fields per the anchor-first rule; none of them were attempted, so none are reported as refusing this machine -- that is a choice not to need them, not a failed fetch."
       ],
       "citations": [
         {
@@ -324,8 +361,38 @@
           "quote": "Compact varieties can also be grown in containers. They can also be grown in an unheated greenhouse for all or part of the year.",
           "source": "Royal Horticultural Society (RHS), How to grow peaches",
           "url": "https://www.rhs.org.uk/fruit/peaches/grow-your-own"
+        },
+        {
+          "claim": "mature_height_in 180-300 (NC State Height: 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus persica",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/",
+          "quote": "Height: 15 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-300 (NC State Width: 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus persica",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/",
+          "quote": "Width: 15 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: fruit edible raw or cooked; seed contains hydrogen cyanide and should be discarded)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus persica",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/",
+          "quote": "Fruit edible raw or cooked. The seed contains hydrogen cyanide and should be discarded"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus persica",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-persica/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 300
     },
     {
       "common_name": "Common Pear",
@@ -375,7 +442,12 @@
         "UF/IFAS HS1393 ('The Pear (Pyrus spp.) in Florida Home Gardens') covers pear culture in Florida generally, spanning both Pyrus communis (European pear) and Asian pear types; its fertilizer-month recommendation was used for this record because the document explicitly names P. communis as one of the two pear groups in scope and gives no differing guidance by type, but it is Florida-climate-specific and may not generalize to all growing regions.",
         "UF/IFAS 'Pyrus communis, Common Pear' (FOR293/FR361), a Florida forestry fact sheet found via search, returned HTTP 410 Gone on ask.ifas.ufl.edu at the time of research and could not be fetched or used as a citation despite being referenced in search-result summaries.",
         "fertilize_active_months — removed on audit: I fetched the UF/IFAS HS1393 source directly. Its Fertilization section opens with: 'UF/IFAS has not researched fertilizer requirements for pear. Therefore, we suggest a general fertilizer like 6-6-6 or 8-8-8.' The January/June split-application timing used for this field is that same unresearched, generic suggestion — not species- or even genus-researched guidance — and the document explicitly covers both European and Asian pear without distinguishing the schedule by type. It is also Florida-climate-specific (assumes no hard winter dormancy in January), which is the identical defect the record itself correctly used to exclude this same document's irrigation-gallon figures from water_regime ('this is regional guidance tied to Florida soils/climate, not a general species watering regime, so it was not forced into these fields'). Applying stricter regional-specificity scrutiny to water than to fertilizer timing from the identical source is an internal inconsistency, and for pear's actual USDA zone 4-8 range (per MOBOT/NC State), a January fertilizer application would be inappropriate in most of that range.",
-        "scientific_name_accepted: restored using NC State's taxonomy block (Genus/Species/Family), which the audit itself located and confirmed on the live page -- the original citation quoted a descriptive sentence instead of this block, which is what actually states the binomial."
+        "scientific_name_accepted: restored using NC State's taxonomy block (Genus/Species/Family), which the audit itself located and confirmed on the live page -- the original citation quoted a descriptive sentence instead of this block, which is what actually states the binomial.",
+        "Common Pear (Pyrus communis) is a tree, not a vine/climber/liana, so the climber-size exclusion (rule 4) does not apply; all four size fields are populated normally.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: zero hits for all three. No toxic part, severity, toxic principle, preparation requirement, or pets warning is named on the anchor page, so is_edible=true is recorded with no accompanying toxicity caveat.",
+        "is_edible is unconditional (not cultivar-specific, not 'cooked only'): the NC State page states the species' fruit generally is 'edible raw, cooked, or dried,' describing the species, not a named cultivar.",
+        "The NC State page's structured Dimensions block (Height: 40-50 ft, Width: 25-35 ft) and Attracts field (Bees, Butterflies, Pollinators, Songbirds) fully answered all six requested fields, so the other five listed pages (UGA, Missouri Botanical PlantFinder, RHS, UF/IFAS, Penn State) were not consulted for this pass; no page refused this machine because none was queried beyond the NC State anchor.",
+        "Songbirds and other birds are listed under NC State's 'Attracts' field alongside Bees/Butterflies/Pollinators, but per rule 7 that mention was not used as support for attracts_pollinators — the pollinator-specific entries (Bees, Butterflies, Pollinators) and the narrative sentence naming butterflies, bees and flies as flower visitors were the basis instead."
       ],
       "citations": [
         {
@@ -449,8 +521,38 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/",
           "quote": "Genus: Pyrus Species: communis Family: Rosaceae"
+        },
+        {
+          "claim": "mature_height_in 480-600 (NC State Height 40 ft. 0 in. - 50 ft. 0 in., converted to inches)",
+          "quote": "Height: 40 ft. 0 in. - 50 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Pyrus communis",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/"
+        },
+        {
+          "claim": "mature_spread_in 300-420 (NC State Width 25 ft. 0 in. - 35 ft. 0 in., converted to inches)",
+          "quote": "Width: 25 ft. 0 in. - 35 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Pyrus communis",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/"
+        },
+        {
+          "claim": "is_edible true (NC State states the fruit is grown for food)",
+          "quote": "Fruits edible raw, cooked, or dried.  Sweet and fragrant.",
+          "source": "NC State Extension Gardener Plant Toolbox — Pyrus communis",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State names bees and butterflies as flower visitors, and lists Bees, Butterflies, Pollinators in its structured Attracts field)",
+          "quote": "The flowers of the common pear attract butterflies, bees and flies.",
+          "source": "NC State Extension Gardener Plant Toolbox — Pyrus communis",
+          "url": "https://plants.ces.ncsu.edu/plants/pyrus-communis/"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 480,
+      "mature_height_in_max": 600,
+      "mature_spread_in_min": 300,
+      "mature_spread_in_max": 420
     },
     {
       "common_name": "Black Walnut",
@@ -498,7 +600,16 @@
         "toxic_to_pets/toxicity_detail: NC State's 'Problem for Dogs' tag has no supporting mechanism in any admissible source checked (Clemson, MOBOT, RHS, Penn State, UMD, UGA); it is included in toxic_to_pets=true on the strength of NC State's own structured Problems field, matching this catalog's established precedent (e.g. Ficus carica) that an unexplained 'Problem for [animal]' structured tag is sufficient support for toxic_to_pets even without a separate prose detail, as long as it isn't a human-only heading being misapplied. The horse hazard, by contrast, does have a specific documented mechanism (Penn State: bedding-shavings-induced laminitis; leaf/pollen respiratory signs).",
         "Juglone/allelopathy (toxicity to OTHER PLANTS, not pets): every admissible source addressing this (NC State, Missouri Botanical Garden, Penn State x2, UMD, UGA x2) describes it as harming nearby plants -- azaleas, peonies, tomatoes, apples, blueberries, rhododendrons, solanaceous crops -- via root/leaf/hull exudate. This is deliberately NOT folded into toxic_to_pets/toxicity_detail, which is scoped to animal harm; there is no dedicated allelopathy field in this schema, so the plant-hazard information itself has no field to populate. Two nuances worth flagging: UGA's 'Did You Know You Can Grow: Black Walnut' article makes one broader, unelaborated claim that 'Juglone can harm animals and humans' (used only as light corroboration for toxic_to_pets, not as a standalone basis); and UMD Extension separately notes the juglone-causes-poor-plant-growth link itself is scientifically disputed ('there is no conclusive, science-based evidence confirming juglone as the cause...'), a caveat about the allelopathy claim's strength that doesn't affect any field in this record.",
         "Clemson Cooperative Extension (hgic.clemson.edu) has no dedicated Juglans nigra/black walnut fact sheet -- confirmed via site search and its Nuts category listing, which covers only pecan and general chill-hours content -- so Clemson could not be used as a citation source for this record. UF/IFAS's only black walnut publication (EDIS/Ask IFAS ENH479/ST320) returned HTTP 410 Gone on direct fetch as of this research (the URL redirects to an Ask IFAS 'no longer available' page) and likewise could not be used.",
-        "toxicity_detail — removed on audit: Two defects. (1) Citation-traceability gap: the clause 'not for cats -- a separate site tag reads \"non-toxic for cats\"' has zero supporting citation entry. I fetched the live NC State page and confirmed the '#non-toxic for cats' tag is real, but it lives in the page's general tag cloud, not in the structured 'Problems:' dt/dd list, and the only toxic_to_pets citation in the record quotes just 'Problems: Allelopathic / Problem for Dogs / Problem for Horses.' A true fact stated with no citation backing it still fails the 'every non-null field value traces to a citation entry' rule. (2) Mislabeled/blended citation: the UGA quote used as animal corroboration -- 'Juglone is a strong respiratory toxin and small amounts will damage other living creatures' -- is presented in the citation label as 'juglone is a respiratory toxin to other creatures' (i.e. animal-toxicity support). I fetched the full source article (fieldreport.caes.uga.edu/news/your-black-walnut-tree-is-out-to-get-you/) and found that sentence is immediately followed, in the same paragraph, by 'In the soil, juglone will damage many living things, including plant roots' -- it is the transition sentence into the article's plant-root/soil-allelopathy section, not a standalone animal-toxicity statement. In juglone allelopathy literature, 'respiratory toxin' is the standard term for juglone inhibiting cellular respiration in plant root cells (the core allelopathy mechanism), not an animal inhalation hazard -- Penn State's own horse-specific mechanism is bedding-contact laminitis and possible pollen/leaf respiratory irritation, never described this way. The citation's quote is truncated with an ellipsis exactly before the plant-transition sentence, making an allelopathy-context line read as clean animal corroboration. This is the specific plant-hazard-blended-into-toxicity_detail failure mode the audit brief asked to check for."
+        "toxicity_detail — removed on audit: Two defects. (1) Citation-traceability gap: the clause 'not for cats -- a separate site tag reads \"non-toxic for cats\"' has zero supporting citation entry. I fetched the live NC State page and confirmed the '#non-toxic for cats' tag is real, but it lives in the page's general tag cloud, not in the structured 'Problems:' dt/dd list, and the only toxic_to_pets citation in the record quotes just 'Problems: Allelopathic / Problem for Dogs / Problem for Horses.' A true fact stated with no citation backing it still fails the 'every non-null field value traces to a citation entry' rule. (2) Mislabeled/blended citation: the UGA quote used as animal corroboration -- 'Juglone is a strong respiratory toxin and small amounts will damage other living creatures' -- is presented in the citation label as 'juglone is a respiratory toxin to other creatures' (i.e. animal-toxicity support). I fetched the full source article (fieldreport.caes.uga.edu/news/your-black-walnut-tree-is-out-to-get-you/) and found that sentence is immediately followed, in the same paragraph, by 'In the soil, juglone will damage many living things, including plant roots' -- it is the transition sentence into the article's plant-root/soil-allelopathy section, not a standalone animal-toxicity statement. In juglone allelopathy literature, 'respiratory toxin' is the standard term for juglone inhibiting cellular respiration in plant root cells (the core allelopathy mechanism), not an animal inhalation hazard -- Penn State's own horse-specific mechanism is bedding-contact laminitis and possible pollen/leaf respiratory irritation, never described this way. The citation's quote is truncated with an ellipsis exactly before the plant-transition sentence, making an allelopathy-context line read as clean animal corroboration. This is the specific plant-hazard-blended-into-toxicity_detail failure mode the audit brief asked to check for.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) -- skipped per instructions, its content was not read or guessed at.",
+        "RHS (rhs.org.uk/plants/9503/juglans-nigra-(f)/details) was checked for both 'Max Height'/'Max Spread' and 'Ultimate height' wording; it carries structured Max Height 'Higher than 12 metres' and Max Spread 'wider than 8 metres', but both are open-ended thresholds with no usable low or high bound, so RHS was not used for size -- NC State's closed-range Height/Width figures were used as the anchor instead.",
+        "is_edible is TRUE but conditional/qualified, per rule 5/6 before setting the field: the anchor NC State page lists this species under structured tags/fields 'Problem for Dogs', 'Problem for Horses', 'non-toxic for cats', and 'Allelopathic' (no severity or toxic-principle text beyond the tag names on that page). The edible part is specifically the nutmeat inside the hull/husk; the fleshy husk itself is not eaten and, per a UGA Extension article (fieldreport.caes.uga.edu/features/did-you-know-you-can-grow-black-walnut), handlers are told to wear gloves and avoid touching their face because the hulls 'can cause irritation,' and the hulls/husk contain prejuglone which oxidizes to the toxic compound juglone (per fieldreport.caes.uga.edu/news/your-black-walnut-tree-is-out-to-get-you and extension.psu.edu/landscaping-and-gardening-around-walnuts-and-other-juglone-producing-plants), which is phytotoxic to many other plants and, per extension.umd.edu/resource/walnut-toxicity-juglone, is the subject of ongoing scientific debate over how strong/consistent that plant-toxicity effect actually is. Separately, extension.psu.edu/trees-in-horse-pastures states black walnut's danger to horses is NOT primarily from being eaten but from wood shavings/sawdust causing laminitis when horses stand on them, and possibly from pollen/leaves causing mild respiratory signs -- this is a contact/bedding hazard, not a food hazard, but is included here per rule 5 because the record is edible=true.",
+        "No page addressed whether black walnut is a cultivar-specific figure; the size figures used (NC State) are given for the species Juglans nigra generally, not a named cultivar.",
+        "Juglans nigra is a tree, not a vine/liana/climber, so rule 4 (climbers get no size) does not apply; all four size fields were populated from the NC State anchor.",
+        "No page among the eight supplied names bees, butterflies, or hummingbirds visiting flowers in an unconditional or structured pollinator-attraction statement; the NC State 'Attracts' field lists 'Moths' and 'Small Mammals' only (moths counted as pollinators per rule 7). Butterfly/moth mentions elsewhere on the NC State page (banded hairstreak, luna moth, hickory horndevil) describe the species as a larval host plant, not as a pollinator-attracting flower, and per rule 7 that distinction was not used as support.",
+        "The PSU juglone-landscaping page, the second UGA (fieldreport) article, and the UMD juglone page were all read in full for Poison/Toxic/Edib/Attracts/Pollinat/size terms; none of them supplied edibility, pollinator, or size data beyond what is already cited -- they only corroborate the juglone/toxicity context folded into the is_edible unknowns above.",
+        "attracts_pollinators removed on audit: The same NC State page used as the anchor says in its Flower Description: 'Flowers from April to May and are wind pollinated.' The unknowns leave this out, even though they claim no page named pollinators. The 'Attracts: Moths' tag is a larval-host link, not flower visitation. The page says the tree 'supports Hickory Horndevil (Citheronia regalis) larvae', that 'Adult Hickory Horndevil moths do not feed', and that it is a 'Larval host for Banded Hairstreak butterflies and Luna moth'. Its tags include '#moth caterpillar host' and '#larval host plant'. The researcher admitted these are larval-host mentions but used the bare structured tag anyway. No page names any pollinator visiting the flowers, and the anchor page says outright that pollination is by wind. Setting the field to FALSE is not supported either, because no page denies pollinator attraction, so it should be null. The quote 'Moths' is a bare value cut off from its 'Attracts:' label, which is too little provenance in any case.",
+        "More conditions on eating, from pages this record cites: UGA 'Did you know you can grow: Black walnut' says the nut is safe to eat only 'As long as the nutmeat inside isn't moldy, rotten or bad-smelling', that the hulls can cause irritation, and that 'Juglone can harm animals and humans'; UGA 'Your black walnut tree is out to get you' says 'In humans, ingesting even a small amount of pure juglone can cause a serious poisoning effect.'; PSU 'Trees in Horse Pastures' says fallen walnuts 'may become moldy, which can cause health problems as well.'"
       ],
       "citations": [
         {
@@ -602,8 +713,31 @@
           "quote": "there is no conclusive, science-based evidence confirming juglone as the cause for the poor growth of plants growing near black walnut trees",
           "source": "University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/walnut-toxicity-juglone"
+        },
+        {
+          "claim": "is_edible: true (NC State Wildlife Value: the nut meat is sweet and edible)",
+          "source": "NC State Extension Gardener Plant Toolbox - Juglans nigra",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/",
+          "quote": "Meat of the nut is sweet and edible and a favorite food for squirrels."
+        },
+        {
+          "claim": "mature_height_in 600-900 (NC State Dimensions Height: 50 ft. 0 in. - 75 ft. 0 in., converted to inches: 50x12=600, 75x12=900)",
+          "source": "NC State Extension Gardener Plant Toolbox - Juglans nigra",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/",
+          "quote": "Height: 50 ft. 0 in. - 75 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 600-840 (NC State Dimensions Width: 50 ft. 0 in. - 70 ft. 0 in., converted to inches: 50x12=600, 70x12=840)",
+          "source": "NC State Extension Gardener Plant Toolbox - Juglans nigra",
+          "url": "https://plants.ces.ncsu.edu/plants/juglans-nigra/",
+          "quote": "Width: 50 ft. 0 in. - 70 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 600,
+      "mature_height_in_max": 900,
+      "mature_spread_in_min": 600,
+      "mature_spread_in_max": 840
     },
     {
       "common_name": "American Elderberry",
@@ -654,7 +788,14 @@
         "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: all admissible sources describe outdoor garden-bed cultivation (e.g., UMD: 'Shallow, fibrous roots make Elderberry susceptible to drought, especially in the first year after planting'; Penn State: soil that is 'average to somewhat wet... not dry or saturated') rather than the container/houseplant dry-down framework these fields assume, so they were left null rather than force-mapped.",
         "fertilize_active_months/fertilize_interval_days/fertilize_strength: the only admissible fertilizing guidance (UGA) gives a once-per-'every spring' application of a fixed quantity ('scatter a small amount of fertilizer (1/2 lb of 10-10-10) evenly under each bush every spring') -- a season name rather than a named calendar month, no repeat interval in days, and a fixed dose rather than a full/half/quarter strength framework, so none of these fields could be populated.",
         "is_houseplant: set false -- every admissible source describes exclusively outdoor cultivation (hardy shrub to roughly 5-12 ft across USDA zones 3/4 through 9/10, full-sun landscape/rain-garden/streambank use); UF/IFAS's 'Uses: container or planter... deck or patio' phrase was read as outdoor patio-container use (paired explicitly with 'deck or patio'), not indoor houseplant growing.",
-        "toxic_to_pets — removed on audit: The sole animal-toxicity evidence (NC State's 'Problem for Horses' tag, verified by direct fetch) is species-correct but target-mismatched: it names horses, not dogs/cats/general pets, and the word 'toxic'/'poisonous' is never applied to it -- that's the record's own inference. NC State's full Problems list for this page is 'Poisonous to Humans, Problem for Horses, Weak Wood, Weedy' with no dog/cat/pet tag, and its detailed Poison/symptom section is explicitly human-directed. I checked every other admissible source cited or discoverable (UF/IFAS ST578, UGA B992, both Penn State pages, UMD, Clemson) and none mentions pet or animal toxicity at all. Generalizing a horse-specific, undetailed tag into a general toxic_to_pets=true is an unsupported leap the record itself flags as thin in its own unknowns text; should have been left null."
+        "toxic_to_pets — removed on audit: The sole animal-toxicity evidence (NC State's 'Problem for Horses' tag, verified by direct fetch) is species-correct but target-mismatched: it names horses, not dogs/cats/general pets, and the word 'toxic'/'poisonous' is never applied to it -- that's the record's own inference. NC State's full Problems list for this page is 'Poisonous to Humans, Problem for Horses, Weak Wood, Weedy' with no dog/cat/pet tag, and its detailed Poison/symptom section is explicitly human-directed. I checked every other admissible source cited or discoverable (UF/IFAS ST578, UGA B992, both Penn State pages, UMD, Clemson) and none mentions pet or animal toxicity at all. Generalizing a horse-specific, undetailed tag into a general toxic_to_pets=true is an unsupported leap the record itself flags as thin in its own unknowns text; should have been left null.",
+        "is_edible is TRUE but CONDITIONAL: NC State's Plant Toolbox states the fruit is edible only 'when cooked' (used in pies, pancakes, jellies); UGA's Minor Fruits and Nuts in Georgia adds that ripe berries may be eaten raw but 'Green berries and stems are toxic and must not be eaten.'",
+        "Per rule 5, toxicity info from the same NC State anchor page that carries the edibility claim: the page gives the plant 'low severity' poison characteristics, lists Poison Part as Fruits, Leaves, Roots and Stems (unripe fruit far more toxic than ripe; corrected at landing from 'fruits and leaves'), Poison Toxic Principle as 'Cyanogenic glycoside and alkaloid', Poison Symptoms as ingestion causing nausea, vomiting, diarrhea, coma (unripe fruits far more toxic than ripe, and cooking inactivates the cyanogenic glycoside), lists 'Poisonous to Humans' and 'Problem for Horses' under Problems, and states Causes Contact Dermatitis: No.",
+        "Not a cultivar-specific figure and not a climber (deciduous multi-stemmed shrub/small tree per every source read), so all four size fields were populated normally.",
+        "Neither RHS page (plants/16388/sambucus-canadensis and plants/202707/sambucus-nigra-subsp-canadensis) carries any size, edibility, toxicity, or pollinator content in the fetched page text -- searched both 'Max Height'/'Max Spread' and 'Ultimate'/'Height'/'Spread' wordings, plus 'Edib', 'Poison', 'Toxic', 'pollinat', 'bee', 'butterfl', 'bird' -- all zero hits; the Botanical Details 'Size' field on both pages renders with no value. Not used for any field.",
+        "plantfinder.mobot.org refused this machine (fetch status error:ConnectError) -- skipped per instructions, not guessed.",
+        "ask.ifas.ufl.edu (UF/IFAS ENH-736/ST578) WAS reachable this run and gives Height: 5 to 12 feet, Spread: 6 to 10 feet, closely corroborating the NC State anchor figures used for the citations, but NC State was kept as the primary/anchor citation per the task's instruction that NC State's structured Dimensions block is the anchor.",
+        "extension.psu.edu/native-plant-spotlights-for-wildlife-friendly-landscaping and extension.psu.edu/rain-garden-plants-elderberry both corroborate Height in the 5-12 ft range and explicitly state the flowers 'attract pollinators', supporting attracts_pollinators=true, but were not used as the primary citation since the NC State anchor already carries a structured 'Attracts: ... Pollinators' field and a 'Play Value: Attracts Pollinators' field."
       ],
       "citations": [
         {
@@ -746,8 +887,38 @@
           "source": "Penn State Extension",
           "url": "https://extension.psu.edu/rain-garden-plants-elderberry",
           "quote": "Circumneutral (pH 6.8 to 7.2)"
+        },
+        {
+          "claim": "mature_height_in 60-144 (NC State Dimensions Height: 5 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Sambucus canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Height: 5 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-144 (NC State Dimensions Width: 6 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Sambucus canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Width: 6 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true, conditional: fruit edible when cooked (NC State: pies, pancakes, jellies); ripe fruit only, unripe/green parts toxic",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Sambucus canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "The fruit is edible when cooked and can be used in pies, pancakes, and jellies."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value field: Attracts Pollinators)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Sambucus canadensis",
+          "url": "https://plants.ces.ncsu.edu/plants/sambucus-canadensis/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 144
     },
     {
       "common_name": "Chinese Fountain Grass",
@@ -802,7 +973,13 @@
         "scientific_name_accepted — removed on audit: The value is serialized as the JSON string \"null\" (with quotes) rather than an actual null. Every other unresolved field in the record (toxic_to_pets, chill_damage_f, water_regime, etc.) uses a bare null. A string \"null\" is truthy/non-empty to virtually any downstream consumer, so this field would render as populated with garbage text instead of correctly signaling 'unknown/unresolved' -- silently defeating the careful genuine-conflict reasoning documented in name_note. The underlying decision to leave the field unresolved is itself well-supported (I verified all four name_note citations against the live RHS, NC State, and UMD pages and confirmed the quoted 'Name Status: Correct', synonym list, 'formerly known as', and 'may also be labeled as' text are all accurate) -- the defect is purely in how the null was encoded.",
         "is_houseplant — removed on audit: The single supporting quote (NC State) only describes outdoor growing habit -- clump size, deer/salt tolerance, cutting foliage back in late winter. It never states or implies anything about indoor/houseplant culture. The claim label bolts on an unsupported global negative ('no admissible source describes indoor or container houseplant culture') that this one quote cannot establish by itself -- that would require checking the absence across all cited sources, which isn't shown. Per the audit's own test ('does the quote ACTUALLY state this value'), it does not; the label asserts a category (definitively not a houseplant) the quote doesn't literally support, even though the overall conclusion is plausibly still correct given the plant's outdoor-specific care details.",
         "soil_base — removed on audit: The MOBOT quote ('Easily grown in average, medium to wet soils in full sun to part shade') describes soil type and sun tolerance only -- it says nothing about ground/bed versus container culture. The claim label infers 'garden_bed' from silence ('no container or potting-mix culture mentioned'), but ornamental grasses like Pennisetum alopecuroides are commonly sold and grown in decorative containers as well as beds, so an absence of a container mention in one MOBOT paragraph doesn't secure the categorical claim. The quote doesn't literally establish the value asserted.",
-        "common_name: restored as \"Chinese Fountain Grass\" -- 3 of the 5 sources actually used (RHS, NC State, UMD) call it that specifically, already quoted in this record's own citations; the plain \"Fountain Grass\" form the audit flagged as an undisclosed minority pick was dropped."
+        "common_name: restored as \"Chinese Fountain Grass\" -- 3 of the 5 sources actually used (RHS, NC State, UMD) call it that specifically, already quoted in this record's own citations; the plain \"Fountain Grass\" form the audit flagged as an undisclosed minority pick was dropped.",
+        "is_edible left null: none of the four cited pages (NC State, RHS, UMD Extension, and MOBOT — which refused this machine) address eating or food use of this species; searches for 'Edible' returned zero hits on all reachable pages.",
+        "No poisonous-part, toxic-principle, or pets-warning language was found on the NC State anchor page: searches for 'Poison', 'Toxic', and 'Problem for' each returned 0 hits, so no toxicity caveat applies (and none is needed since is_edible is null, not true).",
+        "Size fields use NC State (the anchor, since a species-level NC State page exists) rather than RHS: RHS gives Max Height 1-1.5 metres (39.4-59.1 in) and Max Spread 1-1.5 metres (39.4-59.1 in) for the same species, a narrower/higher range than NC State's 24-72 in height / 24-48 in width -- not used as the recorded value per the anchor-priority rule, but noted here for the record.",
+        "This species is a clumping ornamental grass, not a climber, so the climber size-nulling rule does not apply; all four size fields are populated.",
+        "https://extension.umd.edu/resource/ornamental-and-native-grasses-landscape mentions Chinese fountain grass (as Cenchrus alopecuroides / Pennisetum alopecuroides) only in a list of species banned as invasive under Maryland law; it carries no size, edibility, or pollinator data for this species specifically (searched 'Edible', 'Poison', 'Toxic', 'Attracts', 'pollinat', 'bee', 'butterfl' -- only a stray 'bee' hit in an unrelated little bluestem entry).",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e500 refused this machine (error:ConnectError) and was not read; no data from it is reflected in this record."
       ],
       "citations": [
         {
@@ -870,8 +1047,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e500",
           "quote": "Easily grown in average, medium to wet soils in full sun to part shade."
+        },
+        {
+          "claim": "mature_height_in 24-72 (NC State Height 2 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cenchrus alopecuroides (common name: Chinese Fountain Grass)",
+          "url": "https://plants.ces.ncsu.edu/plants/cenchrus-alopecuroides/common-name/chinese-fountain-grass/",
+          "quote": "Height: 2 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-48 (NC State Width 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cenchrus alopecuroides (common name: Chinese Fountain Grass)",
+          "url": "https://plants.ces.ncsu.edu/plants/cenchrus-alopecuroides/common-name/chinese-fountain-grass/",
+          "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators is true (NC State Play Value field states Attracts Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cenchrus alopecuroides (common name: Chinese Fountain Grass)",
+          "url": "https://plants.ces.ncsu.edu/plants/cenchrus-alopecuroides/common-name/chinese-fountain-grass/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 48
     },
     {
       "common_name": "Japanese Pachysandra",
@@ -921,7 +1121,13 @@
         "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: this is an in-ground landscape groundcover, not a container/houseplant; no admissible source gives container-watering depth or day-interval estimates, so these houseplant-style watering-schedule fields are left null.",
         "cool_rest_note: no admissible source describes a cool-rest or watering-dormancy practice for this species.",
         "water_regime was set to keep_moist based on consistent 'moist' / 'moist but well-drained' / 'Water: Medium' guidance across all four sources. Note that sources also flag drought/dry-soil tolerance as a resilience trait, not the recommended regime (NC State: 'pachysandra can tolerate drought conditions'; Missouri Botanical Garden Tolerate list includes 'Drought' and 'Dry Soil') — this was treated as a secondary hardiness note, not a conflicting care instruction, since no source recommends letting the soil dry out as the preferred practice.",
-        "water_regime — removed on audit: \"keep_moist\" overstates what the four sources jointly support. Verified via live fetch: MOBOT's own structured field says \"Water: Medium\" (a middle-of-scale category, not a moisture-loving rating) and separately tags \"Tolerate: Rabbit, Deer, Drought, Heavy Shade, Erosion, Clay Soil, Dry Soil.\" RHS's structured requirement, confirmed in the raw HTML, is \"Moist but well-drained OR Well-drained\" -- RHS explicitly allows plain well-drained soil (no moisture qualifier) as sufficient on its own, not exclusively \"moist.\" NC State also lists Drought and Dry Soil under its own \"Resistance To Challenges\" field. Two of the four sources hedge toward a moderate/average water regime rather than one requiring consistently moist soil, and the record resolves that internal tension toward the more demanding \"keep_moist\" label while treating the drought-tolerance signal as merely a secondary note rather than a real competing interpretation."
+        "water_regime — removed on audit: \"keep_moist\" overstates what the four sources jointly support. Verified via live fetch: MOBOT's own structured field says \"Water: Medium\" (a middle-of-scale category, not a moisture-loving rating) and separately tags \"Tolerate: Rabbit, Deer, Drought, Heavy Shade, Erosion, Clay Soil, Dry Soil.\" RHS's structured requirement, confirmed in the raw HTML, is \"Moist but well-drained OR Well-drained\" -- RHS explicitly allows plain well-drained soil (no moisture qualifier) as sufficient on its own, not exclusively \"moist.\" NC State also lists Drought and Dry Soil under its own \"Resistance To Challenges\" field. Two of the four sources hedge toward a moderate/average water regime rather than one requiring consistently moist soil, and the record resolves that internal tension toward the more demanding \"keep_moist\" label while treating the drought-tolerance signal as merely a secondary note rather than a real competing interpretation.",
+        "is_edible left null: no page addresses eating Japanese Pachysandra at all -- NC State Plant Toolbox and RHS both have zero hits for 'Edible'/'edible', so there is no record either way (not inferred from the genus).",
+        "Confirmed not a climber before applying size: NC State Plant Type lists 'Ground Cover' and 'Herbaceous Perennial' (no vine/climbing habit), and RHS Habit is 'Matforming'. Full mature height and spread from NC State's structured Dimensions block are therefore recorded normally.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting any field -- zero hits on all three, so no toxicity or pet-safety text was found to omit.",
+        "Also searched RHS for 'Poison', 'Toxic', 'Edible', 'Pollinator', 'pollinat', and 'Attracts' -- zero hits on all of these on the RHS page.",
+        "hgic.clemson.edu/factsheet/pachysandra/ refused this machine (fetch returned http-403, reproduced after clearing the cached fetch) -- not read, no fields drawn from it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=e430 refused this machine (fetch returned error:ConnectError) -- not read, no fields drawn from it."
       ],
       "citations": [
         {
@@ -1019,8 +1225,31 @@
           "quote": "Grow in any soil, except very dry, in full or partial shade; has the potential to become a nuisance in moist soils if not managed well",
           "source": "RHS (Royal Horticultural Society) Plants",
           "url": "https://www.rhs.org.uk/plants/12099/pachysandra-terminalis/details"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Dimensions Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Dimensions Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field states the plant attracts bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachysandra-terminalis/",
+          "quote": "Attracts bees."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Pecan",
@@ -1072,7 +1301,15 @@
         "is_houseplant / container growing: no admissible source describes growing this species indoors or long-term in a container. All describe it as a large landscape or orchard tree (NC State: 'this is a tree most appropriate for a large property'; UF/IFAS ST122: reaching 'up to 130 feet' tall; UGA: trees 'commonly found surrounding both urban and rural dwellings'). UGA does mention 'Container-Grown Tree Planting' and 'container-grown transplants,' but this refers to the nursery-trade form the tree is purchased in before permanent in-ground planting, not to long-term container or indoor culture, so is_houseplant is false with no container-specific carve-out.",
         "soil_base: mapped to garden_bed based on Clemson's in-ground planting instructions (digging a hole and backfilling with topsoil/water) and NC State's/UF/IFAS's native soil-texture tolerances (clay, sand, loam); no admissible source frames this species as grown long-term in a container, consistent with is_houseplant false.",
         "outdoor_sun_exposure: Missouri Botanical Garden's structured 'Sun: Full sun' field does not itself mention partial shade, but NC State's and UF/IFAS ST122's own structured light-requirement fields both explicitly pair full sun with partial shade ('full sun to partial shade'), so part_shade was included on the strength of those two sources.",
-        "soil_ph_min, soil_ph_max: set to 6.0-6.5 based on identical wording independently given by Clemson HGIC and UGA Bulletin 1348 ('A soil pH of 6.0 to 6.5 assures the availability of essential nutrients'). UF/IFAS HS229 gives a broader figure for the same fact ('A soil pH between 5.5 and 6.5 is satisfactory'); since this range fully contains, rather than contradicts, the Clemson/UGA figure, and two of three sources agree exactly on 6.0-6.5, that narrower duplicated figure was used rather than the single broader one."
+        "soil_ph_min, soil_ph_max: set to 6.0-6.5 based on identical wording independently given by Clemson HGIC and UGA Bulletin 1348 ('A soil pH of 6.0 to 6.5 assures the availability of essential nutrients'). UF/IFAS HS229 gives a broader figure for the same fact ('A soil pH between 5.5 and 6.5 is satisfactory'); since this range fully contains, rather than contradicts, the Clemson/UGA figure, and two of three sources agree exactly on 6.0-6.5, that narrower duplicated figure was used rather than the single broader one.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ConnectError) -- not queried, no data drawn from it.",
+        "hgic.clemson.edu refused this machine (fetch status: http-403) -- not queried, no data drawn from it.",
+        "Searched the NC State anchor page (and corroborating UF/IFAS ask.ifas.ufl.edu/hs229 and ask.ifas.ufl.edu/st122 pages) for 'Poison'/'Toxic'/'Problem for': all hits found concern squirrel/deer control chemicals or nutrient-deficiency leaf toxicity symptoms, not any poisonous part of the plant or a caution about eating it -- no toxicity or pets warning applies to is_edible.",
+        "is_edible is set true based on the nuts specifically ('Nuts are edible.' -- NC State); no page states the whole plant, husk, or foliage is edible, but this is not a poisonous-part conflict so no conditional caveat beyond 'nuts, not whole plant' is needed.",
+        "RHS page for Carya illinoinensis carries no 'Max Height'/'Max Spread'/'Ultimate height' fields at all (checked both wordings) and no pollinator-attraction tag -- RHS was not usable for size or pollinator data for this species; NC State (and corroborating UF/IFAS ST122) is the size/edibility source, and NC State's own 'Attracts' field is the pollinator source.",
+        "Pecan is not a climber/vine, so the climber exclusion rule (no size fields) does not apply.",
+        "No figures found were attributed to a named cultivar; the NC State and UF/IFAS dimensions are given for the species.",
+        "attracts_pollinators removed on audit: The only support is the bare word 'Pollinators' in NC State's structured 'Attracts:' list (Moths, Pollinators, Small Mammals, Songbirds). The same NC State page contradicts it in its Fruit Description, which says 'Wind pollinated.' (verified verbatim). UF/IFAS HS229 says flatly 'Pecan trees are wind pollinated.' and describes wind-shed catkin pollen. No page names bees, butterflies or any insect visiting the flowers. RHS has no pollinator tag, and MOBOT and Clemson were unreachable. So the one supporting tag is contradicted by the anchor page itself and by a second extension source, and the unknowns never mention the conflict. Also, the quoted run 'Pollinators' is a single word that appears elsewhere as site navigation (the UGA page has a 'Pollinators' menu item), so the quote alone does not show it comes from the Attracts field. This is a judgment call, since the Attracts tag does literally name pollinators and so passes check E as written. But setting true for a documented wind-pollinated tree would mislead users. Null it (silence/conflict is null, not true), or at least record the 'Wind pollinated.' conflict in unknowns if the orchestrator chooses to keep the tag."
       ],
       "citations": [
         {
@@ -1182,8 +1419,31 @@
           "quote": "broadcast 4 pounds of a complete fertilizer such as 16-4-8 or 5 pounds of 12-6-6 for each inch of trunk diameter (measured 4½ feet above soil level)",
           "source": "Clemson Cooperative Extension Home & Garden Information Center",
           "url": "https://hgic.clemson.edu/factsheet/pecan-planting-fertilization/"
+        },
+        {
+          "claim": "mature_height_in 840-1200 (NC State Height 70 ft. 0 in. - 100 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Carya illinoinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/",
+          "quote": "Height: 70 ft. 0 in. - 100 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 480-900 (NC State Width 40 ft. 0 in. - 75 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Carya illinoinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/",
+          "quote": "Width: 40 ft. 0 in. - 75 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: Nuts are edible.)",
+          "source": "North Carolina Extension Gardener Plant Toolbox — Carya illinoinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/carya-illinoinensis/",
+          "quote": "Nuts are edible."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 840,
+      "mature_height_in_max": 1200,
+      "mature_spread_in_min": 480,
+      "mature_spread_in_max": 900
     }
   ],
   "audit_summary": [
@@ -1225,6 +1485,8 @@
     "Two landing-time repairs, both restoring already-available evidence the audit itself located: Pear's scientific_name_accepted was nulled because the record quoted a descriptive sentence instead of NC State's taxonomy block, which the audit fetched directly and confirmed reads \"Genus: Pyrus Species: communis Family: Rosaceae\" -- added as a proper citation and restored. Fountain Grass's common_name was nulled after the audit caught an undisclosed cherry-pick: 3 of the 5 sources actually cited (RHS, NC State, UMD) call it \"Chinese Fountain Grass\" specifically, already quoted in the record's own citations, while the record silently used the minority plain form -- restored to the majority, already-cited name.",
     "Black Walnut's toxicity_detail catch is a precise example of the plant-hazard-vs-animal-hazard confusion this batch's species note specifically warned about: a UGA quote calling juglone \"a strong respiratory toxin\" was being used as animal-toxicity evidence, but the audit traced the full source paragraph and found that sentence is the transition into the article's plant-root/soil allelopathy section (the standard meaning of \"respiratory toxin\" in juglone literature is inhibiting cellular respiration in root cells, not an animal inhalation hazard) -- correctly excluded rather than presented as pet-relevant.",
     "Fountain Grass surfaced a genuine taxonomic split this catalog hasn't hit before with an even split rather than a majority: RHS and Missouri Botanical Garden both anchor to Pennisetum alopecuroides as accepted, while NC State Extension and University of Maryland Extension both independently anchor to Cenchrus alopecuroides -- landed with scientific_name_accepted null and the full four-source conflict documented in name_note.",
-    "Pennisetum's own scientific_name_accepted also carried the same string-\"null\"-instead-of-JSON-null bug seen in b23/b24/b27, again caught and self-corrected by the auditor's own explicit finding before this landing pass even ran its check."
+    "Pennisetum's own scientific_name_accepted also carried the same string-\"null\"-instead-of-JSON-null bug seen in b23/b24/b27, again caught and self-corrected by the auditor's own explicit finding before this landing pass even ran its check.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -523,6 +523,24 @@
           "quote": "Skin redness, burning pain, and blisters when broken skin is in contact with cell sap plus sunlight; nose and eye irritation from aroma of flowers.",
           "source": "NC State Extension Gardener Plant Toolbox — Tagetes (Marigold)",
           "url": "https://plants.ces.ncsu.edu/plants/tagetes/common-name/marigold/"
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/105531/tagetes-patula/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/105531/tagetes-patula/details",
+          "quote": "Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "attracts_pollinators true",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/105531/tagetes-patula/details",
+          "quote": "Plants for pollinators"
         }
       ],
       "unknowns": [
@@ -548,10 +566,22 @@
         "mature_height_in_max removed on audit: Wrong taxon (check C), not a unit slip. The cited URL https://plants.ces.ncsu.edu/plants/tagetes/common-name/marigold/ is the NC State GENUS page for Tagetes (page <title> 'Marigold - Tagetes'), not Tagetes patula. Its 'Height: 1 ft. 0 in. - 4 ft. 0 in.' spans the whole genus, and the 4 ft top end is Tagetes erecta: Penn State's page says 'African marigolds (Tagetes erecta) ... reaching 3 to 4 feet in height' while 'French marigolds (Tagetes patula) ... grow from 6 to 24 inches tall.' NC State does have a species page, https://plants.ces.ncsu.edu/plants/tagetes-patula/ (<title> 'Tagetes patula (French Marigold)'), and it reads 'Height: 0 ft. 6 in. - 1 ft. 0 in.' with the description sentence 'It is 6 to 12 inches high and 6 to 18 inches wide.' RHS agrees: 'A compact, bushy annual to 30cm tall and wide', Max Height 0.1-0.5 metres. So the correct species height is 6-12 in, not 12-48 in; the recorded max is 4x the published figure for this species. Check A: the 1ft/4ft to 12/48 arithmetic itself is right, so this is not an unconverted-feet defect. Check B: min<=max holds and both ends do trace to text, just to the wrong page. Check H: the quote is also defective - it contains U+23CE and glues the 'Dimensions:' label to 'Height:' across a newline boundary, so it is not one rendered run.",
         "mature_spread_in_min removed on audit: Same wrong-taxon defect (check C) plus a wrong max. 6-12 was taken from the genus page's 'Width: 0 ft. 6 in. - 1 ft. 0 in.' The Tagetes patula species page at https://plants.ces.ncsu.edu/plants/tagetes-patula/ reads 'Width: 0 ft. 6 in. - 1 ft. 6 in.' and its description says 'It is 6 to 12 inches high and 6 to 18 inches wide.' The species max spread is 18 in, not 12 in. Checks A and B are clean (0ft6in=6, conversion fine; min<=max; a real published range, not a single figure inflated into one). Check C's climber clause does not apply - the species page lists Habit/Form 'Clumping', so it is not a vine. Check H: the quote again carries U+23CE and welds 'Dimensions:' to 'Height:'/'Width:' across newlines.",
         "mature_spread_in_max removed on audit: Same wrong-taxon defect (check C) plus a wrong max. 6-12 was taken from the genus page's 'Width: 0 ft. 6 in. - 1 ft. 0 in.' The Tagetes patula species page at https://plants.ces.ncsu.edu/plants/tagetes-patula/ reads 'Width: 0 ft. 6 in. - 1 ft. 6 in.' and its description says 'It is 6 to 12 inches high and 6 to 18 inches wide.' The species max spread is 18 in, not 12 in. Checks A and B are clean (0ft6in=6, conversion fine; min<=max; a real published range, not a single figure inflated into one). Check C's climber clause does not apply - the species page lists Habit/Form 'Clumping', so it is not a vine. Check H: the quote again carries U+23CE and welds 'Dimensions:' to 'Height:'/'Width:' across newlines.",
-        "is_edible and attracts_pollinators left unset. The only page cited for either was NC State's Tagetes GENUS page, not the Tagetes patula species page -- the same wrong-taxon defect the audit caught on this record's size, and the edibility text there is about the 'Lemon Gem' and 'Tangerine Gem' cultivars of a different species. Both need re-researching against https://plants.ces.ncsu.edu/plants/tagetes-patula/."
+        "is_edible and attracts_pollinators left unset. The only page cited for either was NC State's Tagetes GENUS page, not the Tagetes patula species page -- the same wrong-taxon defect the audit caught on this record's size, and the edibility text there is about the 'Lemon Gem' and 'Tangerine Gem' cultivars of a different species. Both need re-researching against https://plants.ces.ncsu.edu/plants/tagetes-patula/.",
+        "NC State Plant Toolbox page at plants.ces.ncsu.edu/plants/tagetes/common-name/marigold/ is a GENUS page (its own 'Species:' field reads 'spp.', and it covers T. erecta, T. lucida, T. patula and T. tenuifolia together), not a Tagetes patula species page, so its 'Dimensions: Height: 1 ft. 0 in. - 4 ft. 0 in. / Width: 0 ft. 6 in. - 1 ft. 0 in.' was NOT used for size -- per instructions a genus page is not a substitute for a species-specific figure. RHS (species-specific page, title 'Tagetes patula | French marigold') was used instead.",
+        "hgic.clemson.edu/factsheet/marigold/ returned HTTP 403 (refused this machine) -- not read, no content guessed.",
+        "The NC State genus page also carries a culinary-use line ('may be harmful if eaten in large amounts. Used in tea, coloring foods, substitute for tarragon.') but this is a genus-wide note and the tarragon-substitute use in particular is the well-known trait of a different species in the genus (Tagetes lucida, 'Mexican tarragon'), not documented here as specific to T. patula, so it was not used to support is_edible for this species.",
+        "is_edible set FALSE on extension.psu.edu (Penn State Extension): 'Flowers from  Tagetes  marigolds are generally considered inedible.' -- a direct statement naming the genus Tagetes (which includes T. patula).",
+        "NC State's genus page separately documents toxicity for the genus: 'This plant has low severity poison characteristics', Poison Toxic Principle 'Phototoxic thiophene derivatives', Causes Contact Dermatitis 'Yes', Poison Part 'Flowers, Leaves, Roots' -- noted here for context though not required by the citation rule since is_edible resolved to false, not true.",
+        "attracts_pollinators set TRUE on the RHS species page's 'Plants for pollinators' tag; NC State's genus page also lists 'Attracts: Butterflies' (Songbirds, also listed, is not pollination and was not used as support).",
+        "This is not a climber (RHS: 'a compact, bushy annual to 30cm tall and wide'), so the climber-size exclusion rule does not apply and all four size fields were populated normally.",
+        "is_edible removed on audit: The FALSE value rests only on a hedged genus-wide sentence from Penn State: 'Flowers from Tagetes marigolds are generally considered inedible.' The quote is real and verbatim. But the NC State page that the researcher already treats as covering T. patula ('T. erecta, T. lucida, T. patula, T. tenuifolia') says the opposite at the same genus level. It lists 'Flower Value To Gardener: Edible' and 'Edible Garden'. It has an Edibility field: \"'Lemon Gem' and 'Tangerine Gem' have the best flavor; remove the bitter, white base of the petal. May be harmful if eaten in large amounts. Used in tea, coloring foods...\" The researcher's unknowns leave out NC State's 'Edible' tag and explain away its culinary line with outside knowledge (T. lucida). They also apply a double standard: they reject the NC State genus page for size, then accept a genus-level Penn State sentence as a species-level denial. That leaves two genus-level sources that directly contradict each other and no species-specific statement either way, so FALSE is not established. Null it. It should not be flipped to true either: NC State's edibility refers to 'Gem' cultivars (signet types) and carries a 'harmful if eaten in large amounts' caveat, which would itself need recording under F."
       ],
       "is_edible": null,
-      "attracts_pollinators": null
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Moonflower",
@@ -777,6 +807,18 @@
           "source": "North Carolina Extension Gardener Plant Toolbox: Ipomoea purpurea",
           "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false (RHS: plant is potentially harmful, \"Harmful if eaten\"; NC State: Poisonous to Humans, Poison Severity: Low, with vomiting/hallucination symptoms from ingestion)",
+          "quote": "Harmful if eaten.",
+          "source": "RHS - Ipomoea purpurea (common morning glory) plant details",
+          "url": "https://www.rhs.org.uk/plants/56562/i-ipomoea-purpurea-i/details"
+        },
+        {
+          "claim": "is_edible false, supporting toxicity evidence (NC State Poison Symptoms field)",
+          "quote": "Vomiting, large amounts of seeds may cause hallucinations",
+          "source": "NC State Extension Gardener Plant Toolbox - Ipomoea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/"
         }
       ],
       "common_name": "Common Morning Glory",
@@ -825,7 +867,9 @@
         "is_edible left null: none of the readable sources (NC State, RHS) states the plant or any part of it is eaten or grown for food. NC State's page has no Edible field (0 hits searching 'Edible'); RHS has no edibility statement either (0 hits searching 'Edible').",
         "Not used because is_edible is null, but recorded for the next researcher: NC State lists the plant as \"Poisonous to Humans\" with \"Poison Severity: Low\", \"Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations\", and \"Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine)\"; RHS separately flags \"Potentially harmful. Harmful if eaten\" for people and \"Harmful if eaten\" for pets.",
         "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf refused this machine: qc.py's fetch path returns status 'pdf' with 0 bytes (the quote-checker pipeline does not fetch/extract PDF content), so it could not be searched for size, edibility, or pollinator text -- skipped rather than guessed.",
-        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b754 refused this machine: fetch returned status error:ConnectError, so it could not be searched -- skipped rather than guessed."
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b754 refused this machine: fetch returned status error:ConnectError, so it could not be searched -- skipped rather than guessed.",
+        "is_edible set to false rather than left null: RHS states \"Potentially harmful\" / \"Harmful if eaten\" for both humans and pets; NC State states the plant \"has low severity poison characteristics,\" is \"Poisonous to Humans,\" Poison Severity: Low, Poison Symptoms: \"Vomiting, large amounts of seeds may cause hallucinations,\" Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine). No page on the citation list states any part of the plant is grown or used for food.",
+        "Searched the NC State page for 'Edible': 0 hits -- the page makes no edibility claim of its own; the edibility conclusion rests on its poison/toxicity fields plus RHS's 'Harmful if eaten' statement."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -833,7 +877,8 @@
       "water_estimate_basis": null,
       "water_growing_days_est": null,
       "water_regime": null,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "is_edible": false
     },
     {
       "common_name": "Nasturtium",
@@ -1375,6 +1420,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Two findings worth keeping in mind for future name-resolution work. Annual Geranium's scientific_name_accepted was set to Pelargonium x hybridum on a single source's say-so, but the audit fetched the record's other cited sources directly and found RHS explicitly rates the name status 'Unresolved' while Clemson, MOBOT and UF/IFAS all still use the given name (x hortorum) as their working name -- a genuine cross-source dispute, not a settled reclassification. Nulled, along with a name_note whose own final sentence contradicted the evidence it had just laid out. Petunia's resolution to Petunia x atkinsiana was left alone as a materially different situation: one source (RHS) makes an explicit accepted/synonym determination that the other sources are simply silent about, not actively disputing.",
     "Common Morning Glory's toxicity handling separated two questions the source itself keeps apart: NC State's page has a distinct 'Poisonous to Humans' section (with mechanism and symptoms) and a separate, undetailed 'Problem for Cats/Dogs/Horses' tag. The record had cross-attributed the human section's specific content to toxicity_detail; the audit correctly stripped only that text, leaving toxic_to_pets=true standing on the tag that actually supports it. Nasturtium's toxic_to_pets=true rests on a bare but specific three-animal tag with no mechanism given -- thinner than most, but a different evidentiary situation from Kohlrabi's b10 case, where the tag named only an animal (horses) unrelated to the field's actual question and left cats/dogs unaddressed.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

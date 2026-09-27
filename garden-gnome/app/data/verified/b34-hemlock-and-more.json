@@ -57,7 +57,13 @@
         "is_houseplant: no admissible source explicitly states poison hemlock is not grown indoors (unsurprising, since none discusses indoor/container culture for it at all). Set to false based on the complete absence of any houseplant/container-culture guidance across all admissible sources consulted, combined with NC State's explicit 'Weed' Plant Type tag and every source's uniform framing of the species as something to identify and remove rather than cultivate.",
         "name_note — removed on audit: The record stores name_note as the JSON string \"null\" (quoted) rather than an actual JSON null, which is exactly the defect structural check 6 warns about. Every other genuinely-unresolved field in the record (day_f_min, chill_damage_f, water_regime, etc.) is correctly encoded as a bare null, making this a one-off encoding bug rather than a formatting convention. As written, a strict parser would treat name_note as a populated string field with no supporting citation, which also fails check 1 (no citation's claim label contains 'name_note' or literally supports the string \"null\").",
         "is_houseplant — removed on audit: The only citation offered (NC State's 'Plant Type: Herbaceous Perennial, Perennial, Poisonous, Weed' tag list) does not literally state that the species is not grown as a houseplant -- it only categorizes plant type. is_houseplant=false is an inference from the absence of any indoor/container-culture discussion across all admissible sources, not a directly quoted fact. Per the per-field check ('Does the quote ACTUALLY state this value?'), this citation does not carry the weight the claim label assigns it, even though the inferred value itself is very likely correct in reality for a documented invasive roadside weed.",
-        "toxicity_detail — removed on audit: The opening sentence claims the species is 'rated highly toxic by every admissible source that addresses toxicity,' but I fetched all four cited pages directly and only NC State's Poisonous to Humans section literally uses a formal severity rating ('Poison Severity: High') and the phrase 'HIGHLY TOXIC.' Penn State's two pages and UMD's page describe the plant as 'toxic,' 'poisonous,' and 'can be fatal' but do not use a rating scale or the word 'highly' -- so 'rated ... by every admissible source' overstates uniformity of characterization. This is a framing overreach in the summary sentence; the substantive mechanism/symptom/affected-parts content later in the field is accurately quoted and appropriately hedged (it correctly declines to present NC State's human-scoped symptom list as pet evidence)."
+        "toxicity_detail — removed on audit: The opening sentence claims the species is 'rated highly toxic by every admissible source that addresses toxicity,' but I fetched all four cited pages directly and only NC State's Poisonous to Humans section literally uses a formal severity rating ('Poison Severity: High') and the phrase 'HIGHLY TOXIC.' Penn State's two pages and UMD's page describe the plant as 'toxic,' 'poisonous,' and 'can be fatal' but do not use a rating scale or the word 'highly' -- so 'rated ... by every admissible source' overstates uniformity of characterization. This is a framing overreach in the summary sentence; the substantive mechanism/symptom/affected-parts content later in the field is accurately quoted and appropriately hedged (it correctly declines to present NC State's human-scoped symptom list as pet evidence).",
+        "Poison Hemlock is not a climber/vine/liana -- NC State lists Plant Type: Herbaceous Perennial / Perennial, and other cited sources (UMD, Penn State, UGA) describe it as an erect biennial weed -- so rule 4 (no size for climbers) does not apply and the size fields were filled normally.",
+        "attracts_pollinators left null: no cited page makes any structured or unconditional statement that bees, butterflies, moths, hummingbirds or other pollinators are attracted to Conium maculatum. Searched 'Attracts', 'Pollinator', 'pollinat', 'bee', 'butterfl', 'hummingbird', 'Wildlife' across all 9 pages; the only hits were unrelated site navigation (Penn State's 'Pollinators' topic-menu category, UGA's 'Pollinators' topic list) or RHS 'Plants for Pollinators' award tags attached to other, unrelated species on the poisonous-plants roundup page -- none of it about poison hemlock itself.",
+        "Before setting is_edible, searched the NC State anchor page (and all other cited pages) for 'Poison', 'Toxic' and 'Problem for'. NC State's structured Poison Symptoms field reads 'HIGHLY TOXIC, MAY BE FATAL IF EATEN! Delivery by ingestion. Salivation, vomiting, diarrhea, muscular weakness, paralysis, nervousness, trembling, dilation of pupils, weak pulse, convulsions, coma. People with highly sensitive skin may experience contact dermatitis from handling this plant.' Poison Toxic Principle: 'Alkaloids coniine and others.' Causes Contact Dermatitis: Yes. Poison Part includes Bark and Flowers (and others). Tags include #problem for dogs #problem for horses #problem for cats #contact dermatitis. This directly states the plant is poisonous if eaten, so is_edible was set FALSE per rule 6 rather than left null; no cited page states any part of Conium maculatum is grown or used for food.",
+        "No page among the 9 cited URLs refused this machine -- all returned an ok fetch status, so there is nothing to report as a refused host for this species.",
+        "The UGA B1597 page states poison hemlock 'can reach up to 7 in. tall,' which is almost certainly a units typo for feet, but it is not the anchor and was not used for the size fields regardless -- NC State's structured Height/Width block was used per the anchor rule.",
+        "Penn State's 'poison-hemlock' page gives a single unconditional figure ('can reach up to 6 feet in height') that is lower than NC State's range and was not used, since NC State (the anchor with a structured Dimensions block) takes precedence and its range was used instead."
       ],
       "citations": [
         {
@@ -179,8 +185,31 @@
           "source": "UGA Cooperative Extension (CAES Field Report, B1597, \"Identifying Toxic Weeds in Georgia Pastures and Hayfields\")",
           "url": "https://fieldreport.caes.uga.edu/publications/B1597/identifying-toxic-weeds-in-georgia-pastures-hayfields/",
           "quote": "All animals are susceptible to the piperidine alkaloids. All vegetative plant parts and fruit are toxic, but the leaves are the most dangerous in the springtime and the fruits are more dangerous in the fall."
+        },
+        {
+          "claim": "mature_height_in 72-120 (NC State Height: 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Poison Hemlock (Conium maculatum)",
+          "url": "https://plants.ces.ncsu.edu/plants/conium-maculatum/common-name/poison-hemlock/",
+          "quote": "Height: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-60 (NC State Width: 4 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Poison Hemlock (Conium maculatum)",
+          "url": "https://plants.ces.ncsu.edu/plants/conium-maculatum/common-name/poison-hemlock/",
+          "quote": "Width: 4 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State Poison Symptoms field states the plant may be fatal if eaten)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Poison Hemlock (Conium maculatum)",
+          "url": "https://plants.ces.ncsu.edu/plants/conium-maculatum/common-name/poison-hemlock/",
+          "quote": "HIGHLY TOXIC, MAY BE FATAL IF EATEN!"
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 60
     },
     {
       "common_name": "Rose of Sharon",
@@ -597,7 +626,16 @@
         "UF/IFAS coverage: UF/IFAS's plum-related EDIS content ('Growing Plums in Florida', HS895) covers only University of Florida's own low-chill 'Gulf' series cultivars, which are explicitly Japanese-type plums (Prunus salicina hybrids), not Prunus domestica -- so it was not used for this species-specific record.",
         "soil_ph_min/soil_ph_max: RHS's own structured 'pH' field gives only the broad category 'Acid or Neutral' (and NC State's categorical field for the 'Stanley' cultivar gives 'Acid (<6.0)' and 'Neutral (6.0-8.0)'), while RHS's own Cultivation prose, Clemson, and UGA all independently give the same specific numeric target (6.0-6.5 / 6.5); the specific figure was used and the broader categorical tags were not merged in, consistent with how this catalog treated the same broad-tag-vs-specific-figure pattern for Apple and Peach.",
         "toxicity_detail — removed on audit: The cited quote (NC State 'Stanley' cultivar page) is explicitly headed 'Poisonous to Humans' -- verified live, that page has no 'Poisonous to Pets' section at all, only bare category tags. The record's own prose concedes this human scoping, but still uses the human symptom/mechanism text (cyanide, 'brick red mucous membranes, dilated pupils, difficulty breathing, panting, shock') as the toxicity_detail for a record whose toxic_to_pets=true, which fails check 4's requirement that toxicity_detail content actually be about animal toxicity. No admissible source gives any cat/dog-specific symptom, dose, or severity for this species, so this elaborated detail should not stand as the toxicity_detail supporting a pet-toxicity claim.",
-        "name_note — removed on audit: Only two claims in this field trace to the citations array (RHS 'Name Status Correct'; NC State's 'Greengage and damson plums are subspecies of P. domestica'). The note goes further and asserts, with no supporting citation anywhere in the array: (1) that RHS's own catalog lists 'Greengage as Prunus domestica subsp. italica' and 'Damson under its own subspecies entries', and (2) that NC State's 'Bluefire' cultivar page also uses the Prunus domestica binomial. Neither claim's label appears in citations and neither is traceable to any quote provided, violating structural check 1 -- these are uncited factual assertions embedded in an otherwise-cited field."
+        "name_note — removed on audit: Only two claims in this field trace to the citations array (RHS 'Name Status Correct'; NC State's 'Greengage and damson plums are subspecies of P. domestica'). The note goes further and asserts, with no supporting citation anywhere in the array: (1) that RHS's own catalog lists 'Greengage as Prunus domestica subsp. italica' and 'Damson under its own subspecies entries', and (2) that NC State's 'Bluefire' cultivar page also uses the Prunus domestica binomial. Neither claim's label appears in citations and neither is traceable to any quote provided, violating structural check 1 -- these are uncited factual assertions embedded in an otherwise-cited field.",
+        "Not a climber: NC State and RHS both describe P. domestica as a shrub/small tree, so all four size fields apply normally (rule 4 does not exclude them).",
+        "is_edible is TRUE and the NC State anchor page (the same page cited for is_edible) also carries pets-warning tags 'Problem for Dogs', 'Problem for Horses', and 'Problem for Cats' in its tag list, with no further detail (no specific plant part, toxic principle, or severity given beyond the tag names themselves) -- flagging per rule 5 since is_edible is true.",
+        "NC State search for 'Poison' and 'Toxic' on the anchor page (plants.ces.ncsu.edu/plants/prunus-domestica/) returned 0 hits; RHS page also returned 0 hits for both terms.",
+        "The NC State cultivar page https://plants.ces.ncsu.edu/plants/prunus-domestica-stanley/ ('Stanley' cultivar) reports Height: 18 ft. 0 in. - 20 ft. 0 in. and Width: 18 ft. 0 in. - 20 ft. 0 in. -- this is a cultivar's size, not the species', so it was NOT used per rule 3.",
+        "https://hgic.clemson.edu/factsheet/plum/ returned HTTP 403 (refused this machine) -- skipped; no content from it was used or guessed.",
+        "RHS page was searched for both 'Max Height'/'Max Spread' and 'Ultimate height'; only the 'Max Height'/'Max Spread' wording (2.5-4 metres each) was present. NC State was used as the anchor instead of RHS since NC State has a species-specific (non-genus) page.",
+        "The UGA fieldreport page (fieldreport.caes.uga.edu/publications/B1518/home-garden-plums/) discusses pollinators only in the context of crop pollination requirements for fruit set (bees needed to pollinate flowers for fruiting), not as a wildlife-attraction statement, so it was not used to support attracts_pollinators.",
+        "The UGA and Clemson pages carried no height/width dimension data (UGA: 0 hits for 'Height'/'Width'; Clemson refused as noted above), so they contributed no size citations.",
+        "Added at landing: the NC State page for the 'Stanley' cultivar of this species, which this record cites, names Poison Part: Leaves, Seeds, Stems -- 'Stems, leaves, seeds contain cyanide, particularly toxic in the process of wilting' (Poison Severity: Low; toxic principle cyanogenic glycosides). Only the fruit is described as eaten."
       ],
       "citations": [
         {
@@ -695,8 +733,38 @@
           "source": "UGA Cooperative Extension, CAES Field Report (Home Garden Plums, B1518)",
           "url": "https://fieldreport.caes.uga.edu/publications/B1518/home-garden-plums/",
           "quote": "To come out of dormancy and bloom efficiently, European plums require about 700-1,100 chilling hours and Japanese plums require about 500-900 chilling hours."
+        },
+        {
+          "claim": "mature_height_in 120-240 (NC State Height: 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Prunus domestica",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-domestica/",
+          "quote": "Height: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 120-240 (NC State Width: 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Prunus domestica",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-domestica/",
+          "quote": "Width: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State: fruit described as edible purple stone fruits, eaten raw or cooked; corroborated by RHS Fruit Edible tag)",
+          "source": "NC State Extension Gardener Plant Toolbox — Prunus domestica",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-domestica/",
+          "quote": "edible purple stone fruits"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tag: Plants for pollinators; corroborated by NC State Attracts field listing Pollinators)",
+          "source": "RHS — Prunus domestica (D/C)",
+          "url": "https://www.rhs.org.uk/plants/84405/prunus-domestica-d-c/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 120,
+      "mature_spread_in_max": 240
     },
     {
       "common_name": "Sweet Cherry",
@@ -1116,7 +1184,15 @@
         "fertilize_interval_days / fertilize_active_months / fertilize_strength: RHS's Feeding section gives an interval for pot-grown celery only as 'feed every fortnight with a balanced liquid fertiliser through the summer' -- a named-unit phrase equivalent to 14 days, but the digits '14' never literally appear in the quote, so per the literal-numeral rule for citation labels this was left null rather than converted from the named unit. RHS names only the season 'summer,' not specific calendar months, and gives no dilution/strength figure for the liquid fertiliser either. Separately, RHS's guidance for garden-grown (non-container) celery is only a conditional single application ('a light dressing of a high nitrogen fertiliser in summer, once the plants are established') with no interval number at all.",
         "is_houseplant: no admissible source frames Apium graveolens as an indoor container/houseplant subject for long-term growing, and no source gives a specific quote naming it 'not a houseplant.' Every source that discusses cultivation (RHS's grow-your-own guide, NC State's Cultural Conditions attributes) frames it as an outdoor garden or field vegetable -- garden-bed preparation, trenching/blanching, and even RHS's container-growing instructions describe positioning pots outdoors ('a sunny, sheltered location'). Set to false on that basis (consistent with how other garden-vegetable records in this catalog set is_houseplant without a dedicated citation) rather than a single explicit disqualifying quote.",
         "is_houseplant — removed on audit: The field is populated (false) but has zero citations whose claim label contains 'is_houseplant' — none of the 13 citations reference this field at all. Per structural check 1, every non-null field (except scientific_name_given) must trace to at least one citation labeled for it. The record's own 'unknowns' entry for is_houseplant admits this is inferred reasoning ('consistent with how other garden-vegetable records in this catalog set is_houseplant... rather than a single explicit disqualifying quote') rather than a sourced claim, which confirms the gap rather than curing it. WebFetch of the NC State page confirms it contains no indoor/houseplant language of any kind to cite.",
-        "name_note — removed on audit: Citation 5's claim label asserts celery is the 'wild ancestor of cultivated Celery (var. dulce) and Celery Root (var. rapaceum),' but the cited NC State quote only says 'It is a wild relative of domesticated Celery... and Celery Root...' — 'relative' (kinship) is not the same claim as 'ancestor' (direct lineage), and WebFetch of the live NC State page confirms the exact wording is 'wild relative,' not 'ancestor.' The name_note body text goes further, stating Apium graveolens 'is also the wild ancestor from which the cultivated variety groups... were bred' — this stronger 'bred' framing does exist verbatim in the citations array ('from which cultivated varieties have been bred,' RHS), but that quote is tagged to a different field's claim label (citation 9, 'soil_drainage moisture_retentive'), not to name_note. Per the field-tracing rule, a citation must be labeled for the field it supports; no citation labeled 'name_note' actually contains the 'bred'/ancestor language, so that portion of name_note is effectively uncited beyond the weaker 'wild relative' quote."
+        "name_note — removed on audit: Citation 5's claim label asserts celery is the 'wild ancestor of cultivated Celery (var. dulce) and Celery Root (var. rapaceum),' but the cited NC State quote only says 'It is a wild relative of domesticated Celery... and Celery Root...' — 'relative' (kinship) is not the same claim as 'ancestor' (direct lineage), and WebFetch of the live NC State page confirms the exact wording is 'wild relative,' not 'ancestor.' The name_note body text goes further, stating Apium graveolens 'is also the wild ancestor from which the cultivated variety groups... were bred' — this stronger 'bred' framing does exist verbatim in the citations array ('from which cultivated varieties have been bred,' RHS), but that quote is tagged to a different field's claim label (citation 9, 'soil_drainage moisture_retentive'), not to name_note. Per the field-tracing rule, a citation must be labeled for the field it supports; no citation labeled 'name_note' actually contains the 'bred'/ancestor language, so that portion of name_note is effectively uncited beyond the weaker 'wild relative' quote.",
+        "mature_height_in / mature_spread_in taken from NC State Plant Toolbox's structured 'Dimensions:' block on the species-specific Apium graveolens page (not a genus page): Height 1 ft. 6 in. - 3 ft. 0 in. = 18-36 in; Width 1 ft. 0 in. - 1 ft. 6 in. = 12-18 in.",
+        "is_edible set to true but is CONDITIONAL, not a bare yes: NC State's Edibility field says 'Celery Seed comes from Wild Celery. The bitter-tasting leaves are inedible.' -- i.e. only the seed of this wild-type plant is used for food; the leaves are explicitly called inedible (bitter), not poisonous. RHS (41552) partially conflicts, saying 'Leaves and seeds can be eaten in small quantities to flavour food' -- both sources agree the seed is edible and any leaf use is limited/qualified, not a plain edible leaf crop.",
+        "Before setting is_edible, searched the NC State anchor page and both RHS pages for 'Poison', 'Toxic', and 'Problem for': zero hits on all three pages. No toxic-part, severity, preparation-requirement, or pets warning was found to report.",
+        "attracts_pollinators set true from NC State's Wildlife Value ('Wild Celery attracts bees and butterflies.'), its structured Attracts field (Bees, Butterflies), and its Play Value tag ('Attracts Pollinators'). RHS pages had no Attracts/pollinator field for this record.",
+        "This species is an herb/biennial, not a vine/liana/climber, so all four size fields were researched and filled normally (rule 4 does not apply).",
+        "All three assigned pages fetched successfully (fetch status 'ok'); none refused this machine, so there is nothing to note under the 'page refused' unknowns line.",
+        "is_edible removed on audit: The edibility safety check (F) fails. The unknowns say the researcher searched both RHS pages and found 'No toxic-part, severity, preparation-requirement, or pets warning', but that is false; the search simply missed the RHS wording. RHS 41552/details has a 'Potentially harmful' field that reads 'Harmful to skin with sunlight. Wear gloves and other protective equipment when handling'. The RHS celery grow-your-own page says 'Take care when tending celery, as it can cause a skin rash – wear gloves and long sleeves'. Neither of those hazard statements appears in unknowns, and the record positively denies that any warning exists. The rule requires refuting a true is_edible whose safety condition is missing from unknowns. The edibility quotes themselves check out: NC State 'Celery Seed comes from Wild Celery. The bitter-tasting leaves are inedible.' and RHS 'Leaves and seeds can be eaten in small quantities to flavour food' are both on the pages verbatim. If the harm note is added to unknowns, true is supportable, since NC State's cultivar list also says 'var. dulce ... Celery--eaten raw or cooked'.",
+        "Sources disagree on size: RHS (rhs.org.uk/plants/41552) gives Max Height and Max Spread 0.1-0.5 metres (about 3.9-19.7 in) against NC State's 18-36 in by 12-18 in used here -- noted at landing."
       ],
       "citations": [
         {
@@ -1196,8 +1272,31 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/vegetables/celery/grow-your-own",
           "quote": "Once seedlings appear, give them plenty of light, water them regularly and keep them above 10°C (50°F) – lower temperatures can cause bolting"
+        },
+        {
+          "claim": "mature_height_in 18-36 (NC State Dimensions Height: 1 ft. 6 in. - 3 ft. 0 in., converted to inches: 1ft6in=18in, 3ft0in=36in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Apium graveolens",
+          "url": "https://plants.ces.ncsu.edu/plants/apium-graveolens/",
+          "quote": "Height: 1 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Dimensions Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches: 1ft0in=12in, 1ft6in=18in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Apium graveolens",
+          "url": "https://plants.ces.ncsu.edu/plants/apium-graveolens/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states bees and butterflies are attracted)",
+          "source": "NC State Extension Gardener Plant Toolbox - Apium graveolens",
+          "url": "https://plants.ces.ncsu.edu/plants/apium-graveolens/",
+          "quote": "Wild Celery attracts bees and butterflies."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Japanese Spirea",
@@ -1250,7 +1349,12 @@
         "cool_rest_note: no admissible source addresses a dormancy/cool-rest period for this species.",
         "is_houseplant — removed on audit: Non-null field (false) with zero supporting citations. None of the 9 citation entries has a claim label containing 'is_houseplant' or addresses indoor/outdoor cultivation status at all -- the closest evidence (outdoor_sun_exposure and soil_base citations describing a landscape shrub grown in full sun/garden beds) is never actually cited toward this field. Per structural check 1, every non-null field except scientific_name_given must trace to a citation whose claim label literally contains the field name; this one has no citation whatsoever, so it fails outright regardless of how intuitively correct the value is.",
         "soil_drainage — removed on audit: Value asserted is 'moderate,' but neither supporting quote says that. NC State's own quote is a direct controlled-vocabulary field reading 'Soil Drainage: Good Drainage' -- not 'moderate.' The MOBOT quote says 'well-drained soils' and 'Prefers rich, moist loams' -- 'moist loams' speaks to moisture retention/water need, a different MOBOT attribute, not drainage rate, so it has been conflated with soil_drainage. Both citations, read literally, point toward a well-drained classification, not a 'moderate' one; the value itself (not just one citation) is in doubt since no citation actually supports 'moderate.'",
-        "name_note — removed on audit: No citation's claim label literally contains 'name_note' -- the two citations backing this text are both labeled under 'scientific_name_accepted.' Per the structural check ('check this explicitly for every non-null field... Exception: scientific_name_given'), name_note is not exempted, so strictly it fails the literal-label-match test even though its substance (no conflict between NC State and RHS on Spiraea japonica) is accurately drawn from the adjacent scientific_name_accepted citations. This is a traceability/labeling gap rather than a fabricated claim."
+        "name_note — removed on audit: No citation's claim label literally contains 'name_note' -- the two citations backing this text are both labeled under 'scientific_name_accepted.' Per the structural check ('check this explicitly for every non-null field... Exception: scientific_name_given'), name_note is not exempted, so strictly it fails the literal-label-match test even though its substance (no conflict between NC State and RHS on Spiraea japonica) is accurately drawn from the adjacent scientific_name_accepted citations. This is a traceability/labeling gap rather than a fabricated claim.",
+        "hgic.clemson.edu refused this machine (http-403, tried twice) -- could not check that page for size, edibility, or toxicity data.",
+        "plantfinder.mobot.org refused this machine (ConnectError) -- could not check that page for size, edibility, or toxicity data.",
+        "is_edible left null: neither NC State Plant Toolbox nor RHS addresses eating or food use of Spiraea japonica; searched 'Edible', 'Poison', 'Toxic', and 'Problem for'/'Problems' on both pages with zero relevant hits (NC State's only Problems entry is 'Weedy', not toxicity).",
+        "attracts_pollinators=true is corroborated by RHS's 'Plants for pollinators' tag on the same page used for size, in addition to NC State's structured Attracts: Butterflies field.",
+        "Species is a shrub per NC State's Plant Type field (Perennial, Shrub, Weed), not a climber, so all four size fields were researched normally."
       ],
       "citations": [
         {
@@ -1306,8 +1410,31 @@
           "quote": "Easily grown in average, medium moisture, well-drained soils in full sun. Tolerates light shade. Tolerates a wide range of soils. Prefers rich, moist loams.",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286473"
+        },
+        {
+          "claim": "mature_height_in 48-72 (NC State Height: 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spiraea-japonica/",
+          "quote": "Height: 4 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-84 (NC State Width: 4 ft. 0 in. - 7 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spiraea-japonica/",
+          "quote": "Width: 4 ft. 0 in. - 7 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: attracts butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spiraea-japonica/",
+          "quote": "attracts butterflies"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 84
     }
   ],
   "audit_summary": [
@@ -1347,6 +1474,7 @@
   "normalizations": [
     "2026-08-23: sixteenth batch of the \"blind spots\" pass. Poison Hemlock -- \"the plant that killed Socrates\" -- confirmed toxic_to_pets=true with clean cat/dog evidence, while multiple horse/cattle/\"all animals\"-scoped dose figures from Penn State and UGA were correctly excluded per this catalog's cat/dog scoping rule; its well-documented confusion with edible look-alikes (wild carrot/Queen Anne's Lace, parsley, celery) was captured in unknowns even though there's no dedicated field for it. Rose of Sharon and Saucer Magnolia landed as deliberate companion species to Chinese Hibiscus and Southern Magnolia, already in this catalog -- both audited specifically for genus content bleeding across the shared genera, with none found. European Plum and Sweet Cherry both confirmed toxic_to_pets=true (pit/seed cyanogenic risk, distinct from the edible flesh, matching the pattern already established for apple and peach). Rounded out with Orange (a deliberate companion to Lemon, already in this catalog), Celery, and Japanese Spirea.",
     "One landing-time repair: Rose of Sharon's toxicity_detail was nulled purely on a labeling technicality -- its only citation was labeled for the sibling toxic_to_pets field, not toxicity_detail itself -- even though the audit's own live-fetch confirmed the content accurate (NC State's page genuinely carries \"non-toxic for cats/dogs/horses\" tags and no Poison section at all). Restored with a dedicated duplicate citation rather than left on the floor.",
-    "Two more instances of the string-\"null\"-instead-of-JSON-null bug this batch (Poison Hemlock's name_note, Orange's scientific_name_accepted), both auto-caught by the audit's own structural check and self-corrected before this landing pass ran its check -- consistent with the pattern seen in every batch since b23."
+    "Two more instances of the string-\"null\"-instead-of-JSON-null bug this batch (Poison Hemlock's name_note, Orange's scientific_name_accepted), both auto-caught by the audit's own structural check and self-corrected before this landing pass ran its check -- consistent with the pattern seen in every batch since b23.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

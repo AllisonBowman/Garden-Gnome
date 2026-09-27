@@ -51,7 +51,13 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. The only water-related datum found is Missouri Botanical Garden's categorical 'Water: Medium' rating, which (per this catalog's established convention for that exact MOBOT tag) does not map cleanly to a specific dry-down regime; no source gives watering frequency, dry-down depth, or a growing/dormant watering-day estimate.",
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: left null. No admissible source addresses fertilizing this species.",
         "Source coverage: hgic.clemson.edu (Clemson), edis.ifas.ufl.edu / ask.ifas.ufl.edu (UF/IFAS), extension.psu.edu (Penn State), extension.umd.edu (UMD), and fieldreport.caes.uga.edu (UGA) were all searched (site-restricted and general queries for both 'Atropa belladonna' and 'deadly nightshade') and none returned a dedicated page or factsheet on this species; only plants.ces.ncsu.edu, plantfinder.mobot.org/missouribotanicalgarden.org, and rhs.org.uk had admissible, species-specific content.",
-        "scientific_name_accepted — removed on audit: Structural check #6 violation: the field is serialized as the JSON string \"null\" (with quotes) rather than the JSON literal null -- every other unresolved field in this record (day_f_min, chill_damage_f, water_regime, etc.) is correctly emitted as bare null, so this is an isolated type bug, not a stylistic choice. Downstream code that checks `field === null` or does type-sensitive JSON parsing will treat this as a populated string value rather than a missing one. Note: the underlying research judgment to leave the name unresolved is itself well-supported -- I fetched all three admissible pages directly and confirmed NC State Extension's Plant Toolbox (plants.ces.ncsu.edu/plants/atropa-bella-donna/) genuinely titles the page 'Atropa bella-donna' and lists structured fields 'Genus: Atropa / Species: bella-donna', while RHS (rhs.org.uk/plants/43837/...) genuinely titles its page 'Atropa belladonna' with an explicit 'Name Status: Correct' tag, and Missouri Botanical Garden (plantfinder.mobot.org, taxonid=287159) uses the unhyphenated spelling throughout -- so the conflict is real and the null determination is sound. Only the JSON encoding of that null is defective."
+        "scientific_name_accepted — removed on audit: Structural check #6 violation: the field is serialized as the JSON string \"null\" (with quotes) rather than the JSON literal null -- every other unresolved field in this record (day_f_min, chill_damage_f, water_regime, etc.) is correctly emitted as bare null, so this is an isolated type bug, not a stylistic choice. Downstream code that checks `field === null` or does type-sensitive JSON parsing will treat this as a populated string value rather than a missing one. Note: the underlying research judgment to leave the name unresolved is itself well-supported -- I fetched all three admissible pages directly and confirmed NC State Extension's Plant Toolbox (plants.ces.ncsu.edu/plants/atropa-bella-donna/) genuinely titles the page 'Atropa bella-donna' and lists structured fields 'Genus: Atropa / Species: bella-donna', while RHS (rhs.org.uk/plants/43837/...) genuinely titles its page 'Atropa belladonna' with an explicit 'Name Status: Correct' tag, and Missouri Botanical Garden (plantfinder.mobot.org, taxonid=287159) uses the unhyphenated spelling throughout -- so the conflict is real and the null determination is sound. Only the JSON encoding of that null is defective.",
+        "NC State's species page (plants.ces.ncsu.edu/plants/atropa-bella-donna/) could not be read at research time (ProxyError), so the size figures below come from RHS. Its cached copy, read at landing, gives Height and Width 3 ft. 0 in. - 4 ft. 0 in. (36-48 in), which disagrees with RHS (height 39.4-59.1 in, spread 19.7-39.4 in), and its Edibility field reads 'Not edible, leaves, roots and fruits are highly toxic.'",
+        "Missouri Botanical Garden Plant Finder (plantfinder.mobot.org, taxonid=287159) refused this machine -- fetch returned error:ConnectError -- skipped entirely, nothing from it is used.",
+        "attracts_pollinators left null: searched the RHS page for 'Attracts', 'attractive to pollinators', 'Pollinator', 'butterfl', 'bee', and 'hummingbird' -- zero hits for any of them anywhere on the page, so there is no record either way.",
+        "is_edible set to false on RHS's 'Potentially harmful' field, which reads in full: 'TOXIC if eaten; avoid eye contact. Wear gloves and other protective equipment when handling. Pets (dogs, cats): TOXIC if eaten; avoid eye contact - see the HTA guide to potentially harmful plants for further information and useful contact numbers.' No page read addresses eating/food use in the affirmative anywhere.",
+        "Belladonna is not a climber -- RHS Habit field reads 'Bushy, Clump forming' -- so the climber exclusion (rule 4) does not apply and all four size fields were populated normally.",
+        "RHS's size figures (Max Height 1-1.5 metres, Max Spread 0.5-1 metres) are given for the species record itself (page titled 'Atropa belladonna | deadly nightshade'), not for a named cultivar."
       ],
       "citations": [
         {
@@ -137,8 +143,31 @@
           "quote": "Moisture Moist but well–drained or Well–drained",
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/43837/atropa-belladonna-deadly-nightshade-banewort/details"
+        },
+        {
+          "claim": "mature_height_in 39.4-59.1 (RHS Max Height 1-1.5 metres, converted to inches via metres x 39.37)",
+          "source": "RHS: Atropa belladonna | deadly nightshade",
+          "url": "https://www.rhs.org.uk/plants/43837/atropa-belladonna-deadly-nightshade-banewort/details",
+          "quote": "Max Height         1-1.5 metres                 Max Spread         0.5-1 metres"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches via metres x 39.37)",
+          "source": "RHS: Atropa belladonna | deadly nightshade",
+          "url": "https://www.rhs.org.uk/plants/43837/atropa-belladonna-deadly-nightshade-banewort/details",
+          "quote": "Max Height         1-1.5 metres                 Max Spread         0.5-1 metres"
+        },
+        {
+          "claim": "is_edible false (RHS names the plant TOXIC if eaten, with no edible use stated anywhere on the page)",
+          "source": "RHS: Atropa belladonna | deadly nightshade",
+          "url": "https://www.rhs.org.uk/plants/43837/atropa-belladonna-deadly-nightshade-banewort/details",
+          "quote": "Potentially harmful      TOXIC if eaten; avoid eye contact.  Wear gloves and other protective equipment when handling"
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 39.4,
+      "mature_height_in_max": 59.1,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "common_name": "Bittersweet Nightshade",
@@ -190,7 +219,12 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no admissible source gives any watering guidance for this species. RHS's only cultivation line is 'Grow up a fence or through other shrubs, in any soil in sun or partial shade,' and NC State's guidance for this species is about invasive-population control (manual removal or herbicide for large infestations), not irrigation care -- consistent with the species note that this plant is typically treated as a weed to remove rather than cultivated with a watering regime.",
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source addresses fertilizing this species, consistent with it not being cultivated.",
         "toxicity_detail intentionally omits NC State's dermatitis-related tags: the page's Problems list and Tags both include 'Contact Dermatitis' / '#skin irritation,' but the page's own structured field directly states 'Causes Contact Dermatitis: No' -- an internal inconsistency on NC State's own page. Since this contradiction isn't about pet toxicity specifically (the field the catalog tracks) it was left out of toxicity_detail rather than resolved either way.",
-        "toxicity to humans is documented in more depth by NC State (e.g. the ethnobotany note that the plant was historically used medicinally despite being toxic) but is out of scope for the toxic_to_pets/toxicity_detail fields, which this catalog restricts to cats/dogs; that broader human-toxicity material was not blended in."
+        "toxicity to humans is documented in more depth by NC State (e.g. the ethnobotany note that the plant was historically used medicinally despite being toxic) but is out of scope for the toxic_to_pets/toxicity_detail fields, which this catalog restricts to cats/dogs; that broader human-toxicity material was not blended in.",
+        "All four size fields (mature_height_in_min/max, mature_spread_in_min/max) left null per rule 4: this species is a climber, not a candidate for size fields yet. NC State lists Plant Type as 'Vine' and 'Shrub', Habit/Form as 'Climbing' and 'Spreading', Climbing Method 'Scrambler', tags include '#woody vine #perennial vines #climber', and describes it as 'a perennial vine or scrambling shrub'. RHS independently confirms: Habit 'Climbing', tagged 'Climber Wall Shrub', and describes it as 'A deciduous woody, or herbaceous climber reaching 2.5m.' Both pages do publish size-shaped numbers (NC State Dimensions Height: 2 ft. 0 in. - 10 ft. 0 in., Width: 2 ft. 0 in. - 8 ft. 0 in.; RHS Max Height 1.5-2.5 metres, Max Spread 0.5-1 metres) but per the rule these are not recorded because for a climber they may describe reach/run rather than the plant's own stature.",
+        "is_edible set false on NC State's explicit 'non-edible' statement. The same page also documents toxicity in detail: 'This plant has high severity poison characteristics'; Poison Symptoms: 'Highly toxic, may be fatal if eaten. Nausea, vomiting, salivation, drowsiness, abdominal pain, low blood pressure, low heart rate, diarrhea, dilated pupils, weakness, respiratory depression; may be fatal to humans, pets, and livestock.'; Poison Toxic Principle: 'Solanine and other alkaloids'; tags include '#problem for cats #problem for children #problem for dogs #problem for horses #poisonous #poisonous if ingested #skin irritation'; and 'All parts of the bittersweet nightshade are toxic to humans, pets, and livestock.' RHS corroborates: Habit page notes 'Potentially harmful: Harmful if eaten. Wear gloves and other protective equipment when handling' and 'Pets (dogs): Harmful if eaten.'",
+        "attracts_pollinators set true from NC State's structured 'Attracts:' field (Bees, Songbirds) and its narrative 'The flowers attract bumblebees and insects.' RHS's page for this species had zero hits for 'pollinator' and did not carry an attracts/wildlife field, so it offers no independent support either way; the true value rests on NC State alone.",
+        "Neither page named this species' size on a per-cultivar basis, so rule 3 (cultivar sizes don't count) did not come into play.",
+        "Neither anchor page refused this machine; both plants.ces.ncsu.edu and www.rhs.org.uk fetched successfully via qc.py after clearing a stale cached ProxyError entry from an earlier sandboxed attempt."
       ],
       "citations": [
         {
@@ -252,8 +286,22 @@
           "quote": "Plant Type: Poisonous Shrub Vine Weed",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/solanum-dulcamara/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field: Bees, Songbirds; flowers attract bumblebees)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-dulcamara/",
+          "quote": "The flowers attract bumblebees and insects."
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field states the plant is toxic and non-edible)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-dulcamara/",
+          "quote": "The plant is toxic, especially the leaves and berries, and is non-edible."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Panicle Hydrangea",
@@ -310,7 +358,14 @@
         "water_regime — removed on audit: The two citations labeled 'water_regime' are both weak. Live-fetch confirms the Clemson quote is 'Water them once a week, if needed, during the hottest and driest summer months' -- explicitly conditional ('if needed') and restricted to peak summer heat, which undercuts rather than supports a general 'keep_moist' (consistently-moist) characterization; the record's own unknowns text concedes this ('not a verbatim match... frames watering as conditional'). The UMD citation ('Mulch around the base of the plant to help to maintain moisture') is generic mulching advice, not a stated watering regime. The one citation whose quote text actually says 'medium moisture' (Missouri Botanical Garden, kempercode=c313) exists in the record but its claim label is 'outdoor_sun_exposure full_sun and part_shade,' not 'water_regime' -- so per the field-traceability rule it does not count as support for this field. No citation labeled for water_regime cleanly supports 'keep_moist.'",
         "water_growing_days_est — removed on audit: The value 7 is drawn from the same Clemson quote ('once a week, if needed, during the hottest and driest summer months'), live-fetch-confirmed verbatim. That quote scopes the once-weekly figure explicitly to peak summer heat/drought and frames it as conditional, not a season-wide default. Applying it as the general 'water_growing_days_est' for the whole growing season extends the claim beyond what the source states -- the source gives no general growing-season watering interval, only a hottest/driest-month, if-needed figure.",
         "water_estimate_basis — removed on audit: No citation's claim label contains 'water_estimate_basis,' so the field has no direct citation trace of its own under the record's stated rule. It also inherits the same over-extension problem flagged on water_regime/water_growing_days_est: it uses the Clemson 'hottest and driest summer months, if needed' figure to characterize a general water schedule, and while it partially discloses the conditionality, it still backs a season-wide numeric estimate with a source that only speaks to peak-heat conditions.",
-        "scientific_name_given: restored as \"Hydrangea paniculata\" -- this is the binomial the species was researched under (not a citation-derived claim), and this field is bookkeeping rather than a claim requiring citation traceability, matching every other record in this catalog. The audit's removal applied the citations-must-trace rule more strictly than the actual pipeline requires for this specific field."
+        "scientific_name_given: restored as \"Hydrangea paniculata\" -- this is the binomial the species was researched under (not a citation-derived claim), and this field is bookkeeping rather than a claim requiring citation traceability, matching every other record in this catalog. The audit's removal applied the citations-must-trace rule more strictly than the actual pipeline requires for this specific field.",
+        "NC State Plant Toolbox (species-specific page) is the size anchor per rule; its Dimensions block gives Height 8 ft. 0 in.-25 ft. 0 in. (96-300 in) and Width 6 ft. 0 in.-25 ft. 0 in. (72-300 in) for the species, not a named cultivar -- the page's cultivar list (Bobo, Limelight, Pee Gee, Tardiva, etc.) appears only under 'Related Plants', separate from the Dimensions block.",
+        "Panicle Hydrangea is a shrub/small tree (NC State Plant Type: Perennial, Shrub, Tree), not a climber, so the climber-exclusion rule (#4) does not apply and size fields are populated normally.",
+        "RHS's own page gives Max Height 2.5-4 metres (98.4-157.5 in) and Max Spread 1.5-2.5 metres (59.1-98.4 in) for the species -- these are NOT used because NC State (a species-specific page, not a genus page) exists and is the designated anchor; noting the RHS figures here only for reference/discrepancy awareness.",
+        "is_edible was set to false based on NC State's Problems field naming 'Poisonous to Humans' for this species (also 'Problem for Cats', 'Problem for Dogs', 'Problem for Horses'); the page gives no further detail on which plant part, toxic principle, severity, or preparation requirement is involved -- none of the five read pages elaborate on the mechanism.",
+        "plantfinder.mobot.org refused this machine (error:ConnectError) -- not read, no data obtained from it.",
+        "hgic.clemson.edu refused this machine (http-403) -- not read, no data obtained from it.",
+        "extension.umd.edu's page is a genus-level 'Hydrangea: Identify and Manage Problems' resource, not species-specific to Hydrangea paniculata; it was searched for Poison/Toxic/Edible/Attracts/Pollinator/bee/butterfl/Height/Width/size/feet -- it names no species-specific edibility, toxicity, size, or unconditional pollinator statement for paniculata (its only pollinator remark is a general note that hydrangea blooms' sterile florets don't support pollinators while fertile florets do, not specific to this species and not used as a citation)."
       ],
       "citations": [
         {
@@ -408,8 +463,38 @@
           "source": "Clemson HGIC",
           "url": "https://hgic.clemson.edu/in-the-limelight-hydrangea-paniculata/",
           "quote": "Water them once a week, if needed, during the hottest and driest summer months."
+        },
+        {
+          "claim": "mature_height_in 96-300 (NC State Height 8 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-paniculata/",
+          "quote": "Height: 8 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-300 (NC State Width 6 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-paniculata/",
+          "quote": "Width: 6 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field names pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-paniculata/",
+          "quote": "Attracts Pollinators and small mammals use this plant for cover."
+        },
+        {
+          "claim": "is_edible false (NC State Problems field lists the plant as poisonous to humans)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-paniculata/",
+          "quote": "Poisonous to Humans"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 300
     },
     {
       "common_name": "Corn Plant",
@@ -610,7 +695,15 @@
         "water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis/water_dry_down_target: no admissible source frames watering as a checkable numeric schedule (soil-probe depth, day intervals) for this in-ground landscape tree; the drought/irrigation guidance that does exist (Clemson's 'should be deeply irrigated during hot, dry spells,' UF/IFAS's 'requiring irrigation during drought periods in summer') is qualitative only, with no numbers to anchor an estimate, and is itself part of the water_regime conflict noted above.",
         "fertilize_active_months/fertilize_interval_days/fertilize_strength: no admissible source gives a specific fertilizing schedule, calendar month, or dilution guidance for Cornus kousa. UF/IFAS's only fertilizing mention is generic borer-prevention advice -- 'Try to keep the trees healthy with regular fertilization' -- with no month, interval, or strength specified.",
         "scientific_name_accepted / name_note: confirmed as Cornus kousa without conflict. The sibling species already in this catalog, Cornus florida, has scientific_name_accepted left null because Penn State Extension's taxonomy article argues the currently accepted name is now Benthamidia florida. That same Penn State article was checked directly for this record and does not name Cornus kousa or Benthamidia kousa anywhere -- only Cornus florida/Benthamidia florida and Cornus alternifolia are named. Both admissible sources that give a name-status determination for Cornus kousa specifically (RHS's structured 'Name Status: Correct' field, and NC State's 'Previously known as' list, which places Benthamidia kousa only among former synonyms) agree Cornus kousa is current, so no null was needed here.",
-        "NC State Extension's and RHS's synonym lists for Cornus kousa overlap but are not identical -- NC State's 'Previously known as' list includes Cynoxylon kousa (which RHS's Synonyms list omits), and RHS's list includes Cornus japonica (which NC State's list omits). This is a difference in list completeness between the two sources, not a disagreement about which name is currently accepted, so it does not affect scientific_name_accepted."
+        "NC State Extension's and RHS's synonym lists for Cornus kousa overlap but are not identical -- NC State's 'Previously known as' list includes Cynoxylon kousa (which RHS's Synonyms list omits), and RHS's list includes Cornus japonica (which NC State's list omits). This is a difference in list completeness between the two sources, not a disagreement about which name is currently accepted, so it does not affect scientific_name_accepted.",
+        "is_edible is conditional/qualified: NC State's Edibility field says fruit is \"technically edible but are usually left for the birds\" (fruit only, not the whole plant); PSU Extension (extension.psu.edu/strange-fruit) corroborates -- fruit is edible but \"opinions about palatability vary,\" high in pectin for preserves (the page's \"very tart until fully ripe\" is said of Cornus mas, not kousa).",
+        "Checked NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- 0 hits on all three; no toxicity, poisonous-part, or pets-warning language found on the anchor page.",
+        "Cornus kousa is a tree/shrub, not a vine/liana/climber, so the climber size-exclusion rule does not apply; all four size fields were set normally.",
+        "RHS (rhs.org.uk/plants/4391/cornus-kousa/details) gives Max Height 4-8 metres and Max Spread 4-8 metres, but was not used for size because NC State carries a species-specific Dimensions block and is the anchor per instructions; RHS numbers are left out to avoid conflicting duplicate citations.",
+        "hgic.clemson.edu/kousa-dogwood/ and hgic.clemson.edu/factsheet/dogwood/ both returned HTTP 403 and refused this machine -- skipped, not used for any field.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=j910 refused the connection (error:ConnectError) -- skipped, not used for any field.",
+        "ask.ifas.ufl.edu/publication/ST192 loaded but is titled \"Cornus kousa 'Milky Way'\" -- its Height (15 to 20 feet) and Spread (15 to 20 feet) figures are for the 'Milky Way' cultivar, not the species, so they were excluded per the cultivar rule and not used.",
+        "fieldreport.caes.uga.edu/publications/b625/landscape-plants-for-georgia/ lists Cornus kousa Height 15-25' and Spread 15-20' as Georgia-specific 'Normal Georgia Height' guidance (a regional average, not a species-wide published range); not used since NC State is the anchor for size, but noted here as a source consulted with no conflicting toxicity/edibility content (0 'Poison'/'Toxic' hits tied to kousa on that page)."
       ],
       "citations": [
         {
@@ -726,8 +819,38 @@
           "source": "Clemson Cooperative Extension HGIC (Dogwood factsheet)",
           "url": "https://hgic.clemson.edu/factsheet/dogwood/",
           "quote": "Ideal soil is moist, fertile, loamy and well-drained."
+        },
+        {
+          "claim": "mature_height_in 240-360 (NC State Height 20 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-kousa/",
+          "quote": "Height: 20 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-360 (NC State Width 15 ft. 0 in. - 30 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-kousa/",
+          "quote": "Width: 15 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: fruit is technically edible, though usually left for birds -- fruit-only, condition noted)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-kousa/",
+          "quote": "Fruits are technically edible but are usually left for the birds."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value lists 'Attracts Pollinators'; its structured Attracts field lists Bees, Pollinators, Specialized Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-kousa/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 240,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 360
     },
     {
       "common_name": "Ginger",
@@ -977,7 +1100,13 @@
         "soil_base: RHS's grow-your-own consumer guide actually recommends against open-ground planting ('Planting horseradish in open ground isn't recommended, as it forms a vigorous spreading clump that can be hard to control or remove') and favors container culture instead, while still acknowledging ground planting is workable ('If you're happy for horseradish to spread, you can plant it in the ground.'). This is a real venue-preference difference from NC State and Missouri Botanical Garden (both describe garden-bed vegetable-garden cultivation as the norm) and from RHS's own species page (which gives straightforward in-ground cultivation instructions with no container caveat). garden_bed was recorded as the majority/default value; the RHS grow-guide's contrary container recommendation is flagged here rather than silently dropped.",
         "UF/IFAS: the only UF/IFAS publication specific to horseradish, EDIS HS611/MV078 ('Horseradish--Armoracia rusticana Gaertn., Mey., Scherb.'), has been retired from the site -- both https://edis.ifas.ufl.edu/mv078 and https://ask.ifas.ufl.edu/mv078 return HTTP 410 Gone on direct fetch as of this research -- so despite search-engine result snippets still summarizing its old content (e.g., that horseradish 'does not grow well in Florida'), it could not be used as a live, quotable admissible source. No other UF/IFAS page found gives horseradish cultivation guidance; the only other hits name horseradish merely as a host plant for unrelated pests (nematodes, harlequin bug, tarnished plant bug).",
         "Clemson Cooperative Extension (hgic.clemson.edu), Penn State Extension (extension.psu.edu), and UGA Cooperative Extension (fieldreport.caes.uga.edu) were all searched but no dedicated horseradish factsheet, care guide, or pet-toxicity/vegetable-chart entry naming horseradish was found on any of the three sites as of this research; a Penn State URL titled 'Growing Horseradish' found via search now 301-redirects to an unrelated generic home-gardening page with no horseradish content.",
-        "soil_base — removed on audit: Genuine, unresolved disagreement among admissible sources on this consequential field: RHS's Grow Your Own guide (confirmed live) explicitly says 'Planting horseradish in open ground isn't recommended, as it forms a vigorous spreading clump that can be hard to control or remove' and recommends container culture instead, while NC State (x2) and Missouri Botanical Garden support garden_bed. None of the three citations backing garden_bed is itself defective or mis-quoted (all verified accurate live) -- the dissenting RHS source is an equally admissible, differently-reasoned recommendation, not a bad citation to discount. The record candidly discloses this conflict in unknowns but still resolves it by picking garden_bed as a 'majority/default' rather than leaving the field null, which is the over-reach check 2 targets: a real cross-source disagreement on a field whose wrong value steers users toward a stated hard-to-reverse consequence."
+        "soil_base — removed on audit: Genuine, unresolved disagreement among admissible sources on this consequential field: RHS's Grow Your Own guide (confirmed live) explicitly says 'Planting horseradish in open ground isn't recommended, as it forms a vigorous spreading clump that can be hard to control or remove' and recommends container culture instead, while NC State (x2) and Missouri Botanical Garden support garden_bed. None of the three citations backing garden_bed is itself defective or mis-quoted (all verified accurate live) -- the dissenting RHS source is an equally admissible, differently-reasoned recommendation, not a bad citation to discount. The record candidly discloses this conflict in unknowns but still resolves it by picking garden_bed as a 'majority/default' rather than leaving the field null, which is the over-reach check 2 targets: a real cross-source disagreement on a field whose wrong value steers users toward a stated hard-to-reverse consequence.",
+        "is_edible is conditional: NC State states the roots are the edible part, 'used as a condiment, but only in small amounts,' and separately that 'The leaves are edible but rarely used' -- root use is limited-quantity/condiment use, leaf use is rare; no cooking requirement or toxic-part warning was found.",
+        "Before setting is_edible, the anchor page (NC State Plant Toolbox) was searched for 'Poison', 'Toxic', and 'Problem for' -- 0 hits for all three, so no toxicity or poisonous-part language was found on the anchor page to carry into this field.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=250254&isprofile=0&chr=19 refused this machine (fetch status error:ConnectError) -- not used, and its content was not guessed.",
+        "The three RHS synonym pages (Armoracia rusticana, Brassica amoracia-rusticana, Cochlearia armoracia) and the RHS grow-your-own page were not queried because the NC State Plant Toolbox anchor page (which exists for this species) already carried a structured Dimensions block, an Attracts field, and edibility/wildlife text sufficient for all six requested fields, per the instruction that RHS is used only where no NC State species page exists.",
+        "Habit/Form on the NC State page is listed as 'Spreading' (herbaceous perennial), not a vine/liana/climber, so the climber exclusion rule does not apply and all four size fields were populated normally.",
+        "The size figures (Height: 2 ft. 0 in. - 5 ft. 0 in.; Width: 2 ft. 6 in. - 4 ft. 0 in.) are on the species detail page for Armoracia rusticana itself, not for the 'Variegata' cultivar mentioned only in the page's nursery-selection tags, so they were treated as species-level data, not cultivar data."
       ],
       "citations": [
         {
@@ -1081,8 +1210,38 @@
           "quote": "Soil Drainage:\nGood Drainage\nMoist",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/armoracia-rusticana/"
+        },
+        {
+          "claim": "mature_height_in 24-60 (NC State Height: 2 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Armoracia rusticana",
+          "url": "https://plants.ces.ncsu.edu/plants/armoracia-rusticana/",
+          "quote": "Height: 2 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 30-48 (NC State Width: 2 ft. 6 in. - 4 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Armoracia rusticana",
+          "url": "https://plants.ces.ncsu.edu/plants/armoracia-rusticana/",
+          "quote": "Width: 2 ft. 6 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State: roots used as a condiment in small amounts; leaves edible but rarely used)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Armoracia rusticana",
+          "url": "https://plants.ces.ncsu.edu/plants/armoracia-rusticana/",
+          "quote": "Edible parts: roots, used as a condiment, but only in small amounts."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: pollinated by bees, flies and beetles; structured Attracts field lists Bees, Pollinators)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Armoracia rusticana",
+          "url": "https://plants.ces.ncsu.edu/plants/armoracia-rusticana/",
+          "quote": "It is pollinated by bees, flies and beetles."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 30,
+      "mature_spread_in_max": 48
     },
     {
       "common_name": "Blazing Star",
@@ -1132,7 +1291,13 @@
         "soil_ph_max resolution: NC State's Plant Toolbox selects both 'Acid (<6.0)' and 'Neutral (6.0-8.0)' as Soil pH categories for this species -- a coarse, site-wide checkbox categorization whose combined range extends up to pH 8.0 -- while Penn State Extension gives a specific preferred figure of pH <6.8 on two separate pages. Because NC State's field is a bucketed category rather than a precise number, I used Penn State's specific figure (6.8) for soil_ph_max rather than blending it with NC State's broader category ceiling of 8.0; NC State's coarser tolerance range is noted here rather than folded into the numeric field.",
         "is_houseplant: no admissible source describes growing Liatris spicata indoors or in containers long-term; every source (NC State, Missouri Botanical Garden, RHS, Penn State) describes it strictly as an outdoor garden/meadow/prairie perennial, so is_houseplant is set to false on that consistent absence rather than any single explicit 'not a houseplant' statement.",
         "soil_ph_max — removed on audit: The value 6.8 rests on two citations that are NOT independent corroboration — both are Penn State Extension pages ('extension.psu.edu/dense-blazing-star' and 'extension.psu.edu/rain-garden-plants-blazing-star-liatris-spicata'), and one of them is phrased as a personal aside ('The pH value I found that Liatris prefers is <6.8...') rather than an institutional fact-sheet statement. Meanwhile NC State's Plant Toolbox — a separate, admissible, and elsewhere-cited authoritative source — selects BOTH 'Acid (<6.0)' and 'Neutral (6.0-8.0)' as tolerated soil-pH categories for this species (per the record's own unknowns note), i.e. it documents tolerance up to pH 8.0, directly conflicting with capping soil_ph_max at 6.8. The record's unknowns section acknowledges this conflict but resolves it by simply preferring the single-institution Penn State figure over NC State's broader range rather than nulling the field — this is exactly the 'sources disagree and the record picked one value anyway' defect, and unlike outdoor_sun_exposure there is no truly independent second source to save the field under the check-2 carve-out. Separately, both Penn State quotes state the bound as a strict '<6.8' (less than), while the field records an inclusive max of exactly 6.8 — a minor but real mismatch between the quoted inequality and the stored number.",
-        "scientific_name_accepted — removed on audit: The sole supporting citation's quote is a concatenated scrape of unrelated RHS page sections ('Habit Tufted Genus Liatris are herbaceous perennials with narrow, grass-like foliage and erect, bottlebrush-like spikes of flowers which open from the top down Name Status Correct Plant Range E North America') and never actually contains the string 'Liatris spicata' anywhere in the quoted text. The tie between 'Name Status: Correct' and the specific epithet 'spicata' is inferred only from the page URL slug ('liatris-spicata-button-snakewort-dense-blazing-star'), not from anything stated in the quote itself — re-deriving the value strictly from the quote text (as instructed), a strict reading cannot rule out that 'Name Status: Correct' refers to the genus description or another name on the page rather than specifically confirming the binomial 'Liatris spicata.' This is the only citation supporting the field (no independent backup), so under the 'default to refuted=true when unsure' instruction this thin, context-dependent (URL-only) linkage is flagged, even though the real-world fact is very likely correct and no source contradicts it."
+        "scientific_name_accepted — removed on audit: The sole supporting citation's quote is a concatenated scrape of unrelated RHS page sections ('Habit Tufted Genus Liatris are herbaceous perennials with narrow, grass-like foliage and erect, bottlebrush-like spikes of flowers which open from the top down Name Status Correct Plant Range E North America') and never actually contains the string 'Liatris spicata' anywhere in the quoted text. The tie between 'Name Status: Correct' and the specific epithet 'spicata' is inferred only from the page URL slug ('liatris-spicata-button-snakewort-dense-blazing-star'), not from anything stated in the quote itself — re-deriving the value strictly from the quote text (as instructed), a strict reading cannot rule out that 'Name Status: Correct' refers to the genus description or another name on the page rather than specifically confirming the binomial 'Liatris spicata.' This is the only citation supporting the field (no independent backup), so under the 'default to refuted=true when unsure' instruction this thin, context-dependent (URL-only) linkage is flagged, even though the real-world fact is very likely correct and no source contradicts it.",
+        "is_edible left null: none of the consulted pages (NC State Plant Toolbox, RHS, PSU Dense Blazing Star, PSU Rain Garden Plants) state that Liatris spicata or any part of it is eaten or used for food, and none state it is inedible/poisonous to eat.",
+        "Before setting is_edible, searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' as required: zero hits for all three, so there is no toxicity text to carry forward.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, kempercode=d780) refused the connection (error:ConnectError) from this machine and was not consulted for any field.",
+        "This is not a climber -- NC State lists it as Bulb / Herbaceous Perennial -- so rule 4 (no size for climbers) does not apply and all four size fields were populated normally.",
+        "Size figures (height 36-72in, spread 3-18in) come from NC State's species-specific structured Dimensions block, used as the anchor per instructions since a non-genus NC State page exists for this species. RHS reports a narrower range for the same species (Max Height 0.5-1 metres = 19.7-39.4in; Max Spread 0.1-0.5 metres = 3.94-19.7in), which was not used because NC State takes priority when its own species page exists.",
+        "The NC State Height/Width figures are for the species (page title is 'Liatris spicata', not a named cultivar), so rule 3 (cultivar exclusion) does not apply."
       ],
       "citations": [
         {
@@ -1212,8 +1377,37 @@
           "source": "Penn State Extension",
           "url": "https://extension.psu.edu/rain-garden-plants-blazing-star-liatris-spicata",
           "quote": "Soil: Acidic (pH < 6.8)"
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/liatris-spicata/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 3-18 (NC State Width: 0 ft. 3 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/liatris-spicata/",
+          "quote": "Width: 0 ft. 3 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (PSU: species is visited for nectar by monarchs and other butterflies, and by hummingbirds)",
+          "source": "Penn State Extension - Dense Blazing Star",
+          "url": "https://extension.psu.edu/dense-blazing-star",
+          "quote": "is visited for nectar by monarchs and other butterflies"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species Plants for pollinators)",
+          "source": "RHS Plant Finder",
+          "url": "https://www.rhs.org.uk/plants/10064/liatris-spicata-button-snakewort-dense-blazing-star/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 3,
+      "mature_spread_in_max": 18
     }
   ],
   "audit_summary": [
@@ -1254,6 +1448,7 @@
     "2026-08-23: fifteenth batch of the \"blind spots\" pass. Belladonna (deadly nightshade) is one of history's most infamous toxic plants -- confirmed toxic_to_pets=true with clean, explicit cat and dog evidence from all three admissible sources, and correctly left scientific_name_accepted null on a genuine spelling split (NC State: \"Atropa bella-donna\", hyphenated; RHS and MOBOT: unhyphenated) that neither source acknowledges or resolves. Bittersweet Nightshade also confirmed toxic_to_pets=true, both properly checked against this batch's non-cat/dog toxicity-scope guard with no defects found this round. Rounded out with Panicle Hydrangea (a deliberate companion to Bigleaf Hydrangea, already in this catalog, with notably different sun tolerance), Corn Plant, Kousa Dogwood (a clean pass, 0 fields removed), Ginger, Horseradish, and Blazing Star.",
     "One landing-time repair: Panicle Hydrangea's scientific_name_given was nulled by the audit for lacking its own dedicated citation, but that field is bookkeeping (the binomial the species was researched under), not a claim requiring citation traceability under the actual pipeline rules -- restored directly rather than left null, which would have been inconsistent with every other record in this catalog.",
     "Ginger and Blazing Star both landed scientific_name_accepted null on citation-quality grounds worth noting as a pattern: both citations were RHS genus-level description boxes with a bare \"Name Status Correct\" tag stapled on with no text actually tying that status to the specific species epithet -- the audit correctly refused to accept a page-URL-only inference (\"the URL slug says spicata, so this must be about spicata\") as sufficient under the literal re-derivation standard, even though the underlying facts are very likely correct.",
-    "Horseradish's soil_base landed null after the audit found a genuine, undissolved disagreement it hadn't fully credited: RHS's own growing guide explicitly recommends AGAINST open-ground planting (\"forms a vigorous spreading clump that can be hard to control or remove\") and recommends containers instead, while NC State and MOBOT support garden-bed planting -- a real conflict with a stated hard-to-reverse consequence for whichever way a reader goes, not a case where one source is simply wrong."
+    "Horseradish's soil_base landed null after the audit found a genuine, undissolved disagreement it hadn't fully credited: RHS's own growing guide explicitly recommends AGAINST open-ground planting (\"forms a vigorous spreading clump that can be hard to control or remove\") and recommends containers instead, while NC State and MOBOT support garden-bed planting -- a real conflict with a stated hard-to-reverse consequence for whichever way a reader goes, not a case where one source is simply wrong.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

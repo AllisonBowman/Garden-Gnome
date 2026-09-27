@@ -48,7 +48,14 @@
         "is_houseplant: set false. No admissible source supports growing this species indoors or in a container long-term, and its hemiparasitic biology structurally precludes ordinary houseplant culture -- it must stay attached to and continuously draw water/nutrients from a living host tree branch rather than being potted (Clemson HGIC haustorium description; NC State 'semiparasitic on tree limbs' description).",
         "scientific_name_accepted: left blank because admissible sources genuinely conflict on the currently accepted binomial -- see name_note for the full detail. NC State, UF/IFAS Ask IFAS, and RHS all treat Phoradendron leucarpum as current with Phoradendron serotinum and/or Phoradendron flavescens as synonyms, while Penn State Extension's 'Holiday Plants and Pets' page treats Phoradendron serotinum as current and lists Phoradendron leucarpum as a former name. No admissible source reconciles the two.",
         "toxic_to_pets/toxicity_detail: NC State's Plant Toolbox page tags Phoradendron leucarpum 'Problem for Cats,' 'Problem for Dogs,' and 'Problem for Horses' as standalone entries in its structured Problems list, but the page's only detailed poison narrative (Poison Severity: Medium; Poison Symptoms: 'TOXIC ONLY IF LARGE QUANTITIES EATEN. Stomach and intestinal irritation with diarrhea, vomiting, difficulty breathing, lowered blood pressure, and slow pulse.'; Poison Toxic Principle: 'Amine, toxalbumin, pharatoxin viscumin (Lectins, Phoratoxins)'; Poison Part: Fruits) is nested specifically under a 'Poisonous to Humans:' sub-header on that page. That symptom/toxic-principle text was NOT used for pet-facing toxicity_detail for this reason; toxic_to_pets and toxicity_detail instead rely on NC State's standalone pet-target tags plus Penn State Extension's dedicated pet-specific symptom guidance and Clemson HGIC's 'toxic to humans and many animals' statement, which independently agree pets are at risk and the berries are the main concern, without borrowing the human-specific chemical/symptom detail.",
-        "scientific_name_accepted — removed on audit: The value is JSON \"\" (empty string), not a real null, violating structural check 5 (unresolved fields must be actual null). Verified directly against all four source pages that the underlying conflict is genuine — NC State, UF/IFAS IN267, and RHS all treat Phoradendron leucarpum as current with P. serotinum/P. flavescens as synonyms, while Penn State Extension's 'Holiday Plants and Pets' page states the reverse ('Phoradendron serotinum, formerly P. flavescens or P. leucarpum'). So the decision to leave it unresolved is defensible, but the field must be encoded as null, not an empty string."
+        "scientific_name_accepted — removed on audit: The value is JSON \"\" (empty string), not a real null, violating structural check 5 (unresolved fields must be actual null). Verified directly against all four source pages that the underlying conflict is genuine — NC State, UF/IFAS IN267, and RHS all treat Phoradendron leucarpum as current with P. serotinum/P. flavescens as synonyms, while Penn State Extension's 'Holiday Plants and Pets' page states the reverse ('Phoradendron serotinum, formerly P. flavescens or P. leucarpum'). So the decision to leave it unresolved is defensible, but the field must be encoded as null, not an empty string.",
+        "NC State Plant Toolbox (the size anchor, https://plants.ces.ncsu.edu/plants/phoradendron-leucarpum/) refused this machine every attempt (fetch status error:ProxyError) — could not read its structured Dimensions block; not guessing what it would have said.",
+        "Clemson HGIC (https://hgic.clemson.edu/mistletoe/) refused this machine (fetch status http-403); skipped.",
+        "RHS page (https://www.rhs.org.uk/plants/160356/phoradendron-leucarpum/details) loaded but is essentially empty for this species: searched 'Height', 'Spread', 'Max Height', 'Max Spread', 'Ultimate', 'metres' — 0 hits each; the page's Size/Time-to-Maturity fields render with no value filled in.",
+        "mature_height_in_min/max and mature_spread_in_min/max all left null: none of the five assigned pages (NC State unreachable, Clemson unreachable, RHS empty, PSU Extension has no size data, UF/IFAS IN267 has no size data) published a usable height or spread figure for this species.",
+        "is_edible left null: no page among the five states American mistletoe or a part of it is grown or used for food. UF/IFAS IN267 mentions only that 'Native Americans used mistletoe as a medicinal treatment for many ailments' (medicinal use, not food) and that it contains the toxic protein phoratoxin, about one-tenth as toxic as European mistletoe's viscotoxin; PSU Extension (https://extension.psu.edu/holiday-plants-and-pets) states ingestion by pets can cause 'vomiting, diarrhea, low blood pressure, difficulty breathing, and low heart rate' from toxins concentrated in the white berries. No page frames any of this as human food use, so is_edible stays null rather than inferred from the toxicity/medicinal text.",
+        "American mistletoe is a hemiparasitic aerial shrub, not a vine/liana/climber, so the climber size-suppression rule does not apply here — the null size fields above are due to absence of published data, not that rule.",
+        "ask.ifas.ufl.edu/publication/IN267 (the UF/IFAS page listed as likely to refuse this machine) actually loaded fine (fetch status ok) and was used for the attracts_pollinators citation and for the toxicity/edibility search noted above."
       ],
       "citations": [
         {
@@ -116,8 +123,15 @@
           "quote": "Other common names American mistletoe, flase mistletoe Synonyms Phoradendron flavescens",
           "url": "https://www.rhs.org.uk/plants/160356/phoradendron-leucarpum/details",
           "source": "Royal Horticultural Society"
+        },
+        {
+          "claim": "attracts_pollinators true (oak mistletoe is pollinated by insects, probably wasps and bees, and possibly ants)",
+          "source": "UF/IFAS EDIS IN267 (Great Purple Hairstreak; Great Blue Hairstreak, Atlides halesus)",
+          "url": "https://ask.ifas.ufl.edu/publication/IN267",
+          "quote": "Oak mistletoe is pollinated by insects—probably wasps and bees, and possibly ants (Coder 2008; Kuijt 1982)."
         }
-      ]
+      ],
+      "attracts_pollinators": true
     },
     {
       "common_name": "Monkshood",
@@ -168,7 +182,13 @@
         "toxic_to_pets -- genus-page corroboration caveat: NC State Extension's 'Problem for Cats' / 'Problem for Dogs' fields and its 'Poisonous if ingested. May be fatal to humans and pets' text come from a page that profiles the whole Aconitum genus (explicitly listing A. napellus as one of three cultivars covered) rather than a dedicated napellus page, so this record treats them as corroborating rather than primary evidence. The primary support for toxic_to_pets is RHS's Aconitum-napellus-specific 'Potentially harmful' field, which separately labels a 'Pets: TOXIC if eaten; avoid skin contact' clause.",
         "NC State's genus page also carries a structured field 'Causes Contact Dermatitis: No,' which could look like it conflicts with RHS's and Missouri Botanical Garden's skin-contact warnings. It does not: 'contact dermatitis' denotes an allergic/irritant skin rash reaction, a different mechanism from the systemic aconitine absorption through skin, mucous membranes, or open cuts that RHS and MoBoT are warning about. Both can be true simultaneously, so this was not treated as a genuine cross-source conflict on the toxicity fields.",
         "Clemson Cooperative Extension HGIC has no dedicated factsheet for Aconitum, Aconite, Monkshood, or Wolfsbane (site search for both terms returns no matching factsheet), so Clemson contributes nothing to this record. UF/IFAS (edis.ifas.ufl.edu, ask.ifas.ufl.edu) likewise returns no Aconitum/monkshood content. Penn State Extension's only relevant hit is a bare inventory line ('Aconitum - monkshood') on its New Bolton Center Poisonous Plant Teaching Garden page, with no species-specific care or toxicity detail to cite. University of Maryland Extension's only Aconitum-specific content names it as susceptible to Verticillium wilt (not a schema field here); UMD's own 'One Hundred Poisonous Plants of Maryland' bulletin (Bulletin 314) does not include Aconitum/Monkshood among its 100 entries at all. UGA Cooperative Extension (fieldreport.caes.uga.edu) lists 'Monkshood' / 'Aconitum species' only as a bare name in two perennial-list publications, with no accompanying care data to cite.",
-        "toxicity_detail — removed on audit: The mechanism/symptom narrative and the claim that the toxin is 'present in the bark, flowers, fruits, leaves, roots, seeds, and stems' rest solely on NC State's genus-wide Aconitum page, which the record itself already concedes is not napellus-specific (it profiles A. napellus, A. noveboracense, and A. uncinatum together). I fetched the live NC State page and confirmed the exact 'Poisonous if ingested. May be fatal to humans and pets... Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems' text is reused verbatim across at least eight different NC State URLs (the genus page plus separate common-name-alias pages for queen-of-poisons, aconite, wolfsbane, leopard's-bane, woman's-bane, monkshood, and helmet-flower) -- proof this is templated boilerplate, not napellus-specific content. Worse, 'bark' is physically false for this plant: the record's own is_houseplant citation (RHS) calls A. napellus an 'Herbaceous Perennial,' which has no woody/bark tissue at all -- so a toxin 'present in the bark' is a copy-paste artifact from a shared toxic-plant-parts field, not a real claim about this species. Neither RHS nor Missouri Botanical Garden (the record's declared napellus-specific primary sources) mentions any of the specific symptoms (burning lips, throat numbness, vomiting, diarrhea, muscular weakness, weak pulse, respiratory paralysis, convulsions) or the plant-part list, so none of that specific content is independently corroborated by an unproblematic species-specific citation. Separately, the citation's own claim label asserts 'High poison severity,' but the quote text given in the record's citations array never contains the word 'High' anywhere -- I confirmed NC State's real page does have a distinct 'Poison Severity: High' field, but it is absent from the quote actually cited in this record, so that portion of the claim label is not traceable to its own quote as required by the audit's first check."
+        "toxicity_detail — removed on audit: The mechanism/symptom narrative and the claim that the toxin is 'present in the bark, flowers, fruits, leaves, roots, seeds, and stems' rest solely on NC State's genus-wide Aconitum page, which the record itself already concedes is not napellus-specific (it profiles A. napellus, A. noveboracense, and A. uncinatum together). I fetched the live NC State page and confirmed the exact 'Poisonous if ingested. May be fatal to humans and pets... Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems' text is reused verbatim across at least eight different NC State URLs (the genus page plus separate common-name-alias pages for queen-of-poisons, aconite, wolfsbane, leopard's-bane, woman's-bane, monkshood, and helmet-flower) -- proof this is templated boilerplate, not napellus-specific content. Worse, 'bark' is physically false for this plant: the record's own is_houseplant citation (RHS) calls A. napellus an 'Herbaceous Perennial,' which has no woody/bark tissue at all -- so a toxin 'present in the bark' is a copy-paste artifact from a shared toxic-plant-parts field, not a real claim about this species. Neither RHS nor Missouri Botanical Garden (the record's declared napellus-specific primary sources) mentions any of the specific symptoms (burning lips, throat numbness, vomiting, diarrhea, muscular weakness, weak pulse, respiratory paralysis, convulsions) or the plant-part list, so none of that specific content is independently corroborated by an unproblematic species-specific citation. Separately, the citation's own claim label asserts 'High poison severity,' but the quote text given in the record's citations array never contains the word 'High' anywhere -- I confirmed NC State's real page does have a distinct 'Poison Severity: High' field, but it is absent from the quote actually cited in this record, so that portion of the claim label is not traceable to its own quote as required by the audit's first check.",
+        "NC State Plant Toolbox page for Aconitum (https://plants.ces.ncsu.edu/plants/aconitum/) is a GENUS page, not species-specific, so per the rules it could not have been used for size even if reachable; the fetch machine refused/errored on it (ProxyError, 0 bytes) on every attempt, so it was skipped entirely and no content from it was used.",
+        "Missouri Botanical Garden PlantFinder (https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=286162&isprofile=1&gen=Aconitum) redirects to plantfinder.mobot.org, one of the hosts that refuses this fetch machine; the request was blocked before any content was returned, so it was skipped and not guessed at.",
+        "attracts_pollinators left null: searched RHS page for 'Attracts', 'pollinator', 'bee', 'butterfl', 'hummingbird', 'wildlife' -- no structured attracts/wildlife field and no unconditional pollinator statement was found. 'Wildlife gardens' appears only as a suggested planting-location category ('Suggested planting locations and garden types: Cottage and informal garden, Wildlife gardens, Flower borders and beds'), which is not a statement that the plant attracts pollinators, so it was not treated as support.",
+        "is_edible set to false (not null) because RHS explicitly classifies the species under 'Potentially harmful' with 'TOXIC if eaten; avoid skin contact. Wear gloves and other protective equipment when handling. Pets: TOXIC if eaten; avoid skin contact - see the HTA guide to potentially harmful plants for further information and useful contact numbers.' No page addressed the plant being grown or used for food.",
+        "Confirmed the species is not a climber before populating size fields: RHS lists Habit as 'Bushy', so rule 4 (climbers get no size) does not apply and all four size fields were populated normally from the species-level RHS figures.",
+        "The RHS size figures (Max Height 1-1.5 metres, Max Spread 0.1-0.5 metres) are given for the species Aconitum napellus itself on this page, not for a named cultivar, so rule 3 (cultivar sizes excluded) does not apply here."
       ],
       "citations": [
         {
@@ -272,8 +292,31 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/380/aconitum-napellus/details",
           "quote": "Grows best in deep, cool, moisture-retentive soil in partial shade, but will also tolerate most soils and full sun if soil is humus-rich and protected with mulch to ensure that it is moist throughout the growing season; use protective gloves"
+        },
+        {
+          "claim": "mature_height_in 39.4-59.1 (RHS Max Height 1-1.5 metres, converted to inches: 1 x 39.37 = 39.4, 1.5 x 39.37 = 59.1)",
+          "source": "RHS - Aconitum napellus (monk's hood)",
+          "url": "https://www.rhs.org.uk/plants/380/aconitum-napellus/details",
+          "quote": "Max Height         1-1.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS - Aconitum napellus (monk's hood)",
+          "url": "https://www.rhs.org.uk/plants/380/aconitum-napellus/details",
+          "quote": "Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "is_edible false (RHS lists it under Potentially harmful: TOXIC if eaten; avoid skin contact)",
+          "source": "RHS - Aconitum napellus (monk's hood)",
+          "url": "https://www.rhs.org.uk/plants/380/aconitum-napellus/details",
+          "quote": "TOXIC if eaten; avoid skin contact."
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 39.4,
+      "mature_height_in_max": 59.1,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Common Milkweed",
@@ -323,7 +366,13 @@
         "toxicity_detail: NC State's structured poisoning-symptom data (Poison Severity: Low; symptoms 'stomach upset, nausea, vomiting, abdominal pain, diarrhea, weakness, lethargy, and confusion'; contact dermatitis and eye irritation; toxic principle 'Cardiac glycosides and resinoids') is filed specifically under a 'Poisonous to Humans' section header on that page, not a pets-specific section, so none of that symptom detail was carried into toxicity_detail for pets. toxicity_detail instead relies on Penn State Extension's general-context paragraph, which names cats, dogs, and horses directly in the same breath as the cardiac-glycosides mechanism rather than gating that statement to humans, and on NC State's separate, non-'Poisonous to Humans' Description-section sentence that also names cats, dogs, and horses.",
         "outdoor_sun_exposure: only full_sun was recorded. NC State's Description states plainly 'It does not tolerate shade,' so part_shade/part_sun were not added despite being a common secondary value for perennials elsewhere in this catalog.",
         "is_houseplant: set false by default -- no admissible source describes growing this species indoors or in containers long-term; every source treats it as an outdoor native/naturalizing perennial, and RHS additionally lists it as an invasive species banned from sale in the UK.",
-        "is_houseplant — removed on audit: Structural check 1 failure: is_houseplant is a non-null field (false) but no entry in the citations array supports it -- all 11 citations trace to common_name, scientific_name, name_note, toxic_to_pets/toxicity_detail, outdoor_sun_exposure, or soil_base/soil_drainage. The unknowns entry defends the value with a claim that 'RHS additionally lists it as an invasive species banned from sale in the UK' -- which I independently confirmed is true on the RHS page -- but that supporting fact was never turned into a citations-array entry, so the field's value, while plausibly correct in substance, does not actually trace to the citations array as the structural check requires."
+        "is_houseplant — removed on audit: Structural check 1 failure: is_houseplant is a non-null field (false) but no entry in the citations array supports it -- all 11 citations trace to common_name, scientific_name, name_note, toxic_to_pets/toxicity_detail, outdoor_sun_exposure, or soil_base/soil_drainage. The unknowns entry defends the value with a claim that 'RHS additionally lists it as an invasive species banned from sale in the UK' -- which I independently confirmed is true on the RHS page -- but that supporting fact was never turned into a citations-array entry, so the field's value, while plausibly correct in substance, does not actually trace to the citations array as the structural check requires.",
+        "is_edible left null: none of the three readable pages (NC State Plant Toolbox, Penn State Extension, RHS) state that the plant or any named part is grown or used for human food; the only food-related language found is wildlife/pollinator framing (\"Wildlife Food Source\", \"nectar for butterflies, bees\"), which is not human edibility and was not used to infer it.",
+        "Decision-relevant even though is_edible is null: NC State states \"This plant has low severity poison characteristics\" and \"The bark, flower, seed pods, leaves, roots, and stems are poisonous, which can be a problem for cats, dogs, and horses,\" with Toxic Principle \"Cardiac glycosides and resinoids,\" Causes Contact Dermatitis: Yes, and symptoms \"diarrhea, weakness, lethargy, and confusion if eaten in quantity.\" Penn State Extension repeats the same poisonous-parts/problem-for-cats-dogs-horses statement and the cardiac-glycoside/toxic-to-predators detail. This rules out inferring edibility from the genus.",
+        "RHS page (rhs.org.uk) carried no structured size field: searched both 'Max Height'/'Max Spread' and plain 'Height'/'Width' wordings and got zero hits for any of them, and zero hits for Attracts/Edible/Poison/Toxic/Pollinator as well -- the rendered text is almost entirely site navigation. The one size-like mention on the page is prose in the plant description, \"A clump-forming herbaceous perennial up to 1m tall\" -- not the structured Max Height/Max Spread field the task anchors to, so it was not used; NC State's own structured Dimensions block (the anchor page) already supplied both height and spread in a convertible format, so RHS was not needed for size.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (fetch status error:ConnectError) and could not be read; skipped per instructions, no guess made about what it would have shown.",
+        "Plant is confirmed a non-climbing herbaceous perennial (NC State: \"Herbaceous Perennial\"; Penn State: \"deciduous, native, herbaceous perennial wildflower\"), so the climber size-suppression rule does not apply and all four size fields were filled normally.",
+        "No cultivar-specific figures were used -- the NC State Dimensions block and the RHS prose figure are both given for the species, not a named cultivar."
       ],
       "citations": [
         {
@@ -391,8 +440,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b480",
           "quote": "Easily grown in average, dry to medium, well-drained soils in full sun. Drought tolerant. Does well in poor, dryish soils."
+        },
+        {
+          "claim": "mature_height_in 36-60 (NC State Dimensions Height: 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/asclepias-syriaca/",
+          "quote": "Height: 3 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 8-12 (NC State Dimensions Width: 0 ft. 8 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/asclepias-syriaca/",
+          "quote": "Width: 0 ft. 8 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (Penn State Extension states the species provides nectar for butterflies, bees, and other pollinators)",
+          "source": "Penn State Extension",
+          "url": "https://extension.psu.edu/common-milkweed",
+          "quote": "Common milkweed, Asclepias syriaca, not only provides nectar for butterflies, bees, and other pollinators but is a larval host plant for butterflies and moths."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 8,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Golden Barrel Cactus",
@@ -546,7 +618,16 @@
         "water_check_depth_cm, water_dry_down_target, water_estimate_basis, water_growing_days_est, water_dormant_days_est: container/houseplant watering-schedule metrics not applicable to an in-ground landscape tree; no source provides this kind of data.",
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: no admissible source gives a fertilizing schedule for this species; UF/IFAS only mentions 'Keep trees healthy by regular fertilization' generically in the context of canker disease management, not an actionable schedule.",
         "day_f_max, day_f_min, night_f_max, night_f_min, cool_rest_note: indoor day/night temperature-range fields do not apply to this outdoor landscape tree; no admissible source addresses them.",
-        "soil_base — removed on audit: The only citation for this field is the RHS quote \"Soil Types: Clay, Loam, Sand,\" which I verified is genuine (fetched the live RHS page: Position Full sun / Soil Types Clay, Loam, Sand / Moisture Moist but well-drained). That quote establishes soil-texture tolerance, nothing about planting context. The claim label adds \"grown in ground ... not a container mix\" -- a categorical assertion the quote never makes. No second citation supports soil_base specifically (the nearby is_houseplant citation, 'woody, deciduous landscape tree,' backs a different field). Per check 4 ('does it avoid asserting a category the quote doesn't literally support?') this citation fails outright, and since it's the sole support for the field, the field itself is unsupported by its own evidence chain even though the value is plausible on general horticultural grounds."
+        "soil_base — removed on audit: The only citation for this field is the RHS quote \"Soil Types: Clay, Loam, Sand,\" which I verified is genuine (fetched the live RHS page: Position Full sun / Soil Types Clay, Loam, Sand / Moisture Moist but well-drained). That quote establishes soil-texture tolerance, nothing about planting context. The claim label adds \"grown in ground ... not a container mix\" -- a categorical assertion the quote never makes. No second citation supports soil_base specifically (the nearby is_houseplant citation, 'woody, deciduous landscape tree,' backs a different field). Per check 4 ('does it avoid asserting a category the quote doesn't literally support?') this citation fails outright, and since it's the sole support for the field, the field itself is unsupported by its own evidence chain even though the value is plausible on general horticultural grounds.",
+        "NC State's species page (plants.ces.ncsu.edu/plants/salix-babylonica/) could not be read at research time (ProxyError). Its cached copy, read at landing, gives Height and Width 30 ft. 0 in. - 40 ft. 0 in. (360-480 in), so it and UF/IFAS ST576 (30 to 50 feet, used here) disagree on the top end.",
+        "Missouri Botanical Garden Plant Finder (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c148) refused this machine (fetch status: error:ConnectError) and could not be read; its content was not guessed.",
+        "is_edible left null: searched the RHS and UF/IFAS pages and neither addresses whether Salix babylonica or any part of it is eaten or used for food (no statement either way).",
+        "Searched RHS and UF/IFAS pages for 'Poison', 'Toxic', and 'Problem for' -- zero hits on both pages; no toxicity information was found on either anchor page.",
+        "RHS's own Max Spread field for this species is open-ended ('wider than 8 metres', with 'Time to Maturity 20-50 years') and gives no usable numeric bound, so it was not used; UF/IFAS's structured 'Spread: 30 to 50 feet' field was used instead for mature_spread_in.",
+        "RHS Max Height (8-12 metres, i.e. ~314.96-472.44 in) differs from UF/IFAS Height (30-50 ft, i.e. 360-600 in); UF/IFAS's value was used for both height and spread for internal consistency, since it is the one source among the two reachable pages that supplies clean min and max bounds for both dimensions.",
+        "UF/IFAS's fruit-characteristics field states the fruit 'does not attract wildlife' -- this concerns seed/fruit dispersal, not flower pollination, and was not treated as evidence against attracts_pollinators.",
+        "Habit confirmed via RHS ('Habit: Pendulous weeping') as a tree, not a vine/climber/liana, so the climber size-suppression rule does not apply and size fields were populated normally.",
+        "Searched both reachable pages for cultivar-specific wording; no size figures were attributed to a named cultivar -- both height/spread values are given for the species Salix babylonica itself."
       ],
       "citations": [
         {
@@ -626,8 +707,31 @@
           "quote": "Previously known as: Salix matsudana",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/salix-babylonica/"
+        },
+        {
+          "claim": "mature_height_in 360-600 (UF/IFAS Height: 30 to 50 feet, converted to inches)",
+          "source": "UF/IFAS Extension ENH-734/ST576: Salix babylonica: Weeping Willow",
+          "url": "https://ask.ifas.ufl.edu/publication/st576",
+          "quote": "Height:  30 to 50 feet"
+        },
+        {
+          "claim": "mature_spread_in 360-600 (UF/IFAS Spread: 30 to 50 feet, converted to inches)",
+          "source": "UF/IFAS Extension ENH-734/ST576: Salix babylonica: Weeping Willow",
+          "url": "https://ask.ifas.ufl.edu/publication/st576",
+          "quote": "Spread:  30 to 50 feet"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS 'Plants for pollinators' tag)",
+          "source": "RHS: Salix babylonica | weeping willow",
+          "url": "https://www.rhs.org.uk/plants/66012/salix-babylonica/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 600,
+      "mature_spread_in_min": 360,
+      "mature_spread_in_max": 600
     },
     {
       "common_name": "American Sycamore",
@@ -676,7 +780,18 @@
         "water_regime: kept as keep_moist despite UF/IFAS's own structured 'Drought tolerance: high' tag sitting alongside its own prose warning that 'Dry soil can lead to short life for this wet-site-tolerant tree.' Read together, this is an established-tree survivability rating, not a stated preference for dry soil, and it does not contradict the unanimous moisture guidance from NC State ('moist soils with good drainage'), Missouri Botanical Garden ('Water: Medium to wet' / 'consistently moist soils'), Clemson ('happiest on floodplains and in other moist environments'), and RHS ('moist, fertile soil') -- so this was not treated as the kind of genuine cross-source disagreement that would require nulling a harm-capable field.",
         "toxic_to_pets / toxicity_detail: RHS's 'Potentially harmful' note ('Contact with the hairs on the fruits may irritate the skin and respiriatory system. Wear gloves and other protective equipment when handling') was deliberately excluded from toxicity_detail -- it addresses human skin/respiratory contact irritation from fruit hairs, not ingestion toxicity to pets, so blending it into the pets-toxicity field would misrepresent both the target (human vs. pet) and the mechanism (contact irritant vs. ingested toxin).",
         "outdoor_sun_exposure part_shade: added on Missouri Botanical Garden's Culture text ('Tolerates light shade') even though its own structured 'Sun:' field lists only 'Full sun,' and NC State, RHS, and UF/IFAS's structured light fields likewise list only full sun with no shade-tolerance value. Treated as an additive tolerance note rather than a conflict, since none of those sources state the species requires full sun exclusively or is harmed by shade.",
-        "Penn State Extension, University of Maryland Extension, UGA CAES Field Report, and Clemson HGIC coverage: dedicated species-specific content exists on all four (Penn State's horse-safety comparison article; UMD's 'Native Trees of Maryland' profile and its tree-planting guide's wet-site-exception list, which names Platanus occidentalis directly; UGA's 'Shade Trees for Georgia' listing; and Clemson's dedicated American Sycamore factsheet), but none of these four add sun-exposure, soil-pH, or watering-schedule specifics beyond what NC State, Missouri Botanical Garden, UF/IFAS, and RHS already establish, so they contribute corroborating citations (size, moisture preference, pet-toxicity) rather than new field values."
+        "Penn State Extension, University of Maryland Extension, UGA CAES Field Report, and Clemson HGIC coverage: dedicated species-specific content exists on all four (Penn State's horse-safety comparison article; UMD's 'Native Trees of Maryland' profile and its tree-planting guide's wet-site-exception list, which names Platanus occidentalis directly; UGA's 'Shade Trees for Georgia' listing; and Clemson's dedicated American Sycamore factsheet), but none of these four add sun-exposure, soil-pH, or watering-schedule specifics beyond what NC State, Missouri Botanical Garden, UF/IFAS, and RHS already establish, so they contribute corroborating citations (size, moisture preference, pet-toxicity) rather than new field values.",
+        "attracts_pollinators left null: NC State's structured Attracts field lists only Small Mammals and Songbirds, and its Wildlife Value text says songbirds eat the seeds -- no page (NC State, RHS) names bees, butterflies, moths or hummingbirds visiting this species, and birds eating seed is not pollination per the rules.",
+        "is_edible true applies specifically to the sap, which NC State's Edibility field says is 'sweet and tapped in the spring for use as syrup and sugar' -- not the fruit or leaves.",
+        "Searched the NC State anchor page for Poison, Toxic and Problem for before setting is_edible: 0 hits for 'Poison'/'Poisonous', and the only 'Toxic' hits are the page's own tags 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- no poisonous part, severity, toxic principle, preparation requirement or pets warning is named on the anchor page.",
+        "Corroborating: Penn State Extension's horse-safety article independently states 'This tree is non-toxic to horses,' consistent with the NC State tags.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (fetch status error:ConnectError) -- skipped, not used for any field.",
+        "hgic.clemson.edu (Clemson HGIC) refused this machine (fetch status http-403) -- skipped, not used for any field.",
+        "ask.ifas.ufl.edu (UF/IFAS ST484) did load and gives Height: 75 to 90 feet, Spread: 50 to 70 feet for the species -- a narrower range than NC State's. NC State was used as the anchor for mature_height_in/mature_spread_in per instructions since a species-level NC State page exists; the IFAS figures were not used to avoid mixing sources within one range.",
+        "extension.umd.edu ('Planting a Tree or Shrub') is a generic tree-planting guide with no Platanus occidentalis-specific size, edibility or pollinator data -- not used for any field.",
+        "RHS's Max Height for this species is the open-ended 'Higher than 12 metres,' which gives no usable bound; not used since NC State's anchor value already supplies both ends of the height range. RHS's Max Spread (4-8 metres) was also not used, again to keep the NC State anchor's two ends from the same citation.",
+        "This species is a tree, not a vine/liana/climber, so the climber-size exclusion (rule 4) does not apply and all four size fields were populated from the anchor page.",
+        "is_edible removed on audit: The sap quote itself checks out: NC State's Edibility field says verbatim 'Sap is sweet and tapped in the spring for use as syrup and sugar.' Check F still fails. The RHS page (rhs.org.uk/plants/13226), which the researcher consulted and cites in unknowns for size and pollinators, has a 'Potentially harmful' field. It reads: 'Contact with the hairs on the fruits may irritate the skin and respiriatory system. Wear gloves and other protective equipment when handling.' That names a harmful part (the fruit hairs) and a handling precaution. It does not appear in unknowns. The unknowns reported only a toxicity search of the NC State page and said no harmful part was named, which leaves this condition out. Under rule F a true is_edible with an unreported hazard is refuted."
       ],
       "citations": [
         {
@@ -834,8 +949,24 @@
           "quote": "American sycamore is a bottomland tree, happiest on floodplains and in other moist environments.",
           "source": "Clemson Cooperative Extension HGIC, American Sycamore factsheet",
           "url": "https://hgic.clemson.edu/american-sycamore-platanus-occidentalis/"
+        },
+        {
+          "claim": "mature_height_in 900-1200 (NC State Height 75 ft. 0 in. - 100 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/platanus-occidentalis/",
+          "quote": "Height: 75 ft. 0 in. - 100 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 900-1200 (NC State Width 75 ft. 0 in. - 100 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/platanus-occidentalis/",
+          "quote": "Width: 75 ft. 0 in. - 100 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 900,
+      "mature_height_in_max": 1200,
+      "mature_spread_in_min": 900,
+      "mature_spread_in_max": 1200
     },
     {
       "common_name": "Sweet Potato",
@@ -886,7 +1017,14 @@
         "soil_drainage: NC State's own structured Soil Drainage field for this species lists 'Good Drainage, Moist, Occasionally Dry, Occasionally Wet' -- a broader tolerance than a strict fast-draining requirement -- while Clemson, UMD, and UGA all separately emphasize well-drained sandy/loamy soil to avoid root rot and splitting. 'moderate' was chosen as the value that best reflects NC State's own multi-value field (gooddrainage plus moisture tolerance) rather than 'fast,' even though several sources' emphasis on sandy/well-drained soil would also support a 'fast' reading; flagging this as a judgment call between two defensible enum values.",
         "is_houseplant: set true on RHS's cultivation guidance ('May be grown outdoors in warmer regions, but best grown under glass in colder areas (minimum temperature 7-10°C)'), the same pattern this catalog has treated as houseplant/protected-structure evidence elsewhere. Missouri Botanical Garden's culture note that 'container plants and/or rooted cuttings taken in late summer may be overwintered indoors in bright sunny locations' was read as corroborating rather than load-bearing on its own. RHS's 'Suggested planting locations and garden types' list (which includes 'Patio and container plants' alongside 'Conservatory and greenhouse') was deliberately NOT cited for this field, since this catalog's own prior audit found that RHS's 'Patio and container plants' tag by itself denotes outdoor container gardening, not indoor/houseplant status.",
         "is_houseplant — removed on audit: Verified all cited source text directly (RHS page 9185 and MoBot a587 fetched and confirmed word-for-word). The load-bearing citation is RHS's cultivation prose: 'May be grown outdoors in warmer regions, but best grown under glass in colder areas (minimum temperature 7-10°C).' 'Grown under glass' means greenhouse/conservatory cultivation, not indoor windowsill houseplant use -- and RHS's own structured 'Suggested planting locations and garden types' field for this exact species (confirmed via fetch: 'Patio and container plants / Sub-tropical / Climber and wall shrubs / Conservatory and greenhouse') lists 'Conservatory and greenhouse' as the protected-structure category, not 'Houseplants' (RHS does use a distinct 'Houseplants' tag on other species' pages when applicable, and does not apply it here). The record's own unknowns note explicitly rejects this same structured tag list's 'Patio and container plants' entry as insufficient houseplant evidence per this catalog's prior-audit precedent, but then relies on the free-text 'under glass' cultivation sentence -- which describes the identical greenhouse/conservatory growing context -- as load-bearing evidence anyway. That is an inconsistent application of the record's own standard. The remaining citation (MoBot: 'Container plants and/or rooted cuttings taken in late summer may be overwintered indoors in bright sunny locations') is explicitly self-described in the record as 'corroborating rather than load-bearing,' i.e. not sufficient alone. No admissible source actually states this species is commonly grown/kept as an indoor houseplant.",
-        "soil_drainage — removed on audit: Verified both cited quotes directly against the live NC State and Clemson pages -- both quotes are accurate. But the value 'moderate' is not cleanly supported by either: Clemson's quote ('They grow best in a well-drained, loamy to sandy soil') reads as evidence for fast/well-drained soil, not a distinct 'moderate' category, and NC State's own structured field ('Good Drainage, Moist, Occasionally Dry, Occasionally Wet') is a multi-value tag list the record's own unknowns note concedes is ambiguous ('several sources' emphasis on sandy/well-drained soil would also support a \"fast\" reading'). Since the record itself documents this as a genuine, unresolved disagreement across its own sources rather than a clean single-value read, and picked a value anyway instead of leaving the field null, this is the refutable defect described in audit rule #2 (the VALUE itself, not just one supporting citation, is in doubt)."
+        "soil_drainage — removed on audit: Verified both cited quotes directly against the live NC State and Clemson pages -- both quotes are accurate. But the value 'moderate' is not cleanly supported by either: Clemson's quote ('They grow best in a well-drained, loamy to sandy soil') reads as evidence for fast/well-drained soil, not a distinct 'moderate' category, and NC State's own structured field ('Good Drainage, Moist, Occasionally Dry, Occasionally Wet') is a multi-value tag list the record's own unknowns note concedes is ambiguous ('several sources' emphasis on sandy/well-drained soil would also support a \"fast\" reading'). Since the record itself documents this as a genuine, unresolved disagreement across its own sources rather than a clean single-value read, and picked a value anyway instead of leaving the field null, this is the refutable defect described in audit rule #2 (the VALUE itself, not just one supporting citation, is in doubt).",
+        "All four size fields (mature_height_in_min/max, mature_spread_in_min/max) left null: Ipomoea batatas is a twining climber, not a judgement call under the catalog rule that climbers get no size yet. NC State Plant Toolbox lists Habit/Form as 'Climbing, Spreading' with Climbing Method 'Twining' and Plant Type including 'Vine'; RHS describes it as 'a variable species of twining perennial climber' with Habit 'Climbing, Trailing'.",
+        "NC State's anchor page does publish a structured Dimensions block (Height: 6 ft. 0 in. - 10 ft. 0 in.; Width: 8 ft. 0 in. - 10 ft. 0 in.) and RHS publishes Max Height 2.5-4 metres / Max Spread 0.5-1 metres -- these were deliberately NOT recorded because the plant is a climber, not because the pages lack the data.",
+        "hgic.clemson.edu/how-to-grow-and-care-for-ornamental-sweetpotato-vine-ipomoea-batatas/ returned HTTP 403 (refused this machine) and could not be read.",
+        "hgic.clemson.edu/factsheet/sweet-potato/ returned HTTP 403 (refused this machine) and could not be read.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a587 returned a connection error (refused this machine) and could not be read.",
+        "Searched the NC State anchor page for 'Poison' (0 hits) and 'Toxic' (6 hits, all only site tags reading 'non-toxic for cats', 'non-toxic for dogs', 'non-toxic for horses') before setting is_edible true; no poisonous part, severity, toxic principle, preparation requirement, or pets warning was found on that page, so no toxicity caveat is attached to is_edible.",
+        "RHS attributes edible roots to 'some cultivars' ('some cultivars valued for their edible roots'; 'the parent to both edible sweet potato cultivars') -- that cultivar-specific RHS language was NOT used to support is_edible; is_edible instead rests on NC State's species-level Edibility field ('Edible leaves, tuberous roots, and stems.')."
       ],
       "citations": [
         {
@@ -990,8 +1128,22 @@
           "quote": "In fall before first frost, dig, dry and store tubers in a dry medium (vermiculite or peat) in a cool dry corner of the basement.",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a587"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: 'Edible leaves, tuberous roots, and stems.  Sweet potatoes are a popular vegetable.  Ornamental cultivars are not as tasty.' -- species-level edibility of roots, leaves and stems, with ornamental cultivars noted as less palatable rather than toxic or inedible)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Ipomoea batatas",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-batatas/",
+          "quote": "Edible leaves, tuberous roots, and stems.  Sweet potatoes are a popular vegetable.  Ornamental cultivars are not as tasty."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: 'It is an attractant for bees and pollinators.'; the page's structured Attracts field also lists Pollinators and Specialized Bees)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Ipomoea batatas",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-batatas/",
+          "quote": "It is an attractant for bees and pollinators."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Creeping Jenny",
@@ -1041,7 +1193,13 @@
         "soil_ph_min/soil_ph_max: left null. NC State tags only categorical tolerance bands ('Acid (<6.0)', 'Alkaline (>8.0)', 'Neutral (6.0-8.0)') with no numeric floor for the acid band or ceiling for the alkaline band, and RHS gives only 'Acid or Alkaline or Neutral' with no numbers at all. No literal numeric bound is derivable from either.",
         "water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: left null. No admissible source gives a container watering interval, a soil-check depth, or a dry-down target for this species -- consistent with it being described as an in-ground/garden-bed and pond-margin plant by every admissible source rather than a container houseplant on a watering schedule. (Missouri Botanical Garden does note it 'can be grown as an aquarium plant' and, where invasive spread is a concern, 'use in hanging baskets or containers where its growth can be monitored' -- submerged aquarium culture and outdoor monitored-container use, neither of which is the sustained indoor potted-houseplant use this field's watering-schedule framing targets, so this was not used to populate these fields or is_houseplant.)",
         "fertilize_active_months/fertilize_interval_days/fertilize_strength: left null. No admissible source specifies a fertilizing schedule, timing, or dilution strength for this species.",
-        "is_houseplant set to false: grounded in NC State's USDA Plant Hardiness Zone listing (3a-8b, i.e. fully outdoor-winter-hardy) and its habitat description (wet meadows, streambanks, roadsides, ditches), plus Missouri Botanical Garden's parallel habitat description (stream banks, lake and pond margins, roadsides, ditches, moist disturbed areas). No admissible source affirmatively describes sustained indoor/potted cultivation as a houseplant; landscape/container mentions across sources (NC State's 'Container, Hanging Baskets' landscape locations, MOBOT's monitored hanging-basket/container use, and the aquarium-plant note) all describe outdoor or submerged use, not indoor houseplant care."
+        "is_houseplant set to false: grounded in NC State's USDA Plant Hardiness Zone listing (3a-8b, i.e. fully outdoor-winter-hardy) and its habitat description (wet meadows, streambanks, roadsides, ditches), plus Missouri Botanical Garden's parallel habitat description (stream banks, lake and pond margins, roadsides, ditches, moist disturbed areas). No admissible source affirmatively describes sustained indoor/potted cultivation as a houseplant; landscape/container mentions across sources (NC State's 'Container, Hanging Baskets' landscape locations, MOBOT's monitored hanging-basket/container use, and the aquarium-plant note) all describe outdoor or submerged use, not indoor houseplant care.",
+        "is_edible left null: none of the three cited pages (NC State Plant Toolbox, RHS, and the attempted Missouri Botanical Garden PlantFinder page) address whether this plant or any part of it is eaten or grown for food; searched NC State and RHS for 'Edible' and 'food' with zero hits on either.",
+        "Checked NC State and RHS for 'Poison', 'Toxic', and 'Problem for' before setting any edibility value; zero hits on either page, so no toxicity language exists on these two pages to report.",
+        "Habit/Form on NC State is explicitly 'Creeping, Horizontal, Spreading' and Plant Type includes 'Ground Cover' -- this is a mat-forming ground cover, not a vine/liana/climber, so rule 4 (no size for climbers) does not apply and all four size fields are populated.",
+        "mature_height_in and mature_spread_in are taken from NC State Plant Toolbox's structured Dimensions block (the anchor, since a real NC State species page exists): Height 0 ft. 2 in. - 0 ft. 4 in. = 2-4 inches; Width 1 ft. 0 in. - 2 ft. 0 in. = 12-24 inches. RHS gives the same order of magnitude (Max Height 0.1-0.5 m = 3.9-19.7 in; Max Spread 0.1-0.5 m = 3.9-19.7 in) but was not used for the size fields since NC State's species-specific structured block takes precedence as the anchor.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=285553 refused this machine (fetch status error:ConnectError) -- skipped per instructions, not used for any field, and no guess was made about its content.",
+        "RHS and NC State were both searched for 'bee', 'butterfl', 'hummingbird', 'Wildlife', and 'Pollinator'/'Attracts' -- only RHS's 'Plants for pollinators' tag returned a hit, which is the sole basis for attracts_pollinators=true."
       ],
       "citations": [
         {
@@ -1127,8 +1285,31 @@
           "quote": "It prefers moist areas such as wet meadows, seeps, swamps, banks of streams and ponds, roadsides, and ditches but also tolerates drier conditions.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/lysimachia-nummularia/"
+        },
+        {
+          "claim": "mature_height_in 2-4 (NC State Height 0 ft. 2 in. - 0 ft. 4 in.)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lysimachia-nummularia/",
+          "quote": "Height: 0 ft. 2 in. - 0 ft. 4 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in.)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lysimachia-nummularia/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS lists this species under \"Plants for pollinators\")",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/10632/lysimachia-nummularia/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 2,
+      "mature_height_in_max": 4,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1168,6 +1349,7 @@
   "normalizations": [
     "2026-08-23: eleventh batch of the \"blind spots\" pass. Three high-priority safety gaps, all confirmed toxic_to_pets=true: American Mistletoe (completing a classic holiday-toxic-plant trio with Poinsettia and Holly already in this catalog; also this catalog's first hemiparasitic species -- it draws water/nutrients through a haustorium into a host tree's bark, not from soil, so soil_base/soil_ph/water_regime correctly landed inapplicable rather than forced), Monkshood (aconitine, often cited as among the most acutely toxic garden perennials grown), and Common Milkweed (cardiac glycosides, the same mechanism as oleander, despite being an increasingly deliberately-planted monarch host plant). Rounded out with Golden Barrel Cactus, Weeping Willow, American Sycamore, Sweet Potato, and Creeping Jenny. All 8 confirmed genuinely uncovered by grep before landing -- Platanus occidentalis had one prior hit, but it was only an incidental mention inside a River Birch citation quote in b25 (naming sycamore as another wet-tolerant exception tree), not an actual record.",
     "Monkshood's toxic_to_pets survived intact, but its toxicity_detail was correctly stripped after the audit found the whole symptom/mechanism narrative traced to NC State's genus-wide Aconitum page, reused verbatim across at least eight different NC State URLs (the genus page plus seven common-name-alias pages) -- and caught something the boilerplate itself gave away: the shared text lists \"bark\" as a poisoned plant part, which is physically impossible for an herbaceous perennial with no woody tissue at all, exactly the kind of tell that exposes copy-paste content dressed up as species-specific research.",
-    "One schema bug this batch, again caught and self-corrected by the auditor itself before this landing pass ran its own check: American Mistletoe's scientific_name_accepted was written as an empty string despite genuinely being an unresolved four-source naming conflict (NC State, UF/IFAS, and RHS treat Phoradendron leucarpum as current; Penn State Extension treats P. serotinum as current) -- the auditor named the encoding defect on its own and the batch script's cleanup step correctly nulled it."
+    "One schema bug this batch, again caught and self-corrected by the auditor itself before this landing pass ran its own check: American Mistletoe's scientific_name_accepted was written as an empty string despite genuinely being an unresolved four-source naming conflict (NC State, UF/IFAS, and RHS treat Phoradendron leucarpum as current; Penn State Extension treats P. serotinum as current) -- the auditor named the encoding defect on its own and the batch script's cleanup step correctly nulled it.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

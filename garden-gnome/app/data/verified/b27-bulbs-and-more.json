@@ -51,7 +51,14 @@
         "toxicity_detail / toxic plant part: NC State Extension's structured \"Poison Part\" list (bark, flowers, fruits, leaves, roots, sap/juice, seeds, stems, plus the note \"Bulbs contain the highest amount of toxin\") sits explicitly under that page's \"Poisonous to Humans\" heading, not a pet-specific section, so it was not used to support toxic_to_pets/toxicity_detail. The bulb-concentration claim used instead comes from Penn State Extension's pet-specific \"Spring Holiday Plants and Pets\" page, which states it as a general note about the forced spring bulbs discussed there (crocus, daffodil, hyacinth, tulip) rather than as a hyacinth-exclusive statement -- no admissible source states bulb-concentration as a hyacinth-specific, pets-specific fact on its own.",
         "is_houseplant — removed on audit: The unknowns text resolves an apparent conflict (NC State: \"unsuited to long-term growth in a home\" vs. an alleged RHS \"Houseplants\" tag in its species-specific planting-locations list) entirely through the researcher's own prose reasoning, but no citation entry in the array actually quotes RHS's \"Houseplants\" tag or any RHS planting-locations list -- it's asserted, not sourced. Per the audit's disagreement rule, a real cross-source conflict on a field should either be cited properly on both sides or leave the field null; here an uncited claim about the 'losing' source was used to rationalize away the conflict instead.",
         "soil_drainage — removed on audit: The value \"moderate\" doesn't clearly derive from either supporting quote. Citation 11 (NC State) only warns \"Bulb rot may occur in poorly drained soils\" -- a caution against poor drainage, implying a need for good/sharp drainage, not literally \"moderate.\" Citation 12 (RHS) says \"Grow in moderately fertile soil with good drainage\" -- the word \"moderately\" there modifies fertility, not drainage; drainage itself is described plainly as \"good.\" Neither quote supports a \"moderate\" drainage characterization specifically; if anything both point toward a well-drained/sharp-drainage need.",
-        "name_note — removed on audit: The note asserts \"RHS explicitly marks 'Name Status Correct' for this binomial,\" but no citation entry in the array contains that quote or any RHS text about name status -- citation 1 (the only scientific-name citation) is from NC State, and the two RHS citations present (8, 12, covering sun exposure and soil drainage) never mention name status. This is a specific factual claim about a source that isn't traceable to anything in the citations array, even though the underlying conclusion (Hyacinthus orientalis being the currently accepted name) happens to be correct."
+        "name_note — removed on audit: The note asserts \"RHS explicitly marks 'Name Status Correct' for this binomial,\" but no citation entry in the array contains that quote or any RHS text about name status -- citation 1 (the only scientific-name citation) is from NC State, and the two RHS citations present (8, 12, covering sun exposure and soil drainage) never mention name status. This is a specific factual claim about a source that isn't traceable to anything in the citations array, even though the underlying conclusion (Hyacinthus orientalis being the currently accepted name) happens to be correct.",
+        "is_edible was set false rather than left null because NC State's Edibility field explicitly states \"Toxic to humans\", and its Poison Characteristics field states the plant has medium-severity poison characteristics; NC State's Insects/Diseases/Other Plant Problems text adds: all parts of the plant are considered mildly toxic if ingested and it can also cause contact dermatitis, so gloves are recommended when planting bulbs.",
+        "Supporting (not cited to a field, since is_edible is false not true): Penn State Extension states hyacinth toxins can cause depression and tremors in pets in addition to gastrointestinal symptoms; UGA CAES 'keep-these-toxic-plants-away-from-your-pets' lists Hyacinthus spp. toxicity class as Minor Toxicity, Dermatitis; UGA CAES 'these-25-plants-are-toxic-to-pets' states ingestion by pets may lead to vomiting, diarrhea and tremors.",
+        "mature_height_in and mature_spread_in are taken from NC State's species-level structured Dimensions block (Hyacinthus orientalis has its own NC State page, not just a genus page), not from a named cultivar -- the Dimensions block sits above the cultivar list on the page.",
+        "RHS gives a narrower, differently-sourced range (Max Height 0.1-0.5 metres, Max Spread 0-0.1 metre) for the same species, but NC State was used as the anchor per instructions since a species-specific NC State page exists.",
+        "Hyacinthus orientalis is a bulb/herbaceous perennial, not a vine, liana or other climber, so rule 4 (no size for climbers) does not apply and all four size fields were filled.",
+        "No page in the assigned set states or implies edibility of any part of this plant for food use; is_edible is a straightforward toxicity-based false, not a conditional-edibility case.",
+        "All five assigned pages returned ok (no host refused this machine)."
       ],
       "citations": [
         {
@@ -131,8 +138,38 @@
           "quote": "Hyacinths are sometimes offered as a florist plant, but they are unsuited to long-term growth in a home.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/hyacinthus-orientalis/"
+        },
+        {
+          "claim": "mature_height_in 8-12 (NC State Dimensions Height: 0 ft. 8 in. - 1 ft. 0 in., converted to inches)",
+          "quote": "Height: 0 ft. 8 in. - 1 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hyacinthus-orientalis/"
+        },
+        {
+          "claim": "mature_spread_in 3-6 (NC State Dimensions Width: 0 ft. 3 in. - 0 ft. 6 in., converted to inches)",
+          "quote": "Width: 0 ft. 3 in. - 0 ft. 6 in.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hyacinthus-orientalis/"
+        },
+        {
+          "claim": "is_edible false, per NC State's Edibility field which states the plant is toxic to humans",
+          "quote": "Toxic to humans",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hyacinthus-orientalis/"
+        },
+        {
+          "claim": "attracts_pollinators true, per NC State's Wildlife Value field",
+          "quote": "attracts polinators",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hyacinthus-orientalis/"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 8,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 3,
+      "mature_spread_in_max": 6
     },
     {
       "common_name": "Dutch Crocus",
@@ -183,7 +220,12 @@
         "water_regime and the water_* estimate fields: left null on a genuine tension between sources' framing of moisture needs. NC State's genus-wide page states 'They tolerate drought, but keep them moist during the growing season' (implying keep_moist), while Missouri Botanical Garden's species-specific culture note states 'Plants perform best in gritty, well-drained soils. Avoid heavy clay soils or moist soil conditions' and separately 'Watering should be reduced as plants go dormant in late spring, with dryish soils generally considered best during dormancy' (implying an overall drier regime with an explicit warning against moist conditions). This is exactly the kind of harm-adjacent field the task instructs not to resolve by picking a side. No source gives a watering-frequency interval in days, a moisture check-depth, or a dormancy-duration estimate, so water_check_depth_cm, water_dry_down_target, water_growing_days_est, water_dormant_days_est, and water_estimate_basis were also left null.",
         "fertilize_active_months/fertilize_interval_days/fertilize_strength: no admissible source discusses fertilizing this species.",
         "is_houseplant: set false by default; no admissible source describes or supports growing Crocus vernus indoors or in containers long-term -- every source treats it exclusively as an outdoor, ground-planted, naturalizing spring corm (lawns, borders, rock and woodland gardens).",
-        "is_houseplant — removed on audit: is_houseplant:false is set with zero supporting entries in the citations array — no claim label anywhere in the array even mentions is_houseplant, which fails structural check 1 outright (every non-null field value must trace to at least one citation). The only support offered is prose in `unknowns` asserting 'no admissible source describes or supports growing Crocus vernus indoors or in containers long-term -- every source treats it exclusively as an outdoor, ground-planted, naturalizing spring corm.' A live fetch of the record's own cited RHS page (https://www.rhs.org.uk/plants/29659/crocus-vernus/details) shows its 'Suggested planting locations' section reads verbatim: 'City and courtyard gardens, Cottage and informal garden, Patio and container plants, Wildlife gardens, Wildflower meadow, Banks and slopes, Flower borders and beds' -- RHS explicitly lists 'Patio and container plants' as a suggested use for this exact species, directly contradicting the record's blanket claim that no source supports container growing. This is the identical defect pattern already caught and corrected twice in this same catalog for directly analogous spring bulbs in b20-common-ornamentals.json: Common Garden Tulip's is_houseplant:false was 'removed on audit' because 'the well-known practice of forcing tulip bulbs to bloom indoors in pots is never mentioned' and the record 'conflates grown outdoors and replaced annually with not a houseplant'; Daffodil's is_houseplant:false was likewise 'removed on audit' because 'no entry in the citations array addresses indoor/houseplant status at all,' explicitly citing structural check 1. Forcing crocus corms indoors in pots for a winter/early-spring bloom is at least as well-documented a horticultural practice as forcing tulips or daffodils, so the same reasoning applies with equal or greater force here. Per the catalog's own established precedent, this field should be null, not false."
+        "is_houseplant — removed on audit: is_houseplant:false is set with zero supporting entries in the citations array — no claim label anywhere in the array even mentions is_houseplant, which fails structural check 1 outright (every non-null field value must trace to at least one citation). The only support offered is prose in `unknowns` asserting 'no admissible source describes or supports growing Crocus vernus indoors or in containers long-term -- every source treats it exclusively as an outdoor, ground-planted, naturalizing spring corm.' A live fetch of the record's own cited RHS page (https://www.rhs.org.uk/plants/29659/crocus-vernus/details) shows its 'Suggested planting locations' section reads verbatim: 'City and courtyard gardens, Cottage and informal garden, Patio and container plants, Wildlife gardens, Wildflower meadow, Banks and slopes, Flower borders and beds' -- RHS explicitly lists 'Patio and container plants' as a suggested use for this exact species, directly contradicting the record's blanket claim that no source supports container growing. This is the identical defect pattern already caught and corrected twice in this same catalog for directly analogous spring bulbs in b20-common-ornamentals.json: Common Garden Tulip's is_houseplant:false was 'removed on audit' because 'the well-known practice of forcing tulip bulbs to bloom indoors in pots is never mentioned' and the record 'conflates grown outdoors and replaced annually with not a houseplant'; Daffodil's is_houseplant:false was likewise 'removed on audit' because 'no entry in the citations array addresses indoor/houseplant status at all,' explicitly citing structural check 1. Forcing crocus corms indoors in pots for a winter/early-spring bloom is at least as well-documented a horticultural practice as forcing tulips or daffodils, so the same reasoning applies with equal or greater force here. Per the catalog's own established precedent, this field should be null, not false.",
+        "plantfinder.mobot.org refused this machine (fetch returned error:ProxyError, 0 bytes) — could not check it for size, edibility, toxicity, or pollinator data; not guessed.",
+        "mature_height_in_min left null: RHS gives only an upper bound for height (\"Max Height Up to 10 cm\"), no lower bound published, so per rule one figure fills one end only.",
+        "is_edible left null. Correction made at landing: RHS does address eating -- its Potentially harmful field reads 'Ornamental bulbs - not to be eaten.' with a pets warning -- so the page is not silent; the value was not re-proposed as false in this landing.",
+        "Not a cultivar and not a climber: RHS page is for the species Crocus vernus (with synonyms/subspecies listed, not a named cultivar), and it is a corm/bulb, not a vine, so size fields were populated normally.",
+        "mature_spread_in_min removed on audit: The 0 is RHS's lowest size-band floor (\"0-0.1 metre\"), not a published minimum spread. No plant has a mature spread of 0 in, and a stored 0-3.9 would tell users the crocus can have no spread at all. The same page expresses the same smallest band for height as \"Up to 10 cm\", and the researcher correctly left height_min null for that. Spread should be treated the same way: the band gives only an upper bound (3.9 in) and the lower end should be null. min <= max holds, but the low end is a band edge and not a size claim."
       ],
       "citations": [
         {
@@ -245,8 +287,29 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/29659/crocus-vernus/details",
           "quote": "Moisture\nWell–drained"
+        },
+        {
+          "claim": "mature_height_in_max 3.9 (RHS Max Height Up to 10 cm, converted to inches: 10 cm / 2.54 = 3.9)",
+          "source": "RHS - Crocus vernus (spring crocus)",
+          "url": "https://www.rhs.org.uk/plants/29659/crocus-vernus/details",
+          "quote": "Max Height         Up to 10 cm"
+        },
+        {
+          "claim": "mature_spread_in_max 3.9 (RHS Max Spread 0-0.1 metre, converted to inches: 0.1 x 39.37 = 3.9; the band floor 0 is not a published minimum, so min stays null)",
+          "source": "RHS - Crocus vernus (spring crocus)",
+          "url": "https://www.rhs.org.uk/plants/29659/crocus-vernus/details",
+          "quote": "Max Spread         0-0.1 metre"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS 'Plants for pollinators' designation on the Crocus vernus page)",
+          "source": "RHS - Crocus vernus (spring crocus)",
+          "url": "https://www.rhs.org.uk/plants/29659/crocus-vernus/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_max": 3.9,
+      "mature_spread_in_max": 3.9
     },
     {
       "common_name": "Amaryllis",
@@ -796,7 +859,13 @@
         "UF/IFAS ask.ifas.ufl.edu/publication/FP020 (\"Agave americana 'Marginata' Variegated Century Plant\") returned HTTP 410 Gone on every fetch attempt (both the PDF and HTML paths), so it could not be verified and is not cited.",
         "UF/IFAS FPS-22 (Agave spp., ask.ifas.ufl.edu/publication/FP022), a genus-wide fact sheet covering 200+ Agave species, was reviewed but its light (\"plant grows in full sun, plant grows in partial shade\"), soil, and drought-tolerance statements are explicitly genus-wide rather than species-specific to A. americana, so per the task's genus-boilerplate caution they were not used to populate outdoor_sun_exposure, soil_base, or any other field -- those fields rely instead on NC State's species-specific page.",
         "scientific_name_accepted — removed on audit: The only citation offering a formal accepted/correct-name determination is the RHS entry, but its quoted text ('Family Asparagaceae ... Genus Agave can be perennial or monocarpic succulents ... Name Status Correct') never contains the string 'Agave americana' anywhere. I fetched the live RHS page (rhs.org.uk/plants/333059/agave-americana-subsp-americana/details) and confirmed its title, URL slug, and 'Name Status: Correct' badge all attach formally to the taxon 'Agave americana subsp. americana' -- a specific infraspecific rank -- not to the unranked binomial that was actually written into scientific_name_accepted. NC State and UGA (the other two citations) merely use 'Agave americana' as a matter of common usage; neither one asserts it is the currently accepted name as opposed to, say, a widely-used synonym -- they never address name-acceptance status at all. So no admissible citation directly and cleanly supports 'Agave americana' (unranked) as the accepted name; the record gets there only via its own inserted botanical argument (subsp. americana is the autonym, so it isn't a conflict), which is the researcher's inference, not something any of the three quotes states. For what it's worth, an outside cross-check against Kew's Plants of the World Online shows 'Agave americana L.' is independently listed there as its own accepted species-rank name, so the populated value is probably correct in fact -- but that support doesn't come from any citation actually in this record, which is what the audit is checking.",
-        "name_note — removed on audit: name_note is where the over-reach flagged above actually happens: it correctly reports that RHS's page and 'Name Status: Correct' badge belong to 'Agave americana subsp. americana' (verified accurate against the live page), then asserts this 'is not treated as a conflict with the other admissible sources' unranked usage' on the strength of the autonym/type-subspecies rule -- a claim about nomenclatural convention that is not stated in any of the three quotes actually cited (RHS's quote, NC State's, or UGA's). It's accurate, self-aware editorializing about a real rank mismatch, but it is unsourced argumentation presented in the same breath as sourced content, which is exactly the kind of over-reach the audit is meant to catch even though the underlying conclusion is probably right."
+        "name_note — removed on audit: name_note is where the over-reach flagged above actually happens: it correctly reports that RHS's page and 'Name Status: Correct' badge belong to 'Agave americana subsp. americana' (verified accurate against the live page), then asserts this 'is not treated as a conflict with the other admissible sources' unranked usage' on the strength of the autonym/type-subspecies rule -- a claim about nomenclatural convention that is not stated in any of the three quotes actually cited (RHS's quote, NC State's, or UGA's). It's accurate, self-aware editorializing about a real rank mismatch, but it is unsourced argumentation presented in the same breath as sourced content, which is exactly the kind of over-reach the audit is meant to catch even though the underlying conclusion is probably right.",
+        "is_edible left null: no page addressed eating/edibility for this species. NC State's page had 0 hits for \"Edible\"; the RHS page returned only site-navigation/shell content with no species-specific detail (see below); the UGA PDF could not be read at all by this tooling (see below).",
+        "attracts_pollinators left null: no page named pollinators for this species. NC State has no \"Attracts\" field and 0 hits for \"Pollinator\", \"butterfl\", \"bee\", or \"hummingbird\"; RHS returned no species-specific content to search.",
+        "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf could NOT be read: qc.py's fetch() short-circuits any .pdf URL and returns status \"pdf\" with zero extracted text (it never downloads or parses PDF content) -- this is a tooling limitation, not a host refusal, so this source was not consulted at all for this record.",
+        "https://www.rhs.org.uk/plants/333059/agave-americana-subsp-americana/details fetched successfully (status ok, title 'Agave americana subsp. americana' matched), but the extracted text was entirely site chrome -- nav menus, show dates ('RHS Chelsea Flower Show...') -- with no species-specific plant content, apparently because the real detail is JS-rendered and not present in the static HTML this fetch path captures. Searched for 'Max Height', 'Max Spread', 'Ultimate height', 'metres', 'Attracts', 'Edible', 'Poison', 'Toxic', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife', 'climb', 'Habit' -- no species-specific hits from any of these.",
+        "Per rule 4: confirmed via NC State's 'Habit/Form: Clumping' (a rosette-forming succulent, not a vine/liana/climber) that the climber exclusion does not apply, so all four size fields were populated normally from NC State's Dimensions block.",
+        "Decision-relevant but not field-bearing since is_edible is null rather than true: NC State lists this plant as having 'low severity' poison characteristics -- Poison part: plant sap from leaves; Poison Toxic Principle: calcium oxalate crystals; Causes Contact Dermatitis: Yes. Noting this for the record even though rule 5's mandatory unknowns line only triggers when is_edible is set true."
       ],
       "citations": [
         {
@@ -846,8 +915,24 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/agave-americana/",
           "quote": "Soil Drainage: Good Drainage ... Root rot may occur, particularly in poorly drained or overly moist soils."
+        },
+        {
+          "claim": "mature_height_in 72-120 (NC State Height: 6 ft. 0 in. - 10 ft. 0 in., converted to inches: 6 ft = 72 in, 10 ft = 120 in)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/agave-americana/",
+          "quote": "Height: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-120 (NC State Width: 6 ft. 0 in. - 10 ft. 0 in., converted to inches: 6 ft = 72 in, 10 ft = 120 in)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/agave-americana/",
+          "quote": "Width: 6 ft. 0 in. - 10 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Big Blue Lilyturf",
@@ -897,7 +982,14 @@
         "fertilize_active_months / fertilize_interval_days / fertilize_strength: NC State states the plant is a 'light feeder' that benefits from 'a slow-release or organic fertilizer applied in the early spring,' but names a season ('early spring'), not a specific calendar month, and gives no application interval or dilution strength. Translating 'early spring' into a specific month number was avoided since no source names one; interval and strength are null for the same reason, no source states them.",
         "humidity_need, humidity_pct_min/max, light_fc_min/good, day_f_min/max, night_f_min/max: no admissible source gives any of these figures for Liriope muscari. NC State lists 'Humidity' only as a landscape-disease 'Resistance to Challenges' tag (the plant tolerates humid climates without disease trouble), which is a different claim from a humidity requirement/preference, so it was not used to populate humidity_need.",
         "soil_base — removed on audit: The Clemson citation's claim label asserts soil_base is garden_bed because the plant is grown in-ground 'and not a container potting mix' -- but the Clemson quote itself (groundcover/edging use) never says anything about containers one way or the other, so that parenthetical is an unsupported inference tacked onto the label. Worse, it is directly contradicted by NC State's own page (already cited elsewhere in this record for common_name, scientific_name_accepted, toxicity, sun exposure, soil pH, and drainage): I fetched plants.ces.ncsu.edu/plants/liriope-muscari/ and its structured 'Landscape Location' field literally reads 'Container, Patio, Pool/Hardscape, Walkways, Woodland,' and its Landscape Uses narrative states the plant 'performs effectively in containers.' The record's own 'unknowns' section even acknowledges 'NC State and RHS mention container/patio use' when reasoning about is_houseplant, then ignores that same fact when asserting soil_base is garden_bed only. This is an internally inconsistent overreach: a single-value garden_bed categorization suppresses same-source, same-record evidence that the species is also commonly grown in containers.",
-        "is_houseplant — removed on audit: No entry in the citations array supports is_houseplant at all -- it rests entirely on an absence-of-evidence argument spelled out only in the 'unknowns' block ('no admissible source... describes Liriope muscari being grown indoors'). Per structural check 1, every non-null field must trace to at least one citation entry, and this one traces to none. A negative inferred from silence across sources is not the same as a citation stating the value, so this field fails the basic sourcing requirement even though the underlying conclusion (it's an outdoor landscape plant) is plausible on the evidence I could find."
+        "is_houseplant — removed on audit: No entry in the citations array supports is_houseplant at all -- it rests entirely on an absence-of-evidence argument spelled out only in the 'unknowns' block ('no admissible source... describes Liriope muscari being grown indoors'). Per structural check 1, every non-null field must trace to at least one citation entry, and this one traces to none. A negative inferred from silence across sources is not the same as a citation stating the value, so this field fails the basic sourcing requirement even though the underlying conclusion (it's an outdoor landscape plant) is plausible on the evidence I could find.",
+        "is_edible left null: none of the four anchor pages (NC State, RHS, Clemson HGIC, Missouri Botanical Garden) states the plant or any part of it is eaten or grown for food, so there is no record to support true, and none states outright it is inedible, so no record supports false either.",
+        "attracts_pollinators left null: NC State's page has no 'Attracts' field (searched for 'Attracts', 'bee', 'butterfl', 'hummingbird', 'pollinat' -- all zero hits except an unrelated site-wide tag-cloud entry 'Pollinator garden' on the Clemson page that is not about this species). RHS page has no attracts-pollinators tag and no unconditional pollinator statement (searched 'Attracts', 'pollinat', 'bee', 'butterfl', 'Wildlife', 'Ecological', 'Insects' -- no relevant hits). Clemson HGIC page has no pollinator statement for Liriope muscari either. No page addresses pollinators at all, so null rather than false.",
+        "Decision-relevant, not a field: NC State's page states 'This plant has low severity poison characteristics' with Poison Severity: Low, Poison Symptoms: 'No cases are known, but caution due to a relationship with known toxic plants', Poison Toxic Principle: Unknown, and Poison Part: Fruits. The page also tags the plant #non-toxic for cats #non-toxic for horses #non-toxic for dogs. This is recorded here per instructions even though is_edible ended up null (not true), since it is the reason edibility was not set true from this page.",
+        "mature_height_in / mature_spread_in used NC State as the anchor because Liriope muscari has its own NC State species page (not a genus page) with a structured Dimensions block: 'Height: 1 ft. 0 in. - 1 ft. 6 in.' and 'Width: 1 ft. 0 in. - 1 ft. 6 in.'. RHS's Max Height/Max Spread (0.1-0.5 metres = 3.9-19.7 in) was not used as the source per the rule that RHS is only the source when no NC State species page exists.",
+        "Clemson HGIC gives height only at the genus level ('Most liriopes grow to a height between 10 and 18 inches') rather than specifically for Liriope muscari, so it was not used for mature_height_in; it does give a species-specific spread figure for Liriope muscari ('generally grows in a clump form and will spread to about 12 to 18 inches wide'), which is consistent with the NC State width figure used.",
+        "Missouri Botanical Garden PlantFinder page (https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=l100) could not be read: it redirects to plantfinder.mobot.org, a host that refused this machine (network error on every attempt), so no data from it was used and none of its content is guessed at.",
+        "Liriope muscari is a clumping/groundcover herbaceous perennial, not a vine, liana, or other climber, so the climber-size exclusion rule does not apply and all four size fields were filled normally."
       ],
       "citations": [
         {
@@ -977,8 +1069,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=l100",
           "quote": "Foliage is evergreen in warm southern climates, but declines considerably in areas with cold winters such as St. Louis. Cut foliage to the ground (mow large plots on high mower setting) in late winter to early spring in preparation for new growth."
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height: 1 ft. 0 in. - 1 ft. 6 in., converted to inches: 1 ft. 0 in. = 12 in., 1 ft. 6 in. = 18 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox, Liriope muscari",
+          "url": "https://plants.ces.ncsu.edu/plants/liriope-muscari/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches: 1 ft. 0 in. = 12 in., 1 ft. 6 in. = 18 in.)",
+          "source": "NC State Extension Gardener Plant Toolbox, Liriope muscari",
+          "url": "https://plants.ces.ncsu.edu/plants/liriope-muscari/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Red Raspberry",
@@ -1033,7 +1141,13 @@
         "hgic.clemson.edu has no dedicated raspberry/bramble cultivation factsheet. Its only raspberry-specific content found is one paragraph in \"Fruit and Nut Crops Ranked by Difficulty for Home Gardeners,\" classifying raspberries as a \"Very Difficult\" fruit crop for South Carolina (\"Raspberries are grown commercially only in the northernmost parts of the Piedmont and Blue Ridge regions of South Carolina... The heat, disease, and insect pressure make growing raspberries anywhere else in the state immensely difficult\"), which doesn't supply the granular soil/light/water figures this record's fields call for, so it wasn't cited.",
         "edis.ifas.ufl.edu/ask.ifas.ufl.edu has no current dedicated raspberry cultivation publication. The one historical UF/IFAS publication discussing raspberry cultivars for Florida (HS807/HS104, \"The Blackberry\") now returns HTTP 410 Gone and could not be fetched or quoted; current UF/IFAS blackberry publications (AG238, HS1458, HS1518, HS1352, HS1482) are blackberry-specific and do not address raspberry.",
         "fieldreport.caes.uga.edu has no article about Rubus idaeus/red raspberry cultivation; its only Rubus-adjacent article (\"Creeping raspberry covers tough landscape sites\") covers the unrelated groundcover species Rubus pentalobus, not this species.",
-        "name_note — removed on audit: The note's justification for dismissing NC State's 'Blackberry'/'Dewberry' common-name tags is itself uncited and, on verification, wrong. It claims NC State 'maintains distinct dedicated pages titled Blackberry - Rubus canadensis and Dewberry - Rubus idaeus subsp. strigosus,' implying those two pages cleanly own those names so their appearance on the Rubus idaeus page must be a cross-tagging artifact. I fetched all four pages directly: NC State's actual dedicated Dewberry page is Rubus flagellaris ('Blackberry, Common Dewberry, Dewberry, Northern Blackberry, Northern Dewberry') -- a wholly different bramble species never mentioned in the record. Rubus idaeus subsp. strigosus is a real NC State page, but it is titled with SEVEN common names including 'Blackberry' and 'Dewberry' themselves, and the subspecies page rubus-idaeus-subsp-idaeus/ also lists 'Blackberry' and 'Dewberry' among its own common names. So the pattern isn't an isolated artifact on one page confined away from two clean 'owner' pages -- all four related NC State Rubus entries co-list Blackberry/Dewberry/Raspberry/Red Raspberry together, and the specific page the note names as the Dewberry owner doesn't exist as described. No entry in `citations` supports this claim (only the RHS 'Name Status: Correct' quote is cited in this field), so it fails the structural check that non-null field content must trace to a citation, and independent verification shows the specific factual claim offered is inaccurate."
+        "name_note — removed on audit: The note's justification for dismissing NC State's 'Blackberry'/'Dewberry' common-name tags is itself uncited and, on verification, wrong. It claims NC State 'maintains distinct dedicated pages titled Blackberry - Rubus canadensis and Dewberry - Rubus idaeus subsp. strigosus,' implying those two pages cleanly own those names so their appearance on the Rubus idaeus page must be a cross-tagging artifact. I fetched all four pages directly: NC State's actual dedicated Dewberry page is Rubus flagellaris ('Blackberry, Common Dewberry, Dewberry, Northern Blackberry, Northern Dewberry') -- a wholly different bramble species never mentioned in the record. Rubus idaeus subsp. strigosus is a real NC State page, but it is titled with SEVEN common names including 'Blackberry' and 'Dewberry' themselves, and the subspecies page rubus-idaeus-subsp-idaeus/ also lists 'Blackberry' and 'Dewberry' among its own common names. So the pattern isn't an isolated artifact on one page confined away from two clean 'owner' pages -- all four related NC State Rubus entries co-list Blackberry/Dewberry/Raspberry/Red Raspberry together, and the specific page the note names as the Dewberry owner doesn't exist as described. No entry in `citations` supports this claim (only the RHS 'Name Status: Correct' quote is cited in this field), so it fails the structural check that non-null field content must trace to a citation, and independent verification shows the specific factual claim offered is inaccurate.",
+        "NC State's Plant Toolbox page for Rubus idaeus has no structured 'Dimensions:' block and no 'Height:' field (searched both 'Dimensions' and 'Height', 0 hits), so size fields were sourced from RHS instead, per the fallback rule.",
+        "Growth habit on both anchor pages is erect/arching/spreading shrub with biennial canes to ~2.5m, not a vine/liana/climber, so the climber exclusion rule does not apply and size fields were populated normally.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- all returned 0 hits, so no toxicity, poisonous part, severity, or pets warning was found on that page to carry into unknowns.",
+        "Edibility is unconditional per both anchor pages: NC State's 'Edibility:' field states the fruit can be eaten raw or cooked, and RHS tags the species 'Fruit Edible' with 'red, edible fruits' in the description -- no cooked-only or part-specific caveat was found, so is_edible was set true without an accompanying condition.",
+        "Did not attempt https://www.rhs.org.uk/fruit/raspberries/grow-your-own, https://extension.umd.edu/resource/growing-raspberries-and-blackberries-home-garden, or https://extension.psu.edu/raspberry-production for additional confirmation once NC State and the RHS species-details page together supplied clean, unconditional support for all six fields; none of these three pages returned a non-ok fetch status -- they were simply not needed once sufficient citations were in hand.",
+        "mature_height_in and mature_spread_in were derived from RHS 'Max Height 1.5-2.5 metres' and 'Max Spread 0.5-1 metres' (metres x 39.37): 1.5m=59.055in, 2.5m=98.425in, 0.5m=19.685in, 1m=39.37in."
       ],
       "citations": [
         {
@@ -1107,8 +1221,38 @@
           "quote": "Raspberries prefer fertile, well-drained soil that is slightly acidic (ideally pH 6–6.7).",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/fruit/raspberries/grow-your-own"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: fruit is eaten raw or cooked)",
+          "source": "NC State Extension Gardener Plant Toolbox - Rubus idaeus",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-idaeus/",
+          "quote": "Fruit can be eaten raw or cooked and delicious when eaten out of hand."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: attracts pollinators, bees, and butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox - Rubus idaeus",
+          "url": "https://plants.ces.ncsu.edu/plants/rubus-idaeus/",
+          "quote": "Attracts pollinators, bees, and butterflies for its nectar."
+        },
+        {
+          "claim": "mature_height_in 59.055-98.425 (RHS Max Height 1.5-2.5 metres, converted to inches via x39.37)",
+          "source": "RHS - Rubus idaeus (common raspberry)",
+          "url": "https://www.rhs.org.uk/plants/16137/i-rubus-idaeus-i/details",
+          "quote": "Max Height         1.5-2.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 19.685-39.37 (RHS Max Spread 0.5-1 metres, converted to inches via x39.37)",
+          "source": "RHS - Rubus idaeus (common raspberry)",
+          "url": "https://www.rhs.org.uk/plants/16137/i-rubus-idaeus-i/details",
+          "quote": "Max Spread         0.5-1 metres"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 59.055,
+      "mature_height_in_max": 98.425,
+      "mature_spread_in_min": 19.685,
+      "mature_spread_in_max": 39.37
     },
     {
       "common_name": "Water Lily",
@@ -1170,7 +1314,14 @@
         "scientific_name_accepted: left null -- see name_note for the full genus/hybrid-group framing. UF/IFAS's FPS434/FP434 ('Nymphaea odorata Fragrant Water Lily') is the one admissible source with a single-species title, but it could not be retrieved: https://edis.ifas.ufl.edu/fp434 redirects to https://ask.ifas.ufl.edu/fp434, and both that URL and https://ask.ifas.ufl.edu/publication/FP434 returned HTTP 410 Gone.",
         "Penn State Extension was also checked at 'Types of Aquatic Plants and Algae' and 'Tips for Creating a Water Garden' -- both mention water lily only in passing ('Water lily has large leaves and is an ideal habitat for fish and aquatic insects') with no numeric cultivation data beyond what's already cited from the Mid-Atlantic Pocket Guide.",
         "UMD Extension's 'White Water Lily' resource page was checked but its visible page text gives no cultivation data (sun, depth, soil, fertilizing) for Nymphaea odorata beyond noting it is grown 'in ornamental ponds or small ponds for the purpose of esthetics' and can spread to 'completely cut off the surface' if uncontrolled; a linked PDF may hold more detail but was not part of the fetched page content.",
-        "scientific_name_accepted — removed on audit: The record sets this to an empty string \"\" rather than JSON null, even though name_note and the unknowns entry both frame the decision explicitly as leaving the field 'null' (e.g. 'scientific_name_accepted is left null rather than narrowed to one binomial'). The underlying research justification is genuinely sound -- I independently confirmed edis.ifas.ufl.edu/fp434 301-redirects to ask.ifas.ufl.edu/fp434, which returns HTTP 410 Gone, and confirmed the RHS, NC State, and Clemson sources really do treat water lilies at genus/hybrid-group level with no single accepted binomial -- but the stored value doesn't match the documented convention. An empty string is a populated-but-empty value, not the same sentinel as the null used everywhere else in this record for un-established fields, and downstream code that distinguishes 'no data' (null) from 'field explicitly checked and empty' (\"\") will misclassify this record."
+        "scientific_name_accepted — removed on audit: The record sets this to an empty string \"\" rather than JSON null, even though name_note and the unknowns entry both frame the decision explicitly as leaving the field 'null' (e.g. 'scientific_name_accepted is left null rather than narrowed to one binomial'). The underlying research justification is genuinely sound -- I independently confirmed edis.ifas.ufl.edu/fp434 301-redirects to ask.ifas.ufl.edu/fp434, which returns HTTP 410 Gone, and confirmed the RHS, NC State, and Clemson sources really do treat water lilies at genus/hybrid-group level with no single accepted binomial -- but the stored value doesn't match the documented convention. An empty string is a populated-but-empty value, not the same sentinel as the null used everywhere else in this record for un-established fields, and downstream code that distinguishes 'no data' (null) from 'field explicitly checked and empty' (\"\") will misclassify this record.",
+        "is_edible is CONDITIONAL: NC State's Nymphaea (genus) page states only that 'In some parts of the world the leaves and flowers are eaten in moderation' — an unspecific, moderation-qualified statement, not a blanket edibility claim; no part of the plant is named toxic or poisonous on that page (searched 'Poison', 'Toxic', 'Problem for', 'caution', 'pets', 'poisonous', 'toxic to' — 0 hits on all).",
+        "The NC State 'Nymphaea – Hardy Water Lilies' page (a cultivar-group page, not the genus) gives a narrower Height of 0 ft. 4 in. - 0 ft. 6 in. and says 'Flower petals are edible' for its hybrid cultivars specifically — per rule 3 this cultivar-group figure was NOT used for the species/genus-level size fields, and the genus page's Height (6-10 in.) was used instead.",
+        "attracts_pollinators: NC State's structured 'Attracts' field lists Bees (a pollinator) alongside Frogs and Reptiles (non-pollinator wildlife, not used as support) -- set true on the Bees mention alone.",
+        "RHS pages for Nymphaea (genus overview, growing guide, and the individual cultivars/species N. alba and 'Water Lily' AGM selection) were checked but did not add usable genus-level size data: the genus overview page (rhs.org.uk/plants/waterlilies) lists per-cultivar Height/Width figures (e.g. \"Height No preference Width 1-1.5 metres\") for individual named cultivars, not a species/genus range, so none were used per rule 3; the growing guide page had no 'Max Height'/'Max Spread'/'Ultimate height'/edibility/toxicity text at all; N. alba (156807 and 11623) are a different taxon (species alba, not the genus Nymphaea) so their Max Spread figures were not applied to this genus-level record.",
+        "The Missouri Botanical Garden Water Lilies fact sheet is a PDF; the qc.py/verify_quotes fetch path always returns status 'pdf' with no extracted text for .pdf URLs (by design, per the pipeline's SKIP rule for PDFs), so no quotable text could be pulled from it and it contributes no citations here.",
+        "hgic.clemson.edu/factsheet/aquatic-shoreline-plant-selection/ returned HTTP 403 (refused this machine) -- skipped, not guessed.",
+        "attracts_pollinators rests on NC State's structured Attracts field naming Bees. The same page's Wildlife Value explains the visits as 'Water lily leaves provide a landing pad for thirsty bees' and never says bees visit the flowers (0 hits for 'pollinat' on the page) -- noted at landing, verified against the cached copy."
       ],
       "citations": [
         {
@@ -1256,8 +1407,38 @@
           "quote": "Place them in a container or Ziploc bag of damp sand and store in the dark around 50–55°F.",
           "source": "Missouri Botanical Garden",
           "url": "https://www.missouribotanicalgarden.org/Portals/0/Kemper%20Gardens/Fact%20Sheets/Water%20Lilies%20for%20Home%20Gardeners%202020.pdf"
+        },
+        {
+          "claim": "attracts_pollinators (NC State Attracts: Bees, Frogs, Reptiles)",
+          "source": "NC State Extension Plant Toolbox — Nymphaea",
+          "url": "https://plants.ces.ncsu.edu/plants/nymphaea/",
+          "quote": "Bees"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: leaves and flowers eaten in moderation)",
+          "source": "NC State Extension Plant Toolbox — Nymphaea",
+          "url": "https://plants.ces.ncsu.edu/plants/nymphaea/",
+          "quote": "In some parts of the world the leaves and flowers are eaten in moderation."
+        },
+        {
+          "claim": "mature_height_in 6-10 (NC State Height: 0 ft. 6 in. - 0 ft. 10 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Nymphaea",
+          "url": "https://plants.ces.ncsu.edu/plants/nymphaea/",
+          "quote": "Height: 0 ft. 6 in. - 0 ft. 10 in."
+        },
+        {
+          "claim": "mature_spread_in 24-144 (NC State Width: 2 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Nymphaea",
+          "url": "https://plants.ces.ncsu.edu/plants/nymphaea/",
+          "quote": "Width: 2 ft. 0 in. - 12 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 10,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 144
     }
   ],
   "audit_summary": [
@@ -1298,6 +1479,7 @@
     "2026-08-23: ninth batch of the \"blind spots\" pass. Three more toxic bulbs/ornamentals confirmed toxic_to_pets=true (Hyacinth, Amaryllis, Angel's Trumpet -- the last one is one of the most toxic ornamentals commonly grown, tropane alkaloids), completing the true Crocus (Iridaceae) as a deliberate companion record to Autumn Crocus (Colchicum autumnale, Colchicaceae, already in this catalog from b19) -- the two are frequently confused by common name but taxonomically unrelated and very differently toxic; this record correctly declined to let Colchicum's severe toxicity leak in, and just as correctly declined to invent a toxic_to_pets=true from RHS's weaker 'not to be eaten' bulb-handling boilerplate, landing an honest null instead. Rounded out with Century Plant, Liriope, Raspberry (completing a bramble-fruit trio with blackberry and blueberry), and Water Lily (this catalog's first true aquatic pond plant, correctly recorded at genus level -- \"water lily\" as commonly sold isn't tied to one accepted binomial, and every admissible source treats it that way).",
     "The audit caught a real, subtle citation-and-precedent gap on Crocus vernus: is_houseplant was set false with zero supporting citation, and a live fetch found RHS's own page for this exact species lists 'Patio and container plants' among its suggested uses -- directly contradicting the record's blanket claim. The audit explicitly named this the same defect already caught twice in b20 for Tulip and Daffodil (forcing spring bulbs indoors in pots is a well-documented practice), holding this record to the catalog's own established precedent rather than judging it in isolation.",
     "Century Plant (Agave americana) surfaced a genuinely subtle taxonomic-rank mismatch: the only citation offering a formal name-status determination is RHS's page for 'Agave americana subsp. americana' specifically (an infraspecific rank), not the unranked binomial the record wrote into scientific_name_accepted -- the record's own inserted botanical argument (autonym convention) is probably correct in fact but isn't something any cited quote states, so both the field and its supporting name_note were nulled on a traceability failure rather than a factual one.",
-    "One schema bug this batch, caught and self-corrected by the auditor itself (no manual fix needed): Water Lily's scientific_name_accepted was written as an empty string instead of JSON null, even though the record's own name_note and unknowns text both already said 'left null' -- the auditor named this specific format defect as its own finding, which the batch script's cleanup step then correctly nulled."
+    "One schema bug this batch, caught and self-corrected by the auditor itself (no manual fix needed): Water Lily's scientific_name_accepted was written as an empty string instead of JSON null, even though the record's own name_note and unknowns text both already said 'left null' -- the auditor named this specific format defect as its own finding, which the batch script's cleanup step then correctly nulled.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

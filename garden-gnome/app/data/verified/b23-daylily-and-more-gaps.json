@@ -1232,7 +1232,14 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. Sources describe outdoor garden-bed drought tolerance in qualitative/categorical terms (Missouri Botanical Garden: 'Water: Dry to medium,' 'Drought tolerant'; NC State: 'It can suffer in overly moist or fertile soils,' 'drought- and salt-tolerant') rather than a container watering schedule or dry-down target, and this doesn't map cleanly onto the container-oriented water_regime enum (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist), consistent with this not being a houseplant.",
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: left null. No admissible source specifies a fertilizing schedule, interval, or dilution strength for this species; RHS's cultivation note only describes 'moderately fertile' soil as a planting condition, not an active feeding program.",
         "Clemson HGIC (hgic.clemson.edu) and UF/IFAS (edis.ifas.ufl.edu / ask.ifas.ufl.edu) were both searched and returned no dedicated page for Sedum spectabile / Hylotelephium spectabile / showy stonecrop as a species; Clemson's 'Growing Perennials' factsheet only lists 'Sedum species — Stonecrop' generically among drought-tolerant perennial options with no species-specific care detail, and UF/IFAS's closest hit (FPS-543, a factsheet for the hybrid cultivar Sedum x 'Autumn Joy') was a corrupted/unreadable PDF on fetch and in any case covers a hybrid cultivar rather than the species itself, so neither was used as a citation.",
-        "University of Maryland Extension (extension.umd.edu) and UGA Cooperative Extension (fieldreport.caes.uga.edu) were both searched; no page from either addresses this species specifically. UGA's succulent and groundcover articles that surfaced in search name other Sedum species/cultivars (Sedum 'Akebono', Angelina Stonecrop) but never Sedum spectabile / Hylotelephium spectabile / showy stonecrop, so neither was used."
+        "University of Maryland Extension (extension.umd.edu) and UGA Cooperative Extension (fieldreport.caes.uga.edu) were both searched; no page from either addresses this species specifically. UGA's succulent and groundcover articles that surfaced in search name other Sedum species/cultivars (Sedum 'Akebono', Angelina Stonecrop) but never Sedum spectabile / Hylotelephium spectabile / showy stonecrop, so neither was used.",
+        "Edibility is conditional, not a bare yes: NC State's Edibility field says stems and leaves may be eaten raw only when very young and tender; once older they must be briefly cooked until the plant flowers; flavor is described as bland.",
+        "The same NC State page names this plant as poisonous: it carries a structured low-severity poison rating, a Poison Toxic Principle of 'Alkaloids sedine, sedamine, and others', a Poison Part of 'Flowers', Poison Symptoms of 'Unknown, but possibly gastrointestinal symptoms', and Causes Contact Dermatitis: No. This toxicity information is recorded here because is_edible is true, per the rule that a poisonous part named on the same page a true edibility claim is cited to must be surfaced, not dropped.",
+        "RHS (both the Hylotelephium spectabile and the synonym Sedum spectabile pages, which render identical Max Height/Max Spread figures) gives Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres (about 3.9-19.7 inches), noticeably smaller than NC State's Height/Width of 1 ft. 0 in. - 2 ft. 0 in. (12-24 inches). NC State is used as the anchor per instructions since a species-specific NC State page exists; the RHS figures were not used but are noted here as a discrepancy between the two authorities.",
+        "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279422) refused this machine (error:ConnectError) and was not read; nothing from it is represented in this record.",
+        "This species is not a vine, liana, or other climber (NC State describes it as a clumping herbaceous perennial/ground cover), so the climber-exclusion rule for size fields does not apply here.",
+        "No named cultivar was used for any size or flag value; all figures and statements are attributed to the species-level NC State Plant Toolbox entry.",
+        "is_edible removed on audit: The value is cited correctly: NC State's Edibility field reads 'Stems and leaves, when very young and tender, may be eaten raw. Later, until they flower, they may be briefly cooked.  Flavor is bland.' That is verbatim, including the double space, and the citation label contains 'is_edible'. But check F fails on what the unknowns actually say. The unknown reports NC State's Poison Part as 'Flowers' only. When re-read, the page's Poison Part field lists three parts: Flowers, Leaves, Stems. The poison information in the unknowns therefore leaves out that the very parts called edible (stems and leaves) are themselves named as poisonous on the same page (Poison Severity Low, toxic principle 'Alkaloids sedine, sedamine, and others.', symptoms 'Unknown, but possibly gastrointestinal symptoms.'). The page also puts 'Poisonous' in Plant Type and '#poisonous' in its tags. A required safety condition, toxic stems and leaves, is missing from the unknowns and is misstated there, so the field is nulled. It can be re-proposed with the unknown corrected to 'Poison Part: Flowers, Leaves, Stems'. The RHS pages say nothing about edibility or toxicity."
       ],
       "citations": [
         {
@@ -1330,8 +1337,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
           "quote": "Problems:\nPoisonous to Humans\nPoisonous to Humans:\nPoison Severity:\nLow\nPoison Symptoms:\nUnknown, but possibly gastrointestinal symptoms.\nPoison Toxic Principle:\nAlkaloids sedine, sedamine, and others.\nCauses Contact Dermatitis:\nNo\nPoison Part:\nFlowers\nLeaves\nStems"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Height 1 ft. 0 in. - 2 ft. 0 in., converted to inches: 1 ft = 12 in, 2 ft = 24 in)",
+          "source": "NC State Extension Gardener Plant Toolbox — Hylotelephium spectabile",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches: 1 ft = 12 in, 2 ft = 24 in)",
+          "source": "NC State Extension Gardener Plant Toolbox — Hylotelephium spectabile",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field names a pollinator-relevant visitor)",
+          "source": "NC State Extension Gardener Plant Toolbox — Hylotelephium spectabile",
+          "url": "https://plants.ces.ncsu.edu/plants/hylotelephium-spectabile/",
+          "quote": "Attracts butterflies"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1375,6 +1405,7 @@
     "The audit caught a striking cross-species contamination: NC State's toxicity block for Ceropegia woodii (a non-woody succulent vine) turned out to be byte-for-byte identical to its Wisteria sinensis block elsewhere in this same batch, down to \"wisterin glycoside\" (a compound named for Wisteria) and \"Bark\" as a poisoned part -- a templating/caching defect on the source site, not real data, and correctly excluded from both records.",
     "Chinese Hibiscus landed with toxic_to_pets correctly null after a genuinely thorough four-source search found no toxicity data at all for this species -- not assumed toxic by Malvaceae-family association, not assumed safe by silence. Zero fields were removed by the audit on this record, a rare clean pass.",
     "Golden Bamboo (Phyllostachys aurea) continues this catalog's running theme of common-name naming traps -- true bamboo (a grass, Poaceae), unrelated to \"Lucky Bamboo\" (Dracaena sanderiana, already covered) the way Sago Palm isn't a true palm and Mini Monstera isn't a Monstera. It's also a running, rhizome-spreading, invasive-listed species in multiple states -- captured at length in unknowns even though the schema has no dedicated field for it, since it materially affects whether a home gardener should plant it directly in the ground versus in a contained pot.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
