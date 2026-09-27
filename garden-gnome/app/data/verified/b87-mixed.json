@@ -138,12 +138,6 @@
           "url": "https://hgic.clemson.edu/factsheet/climbing-fig/"
         },
         {
-          "claim": "is_edible — NC State's Edibility field states",
-          "quote": "Not usually grown for edible fruit, but properly prepared it is popular in Asian countries.",
-          "source": "NC State Extension Gardener Plant Toolbox — Ficus pumila (creeping-fig page)",
-          "url": "https://plants.ces.ncsu.edu/plants/ficus-pumila/common-name/creeping-fig/"
-        },
-        {
           "claim": "humidity_need — NC State's Description states this species' humidity preference",
           "source": "NC State Extension Gardener Plant Toolbox — Ficus pumila (creeping-fig page)",
           "url": "https://plants.ces.ncsu.edu/plants/ficus-pumila/common-name/creeping-fig/",
@@ -197,7 +191,7 @@
       "humidity_need": "high",
       "humidity_pct_max": null,
       "humidity_pct_min": null,
-      "is_edible": true,
+      "is_edible": null,
       "is_houseplant": true,
       "light_fc_good": null,
       "light_fc_min": null,
@@ -233,7 +227,8 @@
         "mature_height_in_min/max and mature_spread_in_min/max are all left null under the pipeline's climber rule. NC State's Plant Type field for this species reads Houseplant and Vine, its Habit/Form reads Climbing, and its Description says the plant 'will climb 8 to 15 feet high and spread 3 to 6 feet wide' -- a climber takes no mature size in this catalog, whatever figures a page publishes, because a published height for a climber is the distance it travels along its support rather than the plant's own stature. The figures are recorded here and deliberately not used: NC State's Dimensions block renders 'Height: 8 ft. 0 in. - 15 ft. 0 in.' and 'Width: 3 ft. 0 in. - 6 ft. 0 in.', and RHS's UK Size block gives Max Height 2.5-4 metres and Max Spread 1.5-2.5 metres.",
         "Cultivation caution (no dedicated schema field): Clemson HGIC warns that the vine's adhesive attachments damage structures on removal -- 'When the vines are removed, these attachments often remain, which mars the structure's appearance. Some surfaces, particularly wood and stucco, may be damaged when the stems are detached.' NC State separately notes the vine 'can cement itself to porous surfaces,' describing the adhesion rather than the damage. This is a structural/wall-damage caution, kept separate from the milky-latex skin-handling warning and from the cat/dog toxicity tags.",
         "Juvenile vs. mature foliage (no dedicated schema field): NC State, Clemson HGIC, and Missouri Botanical Garden all note the small, thin, heart-shaped juvenile leaves seen on climbing/indoor stems differ sharply from the larger, thicker, leathery, fruit-bearing mature foliage described on some pages — the size/light/water fields above reflect the common juvenile/climbing/houseplant form, not the mature fruiting form.",
-        "attracts_pollinators left null rather than true: NC State's structured Attracts field for this species carries one value, 'Songbirds', which is seed and fruit eating rather than pollination, and the fig/fig-wasp sentence the research cited is reproductive biology inside a closed syconium, scoped to the outdoor adult form on a page whose next sentence reads 'Rarely flowers when grown indoors.' The citation was dropped with the value."
+        "attracts_pollinators left null rather than true: NC State's structured Attracts field for this species carries one value, 'Songbirds', which is seed and fruit eating rather than pollination, and the fig/fig-wasp sentence the research cited is reproductive biology inside a closed syconium, scoped to the outdoor adult form on a page whose next sentence reads 'Rarely flowers when grown indoors.' The citation was dropped with the value.",
+        "is_edible corrected to null on 2026-09-27, outside the size backfill, and the citation that supported only it was removed; this supersedes the line above that sets it true. NC State's Edibility field reads 'Not usually grown for edible fruit, but properly prepared it is popular in Asian countries.', a marginal food use, not a plant grown to eat, which is what is_edible true tells the app's users. The same page says of the figs 'They are insipid and not worth eating.' and 'Inedible figs appear after the spring flowers on plants grown outdoors', and tags the species '#problem for dogs #problem for horses #problem for cats'."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -785,6 +780,24 @@
           "source": "Missouri Botanical Garden Plant Finder — Clivia miniata",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b549",
           "quote": "A warning: All parts of the plant may be toxic if ingested in large quantities."
+        },
+        {
+          "claim": "mature_height_in 18-24 (NC State Height: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clivia-miniata/",
+          "quote": "Height: 1 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clivia-miniata/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State: plant is Poisonous to Humans, low poison severity, with the following ingestion symptoms)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clivia-miniata/",
+          "quote": "Vomiting, salvation, diarrhea; large ingestions cause convulsions, low blood pressure, tremors, and cardiac arrhythmias. Bulbs are the most poisonous part."
         }
       ],
       "common_name": "Bush Lily",
@@ -829,14 +842,26 @@
         "Three of the ten allowed authority domain entries yielded usable Clivia miniata content -- plants.ces.ncsu.edu, www.rhs.org.uk, and MoBot's Plant Finder, which is listed twice in the allowlist (plantfinder.mobot.org and www.missouribotanicalgarden.org); no working page for this species was found on the remaining six. plantfinder.mobot.org currently serves an incomplete TLS chain, so a plain fetch of it fails certificate validation from this machine.",
         "common_name researched as 'Bush lily'; landed title-cased as 'Bush Lily', the first entry of NC State's alphabetized Common Name(s) list on the only dedicated page that leads with a name other than Natal lily. It collides with no already-landed common_name and is distinct from the catalog's Easter Lily, Tiger Lily, Calla Lily, Peace Lily, Voodoo Lily, Water Lily, Fragrant Water Lily, African Blue Lily and Daylily.",
         "The alias 'Kaffir Lily' is not used by any admissible source found for this species; it is recorded here rather than in name_note because it is a negative observation no citation can carry.",
-        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema. The audit asked for all six keys to be added; that is deliberately not done here, because backfilling them onto a record audited under the 35-field schema is the size backfill's job and not the landing's."
+        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema. The audit asked for all six keys to be added; that is deliberately not done here, because backfilling them onto a record audited under the 35-field schema is the size backfill's job and not the landing's.",
+        "attracts_pollinators left null: no 'Attracts'/wildlife field or unconditional pollinator statement found on either NC State or RHS pages; NC State's fruit description only says 'If the flowers are pollinated, they will produce a green berry...' which names no pollinator and is not support under rule 7.",
+        "is_edible set to false rather than left null because the NC State page states the plant is poisonous to humans (low severity) with ingestion symptoms; full poison detail from the same page, since is_edible touches toxicity: Poison Severity: Low; Poison Symptoms: 'Vomiting, salvation, diarrhea; large ingestions cause convulsions, low blood pressure, tremors, and cardiac arrhythmias. Bulbs are the most poisonous part.'; Poison Toxic Principle: 'Lycorine and other alkaloids'; Causes Contact Dermatitis: No; Poison Part: Flowers, Fruits, Leaves, Roots, Seeds, Stems (corrected at landing: the note had listed only Flowers and Fruits; bulbs are also named in the symptoms text); page tags include 'problem for cats', 'problem for dogs', 'problem for horses' (pets warning).",
+        "Plant is not a climber (NC State Plant Type: Herbaceous Perennial, Houseplant; Habit: Clumping, Erect, Spreading), so rule 4's climber exclusion does not apply and size fields were recorded normally.",
+        "Size figures used are NC State's general Dimensions block (Height 1 ft. 6 in.-2 ft. 0 in.; Width 2 ft. 0 in.-3 ft. 0 in.); the page does not separately label these as indoor/houseplant-specific vs. outdoor, but the values (18-24in height, 24-36in spread) are well under the 120in/10ft houseplant-headroom threshold in rule 12, so no further adjustment or nulling was needed.",
+        "RHS page (https://www.rhs.org.uk/plants/4036/clivia-miniata/details) gives smaller structured values, 'Max Height 0.1-0.5 metres' and 'Max Spread 0.1-0.5 metres' (~3.9-19.7in), which conflict with NC State's larger range; NC State was used as the anchor per instructions because NC State carries a species-specific Dimensions block for Clivia miniata (RHS is only the fallback source when no NC State page exists). The researcher's searches of the RHS page for 'Attracts', 'Edible', 'Pollinator', 'Poison' and 'Toxic' found nothing, but its Potentially harmful field reads 'All parts may cause a stomach upset if ingested; sap may irritate skin. Wear gloves and other protective equipment when handling', which also disagrees with NC State's 'Causes Contact Dermatitis: No' (corrected at landing, verified against the cached copy).",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b549 could not be read: qc.py returned 'fetch status: error:ProxyError' (this host refuses this machine, as flagged in the task instructions) -- skipped, nothing guessed for what it might contain.",
+        "https://plants.ces.ncsu.edu/plants/gloriosa-superba/ was read as instructed but is NC State's page for Gloriosa superba (Climbing Lily/Flame Lily), an entirely different, unrelated species (a poisonous vine) from Bush Lily/Clivia miniata; none of its data (including its 'Toxic when ingested' edibility note or its Height 5 ft.-6 ft./Width 1 ft.-3 ft. dimensions, which belong to a vine and would be excluded under rule 4 regardless) was used for any field on this record."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -900,6 +925,24 @@
           "source": "NC State Extension Gardener Plant Toolbox — Alchemilla mollis",
           "url": "https://plants.ces.ncsu.edu/plants/alchemilla-mollis/",
           "quote": "3a, 3b, 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b"
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alchemilla-mollis/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alchemilla-mollis/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value / Attracts field names butterflies)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/alchemilla-mollis/",
+          "quote": "Attracts butterflies"
         }
       ],
       "common_name": "Lady's Mantle",
@@ -943,14 +986,24 @@
         "outdoor_sun_exposure does not include part_sun: RHS's Position field and MoBot's Sun field both use the term \"partial shade\"/\"part shade\" (mapped here to part_shade), and none of the three admissible sources' structured sun fields distinguish a separate part_sun category for this species, so part_sun was left out rather than guessed.",
         "Self-seeding/spread, captured verbatim rather than paraphrased: NC State states 'The flowers do set seed and self-seeding can be a problem if it is growing in optimum conditions,' Missouri Botanical Garden's Culture section states 'Freely self-seeds in the garden to the point of being somewhat invasive in optimum growing conditions. Prompt removal of spent flower stems will not only prevent self-seeding but may also encourage a sparse, late summer rebloom.', and RHS's species detail page also carries a self-seeding statement in its Cultivation block: 'Prone to self-seeding'. No schema field exists for this trait, so it is recorded here rather than dropped.",
         "No herbal-use or edibility statement for Alchemilla mollis was found on any admissible source's species page (NC State's Uses text and MoBot's Uses section both cover only ornamental/cut-flower/dried-flower uses, border/edging/ground-cover placement); no admissible source makes any edibility or herbal-preparation claim for this species, so none is reported.",
-        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema."
+        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page makes any statement about eating Alchemilla mollis or any part of it (searched 'Edible', 'Poison', 'Toxic', 'Problem for' on both pages: 0 hits on both, so no toxicity text exists to fold in either).",
+        "Not a climber: NC State lists it as Herbaceous Perennial / Perennial, so the size fields were populated normally per rule 4.",
+        "RHS also gives a size range (Max Height 0.1-0.5 metres, Max Spread 0.1-0.5 metres = approx. 3.9-19.7 in) that is consistent with but slightly wider than NC State's; NC State's structured Dimensions block was used as the anchor per instructions since it exists for this species, and RHS was not cited for size to avoid a redundant/looser citation.",
+        "attracts_pollinators is based only on NC State's structured 'Attracts: Butterflies' / 'Wildlife Value: Attracts butterflies' fields; RHS's page (searched 'Pollinator', 'bee', 'butterfl', 'Attracts', 'Wildlife') returned no pollinator-specific content (the only 'Wildlife' hit was an unrelated site-navigation link, 'Wildlife gardening'), so RHS contributes nothing here.",
+        "No named cultivar was involved; both pages address the species Alchemilla mollis itself, not a cultivar."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Cheddar Pink",
@@ -1248,6 +1301,24 @@
           "source": "Missouri Botanical Garden Plant Finder — Cosmos sulphureus",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277308&isprofile=0&basic=cosmos+sulphureus",
           "quote": "Additional common names for this plant include yellow cosmos and orange cosmos."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Cosmos sulphureus",
+          "url": "https://plants.ces.ncsu.edu/plants/cosmos-sulphureus/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Cosmos sulphureus",
+          "url": "https://plants.ces.ncsu.edu/plants/cosmos-sulphureus/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Cosmos sulphureus",
+          "url": "https://plants.ces.ncsu.edu/plants/cosmos-sulphureus/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Yellow Cosmos",
@@ -1289,14 +1360,24 @@
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: no admissible source gives a fertilizing schedule or dilution strength for Sulphur Cosmos; MoBot instead warns to avoid rich, fertile soil because plants may grow too tall and flop over, which is the opposite of a fertilize recommendation, so all fertilize fields are left null.",
         "RHS's Cultivation paragraph ('Grow in moderately fertile, moist but well-drained soil in full sun') is species text, not genus boilerplate: the RHS Cosmos bipinnatus page carries its own distinct Cultivation text ('Grow in moderately fertile, moist, but well-drained soil in full sun. deadhead flowers to prologue flowering season. Leave a few seedheads to ripen to selfseed if required'). The field RHS does share verbatim across the genus is the separate Genus line, which this record does not use.",
         "common_name researched as 'Sulphur Cosmos'; landed as 'Yellow Cosmos' on the audit's finding that 'Sulphur Cosmos' is an artifact of which NC State alias URL was picked. NC State's canonical species page lists it third of four alphabetized Common Name(s) entries, and each of the four auto-generated alias pages promotes its own slug name to the H1, so NC State ranks none of them; RHS's page title and subtitle rank 'yellow cosmos'. MoBot's bare 'Common Name: cosmos' is an umbrella term already landed in this catalog for Cosmos bipinnatus. No collision with an already-landed common_name.",
-        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema."
+        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema.",
+        "is_edible left null: none of the four readable pages (NC State main page, NC State sulphur-cosmos page, NC State yellow-cosmos page, RHS details page) contain any hit for 'Edible', 'eating', or food use -- no record of edibility either way.",
+        "No 'Poison', 'Toxic', or 'Problem for' text was found on any readable page for this species (NC State's only listed Problem is 'Weedy'; RHS page has no hits either) -- not applicable since is_edible is null, but noted per instructions.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277308&isprofile=0&basic=cosmos+sulphureus refused this machine (sandbox denied network egress to plantfinder.mobot.org) -- could not be read, so it contributed nothing to this record.",
+        "Size figures used are from NC State's structured Dimensions block (the anchor, since this species has an NC State page), not RHS -- RHS's own Max Height/Max Spread figures (0.1-0.5 metres = ~3.9-19.7 in) were not used since NC State outranks RHS as the anchor per instructions.",
+        "This is not a climber/vine, so all four size fields are populated normally per rule 4's exception."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -1360,6 +1441,24 @@
           "source": "NC State Extension Gardener Plant Toolbox — Habanero Pepper (Capsicum chinense)",
           "url": "https://plants.ces.ncsu.edu/plants/capsicum-chinense/common-name/habanero-pepper/",
           "quote": "Use these plants in the edible garden."
+        },
+        {
+          "claim": "mature_height_in 12-30 (NC State Height: 1 ft. 0 in. - 2 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Capsicum chinense / Habanero Pepper",
+          "url": "https://plants.ces.ncsu.edu/plants/capsicum-chinense/common-name/habanero-pepper/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Capsicum chinense / Habanero Pepper",
+          "url": "https://plants.ces.ncsu.edu/plants/capsicum-chinense/common-name/habanero-pepper/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Plant Type lists Edible; page text)",
+          "source": "NC State Extension Plant Toolbox — Capsicum chinense / Habanero Pepper",
+          "url": "https://plants.ces.ncsu.edu/plants/capsicum-chinense/common-name/habanero-pepper/",
+          "quote": "Use these plants in the edible garden."
         }
       ],
       "common_name": "Habanero Pepper",
@@ -1411,8 +1510,18 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est and water_dormant_days_est left null. The moisture statements that do exist were found and rejected on rule grounds, not missed: NC State's culture paragraph opens 'Grow in rich, moist, well-drained soil in full sun.' and continues 'These plants enjoy heat and tolerate drought, though prolonged drought may affect fruit quality.', and MoBot adds a structured 'Water: Medium' plus 'Easily grown in moist, organically rich, fertile, well-drained soils in full sun.' A soil adjective, a drought-tolerance trait and a mid-scale structured water tag are each expressly barred from setting water_regime, and none of them states a cadence or day interval.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: no species-dedicated admissible source (as opposed to Clemson's excluded genus-level Pepper factsheet) gives a fertilizing interval, active season, or dilution strength for Capsicum chinense / Habanero Pepper.",
         "water_estimate_basis left null because no water_regime or day-interval figures were established to base an estimate on.",
-        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema."
-      ]
+        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema.",
+        "is_edible is true; the same anchor page also lists, under Problems, \"Problem for Children\" with no further detail (no named toxic part, severity, toxic principle, or preparation requirement given — just that single tag under the Problems heading).",
+        "attracts_pollinators left null: the anchor page's structured \"Attracts\" field lists only \"Songbirds\" (explained elsewhere on the page as birds eating the capsaicin-laden fruit unharmed); no bees, butterflies, moths, or hummingbirds are mentioned anywhere on either anchor page, and searches for 'Pollinator', 'butterfl', 'hummingbird' returned 0 hits.",
+        "The second anchor URL (https://plants.ces.ncsu.edu/plants/capsicum-chinense/) rendered as the same NC State page (title: 'Capsicum chinense (Carolina Reaper, Habanero, Habanero Pepper, Habanero Type Pepper)'), not a separate genus-only page with a different range; it contributed no additional size, edibility, or pollinator information beyond the habanero-pepper page.",
+        "No pages refused this machine; both anchor URLs returned fetch status ok.",
+        "The page separately describes a named cultivar ('Carolina Reaper') as the hottest pepper on record, but the Dimensions block (Height/Width) is presented at the species level, not tied to that cultivar, so it was used as-is; this is not a climbing/vining species, so the size fields were populated normally per rule 4."
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 30,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1450,6 +1559,7 @@
     }
   ],
   "normalizations": [
-    "2026-09-27: b87 landed from the post-audit records alongside the b86 and b88 landings. Eight mixed species; five were researched 2026-09-11 under the 35-field schema and three (Creeping Fig, Asparagus Fern, Cheddar Pink) today under the grown schema, so only those three carry is_edible, attracts_pollinators and mature_*_in -- nothing was backfilled onto the other five, which the size backfill owns, so the Clivia audit's 'add all six keys' finding is declined and disclosed in that record's unknowns instead. Auditor CORRECTED WORDING used verbatim throughout. Landing decisions: Ficus pumila takes NO mature size under the pipeline's climber rule (NC State Plant Type: Houseplant, Vine; Habit/Form: Climbing), its two size citations dropped and the published NC State and RHS figures recorded in unknowns; its outdoor_sun_exposure drops full_shade (Clemson says 'full sun or shade', not full shade, and three structured sun fields exclude it), its attracts_pollinators stays null with the fig-wasp citation dropped (NC State's Attracts field reads only 'Songbirds'), and humidity_need is set high on NC State's 'It does best in high humidity.' at the audit's instruction; it lands as Creeping Fig on RHS's subtitle and NC State's creeping-fig-titled page, with NC State's duplicate Climbing Fig page and Clemson's Climbing Fig factsheet disclosed, and its Edibility/Fruit Description contradiction resolved to one statement keeping is_edible true on the structured Edibility field alone. Clivia miniata lands title-cased as Bush Lily (no collision with the corpus's nine other lilies or its Daylily) and its water_regime stays null (refuted keep_moist; MoBot's sentence is outdoor-scoped and its second clause says to dry), citation dropped. Cosmos sulphureus lands as Yellow Cosmos, not the researched Sulphur Cosmos -- NC State auto-generates one alias page per common name so it ranks none, and RHS's title and subtitle rank yellow cosmos; its two slug-artifact citations were dropped. Cheddar Pink keeps toxic_to_pets true: NC State's structured Problems field values are 'Problem for Cats' and 'Problem for Dogs', cat/dog-scoped rather than a generic pets line, re-read live at landing. Four toxicity_detail fields (Creeping Fig, Asparagus Fern, Blushing Philodendron, Bush Lily) were removed on audit as trimmed and are restored here in full with the missing spine hazard, poisonous tags, horse scope and MoBot all-parts sentence added. is_houseplant was false-and-cited on the two records that had left it null (Lady's Mantle, Habanero Pepper). Three bare RHS Name Status 'Correct' citations the audit proposed dropping were instead relabelled with repair_lib's CORR and paired with the taxon-naming citation, per the landing brief's standing rule. verify_quotes: every reachable quote verified after repair; hgic.clemson.edu returns http-403 to this machine and plantfinder.mobot.org refuses the connection, so those citations SKIP -- the Clemson and MoBot substitutes rest on the auditor's live read and could not be re-fetched here."
+    "2026-09-27: b87 landed from the post-audit records alongside the b86 and b88 landings. Eight mixed species; five were researched 2026-09-11 under the 35-field schema and three (Creeping Fig, Asparagus Fern, Cheddar Pink) today under the grown schema, so only those three carry is_edible, attracts_pollinators and mature_*_in -- nothing was backfilled onto the other five, which the size backfill owns, so the Clivia audit's 'add all six keys' finding is declined and disclosed in that record's unknowns instead. Auditor CORRECTED WORDING used verbatim throughout. Landing decisions: Ficus pumila takes NO mature size under the pipeline's climber rule (NC State Plant Type: Houseplant, Vine; Habit/Form: Climbing), its two size citations dropped and the published NC State and RHS figures recorded in unknowns; its outdoor_sun_exposure drops full_shade (Clemson says 'full sun or shade', not full shade, and three structured sun fields exclude it), its attracts_pollinators stays null with the fig-wasp citation dropped (NC State's Attracts field reads only 'Songbirds'), and humidity_need is set high on NC State's 'It does best in high humidity.' at the audit's instruction; it lands as Creeping Fig on RHS's subtitle and NC State's creeping-fig-titled page, with NC State's duplicate Climbing Fig page and Clemson's Climbing Fig factsheet disclosed, and its Edibility/Fruit Description contradiction resolved to one statement keeping is_edible true on the structured Edibility field alone. Clivia miniata lands title-cased as Bush Lily (no collision with the corpus's nine other lilies or its Daylily) and its water_regime stays null (refuted keep_moist; MoBot's sentence is outdoor-scoped and its second clause says to dry), citation dropped. Cosmos sulphureus lands as Yellow Cosmos, not the researched Sulphur Cosmos -- NC State auto-generates one alias page per common name so it ranks none, and RHS's title and subtitle rank yellow cosmos; its two slug-artifact citations were dropped. Cheddar Pink keeps toxic_to_pets true: NC State's structured Problems field values are 'Problem for Cats' and 'Problem for Dogs', cat/dog-scoped rather than a generic pets line, re-read live at landing. Four toxicity_detail fields (Creeping Fig, Asparagus Fern, Blushing Philodendron, Bush Lily) were removed on audit as trimmed and are restored here in full with the missing spine hazard, poisonous tags, horse scope and MoBot all-parts sentence added. is_houseplant was false-and-cited on the two records that had left it null (Lady's Mantle, Habanero Pepper). Three bare RHS Name Status 'Correct' citations the audit proposed dropping were instead relabelled with repair_lib's CORR and paired with the taxon-naming citation, per the landing brief's standing rule. verify_quotes: every reachable quote verified after repair; hgic.clemson.edu returns http-403 to this machine and plantfinder.mobot.org refuses the connection, so those citations SKIP -- the Clemson and MoBot substitutes rest on the auditor's live read and could not be re-fetched here.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
