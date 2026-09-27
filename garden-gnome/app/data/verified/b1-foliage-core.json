@@ -195,6 +195,24 @@
           "source": "Clemson HGIC 1509, Philodendron",
           "url": "https://hgic.clemson.edu/factsheet/philodendron-pothos-monstera/",
           "quote": "All parts of monsteras and pothos also contain calcium oxalate crystals, and are toxic to pets and children."
+        },
+        {
+          "claim": "is_edible false (NC State: medium-severity poison characteristics, calcium oxalate crystals, poisonous parts and ingestion symptoms named -- no statement the plant is eaten)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/epipremnum-aureum/",
+          "quote": "This plant has  medium severity  poison characteristics."
+        },
+        {
+          "claim": "is_edible false (NC State Poison Symptoms describe ingestion-type toxicity: oral irritation, vomiting, difficulty swallowing)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/epipremnum-aureum/",
+          "quote": "Oral irritation, pain and swelling of mouth, tongue, and lips, excessive drooling, vomiting (not horses), difficulty swallowing, skin irritation, diarrhea"
+        },
+        {
+          "claim": "is_edible false (Clemson HGIC states pothos contains calcium oxalate crystals and is toxic to pets and children, i.e. not edible)",
+          "source": "Clemson HGIC - Philodendron, Pothos, Monstera factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/philodendron-pothos-monstera/",
+          "quote": "All parts of monsteras and pothos also contain calcium oxalate crystals, and are toxic to pets and children."
         }
       ],
       "unknowns": [
@@ -206,8 +224,15 @@
         "soil_ph_min/max: the NC State page for this species carries no Soil pH attribute.",
         "fertilize_strength: neither source states a dilution.",
         "outdoor_sun_exposure: houseplant record; indoor foot-candle values must not be converted to an outdoor exposure rating.",
-        "Clemson HGIC 1450's species table is excerpted from the SC Master Gardener Training Manual EC 678, originally published 09/99, so its foot-candle figures are older extension guidance."
-      ]
+        "Clemson HGIC 1450's species table is excerpted from the SC Master Gardener Training Manual EC 678, originally published 09/99, so its foot-candle figures are older extension guidance.",
+        "Epipremnum aureum is a climbing/clinging vine (NC State Plant Toolbox: 'Climbing Method: Clinging'; common names include Devil's Vine, Taro Vine), so per the climber rule all four mature-size fields are left null rather than recording the page's Dimensions figures, which for a climber conflate the plant's own stature with how far it runs along its support.",
+        "NC State's Dimensions block reads 'Height: 0 ft. 6 in. - 0 ft. 8 in.' and 'Width: 13 ft. 0 in. - 40 ft. 0 in.' (i.e. it stays 6-8 inches tall as a groundcover but the climbing/trailing vine runs 13-40 ft) -- this figure is deliberately NOT recorded in mature_height_in/mature_spread_in because the species is a climber. (Noted at landing, verified against the cached copy: the description says 'It grows only 6 to 8 feet as a horizontal groundcover, but the trailing and climbing vines can grow as long as 40 feet.', which disagrees with the Dimensions block's 6-8 in height. Nothing is recorded either way.)",
+        "attracts_pollinators left null: NC State's Plant Toolbox page has no 'Attracts' field for this species, and none of the read pages state or imply any bee/butterfly/moth/hummingbird attraction for Epipremnum aureum.",
+        "is_edible set to false on toxicity evidence, not an edibility statement: NC State lists 'medium severity' poison characteristics with Poison Toxic Principle 'Calcium oxalate crystals', Poison Part 'Flowers, Fruits, Leaves, Roots, Seeds, Stems', Poison Symptoms 'Oral irritation, pain and swelling of mouth, tongue, and lips, excessive drooling, vomiting (not horses), difficulty swallowing, skin irritation, diarrhea', and 'Causes Contact Dermatitis: Yes'; Clemson's Philodendron/Pothos/Monstera factsheet states pothos 'contain calcium oxalate crystals, and are toxic to pets and children.' No page on the anchor list states any part of Epipremnum aureum is grown or used for food.",
+        "Fetch status (corrected at landing): the researcher's two Clemson results are reversed on this machine now. https://hgic.clemson.edu/factsheet/how-to-grow-pothos-indoors-epipremnum-spp-care-cultivars-and-common-problems/ is cached here as ok and reads 'All parts of a pothos are mildly toxic if ingested.' It is not cited.",
+        "Fetch status (corrected at landing): the Clemson indoor-plants factsheet returned HTTP 403 to the auditor and is cached here as http-403, so the researcher's reading of it could not be re-checked."
+      ],
+      "is_edible": false
     },
     {
       "common_name": "Monstera",
@@ -273,6 +298,12 @@
           "source": "Clemson HGIC 1509, Philodendron",
           "url": "https://hgic.clemson.edu/factsheet/philodendron-pothos-monstera/",
           "quote": "All parts of monsteras and pothos also contain calcium oxalate crystals, and are toxic to pets and children."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: only the ripe fruit is edible; unripe fruit and other plant parts are listed as poisonous)",
+          "source": "NC State Extension Plant Toolbox, Monstera deliciosa",
+          "url": "https://plants.ces.ncsu.edu/plants/monstera-deliciosa/",
+          "quote": "Only ripe fruits are edible and are used to flavor drinks and ice cream or are eaten fresh. Some people are allergic."
         }
       ],
       "unknowns": [
@@ -284,8 +315,16 @@
         "soil_base: NC State lists high organic matter and loam but names no specific medium.",
         "fertilize_active_months/interval_days/strength: neither NC State nor Clemson gives a feeding schedule for Monstera.",
         "outdoor_sun_exposure: houseplant record; the direct_sun_hours_max of 0 is an indoor beam-tolerance value and must not be read as an outdoor shade rating.",
-        "Clemson HGIC 1450's species table is excerpted from the SC Master Gardener Training Manual EC 678, originally published 09/99."
-      ]
+        "Clemson HGIC 1450's species table is excerpted from the SC Master Gardener Training Manual EC 678, originally published 09/99.",
+        "mature_height_in and mature_spread_in left null (all four fields): NC State's Plant Toolbox classifies Monstera deliciosa as a Vine with Habit/Form: Climbing and Climbing Method: Clinging, and describes it as 'a woody, perennial, broadleaf evergreen, climbing vine', so under the climber rule no size is recorded. (Corrected at landing: the page has no Dimensions block, but its description does give a size, 'can grow to 70 feet tall, though it stays between 6 to 8 feet in most home environments'; it is not recorded, by the climber rule.)",
+        "attracts_pollinators left null: neither an 'Attracts' structured field nor any unconditional pollinator statement (bees, butterflies, moths, hummingbirds) was found on the NC State page (0 hits for 'Attracts' and 'Pollinator') or on the Clemson indoor-plants page (the one 'Pollinator' hit was an unrelated site tag, 'Pollinator garden', not text about this species).",
+        "is_edible true is conditional: NC State's 'Edibility:' field states 'Only ripe fruits are edible and are used to flavor drinks and ice cream or are eaten fresh. Some people are allergic.' -- only the ripe fruit is edible, not the whole plant.",
+        "The same NC State page names the plant Poisonous, Poison Severity: Low, with Poison Symptoms: 'Intense burning of mouth, tongue, and throat; nausea, vomiting, difficulty swallowing, drooling, and diarrhea may also occur; contact with cell sap may cause skin irritation. Only if eaten in large quantities.' Poison Toxic Principle: 'Needle-like calcium oxalate crystals; possibly other unidentified toxins.' Causes Contact Dermatitis: Yes. Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems -- every part, the fruit included, with no ripeness qualifier (corrected at landing: the note had glossed Fruits as 'i.e. unripe fruit', which the page does not say). Tags include #poisonous, #problem for cats, #problem for dogs, #problem for horses.",
+        "Fetch status (corrected at landing): the researcher had the two Clemson pages the wrong way round. https://hgic.clemson.edu/factsheet/philodendron-pothos-monstera/ is cached here as ok and reads 'All parts of monsteras and pothos also contain calcium oxalate crystals, and are toxic to pets and children.' It is not cited for any field.",
+        "Fetch status (corrected at landing): the Clemson indoor-plants factsheet is the page that returned HTTP 403 (to the auditor; it is cached here as http-403), so nothing the researcher says about it could be checked.",
+        "The ripeness condition, from NC State's Fruit Description (noted at landing, verified against the cached copy): 'This plant produces an aggregate of creamy-white berries covered by green hexagonal \"scales\"; the fruit is ripe once the scale covering it falls off naturally. These berries are edible and taste like a mixture of banana and pineapple. Rarely produces fruit as a houseplant.' The Edibility field's allergy warning is quoted above: 'Some people are allergic.'"
+      ],
+      "is_edible": true
     },
     {
       "common_name": "ZZ Plant",
@@ -393,6 +432,24 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/zamioculcas-zamiifolia/",
           "quote": "This plant has a medium toxicity to cats and dogs."
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Height 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/zamioculcas-zamiifolia/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-48 (NC State Width 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/zamioculcas-zamiifolia/",
+          "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State: plant has medium severity poison characteristics; leaves cause diarrhea, vomiting if consumed in quantity, so the plant is poisonous to eat, not edible)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/zamioculcas-zamiifolia/",
+          "quote": "This plant has  medium severity  poison characteristics."
         }
       ],
       "unknowns": [
@@ -407,8 +464,20 @@
         "outdoor_sun_exposure: houseplant record; NC State's landscape notes for zones 9-10 are not converted here.",
         "soil_ph 6.0-7.0 comes from UF/IFAS production media guidance rather than a home-care page; it is the only sourced pH figure available.",
         "Citation URL note: the EP252 link now 301-redirects from edis.ifas.ufl.edu to ask.ifas.ufl.edu; content verified intact.",
-        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). UF/IFAS's 25 ft-c is an interiorscape survival/placement floor; every other fc_min in the tranche is a growth minimum, and one column must not carry two meanings. The figure survives in this record's citations."
-      ]
+        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). UF/IFAS's 25 ft-c is an interiorscape survival/placement floor; every other fc_min in the tranche is a growth minimum, and one column must not carry two meanings. The figure survives in this record's citations.",
+        "attracts_pollinators left null: none of the three anchor pages (NC State, Clemson, EDIS) mention bees, butterflies, moths, hummingbirds, or any wildlife/pollinator attraction for this species; NC State's site has no 'Attracts' field for it (0 hits searched), and no unconditional pollinator statement appears on Clemson or EDIS.",
+        "is_edible set false based on toxicity language, not an edibility statement: NC State's Poison Symptoms field reads 'diarrhea, vomiting if leaves are consumed in quantity,' Poison Toxic Principle is calcium oxalate, Poison Part is Leaves, Causes Contact Dermatitis: No, and the plant is tagged medium-severity poisonous with tags '#problem for dogs #problem for cats'. Clemson's factsheet separately notes 'NOT Pet Safe.' No page on any of the three anchors states the plant or any part is grown or used for food.",
+        "EDIS (edis.ifas.ufl.edu/publication/EP252) gives height/spread figures (16-32 in. average height, 20-40 in. spread, up to 3-5 ft. spread for larger plants) but these are explicitly stated for the cultivar: the article says \"'ZZ' is the only recognized cultivar in the species,\" so per the cultivar rule these figures were NOT used for mature_height_in/mature_spread_in.",
+        "Clemson's cultivar table gives additional cultivar-specific heights ('Chameleon' up to 4 ft, 'Raven' max 2.5 ft, 'Zenzi' max 10-12 in.) and a separate species-only line ('Zamioculcas zamiifolia – ... can grow 3 to 4 feet tall'); none of these cultivar figures were used, and only the general 'ZZ Plant Size: Height and Spread: 2 to 4 feet tall and 2 to 4 feet wide' (matching NC State) informed the recorded range.",
+        "ZZ Plant is not a vine/liana/climber, so the climber size restriction (rule 4) does not apply; the recorded height/spread (24-48 in. both dimensions) is well under the 120-inch houseplant ceiling and matches both the general/landscape figure and the houseplant description on NC State, so no indoor-vs-outdoor distinction was needed.",
+        "edis.ifas.ufl.edu redirects to ask.ifas.ufl.edu, a host noted as one that can refuse this fetching machine; on this run it returned status ok (77977 bytes, title 'ENH997/EP252: Cultural Guidelines for Commercial Production of Interiorscape ZZ (Zamioculcas zamiifolia)'), so it was not skipped, but is flagged here since that host is the known-refusing one for other species.",
+        "Searched Clemson's page for pet/cat/dog/child/ingest/skin/irritant/sap toxicity language beyond 'Poison'/'Toxic' literal hits (which returned 0); found only 'Note: NOT Pet Safe' -- included above as corroborating (not sole) support for is_edible false."
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 48
     },
     {
       "common_name": "Peace Lily",
@@ -603,6 +672,18 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/chlorophytum-comosum/",
           "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Chlorophytum comosum",
+          "url": "https://plants.ces.ncsu.edu/plants/chlorophytum-comosum/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Chlorophytum comosum",
+          "url": "https://plants.ces.ncsu.edu/plants/chlorophytum-comosum/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -613,8 +694,19 @@
         "fertilize_active_months/interval_days/strength: Clemson says only to feed during active growth and follow the label; NC State warns against over-fertilizing because it reduces plantlet formation.",
         "outdoor_sun_exposure: houseplant record; the indoor foot-candle figures must not be converted to an outdoor exposure rating.",
         "Separate from the schema: NC State warns to avoid tap water, since chlorine and fluoride cause leaf tip burn. There is no field for this but it belongs in user-facing care text.",
-        "Clemson HGIC 1450's species table is excerpted from the SC Master Gardener Training Manual EC 678, originally published 09/99, and lists the cultivar 'Variegatum' rather than the plain species."
-      ]
+        "Clemson HGIC 1450's species table is excerpted from the SC Master Gardener Training Manual EC 678, originally published 09/99, and lists the cultivar 'Variegatum' rather than the plain species.",
+        "is_edible left null: none of the three cited pages (NC State Plant Toolbox species page, Clemson HGIC spider-plant factsheet, Clemson HGIC indoor-plants factsheet) address eating Chlorophytum comosum -- searched 'Edible', 'Poison', 'Toxic', 'Problem for' on all three, all zero hits for edibility language.",
+        "Before setting is_edible, checked 'Poison'/'Toxic'/'Problem for' per the rule: the NC State page carries no Problem/Poison prose, only tag-cloud entries 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- pet-safety tags, not a human-edibility statement, and not used to set is_edible either way (left null).",
+        "attracts_pollinators left null: NC State's page has no 'Attracts' field for this species (0 hits) and neither Clemson factsheet names bees, butterflies, moths, hummingbirds or other pollinators for Chlorophytum comosum specifically (the only 'pollinat' hits on the Clemson pages are unrelated site tag-cloud entries, e.g. 'Pollinator garden', not text about this species).",
+        "Size anchor: NC State has a species-specific page (not a genus page) with a structured Dimensions block -- Height: 1 ft. 0 in. - 1 ft. 6 in. (12-18 in), Width: 1 ft. 0 in. - 2 ft. 0 in. (12-24 in) -- used per the NC State-anchor rule. The Clemson spider-plant factsheet separately gives a larger houseplant/hanging-basket figure (Width 2 to 2 1/2 ft = 24-30 in; Length in hanging baskets 2 to 3 ft = 24-36 in) but was not used for the recorded fields since NC State's species-level Dimensions block is the designated anchor when it exists.",
+        "Not a climber (NC State Plant Type: Herbaceous Perennial, Houseplant), so the climber-size exclusion does not apply; all four size fields are recorded normally.",
+        "No cultivar-only figures were used -- the NC State and Clemson spider-plant page figures are given for the species/common form, not a named cultivar (the indoor-plants factsheet's table row is for a cultivar, 'Chlorophytum comosum cv. Variegatum', but that row carries no dimensions, so nothing from it was recorded).",
+        "Fetch status (corrected at landing): not all three pages were readable. The Clemson indoor-plants factsheet returned HTTP 403 to the auditor on three fetches and is cached here as http-403, so the researcher's statement that it fetched ok could not be reproduced. No field depends on it; it was cited only for its silence on the null fields."
+      ],
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Heart Leaf Philodendron",
@@ -795,6 +887,12 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/aglaonema/",
           "quote": "This plant contains calcium oxalate crystals, which are toxic if ingested or if the juice/sap is touched (dermatitis). More so a concern for dogs, cats, and horses but can also a concern for humans."
+        },
+        {
+          "claim": "is_edible false (NC State: the plant is poisonous if ingested)",
+          "source": "NC State Extension Gardener Plant Toolbox -- Aglaonema",
+          "url": "https://plants.ces.ncsu.edu/plants/aglaonema/",
+          "quote": "To humans and animals, it is poisonous if ingested (or if the juice from the plant is touched)."
         }
       ],
       "unknowns": [
@@ -810,8 +908,15 @@
         "fertilize_active_months/interval_days/strength: neither source gives a feeding schedule.",
         "outdoor_sun_exposure: houseplant record; indoor light values are not converted.",
         "Clemson HGIC 1450's species table is excerpted from the SC Master Gardener Training Manual EC 678, originally published 09/99.",
-        "Clemson's Chinese Evergreen factsheet ends by pointing readers to the ASPCA toxic plant list. That list was not opened, cited, or reproduced."
-      ]
+        "Clemson's Chinese Evergreen factsheet ends by pointing readers to the ASPCA toxic plant list. That list was not opened, cited, or reproduced.",
+        "attracts_pollinators left null: none of the three assigned pages (NC State's Aglaonema genus page, Clemson's Chinese Evergreen growing guide, Clemson's indoor-plants light-requirements factsheet) mention bees, butterflies, moths, hummingbirds, or any other pollinator, or carry a structured Attracts/Wildlife field, for this species.",
+        "mature_height_in and mature_spread_in nulled at landing (all four fields): the researcher's 24-36 in by 18-24 in rested on Clemson HGIC alone ('Ribbon Aglaonema grows 2 to 3 feet tall and 18 to 24 inches wide, featuring dark green leaves with gray markings along the veins.'), and hgic.clemson.edu refuses this machine, so no new value may rest on it alone; that citation was dropped. NC State's page (https://plants.ces.ncsu.edu/plants/aglaonema/) is the Aglaonema genus page; its Dimensions block ('Height: 1 ft. 0 in. - 1 ft. 8 in.', 'Width: 1 ft. 0 in. - 1 ft. 6 in.') spans the genus and is not a substitute for a species figure.",
+        "is_edible set to false on NC State's statement (page covers 'Chinese Evergreen' among its common names) that the plant 'is poisonous if ingested (or if the juice from the plant is touched)', with Poison Severity: Low, toxic principle calcium oxalate crystals, causes contact dermatitis, and poison parts listed as Bark, Flowers, Fruits, Leaves, Roots, Seeds, Stems. Clemson's growing guide separately corroborates with a pets warning: 'Leaves can be toxic to pets, particularly dogs and cats' and its Quick Guide Special Notes read 'Toxic to cats and dogs.' No page on the reading list addresses human food use or cultivation for eating.",
+        "The Clemson indoor-plants light-requirements factsheet (https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/) only lists 'Aglaonema commutatum' in a footcandle light-requirements table; it carries no size, edibility, or pollinator information for this species and was read but contributed no field values.",
+        "Not a climber, so the climber rule does not apply; the four size fields are null for the reason above (corrected at landing).",
+        "Fetch status (corrected at landing): the Clemson indoor-plants factsheet returned HTTP 403 to the auditor and is cached here as http-403, so the researcher's reading of it could not be re-checked. No field rests on it."
+      ],
+      "is_edible": false
     }
   ],
   "audit_summary": {
@@ -867,6 +972,7 @@
     "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
     "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

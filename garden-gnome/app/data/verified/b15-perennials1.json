@@ -515,6 +515,30 @@
           "source": "UGA CAES Field Report, B1219 \"A Guide for Commercial Production of Vinca\"",
           "url": "https://fieldreport.caes.uga.edu/publications/B1219/a-guide-for-commercial-production-of-vinca/",
           "quote": "This species requires dry leaves and flowers to stay disease free. Very humid greenhouse conditions, over-watering, overhead landscape irrigation and prolonged rainfall can affect vinca adversely. Sufficient air movement that allows leaves to dry is crucial."
+        },
+        {
+          "claim": "mature_height_in 6-18 (NC State Height: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/catharanthus-roseus/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 8-12 (NC State Width: 0 ft. 8 in. - 1 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/catharanthus-roseus/",
+          "quote": "Width: 0 ft. 8 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Butterflies and Pollinators)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/catharanthus-roseus/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false (NC State states consuming the plant causes poisoning symptoms; no page states any part is eaten as food)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/catharanthus-roseus/",
+          "quote": "Consuming large quantities of the plant can lead to vomiting, diarrhea, low blood pressure, hallucinations, depression, tremors, seizures, coma, death"
         }
       ],
       "unknowns": [
@@ -528,8 +552,23 @@
         "fertilize_active_months / fertilize_interval_days / fertilize_strength: left null — only commercial greenhouse ppm fertilizer program data was found (UGA B1219: 50/75/125 ppm at various growth stages), not a home-garden month/interval/strength schedule.",
         "water_growing_days_est / water_dormant_days_est / water_check_depth_cm / water_dry_down_target / water_estimate_basis: left null — no admissible source gives a specific day-interval or soil-depth watering-check figure for this species.",
         "water_regime — removed on audit: Value 'dry_surface_between' rests only on a UF/IFAS quote ('reduce irrigation frequency once established... avoid over-irrigation') that never says to let the soil surface dry between waterings -- that specific category isn't literally in the quote. Worse, Missouri Botanical Garden's own plant page (cited elsewhere in this same record) has a structured field reading 'Water: Medium' and Culture text saying 'Needs regular moisture, but avoid overhead watering,' directly contradicting a dry-down regime. This is a harm-capable field where admissible sources genuinely disagree, and the record picked one value instead of surfacing the conflict or going null.",
-        "humidity_need — removed on audit: The cited UGA B1219 passage ('requires dry leaves and flowers to stay disease free... air movement that allows leaves to dry is crucial') is a foliar-disease-avoidance instruction about leaf-surface wetness, not a stated ambient relative-humidity preference. The same source document states elsewhere that vinca is commercially 'grown under warm, often humid conditions' and that the mitigation is airflow to dry foliage, not low ambient humidity -- i.e. the source's own content undercuts the blanket 'low' categorization the record derived from it."
-      ]
+        "humidity_need — removed on audit: The cited UGA B1219 passage ('requires dry leaves and flowers to stay disease free... air movement that allows leaves to dry is crucial') is a foliar-disease-avoidance instruction about leaf-surface wetness, not a stated ambient relative-humidity preference. The same source document states elsewhere that vinca is commercially 'grown under warm, often humid conditions' and that the mitigation is airflow to dry foliage, not low ambient humidity -- i.e. the source's own content undercuts the blanket 'low' categorization the record derived from it.",
+        "attracts_pollinators is supported by NC State's structured Attracts: field, which lists Butterflies and Pollinators; no mention of bees or hummingbirds specifically was found on any of the readable pages, so the claim rests on the generic 'Pollinators' tag plus 'Butterflies'.",
+        "is_edible is set false on the strength of NC State's Poisonous to Humans section: Poison Severity: Low; Poison Symptoms: 'Consuming large quantities of the plant can lead to vomiting, diarrhea, low blood pressure, hallucinations, depression, tremors, seizures, coma, death'; Poison Toxic Principle: Vinca Alkaloids; Causes Contact Dermatitis: No; Poison Part: Flowers, Fruits, Leaves, Roots, Seeds, Stems. The page's tag list also carries #problem for dogs, #problem for horses, #problem for cats. EDIS (edis.ifas.ufl.edu/fp112) corroborates: 'Toxicity: this plant exhibits low toxicity traits; all parts of this plant contain vinca alkaloids; consuming large amounts causes a variety of symptoms.' No page on the approved list states the plant or any part of it is grown or used for food, so this is treated as an affirmative 'poisonous to eat' answer rather than silence.",
+        "Vinca (Catharanthus roseus) is a low mounding annual/perennial groundcover, not a vine/climber, so the climber exclusion (rule 4) does not apply and size fields were populated normally.",
+        "This species is catalogued as a houseplant, but no page gave an indoor/container-specific size distinct from its outdoor/garden figure, and the outdoor figure used (NC State: 6-18 in. tall, 8-12 in. wide) is well under the 120-inch ceiling, so no houseplant-figure substitution or nulling was needed.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a569 refused this machine (fetch status error:ConnectError) and was not used for any field.",
+        "https://hgic.clemson.edu/factsheet/periwinkle/ returned an HTTP 403 (refused this machine) and was not used; separately, that factsheet's title covers 'Periwinkle' generally, which on Clemson's site is the Vinca minor groundcover rather than Catharanthus roseus, so it would not have been usable for this species even if it had loaded.",
+        "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf is a PDF; the qc.py/verify_quotes fetch path returns status 'pdf' with no extracted text for .pdf URLs, so no text could be read from it and it contributed nothing.",
+        "https://hgic.clemson.edu/factsheet/annual-vinca/ and https://fieldreport.caes.uga.edu/publications/B1219/a-guide-for-commercial-production-of-vinca/ were read in full (searched for 'Height', 'Width', 'Attracts', 'Edible', 'Poison', 'Toxic', 'Pollinator', 'butterfl', 'bee', 'hummingbird'). All size figures on those two pages are per-cultivar (e.g. Clemson: 'Cora XDR' 12-16 in tall/wide, 'Titan' 14-16 in x 10-12 in, 'Valiant' 14-20 in x 10-12 in; UGA: dwarf types 10-14 in, border types 14-20 in) or a loosely worded species-level line (Clemson: 'The plants grow 1 or 2 feet high and about the same width'; EDIS fp112: 'Height: 1 to 2 feet; dependent upon cultivar selection'). Per the anchor rule, NC State's structured, non-cultivar Dimensions block (Height: 0 ft. 6 in. - 1 ft. 6 in.; Width: 0 ft. 8 in. - 1 ft. 0 in.) was used instead of any of these cultivar or hedge figures, and none of the cultivar-specific numbers were recorded. (Corrected at landing: hgic.clemson.edu/factsheet/annual-vinca/ returned HTTP 403 to the auditor and is cached here as http-403, so the Clemson figures in this line, the cultivar sizes and 'The plants grow 1 or 2 feet high and about the same width', could not be verified and should not be treated as read. No citation depends on them.)",
+        "Searched all readable pages for 'Edible' and 'edible' explicitly; zero hits anywhere except the toxicity language already cited, confirming there is no food-use statement to weigh against the poisoning statements."
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 8,
+      "mature_spread_in_max": 12
     },
     {
       "chill_damage_f": null,
@@ -1260,6 +1299,7 @@
   "normalizations": [
     "2026-08-21: landed after one registry fix (garden-gnome commit 9afdde5), not a data fix. Black-Eyed Susan cited ask.ifas.ufl.edu/fp512 -- attributed in the researcher's own source string to the identical EDIS document edis.ifas.ufl.edu hosts -- which the loader correctly refused since the domain wasn't registered. Registered it alongside UF/IFAS's known domain, same authority, and the citations resolved cleanly on re-check.",
     "All three species flagged in advance for toxicity attention -- Sweet Pea (a different genus from the already-landed edible garden pea, despite the name), Vinca (source of the vinca alkaloids), and Butterfly Weed (a milkweed, cardiac glycosides) -- correctly resolved toxic_to_pets=true. Sweet Pea and Vinca both kept toxicity_detail null rather than borrow their sources' human-toxicity writeups -- Sweet Pea's audit explicitly caught and stripped an embedded Lathyrism symptom list that had been copied from a 'Poisonous to Humans' section into the pet-facing field, the same anti-pattern found in b14 now generalizing correctly across unrelated species without being re-taught per batch. Scarlet Sage's record separately cross-checked its own common name against a real collision -- a different species (Salvia coccinea) shares the name 'scarlet sage' in some sources.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."

@@ -171,6 +171,30 @@
           "quote": "Geraniums grow best in full to partial sun in loamy, well-drained soil.",
           "source": "UF/IFAS Extension EDIS",
           "url": "https://edis.ifas.ufl.edu/publication/FP459"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State: \"The plant forms a rounded mound 1 to 3 feet tall.\" 1 ft = 12 in, 3 ft = 36 in)",
+          "source": "NC State Extension Gardener Plant Toolbox — Pelargonium x hybridum",
+          "url": "https://plants.ces.ncsu.edu/plants/pelargonium-x-hybridum/",
+          "quote": "The plant forms a rounded mound 1 to 3 feet tall."
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, x 39.37 = 3.9-19.7 in; NC State's page for this species gives no whole-plant spread figure)",
+          "source": "RHS — Pelargonium × hortorum",
+          "url": "https://www.rhs.org.uk/plants/160286/pelargonium-x-hortorum/details",
+          "quote": "Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Pelargonium x hybridum",
+          "url": "https://plants.ces.ncsu.edu/plants/pelargonium-x-hybridum/",
+          "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false (NC State lists this plant under Poisonous to Humans, Low severity, with symptoms on consumption)",
+          "source": "NC State Extension Gardener Plant Toolbox — Pelargonium x hybridum",
+          "url": "https://plants.ces.ncsu.edu/plants/pelargonium-x-hybridum/",
+          "quote": "Poisonous to Humans"
         }
       ],
       "common_name": "Annual Geranium",
@@ -224,14 +248,30 @@
         "scientific_name_accepted — removed on audit: The record sets this to \"Pelargonium x hybridum\" on the strength of a single admissible source (NC State Plant Toolbox: \"Previously known as: Pelargonium x hortorum\" / \"This name is now a synonym of P. x hybridum\"), but I fetched the record's other cited admissible sources directly and found a genuine cross-source conflict the record resolved by picking a value instead of leaving it as the given name or flagging the uncertainty: RHS's own structured 'Name Status' field for Pelargonium x hortorum reads 'Unresolved' (confirmed live) -- RHS, which is in the business of tracking nomenclature status, explicitly does not confirm hortorum has been superseded. Meanwhile Clemson HGIC (confirmed: 'The page mentions Pelargonium x hortorum specifically as the scientific name'), Missouri Botanical Garden (confirmed: page header text 'Pelargonium x hortorum'), and UF/IFAS (confirmed: 'The page uses Pelargonium x hortorum') all still use hortorum as the live, current operative name in their own text. One extension database's internal relabeling was treated as settling a taxonomic question that four other admissible sources, including the actual nomenclature-status source (RHS), do not agree is settled.",
         "name_note — removed on audit: The note's own body accurately lists the contradicting evidence (RHS 'Unresolved'; Clemson/MBG/RHS/UF-IFAS all still using hortorum) but its final sentence still concludes 'Pelargonium x hybridum is recorded here as the accepted name' -- the note undermines its own conclusion. Given RHS explicitly declines to resolve the name status, a plant-database synonym note from one extension site is not sufficient grounds to declare a different accepted name over the given one.",
         "toxicity_detail — removed on audit: The field states 'Listed as a problem for dogs, cats, and horses, and poisonous to humans,' and its supporting citation's claim label repeats 'problem for cats, dogs, and horses.' But the quote text actually attached to that citation (\"Poison Severity: Low Poison Symptoms: Vomiting, anorexia... Poison Toxic Principle: Geraniol, linalool Causes Contact Dermatitis: Yes Poison Part: Leaves\") never mentions dogs, horses, or humans anywhere -- only 'Cats are most sensitive' appears, which is a comparative remark, not a species listing. The claim outruns its own quoted evidence. (I independently fetched the live NC State page and it does carry a separate 'Problem For: Cat, Dog, Horse / Poisonous to Human' structured section, so the assertion is probably true in substance -- but the citation as constructed in this record does not establish it, which is the defect the audit is checking for.)",
-        "water_regime — removed on audit: Missouri Botanical Garden's Plant Finder page -- already cited three times elsewhere in this record -- carries a structured 'Water: Medium' rating and a separate Culture-section sentence 'Water regularly throughout growing season' (both confirmed by direct fetch), neither of which appears anywhere in this record's citations. MBG's 'Medium' water category denotes consistent/regular moisture, not a deliberate dry-down cycle, and sits in tension with the 'dry_surface_between' value the record built from Clemson/NC State/RHS's 'allow soil to dry between waterings' language. This is exactly the scenario the audit's structural check #1 calls out: a cited source's own structured field was never checked against the prose actually quoted, on a harm-capable field. water_dry_down_target inherits the same unreconciled conflict since it's built on the same determination."
+        "water_regime — removed on audit: Missouri Botanical Garden's Plant Finder page -- already cited three times elsewhere in this record -- carries a structured 'Water: Medium' rating and a separate Culture-section sentence 'Water regularly throughout growing season' (both confirmed by direct fetch), neither of which appears anywhere in this record's citations. MBG's 'Medium' water category denotes consistent/regular moisture, not a deliberate dry-down cycle, and sits in tension with the 'dry_surface_between' value the record built from Clemson/NC State/RHS's 'allow soil to dry between waterings' language. This is exactly the scenario the audit's structural check #1 calls out: a cited source's own structured field was never checked against the prose actually quoted, on a harm-capable field. water_dry_down_target inherits the same unreconciled conflict since it's built on the same determination.",
+        "hgic.clemson.edu/factsheet/geranium/ refused this machine (Cloudflare http-403 bot block); did not guess its content.",
+        "missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=a537 redirects to plantfinder.mobot.org, which refused this machine's network connection; did not guess its content.",
+        "Fetch status (corrected at landing): EDIS FP459 loaded for the auditor and is cached here as ok. It covers the cultivar Pelargonium x hortorum 'Orange Appeal' ('Height: 1 to 2 feet', 'Spread: 1 to 2 feet'), so by the cultivar rule it gives no species size.",
+        "Fetch status (corrected at landing): hgic.clemson.edu/factsheet/growing-geraniums-indoors/ returned HTTP 403 to the auditor and is cached here as http-403, so the researcher's reading of it could not be re-checked, including whether it gives an indoor or container size.",
+        "mature_height_in comes from NC State's general prose description of the species/hybrid group ('rounded mound 1 to 3 feet tall'), not a structured Dimensions block -- this NC State page has no Dimensions field at all, only leaf and fruit measurements.",
+        "NC State's page separately notes 'Miniatures... no more than 8 inches tall' for a group of named cultivars (Anna, Delta, Jane Eyre); excluded per rule 3 (cultivar size is not the species').",
+        "mature_spread_in comes from RHS (Pelargonium x hortorum) rather than NC State, because NC State's page for this species gives no whole-plant spread/width figure at all.",
+        "Plant is not a vine/climber, so the climber size rule does not apply.",
+        "No page grown/used-for-food statement was found for this species on any accessible page; is_edible is instead set false from NC State's structured 'Poisonous to Humans' (Low severity) listing and its poison symptoms text: 'Vomiting, anorexia when consumed in quantity. Primarily GI upset, but also ataxia, muscle weakness, depression or hypothermia in larger exposures. Cats are most sensitive. Contact (allergic) dermatitis is mild.' Poison toxic principle given as Geraniol, linalool; poison part is Leaves; causes contact dermatitis.",
+        "attracts_pollinators is true from NC State's structured Attracts field (Butterflies, Pollinators); RHS's page for this species carried no attracts/pollinator tag to corroborate or contradict this."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": "Allow soil to dry out between waterings but never let the plant wilt; for containers, check dryness to a depth of about 4-6 inches before rewatering.",
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Impatiens",
@@ -375,6 +415,24 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/impatiens/",
           "quote": "Impatiens are tender annuals throughout South Carolina."
+        },
+        {
+          "claim": "mature_height_in 6-24 (NC State Height: 0 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Impatiens walleriana",
+          "url": "https://plants.ces.ncsu.edu/plants/impatiens-walleriana/",
+          "quote": "Height: 0 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-24 (NC State Width: 0 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Impatiens walleriana",
+          "url": "https://plants.ces.ncsu.edu/plants/impatiens-walleriana/",
+          "quote": "Width: 0 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators is true (NC State Wildlife Value states the plant attracts pollinators)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Impatiens walleriana",
+          "url": "https://plants.ces.ncsu.edu/plants/impatiens-walleriana/",
+          "quote": "Attracts butterflies and pollinators. Deer like to browse the plants."
         }
       ],
       "unknowns": [
@@ -393,8 +451,19 @@
         "water_growing_days_est, water_dormant_days_est, water_dry_down_target, water_estimate_basis, water_check_depth_cm: left null because the underlying water_regime could not be resolved (see above), and no source gives day-interval or soil-depth check numbers regardless.",
         "soil_ph_min — removed on audit: Derived from NC State's structured tag 'Soil pH: Neutral (6.0-8.0)'. Verified by direct fetch that this exact bucket string -- 'Acid (<6.0) Neutral (6.0-8.0)' -- appears verbatim on completely unrelated NC State plant pages (Hosta spp., Rosa spp.). It is the site's fixed, generic definition of what the 'Neutral' pH category means, not a value measured or curated for Impatiens walleriana specifically. The record's own unknowns section already applies exactly this skepticism to a different NC State bucket field (direct_sun_hours_max: 'the site's generic category definition reused across plant profiles, not a species-specific... figure, so it was not used') but failed to apply the same reasoning to soil pH. Compounding this, the same NC State page's own prose -- quoted elsewhere in this record's own water citation -- says the plant needs 'a slightly acidic pH,' which is inconsistent with a 6.0-8.0 (neutral-to-alkaline) range. This is the structural-check-1 pattern (a cited source's own structured field contradicts its own prose) using a value that is also generic boilerplate rather than species-specific data. Should be null, not 6.",
         "soil_ph_max — removed on audit: Same defect as soil_ph_min: the '8.0' upper bound comes from NC State's site-wide generic 'Neutral (6.0-8.0)' bucket label, confirmed via direct fetch to be identical boilerplate on unrelated plant pages (Hosta spp., Rosa spp.), not species-specific data -- and it conflicts with the same source's own prose describing the plant as needing 'a slightly acidic pH,' which the record itself quotes elsewhere. Should be null, not 8.",
-        "outdoor_sun_exposure — removed on audit: The 'full_sun' element in this array is supported by only one of the four admissible sources cited (RHS, a UK-climate source), and even that source's own prose conditions it explicitly: 'will also thrive in full sun if kept moist and well watered.' A second RHS citation ('Position Full shade, Full sun, Partial shade') is used to back full_sun without carrying that condition into the record. Meanwhile the other three admissible sources all cap this species at part shade to full shade and actively warn against full sun: NC State says 'too much sun may scorch the leaves,' MOBOT says 'Sun: Part shade to full shade,' and Clemson says old-fashioned impatiens (this species) 'must have protection from hot afternoon sun to maintain their colors.' Storing an unconditioned 'full_sun' value when 3 of 4 admissible sources warn against it, and the 4th only supports it with an unstored moisture caveat, overstates what the evidence collectively supports and risks the plant being sited somewhere it will scorch."
-      ]
+        "outdoor_sun_exposure — removed on audit: The 'full_sun' element in this array is supported by only one of the four admissible sources cited (RHS, a UK-climate source), and even that source's own prose conditions it explicitly: 'will also thrive in full sun if kept moist and well watered.' A second RHS citation ('Position Full shade, Full sun, Partial shade') is used to back full_sun without carrying that condition into the record. Meanwhile the other three admissible sources all cap this species at part shade to full shade and actively warn against full sun: NC State says 'too much sun may scorch the leaves,' MOBOT says 'Sun: Part shade to full shade,' and Clemson says old-fashioned impatiens (this species) 'must have protection from hot afternoon sun to maintain their colors.' Storing an unconditioned 'full_sun' value when 3 of 4 admissible sources warn against it, and the 4th only supports it with an unstored moisture caveat, overstates what the evidence collectively supports and risks the plant being sited somewhere it will scorch.",
+        "is_edible left null: no page addressed eating/food use of Impatiens walleriana. NC State's Plant Toolbox page had 0 hits for 'Edible'; RHS's busy lizzie page had 0 hits for 'Edible'. hgic.clemson.edu/factsheet/impatiens/ (Clemson HGIC) could not be read -- it returned HTTP 403, refusing this machine -- so it was not checked; no guess was made about what it might say. (Fetch status corrected at landing: the Clemson page loaded for the auditor and is cached here as ok; no field rests on it.)",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a586 (Missouri Botanical Garden Plant Finder) could not be read -- the connection failed (refused this machine) -- so it was not checked; no guess was made about what it might say.",
+        "Toxicity check done before setting is_edible per instructions: NC State's page had 0 hits for 'Poison' and 0 hits for 'Problem for'; the 6 'Toxic' hits were only the site's own tags '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' (i.e. stated non-toxic to those pets), not a poisonous-part statement. RHS had 0 hits for 'Poison'/'Toxic'. Since is_edible is null (no food-use statement found either), no toxicity text is carried into a true is_edible per rule 5.",
+        "mature_height_in and mature_spread_in taken from NC State Plant Toolbox's species-specific structured Dimensions field ('Height: 0 ft. 6 in. - 2 ft. 0 in.', 'Width: 0 ft. 6 in. - 2 ft. 0 in.'), the anchor for this species since an NC State page exists for it. RHS's busy lizzie page also carries species-specific figures ('Max Height 0.1-0.5 metres', 'Max Spread 0.1-0.5 metres', i.e. ~3.9-19.7 in) but NC State was preferred as the anchor and the two ranges are broadly consistent (RHS's low end is smaller and its high end narrower, but both fit within NC State's 6-24 in range).",
+        "The species is an herbaceous annual/tender perennial with a mounding/clumping habit, not a vine, liana or other climber, so the climber size rule does not apply and all four size fields were populated.",
+        "This species is catalogued as a houseplant; the published mature size (max 24 in in both height and spread) is well under the 120 in (10 ft) threshold in the instructions, so it was recorded as published without needing to invoke the indoor-vs-outdoor distinction."
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "French marigold",
@@ -1420,6 +1489,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Two findings worth keeping in mind for future name-resolution work. Annual Geranium's scientific_name_accepted was set to Pelargonium x hybridum on a single source's say-so, but the audit fetched the record's other cited sources directly and found RHS explicitly rates the name status 'Unresolved' while Clemson, MOBOT and UF/IFAS all still use the given name (x hortorum) as their working name -- a genuine cross-source dispute, not a settled reclassification. Nulled, along with a name_note whose own final sentence contradicted the evidence it had just laid out. Petunia's resolution to Petunia x atkinsiana was left alone as a materially different situation: one source (RHS) makes an explicit accepted/synonym determination that the other sources are simply silent about, not actively disputing.",
     "Common Morning Glory's toxicity handling separated two questions the source itself keeps apart: NC State's page has a distinct 'Poisonous to Humans' section (with mechanism and symptoms) and a separate, undetailed 'Problem for Cats/Dogs/Horses' tag. The record had cross-attributed the human section's specific content to toxicity_detail; the audit correctly stripped only that text, leaving toxic_to_pets=true standing on the tag that actually supports it. Nasturtium's toxic_to_pets=true rests on a bare but specific three-animal tag with no mechanism given -- thinner than most, but a different evidentiary situation from Kohlrabi's b10 case, where the tag named only an animal (horses) unrelated to the field's actual question and left cats/dogs unaddressed.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

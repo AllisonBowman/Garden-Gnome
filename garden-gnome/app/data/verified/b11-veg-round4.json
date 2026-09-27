@@ -341,6 +341,30 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/capsicum-annuum-longum-group/",
           "quote": "TOXIC ONLY IF LARGE QUANTITIES EATEN. CAUSES SEVERE PAIN IN THE MOUTH IF EATEN! SKIN IRRITATION MINOR OR LASTING ONLY FOR A FEW MINUTES. Burning or stinging of lips, tongue and throat; nausea, vomiting, and diarrhea; burning sensation of the eyes and skin; blistering after prolonged exposure."
+        },
+        {
+          "claim": "is_edible true (NC State Extension Plant Toolbox, Capsicum annuum: Fruits edible, but spiciness is unpredictable in intensity.)",
+          "quote": "Fruits edible, but spiciness is unpredictable in intensity.",
+          "source": "NC State Extension Gardener Plant Toolbox — Capsicum annuum",
+          "url": "https://plants.ces.ncsu.edu/plants/capsicum-annuum/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Extension Plant Toolbox, Capsicum annuum Longum Group, Wildlife Value: May attract masked bees.)",
+          "quote": "May attract masked bees.",
+          "source": "NC State Extension Gardener Plant Toolbox — Capsicum annuum Longum Group",
+          "url": "https://plants.ces.ncsu.edu/plants/capsicum-annuum-longum-group/"
+        },
+        {
+          "claim": "mature_height_in 12-44 (NC State Extension Plant Toolbox, Capsicum annuum, Dimensions: Height: 1 ft. 0 in. - 3 ft. 8 in., converted to inches)",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 8 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Capsicum annuum",
+          "url": "https://plants.ces.ncsu.edu/plants/capsicum-annuum/"
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Extension Plant Toolbox, Capsicum annuum, Dimensions: Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox — Capsicum annuum",
+          "url": "https://plants.ces.ncsu.edu/plants/capsicum-annuum/"
         }
       ],
       "common_name": "Pepper",
@@ -381,14 +405,29 @@
         "water_growing_days_est / water_dormant_days_est / water_check_depth_cm / water_dry_down_target / water_estimate_basis: no admissible source gives day-interval or check-depth watering guidance for this crop; only the qualitative 'keep soil consistently and evenly moist' statement was found (captured as water_regime).",
         "fertilize_active_months / fertilize_strength: no source gives specific active months or a dilution-strength (full/half/quarter) recommendation.",
         "cool_rest_note: not applicable/no source addresses a dormancy or cool-rest period for this warm-season annual crop.",
-        "name_note — removed on audit: name_note asserts that Capsicum annuum is 'the name used consistently across every admissible source consulted (Clemson HGIC, NC State Extension Plant Toolbox, Penn State Extension)' -- but the citations array contains zero Penn State Extension (extension.psu.edu) entries anywhere in the record. No quote, URL, or claim from Penn State backs this up. The record is citing a source's corroboration that isn't actually present in its own evidence chain, which is exactly the kind of unverifiable overreach the audit is meant to catch, even though the underlying value (scientific_name_accepted = 'Capsicum annuum', matching the given name and every source that IS actually cited) checks out as correct on its own. Either drop the Penn State claim from name_note or add the missing citation."
+        "name_note — removed on audit: name_note asserts that Capsicum annuum is 'the name used consistently across every admissible source consulted (Clemson HGIC, NC State Extension Plant Toolbox, Penn State Extension)' -- but the citations array contains zero Penn State Extension (extension.psu.edu) entries anywhere in the record. No quote, URL, or claim from Penn State backs this up. The record is citing a source's corroboration that isn't actually present in its own evidence chain, which is exactly the kind of unverifiable overreach the audit is meant to catch, even though the underlying value (scientific_name_accepted = 'Capsicum annuum', matching the given name and every source that IS actually cited) checks out as correct on its own. Either drop the Penn State claim from name_note or add the missing citation.",
+        "is_edible is conditional/qualified, not a bare true: the species page (NC State Capsicum annuum) names only the fruit as edible and notes spiciness is unpredictable; the Longum Group cultivar page for the same species similarly says 'Fruit edible when raw or cooked but can be quite hot.'",
+        "Because is_edible is true, per the toxicity-check rule: the NC State Capsicum annuum Longum Group page (a cultivar group within this species) carries a full poison record that must be surfaced rather than dropped: 'This plant has low severity poison characteristics.' Poison Severity: Low. Poison Symptoms: 'TOXIC ONLY IF LARGE QUANTITIES EATEN. CAUSES SEVERE PAIN IN THE MOUTH IF EATEN! SKIN IRRITATION MINOR OR LASTING ONLY FOR A FEW MINUTES. Burning or stinging of lips, tongue and throat; nausea, vomiting, and diarrhea; burning sensation of the eyes and skin; blistering after prolonged exposure.' Poison Toxic Principle: Capsaicin and derivatives. Causes Contact Dermatitis: Yes. Poison Part: Fruits, Leaves, Seeds. (This appears on the Longum Group page, not the plain Capsicum annuum species page, which itself had zero hits for Poison/Toxic/Problem for.)",
+        "The Longum Group page's own Dimensions (Height: 1 ft. 0 in. - 4 ft. 0 in.; Width: 1 ft. 0 in. - 2 ft. 0 in.) were NOT used for mature_height_in/mature_spread_in because that page describes a named cultivar group (chili/cayenne types), not the species Capsicum annuum itself; the plain species page's Dimensions block was used instead, per the rule that a cultivar's size is not the species'.",
+        "The species page's Attracts field lists only 'Songbirds', and its Wildlife Value says birds (immune to capsaicin) may eat the fruit and thus be attracted -- this is fruit/seed consumption by birds, not pollination, and was correctly not used as pollinator support.",
+        "No page described Capsicum annuum (or the Longum Group) as a vine, liana, or other climber -- Habit/Form on the species page is Erect, Mounding, Multi-stemmed -- so the climber exclusion (rule 4) does not apply and all four size fields were filled normally.",
+        "Neither anchor page distinguished an indoor/houseplant-specific size from an outdoor one; only a single Dimensions block was given on the species page, and its values (max 44 in height, max 12 in spread) are well under the 120-inch houseplant ceiling, so no override or nulling was needed.",
+        "The Clemson HGIC 'Pepper' factsheet (https://hgic.clemson.edu/factsheet/pepper/) was read in full and searched for Poison, Toxic, Problem for, Attracts, Pollinator, bee, butterfl, hummingbird, Wildlife, Height, Dimensions, Width, Spread, edible, and Edible -- it contained no structured size data, no unconditional pollinator-attraction statement, and no explicit edible/not-edible statement using those terms, so it contributed no field values to this merge (all matches were unrelated site-navigation tags, disease-control text, or an unrelated 'Toxic Insecticides' cross-reference).",
+        "Fetch status (corrected at landing): the Clemson 'Pepper' factsheet returned HTTP 403 to the auditor and is not in the cache here, so the researcher's reading of it (line above) could not be re-checked. No field rests on it.",
+        "Not every plant sold under this species is grown to eat (noted at landing, verified against the cached copy): the species page's Cultivars / Varieties list marks three cultivars 'Ornamental, not edible': 'Aurora', 'Candelabra' and 'Chilly Chili'. is_edible true is the species' fruit, per its Edibility field."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 44,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Potato",
@@ -1157,6 +1196,7 @@
   "normalizations": [
     "2026-08-21: two loader-found defects fixed before landing, both the same class as b8's Artichoke -- Garden Pea and Turnip each had a citation and name_note that already established a specific accepted name (Lathyrus oleraceus, cited to NC State's synonymy listing; Brassica rapa (Rapifera Group), cited to RHS's own 'Name Status: Accepted' field) but left scientific_name_accepted null despite the prompt explicitly warning against this after b8. Populated from evidence already in each record, not invented. Neither left the record without a usable subject -- claims_from_record falls back to scientific_name_given -- but both are now correctly named.",
     "The batch's more important result is a negative one: the conflict- resolution fix added after b10 (a genuine cross-source disagreement on a harm-capable field must be nulled, not decided by preference) held across the whole batch. Onion's water_regime resolved to null with Missouri Botanical Garden's 'Dry to medium' rating explicitly left in conflict against Clemson and UMD's 'ample moisture during bulb enlargement' -- exactly the shape of the Cucumber defect from b10, this time handled correctly at the source. Potato's toxicity call is solid and correctly separates the edible tuber from the genuinely toxic green parts (solanine).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

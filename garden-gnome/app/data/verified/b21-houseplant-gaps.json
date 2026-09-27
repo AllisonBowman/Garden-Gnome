@@ -44,7 +44,14 @@
         "humidity_pct_min/humidity_pct_max and light_fc_min/light_fc_good: left null. No admissible source gives a percentage humidity figure or a foot-candle light figure for this species.",
         "fertilize_interval_days and fertilize_active_months: left null. RHS says to fertilize 'once or twice' 'when in growth' but never gives a day interval or names specific calendar months.",
         "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. No admissible source gives a specific check-depth or day-interval watering figure for this species; only qualitative guidance was found, which is captured instead in water_dry_down_target and cool_rest_note.",
-        "name_note — removed on audit: The field asserts a direct quotation — \"Haworthiopsis attenuata is often mistaken for or mislabeled as this plant\" — attributed to NC State Extension, but no entry in the citations array contains this quote or covers this claim. Citations 1 and 2 only support the 'previously known as' / synonym / Name-Status-Correct portion of name_note; the H. attenuata mistaken-identity aside has zero citation trace, failing structural check #1 (every non-null field value must trace to at least one citations entry). I independently fetched https://plants.ces.ncsu.edu/plants/haworthiopsis-fasciata/ and confirmed the quoted text does genuinely appear on that page, and that NC State's own Haworthiopsis attenuata page lists 'Zebra Haworthia' and 'Zebra Plant' as common names too (supporting the mislabeling point) — so the underlying fact is true, but the record still needs a dedicated citations-array entry for this specific quote rather than presenting it as sourced when it isn't listed anywhere in `citations`."
+        "name_note — removed on audit: The field asserts a direct quotation — \"Haworthiopsis attenuata is often mistaken for or mislabeled as this plant\" — attributed to NC State Extension, but no entry in the citations array contains this quote or covers this claim. Citations 1 and 2 only support the 'previously known as' / synonym / Name-Status-Correct portion of name_note; the H. attenuata mistaken-identity aside has zero citation trace, failing structural check #1 (every non-null field value must trace to at least one citations entry). I independently fetched https://plants.ces.ncsu.edu/plants/haworthiopsis-fasciata/ and confirmed the quoted text does genuinely appear on that page, and that NC State's own Haworthiopsis attenuata page lists 'Zebra Haworthia' and 'Zebra Plant' as common names too (supporting the mislabeling point) — so the underlying fact is true, but the record still needs a dedicated citations-array entry for this specific quote rather than presenting it as sourced when it isn't listed anywhere in `citations`.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page addresses whether Haworthiopsis fasciata (or any part of it) is eaten or used for food; no edible/food language found on either page.",
+        "attracts_pollinators left null: no 'Attracts', 'Pollinator', 'butterfly', 'bee', or 'hummingbird' language found on the NC State page, and no wildlife/pollinator attraction language or tag found on the RHS page.",
+        "Checked NC State for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: no poisonous-part or severity language was found. The page's Tags list only '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' -- no toxicity concern is noted for this species, and is_edible was left null regardless since no page states it is eaten.",
+        "Species is a small rosette succulent (per NC State: 'reaches a height of 4 to 6 inches and grows equally as wide'), not a vine/climber, so the climber size rule (rule 4) does not apply.",
+        "NC State's Dimensions block (Height: 0 ft. 4 in. - 0 ft. 6 in.; Width: 0 ft. 4 in. - 0 ft. 6 in.) is the species-level anchor and was used for size instead of RHS's genus-independent Max Height/Max Spread of 0.1-0.5 metres (~3.9-19.7 in), per the rule that NC State is the anchor when a species page exists.",
+        "Both figures are already well under the 120 in (10 ft) houseplant headroom threshold, so they were recorded as published with no houseplant-vs-outdoor adjustment needed.",
+        "No page in this task's reading list (plants.ces.ncsu.edu, www.rhs.org.uk) refused the fetch; both returned ok status."
       ],
       "citations": [
         {
@@ -94,8 +101,24 @@
           "quote": "Tags: #succulent #non-toxic for cats #non-toxic for horses #non-toxic for dogs #houseplant #easy to grow #container plant #easy to grow houseplant #pet friendly #drought tolerant #interesting leaves #herbaceous perennial",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/haworthiopsis-fasciata/"
+        },
+        {
+          "claim": "mature_height_in 4-6 (NC State Height: 0 ft. 4 in. - 0 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/haworthiopsis-fasciata/",
+          "quote": "Height: 0 ft. 4 in. - 0 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 4-6 (NC State Width: 0 ft. 4 in. - 0 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/haworthiopsis-fasciata/",
+          "quote": "Width: 0 ft. 4 in. - 0 ft. 6 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 4,
+      "mature_height_in_max": 6,
+      "mature_spread_in_min": 4,
+      "mature_spread_in_max": 6
     },
     {
       "common_name": "Majesty Palm",
@@ -142,7 +165,12 @@
         "water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a watering interval, soil-check depth, or day-count schedule; only the qualitative \"consistent moisture\" requirement and \"Moist, Occasionally Wet\" drainage tag were found.",
         "soil_base: NC State's soil-texture data (Clay, Loam, High Organic Matter) describes general planting-site soil composition rather than recommending a specific container/potting-mix product matching any fixed soil_base enum value, so it was left null rather than forced into standard_potting.",
         "fertilize_interval_days/fertilize_active_months/fertilize_strength: no admissible source addresses fertilizer schedule, timing, or strength for this species; the UF/IFAS general palm-fertilizer publication found in search does not name Ravenea rivularis specifically.",
-        "direct_sun_hours_max — removed on audit: Confirmed via direct fetch of both the cited page and a comparison page (plants.ces.ncsu.edu/plants/hedera-helix/) that 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' is NC State's fixed, site-wide legend text for the 'Partial Shade' light category -- it appears verbatim, word-for-word, on an unrelated species' page too. The '2-6 hours' is a generic bucket-boundary definition for the category label, not a measured or recommended sun-tolerance figure specific to Ravenea rivularis. The record extracted the number 6 out of this boilerplate parenthetical and repackaged it as a distinct, precise 'direct_sun_hours_max' data point, which overstates what the source establishes about this species specifically -- especially since the same source separately warns 'Avoid direct sunlight that can scorch the leaves' for this plant, suggesting its actual real-world tolerance is not well characterized by the generic category ceiling. This field should be null with the issue noted in unknowns, the way chill_damage_f and light_fc_min/good were correctly handled."
+        "direct_sun_hours_max — removed on audit: Confirmed via direct fetch of both the cited page and a comparison page (plants.ces.ncsu.edu/plants/hedera-helix/) that 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' is NC State's fixed, site-wide legend text for the 'Partial Shade' light category -- it appears verbatim, word-for-word, on an unrelated species' page too. The '2-6 hours' is a generic bucket-boundary definition for the category label, not a measured or recommended sun-tolerance figure specific to Ravenea rivularis. The record extracted the number 6 out of this boilerplate parenthetical and repackaged it as a distinct, precise 'direct_sun_hours_max' data point, which overstates what the source establishes about this species specifically -- especially since the same source separately warns 'Avoid direct sunlight that can scorch the leaves' for this plant, suggesting its actual real-world tolerance is not well characterized by the generic category ceiling. This field should be null with the issue noted in unknowns, the way chill_damage_f and light_fc_min/good were correctly handled.",
+        "is_edible left null (corrected at landing): NC State's Uses (Ethnobotany) field does name a food use the researcher's search missed, 'In Madagascar, the palm heart is eaten by local people.' That is a local use in the native range, not a use of the plant as grown here, and the page gives no preparation or safety text; under standing rule 2 it stays null, and a landing does not set a value. NC State's pet tags read '#non-toxic for cats #non-toxic for horses #non-toxic for dogs'; no human-poisoning statement was found.",
+        "attracts_pollinators: searched 'Attracts', 'Pollinator', 'Wildlife', 'bee', 'butterfl', 'hummingbird' on the NC State page -- 0 hits on all; the page does describe small yellowish-white flowers 'usually hidden in the foliage' but makes no attracts/wildlife claim; left null (no record), not false.",
+        "mature_spread_in_min / mature_spread_in_max: NC State's structured Dimensions block gives only the outdoor/landscape figure 'Width: 5 ft. 0 in. - 20 ft. 0 in.' (60-240 inches). This is the plant's outdoor/native stature, exceeds the 120-inch (10 ft) houseplant-headroom threshold, and no indoor/houseplant/container-specific spread figure was found anywhere on either page (only an indoor HEIGHT figure was given). Per rule 12, left both spread fields null rather than publish the outdoor figure or invent an indoor one.",
+        "mature_height_in: NC State's Dimensions block outdoor figure ('Height: 5 ft. 0 in. - 100 ft. 0 in.') was NOT used because the page separately gives an explicit indoor/houseplant figure ('As an indoor plant reaching 5 to 10 feet'), which is under the 10 ft threshold and was used instead per rule 12.",
+        "https://ask.ifas.ufl.edu/pp302 fetched successfully (status ok, not refused) but its content is 'PP302/PP302: Calonectria (Cylindrocladium) Leaf Spot of Palm' -- a fungal-disease extension article -- and contains zero hits for Dimensions/Height/Width/Attracts/Edible/Pollinator/Poison/Toxic/Problem for/Wildlife; it supplied no data toward any of the six fields."
       ],
       "citations": [
         {
@@ -204,8 +232,16 @@
           "quote": "Affected species include Chamaedorea elegans (parlor palm), C. cataractarum (cat palm), Cocos nucifera (coconut palm), Dypsis lutescens (golden cane palm or areca palm), Dictyosperma album (princess palm), Howeae belmoreana (Belmore sentry palm), H. forsteriana (Kentia palm), Laccospadix australasica (Atherton palm), Livistona chinensis (Chinese fan palm), Ravenea rivularis (majesty palm), Syagrus romanzoffiana (queen palm), Washingtonia filifera (California or desert fan palm), and W. robusta (Mexican fan palm).",
           "url": "https://ask.ifas.ufl.edu/pp302",
           "source": "UF/IFAS EDIS (PP302, Calonectria Leaf Spot of Palm)"
+        },
+        {
+          "claim": "mature_height_in 60-120 (NC State: As an indoor plant reaching 5 to 10 feet, converted to inches: 5 ft = 60 in, 10 ft = 120 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ravenea rivularis",
+          "url": "https://plants.ces.ncsu.edu/plants/ravenea-rivularis",
+          "quote": "As an indoor plant reaching 5 to 10 feet, this palm has an upright habit, full canopy, multiple stems and long arching, medium to dark green fronds."
         }
-      ]
+      ],
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 120
     },
     {
       "common_name": "Yucca Cane",
@@ -263,7 +299,15 @@
         "scientific_name_accepted — removed on audit: The record's own unknowns/name_note disclose a genuine conflict it does not resolve: RHS's own Yucca gigantea taxon page (the very URL cited elsewhere in this record) displays 'Name Status: Synonym' -- i.e., RHS's structured taxonomy field does not treat gigantea as accepted -- while NC State and UF/IFAS merely use 'Yucca gigantea' as their page/publication title without affirmatively asserting it is the currently accepted binomial over the synonym. This is exactly the 'a cited source's own structured field contradicts the value chosen' pattern the audit calls out, and it was resolved by counting two Extension sources against one RHS structured field rather than being left null with the conflict documented as unresolved.",
         "name_note — removed on audit: name_note asserts a specific, quotable fact -- 'RHS's own Yucca gigantea taxon page (id 522674) ... display[s] \"Name Status: Synonym\"' -- that never appears as an entry in the citations array; the only citations pointing at that RHS URL support unrelated cool_rest_note/fertilize_strength and toxic_to_pets claims. A load-bearing claim used to justify the scientific_name_accepted decision should trace to its own citation entry and does not.",
         "unknowns — removed on audit: Several unknowns entries quote source text directly (NC State's 'Soil pH: Acid (<6.0) Alkaline (>8.0) Neutral (6.0-8.0)', NC State's '70 to 90 degrees Fahrenheit' outdoor range, NC State's 'Indoor temperatures and humidity levels are adequate for this plant', RHS's 'pH: Acid or Alkaline or Neutral') but none of these quotes exist anywhere in the citations array, so these specific factual claims are untraceable per the record's own sourcing standard even though they're only being used to justify leaving fields null.",
-        "soil_base — removed on audit: No cited quote uses the term 'cactus' or 'succulent' for the soil mix. The NC State citation only describes a DIY ratio ('one part potting mix and 3 parts perlite or sand'); RHS describes 'peat-free, loam-based potting compost with added extra grit'; MOBOT says 'well-drained sandy soil mix.' These are gritty/fast-draining mixes in general, but none is literally a cactus/succulent-labeled medium, and RHS's loam-based recipe in particular is a distinct formulation from a generic cactus mix -- 'cactus_succulent' is an inferred category label, not a value any quote actually states."
+        "soil_base — removed on audit: No cited quote uses the term 'cactus' or 'succulent' for the soil mix. The NC State citation only describes a DIY ratio ('one part potting mix and 3 parts perlite or sand'); RHS describes 'peat-free, loam-based potting compost with added extra grit'; MOBOT says 'well-drained sandy soil mix.' These are gritty/fast-draining mixes in general, but none is literally a cactus/succulent-labeled medium, and RHS's loam-based recipe in particular is a distinct formulation from a generic cactus mix -- 'cactus_succulent' is an inferred category label, not a value any quote actually states.",
+        "All four size fields left null: every readable source gives only the plant's outdoor/landscape/greenhouse stature, and every one of those figures exceeds 120 in (10 ft) on at least one axis -- per rule 12 that means no size is recorded rather than a landscape figure being mistaken for houseplant scale.",
+        "NC State (anchor, plants.ces.ncsu.edu/plants/yucca-gigantea/) Dimensions block: \"Height: 15 ft. 0 in. - 30 ft. 0 in.\" / \"Width: 15 ft. 0 in. - 25 ft. 0 in.\" (= 180-360 in / 180-300 in), explicitly labeled outdoor: \"Outdoors, this plant can grow up to 15 to 30 feet tall and 15 to 25 feet wide. If grown as a houseplant, it will be much more compact\" -- no numeric houseplant figure is ever given, so there is nothing smaller to fall back on.",
+        "RHS (www.rhs.org.uk/plants/68706/yucca-elephantipes/details and www.rhs.org.uk/plants/522674/yucca-gigantea/details): \"Max Height 8-12 metres\" / \"Max Spread 4-8 metres\" (= 315-472 in / 157-315 in), no houseplant/container-specific figure, no 'Ultimate height' wording present either. (Corrected at landing: they are two separate pages with the same data, not a redirect; 522674 has Name Status 'Synonym' and 68706 'Not valid'.)",
+        "UF/IFAS ask.ifas.ufl.edu/publication/ST675: \"Height: 20 to 30 feet\" / \"Spread: 10 to 15 feet\" (= 240-360 in / 120-180 in); page only says \"Yucca grows well as a houseplant in a well-lighted area\" with no accompanying size figure.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b538 refused this machine (fetch status error:ConnectError) -- skipped per instructions, not guessed at.",
+        "is_edible is set TRUE but is conditional: only the flowers/blooms are eaten (used in salad, rich in calcium/potassium per NC State; UF/IFAS adds 'Leaves contain large amounts of ascorbic acid' but does not call leaves edible) -- the rest of the plant is not described as food.",
+        "Per rule 5, because is_edible is true, the full toxicity text on the anchor (NC State) page: \"This plant has low severity poison characteristics.\" Poison Symptoms: \"If ingested, toxic to humans, pets, and horses. Symptoms for humans: nausea, vomiting, diarrhea, headaches, dizziness; Symptoms for dogs and cats: vomiting; Symptoms for horses: liver disease; The highest concentration of saponins is found in the roots and leaves of the plant. The sap of the plant can cause minor rashes.\" Poison Toxic Principle: saponin. Poison Part: Leaves, Roots. Causes Contact Dermatitis: No. Whole-plant tags also include #problem for dogs, #problem for horses, #problem for cats, #problem for children, #poisonous if ingested, #poisonous leaves. RHS, both pages (noted at landing, verified against the cached copy): Potentially harmful 'Skin allergen. Wear gloves and other protective equipment when handling' and 'Pets (dogs, cats): Harmful if eaten'.",
+        "Plant is not a climber (NC State describes it as an upright, multistemmed shrub/small tree with a 'Tufted' habit per RHS; zero hits for climb/vine/liana), so the size nulling above is entirely a rule-12 (indoor-vs-outdoor) matter, not a rule-4 (climber) matter."
       ],
       "citations": [
         {
@@ -385,8 +429,22 @@
           "source": "RHS Plants, Yucca gigantea",
           "url": "https://www.rhs.org.uk/plants/522674/yucca-gigantea/details",
           "quote": "Potentially harmful. Skin allergen. Wear gloves and other protective equipment when handling. Pets (dogs, cats): Harmful if eaten - for further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants"
+        },
+        {
+          "claim": "is_edible true (flowers/blooms edible, used in salad) -- NC State: \"The flowers are edible and can be used in salad.\"",
+          "source": "NC State Extension Gardener Plant Toolbox: Yucca gigantea",
+          "url": "https://plants.ces.ncsu.edu/plants/yucca-gigantea/",
+          "quote": "The flowers are edible and can be used in salad."
+        },
+        {
+          "claim": "attracts_pollinators true -- NC State structured Attracts field lists Hummingbirds (and Moths)",
+          "source": "NC State Extension Gardener Plant Toolbox: Yucca gigantea",
+          "url": "https://plants.ces.ncsu.edu/plants/yucca-gigantea/",
+          "quote": "Hummingbirds"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Rex Begonia",
@@ -445,7 +503,17 @@
         "day_f_max — removed on audit: Same defect as day_f_min: the only citation (Clemson 'Foliage Begonias' Culture section) is class-level, not Begonia-rex-specific, and the uncited MOBOT corroboration referenced in unknowns ('...and 60° at night', paired with 70°F day) doesn't state 73°F at all. No clean, in-citations, species-specific source supports 73 as the max.",
         "soil_drainage — removed on audit: Confirmed via the source page: NC State's structured field literally reads 'Good Drainage' and 'Moist' -- it never says or implies 'moderate.' The record invented a 'moderate' category that the quote doesn't support; 'Good Drainage' maps more naturally to a well-drained category. This is the only citation for the field, so the value itself (not just the citation label) is unsupported.",
         "toxic_to_pets — removed on audit: Confirmed by search that the exact 'Poison Severity: Low... Kidney failure (in grazing animals), vomiting, and salivation in dogs/cats... roots are the most toxic part' text block is reused verbatim across at least 8 different NC State Begonia species pages (B. scharffiana, B. grandis, B. x benaratensis, B. incarnata, B. masoniana, B. 'Argenteo-guttata', B. cleopatrae, and Rex Types) -- classic genus-wide ASPCA-sourced boilerplate, not research specific to Begonia rex. It is also the sole citation for this field with no second source corroborating pet toxicity for this species.",
-        "toxicity_detail — removed on audit: Same defect as toxic_to_pets: the detailed mechanism/symptom text is drawn from the identical boilerplate block NC State displays on numerous unrelated Begonia species pages, not from research tailored to Begonia rex specifically, and no other admissible source is cited to corroborate it."
+        "toxicity_detail — removed on audit: Same defect as toxic_to_pets: the detailed mechanism/symptom text is drawn from the identical boilerplate block NC State displays on numerous unrelated Begonia species pages, not from research tailored to Begonia rex specifically, and no other admissible source is cited to corroborate it.",
+        "attracts_pollinators left null: no accessible page (NC State, RHS species page, RHS houseplants advice page) contains an Attracts/wildlife field or a bee/butterfly/moth/hummingbird/pollinator statement for this species.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=242218 refused this machine (fetch status: error:ConnectError) -- could not read, not used for any field.",
+        "https://hgic.clemson.edu/factsheet/growing-begonias-indoors/ refused this machine (fetch status: http-403) -- could not read, not used for any field.",
+        "https://www.rhs.org.uk/plants/begonias/houseplants is a genus/houseplant-group advice page, not species-specific; its 'Height and spread - 10-60cm (4in-2ft) by 10-45cm (4-18in)' figure spans multiple begonia types (fibrous, rhizomatous, tuberous, etc.) and was deliberately NOT used for mature_height_in/mature_spread_in per the genus-page exclusion rule -- the NC State species-group page and RHS species page (Max Height/Max Spread 0.1-0.5 metres, i.e. ~3.9-19.7in) were used instead, and NC State's figure (12-18in) was preferred as the specific-species anchor. (Corrected at landing: NC State's page is the 'Begonia – Rex Types' group page, not a species page, and none of its size figures landed; see the spread line below.)",
+        "is_edible set false, not just left null, because both NC State (Poisonous to Humans: Poison Severity Low; symptoms if ingested include kidney failure in grazing animals, vomiting and salivation in dogs/cats; most toxic part is the underground roots; sap can cause skin irritation; toxic principle calcium oxalate; causes contact dermatitis; poison part Roots, Sap/Juice) and RHS (Potentially harmful: 'Ornamental bulbs - not to be eaten. Wear gloves and other protective equipment when handling. Pets: Ornamental bulbs - not to be eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers') explicitly state the plant is not to be eaten and is toxic; no page states any part is grown or used for food.",
+        "Not a vine/climber: NC State lists it as Annual/Herbaceous Perennial/Houseplant with no climbing habit, and RHS lists Habit as 'Clump forming' -- so the climber exclusion rule (rule 4) does not apply and size fields were recorded normally.",
+        "No size lands for this record (corrected at landing): the height was nulled on audit and the spread at landing, both for scope.",
+        "mature_height_in_min removed on audit: SCOPE (C). The 12 comes from the NC State page's 'Dimensions: Height: 1 ft. 0 in. - 1 ft. 6 in.' (12-18 in; the conversion itself is correct). But that page is 'Begonia - Rex Types', which it calls an 'informal group' made up of 'the species Begonia rex and the many hybrids derived from it'. So the Dimensions block describes the whole hybrid group. The same page's Cultivars/Varieties list has its own entry for the species: 'Begonia rex (Painted Leaf Begonia) 8 to 12 inches tall'. That species figure contradicts the group's 12-18. The researcher's note calls NC State's figure 'the specific-species anchor', which misstates the page: the only species-specific height on it is 8-12 in. RHS 'Begonia rex (R)' gives only a broad 'Max Height 0.1-0.5 metres' (about 4-20 in), which cannot anchor 12 either.",
+        "mature_height_in_max removed on audit: SCOPE (C). The 18 is the upper end of NC State's group-level 'Height: 1 ft. 0 in. - 1 ft. 6 in.' for the 'Rex Types' informal group, which includes many hybrids. The page gives the species itself, Begonia rex (Painted Leaf Begonia), as '8 to 12 inches tall', so 18 in is a hybrid-group figure and not the species'. No page read supports 18 as the species maximum. RHS gives only 0.1-0.5 m.",
+        "mature_spread_in nulled at landing (scope, the ground on which the audit nulled the height): the 12-18 in came from the same NC State Dimensions block ('Width: 1 ft. 0 in. - 1 ft. 6 in.'), and the page describes its subject as 'This informal group includes the species Begonia rex and the many hybrids derived from it.' A group figure is not the species' figure, and the page's species line gives a height only. RHS 'Begonia rex (R)' gives 'Max Spread 0.1-0.5 metres' (about 3.9-19.7 in), which a re-research could cite. The Width citation was dropped."
       ],
       "citations": [
         {
@@ -519,8 +587,15 @@
           "quote": "Minimum winter temperature of 10°C (50°F) is required for all of these types except B. bowerae, B. masoniana and B. rex which require a minimum temperature of 13°C (55°F) ... Feed from May to September with a high nitrogen fertiliser, following the dose rate and frequency recommended on the packaging",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/begonias/houseplants"
+        },
+        {
+          "claim": "is_edible false (RHS Begonia rex (R) page, Potentially harmful field: not to be eaten)",
+          "source": "RHS, Begonia rex (R)",
+          "url": "https://www.rhs.org.uk/plants/101666/begonia-rex-(r)/details",
+          "quote": "Ornamental bulbs - not to be eaten."
         }
-      ]
+      ],
+      "is_edible": false
     },
     {
       "common_name": "Arrowhead Plant",
@@ -568,7 +643,13 @@
         "light_fc_min/light_fc_good: UF/IFAS EP244's sentence literally reads '250 to 1000 ft' rather than 'fc'; read as footcandles because the same article uses 'fc' elsewhere for light intensity (e.g. '80% shade (2500 fc)') and 250–1000 fc is the conventional unit/range for interiorscape light recommendations — flagging the source's own apparent unit typo.",
         "soil_base: mapped to standard_potting from Missouri Botanical Garden's 'soil based potting mix' and Clemson's peat/coir + vermiculite + perlite recipe; neither source uses the literal phrase 'standard potting mix,' and Clemson's specific recipe is technically soilless, so this is an approximate enum mapping rather than a verbatim match.",
         "toxicity mechanism (e.g. calcium oxalate) is not named for this species by any admissible source found — toxicity_detail is limited to RHS's pet-specific line 'Harmful if eaten; skin/eye irritant,' and a UF/IFAS note that sap can irritate human skin during invasive-species removal was not used here since it addresses human handling, not pets.",
-        "soil_base — removed on audit: The two citations backing standard_potting actually disagree on substance, not just phrasing. I fetched MoBOT's raw page directly and confirmed it literally says 'Best grown in a soil based potting mix' (i.e., contains real soil/loam). I fetched Clemson's page and confirmed its actual recommended recipe is 'Equal parts peat moss or coir, vermiculite, and perlite' -- an explicitly soilless mix with no soil component at all. These are two different care instructions, not two phrasings of the same one; the record's own unknowns entry admits 'Clemson's specific recipe is technically soilless' but still forces both into the single 'standard_potting' enum value rather than leaving the field null or reporting only the MoBOT-supported value. Per the audit's harm/quality-relevant-conflict rule, this is a case where sources disagree and the record picked a value anyway instead of resolving or nulling it."
+        "soil_base — removed on audit: The two citations backing standard_potting actually disagree on substance, not just phrasing. I fetched MoBOT's raw page directly and confirmed it literally says 'Best grown in a soil based potting mix' (i.e., contains real soil/loam). I fetched Clemson's page and confirmed its actual recommended recipe is 'Equal parts peat moss or coir, vermiculite, and perlite' -- an explicitly soilless mix with no soil component at all. These are two different care instructions, not two phrasings of the same one; the record's own unknowns entry admits 'Clemson's specific recipe is technically soilless' but still forces both into the single 'standard_potting' enum value rather than leaving the field null or reporting only the MoBOT-supported value. Per the audit's harm/quality-relevant-conflict rule, this is a case where sources disagree and the record picked a value anyway instead of resolving or nulling it.",
+        "Fetch status (corrected at landing): ask.ifas.ufl.edu/publication/EP244 refused the researcher but loaded for the auditor and is cached here as ok. It reads 'Syngonium is a perennial, evergreen, herbaceous vine of the family Araceae.', consistent with the climber rule below. No field rests on it.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276453 refused this machine (connect error, 0 bytes) -- not read, no claims drawn from it.",
+        "hgic.clemson.edu/factsheet/arrowhead-vine-syngonium-spp-indoor-care-growing-tips-plant-guide/ refused this machine (http-403, 0 bytes) -- not read, no claims drawn from it.",
+        "mature_height_in_min/max and mature_spread_in_min/max all left null: RHS lists this species' Habit as 'Climbing' and describes it as 'An evergreen climber, to 2m tall' -- per the climber rule, no size figures are recorded even though RHS's structured Dimensions block gives Max Height 1.5-2.5 metres and Max Spread 0.5-1 metres.",
+        "attracts_pollinators left null: searched RHS page for 'Pollinator', 'Attracts', 'bee', 'butterfl', 'hummingbird', 'Wildlife' -- no structured attracts field and no unconditional pollinator statement found (the one 'Wildlife' hit was a site-navigation link, not plant data).",
+        "is_edible set false on RHS's toxicity statement, not a dedicated edibility field: Botanical Details lists 'Potentially harmful: Harmful if eaten; skin/eye irritant. ... Pets: Harmful if eaten; skin/eye irritant', which is a direct statement that the plant is poisonous to eat."
       ],
       "citations": [
         {
@@ -696,8 +777,15 @@
           "quote": "Best Soil: Equal parts peat moss or coir, vermiculite, and perlite",
           "source": "Clemson Cooperative Extension HGIC — Arrowhead Vine (Syngonium spp.) Indoor Care, Growing Tips & Plant Guide",
           "url": "https://hgic.clemson.edu/factsheet/arrowhead-vine-syngonium-spp-indoor-care-growing-tips-plant-guide/"
+        },
+        {
+          "claim": "is_edible false (RHS Botanical Details, Potentially harmful: Harmful if eaten; skin/eye irritant -- states the plant is poisonous to eat)",
+          "source": "RHS: Syngonium podophyllum | arrowhead vine",
+          "url": "https://www.rhs.org.uk/plants/17899/syngonium-podophyllum/details",
+          "quote": "Harmful if eaten; skin/eye irritant."
         }
-      ]
+      ],
+      "is_edible": false
     },
     {
       "common_name": "Kalanchoe",
@@ -747,7 +835,13 @@
         "outdoor_sun_exposure — Clemson HGIC's claim that the plant 'grows best in full sun' conflicts with NC State's structured Light field (Partial Shade only, plus an explicit warning that prolonged direct sun scorches the leaves), RHS's Position field (Partial shade), and UF/IFAS's Light Requirement field (part shade/part sun). Three sources against one, including a scorch warning, argued against including full_sun; only part_shade and part_sun are recorded, and this conflict is flagged here instead of being silently resolved.",
         "Missouri Botanical Garden (plantfinder.mobot.org / missouribotanicalgarden.org) is an admissible domain, but every WebFetch attempt on it returned a TLS certificate error ('unable to verify the first certificate') and the missouribotanicalgarden.org URL 301-redirects to the same unreachable host, so its content could not be directly verified and none of it was used — a search-engine auto-summary attributed to this domain also closely echoed NC State's own wording, a further reason not to rely on it unverified.",
         "cool_rest_note — removed on audit: The note's clause 'with blooms following in spring and lasting several weeks' is not contained in the cited NC State quote, which reads only: 'In the fall and winter, total darkness is required for 14 hours a day for at least 6 weeks.' No citation entry in the array supports the spring-bloom-timing/duration claim. I independently fetched the live NC State page and found it does say, in the same blooming section, 'Blooms will appear in the spring and can last for several weeks' -- so the added clause is likely true -- but it was never quoted or cited in this record, so as documented the field over-reaches beyond its own citation's quote text. Fix: extend the NC State quote (or add a second citation entry) to actually include the spring-bloom sentence before asserting it in the note.",
-        "toxicity_detail: restored with a citation added for the plant-part detail (NC State's \"Poison Part: Flowers, Leaves, Stems\" field, confirmed live during audit but not originally captured as its own citation entry). The uncited \"cardiac glycosides\" synonym gloss the audit flagged was dropped rather than re-added; \"bufadienolides\" (which is cited) is kept."
+        "toxicity_detail: restored with a citation added for the plant-part detail (NC State's \"Poison Part: Flowers, Leaves, Stems\" field, confirmed live during audit but not originally captured as its own citation entry). The uncited \"cardiac glycosides\" synonym gloss the audit flagged was dropped rather than re-added; \"bufadienolides\" (which is cited) is kept.",
+        "NC State Plant Toolbox (species-specific page, not a genus page) fully covers all six fields, so RHS, Clemson HGIC, and UF/IFAS pages were not needed for this record and were not consulted.",
+        "Not a climber (herbaceous perennial succulent/houseplant), so the climber-height exclusion (rule 4) does not apply.",
+        "Figures are for the species page itself, not a named cultivar, so the cultivar exclusion (rule 3) does not apply.",
+        "Both dimensions (Height: 6-18 in., Width: 6-12 in.) are well under the 10 ft houseplant headroom cap, so no indoor/outdoor size conflict to resolve.",
+        "is_edible is FALSE, not true, so the toxicity dump required by rule 5 for a TRUE value is not mandatory here, but for safety: NC State states 'This plant has medium severity poison characteristics', 'Keep this plant out of the reach of children, dogs, and cats due to its toxicity if ingested', Poison Toxic Principle: bufadienolides, Poison Part: Flowers, Leaves, ingestion by pets 'can be fatal and causing abnormal heart rate, seizures, and death', and tags include 'problem for dogs', 'problem for cats', 'problem for children', 'poisonous if ingested'.",
+        "No field was left null; all six requested fields have a value and citation."
       ],
       "citations": [
         {
@@ -869,8 +963,38 @@
           "source": "NC State Extension — Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/kalanchoe-blossfeldiana/common-name/madagascar-widows-thrill",
           "quote": "Poison Part: Flowers, Leaves, Stems"
+        },
+        {
+          "claim": "mature_height_in 6-18 (NC State Height: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Kalanchoe blossfeldiana (Madagascar Widow's Thrill)",
+          "url": "https://plants.ces.ncsu.edu/plants/kalanchoe-blossfeldiana/common-name/madagascar-widows-thrill",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Kalanchoe blossfeldiana (Madagascar Widow's Thrill)",
+          "url": "https://plants.ces.ncsu.edu/plants/kalanchoe-blossfeldiana/common-name/madagascar-widows-thrill",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value field: bees, butterflies, hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox - Kalanchoe blossfeldiana (Madagascar Widow's Thrill)",
+          "url": "https://plants.ces.ncsu.edu/plants/kalanchoe-blossfeldiana/common-name/madagascar-widows-thrill",
+          "quote": "Attracts hummingbirds, bees, and butterflies."
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field states the plant is toxic if ingested, not edible)",
+          "source": "NC State Extension Gardener Plant Toolbox - Kalanchoe blossfeldiana (Madagascar Widow's Thrill)",
+          "url": "https://plants.ces.ncsu.edu/plants/kalanchoe-blossfeldiana/common-name/madagascar-widows-thrill",
+          "quote": "Toxic if an part of the plant is ingested."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Purple Shamrock",
@@ -923,7 +1047,13 @@
         "toxicity_detail: NC State Extension's Plant Toolbox tags Oxalis triangularis \"Problem for Cats,\" \"Problem for Dogs,\" and \"Problem for Horses\" in a structured field, but its detailed poison-symptom and toxic-principle text for this species (\"Poison Severity,\" \"Poison Symptoms,\" \"Poison Toxic Principle\") is filed on the same page under a \"Poisonous to Humans\" section header, not a pet-specific one, so that narrative was excluded from the pet-facing toxicity_detail text; the detail used instead comes from Penn State Extension's genuinely pet-specific passage naming Oxalis triangularis directly.",
         "outdoor_sun_exposure: RHS's own page for Oxalis triangularis carries a structured \"Position\" field reading \"Partial shade\" alongside separate Cultivation-guidance prose recommending \"full sun in a sheltered position\"; that RHS citation was narrowed to the full_sun cultivation claim it makes in complete-sentence form, since NC State and Missouri Botanical Garden each independently and cleanly state the species does well from \"full sun to partial/part shade\" as one combined recommendation, so the dual value itself rests on those two sources rather than on RHS's internally split fields.",
         "scientific_name_accepted/name_note: NC State and Penn State Extension both note \"Oxalis regnellii\" as a former name for this species, but neither treats it as a currently valid alternative, so scientific_name_accepted was kept identical to the given name Oxalis triangularis with no conflict found.",
-        "fertilize_interval_days — removed on audit: The value 30 is not literally present in its citation's quote: RHS says 'apply a balanced liquid fertiliser monthly' — the word 'monthly,' not a day-count. Check 1 requires every number in a claim label to be re-derived from the quote's own text, with the ONLY stated exception being month-name-to-number translation for fertilize_active_months. Converting 'monthly' to '30' for fertilize_interval_days is a different, non-exempted numeric inference and fails the literalness test as specified. (This is also the sole non-null numeric field in the whole record, so it's the one place the literalness check actually bites.) Separately, Clemson's supplementary citation for this same field ('1-2 times per month') spans 15-30 days, which is compatible with but not identical to 'monthly' — a minor secondary reason the specific figure of 30 shouldn't be asserted as cleanly as it is."
+        "fertilize_interval_days — removed on audit: The value 30 is not literally present in its citation's quote: RHS says 'apply a balanced liquid fertiliser monthly' — the word 'monthly,' not a day-count. Check 1 requires every number in a claim label to be re-derived from the quote's own text, with the ONLY stated exception being month-name-to-number translation for fertilize_active_months. Converting 'monthly' to '30' for fertilize_interval_days is a different, non-exempted numeric inference and fails the literalness test as specified. (This is also the sole non-null numeric field in the whole record, so it's the one place the literalness check actually bites.) Separately, Clemson's supplementary citation for this same field ('1-2 times per month') spans 15-30 days, which is compatible with but not identical to 'monthly' — a minor secondary reason the specific figure of 30 shouldn't be asserted as cleanly as it is.",
+        "is_edible nulled at landing (standing rule 2). NC State's Edibility field reads 'Leaves and flowers are edible but should be used in moderation.', but the same page names toxicity: Poison Symptoms 'All parts of the plant have toxic potential, although the possibility of serious effects is usually limited to ingestions of large quantities. Consuming Oxalis species can produce colic in horses, and kidney failure is possible if significant amounts are eaten.', toxic principle 'Soluble calcium oxylates' (the page's spelling), and the tags '#problem for dogs #problem for horses #problem for cats' and '#poisonous'. The citation was dropped.",
+        "Toxicity text from the same NC State page: the page's summary banner reads 'This plant has low severity poison characteristics.' Its structured fields read: Poison Severity: Low. Poison Symptoms: 'All parts of the plant have toxic potential, although the possibility of serious effects is usually limited to ingestions of large quantities. Consuming Oxalis species can produce colic in horses, and kidney failure is possible if significant amounts are eaten.' Poison Toxic Principle: Soluble calcium oxylates. Causes Contact Dermatitis: No. Poison Part: Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems. The page's tags also include #problem for dogs #problem for horses #problem for cats #poisonous.",
+        "Species is not a vine/climber (Habit/Form is herbaceous perennial groundcover/houseplant), so the climber-exclusion rule for size does not apply.",
+        "The Dimensions figures are for the species itself, not a named cultivar (the page lists 'Atropurpurea', 'Charmed Wine', 'Ebony', 'Fanny', 'Francis', 'Mijke' as related cultivars, but the Dimensions block sits under the species-level page, not a cultivar page).",
+        "Both height (6-18 in) and spread (12-24 in) are already under the 120 in / 10 ft indoor-headroom threshold, so no separate houseplant-specific figure was needed and none is claimed.",
+        "Only plants.ces.ncsu.edu/plants/oxalis-triangularis/ was read for these six fields: it carries a structured Dimensions block plus explicit Edibility and Wildlife Value / Attracts fields. The other seven already-cited pages (two PSU botany/holiday pages, one PSU Master Gardener news page, Missouri Botanical PlantFinder, Clemson HGIC, and two RHS subspecies/species pages) were not fetched by the researcher. Corrected at landing: the auditor read the PSU and RHS pages (PSU adds oxalic acid and pet caution); the Missouri Botanical Garden and Clemson pages failed for the auditor (ConnectError, HTTP 403) and are not in the cache here."
       ],
       "citations": [
         {
@@ -1033,8 +1163,31 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/110044/oxalis-triangularis-subsp-triangularis/details",
           "quote": "Water moderately when in growth and apply a balanced liquid fertiliser monthly. Keep barely moist when dormant in the winter"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value / Attracts field names butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox - Oxalis triangularis",
+          "url": "https://plants.ces.ncsu.edu/plants/oxalis-triangularis/",
+          "quote": "Attracts butterflies."
+        },
+        {
+          "claim": "mature_height_in 6-18 (NC State Height: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Oxalis triangularis",
+          "url": "https://plants.ces.ncsu.edu/plants/oxalis-triangularis/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Oxalis triangularis",
+          "url": "https://plants.ces.ncsu.edu/plants/oxalis-triangularis/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Scarlet Star",
@@ -1085,7 +1238,16 @@
         "toxicity: only pet toxicity is addressed by an admissible source (non-toxic tags on the NC State species page); no admissible source discusses toxicity to humans for this species.",
         "chill_damage_f — removed on audit: Verified live on the RHS page: the only support is 'Hardiness Rating: H1A (minimum temperature above 15°C; requires glass protection year-round)' — a broad UK cultivation/greenhouse-protection category, not an explicit statement that chill or tissue damage begins at that exact point. Nothing in the quote uses words like 'damage' or 'injury'; H1a simply means 'keep under glass all year, needs >15C', which RHS assigns as a conservative growability band, not a documented injury threshold. Separately, the claim label's number 59 is never literally present in the quote (only '15C'/'>15C' appear) — deriving 59°F requires a C-to-F conversion, and the audit's own rule permits number derivation exceptions only for month-name-to-number translation on fertilize_active_months, not other unit conversions. Both the semantic leap (protection-needed zone treated as a damage threshold) and the uncited unit conversion make this specific numeric value unverifiable as written, even though it is the only admissible temperature-tolerance data available for this species.",
         "humidity_need — removed on audit: Verified live: Clemson's clean, explicit 'high humidity' statement ('Guzmanias are more sensitive than many other bromeliads... To ensure success, maintain high humidity') is genus-level text from a general Bromeliads factsheet, written about 'Guzmanias' as a group under a generic Guzmania-genus subheading — not specific to G. lingulata (a second, immediately adjacent paragraph in the same factsheet repeats nearly identical humidity language verbatim for the Vriesea genus, confirming this is templated per-genus boilerplate, not species research). The only species-specific citation (Missouri Botanical Garden's G. lingulata 'Problems' section: 'Keeping the air humid enough for successful growth could also be a problem in a home environment') never says 'high' or states a humidity requirement level at all — it flags a cultivation problem, which only indirectly implies elevated humidity need. Neither citation cleanly and directly supports 'high' as a G. lingulata-specific value: the clear statement is genus-level, and the species-specific source is indirect.",
-        "soil_base — removed on audit: The only citation quote (NC State, verified live) says 'Use potting soil made for bromeliads or orchids and water sparingly at the roots.' This states a purpose-marketed product category ('for bromeliads or orchids') but never literally names bark as the medium — commercial 'orchid potting soil' varies widely (bark, sphagnum, perlite, or blended mixes). Mapping this quote to the specific enum value 'orchid_bark' asserts a material composition the quote doesn't literally state, and NC State's own companion field on the same page tags this species' Soil Texture as 'High Organic Matter,' which is not the description typically used for a coarse bark medium."
+        "soil_base — removed on audit: The only citation quote (NC State, verified live) says 'Use potting soil made for bromeliads or orchids and water sparingly at the roots.' This states a purpose-marketed product category ('for bromeliads or orchids') but never literally names bark as the medium — commercial 'orchid potting soil' varies widely (bark, sphagnum, perlite, or blended mixes). Mapping this quote to the specific enum value 'orchid_bark' asserts a material composition the quote doesn't literally state, and NC State's own companion field on the same page tags this species' Soil Texture as 'High Organic Matter,' which is not the description typically used for a coarse bark medium.",
+        "is_edible left null: neither the NC State species page, the NC State genus page, nor the RHS page states this plant or any part of it is eaten or grown for food; no page addresses eating it at all.",
+        "Searched the NC State species page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: no poisoning language found. The page's own tag list marks it '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' (a pet-safety tag, not an edibility statement), and its 'Insects, Diseases, and Other Plant Problems' section lists only leaf spots, scales, spider mites, and mealybugs -- no toxic part or severity named.",
+        "attracts_pollinators left null: no page (NC State species page, NC State genus page, or RHS) contains an Attracts/wildlife field or any mention of bees, butterflies, moths, hummingbirds, or other pollinators for this species.",
+        "Not a climber: NC State lists Plant Type as Epiphyte / Herbaceous Perennial / Houseplant, a rosette-forming bromeliad, so the climber-exclusion rule does not apply and size fields were recorded normally.",
+        "Size figures used are the NC State species page's Dimensions block (Height/Width 1 ft. 0 in. - 2 ft. 0 in., i.e. 12-24 in each), which is under 120 in, so recorded as published; no separate indoor/houseplant-specific figure was given, and this Dimensions block is the only species-level size figure on the page.",
+        "RHS (https://www.rhs.org.uk/plants/8142/guzmania-lingulata/details) independently gives Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres (3.9-19.7 in), consistent with the NC State range; NC State was used as the citation since it is the species-specific anchor page with a structured Dimensions block.",
+        "https://plants.ces.ncsu.edu/plants/guzmania/common-name/bromeliad/ is a GENUS page for Guzmania (its Height 0 ft. 6 in. - 3 ft. 3 in. / Width 0 ft. 6 in. - 2 ft. 0 in. spans the whole genus) and was not used for this species' size, per the rule that a genus page is not a substitute; it was checked only for supplementary edibility/pollinator language and had none relevant.",
+        "https://hgic.clemson.edu/factsheet/bromeliads/ refused this machine (http-403) -- could not be read, not used, and nothing from it is guessed.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b556 refused this machine (error:ConnectError) -- could not be read, not used, and nothing from it is guessed."
       ],
       "citations": [
         {
@@ -1195,8 +1357,24 @@
           "quote": "Potential problems are leaf spots, scales, spider mites, and mealybugs. Keeping the air humid enough for successful growth could also be a problem in a home environment.",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b556"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Dimensions: Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Scarlet Star (Guzmania lingulata)",
+          "url": "https://plants.ces.ncsu.edu/plants/guzmania-lingulata/common-name/scarlet-star/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Dimensions: Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Scarlet Star (Guzmania lingulata)",
+          "url": "https://plants.ces.ncsu.edu/plants/guzmania-lingulata/common-name/scarlet-star/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1239,6 +1417,7 @@
     "The remaining 8 species are genuinely new: Haworthia, Majesty Palm, Yucca Cane, Rex Begonia, Arrowhead Plant, Kalanchoe, Purple Shamrock, and a representative ornamental bromeliad (Guzmania) -- verified by the same grep check against every batch file, not just b2/b6.",
     "This batch surfaced one more real, current genus reclassification among the species that did land: Haworthia fasciata -> Haworthiopsis fasciata, confirmed independently by NC State. Recorded with scientific_name_given holding the familiar/requested name and scientific_name_accepted holding the current one, per this catalog's usual convention.",
     "Rex Begonia's toxic_to_pets and toxicity_detail were correctly left null after the audit found the sole supporting NC State text block reused verbatim across at least 8 different Begonia species pages -- classic genus-wide boilerplate dressed up as this species' own page content, not species-specific research. Left as an honest gap rather than repaired.",
-    "One small landing-time repair, restoring an already-verified fact the audit had confirmed true via live fetch but the record hadn't properly cited: Kalanchoe's toxicity_detail plant-part detail (added a citation for NC State's own \"Poison Part: Flowers, Leaves, Stems\" field; dropped the one uncited \"cardiac glycosides\" gloss the audit flagged)."
+    "One small landing-time repair, restoring an already-verified fact the audit had confirmed true via live fetch but the record hadn't properly cited: Kalanchoe's toxicity_detail plant-part detail (added a citation for NC State's own \"Poison Part: Flowers, Leaves, Stems\" field; dropped the one uncited \"cardiac glycosides\" gloss the audit flagged).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

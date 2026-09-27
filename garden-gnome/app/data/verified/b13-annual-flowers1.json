@@ -639,7 +639,13 @@
         "soil_ph_min/soil_ph_max: set from NC State's general tag 'Soil pH: Neutral (6.0-8.0)'. UMD separately states cut-flower field production 'thrives in well-drained soil with a pH of 6.0 to 6.4' -- a narrower, production-specific optimum nested inside NC State's broader tolerance range rather than a contradiction, but noted here since a different number appears in another admissible source.",
         "water_regime: no source uses language matching any of the enum categories (keep_moist / dry_surface_between / dry_thoroughly_between / keep_barely_moist). Available quotes describe drought/dry-soil tolerance, an 'occasionally dry' soil-drainage tag, and a weekly irrigation amount for field production -- none map cleanly onto one regime category, so it was left null rather than inferred.",
         "humidity_pct_min/max, direct_sun_hours_max, fertilize_active_months, fertilize_strength, water_dormant_days_est, water_dry_down_target, water_check_depth_cm, cool_rest_note: no admissible source gave a quotable value for these fields.",
-        "soil_drainage — removed on audit: Value 'fast' is not literally supported by either cited quote. NC State's page (verified by direct fetch) tags the species 'Good Drainage' and 'Occasionally Dry' -- not 'fast'. The RHS citation, explicitly invoked to 'support soil_drainage fast', quotes 'Moist but well-drained or Well-drained', which is a moisture-retention descriptor and arguably cuts against a 'fast'-drainage characterization rather than supporting it. 'Fast' is an inferential leap from tag-based drainage/moisture descriptors, not a value stated by either admissible source."
+        "soil_drainage — removed on audit: Value 'fast' is not literally supported by either cited quote. NC State's page (verified by direct fetch) tags the species 'Good Drainage' and 'Occasionally Dry' -- not 'fast'. The RHS citation, explicitly invoked to 'support soil_drainage fast', quotes 'Moist but well-drained or Well-drained', which is a moisture-retention descriptor and arguably cuts against a 'fast'-drainage characterization rather than supporting it. 'Fast' is an inferential leap from tag-based drainage/moisture descriptors, not a value stated by either admissible source.",
+        "Edibility is conditional, not a bare yes: NC State's Edibility field says only that the leaves and young shoots are cooked and used in soups and stews and that the seeds yield edible oil; a separate line on the same page adds that the leaves and flowers are edible 'when picked young' -- i.e. edibility is tied to the plant part and to harvesting it young.",
+        "Before setting is_edible, the anchor page was searched for 'Poison', 'Toxic' and 'Problem for'. No poisonous part, severity, toxic principle, or preparation requirement is named for this species. The only hits are: an Ethnobotany field reading 'It is used as animal food, a poison and a medicine, has environmental uses and social uses and for food' (a generic list of use-categories for the species as a whole, not a statement that Celosia argentea itself is toxic or that any part is poisonous to eat), and tag chips reading 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs'. 'Problem for' had 0 hits. Recorded here per the instruction that any page text naming poison/toxicity must reach unknowns whenever is_edible is true, even though nothing here contradicts edibility.",
+        "Not a climber: NC State lists the habit as erect (Annual / Herbaceous Perennial), so the climber size-suppression rule does not apply.",
+        "Size figures are the species page's own Dimensions block (not a cultivar figure, not a genus page): Height 0 ft. 9 in. - 1 ft. 6 in. and Width 0 ft. 9 in. - 1 ft. 0 in. Both ends are under 10 ft, so no houseplant-vs-outdoor distinction was needed; the published figures were recorded as-is.",
+        "The UMD cut-flower production page and the RHS 'Kimono Series' cultivar page were not drawn on for these six fields: NC State's own species page (celosia-argentea, not a genus page) already carries the anchor structured Dimensions block plus explicit Wildlife Value / Attracts / Edibility fields, so it alone supplied every non-null value with a directly quotable source.",
+        "No mention of hummingbirds was found on the anchor page (0 hits); pollinator support rests on the page's 'Attracts butterflies, bees and other pollinators' wildlife-value statement and its structured 'Attracts: Bees / Butterflies / Pollinators' field."
       ],
       "citations": [
         {
@@ -737,8 +743,38 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/295071/i-celosia-argentea-i-var-i-cristata-i-(plumosa-group)-kimono-series/details",
           "quote": "H2: tolerant of low temperatures, but not surviving being frozen (1 to 5)"
+        },
+        {
+          "claim": "mature_height_in 9-18 (NC State Height: 0 ft. 9 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox, Celosia argentea",
+          "url": "https://plants.ces.ncsu.edu/plants/celosia-argentea/",
+          "quote": "Height: 0 ft. 9 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 9-12 (NC State Width: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox, Celosia argentea",
+          "url": "https://plants.ces.ncsu.edu/plants/celosia-argentea/",
+          "quote": "Width: 0 ft. 9 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: leaves and young shoots cooked in soups/stews, seeds yield edible oil)",
+          "source": "NC State Extension Gardener Plant Toolbox, Celosia argentea",
+          "url": "https://plants.ces.ncsu.edu/plants/celosia-argentea/",
+          "quote": "The leaves and young shoots are cooked and used in soups and stews. The seeds yield edible oil."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: Attracts butterflies, bees and other pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox, Celosia argentea",
+          "url": "https://plants.ces.ncsu.edu/plants/celosia-argentea/",
+          "quote": "Attracts butterflies, bees and other pollinators."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 9,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Coleus",
@@ -794,7 +830,16 @@
         "water_growing_days_est, water_dormant_days_est, water_check_depth_cm, water_estimate_basis, cool_rest_note: no admissible source gives a calendar-based watering interval, a checking depth in centimeters, or dormancy/rest information; Clemson's actionable guidance is condition-based ('water when the entire top inch of soil is dry') rather than a day count, and converting 'top inch' to a centimeter figure not stated in the source was avoided.",
         "fertilize_strength: no admissible source specifies a dilution strength (full/half/quarter); Clemson names NPK formulations (24-8-16, 17-4-17) and RHS says 'high-nitrogen' but neither gives a strength category.",
         "fertilize_interval_days — removed on audit: The value 14 is not literally present in its own cited quote. The RHS quote says 'apply a high-nitrogen every 2 weeks' — the source states '2' (weeks), never '14' (days); 14 is a silent unit conversion the researcher performed, not a number stated in the quote, which fails the re-derivation check. Independently verified against the live RHS page: the cultivation text is 'Under glass grow in peat-free potting compost in full light or partial shade. Water freely in growth and apply a high-nitrogen every 2 weeks' — an indoor/greenhouse ('under glass') fertilizing cadence with no month restriction. This is then paired in the record with fertilize_active_months (6,7,8), which comes from a *different* source (Clemson) describing a *different* context — outdoor garden-bed fertilizing restricted to a mid-summer boost with specific NPK formulations (24-8-16 or 17-4-17), no stated interval. Neither source actually supports 'fertilize every 14 days, active only in June–August' as a combined regimen; that composite claim is synthesized across two sources describing different growing contexts (greenhouse vs. outdoor bed) and time scopes (year-round growth vs. summer-only), which is a genuine over-reach on a field that governs a real feeding schedule.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/coleus-scutellarioides/, https://www.rhs.org.uk/plants/132520/coleus-scutellarioides/details, https://hgic.clemson.edu/factsheet/coleus/, https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a547); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/coleus-scutellarioides/, https://www.rhs.org.uk/plants/132520/coleus-scutellarioides/details, https://hgic.clemson.edu/factsheet/coleus/, https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a547); none found, so the value stays null. Audited live.",
+        "attracts_pollinators left null: neither the NC State Plant Toolbox page nor the RHS page has an Attracts/wildlife field or any mention of bees, butterflies, moths, or hummingbirds for Coleus scutellarioides (the one 'bee' regex hit on the NC State page was inside the word 'been', not a pollinator mention).",
+        "is_edible left null: no page among those read states that Coleus scutellarioides or any part of it is eaten or grown for food.",
+        "NC State's page itself flags this species as having 'low severity poison characteristics': Poison Toxic Principle 'Diterpene coleonol, coleon O', Causes Contact Dermatitis: Yes, Poison Part: Leaves -- noted here for safety context even though is_edible was not set true.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a547 refused this machine (error:ConnectError) -- could not be read.",
+        "https://edis.ifas.ufl.edu/fp136 redirects to ask.ifas.ufl.edu, which refused this machine (error:ProxyError) -- could not be read.",
+        "https://hgic.clemson.edu/factsheet/coleus/ returned HTTP 403 -- refused this machine, could not be read.",
+        "RHS gives a different size range for this species (Max Height 0.5-1 metres = 19.7-39.4 in; Max Spread 0.1-0.5 metres = 3.9-19.7 in) than NC State's Dimensions block (Height 6-36 in, Width 6-36 in); NC State was used as the anchor/citation source per instructions since it carries the structured species-level Dimensions block.",
+        "Not a climber: NC State lists Plant Type as Annual / Ground Cover / Herbaceous Perennial and RHS lists Habit as Bushy, so the size fields were recorded normally rather than left null under the climber rule.",
+        "The recorded figures are the species-level Dimensions/Max Height/Max Spread figures, not a named cultivar's size."
       ],
       "citations": [
         {
@@ -880,8 +925,24 @@
           "quote": "Poisonous to Humans: ... Poison Severity: Low ... Poison Symptoms: SKIN IRRITATION MINOR OR LASTING ONLY FOR A FEW MINUTES.  Allergic dermatitis with red rash after repeated and frequent contact. ... Poison Toxic Principle: Diterpene coleonol, coleon O",
           "url": "https://plants.ces.ncsu.edu/plants/coleus-scutellarioides/",
           "source": "NC State Extension Gardener Plant Toolbox"
+        },
+        {
+          "claim": "mature_height_in 6-36 (NC State Height: 0 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Coleus scutellarioides",
+          "url": "https://plants.ces.ncsu.edu/plants/coleus-scutellarioides/",
+          "quote": "Height: 0 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-36 (NC State Width: 0 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Coleus scutellarioides",
+          "url": "https://plants.ces.ncsu.edu/plants/coleus-scutellarioides/",
+          "quote": "Width: 0 ft. 6 in. - 3 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Cosmos",
@@ -1251,6 +1312,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. The audit caught a subtler variant of the b10 conflict-resolution failure than has shown up before: Joseph's Coat's water_regime was set to keep_moist citing one source's soft prose ('moist, well-drained soils'), while that same source's own structured fields ('Water: Medium', 'Tolerate: Drought') and three other independently-cited sources' dedicated drought-tolerance ratings all pointed the other way -- plus an explicit root-rot-from-overwatering warning the record had already quoted for a different field without letting it inform this one. Correctly recognized as the same structural conflict the rule exists for and nulled, even though the disagreement here was prose-vs-structured-data within and across sources rather than a flat boolean contradiction. Coleus resolved to Coleus scutellarioides (given as Plectranthus scutellarioides), backed independently by NC State and RHS on the same genus reclassification.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Coleus -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

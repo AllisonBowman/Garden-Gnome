@@ -83,6 +83,18 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "If plants go into a winter rest period, do not give them fertilizer."
+        },
+        {
+          "claim": "mature_height_in 24-120 (NC State: 'As a houseplant, it will grow 2 to 10 feet tall,' converted to inches: 2 ft = 24 in, 10 ft = 120 in)",
+          "source": "NC State Extension Gardener Plant Toolbox: Ficus lyrata",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-lyrata/",
+          "quote": "The fiddle-leaf fig is a small tropical tree and broadleaf evergreen, commonly grown and popular as a houseplant in many areas of the United States. As a houseplant, it will grow 2 to 10 feet tall."
+        },
+        {
+          "claim": "is_edible false (NC State's structured Edibility field states the plant is toxic if ingested, not grown or used for food)",
+          "source": "NC State Extension Gardener Plant Toolbox: Ficus lyrata",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-lyrata/",
+          "quote": "Toxic if ingested."
         }
       ],
       "unknowns": [
@@ -100,8 +112,18 @@
         "night_f_min: REMOVED IN AUDIT RECONCILIATION. Both audits rejected it. The sourcing audit found the quote is an ellipsis stitch of a non-night-specific sentence; the horticultural audit found 55 was assigned two contradictory meanings (acceptable night floor and chill-damage point) from one sentence. No day/night floor survives; chill_damage_f carries the only published bound.",
         "fertilize_active_months: REMOVED IN AUDIT RECONCILIATION. Marked unsupported: no source states months, the cited MoBot sentence is about watering, and September falls inside the 'reduce from fall' window the same sentence describes. Auditors also disagreed on the replacement window ([3-8] vs [3-9]), so the conservative outcome is unknown.",
         "fertilize_interval_days: NULLED IN NORMALISATION (2026-08-08). The interval came from Clemson's generic indoor-plant factsheet ('every two or three months'), not a species statement — the same wording the audit removed from Aspidistra. One rule for everyone.",
-        "fertilize_strength: NULLED IN NORMALISATION (2026-08-08). Same generic factsheet; removed with the interval."
-      ]
+        "fertilize_strength: NULLED IN NORMALISATION (2026-08-08). Same generic factsheet; removed with the interval.",
+        "mature_spread_in left null for both ends: NC State's page gives no numeric spread/width figure for the whole plant (only leaf length/width and fruit length/width, which are not plant spread); its Habit/Form field says only 'Rounded / Spreading / Vase' with no measurement. Searched 'Spread', 'wide', 'Width:', and 'Plant Spacing' -- no plant-spread number found on any of the three assigned pages.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282753 refused this machine (fetch status error:ConnectError) -- could not read it, so nothing from it is reflected here; not guessed.",
+        "is_edible set false because NC State's structured 'Edibility:' field states 'Toxic if ingested,' and the narrative text separately states the plant is toxic to humans, cats, and dogs if ingested (oral irritation, excessive drooling, vomiting; sap irritates skin). Per rule 5, recording this here rather than in unknowns since is_edible is false, not true.",
+        "attracts_pollinators left null: searched 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' on both the NC State and Clemson pages -- no hits describing pollinator visitation to this species (the one 'Pollinator' hit on Clemson's page was an unrelated tag-cloud entry, 'Pollinator garden', not a statement about Ficus lyrata). (Corrected at landing: the Clemson page is cached here as http-403 and could not be re-checked. NC State does say the flowers are 'pollinated by fig wasps' and 'Houseplants rarely bloom.', native-range biology that names no attraction, so the field stays null.)",
+        "Ficus lyrata is not a vine/climber (NC State describes it as an erect, vase-shaped small tree/houseplant; no 'climb' or 'vine' hits), so rule 4's climber exclusion does not apply -- the houseplant height figure was recorded per rule 12 instead.",
+        "mature_height_in recorded from NC State's houseplant-specific figure ('As a houseplant, it will grow 2 to 10 feet tall'), not its outdoor/native-habitat figure (60-100 ft, native to tropical Africa), per rule 12: the houseplant figure is <=120 in (10 ft = 120 in) so it is recorded; the outdoor figure is not used and is not itself under 120 in.",
+        "NC State also gives full poison detail for this record even though is_edible is false, for completeness of the decision context: Poison Severity Low; Poisonous to humans, cats, and dogs; Poison Symptoms 'Oral irritation, burning of the mouth, tongue, and lips, excessive drooling, vomiting, and difficulty swallowing'; Poison Toxic Principle 'insoluble calcium oxalates'; Causes Contact Dermatitis: No (though the sap is separately described as able to irritate skin); Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Sap/Juice, Stems."
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 120
     },
     {
       "common_name": "Rubber Plant",
@@ -198,6 +220,18 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ficus-elastica/",
           "quote": "Water regularly, but avoid overwatering. Reduce watering altogether when the plant is dormant (from fall to late winter)."
+        },
+        {
+          "claim": "mature_height_in 24-120 (NC State: grown indoors it is usually kept to 2 to 10 feet, converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-elastica/",
+          "quote": "When grown indoors, it rarely flowers and it is usually kept to 2 to 10 feet with training or support as needed."
+        },
+        {
+          "claim": "attracts_pollinators false (NC State: the rubber plant does not attract other pollinators, relying on one specific fig wasp instead)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-elastica/",
+          "quote": "Because the flowers require a particular species of fig wasp to pollinate them, the rubber plant does not produce highly colorful or fragrant flowers to attract other pollinators."
         }
       ],
       "unknowns": [
@@ -211,8 +245,21 @@
         "fertilize_strength: Clemson specifies frequency and fertilizer type but never a dilution rate.",
         "fertilize_active_months: months are our encoding of Clemson's 'spring and summer'; the months are not enumerated in the source.",
         "toxicity_detail severity/toxic principle: neither Clemson nor NC State names the compound or grades severity. Note the ASPCA list was deliberately not used.",
-        "toxicity_detail: REVISED IN AUDIT RECONCILIATION. toxicity_detail narrowed: the retained NC State quote is '#problem for dogs' only, so the cat and horse claims were dropped rather than out-running the evidence kept in the record."
-      ]
+        "toxicity_detail: REVISED IN AUDIT RECONCILIATION. toxicity_detail narrowed: the retained NC State quote is '#problem for dogs' only, so the cat and horse claims were dropped rather than out-running the evidence kept in the record.",
+        "mature_spread_in_min and mature_spread_in_max left null: no indoor/houseplant spread or width figure was found on either page. NC State's structured Dimensions field gives 'Width: 50 ft. 0 in. - 100 ft. 0 in.', but that is the outdoor/native-landscape stature (the same Dimensions block's Height, 50-100 ft, is also outdoor); since it exceeds 120 in it is excluded per rule 12 and is not recorded as this record's spread.",
+        "mature_height_in uses NC State's indoor/houseplant figure instead of its Dimensions block: 'When grown indoors, it rarely flowers and it is usually kept to 2 to 10 feet with training or support as needed' (2-10 ft = 24-120 in), per rule 12 since the plant is catalogued as a houseplant and the Dimensions block's 50-100 ft outdoor figure exceeds 120 in.",
+        "Clemson HGIC corroborates with its own indoor figure: 'Rubber plants can easily grow 6 to 10 feet tall or more indoors if there is enough space' (72 to 120+ in) -- consistent with the NC State indoor range used for the max end, but Clemson gives no spread/width figure at all.",
+        "is_edible is null (corrected at landing): it was nulled on audit (last line). The only food mention is NC State's Fruit Description: 'Fruiting is rare when grown indoors. ... The fruit is barely edible and contains fertile seeds only in areas where the pollinating insect is present.'",
+        "Toxicity (corrected at landing, verified against the cached copies): Clemson HGIC reads 'The sticky white sap may irritate skin or the stomach if eaten. Keep these plants away from any pets or young children that tend to eat plants.' NC State has no Poison block; its tags include '#problem for dogs #problem for horses #problem for cats'.",
+        "attracts_pollinators=false: both pages were searched for 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', and 'Wildlife'. NC State's only pollinator-relevant sentence is negative -- it states the rubber plant 'does not produce highly colorful or fragrant flowers to attract other pollinators,' relying instead on one specific fig-wasp species that pollinates inside its enclosed flower structure. Clemson has no pollinator mention at all.",
+        "Rule 4's climber exclusion does not apply: NC State lists Habit/Form as Erect, Rounded and Plant Type as Houseplant, Perennial, Shrub, Tree -- this is not a vine or liana.",
+        "No cultivar-specific figures were used for any field; NC State lists cultivars (e.g. 'Tricolor', 'Robusta') separately from the species-level Dimensions and habit data cited here.",
+        "Both target pages (Clemson HGIC and NC State Plant Toolbox) fetched successfully via qc.py; neither refused this machine, so there are no skipped sources to report.",
+        "is_edible removed on audit: This fails the edibility safety check (F), and the unknowns misstate the pages. The unknowns claim 'Neither page carries a prose toxicity paragraph.' That is false. Clemson HGIC says in prose: 'The sticky white sap may irritate skin or the stomach if eaten. Keep these plants away from any pets or young children that tend to eat plants.' The researcher's own rule-5 search list included 'Toxic' but evidently not 'irritat' or 'sap', so it missed this. The toxic part (the sap) and the ingestion warning never appear in unknowns. The only toxicity note there is NC State's '#problem for dogs/horses/cats' tags, which cover pets only and name no part. Beyond that, 'true' rests on a weak basis: NC State calls the fruit only 'barely edible' and says 'Fruiting is rare when grown indoors.' For a houseplant whose one toxicity statement warns against eating it, is_edible=true with the sap irritant left out cannot stand. Null it."
+      ],
+      "attracts_pollinators": false,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 120
     },
     {
       "common_name": "Aloe Vera",
@@ -308,6 +355,24 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/",
           "quote": "Toxic compounds: Saponin and anthraquinone phytotoxins. Symptoms: Vomiting, lethargy, and diarrhea"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Dimensions Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Aloe vera",
+          "url": "https://plants.ces.ncsu.edu/plants/aloe-vera/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-30 (NC State Dimensions Width: 1 ft. 0 in. - 2 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Aloe vera",
+          "url": "https://plants.ces.ncsu.edu/plants/aloe-vera/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 6 in."
+        },
+        {
+          "claim": "attracts_pollinators true, per NC State's structured Attracts field naming Bees among the wildlife the plant attracts",
+          "source": "NC State Extension Gardener Plant Toolbox: Aloe vera",
+          "url": "https://plants.ces.ncsu.edu/plants/aloe-vera/",
+          "quote": "Bees"
         }
       ],
       "unknowns": [
@@ -323,8 +388,20 @@
         "fertilize_active_months: REMOVED IN AUDIT RECONCILIATION. An empty array reads downstream as 'never fertilize', which no source states. Unknown must be encoded as null.",
         "light_fc_good: REMOVED IN AUDIT RECONCILIATION. Auditors disagreed: the sourcing audit upheld 500, the horticultural audit called it an artifact of taking the bottom of Clemson's class-wide preferred band and inconsistent with the top-of-band convention used elsewhere in the batch. Conservative outcome is null.",
         "chill_damage_f: REVISED IN AUDIT RECONCILIATION. chill_damage_f revised from 50 to 40: both audits found the cited MoBot sentence itself states 'a minimum of 40F degrees in winter', while 50F in that quote is the bottom of a summer night comfort band already carried by night_f_min.",
-        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). Clemson's High class minimum band spans 150-1000 ft-c; the audit killed the companion fc_good as a class-floor artifact, and a floor read off the extreme bottom of a 7x band understates a high-light plant. Re-source in the verification pass."
-      ]
+        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). Clemson's High class minimum band spans 150-1000 ft-c; the audit killed the companion fc_good as a class-floor artifact, and a floor read off the extreme bottom of a 7x band understates a high-light plant. Re-source in the verification pass.",
+        "is_edible nulled at landing (standing rule 2). Its only citation was NC State's Edibility field, 'Causes low toxicity if eaten.  Used medicinally and in drinks when properly prepared.' The first sentence is a toxicity statement, not a food use, and the food use is 'in drinks when properly prepared' only. The citation was dropped.",
+        "Toxicity detail (NC State Poison fields): Poison Severity: Low. Poison Symptoms: 'Poisonous through ingestion or dermatitis. Symptoms may include: Abdominal cramping, diarrhea, red urine; skin irritation from latex.' Poison Toxic Principle: Anthraquinone glycoside. Causes Contact Dermatitis: Yes. Poison Part: Leaves. The page's header banner also states 'This plant has  low severity  poison characteristics.' and its tag list includes #problem for cats #problem for dogs #problem for horses.",
+        "attracts_pollinators=true is based on NC State's structured 'Attracts:' field, which lists Bees, Butterflies, Hummingbirds, and Songbirds; only the first three are pollinators, Songbirds are not treated as support for this flag.",
+        "Aloe vera is not a vine, liana, or other climber, so the climber size restriction does not apply; NC State's Dimensions figures (Height 1 ft. 0 in.-2 ft. 0 in.; Width 1 ft. 0 in.-2 ft. 6 in.) are for the whole plant, not a named cultivar, and are well under the 10 ft indoor-headroom ceiling, so they were recorded as published.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282195 refused this fetching setup (error:ConnectError) -- not read, not used for any field.",
+        "https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/ returned HTTP 403 -- not read, not used for any field.",
+        "Fetch status (corrected at landing): the Clemson indoor-plants factsheet is cached here as http-403 and the auditor could not read it, so the researcher's reading of it could not be re-checked. No field uses it."
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 30
     },
     {
       "common_name": "Jade Plant",
@@ -427,6 +504,18 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/crassula-ovata/",
           "quote": "#problem for dogs"
+        },
+        {
+          "claim": "mature_height_in 36-72 (NC State Dimensions Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Crassula ovata",
+          "url": "https://plants.ces.ncsu.edu/plants/crassula-ovata/",
+          "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Dimensions Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Crassula ovata",
+          "url": "https://plants.ces.ncsu.edu/plants/crassula-ovata/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -442,8 +531,19 @@
         "fertilize_interval_days: REMOVED IN AUDIT RECONCILIATION. Unsupported: Penn State states '2 to 3 times in the spring and summer' and publishes no interval. The suggested 90 is itself an inference from that sentence rather than a sourced value, so the field is null rather than revised.",
         "light_fc_good: REMOVED IN AUDIT RECONCILIATION. Auditors disagreed: upheld by the sourcing audit, rejected by the horticultural audit as a class-floor artifact contradicted by Penn State's own 'four or more hours of direct sun is best'. Conservative outcome is null.",
         "toxicity_detail: REVISED IN AUDIT RECONCILIATION. toxicity_detail narrowed: the retained NC State quote is '#problem for dogs' only. The toxic_to_pets conclusion is unaffected — UGA and Clemson carry it independently.",
-        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). Clemson's High class minimum band spans 150-1000 ft-c; the audit killed the companion fc_good as a class-floor artifact, and a floor read off the extreme bottom of a 7x band understates a high-light plant. Re-source in the verification pass."
-      ]
+        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). Clemson's High class minimum band spans 150-1000 ft-c; the audit killed the companion fc_good as a class-floor artifact, and a floor read off the extreme bottom of a 7x band understates a high-light plant. Re-source in the verification pass.",
+        "is_edible: no accessible page states Crassula ovata (or a named part of it) is eaten or grown for food, so left null (no record, not false).",
+        "attracts_pollinators: no accessible page has a structured attracts/wildlife field or an unconditional statement naming bees, butterflies, moths, or hummingbirds for this species, so left null.",
+        "Toxicity context surfaced while checking is_edible (per rule 5): NC State tags the species '#problem for dogs #problem for horses #problem for cats' (no severity/part/preparation detail given on that page). UGA CAES Circular C1245 (fieldreport.caes.uga.edu/publications/C1245/) lists 'Jade Plant (Chinese rubber plant, Japanese rubber plant) Crassula argentea -- Toxicity class: Minor Toxicity, Dermatitis' (Minor Toxicity defined on that page as 'may result in vomiting or diarrhea if ingested'; Dermatitis as 'contact with thorns or sap may result in a skin rash'). This concerns toxicity to pets, not human edibility, so it did not by itself justify setting is_edible to false or true; recorded here since is_edible is non-null-adjacent decision-relevant context.",
+        "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/ and https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/ both refused this machine (http-403 via the qc.py fetch path, on repeated attempts including a fresh cache) -- could not read either page's content, so nothing from them was used and nothing was guessed.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279445 refused this machine (error:ConnectError via the qc.py fetch path) -- could not read it, consistent with it being a known-refusing host.",
+        "mature_height_in / mature_spread_in: taken from NC State Extension Gardener Plant Toolbox's structured Dimensions block (Height: 3 ft. 0 in. - 6 ft. 0 in.; Width: 2 ft. 0 in. - 3 ft. 0 in.), which is a species-level (not cultivar-specific) figure and well under the 120 in / 10 ft houseplant ceiling, so it was recorded as published with no houseplant-vs-outdoor distinction needed. Penn State Extension's 'reaching heights of up to 6 feet' (a single max-only figure, no min) is consistent with NC State's 6 ft max and was not separately recorded since NC State already supplies a full min-max range from a structured field; Penn State also separately gives 'Baby Jade' cultivar reaching up to 12 inches, which was excluded per the cultivar rule.",
+        "Crassula ovata is a shrub/succulent (NC State Plant Type: Houseplant, Shrub, Succulent), not a vine/liana/climber, so the climber-exclusion rule for size fields does not apply here."
+      ],
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "String of Pearls",
@@ -743,6 +843,18 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "Fertilize at the recommended label rate every two or three months"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Aspidistra elatior",
+          "url": "https://plants.ces.ncsu.edu/plants/aspidistra-elatior/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Aspidistra elatior",
+          "url": "https://plants.ces.ncsu.edu/plants/aspidistra-elatior/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -757,8 +869,19 @@
         "fertilize_active_months: REMOVED IN AUDIT RECONCILIATION. Unsupported: the months were derived from a watering sentence ('Water regularly spring to autumn... sparingly in winter'), not from any feeding statement.",
         "fertilize_interval_days: REMOVED IN AUDIT RECONCILIATION. Removed with the rest of the feeding block flagged unsupported for this record; the interval comes from Clemson's generic indoor-plant factsheet with no species-specific feeding statement to anchor it.",
         "fertilize_strength: REMOVED IN AUDIT RECONCILIATION. Removed with the rest of the feeding block flagged unsupported for this record; no source states a rate for this species.",
-        "toxicity_detail: REVISED IN AUDIT RECONCILIATION. toxicity_detail narrowed: the retained quote is '#non-toxic for cats' and cleared three animals. A safety clearance is the dangerous direction to over-reach in, and ASPCA was deliberately not used, so nothing else backed the dog or horse claim."
-      ]
+        "toxicity_detail: REVISED IN AUDIT RECONCILIATION. toxicity_detail narrowed: the retained quote is '#non-toxic for cats' and cleared three animals. A safety clearance is the dangerous direction to over-reach in, and ASPCA was deliberately not used, so nothing else backed the dog or horse claim.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the Clemson factsheet says anything about Aspidistra elatior being grown, used, or eaten as food -- no record either way.",
+        "attracts_pollinators left null: NC State's page has no 'Attracts' field for this species and no unconditional pollinator statement; searches for 'Attracts', 'bee', 'butterfl', 'hummingbird', 'pollinat' on both pages turned up no species-specific pollinator claim (the one Clemson 'pollinat' hit is an unrelated tag-cloud entry, 'Pollinator garden', from the site's category list, not about this plant).",
+        "Checked NC State page for 'Poison'/'Toxic'/'Problem for' per the toxicity-before-edibility rule: no poison or toxic-to-humans statement found; the page's tags list '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' and 'Insects, Diseases, and Other Plant Problems: There are no serious pest problems.' Not entered into any field since is_edible is null, but noted here since it's decision-relevant.",
+        "NC State classifies Aspidistra elatior as Ground Cover / Herbaceous Perennial / Houseplant, not a vine or climber (searched 'vine'/'climb' on the Clemson page too, no match to this species) -- so the climber exclusion (rule 4) does not apply and the size figures are recorded normally.",
+        "NC State's Dimensions block (Height 1 ft.0in.-3 ft.0in., Width 1 ft.0in.-3 ft.0in.) is well under the 120 in. houseplant threshold, so it was recorded as-is without needing to distinguish indoor vs. outdoor stature.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282290 refused this machine (fetch returned error:ConnectError) -- could not read it, so no RHS-style size or pollinator data from Missouri Botanical Garden's Plant Finder was available; skipped per instructions rather than guessed.",
+        "The Clemson HGIC page only lists Aspidistra elatior ('Cast-iron Plant') in a generic table of low-light houseplants with no species-specific text of its own (no Dimensions, Edible, Poison, Toxic, or Attracts content for this species specifically on that page). (Corrected at landing: this Clemson page returned HTTP 403 to the auditor and is cached here as http-403, so this reading could not be re-checked. No field uses it.)"
+      ],
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Wax Plant",
@@ -1009,6 +1132,7 @@
     "2026-08-08: High-band floors (Aloe, Crassula, Hoya) nulled — the audit killed their companion fc_good as class-floor artifacts, and a floor read off the bottom of Clemson's 150-1000 band understates a high-light plant. Re-source in the verification pass.",
     "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
-    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus)."
+    "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

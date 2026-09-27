@@ -258,7 +258,14 @@
         "humidity_need — removed on audit: Set to 'high' but direct verification of the RHS 'Azaleas Indoors' page shows the word 'high' (or any graded humidity level) never appears -- only the unquantified term 'humid'/'cool, humid atmosphere'. Additionally the citation's claim label reads 'cool, humid atmosphere with daily misting,' but 'daily misting' is not in the quoted sentence at all -- it's pulled from a different, uncited sentence in the watering section ('Mist daily and water as needed'), inflating support for the categorical jump to 'high'.",
         "soil_drainage — removed on audit: Categorized as 'moisture_retentive,' but the verbatim RHS field value is the combined phrase 'Moist but well-drained.' The chosen category foregrounds moisture retention and drops the explicit well-drained/free-drainage requirement paired with it in the source, which risks misleading care guidance (encouraging water-holding rather than free-draining acidic mix).",
         "toxic_to_pets and toxicity_detail: the first pass's only citation was a truncated, boilerplate-flavored RHS pet-safety tag with no species-specific detail. A second research pass, prompted specifically to find independent corroboration, found UGA and UF/IFAS entries naming azalea/Rhododendron spp. with a documented toxin mechanism (grayanotoxin) -- both now cited above.",
-        "scientific_name_accepted: left null after the second pass surfaced a real cross-source naming conflict (see name_note) rather than the simple absence-of-evidence the first pass's null reflected."
+        "scientific_name_accepted: left null after the second pass surfaced a real cross-source naming conflict (see name_note) rather than the simple absence-of-evidence the first pass's null reflected.",
+        "attracts_pollinators left null: no page states pollinator attraction for Rhododendron simsii specifically. Searched RHS 'Rhododendron simsii (EA)' details page and RHS 'Azaleas Indoors' page for Attracts/Pollinat/bee/butterfl/hummingbird -- zero hits on both. UF/IFAS EP648 mentions 'mad honey' made by bees feeding on rhododendron nectar, but that is genus-level (Rhododendron spp.) incidental context inside a toxicity discussion, not a structured attracts/pollinator claim, so it was not used to support true.",
+        "is_edible set false on UF/IFAS EP648's genus-level entry 'Azaleas (Rhododendron and Azalea spp.)': 'Rhododendron spp. contains a toxin called grayanotoxin glycosides. This toxin is present in all parts of the plant, including the flowers and nectar.' The same passage documents human poisoning from tea made from the flowers and from 'mad honey' made by bees feeding on rhododendron (Koca and Koca 2007); symptoms in humans include depression, vomiting, painful neck, slow and erratic heart rate, and weakness. No page addresses eating Rhododendron simsii by name, but the toxin is stated to be present in all parts of the genus, which includes this species.",
+        "The RHS 'Rhododendron simsii (EA)' details page carries a species-level warning the researcher's search missed (corrected at landing, verified against the cached copy): Potentially harmful 'Harmful if eaten. Wear gloves and other protective equipment when handling. Pets (dogs, cats, rabbits, tortoises) Harmful if eaten'. It agrees with is_edible false at species level; the landed citation is still UF/IFAS EP648's genus-level statement. The same page gives the outdoor 'Max Height 1.5-2.5 metres' and 'Max Spread 1.5-2.5 metres'.",
+        "Clemson HGIC 'Azalea & Rhododendron Diseases' factsheet is a disease-identification page; searched Edible/Pollinat/Poison/Toxic/Problem for/Attracts/bee/butterfl/hummingbird -- the only hit was an unrelated 'Pollinator garden' entry in a topic tag cloud, so this page contributed nothing to any of the six fields.",
+        "UGA CAES pet-safety page (fieldreport.caes.uga.edu/publications/C1245) lists 'Rhododendron Azalea (Rhododendron spp.)' at genus level with 'Toxicity class: Major Toxicity', consistent with the is_edible=false call, but it is a pet-toxicity page (not about human edibility) and does not name Rhododendron simsii specifically, so it was not used as the is_edible citation and gives no pollinator information.",
+        "mature_height_in and mature_spread_in are taken from the RHS 'Azaleas Indoors' page's species-specific houseplant figure -- that page's structured fact box explicitly gives 'Botanical name - Rhododendron simsii' and 'Height and spread - 45-60cm (18in-2ft)' -- per the rule that a houseplant/indoor/container figure is used over an outdoor figure for this houseplant-catalogued species. This was used in place of the RHS main details page's outdoor 'Max Height 1.5-2.5 metres' / 'Max Spread 1.5-2.5 metres' (about 59-98 inches), which is the garden/outdoor stature of this species, not its indoor houseplant size; both outdoor and indoor figures are well under the 10 ft ceiling regardless.",
+        "Fetch status (corrected at landing): the Clemson 'Azalea & Rhododendron Diseases' factsheet returned HTTP 403 to the auditor and is not in the cache here, so the researcher's reading of it could not be re-checked; the other four pages are cached ok. No field rests on Clemson."
       ],
       "citations": [
         {
@@ -332,8 +339,37 @@
           "source": "University of Florida IFAS Extension, ENH1384/EP648, \"Common Poisonous Landscape Plant Species in Florida\"",
           "url": "https://ask.ifas.ufl.edu/publication/EP648",
           "quote": "many landscape plants can be toxic if consumed, posing risks to small children, pets, and livestock such as cattle, horses, or sheep ... Azaleas (Rhododendron and Azalea spp.) ... Rhododendron spp. contains a toxin called grayanotoxin glycosides. This toxin is present in all parts of the plant, including the flowers and nectar. Grayanotoxin affects the sodium channels in the cell membrane, leading to neurologic, gastrointestinal, and cardiovascular dysfunction. Poisoned animals initially show signs of digestive stress, such as anorexia, excessive salivation, vomiting, and frequent defecation."
+        },
+        {
+          "claim": "mature_height_in 18-24 (RHS Azaleas Indoors: Height and spread 45-60cm (18in-2ft), houseplant figure given for Rhododendron simsii by name)",
+          "source": "RHS Azaleas Indoors",
+          "url": "https://www.rhs.org.uk/plants/rhododendron/indoor-azaleas",
+          "quote": "Height and spread - 45-60cm (18in-2ft)"
+        },
+        {
+          "claim": "mature_spread_in 18-24 (RHS Azaleas Indoors: Height and spread 45-60cm (18in-2ft), houseplant figure given for Rhododendron simsii by name)",
+          "source": "RHS Azaleas Indoors",
+          "url": "https://www.rhs.org.uk/plants/rhododendron/indoor-azaleas",
+          "quote": "Height and spread - 45-60cm (18in-2ft)"
+        },
+        {
+          "claim": "is_edible false (UF/IFAS EP648: Rhododendron spp. contains grayanotoxin glycosides present in all parts of the plant including the flowers and nectar, with documented human poisoning from tea made from the flowers and from mad honey made by bees feeding on rhododendron)",
+          "source": "UF/IFAS EP648: Common Poisonous Landscape Plant Species in Florida",
+          "url": "https://ask.ifas.ufl.edu/publication/EP648",
+          "quote": "Rhododendron  spp. contains a toxin called grayanotoxin glycosides. This toxin is present in all parts of the plant, including the flowers and nectar."
+        },
+        {
+          "claim": "is_edible false (RHS species page for Rhododendron simsii: harmful if eaten)",
+          "source": "RHS, Rhododendron simsii (EA) | Indian azalea, plant details",
+          "url": "https://www.rhs.org.uk/plants/15682/rhododendron-simsii-(ea)/details",
+          "quote": "Harmful if eaten."
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Oleander",
@@ -385,7 +421,12 @@
         "toxicity_detail intentionally omits the extended human poisoning symptom list (nausea, vomiting, irregular heartbeat, dilated pupils, bloody diarrhea, etc.) that NC State lists under a general 'Poison Symptoms' field with no explicit pets-only counterpart, to avoid presenting human-specific symptom detail as verified for pets; toxic_to_pets itself is instead supported directly by NC State's dedicated 'Problem for Cats/Dogs/Horses' flags and RHS's explicit 'TOXIC to pets if eaten' statement.",
         "toxicity_detail — removed on audit: The sentence 'Sap contact can cause skin irritation/contact dermatitis' has no supporting citation anywhere in the citations array. Citation #5 (Clemson) is labeled 'toxicity_detail smoke from burning is toxic' and its quote text is only 'Smoke from burning cuttings can cause severe reactions.' — it does not contain the sap/skin-irritation claim. I fetched the live Clemson page and confirmed it does say 'Contact of sap with skin may cause irritation,' and the live NC State page has a separate structured field 'Causes Contact Dermatitis: Yes' — both would support the claim, but neither was captured as its own citation entry with its own quote. As written, this clause in toxicity_detail fails the basic 'every non-null field value traces to a citation' check: the record asserts a specific harm mechanism (contact dermatitis) that no cited quote actually states.",
         "soil_ph_max — removed on audit: The cited UF/IFAS quote is 'It is adaptable to a pH range of 5.0 to more than 8.3.' The source explicitly flags the upper bound as open-ended ('more than 8.3'), not a ceiling — meaning the plant's demonstrated/tolerated upper pH is higher than 8.3, with the true max unstated. The record nonetheless encodes soil_ph_max as the flat number 8.3, converting the source's explicit 'more than' qualifier into a hard cap. This re-derives a number that is only a floor-of-the-unknown-upper-range in the source, not the actual maximum, understating what the source itself says about pH tolerance.",
-        "name_note — removed on audit: name_note states 'All admissible sources consulted (NC State, Clemson, Missouri Botanical Garden, UF/IFAS, RHS) use \"Nerium oleander\" as the current accepted name.' But no citation in the citations array is from Missouri Botanical Garden (no plantfinder.mobot.org or www.missouribotanicalgarden.org URL appears anywhere in the record). This is a direct violation of the citation-traceability check: the record makes a specific factual claim about what a named source says/doesn't say, for a source that was never actually cited or shown to have been consulted."
+        "name_note — removed on audit: name_note states 'All admissible sources consulted (NC State, Clemson, Missouri Botanical Garden, UF/IFAS, RHS) use \"Nerium oleander\" as the current accepted name.' But no citation in the citations array is from Missouri Botanical Garden (no plantfinder.mobot.org or www.missouribotanicalgarden.org URL appears anywhere in the record). This is a direct violation of the citation-traceability check: the record makes a specific factual claim about what a named source says/doesn't say, for a source that was never actually cited or shown to have been consulted.",
+        "mature_height_in_min/max and mature_spread_in_min/max left null: NC State's Dimensions block (the anchor, since a species page exists) reads 'Height: 5 ft. 0 in. - 19 ft. 6 in.' (60-234 in) and 'Width: 6 ft. 0 in. - 10 ft. 0 in.' (72-120 in) for outdoor/landscape growth; the height's high end (234 in) exceeds the 120 in houseplant ceiling, and no indoor/houseplant/container-specific figure was found on any of the four pages, so per the houseplant-headroom rule all four size fields are left null rather than risk overstating a room's headroom needs.",
+        "RHS gives smaller UK-garden figures (Max Height 1.5-2.5 metres = 59.1-98.4 in; Max Spread 1-1.5 metres = 39.4-59.1 in), but NC State's own species page is the anchor per instructions (a genus page or a secondary source is not a substitute when the species has its own NC State page), so RHS was not used for size.",
+        "Fetch status (corrected at landing): https://hgic.clemson.edu/factsheet/oleander/ returned http-403 to the researcher, but the auditor read it and it is cached here as ok. Its Warning reads 'Oleander is extremely poisonous*. Eating even small amounts of any part of the plant can make a person or animal severely ill or cause death.' No field rests on it.",
+        "No page (NC State Plant Toolbox, RHS, UF/IFAS EP574) states oleander or any part of it is grown or used for food; all three instead describe it as poisonous/toxic if eaten (NC State: 'Do not consume any part of this plant'; RHS: 'TOXIC if eaten'; UF/IFAS EP574: 'This extremely toxic plant can poison livestock and humans at any time of the year'), which is why is_edible is set false rather than null.",
+        "No page mentions bees, moths, or hummingbirds visiting oleander; only NC State's structured 'Attracts: Butterflies' field was found. RHS and UF/IFAS EP574 had no attracts/pollinator field at all."
       ],
       "citations": [
         {
@@ -453,8 +494,22 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/nerium-oleander/",
           "quote": "In cold climates, oleander can be grown in a container that is moved indoors for the winter or as a houseplant."
+        },
+        {
+          "claim": "is_edible false (NC State Plant Toolbox states oleander is highly poisonous and must not be consumed)",
+          "source": "NC State Extension Gardener Plant Toolbox — Nerium oleander",
+          "url": "https://plants.ces.ncsu.edu/plants/nerium-oleander/",
+          "quote": "This plant is highly poisonous. Do not burn this plant, as the smoke is injurious. Do not consume any part of this plant."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox structured Attracts field lists Butterflies)",
+          "source": "NC State Extension Gardener Plant Toolbox — Nerium oleander",
+          "url": "https://plants.ces.ncsu.edu/plants/nerium-oleander/",
+          "quote": "Butterflies"
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Sago Palm",
@@ -506,7 +561,15 @@
         "water_regime — removed on audit: water_regime='dry_surface_between' rests solely on MOBOT's prose ('Needs regular and consistent moisture with soil surface nearly drying between water applications'), but MOBOT's own structured Culture field for this exact page reads 'Water: Medium' -- not the drier 'Low' rating that a genuine dry-down regime would normally carry in that same rating system. NC State, cited elsewhere in this record for soil_drainage, independently describes the species as wanting soil that is 'moist and well-drained... intolerant to overwatering,' which reads as a request for consistent moisture rather than an explicit allow-to-dry cycle. This is exactly the case check #2 warns about: a harm-adjacent field (overwatering is called out by NC State as capable of causing root rot/plant death) where a cited source's own structured field sits in tension with the specific prose sentence quoted, and a second source's independent language doesn't clearly resolve it -- yet the record picked a specific value instead of softening or nulling it.",
         "direct_sun_hours_max — removed on audit: The number 6 is lifted verbatim from NC State's 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' category -- confirmed present in NC State's actual page text. But outdoor_sun_exposure also includes full_sun, sourced independently from UF/IFAS ('grows well in full sun or partial shade') and MOBOT ('Full sun to part shade'), neither of which gives any hours figure, and NC State itself does not list this species under a 'Full Sun' category at all (only 'Partial Shade' appears in its structured Light field). Presenting 6 as the sun-hours ceiling while simultaneously endorsing full_sun as a valid outdoor exposure implies capping full-sun exposure at 6 hours/day, a claim none of the three sources actually make -- the number is scoped only to the narrower partial-shade band it was quoted from.",
         "humidity_need — removed on audit: The only humidity statement anywhere in the RHS source ('moderate humidity', confirmed present verbatim) sits inside the single sentence 'Grow under glass in a peat-free, loam-based potting compost with additional leaf mould and grit; provide full light with shade from hot sun and moderate humidity' -- RHS's UK greenhouse/under-glass cultivation instructions for a plant not hardy outdoors there, not a general statement about the species' ambient humidity preference. The record generalized this glasshouse-specific clause into a blanket humidity_need value without flagging the narrower context, and no other admissible source (NC State, MOBOT, UF/IFAS) mentions humidity at all, so there is no independent corroboration for treating 'moderate/average' as the species' general requirement rather than an artifact of UK glasshouse culture advice.",
-        "water_dry_down_target — removed on audit: This field has no citation entry of its own in the citations array -- it silently reuses the same MOBOT quote already cited for water_regime, rather than being independently listed. Per structural check #1 ('does every non-null field value trace to at least one entry'), the trace here is only implicit through an identical underlying quote shared with another field, not an explicit, dedicated citation for this specific field."
+        "water_dry_down_target — removed on audit: This field has no citation entry of its own in the citations array -- it silently reuses the same MOBOT quote already cited for water_regime, rather than being independently listed. Per structural check #1 ('does every non-null field value trace to at least one entry'), the trace here is only implicit through an identical underlying quote shared with another field, not an explicit, dedicated citation for this specific field.",
+        "attracts_pollinators left null: neither the RHS details page nor the UF/IFAS FR316 page mentions bees, butterflies, moths, hummingbirds, or any other pollinator/wildlife-attraction field for Cycas revoluta; RHS has a general 'Wildlife gardening' nav link but no species-specific pollinator claim.",
+        "is_edible nulled at landing (standing rule 2: a poisonous plant whose food use is famine or survival use). UF/IFAS FR316: 'Historically, the inner bark of the sago palm was used as a food source in Japan during times of famine. However, sago palm contains a powerful neurotoxin that can cause paralysis or even death if it is not prepared properly. The seeds can also be poisonous to humans and animals if ingested.' NC State's Edibility field: 'The pith contains edible starch that can be processed for making sago. The starch has to be carefully washed to remove the toxins that are in the pith.' NC State rates the plant 'high severity' poison: 'Ingestion of any part of this plant may cause permanent internal damage or death.'; toxic principle 'All parts of this plant contain the toxin cycasin, but the seeds have the highest concentration.'; Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds. RHS's Potentially harmful field: 'Harmful if eaten; skin irritant.' and 'TOXIC to pets (dogs, cats)'. The FR316 citation that supported is_edible true was dropped.",
+        "mature_height_in and mature_spread_in were taken from the RHS page's structured 'Max Height'/'Max Spread' fields (1-1.5 metres each), which sit under RHS's container/glasshouse cultivation guidance ('Grow under glass in a peat-free, loam-based potting compost... Suggested planting locations and garden types: Architectural, Patio and container plants'). This species has no reachable NC State Plant Toolbox page, so RHS is the anchor per the sourcing rule.",
+        "UF/IFAS FR316 separately gives an outdoor/landscape stature -- 'the sago palm can reach heights of up to 15 feet in 50 years' (180 in) -- but per the houseplant-headroom rule this outdoor figure exceeds 120 in and was NOT recorded in the size fields; the RHS container/under-glass figure (39-59 in) was used instead since it is at or under 10 ft.",
+        "Fetch status (corrected at landing): https://plants.ces.ncsu.edu/plants/cycas-revoluta/common-name/sago-palm/ refused the researcher (ProxyError) but is cached here as ok. Its Edibility and poison fields are quoted in the is_edible line above. Its Dimensions block, 'Height: 3 ft. 0 in. - 10 ft. 0 in.' and 'Width: 3 ft. 0 in. - 10 ft. 0 in.' (36-120 in), was not used: RHS's 1-1.5 metres is the under-glass and container figure, which the houseplant rule prefers over a Dimensions block, so the size stays RHS's. The size line's 'no reachable NC State Plant Toolbox page' no longer holds.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279640 refused this machine (fetch status: error:ConnectError, 0 bytes) -- could not be read, so it contributed nothing to this update. Did not guess at its content.",
+        "Confirmed via the RHS page title and content that the figures used are for the species Cycas revoluta itself, not a named cultivar.",
+        "Cycas revoluta is a cycad with a stout woody trunk and terminal rosette of leaves (per both RHS and IFAS descriptions), not a vine/liana/climber, so the climber-exclusion rule for size fields does not apply."
       ],
       "citations": [
         {
@@ -622,8 +685,24 @@
           "source": "UF/IFAS Extension (Ask IFAS, FOR254/FR316)",
           "url": "https://ask.ifas.ufl.edu/fr316",
           "quote": "Cycas are gymnosperms and, though palm-like, they are unrelated to true palms, which are actually angiosperms (flowering plants)."
+        },
+        {
+          "claim": "mature_height_in 39-59 (RHS Max Height 1-1.5 metres, grown under glass/in containers per RHS cultivation guidance, converted to inches: 1m x 39.37 = 39.37in, 1.5m x 39.37 = 59.06in)",
+          "source": "RHS: Cycas revoluta | Japanese sago palm",
+          "url": "https://www.rhs.org.uk/plants/5127/cycas-revoluta-japanese-sago-palm-cycad/details",
+          "quote": "Max Height         1-1.5 metres                 Max Spread         1-1.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 39-59 (RHS Max Spread 1-1.5 metres, grown under glass/in containers per RHS cultivation guidance, converted to inches: 1m x 39.37 = 39.37in, 1.5m x 39.37 = 59.06in)",
+          "source": "RHS: Cycas revoluta | Japanese sago palm",
+          "url": "https://www.rhs.org.uk/plants/5127/cycas-revoluta-japanese-sago-palm-cycad/details",
+          "quote": "Max Spread         1-1.5 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 39,
+      "mature_height_in_max": 59,
+      "mature_spread_in_min": 39,
+      "mature_spread_in_max": 59
     },
     {
       "common_name": "Bigleaf Hydrangea",
@@ -1420,6 +1499,7 @@
     "The batch's own post-audit cleanup nulls a field wholesale whenever any finding on it is refuted, even when the auditor's own reasoning says the value is independently supported by other, unflagged citations and only one supporting citation among several had a narrower defect. This wrongly zeroed out toxic_to_pets for Colchicum autumnale (Autumn Crocus) -- one of the more dangerous plants in this batch -- over a single citation's mislabeled \"Problem for Dogs\" claim, while its RHS \"TOXIC to pets\" and UGA \"Major Toxicity, Dermatitis\" citations (species-named, unflagged) went untouched. Restored directly at landing using only those two clean citations, not new research. The same pattern nulled Rhubarb's outdoor_sun_exposure over one mislabeled RHS citation while Missouri Botanical Garden's clean, unambiguous \"full sun to part shade\" citation was left standing unused -- also restored at landing. Future batch scripts should have the verify pass check remaining support before nulling, or refute per-citation rather than per-field.",
     "Azalea (Rhododendron simsii) needed a second, targeted research pass: the first pass's only toxicity citation was a truncated, boilerplate-flavored RHS pet-safety tag with no species-specific content, and no citation established the accepted binomial at all. The retry found solid independent corroboration for toxicity (UGA and UF/IFAS, both naming azalea/Rhododendron spp. with a documented grayanotoxin mechanism), but on the naming question it surfaced a genuine, unresolved conflict rather than closing the gap: two distinct historical \"Azalea indica\" epithets (Linnaeus 1753 vs. Sims 1817) resolve to two different modern binomials (Rhododendron indicum vs. R. simsii), and RHS and NC State each independently anchor to a different one. scientific_name_accepted stays null on this species pending a source that resolves the conflict -- the right outcome per this catalog's own rule of refusing rather than picking a side on a genuine disagreement, now correctly reached for a naming question rather than only for a numeric one.",
     "Sago Palm's own citations establish it is a cycad, not a true palm (UF/IFAS: \"unrelated to true palms, which are actually angiosperms\") -- confirmed no citation in this batch conflates its toxicity data with the unrelated palm genus already in the catalog (Chamaedorea/Chrysalidocarpus).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
