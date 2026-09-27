@@ -67,6 +67,23 @@ const VERDICT_SCHEMA = {
   required: ['common_name', 'findings', 'summary'],
 }
 
+// A houseplant's size is its size indoors. The fit engine checks mature height against a room's headroom,
+// and an extension page's Dimensions block for a tropical tree grown as a houseplant is its native stature:
+// NC State gives the rubber plant 50-100 ft, which would tell every owner it outgrows their living room.
+// Same spirit as the climber rule -- where the field cannot say which size it means, it says nothing.
+function houseplantRule(s) {
+  if (s.is_houseplant !== true) return ''
+  return `12. THIS SPECIES IS CATALOGUED AS A HOUSEPLANT, and the app checks its mature height against a room's headroom. If a page gives a size for the plant grown indoors, as a houseplant or in a container, record THAT figure and say so in the claim ("mature_height_in 72-120 (NC State: as a houseplant 6-10 ft, converted to inches)"), even where the page's Dimensions block is bigger. If the only figure on the pages is the plant's outdoor, landscape or native-habitat stature and its height or spread exceeds 120 inches (10 ft), leave ALL FOUR size fields null and quote that figure in unknowns: a rubber plant recorded at 100 ft would tell every owner it will outgrow their living room. A figure of 10 ft or under is recorded as published.
+`
+}
+
+function houseplantAudit(s) {
+  if (s.is_houseplant !== true) return ''
+  return `I. HOUSEPLANT SCALE. This species is catalogued as a houseplant. Refute every size value taken from the plant's outdoor, landscape or native-habitat stature when its height or spread exceeds 120 inches, unless the page ties that figure to indoor or container growth. Where a page gives an indoor or container figure, refute a size taken from a larger outdoor figure instead.
+
+`
+}
+
 function researchPrompt(s) {
   return `You are adding SIX fields to an already-landed record in an evidence-backed plant-care catalog (PlantAdvocate). The species is "${s.common}" (${s.latin}). Everything else about this record is already researched and cited; you are not re-doing it and must not touch it.
 
@@ -94,7 +111,7 @@ THE RULES.
 9. QUOTES ARE VERBATIM RENDERED TEXT, copied from qc.py's output. Never fabricated, never paraphrased, never a label glued to its value across a U+23CE boundary, never a truncated or extended tag list. Every quote is mechanically re-fetched and checked after you finish; one that is not on the page WILL be found.
 10. All nulls are real JSON null, never the string "null".
 11. unknowns: one line for anything decision-relevant that does not fit a field, one line for every field you deliberately left null and why, and one line for every page that refused this machine.
-
+${houseplantRule(s)}
 common_name must be exactly "${s.common}" and scientific_name_accepted exactly "${s.latin}" -- this record already exists under those names and you are merging into it, not creating one.
 
 NEVER return a citation whose source, url or quote is a placeholder, a stub, or a description of a citation you meant to fill in later. A record with no real citation for a field must set that field null instead. One run returned an array of literal 'placeholder' strings and the whole species had to be thrown away.
@@ -123,7 +140,7 @@ F. EDIBILITY SAFETY. If is_edible is true and any page names a toxic part or a r
 G. CITATION LABELS. Every non-null field needs a citation whose claim contains the field name literally -- "mature_height_in" for the height pair, "mature_spread_in" for the spread pair, "is_edible", "attracts_pollinators". Refute a field whose citation is missing or mislabelled.
 H. QUOTE PROVENANCE. Is each quote really on the page, verbatim, as one rendered run? Refute a quote containing U+23CE, a label glued to a value across a newline boundary, or text you cannot find with qc.py. When the value stands but the quote is defective, set refuted false and supply corrected_quote with page text you verified.
 
-Set refuted TRUE to null the field. Use corrected_quote ONLY when the value survives and just its quote needs replacing. Be specific in reason: name the number, the page, and what it actually says.`
+${houseplantAudit(s)}Set refuted TRUE to null the field. Use corrected_quote ONLY when the value survives and just its quote needs replacing. Be specific in reason: name the number, the page, and what it actually says.`
 }
 
 log(`Backfilling size, edibility and pollinator value on ${SPECIES.length} already-landed species.`)
