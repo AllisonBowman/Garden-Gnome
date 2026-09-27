@@ -123,6 +123,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=y390",
           "quote": "Sun: Full sun"
+        },
+        {
+          "claim": "attracts_pollinators (NC State tags: \"#butterfly friendly\" and \"NC Native Pollinator Plant\")",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/iris-virginica/",
+          "quote": "#butterfly friendly"
+        },
+        {
+          "claim": "mature_height_in 12-30 (NC State Dimensions Height: 1 ft. 0 in. - 2 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/iris-virginica/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Dimensions Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/iris-virginica/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Southern Blue Flag Iris",
@@ -162,14 +180,24 @@
         "outdoor_sun_exposure is landed as full_sun only. NC State's structured Light field lists both \"Full sun (6 or more hours of direct sunlight a day)\" and \"Partial Shade (Direct sunlight only part of the day, 2-6 hours),\" but Missouri Botanical Garden's dedicated page gives \"Sun: Full sun\" with no partial-shade value, and both sources frame shade only as a geographically conditional tolerance -- NC State: \"It will tolerate light shade in the warmer regions of its range.\"; MBG: \"Tolerates light shade, particularly in the southern part of its growing range.\" Per the schema rules a tolerance clause cannot supply an exposure value, and part_shade is excluded by the other source's structured sun field, so it was dropped. part_sun and full_shade are likewise excluded.",
         "soil_base is inferred as garden_bed (in-ground landscape/pond-margin use) from NC State's Landscape Location, Landscape Theme, and Design Feature framing rather than from an explicit 'soil_base'-style statement, since no admissible source used container/potting-mix language for this species.",
         "NC State's site-wide tag list includes '#contact dermatitis' even though the page's own structured Causes Contact Dermatitis field is answered 'No'; the structured field was treated as authoritative for toxicity_detail and the tag was not used to contradict it.",
-        "Two citations quoted the two-line string \"Iris virginica (Southern Blue Flag Iris)\", which exists only inside the page's <title> metadata -- the rendered heading carries the binomial alone and the parenthetical never appears beside it. Both were re-pointed at rendered text (the description prose opener and the heading binomial) at landing. Two further citations quoted bare one-word values, \"Low\" and \"No\", which the same page also renders as the values of Maintenance, Hairs Present and Stem Is Aromatic; the severity citation was replaced with the page's own callout sentence and the contact-dermatitis citation was dropped, its fact left inside toxicity_detail alongside the page's contradicting symptom text."
+        "Two citations quoted the two-line string \"Iris virginica (Southern Blue Flag Iris)\", which exists only inside the page's <title> metadata -- the rendered heading carries the binomial alone and the parenthetical never appears beside it. Both were re-pointed at rendered text (the description prose opener and the heading binomial) at landing. Two further citations quoted bare one-word values, \"Low\" and \"No\", which the same page also renders as the values of Maintenance, Hairs Present and Stem Is Aromatic; the severity citation was replaced with the page's own callout sentence and the contact-dermatitis citation was dropped, its fact left inside toxicity_detail alongside the page's contradicting symptom text.",
+        "is_edible left null: neither NC State page section addresses eating/food use of Iris virginica; searched 'Edible' with 0 hits. This is a genus of ornamentals, not inferred as edible.",
+        "Decision-relevant but not encoded in is_edible (since it stays null): NC State states 'This plant has low severity poison characteristics,' Poison Severity: Low, Poison Symptoms: 'CAUSES ONLY LOW TOXICITY IF EATEN. SKIN IRRITATION MINOR, OR LASTING ONLY FOR A FEW MINUTES. Nausea, vomiting, abdominal pain, diarrhea, elevated temperature following ingestion; skin irritation upon contact with seeds, rootstock, or cell sap.' Toxic Principle: irisin, iridin, or irisine. Poison Part: Roots, Sap/Juice, Seeds (corrected at landing: the note had left out Seeds). Causes Contact Dermatitis: No, which the page's own tag list contradicts. Tags also list #problem for dogs, #problem for horses, #problem for cats, #contact dermatitis.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ProxyError, non-ok status) both without and with the host explicitly allowed -- could not be read, so it contributes no data or citations here.",
+        "Not a climber (Habit/Form: Clumping; Plant Type: Herbaceous Perennial), so size fields were filled normally per the rules rather than left null.",
+        "Searched NC State page for 'bee' and 'hummingbird' explicitly: 0 hits for either; pollinator support rests on the '#butterfly friendly' and 'NC Native Pollinator Plant' tags only."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 30,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Broadleaf Arrowhead",
@@ -218,7 +246,12 @@
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis left null: this is an in-ground marginal-aquatic perennial and no admissible source frames its watering as a dry-down or day-interval schedule.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: no admissible source gives fertilizing guidance for this species.",
         "soil_base was set to garden_bed as the closest fit among the strict enum options for an outdoor, in-ground/pond-margin perennial (MoBot's Culture text describes planting tubers/runners in mud at pond margins); none of the enum's container-mix categories (potting, aroid, cactus/succulent, orchid bark, etc.) apply to an in-ground wetland species like this one.",
-        "The only citation whose claim named common_name quoted NC State's \"Broad-leaved Arrowhead\", a different string from the landed \"Broadleaf Arrowhead\", which comes from Missouri Botanical Garden; that citation was re-pointed to MoBot's Common Name field at landing, and NC State's hyphenated form stays on the record as a name_note citation. A second citation quoted the bare one-word RHS field value \"Correct\", which names no taxon and no field on its own; it was dropped, and scientific_name_accepted now rests on the RHS heading quote \"Sagittaria latifolia\"."
+        "The only citation whose claim named common_name quoted NC State's \"Broad-leaved Arrowhead\", a different string from the landed \"Broadleaf Arrowhead\", which comes from Missouri Botanical Garden; that citation was re-pointed to MoBot's Common Name field at landing, and NC State's hyphenated form stays on the record as a name_note citation. A second citation quoted the bare one-word RHS field value \"Correct\", which names no taxon and no field on its own; it was dropped, and scientific_name_accepted now rests on the RHS heading quote \"Sagittaria latifolia\".",
+        "plantfinder.mobot.org refused this machine (ProxyError on both attempts, including with the host explicitly allow-listed) -- did not read that page, no guess made about its content.",
+        "RHS gives Max Height 0.5-1 metres and Max Spread 0.1-0.5 metres for this species, but NC State (plants.ces.ncsu.edu) has a species-specific structured Dimensions block (Height: 1 ft. 0 in. - 4 ft. 8 in.; Width: 1 ft. 0 in. - 3 ft. 8 in.), so per the anchor rule NC State's figures were used for mature_height_in/mature_spread_in and RHS's conflicting metric figures were not used.",
+        "Searched NC State page for 'Poison', 'Toxic', and 'Problem for': zero hits for all three. No toxicity, pets warning, poisonous part, or preparation requirement is named anywhere on the cited page, so no toxicity caveat is added alongside is_edible=true.",
+        "NC State's Edibility text ('The tubers may be cooked or served raw and taste similar to potatoes or chestnuts. The bud and fruits are also edible.') and Dimensions block are given for the species page itself, not for a named cultivar -- no cultivar-size concern applies.",
+        "Sagittaria latifolia is an herbaceous aquatic/marsh perennial (NC State: Herbaceous Perennial, Water Plant), not a vine/liana/climber, so the climber-height exclusion rule does not apply and all four size fields were filled."
       ],
       "citations": [
         {
@@ -322,8 +355,38 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/sagittaria-latifolia/",
           "quote": "3a, 3b, 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b, 9a, 9b, 10a, 10b, 11a, 11b"
+        },
+        {
+          "claim": "mature_height_in 12-56 (NC State Height: 1 ft. 0 in. - 4 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sagittaria latifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/sagittaria-latifolia/",
+          "quote": "Height: 1 ft. 0 in. - 4 ft. 8 in."
+        },
+        {
+          "claim": "mature_spread_in 12-44 (NC State Width: 1 ft. 0 in. - 3 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sagittaria latifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/sagittaria-latifolia/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 8 in."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: tubers cooked or raw, bud and fruits also edible)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sagittaria latifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/sagittaria-latifolia/",
+          "quote": "The tubers may be cooked or served raw and taste similar to potatoes or chestnuts. The bud and fruits are also edible."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value field: Attracts Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sagittaria latifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/sagittaria-latifolia/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 56,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 44
     },
     {
       "chill_damage_f": null,
@@ -552,6 +615,18 @@
           "source": "NC State Extension Plant Toolbox — Peltandra virginica, Common Name(s) list",
           "url": "https://plants.ces.ncsu.edu/plants/peltandra-virginica/",
           "quote": "5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b, 9a, 9b"
+        },
+        {
+          "claim": "mature_height_in 18-36 (NC State Height 1 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/peltandra-virginica/",
+          "quote": "Height: 1 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 18-24 (NC State Width 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/peltandra-virginica/",
+          "quote": "Width: 1 ft. 6 in. - 2 ft. 0 in."
         }
       ],
       "common_name": "Green Arrow-arum",
@@ -593,14 +668,25 @@
         "soil_base: the schema's enum has no dedicated aquatic/bog-pond option. \"garden_bed\" was chosen as the closest fit given NC State's framing (grown in ponds with earth at the bottom, in containers/tubs, or as a landscape/naturalized-area planting), but this is an imperfect fit and flagged here for review.",
         "name_note left null because all three dedicated sources -- NC State, Missouri Botanical Garden and RHS -- lead with the same primary common name. NC State's secondary name is Tuckahoe while MoBot and RHS render the fuller 'tuckahoe bread' and add 'Virginia wake-robin', but none of that displaces the primary name. NC State's Common Name(s) list is alphabetized and reads Green Arrow-arum, Tuckahoe.",
         "full_shade was dropped from outdoor_sun_exposure at landing. It rested only on the Deep shade entry in NC State's structured Light field, and NC State's own species prose demotes it to a tolerance: \"It does best sited in full sun to part shade, but will tolerates full shade.\" (the typo is the page's). Missouri Botanical Garden files heavy shade under a separate Tolerate row rather than under Sun, and RHS's Position field lists exactly two values, Full sun and Partial shade. The Light-field citation stays on the record as an accurate description of that field, but it is no longer the sole basis for the list.",
-        "One citation quoted the two-line string \"Peltandra virginica (Green Arrow-arum, Tuckahoe)\" with its HTML source indentation intact; that string lives only in the page's <title> metadata, and the rendered heading carries the binomial alone. It was dropped at landing -- the ordering it supported is already carried by the Common Name(s) list citation. Two soil_drainage claims described NC State's Soil Drainage field as carrying two values; it renders three (Frequent Standing Water, Moist, Occasionally Wet), and both were corrected."
+        "One citation quoted the two-line string \"Peltandra virginica (Green Arrow-arum, Tuckahoe)\" with its HTML source indentation intact; that string lives only in the page's <title> metadata, and the rendered heading carries the binomial alone. It was dropped at landing -- the ordering it supported is already carried by the Common Name(s) list citation. Two soil_drainage claims described NC State's Soil Drainage field as carrying two values; it renders three (Frequent Standing Water, Moist, Occasionally Wet), and both were corrected.",
+        "attracts_pollinators left null: NC State's structured 'Attracts' field lists only 'Songbirds' (not a pollinator), and its 'Wildlife Value' text says the fruit is preferred food of wood ducks, muskrats and rails -- seed/fruit predation, not pollination. Searched both pages for 'pollinator', 'bee', 'butterfl', 'hummingbird', 'Wildlife', 'Attracts' -- RHS returned zero hits for pollinator/bee/butterfly/Attracts and carries no attractive-to-pollinators tag on this record. No page names a pollinator, so the field stays null rather than false.",
+        "Edibility is conditional on preparation (the removal line below gives why is_edible is null) -- full condition and toxicity context from the same anchor page: NC State's Edibility field states 'Plant is toxic, but cooking eliminates the toxic element.' Its Poison Severity is 'Medium'. Poison Symptoms: 'The plant is toxic if consumed affecting the mouth and digestive tract. However, the toxic element, calcium oxylate, is eliminated by thoroughly cooking or drying the plant.' Poison Toxic Principle: 'Calcium oxylate'. Poison Part: Flowers, Leaves, Stems. Causes Contact Dermatitis: No.",
+        "RHS (rhs.org.uk/plants/43919) carries no edibility, toxicity/poison, or pollinator/wildlife-attraction information for this species -- searched 'Edible', 'Poison', 'Toxic', 'Attracts', 'pollinator', 'bee', 'butterfl' with zero hits on all.",
+        "Species is not a climber -- NC State lists it as Herbaceous Perennial / Water Plant with Habit/Form 'Clumping, Creeping, Dense, Spreading', so the climber size exclusion (rule 4) does not apply and all four size fields were populated from NC State's species-specific Dimensions block.",
+        "RHS also carries structured size fields ('Max Height 0.5-1 metres', 'Max Spread 0.1-0.5 metres') but NC State's species-specific Height/Width Dimensions block was used as the anchor per the task's precedence rule; RHS size was not needed and not used.",
+        "No page refused this machine; both target URLs fetched with ok status.",
+        "is_edible removed on audit at landing: the plant is poisonous (NC State: Poison Severity Medium, calcium oxylate; Poison Part: Flowers, Leaves, Stems) and its food use is at most marginal. NC State does not type it Edible, and the only edibility text on any page is its Edibility field, 'Plant is toxic, but cooking eliminates the toxic element.', which names no part people eat; no readable page describes it as grown or sold as food. A poisonous plant whose food use is marginal or folk lands null in this catalog, on the same ground as Pokeweed (b30) and Japanese Yew (b85); a plant commonly grown or sold as food that must be cooked first stays true with its condition in unknowns. The dropped citation quoted that sentence."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
@@ -766,6 +852,18 @@
           "source": "NC State Extension Gardener Plant Toolbox — Orontium aquaticum",
           "url": "https://plants.ces.ncsu.edu/plants/orontium-aquaticum/",
           "quote": "If removed from water, submerged leaves appear dry because of their waxy surface, hence the common name of \"never-wet\"."
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Dimensions Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Orontium aquaticum",
+          "url": "https://plants.ces.ncsu.edu/plants/orontium-aquaticum/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-30 (NC State Dimensions Width: 1 ft. 0 in. - 2 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Orontium aquaticum",
+          "url": "https://plants.ces.ncsu.edu/plants/orontium-aquaticum/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 6 in."
         }
       ],
       "common_name": "Golden Club",
@@ -805,14 +903,24 @@
         "day/night temperature fields, humidity fields, light_fc fields, direct_sun_hours_max, and all fertilize_* fields are left null: no admissible source for this species gives foot-candle light levels, indoor/greenhouse temperature ranges, humidity percentages, a species-specific direct-sun-hours figure (NC State's \"6 or more hours\" text is its site-wide light-category legend, not species-specific prose, per scope rules), or any fertilizing guidance.",
         "is_houseplant is set to false on the basis that RHS's plant-profile type for this species is \"Aquatic\" and NC State's Plant Type field names it a \"Water Plant\"; neither source frames it as an indoor houseplant, and both describe pond/bog cultivation instead.",
         "outdoor_sun_exposure is landed as full_sun only. part_shade rested on a single structured Light value on one source, and that source's own species prose demotes it with a stated cost: \"It will do well grown in a container as a water garden in 6 to 18 inches of water and exposed to full sun. It will tolerate partial shade, but leaf color may suffer.\" Missouri Botanical Garden says the same independently (\"Tolerates part shade, but best leaf color is developed in full sun.\") and renders \"Sun: Full sun\" with no part-shade value, and RHS's Position card renders only \"Full sun\", reinforced by its Aspect field (\"South-facing or West-facing\") and by its Cultivation sentence.",
-        "Eight citations were repaired at landing without changing any value. Six were label+value concatenations the pages render as separate stacked elements (RHS Position, RHS Moisture, RHS pH, NC State Soil pH, NC State Poison Toxic Principle, NC State Causes Contact Dermatitis); one was a synthesized string, \"Poisonous to Humans: Poison Severity: Low\", joining three separately rendered elements; and one truncated NC State's Plant Type field to five values when it renders six (the element after \"Wildflower\" is the next label, \"Woody Plant Leaf Characteristics:\", so six is the correct count). The RHS citations also carried the placeholder URL https://www.rhs.org.uk/plants/11967/wd/details; all were re-pointed at the epithet slug https://www.rhs.org.uk/plants/11967/orontium-aquaticum/details, which serves the same page. MoBot's four-name common-names list exists only inside an overlib tooltip attribute and is not quoted here."
+        "Eight citations were repaired at landing without changing any value. Six were label+value concatenations the pages render as separate stacked elements (RHS Position, RHS Moisture, RHS pH, NC State Soil pH, NC State Poison Toxic Principle, NC State Causes Contact Dermatitis); one was a synthesized string, \"Poisonous to Humans: Poison Severity: Low\", joining three separately rendered elements; and one truncated NC State's Plant Type field to five values when it renders six (the element after \"Wildflower\" is the next label, \"Woody Plant Leaf Characteristics:\", so six is the correct count). The RHS citations also carried the placeholder URL https://www.rhs.org.uk/plants/11967/wd/details; all were re-pointed at the epithet slug https://www.rhs.org.uk/plants/11967/orontium-aquaticum/details, which serves the same page. MoBot's four-name common-names list exists only inside an overlib tooltip attribute and is not quoted here.",
+        "Edibility is conditional and hazardous (the removal line below gives why is_edible is null): NC State's own Poisonous-to-Humans block gives this plant 'low severity' poison characteristics, states 'The plant is rich in calcium oxylate, which is toxic and can irritate the mouth and digestive tract. However, calcium oxylate is easily destroyed by thoroughly cooking or drying the plant,' names the Poison Toxic Principle as 'Calcium oxalate crystals,' lists Poison Part as Bark, Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, and Stems, and separately flags 'Causes Contact Dermatitis: Yes.' The same page's Edibility section requires cooking (roots must never be eaten raw; boil roots 30+ min changing water, boil seeds 45+ min) before the edible roots/seeds are safe -- the toxicity applies to the whole plant including the parts eaten, and safety depends entirely on the specified cooking/handling procedure.",
+        "attracts_pollinators left null: searched NC State (no 'Attracts' field present, and its wildlife-related tags -- '#food source spring', '#food source soft mast fruit', '#Audubon' -- describe birds eating seed/fruit, not pollination) and RHS (no 'pollinator', 'Attracts', or wildlife tag on the details page) for bee/butterfly/moth/hummingbird/pollinator mentions; neither page addresses pollinators for this species, so per the rule no mention means null, not false.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ProxyError, even after explicitly allowing the domain) -- not read, and nothing from it is asserted or guessed.",
+        "Species is not a climber (NC State Habit/Form: Clumping, Creeping, Erect, Spreading), so the climber-height exclusion rule does not apply; size fields are populated normally.",
+        "RHS's own species-level size data (Max Height 0.1-0.5 metres, Max Spread 0.5-1 metres) was not used for the size fields because NC State Plant Toolbox has a species-specific page for Orontium aquaticum with its own structured Dimensions block, which is the anchor per the task's sourcing rule; RHS was checked only for pollinator/edibility/toxicity language.",
+        "is_edible removed on audit at landing: the plant is poisonous and its food use is folk, not a crop. NC State types it both 'Edible' and 'Poisonous' and lists every part, the roots and seeds it names as edible included, as poisonous (calcium oxalate, 'easily destroyed by thoroughly cooking or drying the plant'). Its Edibility field is foraging advice for a wild bog plant ('Only collect roots and seeds from areas you know have NOT been treated with pesticides'), eaten only after boiling ('NEVER eat roots raw'; roots boiled at least 30 minutes and seeds at least 45, changing the water), and no readable page describes it as grown or sold as food. A poisonous plant whose food use is marginal or folk lands null in this catalog, on the same ground as Pokeweed (b30) and Japanese Yew (b85); a plant commonly grown or sold as food that must be cooked first stays true with its condition in unknowns. The dropped citation quoted the Edibility field from 'EDIBLE PARTS: Roots and seeds' through 'Serve like peas.'"
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 30
     },
     {
       "chill_damage_f": null,
@@ -894,6 +1002,18 @@
           "source": "NC State Extension Plant Toolbox - Acorus americanus",
           "url": "https://plants.ces.ncsu.edu/plants/acorus-americanus",
           "quote": "1a, 1b, 2a, 2b, 3a, 3b, 4a, 4b, 5a, 5b, 6a, 6b"
+        },
+        {
+          "claim": "mature_height_in 24-45 (NC State Height 2 ft. 0 in. - 3 ft. 9 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Acorus americanus",
+          "url": "https://plants.ces.ncsu.edu/plants/acorus-americanus",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 9 in."
+        },
+        {
+          "claim": "mature_spread_in 18-24 (NC State Width 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Acorus americanus",
+          "url": "https://plants.ces.ncsu.edu/plants/acorus-americanus",
+          "quote": "Width: 1 ft. 6 in. - 2 ft. 0 in."
         }
       ],
       "common_name": "American Sweet Flag",
@@ -935,14 +1055,24 @@
         "soil_base left null: no admissible source frames this species in terms of a potting/soil-mix category; it is discussed only as an in-ground/water-garden aquatic grown in boggy soil or shallow standing water.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis left null: NC State frames watering only as a boggy/consistently-moist-soil culture description for an in-ground wetland/aquatic plant, never as a dry-down schedule or day-interval, consistent with instructions to leave these null for an in-ground perennial absent that framing.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: no admissible source discusses fertilizing this species.",
-        "The research record asserted that no admissible source split \"Sweet Flag\" from \"American Sweet Flag\" as the primary name; its own source does exactly that across two dedicated pages, and the corrected name_note records it. The record had also presented \"Previously known as: Acorus calamus\" as a quotation, but the page stacks that label and its value as separate elements; the label and the value are cited separately here."
+        "The research record asserted that no admissible source split \"Sweet Flag\" from \"American Sweet Flag\" as the primary name; its own source does exactly that across two dedicated pages, and the corrected name_note records it. The record had also presented \"Previously known as: Acorus calamus\" as a quotation, but the page stacks that label and its value as separate elements; the label and the value are cited separately here.",
+        "is_edible left null: the NC State Acorus americanus page has no 'Edible' field and no statement anywhere on the page that the plant or any part is eaten or used for food (searched 'Edible', found 0 hits); the only 'Uses (Ethnobotany)' text found was about leaves flavoring beer, which does not state the plant is eaten.",
+        "attracts_pollinators left null: searched 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' on the NC State Acorus americanus page; the only wildlife statement is 'Wildlife Value: Preferred host plant for the plateumaris shoemaker beetle,' which is a larval host-plant relationship, not pollinator attraction, so it does not support true.",
+        "Searched 'Poison', 'Toxic', and 'Problem for' on the NC State Acorus americanus page before setting is_edible: all returned 0 hits, so no toxicity information was found on the anchor page (consistent with is_edible being left null rather than set true or false).",
+        "Not a climber/vine (listed as Herbaceous Perennial), so the climber size-suppression rule does not apply and the NC State height/width figures were used as-is.",
+        "https://plants.ces.ncsu.edu/plants/acorus-calamus (Eurasian Sweet Flag) was read per instructions but is a different species' own page, not a genus page and not Acorus americanus's page; since Acorus americanus has its own NC State Plant Toolbox page with a structured Dimensions block, the calamus page's figures were not used to fill any Acorus americanus field.",
+        "No page in this task refused the fetching machine; both listed URLs returned ok status."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 45,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
@@ -1211,6 +1341,24 @@
           "source": "NC State Extension Gardener Plant Toolbox (Muenchhusia coccinea, the page the hibiscus-coccineus URL redirects to)",
           "url": "https://plants.ces.ncsu.edu/plants/muenchhusia-coccinea/",
           "quote": "Muenchhusia coccinea (Red Hibiscus, Scarlet Rose Mallow, Texas Hibiscus)"
+        },
+        {
+          "claim": "mature_height_in 72-96 (NC State Height 6 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/muenchhusia-coccinea/",
+          "quote": "Height: 6 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/muenchhusia-coccinea/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value field lists Attracts Pollinators)",
+          "source": "North Carolina Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/muenchhusia-coccinea/",
+          "quote": "Attracts Pollinators"
         }
       ],
       "common_name": "Scarlet Rose Mallow",
@@ -1257,14 +1405,26 @@
         "full_shade was excluded from outdoor_sun_exposure because no admissible source lists it in either prose or a structured field for this species.",
         "is_houseplant is inferred from the consistent absence of any houseplant framing plus explicit outdoor-garden/hardiness-zone framing across every admissible source retrieved (NC State, Clemson, MoBot, UF/IFAS); no source states in so many words that it is not a houseplant.",
         "Two citations were repaired at landing without changing a value: one quoted the pipe-joined string \"Hibiscus coccineus | American scarlet rose mallow\", which occurs only in the page's <title>, meta description and JSON-LD and never in the rendered body, and was re-pointed at the rendered heading \"Hibiscus coccineus\"; the other quoted the bare one-word RHS value \"Correct\", which was replaced with the rendered Name Status pair. A third claim said RHS's subtitle leads with the same name as MoBot's when it renders the prefixed variant \"American scarlet rose mallow\"; the claim label was corrected.",
-        "The common-name tie-break in the research record counted two sources as presenting a single common name; there are three, because Clemson's dedicated page names exactly one as its article title. The corrected name_note states the count and the tie-break as they actually stand."
+        "The common-name tie-break in the research record counted two sources as presenting a single common name; there are three, because Clemson's dedicated page names exactly one as its article title. The corrected name_note states the count and the tie-break as they actually stand.",
+        "is_edible left null: none of the three pages actually read (NC State Plant Toolbox, UF/IFAS FPS-253, RHS) addresses eating or toxicity of this species -- searched for 'Edible', 'Poison', 'Toxic', 'Problem for' on all three, zero hits on each.",
+        "hgic.clemson.edu/scarlet-swamp-hibiscus/ refused this machine (fetch status: error:ProxyError, 0 bytes) even after allowlisting the domain twice -- not read, no claim made about its content.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d270 refused this machine (fetch status: error:ConnectError, 0 bytes) -- not read, no claim made about its content.",
+        "rhs.org.uk/plants/8735/hibiscus-coccineus/details fetched successfully (title: 'Hibiscus coccineus | American scarlet rose mallow') but returned zero hits for every searched term (Height, Width, Spread, Ultimate, Max Height, Max Spread, Edible, Poison, Toxic, Attracts, pollinator, attract, climb, vine) -- the page simply has no size, edibility or wildlife data for this species: its Size section holds only 'Time to Maturity: No preference', so it was not used as a source for any field (corrected at landing: the note had supposed the data sat in a tab this fetch did not capture).",
+        "Plant is not treated as a climber: NC State Plant Toolbox lists Plant Type as Herbaceous Perennial / Wildflower, and no successfully-fetched page mentions vine/climb/liana, so all four size fields were filled normally from the NC State anchor rather than left null under the climber rule.",
+        "UF/IFAS FPS-253 (not used as the primary citation) gives 'Height: 4 to 8 feet' (48-96 in), which contains NC State's 72-96 in, and 'Spread: 3 to 4 feet' (36-48 in), wider than NC State's 24-36 in and meeting it only at 36 in (corrected at landing: the note had called UF's range consistent); it lists 'attracts butterflies; attracts hummingbirds' under Uses -- NC State's structured Dimensions block was used as the anchor citation per the sourcing rule (NC State page exists for this species, so it takes priority over RHS/other sources).",
+        "No cultivar-specific figures were encountered on any successfully-fetched page; all size and pollinator data found applies to the species itself."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     }
   ],
   "audit_summary": [
@@ -1302,6 +1462,7 @@
     }
   ],
   "normalizations": [
-    "2026-09-10: b78 landed on branch claude/database-build-goals-e548af from the post-audit records. Eight native aquatic and emergent perennials: Southern Blue Flag Iris, Broadleaf Arrowhead, American Spatterdock, Green Arrow-arum, Golden Club, American Sweet Flag, Swamp Loosestrife, Scarlet Rose Mallow. Auditor-supplied corrected wording used verbatim where the audit supplied it; every citation substitute was ground-truthed through verify_quotes' own fetch+extract+norm path before being applied, which confirmed that the researcher's Penn State sentence for Nuphar advena was fabricated (the page carries a \"Deep Water Plants\" category definition, not a species assertion) and that NC State's poison callout sentence is genuinely rendered. Landing decisions here: Iris virginica keeps toxic_to_pets true on NC State's Problems values naming cats and dogs, and its toxicity_detail -- nulled on audit -- was rebuilt from the record's own Poison-block citations rather than left null under a true verdict; part_shade dropped from Iris virginica and Orontium aquaticum and full_shade from Peltandra virginica, each excluded by another dedicated page's structured sun field and demoted to a tolerance clause by the species' own prose; Nuphar advena gains outdoor_sun_exposure part_shade from Penn State's species-scoped Light Requirements value, and its common_name is title-cased to American Spatterdock after RHS's dedicated-page lead; the aroids (Peltandra virginica, Orontium aquaticum) keep their calcium-oxalate hazard in the source's words and human-scoped, with toxic_to_pets null; five NC State and RHS label-glued quotes trimmed to their values (Soil Drainage x2, Soil pH, Moisture, pH) while the Poison blocks stay quoted as the pages' contiguous label/value runs; Orontium aquaticum's RHS citations moved off the /wd/ placeholder slug onto the epithet slug. verify_quotes: every reachable quote verified after repair; plantfinder.mobot.org, www.missouribotanicalgarden.org and hgic.clemson.edu refuse this machine and are skipped."
+    "2026-09-10: b78 landed on branch claude/database-build-goals-e548af from the post-audit records. Eight native aquatic and emergent perennials: Southern Blue Flag Iris, Broadleaf Arrowhead, American Spatterdock, Green Arrow-arum, Golden Club, American Sweet Flag, Swamp Loosestrife, Scarlet Rose Mallow. Auditor-supplied corrected wording used verbatim where the audit supplied it; every citation substitute was ground-truthed through verify_quotes' own fetch+extract+norm path before being applied, which confirmed that the researcher's Penn State sentence for Nuphar advena was fabricated (the page carries a \"Deep Water Plants\" category definition, not a species assertion) and that NC State's poison callout sentence is genuinely rendered. Landing decisions here: Iris virginica keeps toxic_to_pets true on NC State's Problems values naming cats and dogs, and its toxicity_detail -- nulled on audit -- was rebuilt from the record's own Poison-block citations rather than left null under a true verdict; part_shade dropped from Iris virginica and Orontium aquaticum and full_shade from Peltandra virginica, each excluded by another dedicated page's structured sun field and demoted to a tolerance clause by the species' own prose; Nuphar advena gains outdoor_sun_exposure part_shade from Penn State's species-scoped Light Requirements value, and its common_name is title-cased to American Spatterdock after RHS's dedicated-page lead; the aroids (Peltandra virginica, Orontium aquaticum) keep their calcium-oxalate hazard in the source's words and human-scoped, with toxic_to_pets null; five NC State and RHS label-glued quotes trimmed to their values (Soil Drainage x2, Soil pH, Moisture, pH) while the Poison blocks stay quoted as the pages' contiguous label/value runs; Orontium aquaticum's RHS citations moved off the /wd/ placeholder slug onto the epithet slug. verify_quotes: every reachable quote verified after repair; plantfinder.mobot.org, www.missouribotanicalgarden.org and hgic.clemson.edu refuse this machine and are skipped.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

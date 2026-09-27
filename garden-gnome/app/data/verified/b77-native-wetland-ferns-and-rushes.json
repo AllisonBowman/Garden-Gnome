@@ -177,6 +177,18 @@
           "source": "Missouri Botanical Garden Plant Finder — Osmunda regalis",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=l320",
           "quote": "Excellent selection for wet areas along ponds, streams, water gardens or in bogs."
+        },
+        {
+          "claim": "mature_height_in 60-72 (NC State Height 5 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox: Osmunda regalis",
+          "url": "https://plants.ces.ncsu.edu/plants/osmunda-regalis/",
+          "quote": "Height: 5 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox: Osmunda regalis",
+          "url": "https://plants.ces.ncsu.edu/plants/osmunda-regalis/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Royal Fern",
@@ -219,14 +231,23 @@
         "soil_ph_min and soil_ph_max left null: RHS's structured pH field accepts Acid, Alkaline, and Neutral soils (i.e., effectively unrestricted), and NC State has no Soil pH band field on this species page at all, so no ceiling or floor can be set.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, and water_dormant_days_est left null: this is an in-ground landscape perennial and no source frames watering in terms of a dry-down target, check depth, or day-interval schedule.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: none of the three admissible sources discuss fertilizing this species.",
-        "soil_base is set to garden_bed as the best fit among the strict enum options, inferred from NC State's Landscape Location/Landscape Theme fields (naturalized area, woodland, riparian, rain garden, water garden) describing in-ground landscape placement; no source uses a 'soil_base' or potting-mix vocabulary directly, since this is not treated as a container/houseplant species by any source."
+        "soil_base is set to garden_bed as the best fit among the strict enum options, inferred from NC State's Landscape Location/Landscape Theme fields (naturalized area, woodland, riparian, rain garden, water garden) describing in-ground landscape placement; no source uses a 'soil_base' or potting-mix vocabulary directly, since this is not treated as a container/houseplant species by any source.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page contains any mention of edibility, use as food, or toxicity for Osmunda regalis (searched 'Edible', 'Poison', 'Toxic', 'Problem for' on both -- zero hits on either page); the Missouri Botanical Garden PlantFinder page could not be checked at all (see below), so this may be revisited if that source becomes reachable.",
+        "attracts_pollinators left null: neither the NC State page nor the RHS page names bees, butterflies, moths, hummingbirds, or any pollinator in connection with this species (searched 'Attracts', 'bee', 'butterfl', 'Wildlife', 'Pollinator', 'pollinators' on both -- NC State had zero hits on 'Attracts'; RHS's one 'Wildlife' hit was just a site-navigation link to a generic 'Wildlife gardening' section, not a plant-specific attracts claim).",
+        "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=l320 refused this machine (fetch status: error:ProxyError, 0 bytes returned, both inside and outside the sandbox) -- could not read it for size, edibility, or pollinator information; not guessing what it would have said.",
+        "Osmunda regalis is not a climber (it is a herbaceous perennial fern per NC State's Plant Type field), so the climber-exclusion rule (#4) does not apply and size fields were filled normally.",
+        "NC State (plants.ces.ncsu.edu) has a species-specific page with a structured Dimensions block, so it was used as the size anchor per the stated priority; RHS's Max Height/Max Spread figures (1.5-2.5 m / 0.5-1 m) were not used for size since the NC State species page exists and takes priority."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Netted Chain Fern",
@@ -280,7 +301,12 @@
         "Clemson HGIC (hgic.clemson.edu), UF/IFAS (edis.ifas.ufl.edu / ask.ifas.ufl.edu), Penn State Extension (extension.psu.edu), and University of Maryland Extension (extension.umd.edu) returned no dedicated or species-specific content for Woodwardia areolata / netted chain fern in the searches performed, so none contributed fields.",
         "Missouri Botanical Garden's Plant Finder was not consulted during research (the record reported a TLS certificate-chain failure that the audit could not reproduce). Re-checked at landing: MoBot carries a dedicated Woodwardia areolata page (kempercode v200), cited here for the common name, sun, water and drainage fields; its structured fields read 'Sun: Part shade to full shade' and 'Water: Medium to wet', its Culture paragraph reads 'Easily grown in organically rich, medium to wet, well-drained soils in part shade to full shade.', and its Problems section states 'Needs consistently moist soils.' MoBot's Family field reads Blechnaceae where NC State's Description says 'spleenwort family (Aspleniaceae)'; that family disagreement bears on no field in this record.",
         "is_houseplant false rests on NC State's Plant Type field (Fern, Ground Cover, Herbaceous Perennial, Native Plant), its USDA Plant Hardiness Zone range (3a-9b) and its Description ('a deciduous herbaceous perennial ... native to the eastern United States and Nova Scotia'); no admissible source frames it as a houseplant one way or the other.",
-        "UGA Extension's fern guide is a multi-species publication (covers many Georgia native ferns), so per the single-species-page rule it was used only to corroborate facts already anchored on NC State's dedicated species page, never as the primary source for common_name or name authority."
+        "UGA Extension's fern guide is a multi-species publication (covers many Georgia native ferns), so per the single-species-page rule it was used only to corroborate facts already anchored on NC State's dedicated species page, never as the primary source for common_name or name authority.",
+        "is_edible left null: neither readable cited page (NC State Plant Toolbox, UGA CAES ferns publication; the third, Missouri Botanical Garden, refused this machine) addresses whether Woodwardia areolata is eaten or used for food, and no poisonous-part, toxicity, or pets warning was found on the NC State anchor page either -- there is simply no record on eating this species either way (corrected at landing: the note had said three pages and named two).",
+        "attracts_pollinators left null: NC State's structured 'Attracts:' field for this species lists only Small Mammals and Songbirds, not bees, butterflies, moths, or hummingbirds; the UGA CAES page and NC State page carry no other pollinator language ('Pollinator', 'butterfl', 'bee', 'hummingbird' all returned zero relevant hits on either page) -- no page names pollinators for this species.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine's fetch (ProxyError, both without and with the host explicitly allowed) -- it was not read and nothing from it is guessed or included.",
+        "UGA CAES ('Native Plants for Georgia Part II: Ferns') gives its own size for this species: its Size field reads '12 to 28 inches high and 2 to 3 feet wide' (12-28 in by 24-36 in), a wider height range than NC State's 18-24 in and a wider spread than its 12-24 in. NC State carries a species-specific (not genus) structured Dimensions block and is the designated anchor, so its Height/Width figures were used instead of UGA's (corrected at landing: the note had run UGA's 'Size:' label into its value, which the page renders on a separate line).",
+        "This species is a ground-cover fern, not a vine/liana/climber, so the climber size restriction (rule 4) does not apply and both height and spread were recorded normally."
       ],
       "citations": [
         {
@@ -408,8 +434,24 @@
           "source": "Missouri Botanical Garden Plant Finder - Woodwardia areolata",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=v200",
           "quote": "Needs consistently moist soils."
+        },
+        {
+          "claim": "mature_height_in 18-24 (NC State Height: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/woodwardia-areolata/",
+          "quote": "Height: 1 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/woodwardia-areolata/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
@@ -509,6 +551,18 @@
           "source": "RHS - Thelypteris palustris",
           "url": "https://www.rhs.org.uk/plants/20658/thelypteris-palustris/details",
           "quote": "Best grown in moist soils in partial shade."
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Thelypteris palustris subsp. pubescens",
+          "url": "https://plants.ces.ncsu.edu/plants/thelypteris-palustris-subsp-pubescens/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Thelypteris palustris subsp. pubescens",
+          "url": "https://plants.ces.ncsu.edu/plants/thelypteris-palustris-subsp-pubescens/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Marsh Fern",
@@ -549,14 +603,25 @@
         "outdoor_sun_exposure: NC State's structured Light Requirements for this taxon list both Full sun and Partial Shade, but RHS's structured Position/Sun field for the exact species T. palustris lists only Partial shade. Because only two admissible dedicated pages exist for this plant and they disagree, full_sun was excluded and only part_shade (supported by both) was retained.",
         "No admissible single-species dedicated page was found on hgic.clemson.edu, extension.umd.edu, extension.psu.edu, edis.ifas.ufl.edu, ask.ifas.ufl.edu, or plantfinder.mobot.org/missouribotanicalgarden.org for this species -- those domains either had no page for Thelypteris palustris or only multi-species list pages (e.g. UGA CAES Field Report's \"Native Plants for Georgia Part II: Ferns\", a multi-species publication), which were excluded per the single-species-page rule even though the UGA page contains species-specific marsh fern text.",
         "NC State's dedicated page covers Thelypteris palustris subsp. pubescens, the North American subspecies of this same species rather than a separate species; its content was used where applicable to the species, and the subspecies scope is noted here.",
-        "chill_damage_f left null: RHS gives only a hardiness rating (H7), which per the schema rules is a zone/survival rating, not a stated damage-onset temperature."
+        "chill_damage_f left null: RHS gives only a hardiness rating (H7), which per the schema rules is a zone/survival rating, not a stated damage-onset temperature.",
+        "is_edible left null: neither the NC State page nor the RHS page addresses eating or culinary/food use of Marsh Fern anywhere.",
+        "Checked NC State and RHS pages for 'Poison', 'Toxic', and 'Problem for' -- zero hits on both pages; no toxicity information found on either anchor page.",
+        "Size comes from NC State's page for Thelypteris palustris subsp. pubescens (eastern marsh fern; 'Previously known as: Thelypteris palustris var. pubescens'), the North American subspecies of this species -- the page gives its range as eastern Canada and the USA, Bermuda, Cuba and parts of Mexico. A subspecies is a wild population of the species itself, not a cultivar, so its Dimensions block is used for Thelypteris palustris: Height 1-3 ft (12-36 in) and Width 2-3 ft (24-36 in). These are broadly consistent with RHS's page for the species as a whole, Max Height/Max Spread of 0.5-1 metres (about 19.7-39.4 in), so no conflict was resolved by preference (corrected at landing: the note had called the NC State page species-specific).",
+        "NC State's Wildlife Value text ('Only known host for the Marsh Fern Moth (Fagitana littera). Small mammals browse the foliage.') was not used to support attracts_pollinators -- small mammals browsing foliage is not pollination per the rules; the Moths entry in the structured Attracts field was used instead.",
+        "This is not a climber (NC State Plant Type: Fern, Ground Cover, Herbaceous Perennial), so all four size fields were populated normally per the rules.",
+        "RHS page was searched for 'Ultimate height', 'Attracts', 'Edible', 'Poison', 'Toxic', 'Problem for', 'Pollinator', and 'pollinators' -- zero hits on all of these; RHS's only relevant field found was the Max Height/Max Spread size block, which was not needed since NC State (the species-specific anchor) already carries size.",
+        "attracts_pollinators removed on audit: The only support is the bare word 'Moths' in NC State's Attracts field (listed next to 'Small Mammals'). The same NC State page says, under Flower Description, 'No flowers.' and, under Fruit Description, 'No fruits. This plants reproduces via spores.' Its Wildlife Value explains why moths are listed: 'Only known host for the Marsh Fern Moth (Fagitana littera).' The tags also include '#moth caterpillar host' and '#larval host plant'. So the moths are there as larvae feeding on the fronds, not as pollinators. A fern with no flowers cannot be pollinated. The researcher's unknowns set the Wildlife Value text aside, but that text is exactly what the 'Moths' entry means. RHS has zero hits for 'Pollinat' and describes propagation 'by division or spores'. This is Check E: larval-host and wildlife-value support that names no pollinator. The field should be null, not true."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -788,7 +853,13 @@
         "water_regime left null: Missouri Botanical Garden's structured Water field reads 'Dry to medium' and NC State's prose says 'dry to medium moisture' — both mid-scale structured/prose moisture readings that span dry-to-medium rather than clearly matching one of dry_surface_between/dry_thoroughly_between/keep_barely_moist/keep_moist, so the field is left null rather than forced into an enum value; Missouri Botanical Garden's Culture note also separately advises 'Avoid overwatering' and 'Needs excellent drainage to minimize risk of crown rot', and its Problems section adds that 'Crown rot can be a significant problem in poorly drained soils', consistent with a drier-leaning regime but not a specific watering instruction.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis left null: this is an in-ground garden/woodland fern, and no admissible source frames its watering in dry-down-target, check-depth, or day-interval terms.",
         "fertilize_interval_days, fertilize_active_months, fertilize_strength left null: none of the admissible sources mention fertilizing this species at all.",
-        "outdoor_sun_exposure excludes full_sun and part_sun: all three admissible structured sun fields cap exposure at partial shade or dimmer — NC State's Light field tops out at 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)', Missouri Botanical Garden's Sun field reads 'Part shade to full shade', and RHS's Position field reads 'Partial shade'. NC State's Description prose does reach higher, saying the fern 'grows best in well-drained, rocky soils, in shade to part sun', but that prose bound is contradicted by NC State's own structured Light field and by both other sources, so part_sun is not asserted."
+        "outdoor_sun_exposure excludes full_sun and part_sun: all three admissible structured sun fields cap exposure at partial shade or dimmer — NC State's Light field tops out at 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)', Missouri Botanical Garden's Sun field reads 'Part shade to full shade', and RHS's Position field reads 'Partial shade'. NC State's Description prose does reach higher, saying the fern 'grows best in well-drained, rocky soils, in shade to part sun', but that prose bound is contradicted by NC State's own structured Light field and by both other sources, so part_sun is not asserted.",
+        "Missouri Botanical Garden PlantFinder (https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=285848) refused this machine (ProxyError, both without and with the host explicitly allowed) -- could not check it for size, edibility, or toxicity content; not guessing what it would have said.",
+        "is_edible left null: no page among the two accessible sources (NC State Plant Toolbox, RHS) addresses eating this plant at all -- no 'Edible', 'Poison', 'Toxic', or 'Problem for' hits on either page.",
+        "attracts_pollinators left null: no page among the two accessible sources has an 'Attracts' field or unconditional pollinator statement -- searched for 'Attracts', 'pollinators', 'butterfl', 'bee', 'hummingbird', 'Wildlife' style terms; no hits on NC State (Attracts: 0 hits) or RHS (Attracts/pollinators: 0 hits).",
+        "NC State's 'Deer, Heavy Shade' entry is its 'Particularly Resistant To (Insects/Diseases/Other Problems): Deer, Heavy Shade' field -- a resistance field, not an Attracts field (the page has none), and not a pollinator or edibility signal; noted here so it isn't mistaken for one (corrected at landing: the note had called it an 'Attracts/Diseases/Other Problems' field).",
+        "RHS gives Max Height and Max Spread both as 0.1-0.5 metres (about 3.9-19.7 in) for this species; NC State's structured Dimensions block was used as the anchor per the size-source hierarchy since NC State has a page for this exact species, so the RHS figures were not used and are noted here only for completeness (corrected at landing: the conversion had been garbled).",
+        "Ebony Spleenwort (Asplenium platyneuron) is not a climber, so the climber-exclusion rule does not apply and all four size fields were populated normally."
       ],
       "citations": [
         {
@@ -922,8 +993,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=285848",
           "quote": "Plant in dryish, rocky, shady areas of rock gardens (will grow in rocky crevices), native plant gardens or woodland areas."
+        },
+        {
+          "claim": "mature_height_in 8-20 (NC State Height 0 ft. 8 in. - 1 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/asplenium-platyneuron/",
+          "quote": "Height: 0 ft. 8 in. - 1 ft. 8 in."
+        },
+        {
+          "claim": "mature_spread_in 8-20 (NC State Width 0 ft. 8 in. - 1 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/asplenium-platyneuron/",
+          "quote": "Width: 0 ft. 8 in. - 1 ft. 8 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 8,
+      "mature_height_in_max": 20,
+      "mature_spread_in_min": 8,
+      "mature_spread_in_max": 20
     },
     {
       "common_name": "Common Spike-rush",
@@ -1371,6 +1458,7 @@
   ],
   "normalizations": [
     "2026-09-10: b77 landed by a second session (branch claude/database-build-goals-e548af) from the loop's post-audit records. Seven native wetland ferns and emergents land: Royal Fern, Netted Chain Fern, Marsh Fern, Crested Woodfern, Ebony Spleenwort, Common Spike-rush, Broadleaf Cattail. Auditor's corrected wording used verbatim; every substitute quote ground-truthed with qc.py, or read off the rendered MoBot page in the Browser pane where MoBot refuses this machine's fetcher. Landing decisions: Osmunda regalis drops full_sun (MoBot's structured Sun field excludes it and its Culture text recommends against it; NC State and RHS carry full sun only behind a cool-summer / constant-moisture condition); Woodwardia areolata's soil_drainage restored to moisture_retentive on the audit's reasoning (the null rested on UGA's Habitat field read as a cultivation range; NC State's structured Soil Drainage field is Frequent Standing Water / Moist / Occasionally Wet and MoBot states 'Needs consistently moist soils.'); MoBot pages the researcher reported unreachable (Woodwardia areolata v200, Typha latifolia a407) cited after a landing re-check; NC State label-glued and space-joined quotes re-quoted as newline-stacked values with Landscape Location and Landscape Theme split; Dryopteris cristata lands as Crested Woodfern, NC State's one-word list lead, distinct from Evergreen Wood Fern (D. marginalis). Sparganium americanum is WITHHELD from this batch: no admissible domain carries a dedicated single-species page (NC State 404, RHS has no S. americanum entry, MoBot none, and nothing on Clemson, UF/IFAS EDIS/ask, Penn State, UMD or UGA), so its record has zero citations and an unsupported common_name that the loader would refuse; it is a coverage gap, not a naming conflict. verify_quotes: every reachable quote verified after repair; MoBot pages skipped from this machine.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
