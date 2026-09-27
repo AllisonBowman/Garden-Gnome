@@ -473,7 +473,15 @@
         "water_regime = keep_moist reflects only RHS's container advice for the GROWING SEASON ('keep the compost moist'). It must be read with the drainage caveats: UF/IFAS warns that excessive water/irrigation is the likely management problem, that moist or wet soils cause root rot, and that an overabundance of moisture can cause flower drop; MBG rates water needs Medium and NC State says average moisture. No source gives a winter/rest-period watering regime, a dry-down target, a check depth, or any day interval, so those fields are null.",
         "fertilize fields left null: RHS says to mix controlled-release fertiliser granules into the compost at potting and to feed with a balanced liquid fertiliser 'every month' during the growing season - a word cadence with no literal day count, and no dilution strength, so fertilize_interval_days and fertilize_strength were not derived. UF/IFAS says nutrient requirements are low, trees do not produce well on highly fertile soils, and excess nitrogen reduces fruiting and oil quality.",
         "Fruit: NC State and UF/IFAS say plant two different cultivars (pollinizers) for cross-pollination if fruit is wanted; several cultivars ('Swan Hill', 'Wilsoni') are fruitless/flowerless. Fruiting trees near hardscape are messy (NC State).",
-        "Pests/diseases: scale insects (NC State, MBG, RHS); olive knot, verticillium wilt, root rot (NC State, MBG); RHS flags it as a high-risk host for Xylella fastidiosa and possibly susceptible to olive scab and honey fungus."
+        "Pests/diseases: scale insects (NC State, MBG, RHS); olive knot, verticillium wilt, root rot (NC State, MBG); RHS flags it as a high-risk host for Xylella fastidiosa and possibly susceptible to olive scab and honey fungus.",
+        "mature_height_in and mature_spread_in left null (all four fields): the only mature-size figures found on the anchor pages are outdoor/landscape stature, and both exceed 10 ft (120 in), the houseplant-headroom cutoff -- NC State Dimensions block: 'Height: 20 ft. 0 in. - 30 ft. 0 in.' and 'Width: 15 ft. 0 in. - 25 ft. 0 in.'; RHS details page: 'Max Height 4-8 metres' and 'Max Spread 1.5-2.5 metres' (also landscape/garden stature, not container-specific). RHS's grow-your-own page discusses growing olive in a container/pot and pruning to restrict size but gives no numeric mature-size figure for container-grown plants, so no houseplant-specific figure exists to substitute. (Corrected at landing: RHS's spread, 1.5-2.5 metres, is about 59-98 in, under 120 in; it is still a garden figure no page ties to containers, beside heights far over 120 in, so all four stay null.)",
+        "attracts_pollinators left null: no page states that bees, butterflies, moths, hummingbirds, or other pollinators visit olive flowers. NC State's 'Wildlife Value: Birds and small mammals spread the seeds.' describes seed dispersal, not pollination, so it was not counted as support. IFAS EP515 (ENH1254) discusses cross-pollination and fertilization mechanics between olive cultivars (a wind-pollination / fruit-set topic) at length but never names an insect or bird pollinator visiting the flowers, so it also gives no basis for true.",
+        "is_edible is true but conditional: olives are not eaten raw. UF/IFAS EP515: 'Olives typically are not eaten raw from the tree and are considered unpalatable as they contain an alkaloid that makes them bitter.' RHS grow-your-own: the fruit 'need special preparation to make them edible', and 'If you like green olives they will need soaking in salted water for several days to remove any bitterness and make them palatable. Black olives need dry curing in salt for several weeks until dehydrated then storing in olive oil or brine.' (Completed at landing, verified against the cached copies.)",
+        "Per rule 5, searched NC State (plants.ces.ncsu.edu/plants/olea-europaea/) and both RHS pages for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: all three terms returned 0 hits on all three pages. No toxic part, severity, toxic principle, or pets warning was found on any page actually read.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=283004 (Missouri Botanical Garden Plant Finder) refused connection from this machine (fetch status: error:ConnectError on repeated attempts, including with the host explicitly allowlisted) -- not read, not used for any field.",
+        "https://ask.ifas.ufl.edu/publication/AG405 (olive nutrition guide) loaded successfully but contains no size, edibility, or pollinator-visitation statements relevant to this record; its only 'Toxic' hits concern boron fertilizer toxicity thresholds in soil, not plant toxicity to humans or pets, and were not used.",
+        "https://ask.ifas.ufl.edu/publication/EP515 (olives for Florida landscape) loaded successfully. Corrected at landing: it does give a size, 'If planted on highly fertile soils, canopies up to 30 ft may be achieved.' (landscape stature, over 120 in, not used), and it does address eating, in the not-eaten-raw sentence quoted above. It names no animal pollinator.",
+        "is_edible re-cited at landing (coordinator's instruction): the researcher's NC State quote described the fruit's shape and colour ('The fruits are oval green drupes ... are edible. Each olive contains one pit.') rather than a food use. The same page's description says 'The fruits can be harvested at either stage and are important commercially as edible fruit, for making olive oil, and fuel.', which qc.py confirms verbatim on the cached copy; that is now the citation. The RHS preparation citation stays."
       ],
       "citations": [
         {
@@ -649,8 +657,21 @@
           "source": "UF/IFAS EDIS ENH1254/EP515: Olives for Your Florida Landscape",
           "url": "https://ask.ifas.ufl.edu/publication/EP515",
           "quote": "Nutrient requirements for olive are low, and the trees do not produce well on highly fertile soils."
+        },
+        {
+          "claim": "is_edible true (NC State description: the fruits are important commercially as edible fruit and for making olive oil; the fruit must be cured before eating, see unknowns)",
+          "source": "NC State Extension Gardener Plant Toolbox - Olea europaea",
+          "url": "https://plants.ces.ncsu.edu/plants/olea-europaea/",
+          "quote": "The fruits can be harvested at either stage and are important commercially as edible fruit, for making olive oil, and fuel."
+        },
+        {
+          "claim": "is_edible true, conditional (RHS: fruit is edible but requires special preparation/curing before it can be eaten)",
+          "source": "RHS - How to grow Olives (grow-your-own guide)",
+          "url": "https://www.rhs.org.uk/fruit/olives/grow-your-own",
+          "quote": "may sometimes in hot summers and southern gardens, reward you with a crop of attractive-looking fruit that need special preparation to make them edible."
         }
-      ]
+      ],
+      "is_edible": true
     },
     {
       "common_name": "Kiwifruit",
@@ -1639,7 +1660,17 @@
         "Overwatering nuance: despite wanting constantly moist soil, NC State says 'The biggest mistake is keeping the plant too wet' and MBG says crowns should not sit in water; root rot is listed as a problem by both.",
         "Never collect from the wild: NC State, MBG, UF/IFAS and Clemson all say to buy nursery-grown plants only; wild populations are threatened and poaching is illegal.",
         "Naming: UF/IFAS lists the Gulf Coast population under 'Gulf Purple Pitcherplant' with Sarracenia rosea as a synonym and 'Decumbent pitcherplant, northern pitcherplant' as other names; MBG and RHS recognise subsp. purpurea (northern) and subsp. venosa (southern), which hybridise where ranges overlap.",
-        "Penn State says pitcher plants can be grown outdoors in containers in hardiness zones 5 and 6 with the containers overwintered in an unheated garage, cold frame or protected outdoor site."
+        "Penn State says pitcher plants can be grown outdoors in containers in hardiness zones 5 and 6 with the containers overwintered in an unheated garage, cold frame or protected outdoor site.",
+        "is_edible left null: no page among the eight addressed eating or edibility of Sarracenia purpurea at all (NC State page has 0 hits for 'Edible'; RHS detail page, RHS growing guide, RHS carnivorous-types page, and ask.ifas.ufl.edu UW378 also have 0 hits for 'Edible' and no mention of eating the plant/parts of it) -- no record, not a false.",
+        "Checked NC State page for 'Poison', 'Toxic', 'Problem for' before setting is_edible: all three returned 0 hits, so no toxicity language exists there to carry into unknowns.",
+        "Checked RHS detail page (plants/16472) for 'Poison'/'Toxic': 0 hits.",
+        "RHS carnivorous-types page (rhs.org.uk/plants/types/carnivorous) has 1 hit for 'Toxic', but it is general guidance about tap-water chemicals being toxic to carnivorous plants as a group, not about Sarracenia purpurea toxicity or edibility -- not used as support for or against is_edible.",
+        "Size fields use NC State Plant Toolbox's structured Dimensions block, which is species-specific (not a genus page): 'Height: 0 ft. 9 in. - 1 ft. 6 in.' = 9-18 in; 'Width: 1 ft. 0 in. - 2 ft. 0 in.' = 12-24 in. These are outdoor/native figures under 120 in (10 ft), so no houseplant-oversize override applies.",
+        "RHS detail page (plants/16472) also gives Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres (3.9-19.7 in) for this species -- broadly consistent with NC State's range -- but NC State is used as the anchor per the species-specific-page rule; RHS figure not used as the recorded citation.",
+        "hgic.clemson.edu/factsheet/creating-an-indoor-carnivorous-wetland-terrarium... refused this machine: http-403.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286838 refused this machine: error:ConnectError (also blocked by sandbox network policy on first attempt).",
+        "extension.psu.edu/carnivorous-plants and ask.ifas.ufl.edu/publication/UW378 loaded fine but are general carnivorous-plant/genus overview pages with no Sarracenia purpurea-specific size or edibility data, so they were not used as citations for any field.",
+        "attracts_pollinators set true from NC State's structured 'Play Value: Attracts Pollinators' tag, its 'Attracts: Bees, Pollinators' field, and the unconditional statement 'A nectar source for insects.' -- all species-specific, not genus-level inference. (Noted at landing: the Attracts citation's quote spliced the label to its two values across U+23CE; it now quotes the value 'Bees' alone. The auditor's proposed 'Attracts Pollinators' is the Play Value tag, a different field, and was not swapped in. The Attracts citation now comes first, so the loader pairs the value with it rather than with 'A nectar source for insects.', a Wildlife Value line that names no pollinator and, on a pitcher plant, could describe the pitchers' prey lure.)"
       ],
       "citations": [
         {
@@ -1983,8 +2014,37 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286838",
           "quote": "These two varieties will readily cross and form hybrids where their ranges overlap, making identification difficult."
+        },
+        {
+          "claim": "mature_height_in 9-18 (NC State Height: 0 ft. 9 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sarracenia purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/sarracenia-purpurea/",
+          "quote": "Height: 0 ft. 9 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sarracenia purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/sarracenia-purpurea/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Bees and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sarracenia purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/sarracenia-purpurea/",
+          "quote": "Bees"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State: nectar source for insects and structured Attracts Pollinators / Attracts: Bees, Pollinators fields)",
+          "source": "NC State Extension Gardener Plant Toolbox - Sarracenia purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/sarracenia-purpurea/",
+          "quote": "A nectar source for insects."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 9,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Winged Tropical Pitcher Plant",
@@ -2413,7 +2473,17 @@
         "humidity_pct_min/max are null: MOBOT calls for a 'warm, humid' indoor environment without a percentage; humidity_need = high is taken from that wording.",
         "toxic_to_pets is null: no admissible source addresses Drosera capensis toxicity to cats or dogs, and sundews do not appear on the extension pet-toxicity lists searched (Clemson, UGA, UMD).",
         "MOBOT rates maintenance High. Mature plants reach up to about 6 inches tall (RHS: 0.1-0.5 m); MOBOT's header line 'Height: 2.50 to 6.00 feet' conflicts with its own description and with RHS.",
-        "RHS propagation: seed, softwood cuttings, or root cuttings taken when dormant."
+        "RHS propagation: seed, softwood cuttings, or root cuttings taken when dormant.",
+        "is_edible left null: no page addressed eating/food use of Drosera capensis. NC State's genus-level Drosera page had 0 hits for 'Edible'; RHS's Drosera capensis details page had 0 hits for 'Edible'.",
+        "Toxicity check (rule 5) done before setting is_edible: NC State had 0 hits for 'Poison', 0 for 'Toxic', 0 for 'Problem for'; RHS had 0 hits for 'Poison'/'Toxic'. Since is_edible ended up null (no food-use statement found on any reachable page), no toxicity text is carried into the field per the rule, which applies only when is_edible is true.",
+        "attracts_pollinators left null: no page states pollinator attraction for Drosera capensis. NC State's genus page has one 'attracts' hit, but it reads 'This fluid attracts, traps and digests insects that land on the leaf' -- describing the sticky leaf substance capturing prey for this carnivorous plant, not pollination -- so it was not used as pollinator support. RHS's species details page had 0 hits for 'pollinator' and carries no Attracts/wildlife field for this species.",
+        "NC State's page at https://plants.ces.ncsu.edu/plants/drosera/ is a GENUS-level page (title rendered as 'Drosera (Sundew)', species field blank/genus-wide), not species-specific for Drosera capensis, so per instructions its Dimensions block ('Height: 0 ft. 1 in. - 0 ft. 6 in.', 'Width: 0 ft. 1 in. - 0 ft. 6 in.') spans the whole genus and was not used as the size citation; RHS's species-specific page was used instead.",
+        "mature_height_in and mature_spread_in are taken from RHS's species-level structured fields 'Max Height 0.1-0.5 metres' and 'Max Spread 0.1-0.5 metres' for Drosera capensis, converted to inches (0.1 m x 39.37 = 3.9 in; 0.5 m x 39.37 = 19.7 in).",
+        "Not a climber: RHS lists Habit as 'Clump forming' (upright/prostrate rosettes per its genus description) and NC State classifies the genus as Herbaceous Perennial/rosette-forming, not a vine, liana or other climber, so the climber rule (rule 4) does not apply and all four size fields were populated normally.",
+        "Both recorded size figures (3.9-19.7 in) are well under the 120 in (10 ft) houseplant-headroom ceiling, so no indoor-vs-outdoor distinction was needed for this houseplant-catalogued species.",
+        "The recorded RHS figures are the species-level Max Height/Max Spread figures for Drosera capensis itself, not a named cultivar's size.",
+        "Clemson HGIC page (https://hgic.clemson.edu/factsheet/creating-an-indoor-carnivorous-wetland-terrarium-a-step-by-step-guide/) returned HTTP 403 -- refused this machine -- and could not be read; nothing was guessed about its contents.",
+        "Missouri Botanical Garden Plant Finder page (https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279902) refused this machine (error:ConnectError) and could not be read; nothing was guessed about its contents."
       ],
       "citations": [
         {
@@ -2571,8 +2641,24 @@
           "source": "Missouri Botanical Garden Plant Finder – Drosera capensis",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279902",
           "quote": "Mature plants will reach up to 6\" tall and spread to form equally wide clumps."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS Plants: Drosera capensis (Cape sundew) details page",
+          "url": "https://www.rhs.org.uk/plants/6136/drosera-capensis/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS Plants: Drosera capensis (Cape sundew) details page",
+          "url": "https://www.rhs.org.uk/plants/6136/drosera-capensis/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     }
   ],
   "audit_summary": [
@@ -2612,6 +2698,7 @@
   "normalizations": [
     "2026-08-24: twenty-seventh batch -- four fruit crops (Pomegranate, Olive, Kiwifruit, Blackberry -- the last a deliberate companion to Red Raspberry already in this catalog, no Rubus-level bleed found), Sweetheart Hoya (a companion to Hoya carnosa), and this catalog's first carnivorous-plant cluster (Purple Pitcher Plant, Winged Tropical Pitcher Plant, Cape Sundew -- researched with explicit cautions against borrowing houseplant defaults; all three correctly carry null fertilize_* fields with the sources' 'do not fertilize' guidance recorded in unknowns). Pomegranate is a model record for the chill_damage_f survival-vs-onset rule: the researcher took UF/IFAS's 12°F dormant-tree damage figure, deliberately declined NC State's and Clemson's 10°F kill-to-ground survival threshold, and disclosed that a non-dormant plant is damaged at 28°F -- exactly the distinction b43 had to be corrected on. Both tools ran clean before and after repair: land_check.py no problems, covered.py no duplicates, verify_quotes.py 216 hit / 0 miss on every reachable citation (128 skips are all plantfinder.mobot.org, ask.ifas.ufl.edu and PDFs, unreachable from the sandbox). Two audit repairs, each using the auditor's own live-verified wording: Blackberry's water_estimate_basis had scoped a UMD hand-watering note to 'the establishment year' when the sentence carries no such qualifier -- restored as UMD's general note, with the 7-day cadence still anchored to Clemson's 1 inch/week and Penn State's 1-2 inches/week; Sweetheart Hoya's name_note had attributed a Valentine's-novelty framing to Penn State, whose article never mentions Valentine's -- restored with the auditor's rewording, and the Valentine's clause now cited to NC State and Clemson, which do say it. toxic_to_pets: Hoya kerrii and Nepenthes both false via explicit NC State '#non-toxic for cats'/'#non-toxic for dogs' tags; the six others null, with no admissible source addressing cat/dog toxicity -- nothing inferred either way.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Kiwifruit -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
