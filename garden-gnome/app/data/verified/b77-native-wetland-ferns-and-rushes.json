@@ -668,6 +668,18 @@
           "source": "NC State Extension Gardener Plant Toolbox - Dryopteris cristata",
           "url": "https://plants.ces.ncsu.edu/plants/dryopteris-cristata/",
           "quote": "Use crested wood fern in the shade, rain, native or winter gardens, along streams and ponds, in groups or borders."
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dryopteris-cristata/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-72 (NC State Width: 2 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dryopteris-cristata/",
+          "quote": "Width: 2 ft. 0 in. - 6 ft. 0 in."
         }
       ],
       "common_name": "Crested Woodfern",
@@ -710,14 +722,24 @@
         "soil_ph_min/max: NC State's pH field is the open-ended 'Acid (<6.0)' band, which per rule sets neither a floor nor a ceiling. RHS's pH field is only the categorical 'Neutral or Acid' with no numeric range given on the page, so no numeric bound could be derived from either source; left null.",
         "water_regime / water_dry_down_target / water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis: neither source gives an explicit watering statement or structured moisture-schedule field (only habitat description and soil-drainage tags, which the rules exclude from water_regime); this is also an in-ground garden perennial, for which the day-interval and dry-down fields are to be left null absent a source that frames watering that way. All left null.",
         "fertilize_interval_days / fertilize_active_months / fertilize_strength: no fertilizing guidance of any kind was found on either the NC State or RHS page for this species; left null.",
-        "common_name researched as 'Crested Wood Fern'; landed as 'Crested Woodfern', the one-word form NC State's Common Name(s) list and Description use, which keeps it distinct from Evergreen Wood Fern (Dryopteris marginalis) already in this catalog."
+        "common_name researched as 'Crested Wood Fern'; landed as 'Crested Woodfern', the one-word form NC State's Common Name(s) list and Description use, which keeps it distinct from Evergreen Wood Fern (Dryopteris marginalis) already in this catalog.",
+        "is_edible left null: neither the NC State nor RHS page states the plant or any part is eaten or is poisonous to eat -- no record either way.",
+        "attracts_pollinators left null: neither page has an Attracts/wildlife field or statement naming bees, butterflies, moths, or hummingbirds for this species -- ferns are not insect-pollinated and neither source addresses it.",
+        "Searched NC State page for 'Poison', 'Toxic', and 'Problem for' -- 0 hits on each; no toxicity information is present on the anchor page.",
+        "Searched RHS page for 'Poison', 'Toxic', 'Problem for', 'Edible', 'Attracts', 'pollinator', 'butterfl', 'bee', 'hummingbird' -- 0 hits on each.",
+        "Not a climber -- Dryopteris cristata is a terrestrial fern, so the climber-exclusion rule does not apply and size fields are filled normally.",
+        "Used NC State's structured Dimensions block (Height 1-3 ft, Width 2-6 ft) as the anchor per the instructions, in preference to RHS's Max Height/Max Spread figures (0.1-0.5 m / 0.5-1 m), since NC State carries a species-specific page for this record."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Ebony Spleenwort",
@@ -948,7 +970,13 @@
         "soil_base left null: none of the enum options (standard_potting, chunky_aroid, cactus_succulent, ericaceous, orchid_bark, african_violet, semi_hydro, garden_bed) accurately describes cultivation of an emergent aquatic sedge grown directly in saturated soil or standing pond/bog water, which is what both admissible sources describe (RHS: pond margins/bog gardens; MoBot: ponds, bogs, or shallow water up to 3 feet deep).",
         "soil_ph_min and soil_ph_max left null: RHS's pH field for this species is categorical, rendering only \"Alkaline or Neutral\", with no numeric band; the Alkaline reading is open-ended with no stated ceiling, so no numeric floor or ceiling can be derived. MoBot's dedicated page states no pH figure at all.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis left null: this species is an emergent aquatic grown in saturated soil or standing water rather than a pot or bed that dries down between waterings, and neither admissible source frames its watering in dry-down or day-interval terms; MoBot's planting note about \"no more than 3\\\" of standing water during the first growing season\" is a planting-depth/standing-water statement, not a drainage or dry-down enum value, per the scope rule.",
-        "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: neither RHS's nor MoBot's dedicated page for this species gives any fertilizing guidance."
+        "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: neither RHS's nor MoBot's dedicated page for this species gives any fertilizing guidance.",
+        "is_edible left null: neither RHS nor NC State (no NC State page exists for this species) states the plant or any part of it is eaten or grown for food; searched 'Edible' on RHS page, 0 hits.",
+        "Searched RHS for 'Poison', 'Toxic', and 'Problem for' (toxicity/edibility-adjacent terms) -- 0 hits for all three, so no toxicity information exists on the anchor page to report.",
+        "attracts_pollinators left null: searched RHS for 'pollinator', 'Attracts', 'butterfl', 'bee', 'hummingbird' -- 0 hits for all. RHS does list 'Wildlife gardens' under Suggested planting locations and garden types, but this is a planting-location suggestion, not a structured attracts/wildlife field or unconditional statement naming bees, butterflies, moths, or hummingbirds, so it does not satisfy the rule for a true value.",
+        "plantfinder.mobot.org (the Missouri Botanical Garden Plant Finder page cited for this record) refused this machine -- fetch returned error:ProxyError with 0 bytes on both an unrestricted attempt and one with the host explicitly allowlisted for network egress. Its content, including any size, edibility, or pollinator information it may carry, could not be read and is not represented in this submission.",
+        "No NC State Plant Toolbox page exists for Eleocharis palustris (only RHS was reachable), so RHS is used as the size source per the stated fallback rule; RHS labels the fields 'Max Height' and 'Max Spread' in metres, not 'Ultimate height'.",
+        "Species is not a vine, liana, or other climber (it is an emergent aquatic sedge/rush), so the climber size restriction (rule 4) does not apply and size fields are populated normally."
       ],
       "citations": [
         {
@@ -1064,8 +1092,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279748&isprofile=0&n=1",
           "quote": "Plants are typically grown in ponds, bogs or other shallow water areas, including sites that are permanently or seasonally flooded."
+        },
+        {
+          "claim": "mature_height_in 19.7-39.4 (RHS Max Height 0.5-1 metres, converted to inches: 0.5 x 39.37 = 19.7, 1 x 39.37 = 39.4)",
+          "source": "RHS - Eleocharis palustris (common spike-rush)",
+          "url": "https://www.rhs.org.uk/plants/6325/eleocharis-palustris/details",
+          "quote": "Max Height         0.5-1 metres"
+        },
+        {
+          "claim": "mature_spread_in 39.4-59.1 (RHS Max Spread 1-1.5 metres, converted to inches: 1 x 39.37 = 39.4, 1.5 x 39.37 = 59.1)",
+          "source": "RHS - Eleocharis palustris (common spike-rush)",
+          "url": "https://www.rhs.org.uk/plants/6325/eleocharis-palustris/details",
+          "quote": "Max Spread         1-1.5 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 19.7,
+      "mature_height_in_max": 39.4,
+      "mature_spread_in_min": 39.4,
+      "mature_spread_in_max": 59.1
     },
     {
       "chill_damage_f": null,
@@ -1213,6 +1257,24 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/typha-latifolia/",
           "quote": "The Common Cattail is a grass-like native plant to North Carolina."
+        },
+        {
+          "claim": "mature_height_in 60-120 (NC State Height: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Typha latifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/typha-latifolia/",
+          "quote": "Height: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-72 (NC State Width: 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Typha latifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/typha-latifolia/",
+          "quote": "Width: 4 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true: Edibility field states parts of the plant are eaten",
+          "source": "NC State Extension Gardener Plant Toolbox - Typha latifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/typha-latifolia/",
+          "quote": "Parts of the plant are edible if picked at the appropriate time. Young shoots are picked at 4 to 16 inches long and can be eaten raw, cooked or pickled. The pollen can be used as flour. The rhizomes can be eaten raw, baked, roasted, or broiled."
         }
       ],
       "common_name": "Broadleaf Cattail",
@@ -1256,14 +1318,25 @@
         "Clemson HGIC (hgic.clemson.edu), UF/IFAS (edis.ifas.ufl.edu / ask.ifas.ufl.edu), Penn State Extension (extension.psu.edu), and UGA fieldreport (fieldreport.caes.uga.edu) were checked but no dedicated single-species Typha latifolia page could be located/confirmed on any of them during this research session; they were not used as sources for any field.",
         "University of Maryland Extension (extension.umd.edu) has a page titled \"Cattail\" (extension.umd.edu/resource/cattail), but it covers cattails generically -- its opening reads \"There are four different 1 species of cattail in the North America, and all are commonly found in wet or hydric soils.\" (the stray \"1\" is the page's own footnote marker) -- without identifying Typha latifolia specifically (the string 'latifolia' does not appear on the page), so it is a genus/multi-species page, not a dedicated single-species page, and was excluded per the single-species-page requirement.",
         "Missouri Botanical Garden's Plant Finder was reported unreachable for this species during research; the audit found a live dedicated Typha latifolia page (kempercode a407), and it was read in the Browser pane at landing. It is cited here for common_name ('Common Name: broadleaf cattail'), outdoor_sun_exposure ('Sun: Full sun to part shade'), water_regime and soil_drainage ('Water: Wet'; Culture 'Easily grown in rich loams in full sun to part shade in water to 12” deep.'). It carries no toxicity statement. Its full common-name list lives only in an overlib tooltip attribute and is not quoted.",
-        "Spread and containment statements, captured as stated: NC State -- 'Grow in containers to control the spread in smaller ponds or water gardens and cover with up to 30 inches of water.' and, under Insects, Diseases and Other Plant Problems, 'Can become invasive.'; RHS Cultivation -- 'Root system may puncture pond liners, and in shallower water may spread rapidly, with potential to become a nuisance if not managed well.'; MoBot Culture -- 'Cattails are aggressive colonizers that if left unrestrained will crowd out most other marginal plants. Plant in containers or tubs to restrain spread.' and Problems 'Aggressive spreader outside of containers.' No schema field holds these, so they are recorded here."
+        "Spread and containment statements, captured as stated: NC State -- 'Grow in containers to control the spread in smaller ponds or water gardens and cover with up to 30 inches of water.' and, under Insects, Diseases and Other Plant Problems, 'Can become invasive.'; RHS Cultivation -- 'Root system may puncture pond liners, and in shallower water may spread rapidly, with potential to become a nuisance if not managed well.'; MoBot Culture -- 'Cattails are aggressive colonizers that if left unrestrained will crowd out most other marginal plants. Plant in containers or tubs to restrain spread.' and Problems 'Aggressive spreader outside of containers.' No schema field holds these, so they are recorded here.",
+        "plantfinder.mobot.org refused this machine (fetch status: error:ProxyError) both without and with the host explicitly allowed for the sandbox — could not check it for size, edibility, or pollinator data; not guessing what it would have shown.",
+        "attracts_pollinators left null: neither NC State nor RHS names bees, butterflies, moths, or hummingbirds, or gives an unconditional pollinator statement. NC State's 'Attracts:' field lists only Small Mammals and Songbirds (seed/food use, not pollination, per the rule that bird/mammal foraging does not count). RHS lists 'Wildlife gardens' only as a suggested planting location/garden type, not a pollinator attraction statement, so it was not read as support either.",
+        "Searched NC State and RHS for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: zero hits on either page for any of the three terms. No toxic part, severity, preparation requirement, or pets warning is named on the anchor page, so none is reported here alongside the true edibility value.",
+        "is_edible set true (not conditional) because NC State's 'Edibility:' field states young shoots, pollen, and rhizomes are eaten raw/cooked/pickled/baked/roasted/broiled with no caveat that another part is inedible or toxic -- this is a straightforward food-use statement, not a partial-edible/partial-toxic case requiring the conditional-true treatment.",
+        "Not a climber -- Typha latifolia is an emergent aquatic/marsh herbaceous perennial, so the climber size-suppression rule does not apply and size fields were populated normally.",
+        "RHS gives 'Max Spread wider than 8 metres' for this species, but NC State already supplies a concrete, non-open-ended Width range (4 ft 0 in - 6 ft 0 in), so NC State (the anchor) was used for both height and spread and the open-ended RHS spread figure was not used."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 72
     }
   ],
   "audit_summary": [
@@ -1297,6 +1370,7 @@
     }
   ],
   "normalizations": [
-    "2026-09-10: b77 landed by a second session (branch claude/database-build-goals-e548af) from the loop's post-audit records. Seven native wetland ferns and emergents land: Royal Fern, Netted Chain Fern, Marsh Fern, Crested Woodfern, Ebony Spleenwort, Common Spike-rush, Broadleaf Cattail. Auditor's corrected wording used verbatim; every substitute quote ground-truthed with qc.py, or read off the rendered MoBot page in the Browser pane where MoBot refuses this machine's fetcher. Landing decisions: Osmunda regalis drops full_sun (MoBot's structured Sun field excludes it and its Culture text recommends against it; NC State and RHS carry full sun only behind a cool-summer / constant-moisture condition); Woodwardia areolata's soil_drainage restored to moisture_retentive on the audit's reasoning (the null rested on UGA's Habitat field read as a cultivation range; NC State's structured Soil Drainage field is Frequent Standing Water / Moist / Occasionally Wet and MoBot states 'Needs consistently moist soils.'); MoBot pages the researcher reported unreachable (Woodwardia areolata v200, Typha latifolia a407) cited after a landing re-check; NC State label-glued and space-joined quotes re-quoted as newline-stacked values with Landscape Location and Landscape Theme split; Dryopteris cristata lands as Crested Woodfern, NC State's one-word list lead, distinct from Evergreen Wood Fern (D. marginalis). Sparganium americanum is WITHHELD from this batch: no admissible domain carries a dedicated single-species page (NC State 404, RHS has no S. americanum entry, MoBot none, and nothing on Clemson, UF/IFAS EDIS/ask, Penn State, UMD or UGA), so its record has zero citations and an unsupported common_name that the loader would refuse; it is a coverage gap, not a naming conflict. verify_quotes: every reachable quote verified after repair; MoBot pages skipped from this machine."
+    "2026-09-10: b77 landed by a second session (branch claude/database-build-goals-e548af) from the loop's post-audit records. Seven native wetland ferns and emergents land: Royal Fern, Netted Chain Fern, Marsh Fern, Crested Woodfern, Ebony Spleenwort, Common Spike-rush, Broadleaf Cattail. Auditor's corrected wording used verbatim; every substitute quote ground-truthed with qc.py, or read off the rendered MoBot page in the Browser pane where MoBot refuses this machine's fetcher. Landing decisions: Osmunda regalis drops full_sun (MoBot's structured Sun field excludes it and its Culture text recommends against it; NC State and RHS carry full sun only behind a cool-summer / constant-moisture condition); Woodwardia areolata's soil_drainage restored to moisture_retentive on the audit's reasoning (the null rested on UGA's Habitat field read as a cultivation range; NC State's structured Soil Drainage field is Frequent Standing Water / Moist / Occasionally Wet and MoBot states 'Needs consistently moist soils.'); MoBot pages the researcher reported unreachable (Woodwardia areolata v200, Typha latifolia a407) cited after a landing re-check; NC State label-glued and space-joined quotes re-quoted as newline-stacked values with Landscape Location and Landscape Theme split; Dryopteris cristata lands as Crested Woodfern, NC State's one-word list lead, distinct from Evergreen Wood Fern (D. marginalis). Sparganium americanum is WITHHELD from this batch: no admissible domain carries a dedicated single-species page (NC State 404, RHS has no S. americanum entry, MoBot none, and nothing on Clemson, UF/IFAS EDIS/ask, Penn State, UMD or UGA), so its record has zero citations and an unsupported common_name that the loader would refuse; it is a coverage gap, not a naming conflict. verify_quotes: every reachable quote verified after repair; MoBot pages skipped from this machine.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

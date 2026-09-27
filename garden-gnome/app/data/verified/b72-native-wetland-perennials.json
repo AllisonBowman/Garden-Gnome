@@ -46,7 +46,13 @@
         "chill_damage_f and cool_rest_note are left null: no admissible source states a numeric cold-damage onset temperature (only USDA hardiness zone ranges, which are survival ratings, not damage-onset figures) or a cool-rest/dormancy watering instruction.",
         "RHS's 'Potentially harmful... Pets: Harmful if eaten' note is scoped to pets generically, naming no specific animal, so it was not used to support toxic_to_pets=true; NC State's cats/dogs/horses-scoped Problems tags were used instead, per the cat/dog scoping rule.",
         "is_houseplant is inferred as false from the consistent outdoor/aquatic-bog cultivation picture across all three sources (RHS: Aquatic, Bogs, Herbaceous Perennial; NC State: pond/water-garden landscape use, USDA zones 3a-9b; MoBot: marginal aquatic perennial for ponds/borders) rather than from any single explicit 'not a houseplant' statement, since no admissible source addresses houseplant suitability directly.",
-        "water_regime keep_moist rests on RHS's imperative cultivation instruction ('Grow in moist to wet deep, humus-rich, acid soil in full sun.') and MoBot's 'constantly moist humusy soils of a border'; no admissible source gives a watering-frequency instruction for this marsh iris, and NC State's 'prefers to grow in rich, moist soils' is a soil descriptor carried as corroboration only."
+        "water_regime keep_moist rests on RHS's imperative cultivation instruction ('Grow in moist to wet deep, humus-rich, acid soil in full sun.') and MoBot's 'constantly moist humusy soils of a border'; no admissible source gives a watering-frequency instruction for this marsh iris, and NC State's 'prefers to grow in rich, moist soils' is a soil descriptor carried as corroboration only.",
+        "is_edible left null: no page (NC State or RHS) states the plant or any part is grown or used for food; NC State instead documents it as poisonous (see below), so absent any food-use statement the field stays null rather than inferring from the genus.",
+        "NC State (anchor) documents toxicity, searched and found under 'Poison'/'Toxic'/'Problem for': 'This plant has low severity poison characteristics.' Poison Severity: Low. Poison Symptoms: 'CAUSES ONLY LOW TOXICITY IF EATEN. SKIN IRRITATION MINOR, OR LASTING ONLY FOR A FEW MINUTES. Nausea, salivation, vomiting, abdominal pain, lethargy, diarrhea, elevated temperature following ingestion; skin irritation upon contact with seeds, rootstock, or cell sap. Highest concentration in rhizomes.' Poison Toxic Principle: 'Pentacylic terpenoids (zeorin, missourin and missouriensin), Irisin, iridin, or irisine.' Causes Contact Dermatitis: Yes. Poison Part: Roots, Sap/Juice and Seeds (corrected at landing: the note had listed Roots only) (and tags note 'problem for dogs', 'problem for cats', 'problem for horses', 'contact dermatitis'). Recorded here per the rule that this text must accompany any true is_edible -- but since is_edible is null, not true, it is recorded for the record's safety regardless.",
+        "attracts_pollinators left null: searched NC State for 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' -- zero hits, no structured Attracts field on the page. Searched RHS for the same terms plus 'pollinator' -- zero hits (the one 'wildlife' hit was an unrelated RHS site-navigation link, 'Wildlife gardening', not a plant attribute). No page addresses pollinators for this species, so null rather than false.",
+        "Size source: NC State Extension Plant Toolbox has a dedicated species page for Iris versicolor and carries a structured Dimensions block, so it is the anchor per the sizing rule; RHS's Max Height/Max Spread figures (0.5-1 metres / 0.1-0.5 metres) were also read but not used, since NC State is the anchor when its species page exists.",
+        "Iris versicolor is an herbaceous perennial/wildflower (NC State Plant Type: Bulb, Perennial, Wildflower), not a vine, liana, or other climber, so the climber-exclusion rule does not apply and the size fields stand.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=281141 refused this machine (network/proxy error on fetch, confirmed even with the host explicitly allowed) -- not read, no data drawn from it, and no guess made about its content."
       ],
       "citations": [
         {
@@ -246,8 +252,24 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=281141",
           "quote": "Grow in medium to wet soils in full sun to part shade. This iris may be grown in up to 2-4” of shallow standing water (muddy bottom or containers), or in moist shoreline soils or in constantly moist humusy soils of a border."
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/iris-versicolor/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-30 (NC State Width: 2 ft. 0 in. - 2 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/iris-versicolor/",
+          "quote": "Width: 2 ft. 0 in. - 2 ft. 6 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 30
     },
     {
       "common_name": "Marsh Marigold",
@@ -298,7 +320,11 @@
         "soil_base is recorded as 'garden_bed' by inference from both sources describing in-ground/pond-margin cultivation (RHS: 'Grow in an open site in rich boggy soil at the water's edge'; NC State: landscape uses including 'water gardens, pond edges, rain gardens, and wet, boggy areas') rather than any container or specialty potting-mix description; no enum value for 'bog garden' exists so 'garden_bed' is the closest fit.",
         "The RHS species page (rhs.org.uk/plants/2803/caltha-palustris-marsh-marigold-boots/details) was checked for a toxicity or handling-warning statement and none is present on that page; a harmful-if-eaten or skin-irritant line attributed to RHS in general search-engine summaries did not appear on this specific verified species page and so was not used.",
         "NC State's structured 'is often confused with' module lists Calla palustris and Ranunculus ficaria, while the page's separate body prose instead names Ficaria verna and Geum radiatum as look-alikes/alternatives; both are reproduced here only for transparency and were not used to support any schema field.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/caltha-palustris/, https://www.rhs.org.uk/plants/2803/caltha-palustris-marsh-marigold-boots/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286073, https://hgic.clemson.edu/?s=marsh+marigold, https://edis.ifas.ufl.edu/search?q=Caltha+palustris, https://ask.ifas.ufl.edu/search?q=Caltha+palustris, https://extension.psu.edu/search?q=Caltha%20palustris, https://extension.umd.edu/search?query=Caltha+palustris, https://fieldreport.caes.uga.edu/?s=Caltha+palustris); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/caltha-palustris/, https://www.rhs.org.uk/plants/2803/caltha-palustris-marsh-marigold-boots/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286073, https://hgic.clemson.edu/?s=marsh+marigold, https://edis.ifas.ufl.edu/search?q=Caltha+palustris, https://ask.ifas.ufl.edu/search?q=Caltha+palustris, https://extension.psu.edu/search?q=Caltha%20palustris, https://extension.umd.edu/search?query=Caltha+palustris, https://fieldreport.caes.uga.edu/?s=Caltha+palustris); none found, so the value stays null. Audited live.",
+        "is_edible is true but CONDITIONAL and comes with a poisoning warning that must travel with it: NC State rates the plant 'low severity poison' overall; Poison Symptoms: 'This plant can be toxic and ingesting large amounts of the plant's leaves can lead to burning of the throat, vomiting, bloody diarrhea, dizziness, fainting, and convulsions. No part of this plant should ever be eaten raw.'; Poison Toxic Principle: Protoanemonin; Poison Part: Leaves; Causes Contact Dermatitis: No. The edibility claim itself is limited to 'Spring greens, in small quantities and properly prepared, for salads' -- i.e. only prepared (not raw) spring greens in small quantity are the edible part; raw material and large amounts are the poisonous scenario.",
+        "RHS (rhs.org.uk) and Missouri Botanical Garden PlantFinder pages were not consulted for these six fields because the NC State Plant Toolbox page already supplied a complete, structured Dimensions block (Height and Width) plus explicit Attracts and Edibility fields for the species itself (not a genus or cultivar page), satisfying the anchor-page rule; no page returned a non-ok fetch status.",
+        "Not a climber: NC State lists Life Cycle: Perennial, Plant Type: Herbaceous Perennial, and Habit/Form: Mounding -- so all four size fields were filled rather than left null.",
+        "is_edible -- null at landing 2026-09-27, not true: NC State's Edibility field does read 'Spring greens, in small quantities and properly prepared, for salads.', but the same page's Poison Symptoms end 'No part of this plant should ever be eaten raw.' (Poison Toxic Principle: Protoanemonin; Poison Part: Leaves -- the part eaten as greens). The plant is poisonous raw and edible only after preparation, and the app renders is_edible true as \"grown to eat\" with no room for that condition, so a true would read as unconditional. Same ruling as Pokeweed (b30). Left null pending a catalog decision on conditionally edible poisonous plants. The dropped citation quoted: 'Spring greens, in small quantities and properly prepared, for salads.'"
       ],
       "citations": [
         {
@@ -438,8 +464,31 @@
           "source": "RHS Plants — Caltha palustris",
           "url": "https://www.rhs.org.uk/plants/2803/caltha-palustris-marsh-marigold-boots/details",
           "quote": "Caltha palustris | marsh marigold"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: \"Attracts hummingbirds and bees.\")",
+          "source": "NC State Extension Gardener Plant Toolbox - Caltha palustris",
+          "url": "https://plants.ces.ncsu.edu/plants/caltha-palustris/",
+          "quote": "Attracts hummingbirds and bees."
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Dimensions Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Caltha palustris",
+          "url": "https://plants.ces.ncsu.edu/plants/caltha-palustris/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-18 (NC State Dimensions Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Caltha palustris",
+          "url": "https://plants.ces.ncsu.edu/plants/caltha-palustris/",
+          "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 18
     },
     {
       "chill_damage_f": null,
@@ -575,6 +624,30 @@
           "source": "RHS - Pontederia cordata",
           "url": "https://www.rhs.org.uk/plants/13502/pontederia-cordata/details",
           "quote": "Pontederia cordata | pickerel weed"
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Dimensions Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pontederia-cordata/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 18-24 (NC State Dimensions Width: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pontederia-cordata/",
+          "quote": "Width: 1 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true: seeds and young leaves are eaten (condition noted in unknowns)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pontederia-cordata/",
+          "quote": "Seeds can be eaten raw or dried. Young leaves can be used in salads."
+        },
+        {
+          "claim": "attracts_pollinators true: structured Attracts field names Pollinators along with Butterflies, Moths, and Specialized Bees",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pontederia-cordata/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Pickerelweed",
@@ -612,14 +685,27 @@
         "soil_base is recorded as garden_bed as the closest available enum fit for an emergent aquatic perennial planted into pond-margin soil/mud per MoBot and NC State's Landscape Location field (Container, Pond, Riparian); none of the schema's soil_base tokens actually describes aquatic-basket or standing-water cultivation, so this is a best-fit classification rather than a source using that literal category.",
         "soil_ph_min and soil_ph_max are left null: NC State's Soil pH field reads the closed Neutral (6.0-8.0) band, but RHS's pH field lists Acid or Alkaline or Neutral as all acceptable, so per this catalog's rule neither a floor nor a ceiling is set from NC State's band.",
         "water_regime is set to keep_moist from NC State's explicit cultivation statement that water depth must be maintained above saturation year-round, corroborated by MoBot's structured Water field reading 'Wet' (not the mid-scale 'Medium'); UF/IFAS's planting-depth instructions were not used to derive drainage or water_regime, per the instruction that a planting-depth or standing-water statement alone is not a drainage/regime value on its own.",
-        "Common name capitalization/spacing genuinely splits between NC State ('Pickerelweed', one word, matching its own title and prose) and MoBot/RHS/UF-IFAS ('pickerel weed', two words); common_name was set to Pickerelweed based on NC State meeting this catalog's lead-name criteria (list order matches page title and body prose), see name_note for the full disclosure."
+        "Common name capitalization/spacing genuinely splits between NC State ('Pickerelweed', one word, matching its own title and prose) and MoBot/RHS/UF-IFAS ('pickerel weed', two words); common_name was set to Pickerelweed based on NC State meeting this catalog's lead-name criteria (list order matches page title and body prose), see name_note for the full disclosure.",
+        "Not a climber: NC State Plant Toolbox lists Plant Type as Herbaceous Perennial / Water Plant, so rule 4 (climber gets no size) does not apply and all four size fields are filled.",
+        "is_edible is conditional, not a bare true: NC State states 'Seeds can be eaten raw or dried. Young leaves can be used in salads.' -- edibility is specific to the seeds and young leaves, not the whole plant, and no other part is described as eaten.",
+        "Toxicity check per rule 5: searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' -- zero hits for Poison and zero for Toxic; the only 'Problem' hit was 'Insects, Diseases, and Other Plant Problems: No serious problems.' No poisonous part, severity, toxic principle, preparation requirement, or pets warning was named anywhere on the page.",
+        "RHS (rhs.org.uk/plants/13502) and UF/IFAS EDIS (FP490) were both read but neither page addresses edibility or toxicity at all -- their silence does not change the true/conditional value taken from NC State, and is noted here since edibility support only comes from the one anchor page.",
+        "RHS page carries no unconditional or tagged pollinator-attraction statement: searched 'pollinator', 'Pollinators', and 'RHS Plants for Pollinators' with zero hits for each; attracts_pollinators is supported only by NC State's structured Attracts field (Butterflies, Moths, Pollinators, Specialized Bees), which is sufficient on its own per rule 7.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a428 refused this machine (fetch status error:ProxyError on two attempts, including one with the host explicitly allow-listed) -- it was not read and nothing from it is guessed or used.",
+        "UF/IFAS EDIS FP490 gives Height: 3 to 5 feet and Spread: depends upon supporting structure, but this is not used for mature_height_in/mature_spread_in because it conflicts with NC State's structured Dimensions block (2-4 ft height), and the rules designate NC State's structured Dimensions field as the anchor over a prose description elsewhere; the IFAS figure is not recorded as a separate claim to avoid a contradictory duplicate on the same fields."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
@@ -773,6 +859,24 @@
           "source": "RHS Plants",
           "url": "https://www.rhs.org.uk/plants/50176/hibiscus-moscheutos-common-rose-mallow-crimsoneyed-rosemallow/details",
           "quote": "Full sun"
+        },
+        {
+          "claim": "mature_height_in 24-72 (NC State Height: 2 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hibiscus moscheutos (Common Rose Mallow)",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-moscheutos/",
+          "quote": "Height: 2 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-60 (NC State Width: 2 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hibiscus moscheutos (Common Rose Mallow)",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-moscheutos/",
+          "quote": "Width: 2 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Pollinators among Butterflies, Hummingbirds, and Specialized Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hibiscus moscheutos (Common Rose Mallow)",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-moscheutos/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Common Rose Mallow",
@@ -813,14 +917,24 @@
         "water_regime (keep_moist) is corroborated by MoBot's structured 'Water: Medium to wet' field, but that field alone was not used as the basis per the rule that a bare 'Medium' field cannot support keep_moist; the cultivation prose was used instead.",
         "soil_drainage (moderate) is based on RHS's 'Moist but well-drained' Moisture field; NC State's own Soil Drainage field ('Moist', 'Occasionally Wet') was checked first and does not state a drainage-quality requirement (no 'well-drained' or boggy-requirement language), so it was treated as consistent corroboration rather than the primary basis; no source frames constantly wet/boggy soil as a cultivation requirement, so moisture_retentive was not used.",
         "is_houseplant false rests on NC State's Plant Type and USDA Plant Hardiness Zone fields, NC State's and MoBot's siting prose and RHS's H4 hardiness rating. RHS's Cultivation paragraph ('May be grown outdoors in mild, frost-free areas, or in large containers that can be moved indoors over winter. ... Indoors, grow in bright filtered light with moderate humidity and good ventilation') is RHS's genus-level Hibiscus text, identical on its Hibiscus rosa-sinensis page and contradicted by this page's own H4 rating, so it was not used for any field.",
-        "soil_base garden_bed: NC State's Plant Type field reads 'Herbaceous Perennial', 'Native Plant', 'Wildflower' and its landscape uses are in-ground ('Use Rose Mallow in the lowest area of the garden, as a specimen, along streams or ponds'); no source specifies a container or specialty potting medium as the growing base, though NC State's Landscape Location field lists Container alongside Pond and Riparian and both NC State and MoBot note it can also be grown in large containers."
+        "soil_base garden_bed: NC State's Plant Type field reads 'Herbaceous Perennial', 'Native Plant', 'Wildflower' and its landscape uses are in-ground ('Use Rose Mallow in the lowest area of the garden, as a specimen, along streams or ponds'); no source specifies a container or specialty potting medium as the growing base, though NC State's Landscape Location field lists Container alongside Pond and Riparian and both NC State and MoBot note it can also be grown in large containers.",
+        "is_edible left null: neither the NC State Extension Plant Toolbox page nor the RHS page addresses human edibility, food use, or toxicity for this species. Searched NC State for 'food', 'eat', 'culinary', 'Poison', 'Toxic', 'Problem for', 'pets' -- no edibility or toxicity statement found (the 'food'/'eat' hits found were wildlife nectar/pollen references and unrelated site navigation text, not statements about human consumption or poisoning).",
+        "Searched RHS page for 'eat', 'food', 'culinary', 'Poison', 'Toxic', 'Problem for' -- no hits addressing edibility or toxicity; RHS page also carries no explicit pollinator-attraction tag or bee/butterfly mention (only unrelated nav-menu text matched 'wildlife' and 'insect').",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282590 refused the fetch (ProxyError / network denial by this machine's sandbox) -- not read, and nothing about its content is assumed or guessed.",
+        "Not a vine/climber: NC State describes the species as an 'Herbaceous Perennial' with 'rounded, somewhat shrubby, hairy stems, and woody base', so the size fields were populated normally rather than left null under the climber rule.",
+        "Size was taken from NC State's structured Dimensions block (species-specific) rather than RHS's Max Height/Max Spread (1.5-2.5 metres / 0.5-1 metres), per the instruction to treat NC State as the anchor when a species-level NC State page exists; the RHS figures were not blended in to avoid mixing sources within one field."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 72,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 60
     },
     {
       "chill_damage_f": null,
@@ -950,6 +1064,18 @@
           "source": "RHS Plants",
           "url": "https://www.rhs.org.uk/plants/9517/juncus-effusus/details",
           "quote": "Juncus effusus | common rush"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State species description: 'smooth from 12 - 36 inches in height', figure already given in inches, no conversion needed)",
+          "source": "NC State Extension Plant Toolbox -- Juncus effusus",
+          "url": "https://plants.ces.ncsu.edu/plants/juncus-effusus/",
+          "quote": "smooth from 12 - 36 inches in height and spreading"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches: 0.5 x 39.37 = 19.7, 1 x 39.37 = 39.4)",
+          "source": "RHS -- Juncus effusus (common rush)",
+          "url": "https://www.rhs.org.uk/plants/9517/juncus-effusus/details",
+          "quote": "Max Spread         0.5-1 metres"
         }
       ],
       "common_name": "Common Rush",
@@ -985,14 +1111,25 @@
         "RHS's Position field lists 'Full shade' in addition to 'Full sun', but this value is excluded from outdoor_sun_exposure because neither of the two North American structured sun fields (NC State's Light field, MoBot's Sun field) carry any shade value -- both read Full sun only.",
         "direct_sun_hours_max is left null: NC State's Light field text ('6 or more hours of direct sunlight a day') is the site-wide generic Full Sun category legend, not a species-specific sun-hours statement, so it does not satisfy the species-specific-prose requirement.",
         "No admissible source gives chill-damage onset temperatures, day/night temperature targets, humidity percentages, light foot-candle values, watering day-intervals, or fertilizer schedule/strength data for this species -- these fields are left null rather than inferred from general wetland-perennial knowledge.",
-        "soil_base is set to garden_bed as the best-fit enum for an in-ground wetland/bog perennial grown in ordinary garden or pond-margin soil (RHS Soil Type: Clay, Loam); none of the potting-mix-oriented enum values (e.g. chunky_aroid, semi_hydro) are supported by any admissible source for this species."
+        "soil_base is set to garden_bed as the best-fit enum for an in-ground wetland/bog perennial grown in ordinary garden or pond-margin soil (RHS Soil Type: Clay, Loam); none of the potting-mix-oriented enum values (e.g. chunky_aroid, semi_hydro) are supported by any admissible source for this species.",
+        "is_edible left null: none of the four pages (NC State species page, RHS species page, RHS 'Spiralis' cultivar page) address the plant being eaten or not eaten; Missouri Botanical Garden page could not be checked (see below).",
+        "attracts_pollinators left null: none of the checked pages have a structured attracts/wildlife field or an unconditional statement naming bees, butterflies, moths, or hummingbirds for this species; NC State's page has no 'Attracts' field for Juncus effusus and neither RHS page carries a pollinator tag.",
+        "Searched NC State species page for 'Poison', 'Toxic', 'Problem for' -- 0 hits each. Searched both RHS pages for 'Poison', 'Toxic' -- 0 hits each. No toxicity/edibility language found anywhere.",
+        "mature_height_in (12-36) comes from NC State's species description text ('...smooth from 12 - 36 inches in height and spreading in clumps'), not a structured 'Dimensions:' field -- this page has no separate Height:/Width: labeled block, but the figure is stated directly for the species (not a cultivar or genus figure).",
+        "mature_spread_in (19.7-39.4) comes from the RHS species page's 'Max Spread 0.5-1 metres' because NC State's page gives no numeric spread/width value at all (only the qualitative phrase 'spreading in clumps').",
+        "The RHS 'Juncus effusus Spiralis' (dwarf, corkscrew rush) cultivar page gives Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres -- these are cultivar-specific figures and were NOT used for the species record.",
+        "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=c262 refused this machine (ProxyError, tried with and without an explicit allowed_domains override) -- could not check it for edibility, pollinator, height/spread, or toxicity text; not guessed."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "chill_damage_f": null,
@@ -1098,6 +1235,18 @@
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/16496/saururus-cernuus/details",
           "quote": "Grow in boggy ground or pond margins in full sun or partial shade in water no deeper than 10cm. Divide regularly to maintain vigour."
+        },
+        {
+          "claim": "mature_height_in 12-48 (NC State Height: 1 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Saururus cernuus",
+          "url": "https://plants.ces.ncsu.edu/plants/saururus-cernuus/",
+          "quote": "Height: 1 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox - Saururus cernuus",
+          "url": "https://plants.ces.ncsu.edu/plants/saururus-cernuus/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
       ],
       "common_name": "Lizard's Tail",
@@ -1141,14 +1290,24 @@
         "Aggressive-spread statements (not a schema field, recorded for reference): NC State: 'This plant will form large colonies over time and can be propagated by seed or root division.' Missouri Botanical Garden: 'Unrestrained rhizomes will spread to form colonies.' Clemson: 'it tends to spread and form large colonies when it's happy, so beware' and 'be aware that it can form large colonies.' RHS notes only a modest ultimate spread of 0.1-0.5 metres with a 5-10 year time to full size, in apparent tension with the North American sources' 'large colonies' framing; this conflict is not resolved here.",
         "Genus scoping confirmed: Saururus cernuus is the only North American species in the genus; the Asian species Saururus chinensis (a separate Missouri Botanical Garden Plant Finder page) was not used as a source for any field here.",
         "water_regime keep_moist rests on RHS's cultivation instruction to grow the plant in boggy ground or pond margins in water no deeper than 10cm and MoBot's structured Water field reading Wet; no source gives a watering-frequency statement, since the plant is sited in standing water or bog rather than watered on a schedule.",
-        "Clemson HGIC's page (hgic.clemson.edu/lizards-tail/) returned HTTP 403 to this machine's quote check at landing; its heading is quoted on the auditor's live fetch, which found a dated HGIC article rather than a numbered factsheet."
+        "Clemson HGIC's page (hgic.clemson.edu/lizards-tail/) returned HTTP 403 to this machine's quote check at landing; its heading is quoted on the auditor's live fetch, which found a dated HGIC article rather than a numbered factsheet.",
+        "is_edible left null: neither NC State nor RHS addresses eating this plant at all (searched 'Edible' on both pages, 0 hits each); no page could be read that states it is grown for food or is poisonous to eat.",
+        "attracts_pollinators left null: NC State's page has no 'Attracts' field (0 hits) -- its only pollinator-adjacent text is informal keyword tags ('#pollinator plant', '#NC Native Pollinator Plant') and a Play Value list ('Attractive Flowers, Fragrance, Wildlife Cover/Habitat'), none of which is a structured Attracts field or an unconditional statement naming bees/butterflies/moths/hummingbirds. Its Wildlife Value field says only 'This plant provides cover for wood ducks' -- cover/habitat for birds, not pollination. RHS page: searched 'Attracts', 'pollinator', 'bee', 'butterfl', 'insect', 'bird' -- all 0 hits (only nav-menu boilerplate matched 'wildlife'). So no page states pollinator attraction; left null rather than inferred.",
+        "Not a climber: NC State lists it as Herbaceous Perennial / Water Plant, so the vine/liana size-suppression rule (rule 4) does not apply; both height and spread were recorded normally.",
+        "https://hgic.clemson.edu/lizards-tail/ could not be read: qc.py returned fetch status error:ProxyError on every attempt (with and without sandbox bypass) -- this host refused this machine. Did not guess what it would have shown.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a649 could not be read: qc.py returned fetch status error:ConnectError, matching the task's note that this host refuses this machine. Did not guess what it would have shown.",
+        "RHS also carries Max Height 1-1.5 metres (39.4-59.1 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in) for this species, but NC State has its own species-level Dimensions block (not a genus page), so per the anchor rule NC State's Height/Width figures were used instead of RHS's."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1179,6 +1338,7 @@
   ],
   "normalizations": [
     "2026-09-05: fifty-fourth batch (cruise throttle) -- native wetland perennials: Blue Flag, Marsh Marigold, Pickerelweed, Common Rose Mallow, Common Rush, and Lizard's Tail. Clean first run (12/12 agents, 1.45M subagent tokens); land_check.py and covered.py clean; verify_quotes.py 88 hit / 0 MISS before repair with 32 skipped (every MoBot fetch failed with a connection error from this machine, as in b71, and Clemson HGIC returned 403), so the MoBot and Clemson quotes stand on the auditor's live fetches, which the audit transcript records. Two values changed on the audit's findings, both on Common Rush: is_houseplant true -> false (the only support was MoBot's conditional clause 'Foliage remains evergreen in warm winter climates or when grown indoors as a houseplant.', inside an otherwise outdoor Culture section; every source sites the rush in bogs, marshes and pond margins) and soil_ph_max 8.0 -> null (NC State's 'Neutral (6.0-8.0)' is a site-wide category band and RHS grows the species in acid soil). Common Rose Mallow's is_houseplant false and soil_base garden_bed are restored on rebuilt citations: the record's RHS quote ('May be grown outdoors in mild, frost-free areas, or in large containers that can be moved indoors over winter.') is RHS's genus-level Hibiscus boilerplate, identical on the Hibiscus rosa-sinensis page and contradicted by this page's own H4 hardiness rating -- the same-genus contamination the batch prompt warns about, caught by the auditor. Blue Flag's toxicity_detail was rebuilt in full: RHS's Potentially harmful field is now quoted to its end (the record had cut it mid-item with a stray '..'), and MoBot's 'Rhizome is poisonous.' and 'Wear gloves when dividing the rhizomes.' were added; toxic_to_pets true stands on NC State's cat- and dog-scoped Problems tags, with RHS's generic 'Pets: Harmful if eaten' disclosed as corroboration only. Every name_note was replaced with the auditor's corrected wording (the invented 'three or more entries marks no primary' convention appeared in five of six records again; a false 'all three lead with' count for Marsh Marigold, where NC State leads with Cowslip; an inverted prose attribution for Blue Flag; a denied MoBot popup control for Common Rose Mallow). Three more MoBot tooltip quotes reconstructed from overlib markup were removed or replaced with rendered prose; two RHS title strings were relabelled as page titles; every one-word 'Correct' Name Status citation was paired with the page title; a truncated NC State Light list (Common Rose Mallow) and Plant Type tag (Common Rose Mallow) were completed. Pickerelweed's name_note gained the two citations it lacked (RHS's rendered subtitle and UF/IFAS fact sheet FPS490/FP490). NC State currently titles its Hibiscus moscheutos page 'Muenchhusia moscheutos'; the accepted name follows RHS's Correct and the split is disclosed. water_regime keep_moist stands on explicit requirements for Marsh Marigold ('it requires constant moisture'), Common Rose Mallow ('not allowed to dry out. Regular deep watering is advisable.'), Common Rush ('kept consistently moist'; 'permanently moist'), Pickerelweed (water depth maintained above saturation year-round) and, for the two plants sited in standing water or wet soil by instruction, Blue Flag (RHS 'Grow in moist to wet ... soil') and Lizard's Tail (RHS 'Grow in boggy ground or pond margins ... in water no deeper than 10cm'), each disclosed in unknowns. Sun lists follow the two-of-three structured-field rule (Pickerelweed and Common Rose Mallow drop NC State's lone Partial Shade; Common Rush drops RHS's lone Full shade), all disclosed.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Marsh Marigold -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Marsh Marigold -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

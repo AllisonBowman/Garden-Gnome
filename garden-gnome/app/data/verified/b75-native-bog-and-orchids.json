@@ -69,6 +69,18 @@
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/11295/myrica-gale/details",
           "quote": "H7"
+        },
+        {
+          "claim": "mature_height_in 39.4-59.1 (RHS Max Height 1-1.5 metres, converted to inches: 1 x 39.37=39.4, 1.5 x 39.37=59.1)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/11295/myrica-gale/details",
+          "quote": "Max Height         1-1.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 39.4-59.1 (RHS Max Spread 1-1.5 metres, converted to inches: 1 x 39.37=39.4, 1.5 x 39.37=59.1)",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/11295/myrica-gale/details",
+          "quote": "Max Spread         1-1.5 metres"
         }
       ],
       "common_name": "Bog Myrtle",
@@ -111,14 +123,25 @@
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are left null: no admissible source frames watering for this in-ground shrub as a dry-down schedule or gives day intervals.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: although Myrica gale is widely known for nitrogen-fixing root nodules, no admissible source's page for this species (only RHS has one) states any fertility, feeding, or nitrogen-fixation claim, so per the instruction to capture any fertility statement exactly as stated, none could be captured because none exists in the admissible sources found.",
         "RHS's Cultivation sentence was used only for soil_drainage. RHS carries genus-level prose in a separate 'Genus' field on the same page, and soil_drainage is independently carried by the structured 'Moisture' row, so the value does not depend on whether the Cultivation sentence is shared across the genus.",
-        "common_name researched as 'bog myrtle' (RHS renders it lower-case); landed title-cased as Bog Myrtle."
+        "common_name researched as 'bog myrtle' (RHS renders it lower-case); landed title-cased as Bog Myrtle.",
+        "is_edible left null: the RHS page has no mention of eating, food use, or culinary preparation for Myrica gale anywhere on the page.",
+        "attracts_pollinators left null: searched 'Attracts' and 'Pollinator' on the RHS page, 0 hits for both; no structured attracts/wildlife field and no unconditional pollinator statement present.",
+        "Searched 'Poison', 'Toxic', and 'Problem for' on the RHS page per the toxicity check rule: 0 hits for all three, so no poisoning/toxicity text exists to attach to is_edible (which is null anyway).",
+        "Not a climber: RHS 'Habit' field for this species reads 'Suckering' (a suckering shrub), not a climbing habit, so the climber exclusion (rule 4) does not apply and the size fields were populated normally.",
+        "No cultivar concern: the Max Height/Max Spread figures on the RHS page are given for the species Myrica gale itself, not a named cultivar.",
+        "'Ultimate height' wording: searched and got 0 hits; RHS used 'Max Height'/'Max Spread' instead, which is what was recorded.",
+        "No other pages were consulted beyond the single RHS URL specified in the task; no host refused this machine for this species."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "mature_height_in_min": 39.4,
+      "mature_height_in_max": 59.1,
+      "mature_spread_in_min": 39.4,
+      "mature_spread_in_max": 59.1
     },
     {
       "common_name": "Leatherleaf",
@@ -169,7 +192,12 @@
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are left null because RHS does not frame watering for this in-ground bog shrub as a dry-down or day-interval schedule.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: no fertilizer guidance for this species was found on RHS or any other admissible source.",
         "outdoor_sun_exposure (full_sun, part_shade) is sourced solely from RHS's Position field ('Full sun, Partial shade'); there was no North American extension source for this species available to cross-check that reading against a bog/wetland habitat context.",
-        "common_name researched as 'leatherleaf' (RHS renders it lower-case); landed title-cased as Leatherleaf."
+        "common_name researched as 'leatherleaf' (RHS renders it lower-case); landed title-cased as Leatherleaf.",
+        "is_edible left null: RHS details page for Chamaedaphne calyculata has no statement addressing edibility (searched 'Edible' — 0 hits); no page in the approved read set discusses eating this plant.",
+        "attracts_pollinators left null: no structured attracts/wildlife field or unconditional pollinator statement found on the RHS page (searched 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird' — 0 hits each; 'Wildlife' had 1 hit but it was a nav-menu link to a generic 'Wildlife gardening' article, not a statement about this species).",
+        "Toxicity check performed per rule 5: searched 'Poison', 'Toxic', 'Problem for' on the RHS page — 0 hits each, so no toxicity/poison warning was found (and is_edible was left null anyway, not true).",
+        "Size fields sourced from RHS (no NC State Plant Toolbox page exists for this species, and none was substituted with a genus page): RHS labels were 'Max Height 0.5-1 metres' and 'Max Spread 0.5-1 metres', converted to inches by x39.37: 0.5 m = 19.7 in, 1 m = 39.4 in.",
+        "Species is not a cultivar and not a climber/vine, so the cultivar and climber exclusion rules (3 and 4) do not apply here."
       ],
       "citations": [
         {
@@ -225,8 +253,24 @@
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/3688/chamaedaphne-calyculata/details",
           "quote": "H6"
+        },
+        {
+          "claim": "mature_height_in 19.7-39.4 (RHS Max Height 0.5-1 metres, converted to inches: 0.5 x 39.37 = 19.7, 1 x 39.37 = 39.4)",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/3688/chamaedaphne-calyculata/details",
+          "quote": "Max Height         0.5-1 metres"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches: 0.5 x 39.37 = 19.7, 1 x 39.37 = 39.4)",
+          "source": "RHS Plants",
+          "url": "https://www.rhs.org.uk/plants/3688/chamaedaphne-calyculata/details",
+          "quote": "Max Spread         0.5-1 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 19.7,
+      "mature_height_in_max": 39.4,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "chill_damage_f": null,
@@ -356,6 +400,24 @@
           "source": "NC State Extension Plant Toolbox — Sarracenia flava",
           "url": "https://plants.ces.ncsu.edu/plants/sarracenia-flava/",
           "quote": "Moist\nOccasionally Wet"
+        },
+        {
+          "claim": "attracts_pollinators (NC State Attracts: Moths, Pollinators; Play Value: Attracts Pollinators)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sarracenia-flava/",
+          "quote": "Attracts Pollinators"
+        },
+        {
+          "claim": "mature_height_in 18-36 (NC State Height: 1 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sarracenia-flava/",
+          "quote": "Height: 1 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 18-36 (NC State Width: 1 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/sarracenia-flava/",
+          "quote": "Width: 1 ft. 6 in. - 3 ft. 0 in."
         }
       ],
       "common_name": "Yellow Pitcher Plant",
@@ -400,14 +462,25 @@
         "is_houseplant=false is drawn from NC State and MoBot's explicit statements that the species does not grow well as a houseplant (both citing the need for a genuine cold winter dormancy). Two conflicts are disclosed. RHS's Sarracenia flava page carries a 'Houseplants' category badge alongside 'Bogs' and 'Conservatory Greenhouse' near the top of the page, without further species-specific houseplant-suitability prose. And MoBot's own Uses section reads: \"Bog garden is best. Also may be grown in containers, greenhouses or as an indoor houseplant. Perhaps too tall for terraria. Growth in containers as an indoor plant can be difficult because of the need for growing season sun and winter dormancy.\" -- so MoBot both allows indoor growing and says the plants 'simply do not grow well as houseplants'. The value stands because both sources' explicit suitability verdicts are negative and both tie it to the cold-dormancy requirement; this catalog's Purple Pitcher Plant (Sarracenia purpurea) landed true on the same MoBot wording plus an RHS growing guide, which this species lacks.",
         "RHS's Cultivation paragraph (\"Grow under glass, keep moist in full light... Most Sarracenias can be grown outside in milder parts of the country...\") was treated as genus-level boilerplate per the scope-discipline rule (it explicitly generalizes to \"Most Sarracenias\") and was not used to support any field. Only RHS's page-specific structured fields (Position, Soil Types, Moisture, pH, Hardiness, Name Status) were considered admissible, and of those only Position and Name Status were actually used: Hardiness was rejected as a survival rating and Soil Types ('Loam, Sand') was left unused because soil_base stayed null.",
         "Wild-harvest / protection statement, NC State's exact words: \"Some pitcher plants are on the endangered species list while others are on the threatened list. These plants are threatened by habitat loss, development, and over-collection. Never harvest these plants from the wild. They are best purchased from a reputable carnivorous plant nursery.\"",
-        "NC State citations were moved at landing from the slug-parameterized view /plants/sarracenia-flava/common-name/yellow-pitcher-plant/ to the canonical /plants/sarracenia-flava/ page, whose H1 is the binomial; the one citation kept on the view is NC State's 'Other plants called Yellow Pitcher Plant: Sarracenia alata' cross-reference, which renders only there."
+        "NC State citations were moved at landing from the slug-parameterized view /plants/sarracenia-flava/common-name/yellow-pitcher-plant/ to the canonical /plants/sarracenia-flava/ page, whose H1 is the binomial; the one citation kept on the view is NC State's 'Other plants called Yellow Pitcher Plant: Sarracenia alata' cross-reference, which renders only there.",
+        "is_edible left null: none of the readable pages (NC State species page, NC State common-name page, RHS) mention edibility, toxicity, poisoning, or any 'Problem for' text for Sarracenia flava. Checked all three for 'Edible', 'Poison', 'Toxic', 'Problem for' with zero hits on each.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286843 refused this machine (fetch status: error:ProxyError, both without and with the host explicitly allowed) — could not read it, so no data was taken from it and nothing was guessed.",
+        "https://plants.ces.ncsu.edu/plants/sarracenia-alata/ is a different species (Sarracenia alata, a genus-sibling, not S. flava) and per the task rules a genus/sibling page is not used as a size or edibility substitute for this species' record; it was read only to confirm it has no size 'Dimensions' block for flava and adds nothing beyond corroborating pollinator attraction (Attracts: Bees, Pollinators) for the genus.",
+        "Size figures used come from the NC State species page (and identically from its common-name mirror page), which carries a structured Dimensions block: Height 1 ft. 6 in. - 3 ft. 0 in. (18-36 in) and Width 1 ft. 6 in. - 3 ft. 0 in. (18-36 in). RHS page was also read and gives Max Height/Max Spread 0.5-1 metres (19.7-39.4 in), consistent with but not used over the NC State anchor since NC State is the designated anchor for this species.",
+        "No cultivar-specific figures were found; the size given applies to the species as listed, not a named cultivar.",
+        "Sarracenia flava is a rosette-forming carnivorous pitcher plant (Herbaceous Perennial, Carnivorous plant type per NC State), not a vine/liana/climber, so the climber exclusion rule does not apply and size fields were populated normally."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 36
     },
     {
       "chill_damage_f": null,
@@ -632,6 +705,12 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/cypripedium-acaule/",
           "quote": "In the past, the root was used as a remedy for nervousness, tooth pain, and muscle spasms."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: Attracts bees for pollenation)",
+          "source": "NC State Extension Plant Toolbox - Cypripedium acaule",
+          "url": "https://plants.ces.ncsu.edu/plants/cypripedium-acaule/",
+          "quote": "Attracts bees for pollenation"
         }
       ],
       "common_name": "Moccasin-flower",
@@ -670,14 +749,18 @@
         "day_f_min/max, night_f_min/max, chill_damage_f, cool_rest_note, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, fertilize_interval_days, fertilize_active_months, and fertilize_strength were all left null because no admissible source states them for this species.",
         "Source coverage: of the admissible domains, only plants.ces.ncsu.edu was found to carry a dedicated single-species page for Cypripedium acaule. hgic.clemson.edu, plantfinder.mobot.org / www.missouribotanicalgarden.org, edis.ifas.ufl.edu / ask.ifas.ufl.edu, www.rhs.org.uk, extension.psu.edu, extension.umd.edu, and fieldreport.caes.uga.edu did not yield a locatable dedicated page for this species during this research, so no cross-source disagreement could be checked or disclosed beyond the single-source data reported here.",
         "Mycorrhiza requirement (NC State, exact statement): \"The seeds require the presence of a specific Rhizoctonia fungus to germinate and grow. As the plant matures the relationship becomes symbiotic with the fungus.\"",
-        "Do-not-dig / transplant warning (NC State, exact statement, kept verbatim because this is a protected wild orchid in several states): \"They are difficult to transplant and grow and are best left to their native habitat which is dry to mesic, acidic forests and woodlands, often under pines, other conifers, and/or oak trees.\" No admissible source states a legal harvest/protection status for the species, so none is recorded."
+        "Do-not-dig / transplant warning (NC State, exact statement, kept verbatim because this is a protected wild orchid in several states): \"They are difficult to transplant and grow and are best left to their native habitat which is dry to mesic, acidic forests and woodlands, often under pines, other conifers, and/or oak trees.\" No admissible source states a legal harvest/protection status for the species, so none is recorded.",
+        "mature_height_in and mature_spread_in left null: the NC State page has no 'Dimensions' block and no whole-plant 'Height'/'Width' fields for this species; it gives only Leaf Length (3-6 inches) and Leaf Width (1-3 inches), which describe individual leaves, not overall plant stature or spread, so they were not used.",
+        "is_edible left null: the page has no 'Edible' field and makes no statement that any part of the plant is or is not eaten. It does mark the plant Poisonous (medium severity), with Poison Part: Leaves, Poison Symptoms: Skin irritation after contact, Poison Toxic Principle: Unidentified, and Causes Contact Dermatitis: Yes -- flagged here for decision purposes even though is_edible was not set true.",
+        "No page refused this machine; only the single assigned NC State URL was read."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true
     },
     {
       "chill_damage_f": null,
@@ -771,6 +854,24 @@
           "source": "RHS Plants — Spiranthes cernua",
           "url": "https://www.rhs.org.uk/plants/115298/spiranthes-cernua/details",
           "quote": "drooping lady's tresses, late orchid, nodding ladies, nodding lady's tresses, twisted traces, twisted tresses, wild tuberose"
+        },
+        {
+          "claim": "mature_height_in 9-24 (NC State Height: 0 ft. 9 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spiranthes-cernua/",
+          "quote": "Height: 0 ft. 9 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 9-12 (NC State Width: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spiranthes-cernua/",
+          "quote": "Width: 0 ft. 9 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states the flowers attract bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/spiranthes-cernua/",
+          "quote": "The flowers attract bees."
         }
       ],
       "common_name": "Nodding Ladies' Tresses",
@@ -810,14 +911,24 @@
         "soil_ph_min/max left null: NC State's Soil pH field for this species is the open-ended 'Acid (<6.0)' band, which per instructions cannot supply a floor or ceiling; RHS's dedicated species page carries no pH field at all to cross-check against, so no ceiling could be confirmed either.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis left null: this is an in-ground perennial wildflower/orchid and no admissible source frames its watering in dry-down or day-interval terms.",
         "Missouri Botanical Garden's Plant Finder (plantfinder.mobot.org) and www.missouribotanicalgarden.org do not carry a page for Spiranthes cernua, so that domain is not cited. UF/IFAS (edis.ifas.ufl.edu, ask.ifas.ufl.edu), extension.umd.edu, extension.psu.edu, and fieldreport.caes.uga.edu were searched but returned no dedicated or substantive content on this species.",
-        "water_regime keep_moist rests on NC State's species culture sentence 'The plant is best grown in moist, boggy, acidic soils in part shade. This is a classic bog plant.' (the audit's verified substitute) rather than a watering instruction or structured moisture field; the research record had read it off the Soil Drainage tag, which is a drainage descriptor and now supports soil_drainage only."
+        "water_regime keep_moist rests on NC State's species culture sentence 'The plant is best grown in moist, boggy, acidic soils in part shade. This is a classic bog plant.' (the audit's verified substitute) rather than a watering instruction or structured moisture field; the research record had read it off the Soil Drainage tag, which is a drainage descriptor and now supports soil_drainage only.",
+        "is_edible left null: NC State's page (the anchor, and the only page that returned usable content) has zero hits for 'Edible', 'food', 'eaten', or 'culinary' -- no page addresses eating this plant at all.",
+        "Checked NC State for 'Poison', 'Toxic', and 'Problem for' before setting any flags: 0 hits for all three, so no toxicity warning was found or needed for unknowns.",
+        "hgic.clemson.edu refused this machine (fetch status: error:ProxyError, both without and with the host added to allowed_domains) -- could not read this page at all; did not guess its content.",
+        "https://www.rhs.org.uk/plants/115298/spiranthes-cernua/details fetched OK (status ok, title 'Spiranthes cernua | drooping lady's tresses') but returned 0 hits for every searched term (Height, Width, Max Height, Max Spread, Ultimate height, Attracts, Edible, Poison, Toxic, Problem for, Pollinator, bee, butterfl) -- searched both wordings for size fields per the instructions and found none, so no size/edibility/pollinator claim was drawn from it. (Corrected at landing: the note had guessed the data loads by a mechanism the fetch does not capture. The cached page is complete; RHS publishes no size for this species -- its Size block holds only 'Time to Maturity: No preference'.)",
+        "This is a terrestrial orchid (herbaceous perennial), not a vine/liana/climber, so the climber-exclusion rule (rule 4) does not apply and size fields were filled normally from NC State."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 9,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 12
     },
     {
       "chill_damage_f": null,
@@ -905,6 +1016,24 @@
           "source": "NC State Extension Gardener Plant Toolbox, Platanthera ciliaris",
           "url": "https://plants.ces.ncsu.edu/plants/platanthera-ciliaris/",
           "quote": "it prefers acidic soils that are boggy and wet though it tolerates drier conditions as long as adequate moisture is present during flowering"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Plant Toolbox Dimensions: Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/platanthera-ciliaris/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Plant Toolbox Dimensions: Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/platanthera-ciliaris/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox structured Attracts field lists Butterflies and Moths, and Wildlife Value states butterflies and moths pollinate the flowers)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/platanthera-ciliaris/",
+          "quote": "Butterflies"
         }
       ],
       "common_name": "Orange Fringed Orchid",
@@ -948,14 +1077,24 @@
         "No admissible source discusses fertilizing this species, so fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null.",
         "This is an in-ground wetland/meadow perennial, and no admissible source frames its watering in terms of a dry-down target or numeric day intervals, so water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are left null per the task's in-ground-plant rule.",
         "PSU Extension, UMD Extension, EDIS/Ask IFAS, and CAES Field Report were searched but no dedicated content on Platanthera ciliaris was found on those domains; the only UF/IFAS mention found (a Featured Creatures article on the Palamedes swallowtail) does not carry any schema-relevant care facts about the orchid itself.",
-        "common_name researched as 'Yellow Fringed Orchid' (the last of NC State's five alphabetized names, and the caption of a Clemson photo roundup); landed as 'Orange Fringed Orchid', the name NC State's dedicated page leads with in prose and carries verbatim in its Common Name(s) list, per the audit."
+        "common_name researched as 'Yellow Fringed Orchid' (the last of NC State's five alphabetized names, and the caption of a Clemson photo roundup); landed as 'Orange Fringed Orchid', the name NC State's dedicated page leads with in prose and carries verbatim in its Common Name(s) list, per the audit.",
+        "is_edible left null: neither accessible page (NC State Plant Toolbox) addresses eating/culinary use of Platanthera ciliaris at all; Clemson HGIC could not be checked (see below).",
+        "https://hgic.clemson.edu/photo-worthy-plants/ refused this machine on every attempt (fetch status: error:ProxyError, including with the host explicitly allowlisted for network egress) -- not read, not guessed.",
+        "No poisonous/toxic language was found on the NC State page (searched 'Poison', 'Toxic', 'Problem for' -- 0 hits each), so no toxicity caveat applies to the null is_edible.",
+        "Platanthera ciliaris is an herbaceous terrestrial orchid, not a vine/climber, so the size-fields-null-for-climbers rule does not apply; size figures were recorded normally.",
+        "NC State 'Insects, Diseases, and Other Plant Problems' field reads 'No serious problems' -- no toxicity or pest concern noted."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Bushy St. John's Wort",
@@ -1003,7 +1142,11 @@
         "water_regime: no admissible source gives a WATERING statement or structured moisture/water field for this species (NC State's page has Soil Drainage tags but no separate 'Water' field); the cultivation sentence 'Easily grown in average well-drained moist garden soil' is a soil descriptor, not a watering statement, so left null per instructions.",
         "MoBot/Missouri Botanical Garden Plant Finder and plantfinder.mobot.org do not have a dedicated single-species page for Hypericum densiflorum (searches only surfaced sibling species such as H. prolificum and H. calycinum, plus a generic genus results page), so MoBot could not be used as a source for this species.",
         "RHS's dedicated Hypericum densiflorum page (rhs.org.uk/plants/40866) carries no common name, Cultivation, Position, Soil, pH, Exposure, or Hardiness-rating content beyond Family, 'Native to GB/Ireland: No', a genus-level description, and Name Status 'Correct' -- so RHS could only be used to corroborate the accepted scientific name, not for cultural fields.",
-        "No admissible source (Clemson HGIC, Penn State Extension, UMD Extension, UF/IFAS EDIS or Ask IFAS, UGA fieldreport) has a dedicated page discussing Hypericum densiflorum specifically; searches of those domains returned no species-specific results, so fertilizer, chill-damage, and cool-rest information could not be sourced and remain null."
+        "No admissible source (Clemson HGIC, Penn State Extension, UMD Extension, UF/IFAS EDIS or Ask IFAS, UGA fieldreport) has a dedicated page discussing Hypericum densiflorum specifically; searches of those domains returned no species-specific results, so fertilizer, chill-damage, and cool-rest information could not be sourced and remain null.",
+        "is_edible left null: neither the NC State anchor page nor the RHS page addresses eating or food use of any part of this species (searched 'Edible' on both, 0 hits).",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' -- 0 hits on all three, so no toxicity language exists to carry into unknowns alongside an edibility flag.",
+        "RHS page (https://www.rhs.org.uk/plants/40866/hypericum-densiflorum/details) carries no 'Dimensions', 'Max Height', 'Max Spread', 'Ultimate height', or 'Attracts' content for this species -- searched both RHS wordings for size and found neither; only a generic 'Wildlife gardening' nav link, not a species-specific wildlife/pollinator statement. Size and pollinator data were taken from the NC State species page instead, which is the anchor here.",
+        "This is a woody shrub (NC State lists it under Woody Plant Leaf Characteristics / Plant Type), not a climber, so all four size fields were filled normally per the climber exception rule."
       ],
       "citations": [
         {
@@ -1065,8 +1208,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/hypericum-densiflorum/",
           "quote": "Plant in groups, shrub borders, foundations or as a hedge."
+        },
+        {
+          "claim": "mature_height_in 24-84 (NC State Height: 2 ft. 0 in. - 7 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hypericum-densiflorum/",
+          "quote": "Height: 2 ft. 0 in. - 7 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hypericum-densiflorum/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/hypericum-densiflorum/",
+          "quote": "Bees"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 84,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     }
   ],
   "audit_summary": [
@@ -1104,6 +1270,7 @@
     }
   ],
   "normalizations": [
-    "2026-09-10: b75 landed by the second session (branch claude/database-build-goals-e548af) from the loop's post-audit records. Eight native bog shrubs, carnivorous plants and orchids: Bog Myrtle, Leatherleaf, Yellow Pitcher Plant, Round-leaved Sundew, Moccasin-flower, Nodding Ladies' Tresses, Orange Fringed Orchid, Bushy St. John's Wort. Auditor-supplied corrected wording used verbatim except where it attributed a ranking convention to NC State ('designates no primary', 'neither is marked primary'), which rule 11 forbids; every RHS <title> pipe string was replaced by the rendered subtitle or H1 the audit verified; bare RHS 'Correct' quotes keep the CORR claim paired with the H1 binomial rather than being dropped. Landing decisions: Platanthera ciliaris lands as Orange Fringed Orchid (NC State's prose lead; the researched Yellow Fringed Orchid was the last of five alphabetized names and a Clemson photo-roundup caption) with soil_drainage moderate under the structured-field rule (tags span Occasionally Dry and Occasionally Wet); is_houseplant set false on cited fields for the four records the researcher left null; Drosera rotundifolia keeps is_houseplant true on NC State's 'can also be grown indoors' (b45's Cape Sundew precedent) and drops the RHS 'Under glass grow in...' paragraph from cool_rest_note and water_regime for scope consistency, resting both on NC State's species text; Sarracenia flava's NC State citations moved from the slug-parameterized common-name view to the canonical page; a name_note was written for Spiranthes cernua, whose three sources split; lower-case RHS leads title-cased. verify_quotes: MoBot skipped (ConnectError) and Clemson HGIC skipped (http-403) from this machine; every other quote verified after repair."
+    "2026-09-10: b75 landed by the second session (branch claude/database-build-goals-e548af) from the loop's post-audit records. Eight native bog shrubs, carnivorous plants and orchids: Bog Myrtle, Leatherleaf, Yellow Pitcher Plant, Round-leaved Sundew, Moccasin-flower, Nodding Ladies' Tresses, Orange Fringed Orchid, Bushy St. John's Wort. Auditor-supplied corrected wording used verbatim except where it attributed a ranking convention to NC State ('designates no primary', 'neither is marked primary'), which rule 11 forbids; every RHS <title> pipe string was replaced by the rendered subtitle or H1 the audit verified; bare RHS 'Correct' quotes keep the CORR claim paired with the H1 binomial rather than being dropped. Landing decisions: Platanthera ciliaris lands as Orange Fringed Orchid (NC State's prose lead; the researched Yellow Fringed Orchid was the last of five alphabetized names and a Clemson photo-roundup caption) with soil_drainage moderate under the structured-field rule (tags span Occasionally Dry and Occasionally Wet); is_houseplant set false on cited fields for the four records the researcher left null; Drosera rotundifolia keeps is_houseplant true on NC State's 'can also be grown indoors' (b45's Cape Sundew precedent) and drops the RHS 'Under glass grow in...' paragraph from cool_rest_note and water_regime for scope consistency, resting both on NC State's species text; Sarracenia flava's NC State citations moved from the slug-parameterized common-name view to the canonical page; a name_note was written for Spiranthes cernua, whose three sources split; lower-case RHS leads title-cased. verify_quotes: MoBot skipped (ConnectError) and Clemson HGIC skipped (http-403) from this machine; every other quote verified after repair.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
