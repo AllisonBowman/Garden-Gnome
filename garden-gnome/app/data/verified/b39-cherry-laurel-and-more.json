@@ -86,13 +86,31 @@
           "claim": "soil_drainage moderate (Moist but well-drained or Well-drained)",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/13977/prunus-laurocerasus/details",
-          "quote": "Moisture Moist but well\u2013drained or Well\u2013drained"
+          "quote": "Moisture Moist but well–drained or Well–drained"
         },
         {
           "claim": "soil_drainage moderate (moist, well-drained soil supplemented with organic matter)",
           "source": "Clemson Cooperative Extension Home & Garden Information Center (HGIC)",
           "url": "https://hgic.clemson.edu/factsheet/laurel/",
           "quote": "Cherry laurels perform best in moist, well-drained soil supplemented with organic matter."
+        },
+        {
+          "claim": "mature_height_in 120-240 (NC State Height 10 ft. 0 in. - 20 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-laurocerasus/",
+          "quote": "Height: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 96-120 (NC State Width 8 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-laurocerasus/",
+          "quote": "Width: 8 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field names Butterflies and Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-laurocerasus/",
+          "quote": "Pollinators"
         }
       ],
       "common_name": "Cherry Laurel",
@@ -128,7 +146,7 @@
       "unknowns": [
         "day_f_min/day_f_max/night_f_min/night_f_max/humidity_need/humidity_pct_min/humidity_pct_max/light_fc_min/light_fc_good: no admissible source discusses this species in indoor/greenhouse/container-microclimate terms; every source treats it as a purely outdoor landscape hedge/screen shrub, so no ambient temperature, humidity, or footcandle figures exist to record.",
         "direct_sun_hours_max: NC State's Light Conditions field states only a minimum for its 'Full sun' tag ('6 or more hours of direct sunlight a day') with no stated maximum, and the species is independently tagged tolerant of 'Deep shade' at the other extreme, so no ceiling on direct-sun hours is given by any source; left null rather than treating the minimum as a ceiling.",
-        "chill_damage_f: left null. No admissible source gives a specific frost/cold damage-onset temperature for this species. UMD notes only in general terms that 'Broadleaved evergreens are susceptible to drying winter winds, low temperatures, and late frosts or freezes,' without a number. The only cold-related figures found are USDA hardiness-zone survival ranges (NC State: zones 6a-8b; RHS: Hardiness rating H5, hardy in most UK locations even in severe winters, -15 to -10\u00b0C), which are survival/tolerance floors, not damage-onset points.",
+        "chill_damage_f: left null. No admissible source gives a specific frost/cold damage-onset temperature for this species. UMD notes only in general terms that 'Broadleaved evergreens are susceptible to drying winter winds, low temperatures, and late frosts or freezes,' without a number. The only cold-related figures found are USDA hardiness-zone survival ranges (NC State: zones 6a-8b; RHS: Hardiness rating H5, hardy in most UK locations even in severe winters, -15 to -10°C), which are survival/tolerance floors, not damage-onset points.",
         "cool_rest_note: left null. This is an evergreen ornamental grown for foliage/screening, not a deciduous fruit-bearing Prunus with a stated winter-chilling requirement; no admissible source gives it a chill-hour dormancy figure.",
         "soil_ph_min/soil_ph_max: left null. NC State's own structured Soil pH field gives only open-ended categorical tags -- 'Acid (<6.0)' and 'Alkaline (>8.0)' -- with no closed numeric range, and RHS's structured pH field is likewise only categorical ('Acid or Alkaline or Neutral') with no specific figure anywhere in its Cultivation prose either. Unlike this catalog's treatment of European Plum and Sweet Cherry (where a specific numeric pH figure existed alongside the broad category tags), no admissible source gives Cherry Laurel a specific number, so both fields stay null rather than guessing bounds from the open-ended category thresholds.",
         "water_regime/water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: left null. The only quantifiable-sounding guidance found is UMD's 'If there is less than 1 inch of rainfall per week, water thoroughly to maintain even soil moisture during dry periods' -- a rainfall-substitution trigger conditioned on local weather, not a defined moisture regime, soil-check depth, or fixed day-interval. Clemson's watering guidance addresses only avoiding overhead watering to limit leaf-spot disease spread, not frequency or amount. Neither source supports a specific regime token or numeric estimate.",
@@ -139,14 +157,25 @@
         "Invasive/weedy status: NC State tags this species '#weedy' and '#aggressive' and states it 'has escaped cultivation on the Pacific coast west of the Cascades and is classified there as a weed of concern' -- not a schema field, but decision-relevant landscape-use context.",
         "plantfinder.mobot.org / www.missouribotanicalgarden.org: every attempt to fetch this species' Plant Finder page (multiple taxonid URLs tried) failed with a TLS certificate verification error, so no content from this admissible domain could be incorporated into this record.",
         "is_houseplant: populated as false based on UMD's in-ground planting-hole instructions (see citations). No admissible source describes container or indoor culture for this species at all -- unlike this catalog's Boxwood record, no 'Container' landscape-location tag or container-growing guidance was found anywhere for Cherry Laurel -- so there is no competing container-culture evidence to weigh against the in-ground planting instructions.",
-        "name_note \u2014 removed on audit: name_note bundles THREE sub-claims: (1) RHS Name Status is 'Correct'; (2) RHS lists 'Cerasus laurocerasus' as a synonym; (3) NC State's Plant Toolbox carries no separate synonym/'previously known as' listing for this species, so there is no conflict to adjudicate. Checking each individually: sub-claim (1) is covered and accurate -- citation 'name_note RHS gives Prunus laurocerasus a Name Status of Correct...' verified live on RHS. Sub-claim (2) is covered and accurate -- citation 'name_note RHS lists Cerasus laurocerasus as a synonym...' verified live on RHS (synonym field literally shows 'Cerasus laurocerasus'). Sub-claim (3) is UNCITED: no citation entry in the record's citations array has a claim label containing 'name_note' that addresses NC State's absence of a synonym listing -- the only two name_note citations are both about RHS content. I independently fetched the live NC State page and confirmed the underlying fact is true ('No alternative nomenclature listed' on that page), so this sub-claim is uncited-but-true rather than wrong; it can be repaired by adding a citation such as: source NC State Extension Gardener Plant Toolbox, url https://plants.ces.ncsu.edu/plants/prunus-laurocerasus/, with the page's absence of any Synonym(s)/'Previously known as' field serving as the supporting evidence (a negative-existence citation, or at minimum an explicit note-to-self in the citation quote). No sub-claim here is factually wrong. Per the audit rubric, a name_note prose bundle with any uncited sub-claim must be refuted even though the cited sub-claims are accurate and the uncited one turned out to be true."
+        "name_note — removed on audit: name_note bundles THREE sub-claims: (1) RHS Name Status is 'Correct'; (2) RHS lists 'Cerasus laurocerasus' as a synonym; (3) NC State's Plant Toolbox carries no separate synonym/'previously known as' listing for this species, so there is no conflict to adjudicate. Checking each individually: sub-claim (1) is covered and accurate -- citation 'name_note RHS gives Prunus laurocerasus a Name Status of Correct...' verified live on RHS. Sub-claim (2) is covered and accurate -- citation 'name_note RHS lists Cerasus laurocerasus as a synonym...' verified live on RHS (synonym field literally shows 'Cerasus laurocerasus'). Sub-claim (3) is UNCITED: no citation entry in the record's citations array has a claim label containing 'name_note' that addresses NC State's absence of a synonym listing -- the only two name_note citations are both about RHS content. I independently fetched the live NC State page and confirmed the underlying fact is true ('No alternative nomenclature listed' on that page), so this sub-claim is uncited-but-true rather than wrong; it can be repaired by adding a citation such as: source NC State Extension Gardener Plant Toolbox, url https://plants.ces.ncsu.edu/plants/prunus-laurocerasus/, with the page's absence of any Synonym(s)/'Previously known as' field serving as the supporting evidence (a negative-existence citation, or at minimum an explicit note-to-self in the citation quote). No sub-claim here is factually wrong. Per the audit rubric, a name_note prose bundle with any uncited sub-claim must be refuted even though the cited sub-claims are accurate and the uncited one turned out to be true.",
+        "is_edible left null: no page among the four addressed eating this species at all — NC State's page has no 'Edib' hits, RHS's only edibility mention is genus-level ('Some [Prunus] have edible fruit in autumn') which per rule 3/6 does not establish the species itself as edible, and UMD has none. Not inferred from genus.",
+        "NC State (anchor, plants.ces.ncsu.edu/plants/prunus-laurocerasus/) lists this species as having 'high severity' poison characteristics: Poison Severity: High; Poison Symptoms: 'Gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure. Stems, leaves, seeds contain cyanide, particularly toxic in the process of wilting: brick red mucous membranes, panting, shock.'; Poison Toxic Principle: Cyanogenic glycosides (amygdalin, prunasin, prulaurasin); Poison Part: Leaves, Seeds and Stems (corrected at landing: the note had listed Leaves only). Tags also include #problem for cats #problem for dogs #problem for horses. Recorded here per rule 5 since is_edible could otherwise appear alongside this without the warning surfacing, even though is_edible itself is null (not true) in this record.",
+        "hgic.clemson.edu/factsheet/laurel/ could not be read: the sandbox network proxy refused this host with error:ProxyError even after being added to allowed_domains for the command. Its content was not consulted and nothing from it is guessed or included.",
+        "This is a shrub/small tree per NC State ('Plant Type: Shrub, Tree'; RHS: 'large, spreading evergreen shrub'), not a climber, so rule 4 (climber size suppression) does not apply and the four size fields were populated normally.",
+        "Size figures used are NC State's structured Dimensions block for the species itself (not a cultivar): Height: 10 ft. 0 in. - 20 ft. 0 in.; Width: 8 ft. 0 in. - 10 ft. 0 in. RHS's figures (Max Height 4-8 metres, Max Spread 'wider than 8 metres') were not used since NC State (the anchor, with a species-specific structured dimensions block) takes priority and RHS's spread value is open-ended/unusable per the task instructions; RHS was consulted only to cross-check pollinator/edibility signals.",
+        "attracts_pollinators set true from NC State's structured 'Attracts:' field listing Butterflies, Pollinators, Songbirds, and independently corroborated by RHS's 'Plants for pollinators' category tag on the same page."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 96,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -275,7 +304,25 @@
           "claim": "name_note RHS's page title and MOBOT's common-names list both also render this species 'wall cotoneaster'",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=286505&isprofile=0&letter=c",
-          "quote": "rock cotoneaster \u2022 rock spray \u2022 wall cotoneaster \u2022 wall spray"
+          "quote": "rock cotoneaster • rock spray • wall cotoneaster • wall spray"
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cotoneaster-horizontalis/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-96 (NC State Width: 6 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cotoneaster-horizontalis/",
+          "quote": "Width: 6 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Bees; Wildlife Value: Attracts birds and bees)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/cotoneaster-horizontalis/",
+          "quote": "Bees"
         }
       ],
       "common_name": "Rockspray Cotoneaster",
@@ -319,14 +366,23 @@
         "Identification: NC State Extension's own plant profile lists \"is often confused with: Berberis thunbergii, Buxus microphylla var. japonica, Cotoneaster dammeri, Cotoneaster salicifolius\" for Cotoneaster horizontalis -- notably not Pyracantha coccinea (Firethorn), the species this record is deliberately paired against in this batch. No admissible source consulted here discusses Pyracantha at all; flagging this so Firethorn content (a different genus, also thorny and red-berried, easily confused by non-experts) does not bleed into this Cotoneaster horizontalis record or vice versa.",
         "Invasive status: RHS lists Cotoneaster horizontalis on Schedule 9 of the UK Wildlife & Countryside Act (1981) as an invasive non-native species -- not banned from sale, but illegal to plant or cause to grow in the wild in Great Britain. This is a UK-specific legal designation; no US-based admissible source addressed invasive/regulatory status for this species.",
         "scientific_name_accepted: RHS's Synonyms field lists Cotoneaster acuminata var. prostrata as an older name folded into the currently accepted Cotoneaster horizontalis (RHS Name Status: Correct); all other admissible sources use Cotoneaster horizontalis directly with no indication of a name change.",
-        "name_note \u2014 removed on audit: The prose bundles three sub-claims. (1) 'rock spray' and 'wall spray' as RHS other-common-names -- covered by citation 3, verbatim-confirmed live ('Other common names\\nrock spray, wall spray'). (3) synonym Cotoneaster acuminata var. prostrata -- covered by citation 4, verbatim-confirmed live ('Synonyms Cotoneaster acuminata var. prostrata'). Both of those are fine. But (2) 'its own page title also renders it \"wall cotoneaster\"' has NO matching citation anywhere in the citations array -- no claim label or quote addresses the RHS page title at all. This sub-claim happens to be TRUE (I fetched the live RHS page and its title/heading literally reads 'Cotoneaster horizontalis | wall cotoneaster'; it's independently corroborated by Missouri Botanical Garden's own common-names list, which I also fetched live: 'rock cotoneaster \u2022 rock spray \u2022 wall cotoneaster \u2022 wall spray') -- but it is uncited. Per the task's rule, a citation covering sub-claims 1 and 3 does not cover sub-claim 2, so name_note fails the structural check as written. Repair: add a citation for sub-claim 2 (RHS page title 'Cotoneaster horizontalis | wall cotoneaster', or MOBOT's common-names list) rather than dropping it, since it is accurate -- nothing in name_note is actually wrong, just under-cited."
+        "name_note — removed on audit: The prose bundles three sub-claims. (1) 'rock spray' and 'wall spray' as RHS other-common-names -- covered by citation 3, verbatim-confirmed live ('Other common names\\nrock spray, wall spray'). (3) synonym Cotoneaster acuminata var. prostrata -- covered by citation 4, verbatim-confirmed live ('Synonyms Cotoneaster acuminata var. prostrata'). Both of those are fine. But (2) 'its own page title also renders it \"wall cotoneaster\"' has NO matching citation anywhere in the citations array -- no claim label or quote addresses the RHS page title at all. This sub-claim happens to be TRUE (I fetched the live RHS page and its title/heading literally reads 'Cotoneaster horizontalis | wall cotoneaster'; it's independently corroborated by Missouri Botanical Garden's own common-names list, which I also fetched live: 'rock cotoneaster • rock spray • wall cotoneaster • wall spray') -- but it is uncited. Per the task's rule, a citation covering sub-claims 1 and 3 does not cover sub-claim 2, so name_note fails the structural check as written. Repair: add a citation for sub-claim 2 (RHS page title 'Cotoneaster horizontalis | wall cotoneaster', or MOBOT's common-names list) rather than dropping it, since it is accurate -- nothing in name_note is actually wrong, just under-cited.",
+        "is_edible left null: no page says the plant or any part of it is eaten or grown for food (0 hits for 'Edible' on NC State and RHS). Corrected at landing: both pages carry a harm statement the note had missed. NC State: 'If ingested, the fruits can cause stomach upset.' RHS 'Potentially harmful': 'Fruit are ornamental - not to be eaten. Wear gloves and other protective equipment when handling. Pets: Fruit are ornamental - not to be eaten'. The researcher did not propose a false value, so the field stays null here with both warnings recorded.",
+        "plantfinder.mobot.org refused this machine (fetch returned error:ProxyError with 0 bytes on two attempts, including with the host explicitly allowed) -- it was not read and its content is not reflected here.",
+        "mature_height_in and mature_spread_in are taken from NC State's structured Dimensions block (Height: 2 ft. 0 in. - 3 ft. 0 in.; Width: 6 ft. 0 in. - 8 ft. 0 in.), confirmed as species-level (not a named cultivar), and the plant is a Ground Cover/Shrub, not a climber. RHS's Max Height 0.5-1 metres (19.7-39.4 in) broadly agrees on height, but its Max Spread 1-1.5 metres (39.4-59.1 in) is well below NC State's 72-96 in (corrected at landing: the note had called both broadly consistent). NC State is kept under the anchor rule; the spread conflict is recorded here.",
+        "attracts_pollinators set true from NC State's structured 'Attracts' field, which lists 'Bees' and 'Songbirds', and its separate 'Wildlife Value' field reading 'Attracts birds and bees'; RHS had no 'Attracts'/'pollinat' hits on this page, so RHS neither supports nor contradicts this."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 96
     },
     {
       "common_name": "Firethorn",
@@ -367,16 +423,21 @@
       "fertilize_strength": null,
       "unknowns": [
         "toxic_to_pets/toxicity_detail: left null. UGA Cooperative Extension (CAES Field Report) Circular 957, \"Poisonous Plants in the Landscape,\" lists Firethorn (Pyracantha spp., berries) under a table explicitly titled \"Ornamental Plants Reported To Be Toxic When Ingested by Humans,\" with symptoms \"stomach ache, blistering of tongue, vomiting\" -- this source is scoped to human toxicity, not cats or dogs specifically, so per instructions it cannot support toxic_to_pets. RHS's toxicity note for this species reads only \"Fruit are ornamental - not to be eaten\" with no \"Pets:\" line and no animal named at all (unlike many other RHS species pages, which carry an explicit \"Pets: harmful if eaten ...\" line). NC State's Firethorn Plant Toolbox page has no toxicity/poison entries in its Problems section for this species at all -- only disease and insect pests (scab, fire blight, wilt, aphids, lace bugs, scale), with no Poisonous-to-Humans or Problem-for-Cats/Problem-for-Dogs tags of the kind NC State uses on many other species pages. No admissible source names cats or dogs specifically for this species, so toxic_to_pets is left null rather than inferred true or false.",
-        "soil_drainage: left null. NC State's structured Soil Drainage tags for this species are \"Good Drainage,\" \"Moist,\" and \"Occasionally Dry\" together (this exact tag combination has been left null rather than mapped to \"moderate\" across dozens of other verified records in this catalog); Missouri Botanical Garden's culture text says the plant is \"Best in fertile soils with sharp drainage\" (leaning fast) while its structured Water field reads \"Medium\" and its own prose separately says \"dry to medium moisture\" (not clearly fast either); RHS's Moisture field is the same either/or phrasing, \"Moist but well\u2013drained or Well\u2013drained,\" already established elsewhere in this catalog as not resolving cleanly to a single enum value. No confident single value emerges, so left null.",
+        "soil_drainage: left null. NC State's structured Soil Drainage tags for this species are \"Good Drainage,\" \"Moist,\" and \"Occasionally Dry\" together (this exact tag combination has been left null rather than mapped to \"moderate\" across dozens of other verified records in this catalog); Missouri Botanical Garden's culture text says the plant is \"Best in fertile soils with sharp drainage\" (leaning fast) while its structured Water field reads \"Medium\" and its own prose separately says \"dry to medium moisture\" (not clearly fast either); RHS's Moisture field is the same either/or phrasing, \"Moist but well–drained or Well–drained,\" already established elsewhere in this catalog as not resolving cleanly to a single enum value. No confident single value emerges, so left null.",
         "soil_ph_min: left null. NC State's only acid-range tag is \"Acid (<6.0),\" which has no stated lower bound, and RHS's pH field is the essentially unrestricted \"Acid or Alkaline or Neutral.\"",
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. This is an outdoor, in-ground landscape/hedge shrub; no admissible source describes it as a container plant on a watering schedule. Sources describe only general outdoor drought tolerance once established (Clemson: \"Heat and drought-tolerant once established\"; UGA: \"fairly drought-tolerant once established\"; NC State: prefers \"dry to moist, well-drained soils\" and is \"tolerant of ... drought\"), with no check depth, dry-down target, or day-count interval given.",
         "humidity_need, humidity_pct_min, humidity_pct_max: left null. No admissible source addresses ambient humidity for this outdoor shrub.",
         "light_fc_min, light_fc_good: left null. No admissible source gives foot-candle light figures.",
         "direct_sun_hours_max: left null. NC State's \"Full sun (6 or more hours of direct sunlight a day)\" states the minimum threshold that defines its Full Sun category, not a maximum for this species.",
-        "day_f_min, day_f_max, night_f_min, night_f_max, chill_damage_f, cool_rest_note: left null. No admissible source gives ambient day/night temperature ranges or a numeric cold-damage-onset threshold. Only categorical winter-hardiness data exists -- USDA zones 6-9 (NC State, Clemson) and RHS's H6 rating (roughly -20 to -15\u00b0C survival) -- plus qualitative advice from NC State to \"protect or shelter this shrub from cold winds\" in colder climates; these are survival-zone ratings and general wind-protection advice, not the specific damage-onset temperature or ambient day/night ranges these fields call for.",
+        "day_f_min, day_f_max, night_f_min, night_f_max, chill_damage_f, cool_rest_note: left null. No admissible source gives ambient day/night temperature ranges or a numeric cold-damage-onset threshold. Only categorical winter-hardiness data exists -- USDA zones 6-9 (NC State, Clemson) and RHS's H6 rating (roughly -20 to -15°C survival) -- plus qualitative advice from NC State to \"protect or shelter this shrub from cold winds\" in colder climates; these are survival-zone ratings and general wind-protection advice, not the specific damage-onset temperature or ambient day/night ranges these fields call for.",
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: left null. RHS's growing guide states \"Pyracantha don't need regular feeding,\" noting only that an optional potassium-rich feed (sulphate of potash, tomato fertiliser, or comfrey pellets) can be applied \"in early spring\" to encourage flowering and fruiting -- no specific calendar month, day-interval, or liquid-feed dilution/strength is given. (RHS's \"30g per sq m\" sulphate-of-potash figure is a granular per-area application rate, not a fertilize_strength dilution fraction, so it was not used for that field either.)",
         "Identification-confusion note (decision-relevant, not a schema field): this record was researched specifically apart from the visually similar but unrelated genus Cotoneaster (paired in this batch as Cotoneaster horizontalis) -- no content from that species was used here. Separately, NC State's own page for this species warns that Scarlet Firethorn (Pyracantha coccinea) \"is often confused with P. koidzummii or Formosa Firethorn,\" distinguishing the two by leaf shape and noting P. coccinea is more cold-hardy; that is a within-genus confusion, distinct from the cross-genus Pyracantha/Cotoneaster confusion this batch is designed to guard against.",
-        "name_note \u2014 removed on audit: The prose bundles two sub-claims. Sub-claim (a): 'NC State Extension lists this species' historical synonym as Cotoneaster pyracantha' -- covered cleanly by the given citation (quote 'Previously known as: Cotoneaster pyracantha'), and I confirmed this is verbatim on the live NC State page ('Previously Known As / Synonym: Cotoneaster pyracantha'). This part is accurate and properly cited. Sub-claim (b): 'Pyracantha coccinea was formerly classified in the genus Cotoneaster before being reclassified into its own genus, Pyracantha' -- this has no citation of its own. The single citation attached to name_note only supports the bare 'previously known as' fact; neither the live NC State page nor the live RHS species page (both fetched and checked) contains any sentence stating the reclassification narrative. The claim happens to be botanically true (genus Pyracantha M.Roem. was split off from what had been classified in Cotoneaster/Mespilus in 1847) but it is uncited researcher synthesis layered onto a citation that doesn't cover it -- exactly the kind of 'citation covering one sub-claim does not cover the others' failure this audit is meant to catch. At repair time this sub-claim needs its own source (e.g., a taxonomic authority actually stating the genus history) or should be dropped/softened rather than left riding on the NC State synonym citation."
+        "name_note — removed on audit: The prose bundles two sub-claims. Sub-claim (a): 'NC State Extension lists this species' historical synonym as Cotoneaster pyracantha' -- covered cleanly by the given citation (quote 'Previously known as: Cotoneaster pyracantha'), and I confirmed this is verbatim on the live NC State page ('Previously Known As / Synonym: Cotoneaster pyracantha'). This part is accurate and properly cited. Sub-claim (b): 'Pyracantha coccinea was formerly classified in the genus Cotoneaster before being reclassified into its own genus, Pyracantha' -- this has no citation of its own. The single citation attached to name_note only supports the bare 'previously known as' fact; neither the live NC State page nor the live RHS species page (both fetched and checked) contains any sentence stating the reclassification narrative. The claim happens to be botanically true (genus Pyracantha M.Roem. was split off from what had been classified in Cotoneaster/Mespilus in 1847) but it is uncited researcher synthesis layered onto a citation that doesn't cover it -- exactly the kind of 'citation covering one sub-claim does not cover the others' failure this audit is meant to catch. At repair time this sub-claim needs its own source (e.g., a taxonomic authority actually stating the genus history) or should be dropped/softened rather than left riding on the NC State synonym citation.",
+        "is_edible left null: no page states Firethorn or any part of it is eaten or grown for food (NC State's only 'Edible' hit is the 'Edible Garden' landscape-theme tag). Corrected at landing: the RHS species page does address eating, in its 'Potentially harmful' field -- 'Fruit are ornamental - not to be eaten. Wear gloves and other protective equipment when handling. Pets: Fruit are ornamental - not to be eaten'. The researcher did not propose a false value, so the field stays null here with the warning recorded.",
+        "Before setting is_edible, searched 'Poison', 'Toxic', and 'Problem for' on all three cited pages: 0 hits on each. Corrected at landing: that search missed RHS's 'Potentially harmful' field (quoted in the line above), the only harm statement on these pages; the RHS growing guide has none.",
+        "mature_height_in and mature_spread_in are taken from NC State's species-specific, structured 'Dimensions:' block (Height/Width in ft-in, converted to inches) rather than from RHS's genus-level growing guide or the RHS species page's 'Max Height'/'Max Spread' figures (2.5-4 metres each), per the instruction that the NC State species page is the anchor when present.",
+        "Firethorn (Pyracantha coccinea) is classified by NC State as a Perennial/Shrub, not a climber or vine, so all four size fields were filled normally rather than left null under the climber rule; RHS's mention of training it against a wall is a growing style, not a genus/species classification as a climbing plant.",
+        "All three pages named in this task (NC State Plant Toolbox, RHS species details page, RHS growing guide) returned an ok fetch status via qc.py; none refused this machine."
       ],
       "citations": [
         {
@@ -438,8 +499,37 @@
           "quote": "Soil pH: Acid (<6.0) Neutral (6.0-8.0)",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/pyracantha-coccinea/common-name/firethorn/"
+        },
+        {
+          "claim": "mature_height_in 72-216 (NC State Dimensions block, Height: 6 ft. 0 in. - 18 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Firethorn (Pyracantha coccinea)",
+          "url": "https://plants.ces.ncsu.edu/plants/pyracantha-coccinea/common-name/firethorn/",
+          "quote": "Height: 6 ft. 0 in. - 18 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 96-216 (NC State Dimensions block, Width: 8 ft. 0 in. - 18 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Firethorn (Pyracantha coccinea)",
+          "url": "https://plants.ces.ncsu.edu/plants/pyracantha-coccinea/common-name/firethorn/",
+          "quote": "Width: 8 ft. 0 in. - 18 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Bees and Pollinators, and its Wildlife Value text confirms flowers are visited by pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Firethorn (Pyracantha coccinea)",
+          "url": "https://plants.ces.ncsu.edu/plants/pyracantha-coccinea/common-name/firethorn/",
+          "quote": "Flowers are visited by many kinds of pollinators. Fruits are enjoyed by birds.  This shrub is particularly resistant to damage by deer."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species under its pollinator-plants category)",
+          "source": "RHS — Pyracantha coccinea (scarlet firethorn) details page",
+          "url": "https://www.rhs.org.uk/plants/14208/pyracantha-coccinea/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 216,
+      "mature_spread_in_min": 96,
+      "mature_spread_in_max": 216
     },
     {
       "common_name": "Tatarian Dogwood",
@@ -490,7 +580,12 @@
         "Regional/site coverage gap: Clemson HGIC, UF/IFAS (edis.ifas.ufl.edu and ask.ifas.ufl.edu), UGA CAES Field Report, and Penn State Extension have no dedicated Cornus alba fact sheet (confirmed via direct site search on each domain); only passing mentions turned up (UMD's anthracnose-resistance note, Penn State's winter-arrangement materials list). This tracks with NC State's and Missouri Botanical Garden's own warnings that the species struggles with disease south of USDA Zone 7 -- NC State: 'This shrub is more vulnerable to diseases in hot summer climates, especially south of USDA Zone 7'; MOBOT: 'Plants become stressed and more vulnerable to diseases such as canker in hot summer climates south of USDA Zone 7.' -- i.e. it is a poor regional fit for the Deep South/Florida extension offices in this source list.",
         "Weedy/invasive-adjacent caveat (no dedicated schema field): NC State flags this species as weedy and difficult to remove once established -- 'The plant is weedy, and its suckering can make it difficult to remove. Please consider your planting site carefully.' -- and separately confirms it tends to sucker into large colonies. Decision-relevant planting-site guidance not captured by any schema field.",
         "Disease-resistance note (no dedicated schema field): University of Maryland Extension states 'Tartarian dogwood (Cornus alba), red osier dogwood (C. sericea), and Cornelian cherry (C. mas) also are resistant to this disease [dogwood anthracnose].' Included for completeness; not applicable to any schema field.",
-        "common_name \u2014 removed on audit: Structurally both citations' claim labels contain 'common_name', and neither quote is fabricated -- I fetched Penn State's page directly and confirmed the exact string 'red twig dogwoods (Cornus stolonifera, C. sericea, C. alba, also known as Swida spp.)' appears verbatim, and confirmed NC State's Common Name(s) field is exactly 'Red-Barked Dogwood / Siberian Dogwood / Tatarian Dogwood' (fetched https://plants.ces.ncsu.edu/plants/cornus-alba/). The problem is that NEITHER citation, on its own terms, actually establishes 'Red-twig Dogwood' as a name belonging specifically to Cornus alba: the Penn State quote bundles it into a three-species umbrella term ('Cornus stolonifera, C. sericea, C. alba') without singling out C. alba, and the NC State quote -- from the one source with a dedicated single-species page -- lists three alternate common names and does NOT include 'Red-twig Dogwood' at all. This is exactly the cross-species-bleed risk the record's own 'Identification confusion' unknown flags (MOBOT: 'Tatarian dogwood is similar in appearance to redtwig dogwood (C. sericea/stolonifera)...' -- i.e. MOBOT treats 'redtwig dogwood' as the more proper name of the *other*, similar-looking species). I independently fetched MOBOT's page (https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279370) and found its own 'Common Names' popup DOES list 'red-twig dogwood' as a valid alternate name for Cornus alba ('tatarian dogwood, red-barked dogwood, red-twig dogwood, tartarian dogwood, white dogwood, white-berried dogwood'), and MOBOT's prose separately says 'Cornus alba, commonly called tatarian dogwood...' -- so the primary/most-supported common name by the record's own admissible sources is actually 'Tatarian Dogwood' (both NC State's and MOBOT's first-listed name), not 'Red-twig Dogwood'. The chosen value is plausible (MOBOT does list it) but the two citations actually placed in the record do not cleanly support it -- repair by either citing MOBOT's Common Names field directly, or reconsidering 'Tatarian Dogwood' as the primary common_name given it is the name both dedicated single-species sources lead with."
+        "common_name — removed on audit: Structurally both citations' claim labels contain 'common_name', and neither quote is fabricated -- I fetched Penn State's page directly and confirmed the exact string 'red twig dogwoods (Cornus stolonifera, C. sericea, C. alba, also known as Swida spp.)' appears verbatim, and confirmed NC State's Common Name(s) field is exactly 'Red-Barked Dogwood / Siberian Dogwood / Tatarian Dogwood' (fetched https://plants.ces.ncsu.edu/plants/cornus-alba/). The problem is that NEITHER citation, on its own terms, actually establishes 'Red-twig Dogwood' as a name belonging specifically to Cornus alba: the Penn State quote bundles it into a three-species umbrella term ('Cornus stolonifera, C. sericea, C. alba') without singling out C. alba, and the NC State quote -- from the one source with a dedicated single-species page -- lists three alternate common names and does NOT include 'Red-twig Dogwood' at all. This is exactly the cross-species-bleed risk the record's own 'Identification confusion' unknown flags (MOBOT: 'Tatarian dogwood is similar in appearance to redtwig dogwood (C. sericea/stolonifera)...' -- i.e. MOBOT treats 'redtwig dogwood' as the more proper name of the *other*, similar-looking species). I independently fetched MOBOT's page (https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279370) and found its own 'Common Names' popup DOES list 'red-twig dogwood' as a valid alternate name for Cornus alba ('tatarian dogwood, red-barked dogwood, red-twig dogwood, tartarian dogwood, white dogwood, white-berried dogwood'), and MOBOT's prose separately says 'Cornus alba, commonly called tatarian dogwood...' -- so the primary/most-supported common name by the record's own admissible sources is actually 'Tatarian Dogwood' (both NC State's and MOBOT's first-listed name), not 'Red-twig Dogwood'. The chosen value is plausible (MOBOT does list it) but the two citations actually placed in the record do not cleanly support it -- repair by either citing MOBOT's Common Names field directly, or reconsidering 'Tatarian Dogwood' as the primary common_name given it is the name both dedicated single-species sources lead with.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page addresses eating this plant or any part of it (searched 'Edible' on both — 0 hits each); no record of edibility either way.",
+        "Before setting any edibility value, searched the anchor (NC State) and RHS pages for 'Poison', 'Toxic', and 'Problem for' as required — 0 hits on all three terms on both pages, so no toxicity language exists to fold into unknowns.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279370 refused this machine (fetch returned error:ProxyError, 0 bytes) — could not read it, so it contributed nothing to any field; not used for size, edibility, or pollinator data.",
+        "Cornus alba is a shrub, not a climber (NC State Plant Type: Perennial, Shrub), so the climber-exclusion rule does not apply and all four size fields were populated normally.",
+        "Size anchor is NC State's species-specific Dimensions block (Height 8-10 ft, Width 5-10 ft); RHS gives a broader Max Height/Max Spread of 2.5-4 metres (98.4-157.5 in) for the species, which is consistent in order of magnitude but was not used to override the NC State figures since NC State is the designated anchor with a direct species page."
       ],
       "citations": [
         {
@@ -600,8 +695,37 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279370",
           "quote": "Cornus alba, commonly called tatarian dogwood"
+        },
+        {
+          "claim": "mature_height_in 96-120 (NC State Height: 8 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Cornus alba",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-alba/",
+          "quote": "Height: 8 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-120 (NC State Width: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Cornus alba",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-alba/",
+          "quote": "Width: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies, Pollinators, Specialized Bees; body text: flowers visited by bees, butterflies, and other pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Cornus alba",
+          "url": "https://plants.ces.ncsu.edu/plants/cornus-alba/",
+          "quote": "Flowers are visited by bees, butterflies, and other pollinators."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species under Plants for pollinators)",
+          "source": "RHS Plants — Cornus alba L.",
+          "url": "https://www.rhs.org.uk/plants/4379/cornus-alba-l/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -712,7 +836,31 @@
           "claim": "soil_drainage: RHS lists Hypericum calycinum's moisture tolerance as moist-but-well-drained or well-drained, also spanning into moisture-retentive territory.",
           "source": "RHS",
           "url": "https://www.rhs.org.uk/plants/8994/hypericum-calycinum/details",
-          "quote": "Moist but well\u2013drained or Well\u2013drained"
+          "quote": "Moist but well–drained or Well–drained"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Wildlife/Attracts field names butterflies)",
+          "source": "NC State Extension Plant Toolbox, Hypericum calycinum",
+          "url": "https://plants.ces.ncsu.edu/plants/hypericum-calycinum/",
+          "quote": "Attracts butterflies."
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field states the plant is toxic if eaten, not edible)",
+          "source": "NC State Extension Plant Toolbox, Hypericum calycinum",
+          "url": "https://plants.ces.ncsu.edu/plants/hypericum-calycinum/",
+          "quote": "Highly toxic if ingested."
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Hypericum calycinum",
+          "url": "https://plants.ces.ncsu.edu/plants/hypericum-calycinum/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 18-24 (NC State Width: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Hypericum calycinum",
+          "url": "https://plants.ces.ncsu.edu/plants/hypericum-calycinum/",
+          "quote": "Width: 1 ft. 6 in. - 2 ft. 0 in."
         }
       ],
       "common_name": "St. John's Wort",
@@ -746,25 +894,37 @@
       "toxic_to_pets": null,
       "toxicity_detail": "NC State's toxicity entry for Hypericum calycinum is explicitly labeled \"Poisonous to Humans\" (severity High): leaves and sap/juice can cause severe illness if ingested (toxic principle unidentified, possibly a glycoside), and the plant also causes contact dermatitis. This entry is scoped to humans, not specifically to cats or dogs.",
       "unknowns": [
-        "toxic_to_pets left null: NC State's toxicity entry for Hypericum calycinum is explicitly scoped \"Poisonous to Humans\" with no cat/dog/animal-specific claim. RHS's harmful-plants note reads: \"Pets: Fruit are ornamental - not to be eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers\" \u2014 it names \"Pets\" generically but does not identify cats or dogs specifically, makes no toxicity claim beyond an edibility caution, and points to a non-admissible external guide. Per instructions this does not support toxic_to_pets=true, and no admissible source affirmatively clears cats/dogs either, so the field is left null.",
+        "toxic_to_pets left null: NC State's toxicity entry for Hypericum calycinum is explicitly scoped \"Poisonous to Humans\" with no cat/dog/animal-specific claim. RHS's harmful-plants note reads: \"Pets: Fruit are ornamental - not to be eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers\" — it names \"Pets\" generically but does not identify cats or dogs specifically, makes no toxicity claim beyond an edibility caution, and points to a non-admissible external guide. Per instructions this does not support toxic_to_pets=true, and no admissible source affirmatively clears cats/dogs either, so the field is left null.",
         "Hypericum perforatum, a different species in the same genus, has well-documented photosensitization toxicity in livestock, but no admissible source found here makes that claim for Hypericum calycinum specifically, so it was deliberately not carried over into this record.",
-        "soil_ph_min/soil_ph_max left null: NC State tags Hypericum calycinum \"Soil pH: Acid (<6.0)\" while RHS lists pH tolerance as \"Acid or Alkaline or Neutral\" (essentially any pH) \u2014 these two admissible sources conflict, so no single reliable numeric pH range could be extracted.",
-        "day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, and direct_sun_hours_max all left null: every admissible source treats this as an outdoor hardy shrub/ground cover, described via USDA hardiness zone (NC State: 5a-10b) and RHS's H5 rating (\"hardy in most places throughout the UK even in severe winters,\" -15 to -10\u00b0C) plus categorical sun-exposure tags, rather than houseplant-style day/night temperature, humidity percentage, or foot-candle figures.",
+        "soil_ph_min/soil_ph_max left null: NC State tags Hypericum calycinum \"Soil pH: Acid (<6.0)\" while RHS lists pH tolerance as \"Acid or Alkaline or Neutral\" (essentially any pH) — these two admissible sources conflict, so no single reliable numeric pH range could be extracted.",
+        "day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, and direct_sun_hours_max all left null: every admissible source treats this as an outdoor hardy shrub/ground cover, described via USDA hardiness zone (NC State: 5a-10b) and RHS's H5 rating (\"hardy in most places throughout the UK even in severe winters,\" -15 to -10°C) plus categorical sun-exposure tags, rather than houseplant-style day/night temperature, humidity percentage, or foot-candle figures.",
         "water_regime and the water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis fields left null: no admissible source gives a specific watering schedule, soil-check depth, or day-interval regimen. Only qualitative notes were found: Missouri Botanical Garden rates water need \"Medium\" with drought tolerance; NC State and RHS both describe moderate drought tolerance with soil drainage spanning good-drainage to occasionally-dry/moist.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: no admissible source discusses fertilizing Hypericum calycinum.",
         "chill_damage_f left null: no admissible source gives a specific damage-onset temperature; only hardiness-zone/rating data was found (see the temperature-fields note above).",
         "Not a schema field, but decision-relevant: Missouri Botanical Garden flags an \"Invasive: Where is this species invasive in the US?\" note on its own profile page, and RHS separately states the plant \"May have the potential to become a nuisance if not managed well.\" NC State and Missouri Botanical Garden both describe it spreading rapidly/aggressively by underground stems or stolons.",
         "EDIS/UF-IFAS publication FP261 is titled \"Hypericum spp. St. John's Wort\" and covers the Hypericum genus broadly (multiple species used in Florida landscapes), not Hypericum calycinum specifically, so its figures were not used for this species-specific record.",
-        "RHS also notes Hypericum calycinum \"May be susceptible to a rust and honey fungus (rarely)\" and follows \"pruning group 8\" \u2014 pest/disease and pruning details outside this schema but potentially useful for care content.",
-        "name_note \u2014 removed on audit: name_note bundles two sub-claims. Sub-claim A ('Shares the common name St. John's Wort with the distinct species Hypericum perforatum, not covered by this record') is accurate and covered by a citation labeled 'name_note:' -- verified live: the NC State H. perforatum page lists common names 'Common St. John's-wort, Goatweed, Klamath Weed, St. Johns Wort', confirming the two species genuinely share a St. John's Wort-type name. This sub-claim is fine as written and cited. Sub-claim B ('RHS's own listing for this species uses the common name rose of Sharon rather than St. John's Wort') is WRONG/misleading and should be dropped, not re-cited. I fetched the live RHS page (https://www.rhs.org.uk/plants/8994/hypericum-calycinum/details) and its own JSON-LD structured data for this exact taxon reads: alternateName: [\"rose of Sharon\",\"Aaron's beard\",\"large-flowered St John's wort\",\"Resurrection plant\"]. RHS's own 'Other common names' list for Hypericum calycinum explicitly INCLUDES 'large-flowered St John's wort' -- so RHS does not use rose of Sharon 'rather than' St. John's Wort; it lists both. The citation's quote ('Hypericum calycinum | rose of Sharon') is verbatim from the page's <title> tag, but building an exclusivity claim ('rather than St. John's Wort') from just the title while ignoring the same page's own common-names list is a selective/misleading construction that changes the meaning (checklist item 3) and over-generalizes what the source actually says (checklist item 5). This also undercuts the note's overall framing: Missouri Botanical Garden's page for this exact species (already used elsewhere in this record) lists 'St. John's wort' as its PRIMARY common name ('Common Name: St. John's wort'), and NC State's own H. calycinum page also calls it 'creeping St. John's wort' in prose -- so 'St. John's Wort' is a well-established name for H. calycinum itself, not merely bleed-in from H. perforatum. At repair time, sub-claim B should be deleted rather than re-cited; sub-claim A can stand with its existing citation.",
-        "toxic_to_pets \u2014 verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/hypericum-calycinum/, https://www.rhs.org.uk/plants/8994/hypericum-calycinum/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279207&isprofile=0&basic=hypericum, https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/, https://fieldreport.caes.uga.edu/news/these-25-plants-are-toxic-to-pets/, https://ask.ifas.ufl.edu/publication/FP261); none found, so the value stays null. Audited live."
+        "RHS also notes Hypericum calycinum \"May be susceptible to a rust and honey fungus (rarely)\" and follows \"pruning group 8\" — pest/disease and pruning details outside this schema but potentially useful for care content.",
+        "name_note — removed on audit: name_note bundles two sub-claims. Sub-claim A ('Shares the common name St. John's Wort with the distinct species Hypericum perforatum, not covered by this record') is accurate and covered by a citation labeled 'name_note:' -- verified live: the NC State H. perforatum page lists common names 'Common St. John's-wort, Goatweed, Klamath Weed, St. Johns Wort', confirming the two species genuinely share a St. John's Wort-type name. This sub-claim is fine as written and cited. Sub-claim B ('RHS's own listing for this species uses the common name rose of Sharon rather than St. John's Wort') is WRONG/misleading and should be dropped, not re-cited. I fetched the live RHS page (https://www.rhs.org.uk/plants/8994/hypericum-calycinum/details) and its own JSON-LD structured data for this exact taxon reads: alternateName: [\"rose of Sharon\",\"Aaron's beard\",\"large-flowered St John's wort\",\"Resurrection plant\"]. RHS's own 'Other common names' list for Hypericum calycinum explicitly INCLUDES 'large-flowered St John's wort' -- so RHS does not use rose of Sharon 'rather than' St. John's Wort; it lists both. The citation's quote ('Hypericum calycinum | rose of Sharon') is verbatim from the page's <title> tag, but building an exclusivity claim ('rather than St. John's Wort') from just the title while ignoring the same page's own common-names list is a selective/misleading construction that changes the meaning (checklist item 3) and over-generalizes what the source actually says (checklist item 5). This also undercuts the note's overall framing: Missouri Botanical Garden's page for this exact species (already used elsewhere in this record) lists 'St. John's wort' as its PRIMARY common name ('Common Name: St. John's wort'), and NC State's own H. calycinum page also calls it 'creeping St. John's wort' in prose -- so 'St. John's Wort' is a well-established name for H. calycinum itself, not merely bleed-in from H. perforatum. At repair time, sub-claim B should be deleted rather than re-cited; sub-claim A can stand with its existing citation.",
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/hypericum-calycinum/, https://www.rhs.org.uk/plants/8994/hypericum-calycinum/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279207&isprofile=0&basic=hypericum, https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/, https://fieldreport.caes.uga.edu/news/these-25-plants-are-toxic-to-pets/, https://ask.ifas.ufl.edu/publication/FP261); none found, so the value stays null. Audited live.",
+        "is_edible is FALSE, not conditional: the NC State anchor page's Edibility field reads only \"Highly toxic if ingested,\" naming no edible part or preparation.",
+        "Toxicity detail from the same anchor page (not required in unknowns since is_edible is false, but decision-relevant): Poison Severity: High; Poison Symptoms: \"Can cause severe illness if ingested.\"; Poison Toxic Principle: \"Unidentified, possibly a glycoside\"; Causes Contact Dermatitis: Yes; Poison Part: Leaves, Stems.",
+        "Plant is a ground cover/shrub, not a climber (Whole Plant Traits: Plant Type: Ground Cover, Shrub), so the climber-size exclusion (rule 4) does not apply and all four size fields were populated normally.",
+        "Size and edibility/pollinator figures came from the NC State page for the species itself (Hypericum calycinum), not a cultivar and not the genus page, so no cultivar exclusion applies.",
+        "RHS (rhs.org.uk/plants/8994/hypericum-calycinum), NC State's hypericum-perforatum page, and plantfinder.mobot.org were not consulted for size/edibility/pollinator data because the NC State calycinum page is the correct species-level anchor and already supplied structured, unambiguous values for all six requested fields; plantfinder.mobot.org is also one of the hosts noted as likely to refuse this machine and was not tested.",
+        "Noted at landing: RHS (rhs.org.uk/plants/8994/hypericum-calycinum/details) gives larger sizes than NC State's anchor block -- 'Height is 60cm with a spread of 1.2m or more', Max Height 0.5-1 metres (19.7-39.4 in), Max Spread 1-1.5 metres (39.4-59.1 in) -- so the recorded 12-18 in by 18-24 in sits at the small end of the published sizes. NC State is kept under the anchor rule."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 18,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
@@ -834,6 +994,24 @@
           "quote": "Due to its preference for moist soils, Virginia sweetspire thrives in rain gardens, bioswales, and other areas prone to periodic flooding.",
           "source": "Clemson HGIC Factsheet - Virginia Sweetspire",
           "url": "https://hgic.clemson.edu/factsheet/virginia-sweetspire/"
+        },
+        {
+          "claim": "mature_height_in 48-96 (NC State Dimensions Height: 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Itea virginica",
+          "url": "https://plants.ces.ncsu.edu/plants/itea-virginica/",
+          "quote": "Height: 4 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Dimensions Width: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Itea virginica",
+          "url": "https://plants.ces.ncsu.edu/plants/itea-virginica/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: Flowers attract butterflies and other pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox — Itea virginica",
+          "url": "https://plants.ces.ncsu.edu/plants/itea-virginica/",
+          "quote": "Flowers attract butterflies and other pollinators."
         }
       ],
       "common_name": "Virginia Sweetspire",
@@ -874,14 +1052,28 @@
         "Fields oriented toward houseplant/potted-plant care metrics (chill_damage_f, cool_rest_note, day_f_min/max, night_f_min/max, humidity_need, humidity_pct_min/max, light_fc_min, light_fc_good, direct_sun_hours_max, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis, fertilize_interval_days, fertilize_active_months, fertilize_strength) were left null because the admissible extension/RHS sources describe this cold-hardy outdoor native shrub only in qualitative garden terms (USDA hardiness zones, sun/shade categories, general soil-moisture tolerance, 'avoid over fertilization') rather than the specific numeric potted-plant metrics the schema calls for; no admissible citation resolves any of these to a concrete value.",
         "Clemson's statement that best floral display needs 'at least 6 hours of sun' is a minimum threshold for optimal bloom, not a maximum sun-tolerance limit, so it was not used to populate direct_sun_hours_max.",
         "For reference (not mapped to a schema field): RHS rates the 'Henry's Garnet' cultivar as hardiness H5 ('hardy in most places throughout the UK even in severe winters (-15 to -10)'), grown in 'Partial shade,' a 'Sheltered' exposure, and 'Moist but well-drained' acid soil over Clay/Loam -- broadly consistent with the North American extension sources' picture of the species.",
-        "soil_drainage \u2014 removed on audit: Structurally the value 'moderate' is a valid token from the required enum {fast, moderate, moisture_retentive}, so it passes the strict-enum schema check. But the VALUE choice looks wrong against the weight of the record's own cited evidence. I fetched the live NC State page directly: its cultural-conditions soil-drainage tags for this species are 'Frequent Standing Water, Good Drainage, Moist, Occasionally Wet' -- the citation's claim text ('spans from Good Drainage to Occasionally Wet and Frequent Standing Water') is accurate, meaning NC State tags this species with the single wettest drainage category it offers. I also fetched the live Missouri Botanical Garden page (my first attempt returned a wrong, unrelated plant -- Hypericum calycinum -- because the redirected domain plantfinder.mobot.org silently served different/cached content to a bare curl request without a browser User-Agent; a second fetch with a normal UA confirmed the correct Itea virginica page) and its confirmed live text reads 'Easily grown in average, medium to wet, well-drained soil,' 'Water: Medium to wet,' 'Suggested Use: Rain Garden,' and 'Tolerate: ... Wet Soil.' Clemson (cited separately for water_regime, verified verbatim) recommends the plant specifically for 'rain gardens, bioswales, and other areas prone to periodic flooding.' Every admissible source's standout, repeatedly-emphasized site-siting characteristic is wet/poorly-drained ground -- not merely average garden drainage -- which maps more naturally onto 'moisture_retentive' than 'moderate' in a three-tier fast/moderate/moisture_retentive schema. 'Well-drained' does appear in the MoBot quote too (the plant is not a bog obligate), so this is a genuine judgment call rather than an open-and-shut error, but 'moderate' undersells the wet-tolerance that is the plant's defining landscape-use trait across all three sources, and I'd flag it for re-categorization."
+        "soil_drainage — removed on audit: Structurally the value 'moderate' is a valid token from the required enum {fast, moderate, moisture_retentive}, so it passes the strict-enum schema check. But the VALUE choice looks wrong against the weight of the record's own cited evidence. I fetched the live NC State page directly: its cultural-conditions soil-drainage tags for this species are 'Frequent Standing Water, Good Drainage, Moist, Occasionally Wet' -- the citation's claim text ('spans from Good Drainage to Occasionally Wet and Frequent Standing Water') is accurate, meaning NC State tags this species with the single wettest drainage category it offers. I also fetched the live Missouri Botanical Garden page (my first attempt returned a wrong, unrelated plant -- Hypericum calycinum -- because the redirected domain plantfinder.mobot.org silently served different/cached content to a bare curl request without a browser User-Agent; a second fetch with a normal UA confirmed the correct Itea virginica page) and its confirmed live text reads 'Easily grown in average, medium to wet, well-drained soil,' 'Water: Medium to wet,' 'Suggested Use: Rain Garden,' and 'Tolerate: ... Wet Soil.' Clemson (cited separately for water_regime, verified verbatim) recommends the plant specifically for 'rain gardens, bioswales, and other areas prone to periodic flooding.' Every admissible source's standout, repeatedly-emphasized site-siting characteristic is wet/poorly-drained ground -- not merely average garden drainage -- which maps more naturally onto 'moisture_retentive' than 'moderate' in a three-tier fast/moderate/moisture_retentive schema. 'Well-drained' does appear in the MoBot quote too (the plant is not a bog obligate), so this is a genuine judgment call rather than an open-and-shut error, but 'moderate' undersells the wet-tolerance that is the plant's defining landscape-use trait across all three sources, and I'd flag it for re-categorization.",
+        "Itea virginica is a shrub (NC State: Plant Type Shrub), not a vine/climber, so normal size-field handling applies (no size fields withheld for climber-ambiguity).",
+        "Searched the NC State anchor page for \"Poison\", \"Toxic\", and \"Problem\" before setting is_edible: 0 hits for Poison and Toxic; the only \"Problem\" hits were the structured \"Problems: Weedy\" field and the generic \"Particularly Resistant To (Insects/Diseases/Other Problems)\" section header, describing disease/pest resistance, not toxicity to humans or pets -- no poisonous-part, severity, toxic-principle, preparation, or pets warning was found on this page.",
+        "is_edible=true rests specifically on NC State's structured \"Play Value: Edible fruit\" tag (fruit only); no narrative sentence on the page elaborates on preparation, ripeness, or which part beyond \"fruit\" -- the fruit itself is elsewhere described as a small woody, pubescent capsule with tiny persistent seeds, so this is a thin, structured-field-only basis for edibility, not a detailed food-use statement.",
+        "hgic.clemson.edu (Clemson HGIC factsheet) refused this machine on every attempt (fetch status error:ProxyError, 0 bytes, including with the host explicitly allowlisted and with the sandbox disabled) -- could not be read for any field.",
+        "www.missouribotanicalgarden.org (Missouri Botanical Garden PlantFinder) refused this machine the same way (error:ProxyError, 0 bytes, including with the host allowlisted) -- could not be read for any field.",
+        "https://fieldreport.caes.uga.edu/wp-content/uploads/generated-pub-pdfs/B-625.pdf is a PDF; the qc.py/verify_quotes fetch path does not extract PDF text (status 'pdf', 0 bytes by design) -- skipped rather than guessed at its content; any quote from it could not be mechanically verified anyway.",
+        "www.rhs.org.uk/plants/9421/itea-virginica/details fetched successfully (ok, 141662 bytes) but the static HTML returned contains no rendered size, edibility, or pollinator content -- searched 'Max Height', 'Max Spread', 'Ultimate height', 'Height', 'Spread', 'pollinator', 'Edible', 'Poison', 'Toxic', 'bee', 'butterfl', 'hummingbird', 'Habit': all 0 hits (the page's Size/Attracts sections appear to be populated client-side and were not present in the fetched markup) -- no usable data obtained from RHS for this record.",
+        "UMD Extension (extension.umd.edu/resource/virginia-sweetspire) independently gives Height: 6 to 10 feet (72-120 in) and Wildlife: 'supports bumblebees, butterflies, and hummingbirds' -- consistent in direction with the NC State figures used here but not used for the recorded citations since NC State's structured Dimensions block already supplies both height and width from a single anchor source; noted here only as corroboration, not entered as a separate citation.",
+        "is_edible removed on audit at landing: its only support is NC State's 'Play Value: Edible fruit' and 'Fruit Value To Gardener: Edible' tags, the '#edible seeds' tag and an 'Edible Garden' theme. The same page describes the fruit as 'Woody capsules arranged in racemes' that 'are slim, pubescent, have tiny seeds', and says 'Seeds are eaten by songbirds.' No page says any part is eaten by people, which rule 6 requires; this is the same evidence the audit ruled insufficient for Summersweet (Clethra alnifolia) in this chunk. The researcher's own note above calls it 'a thin, structured-field-only basis for edibility'."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Summersweet",
@@ -930,8 +1122,17 @@
         "soil_ph_min/soil_ph_max (4.5-6.5) come from UMD Extension's explicit numeric range. NC State's own page only gives qualitative pH bands ('Acid (<6.0)' and 'Neutral (6.0-8.0)'), which don't resolve cleanly to a single numeric range, so that source was not used for the numeric pH fields.",
         "soil_drainage is set to moderate because NC State's own drainage tags for this plant span from 'Good Drainage' through 'Occasionally Wet'. Other admissible sources describe a stronger, more constant moisture preference (Missouri Botanical Garden: soils 'should not be allowed to dry out'; UMD: 'moist to wet soil' with tolerance for periodic flooding), so moisture_retentive is also a defensible reading -- flagging the tension since the sources lean somewhat differently.",
         "is_houseplant is set to false by inference from USDA hardiness zone (3a-9b) and cold-hardiness (dormant to about -22 degrees F) plus in-ground planting-hole and landscape-use guidance across every admissible source -- no source explicitly states 'not grown as a houseplant.'",
-        "name_note \u2014 removed on audit: name_note bundles two sub-claims and they get different verdicts. Sub-claim 1, 'Also listed under the older synonym Clethra tomentosa,' is accurately covered by citation 3: I fetched the live NC State page and it literally reads 'Previously known as: Clethra tomentosa' -- clean match, no issue. Sub-claim 2, 'often confused in identification with the related species Clethra acuminata and with Kalmia latifolia (mountain laurel),' is FACTUALLY TRUE -- the live page's raw HTML reads verbatim 'Clethra alnifolia is often confused with: Clethra acuminata Kalmia latifolia' -- but the citation offered for it (citation 4) uses the quote 'is often confused with:', which is truncated exactly at the colon, immediately before the two species names that are the entire substance of the claim. As shipped, that quote does not verbatim substantiate which species the plant is confused with; a reader checking the citation gets no confirmation that Clethra acuminata or Kalmia latifolia specifically are meant. This is a selective truncation that removes the load-bearing content of the quote, per the audit's citation-fabrication check, even though independent verification confirms the underlying assertion is correct. Repair: extend citation 4's quote to 'is often confused with: Clethra acuminata Kalmia latifolia' (or split into two citations, one per confused species) rather than dropping the sub-claim, since the content itself is true. No sub-claim in name_note is actually wrong/invented.",
-        "soil_drainage \u2014 removed on audit: Strict-enum check: 'moderate' is a syntactically valid token (fast, moderate, moisture_retentive) -- passes structurally. But the VALUE is in genuine doubt. NC State's own drainage tags for this species, verified on the live page, are actually 'Good Drainage, Moist, Occasionally Dry, Occasionally Wet' (the record's unknowns note cites only the two endpoints, omitting 'Moist' and 'Occasionally Dry'). Weighed against this ambiguous tag set are three independent, more descriptive sources all pointing the same direction: NC State's own prose ('prefers moist, sometimes wet, acidic soil... tolerates short periods of drought and flooding once established'), Missouri Botanical Garden ('Soils should not be allowed to dry out'; native habitat description 'swampy woodlands, wet marshes, stream banks and seashores'; overview stat 'Water: Medium to wet'), and UMD Extension ('moist to wet soil'). None of the admissible sources describe this plant with language like 'well-drained' or 'average garden soil' that would typically map to 'moderate.' The record's own water_regime field already committed to the wettest-leaning enum option, keep_moist, and water_dry_down_target says 'Do not let soil dry out; keep consistently moist to sometimes-wet' -- pairing that with 'moderate' soil drainage is internally inconsistent. The record's unknowns section itself flags this tension and concedes moisture_retentive is 'also a defensible reading,' but ships the weaker-supported value. Given the preponderance of qualitative evidence, moisture_retentive is the better-supported enum value; soil_drainage as shipped is refuted."
+        "name_note — removed on audit: name_note bundles two sub-claims and they get different verdicts. Sub-claim 1, 'Also listed under the older synonym Clethra tomentosa,' is accurately covered by citation 3: I fetched the live NC State page and it literally reads 'Previously known as: Clethra tomentosa' -- clean match, no issue. Sub-claim 2, 'often confused in identification with the related species Clethra acuminata and with Kalmia latifolia (mountain laurel),' is FACTUALLY TRUE -- the live page's raw HTML reads verbatim 'Clethra alnifolia is often confused with: Clethra acuminata Kalmia latifolia' -- but the citation offered for it (citation 4) uses the quote 'is often confused with:', which is truncated exactly at the colon, immediately before the two species names that are the entire substance of the claim. As shipped, that quote does not verbatim substantiate which species the plant is confused with; a reader checking the citation gets no confirmation that Clethra acuminata or Kalmia latifolia specifically are meant. This is a selective truncation that removes the load-bearing content of the quote, per the audit's citation-fabrication check, even though independent verification confirms the underlying assertion is correct. Repair: extend citation 4's quote to 'is often confused with: Clethra acuminata Kalmia latifolia' (or split into two citations, one per confused species) rather than dropping the sub-claim, since the content itself is true. No sub-claim in name_note is actually wrong/invented.",
+        "soil_drainage — removed on audit: Strict-enum check: 'moderate' is a syntactically valid token (fast, moderate, moisture_retentive) -- passes structurally. But the VALUE is in genuine doubt. NC State's own drainage tags for this species, verified on the live page, are actually 'Good Drainage, Moist, Occasionally Dry, Occasionally Wet' (the record's unknowns note cites only the two endpoints, omitting 'Moist' and 'Occasionally Dry'). Weighed against this ambiguous tag set are three independent, more descriptive sources all pointing the same direction: NC State's own prose ('prefers moist, sometimes wet, acidic soil... tolerates short periods of drought and flooding once established'), Missouri Botanical Garden ('Soils should not be allowed to dry out'; native habitat description 'swampy woodlands, wet marshes, stream banks and seashores'; overview stat 'Water: Medium to wet'), and UMD Extension ('moist to wet soil'). None of the admissible sources describe this plant with language like 'well-drained' or 'average garden soil' that would typically map to 'moderate.' The record's own water_regime field already committed to the wettest-leaning enum option, keep_moist, and water_dry_down_target says 'Do not let soil dry out; keep consistently moist to sometimes-wet' -- pairing that with 'moderate' soil drainage is internally inconsistent. The record's unknowns section itself flags this tension and concedes moisture_retentive is 'also a defensible reading,' but ships the weaker-supported value. Given the preponderance of qualitative evidence, moisture_retentive is the better-supported enum value; soil_drainage as shipped is refuted.",
+        "Species is an upright deciduous shrub, not a climber, per all four sources (NC State: 'shrub'; Clemson: 'native, deciduous upright shrub'; UMD: 'Deciduous shrub') -- Rule 4 (climber = no size) does not apply.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', 'Problem for', and 'caution': all returned zero hits. No toxicity, poisonous part, severity, preparation requirement, or pets warning was found on the anchor page, so none is added to unknowns per Rule 5 (nothing was found to report).",
+        "is_edible is based on NC State's structured Play Value field listing 'Edible fruit' (also reflected in the page's tag list as '#edible fruits'); the page gives no further detail on which part, preparation, or degree of edibility -- the designation is unconditional and unqualified on this page, so it was not marked conditional.",
+        "Fruit is described elsewhere on the NC State page as a dry, dehiscent, pubescent capsule primarily noted as a winter-interest and bird-food feature ('Wildlife Value: ... Fruits are eaten by birds and small mammals'), which is a separate statement from the Play Value 'Edible fruit' tag used for the is_edible citation; both appear on the same anchor page.",
+        "Clemson (hgic.clemson.edu) gives species-level size as 'grows between 4 and 8 feet tall' (general) and 'typically grow from 5 to 8 feet tall and 4 to 6 feet wide' -- broadly consistent with but not identical to the NC State anchor figures used (60-120 in height, 48-72 in spread); NC State was used per the anchor rule and Clemson's figures were not merged in.",
+        "UMD (extension.umd.edu) gives a structured 'Height: 6-12’' field for the species overall (with 'dwarf cultivars are 2-4’' called out separately) and does not give a species-level width figure at all -- not used, since NC State is the designated anchor and has both height and width.",
+        "Clemson (hgic.clemson.edu) and UMD (extension.umd.edu) do not state anything about human edibility of the plant or its fruit (no hits for 'edible'/'Edible' on either page); they were not used to support or contradict is_edible.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (ProxyError/sandbox network denial) and could not be read at all; no data from it is reflected in this record.",
+        "is_edible removed on audit: The only support is a bare 'Edible fruit' entry in NC State's Play Value list, which also shows up as the '#edible fruits' tag. The quote is on the page, but rule 6 needs a page to say the plant or a named part is grown or used for food, and no page does. The same NC State page describes the fruit as a 'Dry, 3-valved, dehiscent, pubescent, 1/8 inch diameter capsule' that provides 'seed to birds during the winter'. Its Wildlife Value text says 'Fruits are eaten by birds and small mammals.' Clemson ('dark brown seed capsules will attract birds') and UMD ('songbirds eat the seeds') treat the fruit only as wildlife food and never mention people eating it. A lone tag that the page's own fruit description contradicts is not a statement that the fruit is used for food. Recording true would tell users that a dry seed capsule is human food, so this should be null. On F: no page names a toxic part (0 hits for poison or toxic on NC State, Clemson and UMD), so the refutation rests on rule 6 and not on a missing safety condition. MoBot could not be read (ProxyError)."
       ],
       "citations": [
         {
@@ -1017,8 +1218,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/clethra-alnifolia/",
           "quote": "It prefers moist, sometimes wet, acidic soil with organic material and tolerates short periods of drought and flooding once established."
+        },
+        {
+          "claim": "mature_height_in 60-120 (NC State Dimensions Height: 5 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Clethra alnifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/clethra-alnifolia/",
+          "quote": "Height: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-72 (NC State Dimensions Width: 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Clethra alnifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/clethra-alnifolia/",
+          "quote": "Width: 4 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true: the flowers support pollinators",
+          "source": "NC State Extension Gardener Plant Toolbox - Clethra alnifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/clethra-alnifolia/",
+          "quote": "The flowers produce high-quality nectar and pollen that support hummingbirds, butterflies, bees and other pollinators."
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 72
     },
     {
       "chill_damage_f": null,
@@ -1026,110 +1250,128 @@
         {
           "claim": "NC State Extension's common_name listing for this species gives Dwarf Fothergilla alongside Coastal Witch-alder",
           "quote": "(Coastal Witch-alder, Dwarf Fothergilla)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "UF/IFAS FP214 states the scientific_name_accepted for dwarf fothergilla is Fothergilla gardenii",
           "quote": "Scientific name: Fothergilla gardenii",
-          "source": "UF/IFAS EDIS FP214 \u2014 Fothergilla gardenii Dwarf Fothergilla",
+          "source": "UF/IFAS EDIS FP214 — Fothergilla gardenii Dwarf Fothergilla",
           "url": "https://ask.ifas.ufl.edu/publication/fp214"
         },
         {
           "claim": "name_note: NC State Extension co-lists Coastal Witch-alder as a common name for Fothergilla gardenii",
           "quote": "(Coastal Witch-alder, Dwarf Fothergilla)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "name_note: NC State Extension explains the genus honors John Fothergill and the species epithet honors Alexander Garden",
           "quote": "The shrub is named for John Fothergill, British physician and botanist who died in 1780. The specific name honors Alexander Garden (1730-1791), a Scottish physician and plant enthusiast who lived in South Carolina and introduced the plant to England.",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "UF/IFAS's landscape-use description supports is_houseplant = false, describing dwarf fothergilla as sized for the residential landscape",
           "quote": "The moderately small size makes this appropriate for planting in a residential landscape.",
-          "source": "UF/IFAS EDIS FP214 \u2014 Fothergilla gardenii Dwarf Fothergilla",
+          "source": "UF/IFAS EDIS FP214 — Fothergilla gardenii Dwarf Fothergilla",
           "url": "https://ask.ifas.ufl.edu/publication/fp214"
         },
         {
           "claim": "NC State's Light tags for outdoor_sun_exposure list Full sun as a tolerated condition",
           "quote": "Full sun (6 or more hours of direct sunlight a day)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "NC State's Light tags for outdoor_sun_exposure list Partial Shade, mapped to this catalog's part_shade value",
           "quote": "Partial Shade (Direct sunlight only part of the day, 2-6 hours)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "NC State's Dappled Sunlight tag also feeds outdoor_sun_exposure's part_shade value per this catalog's established convention",
           "quote": "Dappled Sunlight (Shade through upper canopy all day)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "Clemson HGIC's soil_base guidance treats dwarf fothergilla as an in-ground garden_bed landscape planting",
           "quote": "Amending large landscape beds with organic matter is always better than simply amending a planting hole.",
-          "source": "Clemson HGIC Factsheet \u2014 Fothergilla",
+          "source": "Clemson HGIC Factsheet — Fothergilla",
           "url": "https://hgic.clemson.edu/factsheet/fothergilla/"
         },
         {
           "claim": "NC State's soil_drainage tags include Good Drainage as a tolerated condition",
           "quote": "Good Drainage",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "NC State's soil_drainage tags also include Occasionally Wet, spanning into moisture_retentive drainage territory per this catalog's enum definition",
           "quote": "Occasionally Wet",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "NC State's soil_ph_max tag specifies acid soil below pH 6.0",
           "quote": "Acid (<6.0)",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "NC State's description supports a water_regime of consistently moist soil",
           "quote": "It grows best in rich moist, slightly acidic, organically rich, well-drained soils in full sun to partial or dappled shade.",
-          "source": "NC State Extension Gardener Plant Toolbox \u2014 Fothergilla gardenii",
+          "source": "NC State Extension Gardener Plant Toolbox — Fothergilla gardenii",
           "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/"
         },
         {
           "claim": "UF/IFAS's water_regime guidance warns the plant suffers without consistent soil moisture",
           "quote": "Plants suffer in extended drought, especially in full sun. An acidic clayey soil that holds moisture and drains well is ideal.",
-          "source": "UF/IFAS EDIS FP214 \u2014 Fothergilla gardenii Dwarf Fothergilla",
+          "source": "UF/IFAS EDIS FP214 — Fothergilla gardenii Dwarf Fothergilla",
           "url": "https://ask.ifas.ufl.edu/publication/fp214"
         },
         {
           "claim": "Clemson's guidance for hot-summer full-sun plantings supports a water_growing_days_est of roughly weekly irrigation",
           "quote": "without weekly irrigation in the heat of South Carolina summers, fothergilla may perform better in part-shade",
-          "source": "Clemson HGIC Factsheet \u2014 Fothergilla",
+          "source": "Clemson HGIC Factsheet — Fothergilla",
           "url": "https://hgic.clemson.edu/factsheet/fothergilla/"
         },
         {
           "claim": "The water_estimate_basis for the growing-season figure is Clemson's South Carolina hot-summer irrigation guidance for full-sun plantings",
           "quote": "without weekly irrigation in the heat of South Carolina summers, fothergilla may perform better in part-shade",
-          "source": "Clemson HGIC Factsheet \u2014 Fothergilla",
+          "source": "Clemson HGIC Factsheet — Fothergilla",
           "url": "https://hgic.clemson.edu/factsheet/fothergilla/"
         },
         {
           "claim": "Clemson's fertilize_interval_days guidance spaces two spring applications about six weeks apart",
           "quote": "fertilize twice during the spring, such as on April 1st and again in mid-May to cover the main spring growing period",
-          "source": "Clemson HGIC Factsheet \u2014 Fothergilla",
+          "source": "Clemson HGIC Factsheet — Fothergilla",
           "url": "https://hgic.clemson.edu/factsheet/fothergilla/"
         },
         {
           "claim": "Clemson's fertilize_active_months guidance covers April and May applications",
           "quote": "fertilize twice during the spring, such as on April 1st and again in mid-May to cover the main spring growing period",
-          "source": "Clemson HGIC Factsheet \u2014 Fothergilla",
+          "source": "Clemson HGIC Factsheet — Fothergilla",
           "url": "https://hgic.clemson.edu/factsheet/fothergilla/"
+        },
+        {
+          "claim": "mature_height_in 18-36 (NC State Height: 1 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Fothergilla gardenii",
+          "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/",
+          "quote": "Height: 1 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-48 (NC State Width: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Fothergilla gardenii",
+          "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/",
+          "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value states bees and other pollinators nectar at the flowers)",
+          "source": "NC State Extension Gardener Plant Toolbox - Fothergilla gardenii",
+          "url": "https://plants.ces.ncsu.edu/plants/fothergilla-gardenii/",
+          "quote": "Bees nectar at these flowers, as do other pollinators."
         }
       ],
       "common_name": "Dwarf Fothergilla",
@@ -1176,15 +1418,25 @@
         "fertilize_strength is left null: Clemson's fertilizer guidance only gives granular/slow-release product NPK ratios (e.g., Espoma Holly-Tone 4-3-4, Fertrell Holly Care 4-6-4) and application timing, not a liquid-feed dilution fraction, which this schema explicitly excludes from fertilize_strength.",
         "water_growing_days_est (7 days) is a soft estimate inferred from Clemson's conditional statement that full-sun plantings need weekly irrigation in hot South Carolina summers or perform better sited in part-shade instead -- not a direct blanket watering-schedule instruction -- and no admissible source gives a dormant-season watering interval, hence water_dormant_days_est is null.",
         "Hardiness-zone figures differ slightly by source (NC State and UF/IFAS: zones 5-8A/8B; Penn State: zones 5-9), which isn't a schema field here but is worth noting for anyone cross-checking cold tolerance.",
-        "fertilize_interval_days \u2014 removed on audit: Value 44 is a computed/invented number that never appears in the cited source. The Clemson quote is 'fertilize twice during the spring, such as on April 1st and again in mid-May to cover the main spring growing period' -- it contains no digit '44', and the record's own claim label ('about six weeks apart') introduces yet another number ('six') that also never appears in the quote; neither figure is literally traceable to the source text. Deriving 44 requires assuming 'mid-May' means specifically May 15th, an unstated precision. This is a clear violation of this catalog's own repeatedly-enforced 'literal-number-derivation' standard: 'every number in a claim label must be literally traceable to the quote' (explicitly stated when a near-identical violation was caught and removed for Petunia's fertilize_interval_days=30 derived from 'monthly' in b14-annual-flowers2.json), and the standard has been applied specifically to reject computing a day-interval from multiple named calendar dates before (Leek's four sidedress dates in b10-veg-round3.json: 'no single day-interval number is supportable without inventing an average the source doesn't state'), as well as to reject converting word-based intervals like 'six-week'/'monthly'/'fortnightly' into day counts without a literal digit (b20-common-ornamentals.json, b24-trees-and-more.json, b25-more-trees-shrubs.json, b35-ginkgo-and-more.json all independently restate this same rule). By the catalog's own standard, fertilize_interval_days should have been left null here, not set to 44.",
-        "soil_drainage \u2014 removed on audit: Value is 'moderate', a structurally valid enum token, but it is the WRONG value per this catalog's own established precedent. Live-fetch of the NC State page confirms its full Soil Drainage tag set for this exact species is 'Good Drainage', 'Occasional Flooding', 'Occasionally Wet' -- the record's citations quote only 'Good Drainage' and 'Occasionally Wet', silently omitting 'Occasional Flooding' and never mentioning it at all. Critically, there is no 'Occasionally Dry' tag present. I checked prior verified batches: this catalog has an explicit, repeatedly-applied rule that 'moderate' is reserved for NC State combinations that pair 'Good Drainage' with BOTH 'Occasionally Dry' AND 'Occasionally Wet' (documented examples: Common Morning Glory, Crape Myrtle, Golden Bamboo), while a 'Good Drainage'+'Moist'/'Occasionally Wet' combination lacking 'Occasionally Dry' is mapped to 'moisture_retentive' (Jack-in-the-Pulpit in b22-aroid-genus-gaps.json uses the identical NC State quote pattern and is correctly moisture_retentive; a prior audit explicitly caught and reverted Camellia in app/data/verified/b25-more-trees-shrubs.json for making this exact same 'moderate' mistake on the exact same tag pattern). Independently, UF/IFAS FP214 (already cited elsewhere in this same record) states in the same paragraph as the water_regime citation: 'Fothergilla can be grown in any soil except those that are excessively drained... An acidic clayey soil that holds moisture and drains well is ideal' -- explicitly ruling out fast/excessive drainage and favoring moisture retention, not a 'both extremes tolerated' middle category. The value should be 'moisture_retentive', not 'moderate'."
+        "fertilize_interval_days — removed on audit: Value 44 is a computed/invented number that never appears in the cited source. The Clemson quote is 'fertilize twice during the spring, such as on April 1st and again in mid-May to cover the main spring growing period' -- it contains no digit '44', and the record's own claim label ('about six weeks apart') introduces yet another number ('six') that also never appears in the quote; neither figure is literally traceable to the source text. Deriving 44 requires assuming 'mid-May' means specifically May 15th, an unstated precision. This is a clear violation of this catalog's own repeatedly-enforced 'literal-number-derivation' standard: 'every number in a claim label must be literally traceable to the quote' (explicitly stated when a near-identical violation was caught and removed for Petunia's fertilize_interval_days=30 derived from 'monthly' in b14-annual-flowers2.json), and the standard has been applied specifically to reject computing a day-interval from multiple named calendar dates before (Leek's four sidedress dates in b10-veg-round3.json: 'no single day-interval number is supportable without inventing an average the source doesn't state'), as well as to reject converting word-based intervals like 'six-week'/'monthly'/'fortnightly' into day counts without a literal digit (b20-common-ornamentals.json, b24-trees-and-more.json, b25-more-trees-shrubs.json, b35-ginkgo-and-more.json all independently restate this same rule). By the catalog's own standard, fertilize_interval_days should have been left null here, not set to 44.",
+        "soil_drainage — removed on audit: Value is 'moderate', a structurally valid enum token, but it is the WRONG value per this catalog's own established precedent. Live-fetch of the NC State page confirms its full Soil Drainage tag set for this exact species is 'Good Drainage', 'Occasional Flooding', 'Occasionally Wet' -- the record's citations quote only 'Good Drainage' and 'Occasionally Wet', silently omitting 'Occasional Flooding' and never mentioning it at all. Critically, there is no 'Occasionally Dry' tag present. I checked prior verified batches: this catalog has an explicit, repeatedly-applied rule that 'moderate' is reserved for NC State combinations that pair 'Good Drainage' with BOTH 'Occasionally Dry' AND 'Occasionally Wet' (documented examples: Common Morning Glory, Crape Myrtle, Golden Bamboo), while a 'Good Drainage'+'Moist'/'Occasionally Wet' combination lacking 'Occasionally Dry' is mapped to 'moisture_retentive' (Jack-in-the-Pulpit in b22-aroid-genus-gaps.json uses the identical NC State quote pattern and is correctly moisture_retentive; a prior audit explicitly caught and reverted Camellia in app/data/verified/b25-more-trees-shrubs.json for making this exact same 'moderate' mistake on the exact same tag pattern). Independently, UF/IFAS FP214 (already cited elsewhere in this same record) states in the same paragraph as the water_regime citation: 'Fothergilla can be grown in any soil except those that are excessively drained... An acidic clayey soil that holds moisture and drains well is ideal' -- explicitly ruling out fast/excessive drainage and favoring moisture retention, not a 'both extremes tolerated' middle category. The value should be 'moisture_retentive', not 'moderate'.",
+        "is_edible left null: neither the NC State page nor the two Extension pages (see below) addressed eating this plant; no Edible/Poison/Toxic/Problem-for text appears on the NC State page at all.",
+        "ask.ifas.ufl.edu/publication/fp214 was readable (corrected at landing: it did not refuse this machine) but was not cited. Its Fothergilla gardenii species page gives 'Height: 4 to 6 feet' and 'Spread: 4 to 6 feet' (48-72 in each way) and has no edibility, pollinator or toxicity text. With NC State's own prose ('a height of 3 to 6 feet and a width of 2 to 6 feet'), that makes the NC State Dimensions block used here (18-36 in by 24-48 in) the low outlier of three published sizes. It is kept under the anchor rule; the conflict is recorded here.",
+        "hgic.clemson.edu/factsheet/fothergilla/ refused this machine (network/proxy error, non-ok fetch status) -- not read, contents unknown.",
+        "NC State's free-text plant description states 'a height of 3 to 6 feet and a width of 2 to 6 feet,' which conflicts with the page's own structured Dimensions block ('Height: 1 ft. 6 in. - 3 ft. 0 in.' / 'Width: 2 ft. 0 in. - 4 ft. 0 in.'); the structured Dimensions block was used as the authoritative figure per the anchor-page convention, giving height 18-36 in and spread 24-48 in rather than 36-72 in / 24-72 in.",
+        "Fothergilla gardenii is a shrub, not a climber, so all four size fields were populated normally (the climber exclusion does not apply)."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": "Weekly interval inferred from Clemson HGIC's conditional guidance that full-sun South Carolina plantings need weekly irrigation in hot summers or else perform better sited in part-shade instead; treated as a growing-season estimate only, not a confirmed universal schedule, and no admissible source gives a dormant-season figure.",
       "water_growing_days_est": 7,
-      "water_regime": "keep_moist"
+      "water_regime": "keep_moist",
+      "attracts_pollinators": true,
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 48
     }
   ],
   "audit_summary": [
@@ -1223,6 +1475,7 @@
   ],
   "normalizations": [
     "2026-08-23: twenty-first batch of the \"blind spots\" pass -- Cherry Laurel, a deliberate Cotoneaster/Firethorn identification-confusion companion pair (Rockspray Cotoneaster and Firethorn are visually similar thorny berry shrubs in different genera; no content bleed found), Red-twig Dogwood (deliberately paired against the tree-form Flowering and Kousa Dogwoods already in this catalog), St. John's Wort, Virginia Sweetspire, Summersweet, and Dwarf Fothergilla. Cherry Laurel's toxic_to_pets=true rests on NC State's explicit '#problem for cats #problem for dogs' tags -- clean, no repeat of the b31/b32 non-cat/dog-scope defect despite this species' well-known cyanogenic toxicity inviting an easy over-generalization from its equally-tagged '#problem for horses'. Caught a serious defect this batch's own in-workflow audit found but the post-processing script mishandled: Red-twig Dogwood's common_name was nulled by the audit (correctly -- neither of its two citations actually established 'Red-twig Dogwood' as belonging specifically to Cornus alba rather than its sibling species C. sericea/stolonifera) but the batch script has no special handling for common_name, a required, non-nullable field -- restored using the audit's own conclusion that 'Tatarian Dogwood' is the better-supported name (the one both single-species sources, NC State and MOBOT, actually lead with), with a corrected citation set. This surfaces a script-level gap worth fixing in a future batch: common_name should never be eligible for the generic refute-and-null path. Six more repairs, all using the auditor's own live-fetched, verbatim-quoted evidence: Cherry Laurel's, Firethorn's, and St. John's Wort's name_notes were each trimmed to their one or two individually-cited, accurate sub-claims after the audit found an additional bundled sub-claim that was either uncited researcher synthesis (Firethorn's genus-reclassification narrative) or outright misleading (St. John's Wort's claim that RHS uses 'rose of Sharon' 'rather than' St. John's Wort, when RHS's own full common-names list includes both); Rockspray Cotoneaster's name_note was restored in full with a new Missouri Botanical Garden citation covering its one previously-uncited sub-claim (the 'wall cotoneaster' page title, independently confirmed by MOBOT's own common-names list); Summersweet's name_note was restored by widening a citation's quote that had been truncated exactly before its load-bearing content (the species names it's confused with). Separately, three soil_drainage values -- Virginia Sweetspire, Summersweet, and Dwarf Fothergilla -- were corrected from 'moderate' to 'moisture_retentive' after the audit identified and cited a specific, previously-undocumented refinement to this catalog's existing drainage-mapping convention: 'moderate' is reserved for a source's tags spanning BOTH 'Occasionally Dry' AND 'Occasionally Wet' alongside 'Good Drainage' (precedent: Common Morning Glory, Crape Myrtle, Golden Bamboo), while a combination with 'Moist'/'Occasionally Wet' but no 'Occasionally Dry' tag maps to 'moisture_retentive' instead (precedent: Jack-in-the-Pulpit correctly moisture_retentive; Camellia in b25 previously caught and reverted for this exact mistake) -- all three of this batch's corrected species matched the moisture_retentive pattern exactly, further corroborated in each case by multiple independent sources emphasizing wet-tolerance with no 'well-drained'/'average soil' language. Dwarf Fothergilla's fertilize_interval_days=44 was correctly left null by the audit as an invented number computed from two named calendar dates ('April 1st' and 'mid-May') that appear nowhere in the source as a literal day count -- a violation of this catalog's own repeatedly-enforced literal-number-derivation standard, consistent with precedent going back to b10's Leek and b14's Petunia.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- St. John's Wort -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- St. John's Wort -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

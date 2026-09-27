@@ -54,7 +54,12 @@
         "water_dormant_days_est / water_check_depth_cm: left null. RHS says 'Water sparingly in winter' and MoBot 'reduced watering' for overwintered containers, but no source gives a dormant-season day interval or a soil-probe depth.",
         "fertilize_interval_days / fertilize_strength: left null. RHS's 'balanced liquid fertiliser monthly' is a word-based cadence with no dilution strength; UGA's schedule is 'three times a year (early spring, late spring and summer)' -- season names only -- at a per-foot-of-height rate ('1 ounce of 10-10-10 per foot of bush height'), and Clemson's is a per-height rate ('1 lb. (one pound) 10-10-10 per 3 ft. of plant height'), neither of which is a dilution fraction. fertilize_active_months [3, 7] comes from Clemson's literal 'Fertilize in March and July'. UGA cautions that 'excessive nitrogen in the late summer to early fall' hurts fruit color and size and 'may also increase the susceptibility of the tree to early chilling temperatures'; UF/IFAS says over-fertilization aggravates fruit drop.",
         "is_houseplant false applies to the species: MoBot says 'Species plants generally do not perform well as indoor plants', but that the dwarf 'Nana' 'may perform well in a sunny window' and 'is considered to be a much better alternative for indoor use'. Indoor use in the sources is otherwise winter protection only: NC State suggests 'a container that can be brought indoors for the winter' and MoBot says 'Where not winter hardy, grow in containers which are overwintered indoors.' RHS lists it under Conservatory Greenhouse and gives under-glass culture.",
-        "Fruit-set notes (decision-relevant, no schema field): UGA says 'Pomegranates are self-fruitful', but Clemson recommends 'Plant two or more pomegranate plants, as cross-pollination increases fruit set.' Clemson lists inadequate sunlight, lack of pollination, and over-pruning or cold damage as the usual reasons for no fruit; plants flower on new growth, and heavy pruning reduces fruiting. MoBot says species plants 'will not produce any fruit' in climates like St. Louis; NC State and Clemson say fruiting is unreliable in the humid Southeast. Double-flowered ornamental cultivars produce few or no fruit (Clemson)."
+        "Fruit-set notes (decision-relevant, no schema field): UGA says 'Pomegranates are self-fruitful', but Clemson recommends 'Plant two or more pomegranate plants, as cross-pollination increases fruit set.' Clemson lists inadequate sunlight, lack of pollination, and over-pruning or cold damage as the usual reasons for no fruit; plants flower on new growth, and heavy pruning reduces fruiting. MoBot says species plants 'will not produce any fruit' in climates like St. Louis; NC State and Clemson say fruiting is unreliable in the humid Southeast. Double-flowered ornamental cultivars produce few or no fruit (Clemson).",
+        "NC State's Plant Toolbox page for Punica granatum (the species page, not a genus page) is the anchor and fully resolved all six fields, so RHS, Missouri Botanical Garden, Clemson HGIC, and the UGA/UF pages were not fetched for this pass.",
+        "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: 0 hits for all three. No toxic part, severity, preparation requirement, or pets warning is named on the page, so is_edible=true carries no toxicity caveat.",
+        "Searched for 'climb', 'vine', and 'liana' on the anchor page: 0 hits. Punica granatum is listed as a shrub/tree, not a climber, so the size-field-nulling rule for climbers does not apply.",
+        "The Dimensions block (Height 10-12 ft, Width 8-10 ft) is given at the species level, separate from the page's Cultivars/Varieties list (which separately notes 'Nana' as a dwarf cultivar reaching 3 ft) -- the species-level figures, not the cultivar figure, were used.",
+        "Attracts_pollinators is supported only by the structured 'Attracts: Hummingbirds' field; the page has no bee/butterfly/moth mention (0 hits for 'bee' and \"butterfl\"), but hummingbirds alone are sufficient per the rule that names hummingbirds as a qualifying pollinator category."
       ],
       "citations": [
         {
@@ -386,8 +391,38 @@
           "quote": "Plant two or more pomegranate plants, as cross-pollination increases fruit set.",
           "source": "Clemson HGIC 1359: Pomegranate (Punica granatum): How to Grow, Care for, and Enjoy in South Carolina",
           "url": "https://hgic.clemson.edu/factsheet/pomegranate/"
+        },
+        {
+          "claim": "mature_height_in 120-144 (NC State Height 10 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Punica granatum (Pomegranate)",
+          "url": "https://plants.ces.ncsu.edu/plants/punica-granatum/",
+          "quote": "Height: 10 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 96-120 (NC State Width 8 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Punica granatum (Pomegranate)",
+          "url": "https://plants.ces.ncsu.edu/plants/punica-granatum/",
+          "quote": "Width: 8 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true (NC State describes the species as having edible fruit)",
+          "source": "NC State Extension Gardener Plant Toolbox: Punica granatum (Pomegranate)",
+          "url": "https://plants.ces.ncsu.edu/plants/punica-granatum/",
+          "quote": "Pomegranate is a woody, deciduous, perennial shrub or tree with edible fruit in the henna family (Lythraceae)."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field names Hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox: Punica granatum (Pomegranate)",
+          "url": "https://plants.ces.ncsu.edu/plants/punica-granatum/",
+          "quote": "Hummingbirds"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 96,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Common Olive",
@@ -671,7 +706,12 @@
         "Pests and diseases: UGA says root-knot nematodes are widespread and very destructive to kiwifruit, and warns against peanut hulls or peanut straw as mulch because peanut litter carries a destructive root disease; RHS lists honey fungus and Phytophthora root rot as possible problems. Otherwise NC State and Missouri Botanical Garden report no serious insect or disease problems.",
         "No admissible source gives numeric day/night temperatures, humidity, foot-candle light levels, a maximum direct-sun figure, or a chill-hour requirement, so those fields are null. NC State's 'Full sun (6 or more hours of direct sunlight a day)' is a minimum, not a maximum.",
         "Source coverage: Clemson HGIC has only a photo Q&A (noting several extremely cold-hardy varieties exist and fruit in SC most years); UF/IFAS Ask IFAS/EDIS has no kiwi-growing publication (only nutrition and pest tables); UMD Extension covers hardy kiwi (Actinidia arguta) and mentions A. deliciosa only as the supermarket fruit. Nothing from those domains was usable for care fields.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/, https://www.rhs.org.uk/plants/96689/actinidia-deliciosa/details, https://www.rhs.org.uk/plants/96689/actinidia-deliciosa-1/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=275437, https://hgic.clemson.edu/, https://edis.ifas.ufl.edu/, https://ask.ifas.ufl.edu/, https://extension.psu.edu/programs/master-gardener/counties/adams/news/hardy-kiwi-for-hearty-climes, https://extension.umd.edu/resource/less-common-fruits-home-garden, https://fieldreport.caes.uga.edu/publications/B992/minor-fruits-and-nuts-in-georgia/); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/, https://www.rhs.org.uk/plants/96689/actinidia-deliciosa/details, https://www.rhs.org.uk/plants/96689/actinidia-deliciosa-1/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=275437, https://hgic.clemson.edu/, https://edis.ifas.ufl.edu/, https://ask.ifas.ufl.edu/, https://extension.psu.edu/programs/master-gardener/counties/adams/news/hardy-kiwi-for-hearty-climes, https://extension.umd.edu/resource/less-common-fruits-home-garden, https://fieldreport.caes.uga.edu/publications/B992/minor-fruits-and-nuts-in-georgia/); none found, so the value stays null. Audited live.",
+        "Kiwifruit is a climbing vine — NC State's own record (for Actinidia chinensis var. deliciosa, the accepted synonym anchor page for this species) gives Plant Type: Vine and Habit/Form: Climbing, and RHS labels it 'Climber'. Per the climber rule, all four size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null even though NC State publishes Height: 15 ft. 0 in. - 30 ft. 0 in. and Width: 6 ft. 0 in. - 10 ft. 0 in., and RHS publishes Max Height 8-12 metres and Max Spread 2.5-4 metres — these figures are the plant's climbing run/spread on a support, not disambiguated stature, so none of them were used.",
+        "is_edible is set true from NC State's Edibility field ('Fruit is edible: it is sweet and tart.'). The anchor page was searched for 'Poison' and 'Toxic' (0 hits each), but its Insect Pests/Diseases/Other Problems section states: 'Insect pests and diseases are not a major problem for this plant. Hairs on the fruits may cause throat irritation. The fruits also contain actinidin, an enzyme that can also cause irritation.' This fruit-irritation/actinidin warning is recorded here per the edibility-and-toxicity rule.",
+        "attracts_pollinators is set true from NC State's structured Attracts field ('Bees') and its Wildlife Value field ('Bees pollinate the plant.'). The RHS details page was also searched for 'pollinator' and had no matching tag or mention — it neither confirms nor contradicts this.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=275437 refused this machine's fetch (network/proxy error, sandboxed) and was not read; no content from it is used for any field.",
+        "The remaining listed pages (CAES minor-fruits-and-nuts bulletin, CAES 'did you know you can grow kiwi', RHS grow-your-own guide, Penn State hardy-kiwi extension page) were not queried because the six requested fields were already resolved with citations from the anchor NC State page and cross-checked against RHS; none of them was needed to fill or null a field."
       ],
       "citations": [
         {
@@ -961,8 +1001,22 @@
           "source": "NC State Extension Gardener Plant Toolbox — Actinidia chinensis var. deliciosa",
           "url": "https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/",
           "quote": "is a dioecious, woody vine in the Actinidiaceae family native to China"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility field: Fruit is edible: it is sweet and tart.)",
+          "source": "NC State Extension Gardener Plant Toolbox — Actinidia chinensis var. deliciosa",
+          "url": "https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/",
+          "quote": "Fruit is edible: it is sweet and tart."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Attracts field: Bees; Wildlife Value: Bees pollinate the plant.)",
+          "source": "NC State Extension Gardener Plant Toolbox — Actinidia chinensis var. deliciosa",
+          "url": "https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/",
+          "quote": "Bees pollinate the plant."
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Blackberry",
@@ -2557,6 +2611,7 @@
   ],
   "normalizations": [
     "2026-08-24: twenty-seventh batch -- four fruit crops (Pomegranate, Olive, Kiwifruit, Blackberry -- the last a deliberate companion to Red Raspberry already in this catalog, no Rubus-level bleed found), Sweetheart Hoya (a companion to Hoya carnosa), and this catalog's first carnivorous-plant cluster (Purple Pitcher Plant, Winged Tropical Pitcher Plant, Cape Sundew -- researched with explicit cautions against borrowing houseplant defaults; all three correctly carry null fertilize_* fields with the sources' 'do not fertilize' guidance recorded in unknowns). Pomegranate is a model record for the chill_damage_f survival-vs-onset rule: the researcher took UF/IFAS's 12°F dormant-tree damage figure, deliberately declined NC State's and Clemson's 10°F kill-to-ground survival threshold, and disclosed that a non-dormant plant is damaged at 28°F -- exactly the distinction b43 had to be corrected on. Both tools ran clean before and after repair: land_check.py no problems, covered.py no duplicates, verify_quotes.py 216 hit / 0 miss on every reachable citation (128 skips are all plantfinder.mobot.org, ask.ifas.ufl.edu and PDFs, unreachable from the sandbox). Two audit repairs, each using the auditor's own live-verified wording: Blackberry's water_estimate_basis had scoped a UMD hand-watering note to 'the establishment year' when the sentence carries no such qualifier -- restored as UMD's general note, with the 7-day cadence still anchored to Clemson's 1 inch/week and Penn State's 1-2 inches/week; Sweetheart Hoya's name_note had attributed a Valentine's-novelty framing to Penn State, whose article never mentions Valentine's -- restored with the auditor's rewording, and the Valentine's clause now cited to NC State and Clemson, which do say it. toxic_to_pets: Hoya kerrii and Nepenthes both false via explicit NC State '#non-toxic for cats'/'#non-toxic for dogs' tags; the six others null, with no admissible source addressing cat/dog toxicity -- nothing inferred either way.",
-    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Kiwifruit -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns."
+    "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Kiwifruit -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

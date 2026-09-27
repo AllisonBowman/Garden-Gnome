@@ -51,7 +51,17 @@
         "is_houseplant / bonsai and container use: NC State's description notes \"Its sculptural form makes it popular for use in bonsai,\" and other NC State cultivar pages show the dwarf 'Mariken' cultivar potted, but bonsai/potted display is not the same as sustained indoor houseplant culture -- ginkgo is winter-deciduous and needs an outdoor winter chill/dormancy period, and no admissible source frames it as grown indoors long-term. Every admissible source instead uniformly describes it as a 50-80+ ft outdoor landscape/street/shade tree, so is_houseplant is kept false.",
         "water_regime: left null. This is an in-ground landscape tree, and the container-oriented enum (keep_moist/dry_surface_between/dry_thoroughly_between/keep_barely_moist) doesn't fit any admissible source's framing. Sources vary in how they characterize water need -- MOBOT's structured field rates \"Water: Medium,\" UF/IFAS rates \"Drought tolerance: high,\" Clemson's Quick Guide lists \"Watering: Drought-tolerant once established,\" and NC State's description says the tree \"is tolerant of drought.\" This qualitative drought-tolerance picture is captured in water_estimate_basis instead of forcing it into the container-watering enum.",
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est: no admissible source frames watering for this species as a checkable schedule (soil-probe depth, days-between-waterings); guidance is only qualitative drought-tolerance language.",
-        "name_note \u2014 removed on audit: name_note is non-null but, unlike every other narrative field in this record (e.g. water_estimate_basis, whose four citations are all explicitly labeled 'water_estimate_basis (...)'), no citation in the array has a claim label that literally contains the string 'name_note.' Per structural check 1 this field fails the mechanical citation-tracing test. That said, the underlying content checks out: I fetched the live RHS page and confirmed the 'Name Status' field does read 'Correct' verbatim, and fetched NC State's page and confirmed the Genus/Species/Family field reads 'Ginkgo' / 'biloba' / 'Ginkgoaceae' verbatim -- both facts are already captured under citations 2 (scientific_name_given) and 3 (scientific_name_accepted). So this is a citation-labeling/traceability gap specific to the name_note field, not a factual error -- the record simply never added a name_note-labeled citation the way it did for water_estimate_basis."
+        "name_note — removed on audit: name_note is non-null but, unlike every other narrative field in this record (e.g. water_estimate_basis, whose four citations are all explicitly labeled 'water_estimate_basis (...)'), no citation in the array has a claim label that literally contains the string 'name_note.' Per structural check 1 this field fails the mechanical citation-tracing test. That said, the underlying content checks out: I fetched the live RHS page and confirmed the 'Name Status' field does read 'Correct' verbatim, and fetched NC State's page and confirmed the Genus/Species/Family field reads 'Ginkgo' / 'biloba' / 'Ginkgoaceae' verbatim -- both facts are already captured under citations 2 (scientific_name_given) and 3 (scientific_name_accepted). So this is a citation-labeling/traceability gap specific to the name_note field, not a factual error -- the record simply never added a name_note-labeled citation the way it did for water_estimate_basis.",
+        "attracts_pollinators left null: no page named bees, butterflies, moths, hummingbirds or other pollinators for Ginkgo (searched 'bee', 'butterfl', 'hummingbird', 'moth', 'wildlife', 'Attracts', 'pollinat' on NC State and RHS); Ginkgo is wind-pollinated and NC State's only wildlife-related tag is 'Wildlife Food Source' under Play Value, which is not pollinator support.",
+        "is_edible is conditional, not a bare true: NC State states 'The seed, freed of the outer pulp and washed, is boiled or roasted and eaten' -- only the prepared seed kernel is eaten, not the fruit/pulp.",
+        "Toxicity on the same NC State page that supports is_edible: NC State lists Ginkgo with 'low severity poison characteristics', Poison Part 'Seeds', Poison Toxic Principle 'An alkyl phenol and ginkgolic acid', Causes Contact Dermatitis 'Yes', and Poison Symptoms 'TOXIC ONLY IF LARGE QUANTITIES EATEN. SKIN IRRITATION MINOR OR LASTING ONLY FOR A FEW MINUTES. Irritation of the skin following contact with the juice of the seed pulp; irritation of lips, mouth, and throat and stomach pain, nausea, and diarrhea after eating the pulp.' Plant Type tags also list both 'Edible' and 'Poisonous'.",
+        "Penn State Extension (extension.psu.edu/strange-fruit) corroborates edibility of the seed kernel ('the hard kernel inside the stinky flesh is a popular treat in Asia, with a sweet taste after being steamed or roasted') but that page carries no toxicity statement of its own for Ginkgo.",
+        "Size fields use NC State (the anchor, species-specific, not a cultivar figure) rather than RHS, per the NC State-first rule: NC State Height 50 ft. 0 in. - 80 ft. 0 in. and Width 30 ft. 0 in. - 40 ft. 0 in. RHS's own figures (Max Height 'Higher than 12 metres', an open-ended value giving no usable bound, and Max Spread '4-8 metres' = 157.5-315 in) were not used since NC State already supplies a closed species-level range and is the designated anchor.",
+        "hgic.clemson.edu refused this machine (ProxyError on repeated attempts) -- could not be read; skipped per instructions, not treated as silent on any field.",
+        "plantfinder.mobot.org refused this machine (ProxyError on repeated attempts) -- could not be read; skipped per instructions, not treated as silent on any field.",
+        "ask.ifas.ufl.edu/publication/ST273 (Florida ENH432/ST273) loaded successfully and gives Height: 50 to 75 feet, Spread: 50 to 60 feet, but has no Edible/Poison/Toxic/Attracts/pollinator/bee/butterfly text at all -- not used to override NC State's numbers since NC State is the designated anchor with a structured Dimensions block, and no toxicity/edibility/pollinator evidence was found there either way.",
+        "fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf could not be read: qc.py returned 'fetch status: pdf' with 0 bytes, i.e. the tool does not extract PDF text through this path -- not used for any field, and this is a tool limitation, not a claim that the document lacks the information.",
+        "Added at landing: RHS (rhs.org.uk/plants/7990/ginkgo-biloba/details), 'Potentially harmful': 'Seeds harmful if eaten. Wear gloves and other protective equipment when handling. Seed TOXIC to pets - see the HTA guide to potentially harmful plants for further information and useful contact numbers'. The seed RHS calls harmful if eaten is the same part NC State says is eaten once freed of its pulp, washed, and boiled or roasted, so is_edible true holds only under that preparation and in moderation (NC State: 'TOXIC ONLY IF LARGE QUANTITIES EATEN')."
       ],
       "citations": [
         {
@@ -152,7 +162,7 @@
         },
         {
           "claim": "soil_drainage moderate (well-drained moisture preference)",
-          "quote": "Moisture\nWell\u2013drained",
+          "quote": "Moisture\nWell–drained",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/7990/ginkgo-biloba/details"
         },
@@ -218,11 +228,40 @@
         },
         {
           "claim": "species note fetid odor of fallen fruit, separate male and female trees (no dedicated field, captured in unknowns)",
-          "quote": "The tree has separate male and female trees; only the female trees bear \"fruit\" \u2013 botanically, it is not a fruit, but a hard seed encased in a soft fleshy covering that looks like an apricot.",
+          "quote": "The tree has separate male and female trees; only the female trees bear \"fruit\" – botanically, it is not a fruit, but a hard seed encased in a soft fleshy covering that looks like an apricot.",
           "source": "Penn State Extension, \"Strange Fruit\"",
           "url": "https://extension.psu.edu/strange-fruit"
+        },
+        {
+          "claim": "mature_height_in 600-960 (NC State Height 50 ft. 0 in. - 80 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ginkgo biloba",
+          "url": "https://plants.ces.ncsu.edu/plants/ginkgo-biloba/",
+          "quote": "Height: 50 ft. 0 in. - 80 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 360-480 (NC State Width 30 ft. 0 in. - 40 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ginkgo biloba",
+          "url": "https://plants.ces.ncsu.edu/plants/ginkgo-biloba/",
+          "quote": "Width: 30 ft. 0 in. - 40 ft. 0 in."
+        },
+        {
+          "claim": "is_edible true: NC State states the seed, once freed of its outer pulp and washed, is boiled or roasted and eaten",
+          "source": "NC State Extension Gardener Plant Toolbox - Ginkgo biloba",
+          "url": "https://plants.ces.ncsu.edu/plants/ginkgo-biloba/",
+          "quote": "The seed, freed of the outer pulp and washed, is boiled or roasted and eaten."
+        },
+        {
+          "claim": "is_edible true, corroborated: the hard kernel inside the fleshy seed covering is eaten after steaming or roasting",
+          "source": "Penn State Extension - Strange Fruit",
+          "url": "https://extension.psu.edu/strange-fruit",
+          "quote": "the hard kernel inside the stinky flesh is a popular treat in Asia, with a sweet taste after being steamed or roasted"
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 600,
+      "mature_height_in_max": 960,
+      "mature_spread_in_min": 360,
+      "mature_spread_in_max": 480
     },
     {
       "common_name": "Heavenly Bamboo",
@@ -272,10 +311,17 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: Missouri Botanical Garden gives only a 'Water: Medium' maintenance tag plus qualitative prose ('Best with consistent watering. Established plants have some drought tolerance.') that doesn't map cleanly onto the schema's container-oriented dry-down regime categories; no admissible source gives a numeric watering interval or soil-check depth for this outdoor shrub.",
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source gives a fertilizing schedule for this species.",
         "is_houseplant is set to false on hardiness-zone/outdoor-landscape evidence (NC State USDA zones 6a-9b; Missouri Botanical Garden zone 6 to 9); no admissible source describes growing Nandina domestica indoors or in containers long-term.",
-        "chill_damage_f 10 is drawn from Missouri Botanical Garden's note that in their own reference garden ('In the St. Louis area') the species drops its foliage and sometimes suffers stem dieback once winter temperatures fall below 10\u00b0F -- the only damage-onset figure any admissible source gives, though it is framed around MOBOT's own local growing conditions rather than asserted as a universal species-wide constant. No other admissible source offers a competing or corroborating damage-onset number, so it was used as-is with this caveat noted.",
+        "chill_damage_f 10 is drawn from Missouri Botanical Garden's note that in their own reference garden ('In the St. Louis area') the species drops its foliage and sometimes suffers stem dieback once winter temperatures fall below 10°F -- the only damage-onset figure any admissible source gives, though it is framed around MOBOT's own local growing conditions rather than asserted as a universal species-wide constant. No other admissible source offers a competing or corroborating damage-onset number, so it was used as-is with this caveat noted.",
         "Toxicity to birds/wildlife is a separate, well-documented finding distinct from pet toxicity: Clemson HGIC ('The berries contain the toxin cyanide, which causes bird mortality. Cedar waxwings are most susceptible...'), NC State ('birds such as the Cedar Waxwing'), and Missouri Botanical Garden ('the berries of Nandina domestica have been linked to toxicity in cedar waxwing birds') all independently confirm this. This catalog's toxic_to_pets field tracks only cats/dogs, and the schema has no separate wildlife-toxicity field, so this finding is documented here rather than folded into toxic_to_pets or toxicity_detail.",
         "toxic_to_pets / toxicity_detail: NC State's poison data sits under a 'Poisonous to Humans:' section label, but the quoted 'Poison Symptoms' sentence itself explicitly names cats and dogs as toxic targets, and the page's separate 'Problems' tag list carries 'Problem for Cats' and 'Problem for Dogs' as their own sibling entries rather than being nested inside a humans-only subsection -- so despite the section header, this source affirmatively supports pet toxicity and was used accordingly. This was cross-checked against Clemson HGIC, whose toxicity section is scoped only to wildlife/birds and never names cats, dogs, or any pet -- so Clemson was used for the bird-toxicity note above but NOT as support for toxic_to_pets.",
-        "name_note \u2014 removed on audit: name_note asserts that 'NC State Extension, Clemson HGIC, Missouri Botanical Garden, and UF/IFAS all consistently use \"Nandina domestica\"' -- but the record's citations array contains zero entries from either admissible UF/IFAS domain (edis.ifas.ufl.edu or ask.ifas.ufl.edu). UF/IFAS is invoked as one of four corroborating sources for the binomial with no supporting citation anywhere in the record, which is a straightforward citation-tracing failure: this specific factual claim (about a specific named source) was never actually documented as checked. I confirmed live that UF/IFAS does have EDIS content touching Nandina domestica (e.g. ENH1158/EP418 on 'Harbour Dwarf' Nandina, and fact sheet FP422), so a citation may have been obtainable, but none was produced -- the claim was asserted, not sourced."
+        "name_note — removed on audit: name_note asserts that 'NC State Extension, Clemson HGIC, Missouri Botanical Garden, and UF/IFAS all consistently use \"Nandina domestica\"' -- but the record's citations array contains zero entries from either admissible UF/IFAS domain (edis.ifas.ufl.edu or ask.ifas.ufl.edu). UF/IFAS is invoked as one of four corroborating sources for the binomial with no supporting citation anywhere in the record, which is a straightforward citation-tracing failure: this specific factual claim (about a specific named source) was never actually documented as checked. I confirmed live that UF/IFAS does have EDIS content touching Nandina domestica (e.g. ENH1158/EP418 on 'Harbour Dwarf' Nandina, and fact sheet FP422), so a citation may have been obtainable, but none was produced -- the claim was asserted, not sourced.",
+        "attracts_pollinators left null: NC State's structured 'Attracts' field lists only Small Mammals and Songbirds, and RHS had 0 hits for 'Attracts' and 'pollinator'. The only pollinator mention on the anchor page is two photo captions, 'Flower and Bee (Wake County, NC)' and 'Flower close-up with bee (Wake County, NC)-Early Summer' (corrected at landing: the note had said no bee is named anywhere on the page). A photo caption is not an attracts field or an unconditional statement, so it does not make the field true. Birds/mammals are excluded from counting as pollinator support per the task rules, so this is 'no mention', not false.",
+        "hgic.clemson.edu/factsheet/nandina/ refused this machine (fetch status: error:ProxyError, both without and with the host explicitly allowed) -- not used for any field.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c772 refused this machine (fetch status: error:ProxyError, both without and with the host explicitly allowed) -- not used for any field.",
+        "is_edible set to false because NC State's own 'Edibility' field states only 'Berries are poisonous if ingested,' and the page separately states the plant carries 'high severity poison characteristics' and is tagged 'problem for dogs', 'problem for horses', 'problem for cats'; the full toxicity text: 'The leaves and berries may be toxic to humans, livestock, horses, cats, dogs, and birds. A recent study in Georgia has linked overconsumption of the berries by Cedar Waxwings to their deaths by cyanide toxicity. All parts contain cyanide and when consumed in quantity can be toxic.' Also tagged #poisonous, #problem for dogs, #problem for horses, #problem for cats, and description text: 'Because heavenly bamboo is listed as invasive by the NC Invasive Plant Council and is toxic if ingested by pets or children, plant with caution.'",
+        "Nandina domestica is a shrub, not a climber/vine/liana, so the no-size-for-climbers rule (rule 4) does not apply; size fields were populated normally.",
+        "Size figures are for the species (not a named cultivar): NC State's Dimensions block gives a species-level range, not a cultivar-specific one, so rule 3 (cultivar sizes excluded) does not apply here.",
+        "RHS gives a narrower size range (Max Height 1.5-2.5 m = 59.1-98.4 in; Max Spread 1-1.5 m = 39.4-59.1 in) but was not used for the size fields because NC State (the anchor) already carries a full species-level 'Dimensions:' block, per the task's anchor-priority rule."
       ],
       "citations": [
         {
@@ -321,10 +367,10 @@
           "quote": "Soil Drainage:\nGood Drainage\nMoist"
         },
         {
-          "claim": "chill_damage_f 10 (foliage drop and stem dieback below 10\u00b0F)",
+          "claim": "chill_damage_f 10 (foliage drop and stem dieback below 10°F)",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c772",
-          "quote": "In the St. Louis area, it is considered to be semi-evergreen to deciduous because plants will typically lose their foliage (become deciduous) as soon as winter temperatures dip below 10\u00b0F., with the stems sometimes dying to the ground."
+          "quote": "In the St. Louis area, it is considered to be semi-evergreen to deciduous because plants will typically lose their foliage (become deciduous) as soon as winter temperatures dip below 10°F., with the stems sometimes dying to the ground."
         },
         {
           "claim": "toxic_to_pets true and toxicity_detail (cyanogenic glycosides, all parts, weakness, incoordination, seizures, coma, respiratory failure, death)",
@@ -343,8 +389,31 @@
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/11327/nandina-domestica/details",
           "quote": "Harmful if eaten. Wear gloves and other protective equipment when handling Pets (dogs, poultry): Harmful if eaten. For further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants"
+        },
+        {
+          "claim": "mature_height_in 36-96 (NC State Height 3 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Nandina domestica",
+          "url": "https://plants.ces.ncsu.edu/plants/nandina-domestica/",
+          "quote": "Height: 3 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-60 (NC State Width 2 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox — Nandina domestica",
+          "url": "https://plants.ces.ncsu.edu/plants/nandina-domestica/",
+          "quote": "Width: 2 ft. 0 in. - 5 ft. 0 in."
+        },
+        {
+          "claim": "is_edible is false: berries are poisonous if ingested",
+          "source": "NC State Extension Gardener Plant Toolbox — Nandina domestica",
+          "url": "https://plants.ces.ncsu.edu/plants/nandina-domestica/",
+          "quote": "Berries are poisonous if ingested."
         }
-      ]
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 60
     },
     {
       "common_name": "Bougainvillea",
@@ -358,7 +427,7 @@
       "day_f_max": null,
       "night_f_min": 50,
       "night_f_max": null,
-      "cool_rest_note": "RHS: Bougainvillea can be overwintered above freezing if kept relatively dry, though it will drop leaves under those cooler, drier conditions; the recommended minimum night temperature for good condition is 10\u00b0C (50\u00b0F).",
+      "cool_rest_note": "RHS: Bougainvillea can be overwintered above freezing if kept relatively dry, though it will drop leaves under those cooler, drier conditions; the recommended minimum night temperature for good condition is 10°C (50°F).",
       "humidity_need": null,
       "humidity_pct_min": null,
       "humidity_pct_max": null,
@@ -394,8 +463,8 @@
         "water_check_depth_cm, water_dry_down_target, water_estimate_basis, water_growing_days_est, water_dormant_days_est: no admissible source quantifies a watering depth, day-interval schedule, or dormancy duration beyond the qualitative 'watered deeply but allowed to dry out between waterings' / 'drought resistant'; left null.",
         "Clemson's fertilizing schedule and houseplant/greenhouse guidance, and the RHS growing-guide's night-temperature and overwintering guidance, come from each publisher's genus-level 'Bougainvillea' page rather than a glabra-specific page. Used because B. glabra is the principal species these generalist factsheets describe and no species-specific admissible source conflicts with them; for is_houseplant and soil_base, the RHS glabra-specific species page independently corroborates the same container/loam-compost guidance.",
         "soil_drainage (fast): drawn from NC State's 'Good Drainage' / 'Occasionally Dry' checkboxes on the glabra-specific page. The same NC State soil-type field also lists 'Clay' and 'High Organic Matter' as tolerated soil types, which sits in some tension with fast drainage, and RHS separately describes container soil as 'Moist but well-drained' rather than fast-draining. Not a harm-capable field per the rules, so not nulled, but flagged here as an internal-source tension worth noting.",
-        "soil_base \u2014 removed on audit: soil_base's only citation is the same RHS text verified above: 'Plant in large pots of peat-free, loam-based compost, or directly into the conservatory border.' 'Loam-based compost' (a specific, formulated potting medium, akin to John Innes-type mixes) is not the same thing as a generic 'standard_potting' category, and no other citation in the record supports soil_base at all. The claim label asserts a category ('standard_potting') the quote does not literally support, with no independent corroboration.",
-        "fertilize_interval_days \u2014 removed on audit: Verified the full source sentence on hgic.clemson.edu: 'Outdoors, bougainvilleas should be in full sun... They should be fertilized at half the recommended rate once a month with a general-purpose fertilizer (e.g., 10-10-10) in early spring and midsummer.' This single sentence is genuinely ambiguous about whether 'once a month' is a standing, year-round 30-day cadence or refers only to monthly feeding confined to the two named windows (i.e., could mean as few as two applications total, not a recurring interval). The record itself judged this same sentence's timing language too ambiguous to convert into fertilize_active_months (left null, with an explicit note that only named calendar months would be converted), yet extracted a precise '30' for fertilize_interval_days from that identical ambiguous clause -- an inconsistent reading of one uncertain source sentence, and the numeric field's value is not cleanly derivable from a quote this self-contradictory."
+        "soil_base — removed on audit: soil_base's only citation is the same RHS text verified above: 'Plant in large pots of peat-free, loam-based compost, or directly into the conservatory border.' 'Loam-based compost' (a specific, formulated potting medium, akin to John Innes-type mixes) is not the same thing as a generic 'standard_potting' category, and no other citation in the record supports soil_base at all. The claim label asserts a category ('standard_potting') the quote does not literally support, with no independent corroboration.",
+        "fertilize_interval_days — removed on audit: Verified the full source sentence on hgic.clemson.edu: 'Outdoors, bougainvilleas should be in full sun... They should be fertilized at half the recommended rate once a month with a general-purpose fertilizer (e.g., 10-10-10) in early spring and midsummer.' This single sentence is genuinely ambiguous about whether 'once a month' is a standing, year-round 30-day cadence or refers only to monthly feeding confined to the two named windows (i.e., could mean as few as two applications total, not a recurring interval). The record itself judged this same sentence's timing language too ambiguous to convert into fertilize_active_months (left null, with an explicit note that only named calendar months would be converted), yet extracted a precise '30' for fertilize_interval_days from that identical ambiguous clause -- an inconsistent reading of one uncertain source sentence, and the numeric field's value is not cleanly derivable from a quote this self-contradictory."
       ],
       "citations": [
         {
@@ -448,7 +517,7 @@
         },
         {
           "claim": "night_f_min 50",
-          "quote": "Maintain a minimum night temperature of 10\u00b0C (50\u00b0F).",
+          "quote": "Maintain a minimum night temperature of 10°C (50°F).",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/bougainvillea/growing-guide"
         },
@@ -505,7 +574,7 @@
       "toxicity_detail": null,
       "unknowns": [
         "chill_damage_f: no admissible source gives a specific frost/cold damage-onset temperature. RHS rates the species H6 (\"hardy in all of UK and northern Europe (-20 to -15)\"), which is a mature-plant winter-survival floor, not a damage-onset value. NC State (USDA zones 5a-9b) and UF/IFAS (USDA zones 7B-11) also give conflicting hardiness-zone ranges that don't resolve to a single figure, so this field was left null rather than guessed.",
-        "soil_drainage: NC State's own structured Soil Drainage field lists this species as tolerating \"Good Drainage, Moist, Occasionally Dry\" together \u2014 a multi-condition tolerance tag that doesn't cleanly map to a single fast/moderate/moisture_retentive tier \u2014 and RHS gives only the categorical tag \"Moist but well-drained,\" so the field was left null rather than forcing a tier.",
+        "soil_drainage: NC State's own structured Soil Drainage field lists this species as tolerating \"Good Drainage, Moist, Occasionally Dry\" together — a multi-condition tolerance tag that doesn't cleanly map to a single fast/moderate/moisture_retentive tier — and RHS gives only the categorical tag \"Moist but well-drained,\" so the field was left null rather than forcing a tier.",
         "soil_ph_min / soil_ph_max: no admissible source gives a numeric pH range for this species. NC State has no Soil pH field on its Passiflora incarnata page, and RHS gives only the qualitative tag \"Acid or Alkaline or Neutral\" with no numbers attached.",
         "water_regime and its day-count fields (water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis): sources describe garden-soil moisture tolerance only (\"Moist,\" \"Occasionally Dry,\" \"Dry to Moist,\" \"Moist but well-drained\"), not a container dry-down cycle matching the regime options, and none give any watering interval or estimate basis.",
         "day_f_min/day_f_max, night_f_min/night_f_max: no source gives day or night operating temperature ranges for this outdoor perennial vine; only winter hardiness zone/rating data exists, and that conflicts between sources (see chill_damage_f note).",
@@ -513,8 +582,16 @@
         "humidity_need, humidity_pct_min, humidity_pct_max: no admissible source addresses ambient humidity for this outdoor garden vine.",
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source addresses a fertilizing schedule or strength for this species.",
         "cool_rest_note: Clemson notes the vine \"Dies back to the ground in the winter,\" but this describes normal outdoor winter dieback/regrowth of a hardy herbaceous-topped perennial, not a houseplant-style cool-rest care instruction, so it was not mapped to this field.",
-        "toxicity_detail \u2014 removed on audit: The citation's quote for this field is selectively truncated. I fetched the live NC State page: the actual 'Poison Symptoms' text reads '...Severe nausea, vomiting, drowsiness, and episodes of irregular heartbeat. Consumption of leaves in \"herbal medicine\" is not recommended.' before continuing to 'Toxic Principle: cyanogenic glycosides.' The record's quote stops right after 'irregular heartbeat' and splices directly to 'Toxic Principle,' silently dropping the herbal-medicine sentence. That dropped sentence is the tell that NC State's Poison Severity/Poison Symptoms/Toxic Principle/Poison Part block is a single undifferentiated field describing consumption risk in general (tied to human herbal use of the leaves), not a symptom set broken out per affected animal -- the same block sits underneath tags for 'Poisonous to Humans,' 'Problem for Cats,' 'Problem for Dogs,' 'Problem for Horses,' and 'Problem for Children' with no species-specific differentiation anywhere on the page. Presenting this exact symptom list as pet-specific toxicity_detail overstates what the source establishes. (Note: toxic_to_pets itself is fine -- the same source's tags explicitly name both 'Problem for Cats' and 'Problem for Dogs' as categorical flags, independent of the disputed symptom narrative.)",
-        "is_houseplant \u2014 removed on audit: The only supporting citation's quote is 'Design Feature: Border, Mass Planting, Screen/Privacy' -- a landscape-use tag that says nothing about indoor or container culture. The claim label's parenthetical 'no indoor or container culture described' is the researcher's own inference from absence of evidence, not something the quote states; NC State's toolbox does not have a houseplant field being checked here at all. There is no independent citation that actually asserts a houseplant/non-houseplant status for this species, so the boolean is only circumstantially supported, not directly evidenced."
+        "toxicity_detail — removed on audit: The citation's quote for this field is selectively truncated. I fetched the live NC State page: the actual 'Poison Symptoms' text reads '...Severe nausea, vomiting, drowsiness, and episodes of irregular heartbeat. Consumption of leaves in \"herbal medicine\" is not recommended.' before continuing to 'Toxic Principle: cyanogenic glycosides.' The record's quote stops right after 'irregular heartbeat' and splices directly to 'Toxic Principle,' silently dropping the herbal-medicine sentence. That dropped sentence is the tell that NC State's Poison Severity/Poison Symptoms/Toxic Principle/Poison Part block is a single undifferentiated field describing consumption risk in general (tied to human herbal use of the leaves), not a symptom set broken out per affected animal -- the same block sits underneath tags for 'Poisonous to Humans,' 'Problem for Cats,' 'Problem for Dogs,' 'Problem for Horses,' and 'Problem for Children' with no species-specific differentiation anywhere on the page. Presenting this exact symptom list as pet-specific toxicity_detail overstates what the source establishes. (Note: toxic_to_pets itself is fine -- the same source's tags explicitly name both 'Problem for Cats' and 'Problem for Dogs' as categorical flags, independent of the disputed symptom narrative.)",
+        "is_houseplant — removed on audit: The only supporting citation's quote is 'Design Feature: Border, Mass Planting, Screen/Privacy' -- a landscape-use tag that says nothing about indoor or container culture. The claim label's parenthetical 'no indoor or container culture described' is the researcher's own inference from absence of evidence, not something the quote states; NC State's toolbox does not have a houseplant field being checked here at all. There is no independent citation that actually asserts a houseplant/non-houseplant status for this species, so the boolean is only circumstantially supported, not directly evidenced.",
+        "mature_height_in and mature_spread_in left null (all four fields) because Passiflora incarnata is a climber: NC State lists Habit/Form 'Climbing, Spreading' and tags it #vine, #native vine, #deciduous vine, and its Description calls it 'a rapid-growing, trailing vine that climbs by axillary tendrils' -- per task rule 4, climbers get no size fields regardless of any figure a page publishes.",
+        "RHS (https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details) does publish 'Max Height 1.5-2.5 metres' and 'Max Spread 0.5-1 metres', but this was NOT used because the plant is a climber (rule 4 overrides using any such figure). Corrected at landing: the page is the species profile, not a cultivar -- the '(F)' in its title 'Passiflora incarnata (F) | apricot vine' is RHS's fruit classification and the page reads 'Name Status Correct' -- so the climber rule is the only reason.",
+        "is_edible set true on a CONDITIONAL basis: NC State's Edibility field states 'Ripened maypops can be eaten fresh off the vine or made into jelly' (i.e. only the ripened fruit is the edible part/stage).",
+        "Before setting is_edible, searched NC State for Poison/Toxic/Problem for as required: the SAME page carries 'This plant has medium severity poison characteristics', a Problems list of 'Poisonous to Humans, Problem for Cats, Problem for Children, Problem for Dogs, Problem for Horses', Poison Severity 'Medium', Poison Symptoms 'Severe nausea, vomiting, drowsiness, and episodes of irregular heartbeat. Consumption of leaves in \"herbal medicine\" is not recommended.', Poison Toxic Principle 'cyanogenic glycosides', and Poison Part 'Leaves, Stems'. Recorded here per rule 5/6 because is_edible is true: only the ripened fruit is eaten; the leaves and stems are listed as the poisonous parts (medium severity, cyanogenic glycosides, symptoms nausea/vomiting/drowsiness/irregular heartbeat), and the page separately warns consumption of leaves in herbal medicine is not recommended, and flags the plant as a problem for cats, children, dogs, and horses.",
+        "attracts_pollinators set true from NC State's structured 'Attracts:' field, which lists 'Bees, Butterflies, Hummingbirds, Pollinators, Songbirds', and its 'Play Value:' field which includes 'Attracts Pollinators'.",
+        "hgic.clemson.edu/factsheet/vine-selections-for-landscaping/ was not fetched/cited for these six fields -- NC State's Plant Toolbox page already fully covered edibility, toxicity, and pollinator attraction, and per rule 4 no page's size figures could be used for this vine regardless.",
+        "fieldreport.caes.uga.edu was not fetched/cited for these six fields for the same reason -- NC State's page was sufficient and is the anchor for the vine/climber determination.",
+        "https://ask.ifas.ufl.edu/publication/FP457 was readable (corrected at landing: it did not refuse this machine) but was not cited. It agrees with the recorded values: the fruits are 'attractive and edible (but not very tasty)', its Uses line reads 'attracts butterflies; attracts hummingbirds', its plant type is vine, and it has no poison or toxicity text."
       ],
       "citations": [
         {
@@ -542,7 +619,7 @@
           "quote": "Sun Exposure: Full sun, Partial shade"
         },
         {
-          "claim": "is_houseplant false (grown outdoors as a landscape vine \u2014 border, mass planting, screen/privacy use; no indoor or container culture described)",
+          "claim": "is_houseplant false (grown outdoors as a landscape vine — border, mass planting, screen/privacy use; no indoor or container culture described)",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/",
           "quote": "Design Feature: Border, Mass Planting, Screen/Privacy"
@@ -594,8 +671,22 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/",
           "quote": "Soil Drainage: Good Drainage, Moist, Occasionally Dry"
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: \"Ripened maypops can be eaten fresh off the vine or made into jelly.\") -- edibility is conditional to the ripened fruit only",
+          "source": "NC State Extension, North Carolina Extension Gardener Plant Toolbox, Passiflora incarnata",
+          "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/",
+          "quote": "Ripened maypops can be eaten fresh off the vine or made into jelly."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Bees, Butterflies, Hummingbirds, Pollinators, Songbirds)",
+          "source": "NC State Extension, North Carolina Extension Gardener Plant Toolbox, Passiflora incarnata",
+          "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/",
+          "quote": "Pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Buttercup",
@@ -687,6 +778,12 @@
           "quote": "It favors sunny positions on moist, humus-rich soil.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ranunculus-acris/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts field lists Pollinators)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ranunculus-acris/",
+          "quote": "Pollinators"
         }
       ],
       "unknowns": [
@@ -699,8 +796,15 @@
         "soil_ph_min/soil_ph_max: no admissible source gives a soil pH range for this species.",
         "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a houseplant-style watering schedule, soak-check depth, or dry-down protocol for this outdoor perennial; only the qualitative 'moist soil' preference was found, captured instead in water_regime.",
         "cool_rest_note: no admissible source mentions a cool dormancy or rest period for this species.",
-        "Clemson HGIC, UF/IFAS (edis/ask), Penn State Extension, UGA CAES Field Report, and Missouri Botanical Garden Plant Finder were searched but returned no page specific to Ranunculus acris with usable structured or toxicity data -- the UGA and Penn State buttercup-in-pasture pages that did surface treat Ranunculus at the genus level (Ranunculus spp.) and scope toxicity to livestock generally, not to this species or to cats/dogs specifically, so were not used per the no-genus-inference rule."
-      ]
+        "Clemson HGIC, UF/IFAS (edis/ask), Penn State Extension, UGA CAES Field Report, and Missouri Botanical Garden Plant Finder were searched but returned no page specific to Ranunculus acris with usable structured or toxicity data -- the UGA and Penn State buttercup-in-pasture pages that did surface treat Ranunculus at the genus level (Ranunculus spp.) and scope toxicity to livestock generally, not to this species or to cats/dogs specifically, so were not used per the no-genus-inference rule.",
+        "mature_height_in and mature_spread_in left null: searched NC State (plants.ces.ncsu.edu/plants/ranunculus-acris/) for 'Dimensions', 'Height', 'Width' — 0 hits each; no structured size block exists on that page for this species.",
+        "Searched RHS (rhs.org.uk/plants/295564/ranunculus-acris-subsp-acris/details) for both wordings ('Max Height'/'Max Spread' and 'Ultimate height'/'Height'/'Spread'), plus 'eventual' and 'metres' — the page's 'Size' section only contains 'Time to Maturity: No preference' with no numeric height or spread value present in the fetched content. No usable size figure found on either required page, so all four size fields are null rather than guessed.",
+        "is_edible left null: searched NC State for 'Edible', 'food', 'eaten' (0 hits each) and RHS for 'food' (0 hits) — neither page addresses eating or culinary use of Ranunculus acris, so there is no record either way.",
+        "NC State's anchor page lists Ranunculus acris as 'Poisonous to Humans', with medium-severity poison characteristics: Poison Severity 'Medium'; Poison Symptoms 'In livestock, ingestion has caused blistering of the tongue and lips, diarrhea and blindness. Consumption can also cause irregular heart rhythm and respiratory failure.'; Poison Toxic Principle 'ranunculin'; Poison Part 'Leaves', 'Roots', 'Sap/Juice' and 'Stems' (corrected at landing: the note had listed only Leaves and Roots); and it is tagged 'Problem for Cats', 'Problem for Dogs', 'Problem for Horses'. The page contradicts itself on skin contact: the structured field reads 'Causes Contact Dermatitis: No' while its tag list includes '#contact dermatitis'. Recorded here per the toxicity-disclosure rule even though is_edible is null (not true), since it is decision-relevant.",
+        "Not a climber — NC State lists Plant Type 'Herbaceous Perennial' and Habit/Form 'Erect' — so the climber size-suppression rule does not apply; the size fields are null solely for lack of a published figure on either required page.",
+        "Neither required page was among the machine-refused hosts (plantfinder.mobot.org, ask.ifas.ufl.edu); both NC State and RHS pages fetched with 'ok' status, so nothing was skipped for host refusal."
+      ],
+      "attracts_pollinators": true
     },
     {
       "common_name": "Climbing Hydrangea",
@@ -751,7 +855,13 @@
         "soil_ph_min, soil_ph_max: NC State gives only broad categories (Acid <6.0, Neutral 6.0-8.0, Alkaline >8.0) spanning nearly the entire pH scale, and RHS gives only 'Acid or Neutral' with no numeric figures; no admissible source states a specific numeric min/max pH for this species, so no defensible bound could be set.",
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source gives fertilizer timing, interval, or strength guidance for this species. A Penn State Extension URL once titled 'the-climbing-hydrangea' now 301-redirects to a generic ornamentals-species-listing page with no species-specific fertilizing content, so it could not be used as a source.",
         "water_growing_days_est, water_dormant_days_est, water_check_depth_cm, water_dry_down_target, water_estimate_basis: no admissible source gives a specific watering-interval number of days, a soil moisture-check depth, or a dry-down target for this species; sources describe qualitative soil-moisture preference only ('moist but well-drained,' 'fertile, moist, well-drained soil,' 'moist, well-draining'), which supports the categorical water_regime value but not a numeric estimate.",
-        "scientific_name_accepted \u2014 removed on audit: The value is literally the JSON string \"null\" (quoted) rather than a real JSON null -- confirmed by inspecting the record text character-for-character. This is a direct violation of structural check 6, and it also fails structural check 1 independently: since the value is technically a populated string, not null, it would need a citation whose claim label contains 'scientific_name_accepted', but no such citation exists (only 'name_note ...' citations touch this content). Cross-checking the rest of this catalog (e.g. app/data/verified/b14-annual-flowers2.json line 206: \"scientific_name_accepted\": null) confirms the house convention for a genuinely unresolved accepted name is real JSON null, so this is a deviation, not a stylistic choice. Note the underlying research is sound -- I independently fetched RHS (Name Status 'Correct' for Hydrangea petiolaris, listing 'Hydrangea anomala subsp. petiolaris' as a synonym), NC State (Scientific Name 'Hydrangea petiolaris', 'Previously known as: Hydrangea anomala ssp. petiolaris'), and Missouri Botanical Garden ('Subsp. petiolaris (formerly known as Hydrangea petiolaris)') and all three quotes are verbatim-accurate, so the two-against-one conflict is genuine and the intent to leave it unresolved is correct -- only the encoding is broken. Downstream code that checks `if value is not None` would treat this as a populated field and could literally display the text \"null\" to a user."
+        "scientific_name_accepted — removed on audit: The value is literally the JSON string \"null\" (quoted) rather than a real JSON null -- confirmed by inspecting the record text character-for-character. This is a direct violation of structural check 6, and it also fails structural check 1 independently: since the value is technically a populated string, not null, it would need a citation whose claim label contains 'scientific_name_accepted', but no such citation exists (only 'name_note ...' citations touch this content). Cross-checking the rest of this catalog (e.g. app/data/verified/b14-annual-flowers2.json line 206: \"scientific_name_accepted\": null) confirms the house convention for a genuinely unresolved accepted name is real JSON null, so this is a deviation, not a stylistic choice. Note the underlying research is sound -- I independently fetched RHS (Name Status 'Correct' for Hydrangea petiolaris, listing 'Hydrangea anomala subsp. petiolaris' as a synonym), NC State (Scientific Name 'Hydrangea petiolaris', 'Previously known as: Hydrangea anomala ssp. petiolaris'), and Missouri Botanical Garden ('Subsp. petiolaris (formerly known as Hydrangea petiolaris)') and all three quotes are verbatim-accurate, so the two-against-one conflict is genuine and the intent to leave it unresolved is correct -- only the encoding is broken. Downstream code that checks `if value is not None` would treat this as a populated field and could literally display the text \"null\" to a user.",
+        "mature_height_in_min/max and mature_spread_in_min/max all left null: this species is confirmed a climber/vine on both anchor pages (NC State Plant Type includes \"Vine\", Habit/Form \"Climbing\", tag \"#climber\"; RHS categorizes it as \"Climber\"), so per the climber-size rule no size figures are recorded even though both pages publish numbers. NC State's Dimensions block reads \"Height: 30 ft. 0 in. - 60 ft. 0 in.\" and \"Width: 5 ft. 0 in. - 6 ft. 0 in.\" (this height figure is the plant's climbing run, not a stature bound, per the rule). RHS's structured fields read \"Max Height Higher than 12 metres\" (open-ended, no usable upper bound in any case) and \"Max Spread 4-8 metres\".",
+        "is_edible left null: no page among the readable ones (NC State, RHS, UMD vines page) states this species or any part of it is eaten or grown for food, and none states it is inedible. UMD's vines page discusses edibility for other listed vines (e.g. grapes, Virginia creeper) but makes no edibility statement for Climbing Hydrangea specifically.",
+        "Toxicity check performed per instructions before considering is_edible: NC State's anchor page lists Plant Type \"Poisonous\" and Problems \"Poisonous to Humans\" for this species. Since is_edible was left null (no page states it is eaten), this toxicity information is not gating a true value, but is recorded here as required. No specific poisonous part, severity, toxic principle, preparation requirement, or pets warning text beyond the bare \"Poisonous\"/\"Poisonous to Humans\" tags was found on the page.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d370 (Missouri Botanical Garden Plant Finder) refused connection from this machine (ProxyError) on every attempt; not used for any field.",
+        "https://hgic.clemson.edu/factsheet/vine-selections-for-landscaping/ (Clemson HGIC) refused connection from this machine (ProxyError) on every attempt; not used for any field.",
+        "https://extension.umd.edu/resource/vines-maryland-gardens was read successfully; its entry for Climbing Hydrangea (Hydrangea anomala subsp. petiolaris) gives only light/moisture/climbing-type and a note that it is 'slow to establish' with white flowers in early summer -- no edibility or pollinator-attraction statement for this species specifically, so it contributed no field values."
       ],
       "citations": [
         {
@@ -842,7 +952,7 @@
           "claim": "soil_drainage moderate",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/8948/i-hydrangea-petiolaris-i/details",
-          "quote": "Moisture\nMoist but well\u2013drained"
+          "quote": "Moisture\nMoist but well–drained"
         },
         {
           "claim": "soil_drainage moderate",
@@ -867,8 +977,15 @@
           "source": "University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/vines-maryland-gardens",
           "quote": "Partial shade to full shade\nMoist, well-draining\nClinging/Woody/Deciduous\nWhite flowers in early summer; slow to establish"
+        },
+        {
+          "claim": "attracts_pollinators: RHS structured tag \"Plants for pollinators\" (Award of Garden Merit Plants for pollinators)",
+          "source": "RHS - Hydrangea petiolaris details page",
+          "url": "https://www.rhs.org.uk/plants/8948/i-hydrangea-petiolaris-i/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true
     },
     {
       "common_name": "Crown of Thorns",
@@ -965,7 +1082,7 @@
           "claim": "chill_damage_f 35",
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b633",
-          "quote": "Plants react poorly to temperatures that dip below 35\u00b0F in winter."
+          "quote": "Plants react poorly to temperatures that dip below 35°F in winter."
         },
         {
           "claim": "cool_rest_note (keep dry in winter; low-nitrogen liquid fertiliser monthly while in growth)",
@@ -1017,10 +1134,10 @@
         "water_check_depth_cm / water_growing_days_est / water_dormant_days_est / water_estimate_basis / water_dry_down_target: sources describe watering only qualitatively ('dry to medium moisture,' 'water sparingly,' 'keep dry in winter'); none gives a soil-check depth, a day-interval, or an estimate basis to build one from.",
         "toxicity_detail / toxic_to_pets scoping: NC State's detailed poisoning narrative (Poison Severity: Low; contact dermatitis, corneal damage from eye contact, blistering on lips and oral mucosa if eaten; toxic principle diterpene esters in the milky latex) is filed entirely under a 'Poisonous to Humans:' heading on that page, so it was NOT used to support toxic_to_pets or toxicity_detail. toxic_to_pets=true instead rests on NC State's separate 'Problems:' tag list, which names 'Problem for Cats' and 'Problem for Dogs' as their own structured tags without further detail. toxicity_detail instead draws on RHS, whose 'Potentially harmful' field is explicitly headed 'Humans/Pets:' rather than humans-only.",
         "Missouri Botanical Garden's toxicity language ('Sticky white latex sap is poisonous... skin rashes from contact with the toxic plant sap of euphorbias') names no target at all -- not humans, not pets, not any specific animal -- so it was not used to support toxic_to_pets or toxicity_detail.",
-        "chill_damage_f: RHS's Hardiness Rating 'H1B' (can be grown outside in the summer, 10-15\u00b0C minimum) is a broader UK garden-hardiness zone classification, not a stated damage-onset temperature, so it was not used numerically; the 35\u00b0F figure instead comes from NC State and Missouri Botanical Garden, which independently agree.",
+        "chill_damage_f: RHS's Hardiness Rating 'H1B' (can be grown outside in the summer, 10-15°C minimum) is a broader UK garden-hardiness zone classification, not a stated damage-onset temperature, so it was not used numerically; the 35°F figure instead comes from NC State and Missouri Botanical Garden, which independently agree.",
         "Clemson HGIC (hgic.clemson.edu), UF/IFAS EDIS (edis.ifas.ufl.edu / ask.ifas.ufl.edu), Penn State Extension (extension.psu.edu), University of Maryland Extension (extension.umd.edu), and UGA Cooperative Extension (fieldreport.caes.uga.edu) were searched but returned no dedicated Euphorbia milii page within the admissible domain list; UF/IFAS's own crown-of-thorns fact sheet lives at hort.ifas.ufl.edu, which is not on the admissible list, so it was not used.",
-        "toxicity_detail \u2014 removed on audit: The value's opening clause 'Milky latex sap is an irritant to skin and eyes and harmful if eaten' attributes a substance-specific claim to its only citation, RHS's quote 'Humans/Pets: IRRITANT to skin/eye; harmful if eaten.' A live fetch of the RHS page (searched specifically for 'latex' and 'sap') confirms 'latex' never appears on the page at all, and 'sap' appears exactly once, in a generic genus-level Botanical Details sentence about Euphorbia broadly ('milky sap and small flowers'), not in the toxicity section and not species-specific. The RHS toxicity line itself never names the causative substance. The phrase 'milky latex sap' instead matches, almost verbatim, NC State's 'The milky white latex sap found in all plant parts can cause mild to severe contact dermatitis...' -- the exact human-only passage this record's own toxicity_detail text says it withheld because it is filed under NC State's 'Poisonous to Humans' heading. So the record correctly reasoned about why to exclude that passage, then re-imported its key descriptive phrase into the field anyway, uncited and unsupported by the citation actually attached to this field.",
-        "name_note \u2014 removed on audit: No citation's claim label literally contains 'name_note' -- the three citations that support this field's content (RHS 'Name Status Correct', NC State 'Genus: Euphorbia Species: milii', NC State 'Previously known as: Euphorbia breonii') are all labeled 'scientific_name_accepted' instead. Per structural check 1, only scientific_name_given is exempt from needing a citation whose claim label contains its own field name; name_note is a substantive claim (that milii, not breonii, is current) and lacks that literal match, even though the underlying facts were independently verified as accurate against the live NC State and RHS pages."
+        "toxicity_detail — removed on audit: The value's opening clause 'Milky latex sap is an irritant to skin and eyes and harmful if eaten' attributes a substance-specific claim to its only citation, RHS's quote 'Humans/Pets: IRRITANT to skin/eye; harmful if eaten.' A live fetch of the RHS page (searched specifically for 'latex' and 'sap') confirms 'latex' never appears on the page at all, and 'sap' appears exactly once, in a generic genus-level Botanical Details sentence about Euphorbia broadly ('milky sap and small flowers'), not in the toxicity section and not species-specific. The RHS toxicity line itself never names the causative substance. The phrase 'milky latex sap' instead matches, almost verbatim, NC State's 'The milky white latex sap found in all plant parts can cause mild to severe contact dermatitis...' -- the exact human-only passage this record's own toxicity_detail text says it withheld because it is filed under NC State's 'Poisonous to Humans' heading. So the record correctly reasoned about why to exclude that passage, then re-imported its key descriptive phrase into the field anyway, uncited and unsupported by the citation actually attached to this field.",
+        "name_note — removed on audit: No citation's claim label literally contains 'name_note' -- the three citations that support this field's content (RHS 'Name Status Correct', NC State 'Genus: Euphorbia Species: milii', NC State 'Previously known as: Euphorbia breonii') are all labeled 'scientific_name_accepted' instead. Per structural check 1, only scientific_name_given is exempt from needing a citation whose claim label contains its own field name; name_note is a substantive claim (that milii, not breonii, is current) and lacks that literal match, even though the underlying facts were independently verified as accurate against the live NC State and RHS pages."
       ]
     },
     {
@@ -1042,7 +1159,7 @@
       "day_f_max": null,
       "night_f_min": null,
       "night_f_max": null,
-      "cool_rest_note": "In colder climates (outside its hardy zones), Lantana camara can be grown as a container plant and overwintered indoors in a bright, cool 40-49\u00b0F location.",
+      "cool_rest_note": "In colder climates (outside its hardy zones), Lantana camara can be grown as a container plant and overwintered indoors in a bright, cool 40-49°F location.",
       "humidity_need": null,
       "humidity_pct_min": null,
       "humidity_pct_max": null,
@@ -1128,7 +1245,7 @@
         },
         {
           "claim": "cool_rest_note (overwintered indoors in bright, cool 40-49F locations)",
-          "quote": "In colder climates, grow as annual bedding plants or in containers that may be overwintered indoors in bright, cool (40-49\u00b0F) locations.",
+          "quote": "In colder climates, grow as annual bedding plants or in containers that may be overwintered indoors in bright, cool (40-49°F) locations.",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a523",
           "source": "Missouri Botanical Garden Plant Finder"
         },
@@ -1170,8 +1287,8 @@
         "UF/IFAS EP648's own 'Toxicity' paragraph for Lantana camara names cattle, horses, sheep, guinea pigs, rabbits, and children -- not cats or dogs by name -- so on its own it would NOT satisfy the toxic_to_pets cats/dogs rule; it was used only as a supplementary toxicity_detail source (toxic principle and plant part). Also note: on that same UF/IFAS page, the toxicity paragraph for a different, unrelated plant (Brunfelsia, 'Yesterday, Today, and Tomorrow') sits immediately above the Lantana camara entry and happens to name 'Dogs, cats, and children' with toxin 'brunfelsamidine' -- that text describes Brunfelsia, not Lantana camara, and was excluded accordingly.",
         "Invasive/weedy status is documented by multiple admissible sources but there is no dedicated field for it in this schema, so it is captured only here: NC State tags the plant '#weedy' and states 'In certain parts of the world with more tropical climates, lantana is a weedy pest'; Missouri Botanical Garden states it 'has naturalized and is considered invasive in parts of the southern United States including southern Florida, the Gulf Coast and southern California'; UF/IFAS EP648 states 'The UF/IFAS Assessment of Non-Native Plants categorizes common lantana as invasive' and that it is 'regarded as one of the 10 most noxious weeds in the world.'",
         "USDA hardiness-zone figures differ slightly by source and scope: NC State's species-page attribute lists 7a-11b (appears to include frost-hardy cultivars like 'Miss Huff'/'Chapel Hill Yellow' alongside the tender straight species), while Missouri Botanical Garden gives top-growth-hardy zones 10-11 (roots to zone 9) for the species itself. No numeric hardiness/chill field was populated from either since chill_damage_f specifically calls for a damage-onset degrees-F figure, not a zone range.",
-        "name_note \u2014 removed on audit: Structural check 1 violation: name_note is non-null (and is not the scientific_name_given exception), but no citation in the array has a claim label that literally contains \"name_note\". Citations 2 and 3 (RHS Name Status: Correct; NC State Genus/Species) are both labeled as scientific_name_accepted claims, not name_note claims. The underlying facts are accurate (verified live: RHS shows Hardiness/Name Status = Correct, NC State shows Genus: Lantana / Species: camara), but under the record's own citation-labeling convention this field is effectively uncited.",
-        "soil_drainage \u2014 removed on audit: The value \"moderate\" is not literally stated by any cited quote and is contradicted by the dominant signal across sources. NC State's own structured field (verified live) reads \"Good Drainage, Moist, Occasionally Dry\"; Clemson's cited quote says lantana needs soil \"well drained and slightly acid\"; and Missouri Botanical Garden (not even cited for this field) independently describes it growing in \"average, medium moisture, well-drained soils\" (confirmed via search). All three admissible sources point toward a well-drained/good-drainage characterization, not \"moderate\" \u2014 the record synthesized a category word none of the quotes use, and that arguably runs against the well-drained signal shared by every source."
+        "name_note — removed on audit: Structural check 1 violation: name_note is non-null (and is not the scientific_name_given exception), but no citation in the array has a claim label that literally contains \"name_note\". Citations 2 and 3 (RHS Name Status: Correct; NC State Genus/Species) are both labeled as scientific_name_accepted claims, not name_note claims. The underlying facts are accurate (verified live: RHS shows Hardiness/Name Status = Correct, NC State shows Genus: Lantana / Species: camara), but under the record's own citation-labeling convention this field is effectively uncited.",
+        "soil_drainage — removed on audit: The value \"moderate\" is not literally stated by any cited quote and is contradicted by the dominant signal across sources. NC State's own structured field (verified live) reads \"Good Drainage, Moist, Occasionally Dry\"; Clemson's cited quote says lantana needs soil \"well drained and slightly acid\"; and Missouri Botanical Garden (not even cited for this field) independently describes it growing in \"average, medium moisture, well-drained soils\" (confirmed via search). All three admissible sources point toward a well-drained/good-drainage characterization, not \"moderate\" — the record synthesized a category word none of the quotes use, and that arguably runs against the well-drained signal shared by every source."
       ]
     }
   ],
@@ -1210,6 +1327,7 @@
     }
   ],
   "normalizations": [
-    "2026-08-23: seventeenth batch of the \"blind spots\" pass -- Ginkgo biloba, Nandina domestica (Heavenly Bamboo), Bougainvillea glabra, Passiflora incarnata (Purple Passionflower), Ranunculus acris (Buttercup), Hydrangea anomala subsp. petiolaris (Climbing Hydrangea, a deliberate third companion species to the Bigleaf/Panicle Hydrangea already in this catalog), Euphorbia milii (Crown of Thorns), and Lantana camara. Ginkgo's toxic_to_pets correctly left null -- RHS's only pets-scoped language ('Seed TOXIC to pets') never names cats or dogs specifically -- while a well-sourced unknowns entry documents the dioecious male/female fruit-drop-and-odor issue as decision-relevant context with no dedicated schema field. Nandina domestica's toxic_to_pets=true confirmed with clean, explicit cat-and-dog evidence (NC State's 'Problem for Cats'/'Problem for Dogs' tags), correctly kept separate from its independently documented bird-specific cyanide toxicity. Restored Common Lantana's soil_drainage from an audit-nulled value back to 'moderate': the audit reasoned that a well-drained signal across sources meant 'moderate' was unsupported, but its own live-verified NC State quote -- 'Soil Drainage: Good Drainage Moist Occasionally Dry' -- is the same tag-combination pattern this catalog has already and repeatedly mapped to 'moderate' rather than 'fast' (see b24's precedent, where a plain well-drained signal without a moisture-spanning tag combo was mapped to 'fast' or left null, while 'Good Drainage, Moist, Occasionally Dry/Wet' combinations were consistently read as 'moderate'); both of Lantana's own citations for the field were already present, correctly labeled, and quote-verified, so this was a citation-already-sufficient repair, not new research. Left null rather than repaired: name_note was removed on audit for three records (Ginkgo, Crown of Thorns, Lantana) purely because no citation's claim label literally contained the string 'name_note' -- all three records' underlying content was independently confirmed accurate by the auditor's own live fetches, and in isolation each would be a same-batch citation-mislabeling repair matching b34's Rose of Sharon fix, but by the time this file reached landing review the post-processing step had already overwritten the field to null everywhere, and the original name_note prose was not preserved anywhere else in the record to restore verbatim -- rather than author replacement text myself, these three stayed null. This surfaced a real, batch-spanning gap in the research prompt (it asks for name_note text but doesn't always generate a matching-labeled citation for it, mirroring the scientific_name_given exception already carved out in b34) worth fixing in the prompt for b36 onward, on both the research and verify sides, so a citation-labeling repair can happen before the value itself gets discarded. Bougainvillea's soil_base and fertilize_interval_days nulls, Purple Passionflower's toxicity_detail and is_houseplant nulls, and Crown of Thorns's toxicity_detail null were all reviewed and confirmed as genuine value-level defects the audit correctly caught (a category word ('standard_potting') not supported by a 'loam-based compost' quote; an ambiguous 'once a month' reading applied inconsistently within the same record; a landscape-use tag read as evidence of non-houseplant status; and, for Crown of Thorns, a 'milky latex sap' phrase re-imported uncited from a passage the record itself had already correctly identified as human-only) -- none were repaired. Climbing Hydrangea's scientific_name_accepted was self-caught by the audit as a literal string \"null\" rather than real JSON null, encoding a genuine, disclosed two-against-one naming disagreement between RHS/NC State (Hydrangea petiolaris) and Missouri Botanical Garden (subsp. petiolaris of H. anomala) -- the underlying research was sound and the intent to leave it unresolved was correct, only the encoding was broken, and it now lands as proper null."
+    "2026-08-23: seventeenth batch of the \"blind spots\" pass -- Ginkgo biloba, Nandina domestica (Heavenly Bamboo), Bougainvillea glabra, Passiflora incarnata (Purple Passionflower), Ranunculus acris (Buttercup), Hydrangea anomala subsp. petiolaris (Climbing Hydrangea, a deliberate third companion species to the Bigleaf/Panicle Hydrangea already in this catalog), Euphorbia milii (Crown of Thorns), and Lantana camara. Ginkgo's toxic_to_pets correctly left null -- RHS's only pets-scoped language ('Seed TOXIC to pets') never names cats or dogs specifically -- while a well-sourced unknowns entry documents the dioecious male/female fruit-drop-and-odor issue as decision-relevant context with no dedicated schema field. Nandina domestica's toxic_to_pets=true confirmed with clean, explicit cat-and-dog evidence (NC State's 'Problem for Cats'/'Problem for Dogs' tags), correctly kept separate from its independently documented bird-specific cyanide toxicity. Restored Common Lantana's soil_drainage from an audit-nulled value back to 'moderate': the audit reasoned that a well-drained signal across sources meant 'moderate' was unsupported, but its own live-verified NC State quote -- 'Soil Drainage: Good Drainage Moist Occasionally Dry' -- is the same tag-combination pattern this catalog has already and repeatedly mapped to 'moderate' rather than 'fast' (see b24's precedent, where a plain well-drained signal without a moisture-spanning tag combo was mapped to 'fast' or left null, while 'Good Drainage, Moist, Occasionally Dry/Wet' combinations were consistently read as 'moderate'); both of Lantana's own citations for the field were already present, correctly labeled, and quote-verified, so this was a citation-already-sufficient repair, not new research. Left null rather than repaired: name_note was removed on audit for three records (Ginkgo, Crown of Thorns, Lantana) purely because no citation's claim label literally contained the string 'name_note' -- all three records' underlying content was independently confirmed accurate by the auditor's own live fetches, and in isolation each would be a same-batch citation-mislabeling repair matching b34's Rose of Sharon fix, but by the time this file reached landing review the post-processing step had already overwritten the field to null everywhere, and the original name_note prose was not preserved anywhere else in the record to restore verbatim -- rather than author replacement text myself, these three stayed null. This surfaced a real, batch-spanning gap in the research prompt (it asks for name_note text but doesn't always generate a matching-labeled citation for it, mirroring the scientific_name_given exception already carved out in b34) worth fixing in the prompt for b36 onward, on both the research and verify sides, so a citation-labeling repair can happen before the value itself gets discarded. Bougainvillea's soil_base and fertilize_interval_days nulls, Purple Passionflower's toxicity_detail and is_houseplant nulls, and Crown of Thorns's toxicity_detail null were all reviewed and confirmed as genuine value-level defects the audit correctly caught (a category word ('standard_potting') not supported by a 'loam-based compost' quote; an ambiguous 'once a month' reading applied inconsistently within the same record; a landscape-use tag read as evidence of non-houseplant status; and, for Crown of Thorns, a 'milky latex sap' phrase re-imported uncited from a passage the record itself had already correctly identified as human-only) -- none were repaired. Climbing Hydrangea's scientific_name_accepted was self-caught by the audit as a literal string \"null\" rather than real JSON null, encoding a genuine, disclosed two-against-one naming disagreement between RHS/NC State (Hydrangea petiolaris) and Missouri Botanical Garden (subsp. petiolaris of H. anomala) -- the underlying research was sound and the intent to leave it unresolved was correct, only the encoding was broken, and it now lands as proper null.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

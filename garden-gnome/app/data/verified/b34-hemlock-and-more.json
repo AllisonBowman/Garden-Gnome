@@ -263,7 +263,16 @@
         "UF/IFAS: this species has a dedicated UF/IFAS publication (ENH454/ST295, \"Hibiscus syriacus: Rose-of-Sharon\"), but as of this research its edis.ifas.ufl.edu/ask.ifas.ufl.edu page returns HTTP 410 Gone (\"The publication you requested is no longer available on Ask IFAS\") -- it has been retired from the live admissible domain and was therefore not usable as a source. No other edis.ifas.ufl.edu or ask.ifas.ufl.edu page substantively addressing this species' care was found (only incidental host-plant mentions in unrelated insect-pest publications).",
         "Penn State Extension and University of Maryland Extension: both domains mention this species only in passing (Penn State: a juglone-tolerance plant list; Maryland: pest pages for hibiscus sawfly and armored scale, and a deer-resistance list) -- none of these pages give care/cultivation data usable for any field in this record.",
         "soil_base: set to garden_bed based on this being an in-ground landscape shrub/hedge/small tree in every admissible source (no source ever frames it as a container or houseplant subject); see is_houseplant citations for the same underlying evidence.",
-        "toxicity_detail: restored with a dedicated citation duplicating the already-verified NC State tags -- the audit's removal was a pure labeling gap (the only citation was labeled for the sibling toxic_to_pets field), not a factual problem; the audit itself independently confirmed the content accurate via live fetch."
+        "toxicity_detail: restored with a dedicated citation duplicating the already-verified NC State tags -- the audit's removal was a pure labeling gap (the only citation was labeled for the sibling toxic_to_pets field), not a factual problem; the audit itself independently confirmed the content accurate via live fetch.",
+        "is_edible left null: no readable page (NC State, RHS, UGA CAES fieldreport) states Hibiscus syriacus or any part of it is eaten/used as food, or that it is poisonous to eat; no record of edibility either way.",
+        "Checked the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting any edibility-adjacent field: 'Poison' had 0 hits, 'Problem for' had 0 hits, and the 6 'Toxic' hits are all the tags 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- i.e. the page reports the plant as NOT toxic to those animals, no toxic part or principle is named.",
+        "Rose of Sharon is a shrub/small tree (NC State: 'Shrub', 'Tree'; UGA: 'Grows eight to 12 feet tall and generally has a tree form'), not a vine/liana/climber, so the climber exclusion (rule 4) does not apply and all four size fields were populated normally.",
+        "https://hgic.clemson.edu/factsheet/hibiscus/ refused this machine (fetch status: error:ProxyError) -- could not be read, skipped.",
+        "https://hgic.clemson.edu/bring-on-the-heat-bring-on-the-blooms-with-rose-of-sharon/ returned http-403 -- could not be read, skipped.",
+        "https://edis.ifas.ufl.edu/publication/ST295 returned http-410 (page gone) -- could not be read, skipped.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c522 refused this machine (fetch status: error:ConnectError) -- could not be read, skipped, consistent with it being a known-refusing host.",
+        "https://www.rhs.org.uk/plants/40530/hibiscus-syriacus/details was read successfully and gives Max Height 2.5-4 metres / Max Spread 2.5-4 metres, but was NOT used for size because NC State has a species-specific page and is the designated anchor when available; RHS also had 0 hits for edible/poison/toxic/pollinator/butterfly/bee/hummingbird terms, so it added no other data.",
+        "https://fieldreport.caes.uga.edu/news/turn-overgrown-shrubs-into-trees/ was read successfully and independently corroborates the height range ('Grows eight to 12 feet tall'); it had no edibility, toxicity, or pollinator content for this species."
       ],
       "citations": [
         {
@@ -451,8 +460,31 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/hibiscus-syriacus/",
           "quote": "#non-toxic for cats #non-toxic for horses #non-toxic for dogs"
+        },
+        {
+          "claim": "mature_height_in 96-144 (NC State Dimensions block: Height: 8 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hibiscus syriacus",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-syriacus/",
+          "quote": "Height: 8 ft. 0 in. - 12 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-120 (NC State Dimensions block: Width: 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hibiscus syriacus",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-syriacus/",
+          "quote": "Width: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Play Value field lists the plant as attracting pollinators; the structured Attracts field separately lists Butterflies, Hummingbirds, Pollinators, and Specialized Bees)",
+          "source": "NC State Extension Gardener Plant Toolbox - Hibiscus syriacus",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-syriacus/",
+          "quote": "Attracts Pollinators"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 144,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Saucer Magnolia",
@@ -503,7 +535,15 @@
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source discusses a fertilizing schedule, frequency, or product strength for this species.",
         "toxic_to_pets, toxicity_detail: none of the admissible sources consulted for this species -- NC State Plant Toolbox, Missouri Botanical Garden Plant Finder, Clemson HGIC's Magnolia factsheet and its dedicated 'Pet Owners Beware: 11 Poisonous Houseplants' article, RHS's plant profile, UF/IFAS EDIS fact sheets for the species and several cultivars (ST386/ST388/ST389/FP368/FP370/FP371/FP373), UGA Extension's 'Landscape Plants for Georgia' guide and its two dedicated pet-toxic-plant news articles, and Penn State Extension's 'spring plants that are poisonous to horses, dogs, and barn cats' article -- name Magnolia x soulangeana, or magnolias generally, in connection with toxicity to any animal.",
         "is_houseplant: all admissible sources describe this as a hardy, USDA zone 4-9 deciduous landscape tree grown in the ground as a lawn or specimen tree (NC State: 'Saucer magnolia makes a great specimen or lawn tree planted in a park or recreation area'; UF/IFAS: 'The tree is best used as a specimen in a sunny spot where it can develop a symmetrical crown'); no admissible source describes growing it indoors or as a long-term houseplant, so is_houseplant is false.",
-        "scientific_name_given/UF/IFAS ENH-545/ST386 (the general, non-cultivar-specific species fact sheet): this publication returns HTTP 410 Gone on both edis.ifas.ufl.edu and ask.ifas.ufl.edu as of this research, so it could not be consulted; only cultivar-specific UF/IFAS sheets (which carry their own cultivar-scoped structured fields such as height/zone/flower color) were available and were used only for their generic, non-cultivar-specific prose, not their structured per-cultivar data tables."
+        "scientific_name_given/UF/IFAS ENH-545/ST386 (the general, non-cultivar-specific species fact sheet): this publication returns HTTP 410 Gone on both edis.ifas.ufl.edu and ask.ifas.ufl.edu as of this research, so it could not be consulted; only cultivar-specific UF/IFAS sheets (which carry their own cultivar-scoped structured fields such as height/zone/flower color) were available and were used only for their generic, non-cultivar-specific prose, not their structured per-cultivar data tables.",
+        "is_edible left null: no page that could be fetched (NC State Plant Toolbox, RHS, IFAS ST388) addresses eating, food use, or toxicity for Saucer Magnolia; searched 'Edible', 'Poison', 'Toxic', 'Problem for' with zero hits on each.",
+        "attracts_pollinators left null: no page that could be fetched has a structured Attracts/wildlife field or an unconditional pollinator statement; searched 'Attracts', 'pollinator', 'butterfl', 'bee' with zero hits on NC State and RHS pages.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a885 refused this machine (ProxyError on every attempt) -- could not check it for size, edibility, or pollinator info.",
+        "ask.ifas.ufl.edu/publication/FP370 was readable (corrected at landing: it did not refuse this machine). It is the named-cultivar page for Magnolia x soulangiana 'Lennei' ('Height: 20 to 25 feet', 'Spread: 15 to 25 feet') and has no edibility or pollinator text, so it was not used for the species, per the cultivar rule.",
+        "hgic.clemson.edu/factsheet/magnolia/ refused this machine (ProxyError on every attempt) -- could not check it.",
+        "ask.ifas.ufl.edu/publication/ST388 (Magnolia x soulangeana 'Burgundy') is a named-cultivar page -- its dimensions (25 ft tall, 20-30 ft spread) and content were not used for the species per the cultivar rule.",
+        "RHS lists Max Height and Max Spread both as 4-8 metres, but NC State's Plant Toolbox page (the anchor, with a structured Dimensions/Height/Width block) exists for this species, so RHS's size figures were not used, per instructions to prefer the NC State anchor when present.",
+        "Saucer Magnolia is a tree/shrub, not a climber, so the climber-size exclusion rule does not apply."
       ],
       "citations": [
         {
@@ -577,8 +617,24 @@
           "quote": "Soil Drainage:\nGood Drainage\nMoist",
           "source": "North Carolina Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/magnolia-x-soulangeana/common-name/saucer-magnolia/"
+        },
+        {
+          "claim": "mature_height_in 180-396 (NC State Height 15 ft. 0 in. - 33 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-x-soulangeana/common-name/saucer-magnolia/",
+          "quote": "Height: 15 ft. 0 in. - 33 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 180-300 (NC State Width 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/magnolia-x-soulangeana/common-name/saucer-magnolia/",
+          "quote": "Width: 15 ft. 0 in. - 25 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 396,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 300
     },
     {
       "common_name": "European Plum",
@@ -816,7 +872,13 @@
         "soil_base: populated as garden_bed on RHS's own explicit statement that cherry trees 'crop best in the ground,' with container growing presented in the same sentence as a secondary fallback. This is more direct evidence than this catalog required to leave Peach's soil_base null (Peach's only candidate was a bare drainage tag with no in-ground/container statement at all); here the source states a primary substrate outright, so garden_bed is populated rather than left null.",
         "outdoor_sun_exposure: populated as full_sun and part_shade together, not treated as a conflict to resolve. NC State, the RHS species profile, and RHS's cherry-growing guide (which names 'Sweet cherries' specifically, distinguishing them from 'acid cherries' which 'will tolerate some shade') all independently give full_sun. Missouri Botanical Garden's Plant Finder entry for this exact species separately gives 'Sun: Full sun to part shade' as its own tolerance-range field rather than a competing preference claim, so part_shade is added alongside full_sun rather than nulled out as a disagreement.",
         "scientific_name_accepted/name_note: NC State's Prunus avium page carries no 'Previously known as' synonym box, and RHS's own Name Status field for Prunus avium reads 'Correct' with no synonym listed either -- both admissible sources agree with nothing to adjudicate, so scientific_name_accepted is copied over unchanged.",
-        "water_estimate_basis — removed on audit: The field's final clause -- 'with container trees kept evenly moist' -- does not trace to citation 17 (or any other citation). Citation 17's quote from RHS 'How to grow cherries' reads only: 'Established cherry trees in open ground shouldn't need watering. Young cherry trees and trees grown in pots will need some additional watering throughout the growing season.' I fetched the live RHS page directly: the 'evenly moist' language is real, but it belongs to a separate, later sentence in the Watering section -- 'Trees in containers need a steady supply of moisture throughout the growing season, so water regularly in dry spells, aiming to keep the compost evenly moist. But never leave them standing in water...' -- which was never quoted or added as its own citation entry. So the field asserts a specific, accurate-but-uncited detail, exactly the traceability defect this same catalog's own audited Peach record (app/data/verified/b28-holly-and-nuts.json, 'water_estimate_basis — removed on audit') establishes as disqualifying: 'the field text includes... [a detail] attributed to [a source], but no citation entry in the array contains this string.' The base watering claim (established in-ground trees need no water; young/container trees need regular watering) is soundly cited; only the added 'evenly moist' clause is unsupported, but per this catalog's own precedent an untraceable addition inside the field's text is grounds to treat the field as unsound as written."
+        "water_estimate_basis — removed on audit: The field's final clause -- 'with container trees kept evenly moist' -- does not trace to citation 17 (or any other citation). Citation 17's quote from RHS 'How to grow cherries' reads only: 'Established cherry trees in open ground shouldn't need watering. Young cherry trees and trees grown in pots will need some additional watering throughout the growing season.' I fetched the live RHS page directly: the 'evenly moist' language is real, but it belongs to a separate, later sentence in the Watering section -- 'Trees in containers need a steady supply of moisture throughout the growing season, so water regularly in dry spells, aiming to keep the compost evenly moist. But never leave them standing in water...' -- which was never quoted or added as its own citation entry. So the field asserts a specific, accurate-but-uncited detail, exactly the traceability defect this same catalog's own audited Peach record (app/data/verified/b28-holly-and-nuts.json, 'water_estimate_basis — removed on audit') establishes as disqualifying: 'the field text includes... [a detail] attributed to [a source], but no citation entry in the array contains this string.' The base watering claim (established in-ground trees need no water; young/container trees need regular watering) is soundly cited; only the added 'evenly moist' clause is unsupported, but per this catalog's own precedent an untraceable addition inside the field's text is grounds to treat the field as unsound as written.",
+        "Toxicity (required accompaniment to is_edible=true): NC State Plant Toolbox lists this plant with medium poison severity to humans. Poison Part: Flowers, Fruits, Leaves, Seeds. Poison Symptoms: \"The leaves, flowers, green fruits, ripe fruits and seeds contain cyanide compounds in detectable quantities, but the seeds and fruit stalks have the highest concentration of toxins. If a couple of pits (stones, which enclose the seeds) are accidentally swallowed, it will not cause poisoning, but care should be taken to remove pits before fruits are processed in a blender or any other machine that will crack open the pits. Symptoms include gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma and respiratory failure.\" Poison Toxic Principle: Cyanogenic glycosides (amygdalin & prunasin). The page's tags also flag it as a problem for cats, dogs, and horses. Only the ripe fruit flesh is the edible part; the pits/seeds, leaves, and flowers are the toxic parts and must not be eaten.",
+        "RHS (rhs.org.uk/plants/13950/prunus-avium/details) gives size as open-ended 'Max Height Higher than 12 metres' and 'Max Spread wider than 8 metres' -- per instructions, an open-ended RHS bound gives no usable figure, so it was not used; NC State's concrete '15 to 30 feet with a matching spread' was used instead for both height and spread.",
+        "RHS 'grow-your-own' cherries page (rhs.org.uk/fruit/cherries/grow-your-own) was not used as a citation source because its size/edibility figures there are given for named cultivars and rootstocks, not the species Prunus avium itself (rule 3).",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=l860 was not read: fetching it via qc.py from this machine is expected to be refused per task instructions for this host, and no attempt-derived content is included here as a property of the page.",
+        "fieldreport.caes.uga.edu (Minor Fruits and Nuts in Georgia) and extension.psu.edu (orchard frost critical temperatures) were not cited (corrected at landing: the note called them both unqueried and searched). Both are readable. UGA confirms sweet cherry (Prunus avium) is grown for fruit and that sweet cherries other than 'Stella' are self-infertile and need cross-pollination; PSU gives only frost critical temperatures. Neither gives a cherry size figure or a toxicity statement, so neither changes a field.",
+        "Prunus avium is a tree, not a climber, so the size-nulling climber rule (rule 4) does not apply here."
       ],
       "citations": [
         {
@@ -956,8 +1018,38 @@
           "quote": "Cherries growing in containers benefit from regular feeding. Either apply an organic, high potassium liquid fertiliser every fortnight during the growing season (April to August), or sprinkle a granular, general-purpose fertiliser onto the compost.",
           "source": "Royal Horticultural Society (RHS), How to grow cherries",
           "url": "https://www.rhs.org.uk/fruit/cherries/grow-your-own"
+        },
+        {
+          "claim": "mature_height_in 180-360 (NC State: \"grows to a height of 15 to 30 feet\", converted to inches: 15 ft = 180 in, 30 ft = 360 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus avium",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-avium/",
+          "quote": "grows to a height of 15 to 30 feet with a matching spread."
+        },
+        {
+          "claim": "mature_spread_in 180-360 (NC State: spread stated to match the 15 to 30 foot height, converted to inches: 15 ft = 180 in, 30 ft = 360 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus avium",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-avium/",
+          "quote": "grows to a height of 15 to 30 feet with a matching spread."
+        },
+        {
+          "claim": "is_edible true (NC State states the fruit is edible raw or cooked)",
+          "source": "NC State Extension Gardener Plant Toolbox - Prunus avium",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-avium/",
+          "quote": "Fruit edible raw or cooked."
+        },
+        {
+          "claim": "attracts_pollinators true (RHS tags this species under Plants for pollinators)",
+          "source": "RHS - Prunus avium (wild cherry) details",
+          "url": "https://www.rhs.org.uk/plants/13950/prunus-avium/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 180,
+      "mature_spread_in_max": 360
     },
     {
       "common_name": "Orange",
@@ -1475,6 +1567,7 @@
     "2026-08-23: sixteenth batch of the \"blind spots\" pass. Poison Hemlock -- \"the plant that killed Socrates\" -- confirmed toxic_to_pets=true with clean cat/dog evidence, while multiple horse/cattle/\"all animals\"-scoped dose figures from Penn State and UGA were correctly excluded per this catalog's cat/dog scoping rule; its well-documented confusion with edible look-alikes (wild carrot/Queen Anne's Lace, parsley, celery) was captured in unknowns even though there's no dedicated field for it. Rose of Sharon and Saucer Magnolia landed as deliberate companion species to Chinese Hibiscus and Southern Magnolia, already in this catalog -- both audited specifically for genus content bleeding across the shared genera, with none found. European Plum and Sweet Cherry both confirmed toxic_to_pets=true (pit/seed cyanogenic risk, distinct from the edible flesh, matching the pattern already established for apple and peach). Rounded out with Orange (a deliberate companion to Lemon, already in this catalog), Celery, and Japanese Spirea.",
     "One landing-time repair: Rose of Sharon's toxicity_detail was nulled purely on a labeling technicality -- its only citation was labeled for the sibling toxic_to_pets field, not toxicity_detail itself -- even though the audit's own live-fetch confirmed the content accurate (NC State's page genuinely carries \"non-toxic for cats/dogs/horses\" tags and no Poison section at all). Restored with a dedicated duplicate citation rather than left on the floor.",
     "Two more instances of the string-\"null\"-instead-of-JSON-null bug this batch (Poison Hemlock's name_note, Orange's scientific_name_accepted), both auto-caught by the audit's own structural check and self-corrected before this landing pass ran its check -- consistent with the pattern seen in every batch since b23.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
