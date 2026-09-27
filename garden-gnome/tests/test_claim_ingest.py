@@ -328,7 +328,8 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # size does real damage there -- the fit engine recommended American Beech for a
     # 32 sq ft raised bed, and did it because a 60-80 ft tree and a 2 ft
     # perennial were equally unknown to it.
-    assert report.claims_written == 4578
+    # + 48 (b84).
+    assert report.claims_written == 4626
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
