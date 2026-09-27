@@ -134,7 +134,10 @@ def fetch(url: str) -> tuple[str, str]:
     except Exception as e:  # noqa: BLE001
         _last[host] = time.time()
         status, text = f"error:{type(e).__name__}", ""
-    key.write_text(json.dumps({"status": status, "text": text}))
+    # A network failure is a fact about this machine at this moment, not about the page. Caching it made every later
+    # check SKIP that page for good, and agents clearing such entries by hand twice wiped the whole cache instead.
+    if not status.startswith("error:"):
+        key.write_text(json.dumps({"status": status, "text": text}))
     return status, text
 
 
