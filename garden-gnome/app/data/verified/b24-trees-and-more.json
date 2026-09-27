@@ -838,7 +838,14 @@
         "fertilize_active_months/fertilize_interval_days/fertilize_strength: none of the four admissible sources located for this species (NC State, Missouri Botanical Garden, UF/IFAS ST093, RHS) address fertilizing at all.",
         "water_regime winter intensity: RHS's winter guidance ('keep just moist in winter') reads softer than NC State's ('greatly reduce water in the winter') and MOBOT's ('reduce watering'); the core growing-season classification (water thoroughly, then let dry before rewatering) is consistently and independently supported by all three, so water_regime was not nulled, but this winter-intensity nuance is flagged for reviewers rather than resolved.",
         "No admissible page was found on hgic.clemson.edu, extension.psu.edu, extension.umd.edu, or fieldreport.caes.uga.edu covering this species despite targeted searches; coverage rests on NC State, Missouri Botanical Garden, UF/IFAS, and RHS only.",
-        "name_note — removed on audit: The name_note text asserts NC State places the plant 'in the asparagus family (Asparagaceae)' and attributes this to the same NC State citation used for the 'not a true palm' claim. I fetched the live NC State page and confirmed the 'asparagus family (Asparagaceae)' sentence is real, but it's a separate sentence at the top of the description paragraph, not part of the quote text NC State's citation entry actually contains ('Even though it is called ponytail palm, it is not a true palm, it has a thick swollen stem (caudex)...'). That quote never mentions family or Asparagaceae. No other citation in the array contains that phrase either (the MOBOT citation only supports 'not a true palm'). So the citation's claim label ('name_note not a true palm, family Asparagaceae') asserts a category the quote doesn't literally support, and the family sub-claim in name_note fails the 'every field value traces to a citation entry' requirement -- even though the fact itself is true, it isn't backed by any quote in the record as constructed."
+        "name_note — removed on audit: The name_note text asserts NC State places the plant 'in the asparagus family (Asparagaceae)' and attributes this to the same NC State citation used for the 'not a true palm' claim. I fetched the live NC State page and confirmed the 'asparagus family (Asparagaceae)' sentence is real, but it's a separate sentence at the top of the description paragraph, not part of the quote text NC State's citation entry actually contains ('Even though it is called ponytail palm, it is not a true palm, it has a thick swollen stem (caudex)...'). That quote never mentions family or Asparagaceae. No other citation in the array contains that phrase either (the MOBOT citation only supports 'not a true palm'). So the citation's claim label ('name_note not a true palm, family Asparagaceae') asserts a category the quote doesn't literally support, and the family sub-claim in name_note fails the 'every field value traces to a citation entry' requirement -- even though the fact itself is true, it isn't backed by any quote in the record as constructed.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (ConnectError/ProxyError on repeated tries) -- not checked, figures not guessed.",
+        "is_edible left null: none of the three readable pages (NC State Plant Toolbox, RHS, UF/IFAS ST093) mention eating, food use, or edibility of any plant part -- no record found, not inferred.",
+        "attracts_pollinators left null: searched NC State for 'Attracts' and 'Pollinator' (0 hits each) and RHS for 'pollinator' (0 hits); RHS only notes small white/creamy flowers are 'rarely produced' with no pollinator-visitor claim, and UF/IFAS likewise has 0 hits for 'Attracts'/'Pollinator' -- no structured attracts field or unconditional pollinator statement found on any readable page.",
+        "NC State (the anchor) is a Houseplant/Tree per its Plant Type tags; its structured Dimensions block reads 'Height: 6 ft. 0 in. - 8 ft. 0 in.' and 'Width: 3 ft. 0 in. - 5 ft. 0 in.', and NC State's own prose confirms this is the pot/houseplant figure ('In its native habitat, it can grow 30 feet tall but in a pot it will grow 6 to 8 feet tall'). Both ends are under 120 in, so recorded as published per the houseplant rule.",
+        "UF/IFAS ST093 gives a larger, non-houseplant figure ('Height: 12 to 18 feet', 'Spread: 10 to 15 feet') under its general landscape Description section -- this is outdoor/landscape stature exceeding 10 ft and was NOT used for the size fields since the anchor (NC State) already supplies a usable houseplant-scale figure; noting it here per the houseplant/outdoor-figure rule.",
+        "NC State's own tags list the plant as 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- no poisonous-part, severity, or toxic-principle language was found on any readable page (0 hits for 'Poison' on NC State and RHS; 0 hits for 'Toxic' on RHS and UF/IFAS), so this does not affect is_edible (which remains null for lack of any edibility statement, not because of a toxicity flag).",
+        "RHS also carries structured size fields ('Max Height 1.5-2.5 metres' = 59.1-98.4 in, 'Max Spread 1-1.5 metres' = 39.4-59.1 in) but per the anchor rule NC State's Dimensions block was used instead since NC State is the species-specific anchor page already cited for this record; RHS figures were not blended in."
       ],
       "citations": [
         {
@@ -966,8 +973,24 @@
           "quote": "Suggested planting locations and garden types: Patio and container plants",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/1993/beaucarnea-recurvata/details"
+        },
+        {
+          "claim": "mature_height_in 72-96 (NC State Plant Toolbox Dimensions block: Height: 6 ft. 0 in. - 8 ft. 0 in., converted to inches; confirmed as the houseplant/pot figure by the page's own text: \"in a pot it will grow 6 to 8 feet tall\")",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/beaucarnea-recurvata/",
+          "quote": "Height: 6 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-60 (NC State Plant Toolbox Dimensions block: Width: 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/beaucarnea-recurvata/",
+          "quote": "Width: 3 ft. 0 in. - 5 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 60
     },
     {
       "common_name": "Money Tree",
@@ -1018,7 +1041,14 @@
         "day_f_min/day_f_max chill_damage_f: NC State's instruction to bring the tree 'indoors before temperatures drop to 45 degrees Fahrenheit' was used as chill_damage_f (an actionable pre-damage threshold) rather than as a night_f_min, since the source frames it as a general cold-weather protective action, not a nightly target range; NC State's separate USDA zone 10-12 hardiness rating and RHS's H1B hardiness rating (10-15C survivability threshold) were treated as broader survival-zone classifications and not used to override or duplicate this more specific, actionable °F figure.",
         "outdoor_sun_exposure — removed on audit: The full_sun entry is a genuine, unresolved disagreement on a harm-capable field (leaf scorch), not a case where one clean citation is corroborated elsewhere against a merely defective outlier. Verified via direct fetch: NC State's structured Light field lists ONLY 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' -- no full-sun option exists in that tag at all -- and its prose states plainly 'The money tree prefers indirect sunlight or a mix of sun and shade. Leaf scorch can occur from exposure to direct sunlight,' a general statement, not one scoped only to containers as the record's unknowns text claims. RHS's own structured Position field is 'Full shade, Partial shade' (again, no full-sun option), and its Cultivation instruction says grow 'in bright light or partial shade.' That is two of the three admissible sources -- including an explicit damage warning -- against full_sun; only Missouri Botanical Garden's landscape-context 'Sun: Full sun to part shade' supports it. The record's own unknowns section admits it 'cannot fully reconcile into a single flag,' which is itself the signal that this value should have been left out of the structured array rather than asserted alongside an unrelated caveat buried in unknowns.",
         "toxic_to_pets — 2026-09-10: the b24 landing had left this null on a practical-risk argument (houseplants never set seed). The catalog rule has no practical-risk carve-out: a cat-scoped statement from an admissible source is what the field tracks, and NC State gives two. The caveat now lives in toxicity_detail instead of in the value.",
-        "toxic_to_pets — verdict pass 2026-09-10: set to true on a cat/dog-scoped statement (https://plants.ces.ncsu.edu/plants/pachira-aquatica/, https://www.rhs.org.uk/plants/12078/pachira-aquatica/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277941 checked). Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: set to true on a cat/dog-scoped statement (https://plants.ces.ncsu.edu/plants/pachira-aquatica/, https://www.rhs.org.uk/plants/12078/pachira-aquatica/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277941 checked). Audited live.",
+        "attracts_pollinators left null: searched NC State page for 'Attracts', 'Pollinator', 'bees', 'butterfl', 'hummingbird', 'wildlife' and RHS page for the same terms -- no structured Attracts field or unconditional pollinator statement on either page (only a general 'Wildlife gardening' nav link on RHS, not about this species).",
+        "is_edible set to true but is CONDITIONAL, not a bare yes: NC State's Edibility section states 'The seeds or nuts are eaten raw, fried, or roasted... The seeds can be ground and used to make flour. The flowers and young leaves can be cooked and used as a vegetable,' but the SAME page also carries: 'This plant has low severity poison characteristics'; 'Poison Severity: Low'; 'Poison Symptoms: possible carcinogen if seeds ingested by humans, mild to moderate gastrointestinal distress for cats--vomiting, diarrhea, and drooling. Houseplants never produce seeds.'; 'Problem for Cats'; 'Some sources state that the seeds are potentially toxic and contain cyclopropenoid fatty acids. Research further before ingesting the seeds or nuts.'; and elsewhere 'The Malabar chestnut is used in cooking; however, there is conflicting information regarding the possible toxicity of the seeds.' Houseplants are unlikely ever to produce the part in question: the page says 'houseplants are unlikely to flower' and 'Houseplants never produce seeds.' (corrected at landing; the note had said houseplants never flower).",
+        "mature_height_in (corrected at landing): max 96, min null. NC State's houseplant statement, 'In cultivation, it can grow up to 30 feet, but it typically grows no more than 6 to 8 feet tall as a houseplant.', is a ceiling, so it fills the max only; the 72 in minimum the researcher took from it was nulled at landing. RHS's pot figure is lower: 'Can reach 20m in its tropical home, but unlikely to exceed 1.5m in a pot.' and 'Max Height 1-1.5 metres' (39.4-59.1 in), so the two indoor figures disagree on the ceiling; NC State's, which the audit passed, is kept. The page's general Dimensions block ('Height: 6 ft. 0 in. - 30 ft. 0 in.', 72-360 in) describes outdoor growth and was not used.",
+        "mature_spread_in recorded from RHS's 'Max Spread 0.1-0.5 metres' (= 3.9-19.7 in), confirmed by RHS's own prose as the pot-grown/houseplant figure ('unlikely to exceed 1.5m in a pot', paired with 'Max Height 1-1.5 metres'). NC State's general Dimensions Width ('6 ft. 0 in. - 30 ft. 0 in.' = 72-360 in) is not houseplant-specific and was not used.",
+        "https://plantfinder.mobot.org/plantfinderdetails.aspx?taxonid=277941 (Missouri Botanical Garden Plant Finder) refused this machine -- fetch returned a non-ok/proxy-error status -- so it was not consulted; nothing from it is represented here.",
+        "Species is not a climber/vine: NC State's Whole Plant Traits list 'Plant Type: Perennial, Tree' and no 'Vine'/'Climbing' terminology appears anywhere on either fetched page, so the climber size-exclusion rule does not apply and size fields were populated normally.",
+        "is_edible citations (landing note): the second citation, which quoted 'The Malabar chestnut is used in cooking; however, there is conflicting information regarding the possible toxicity of the seeds.' as an is_edible condition, was dropped at landing: a toxicity sentence is never cited as support for is_edible true. Its words stay in the is_edible line above. is_edible stays true on the Edibility field's 'The seeds or nuts are eaten raw, fried, or roasted.' (the Malabar chestnut is a real food). The page's Poison Part is Seeds, the part that is eaten, and its Poison Toxic Principle reads 'cyclopropenoid fatty acids--possibly toxic and carcinogenic'."
       ],
       "citations": [
         {
@@ -1140,8 +1170,30 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/pachira-aquatica/",
           "quote": "possible carcinogen if seeds ingested by humans, mild to moderate gastrointestinal distress for cats--vomiting, diarrhea, and drooling. Houseplants never produce seeds."
+        },
+        {
+          "claim": "mature_height_in max 96, min null (NC State: 'it typically grows no more than 6 to 8 feet tall as a houseplant', a ceiling, so its upper end, 8 ft = 96 in, fills the max and the min stays null; re-labelled at landing, same page and quote)",
+          "url": "https://plants.ces.ncsu.edu/plants/pachira-aquatica/common-name/money-tree/",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "quote": "In cultivation, it can grow up to 30 feet, but it typically grows no more than 6 to 8 feet tall as a houseplant."
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, the pot-grown houseplant figure, converted to inches: 0.1 m = 3.9 in, 0.5 m = 19.7 in)",
+          "source": "RHS (Royal Horticultural Society) Plants",
+          "url": "https://www.rhs.org.uk/plants/12078/pachira-aquatica/details",
+          "quote": "Max Height         1-1.5 metres                 Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "is_edible true: NC State's Edibility section states the seeds/nuts are eaten and the flowers/young leaves are cooked and eaten",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/pachira-aquatica/common-name/money-tree/",
+          "quote": "The seeds or nuts are eaten raw, fried, or roasted. Reportedly, the nut has the flavor of peanuts when raw and tastes like chestnuts when roasted."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Norfolk Island Pine",
@@ -1200,7 +1252,12 @@
         "water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no admissible source gives a specific dry-down depth, a probe/check method, or a per-day or per-week watering interval to convert into a day-count estimate; only the qualitative moisture guidance above was found, and since water_regime itself is left null, no downstream estimate was built on top of it.",
         "fertilize_strength: NC State/MOBOT describe 'dilute liquid fertilizer' and RHS a 'balanced fertiliser' -- neither gives a specific dilution ratio (e.g., half or quarter strength) that would map to the fixed enum, so left null rather than guessing a fraction from the word 'dilute' alone.",
         "outdoor_sun_exposure -- MOBOT was not used to support part_shade despite its own structured Sun field reading 'Part shade', because that sits in tension with MOBOT's own prose, which recommends full sun both outdoors ('prefers... full sun') and indoors ('Full sun is normally best for developing compact symmetrical growth'). part_shade is instead supported independently by RHS's structured Position field and its 'sheltered, sunny position during the summer' outdoor-placement note, avoiding reliance on MOBOT's internally conflicted field.",
-        "Clemson HGIC's generic 'Fertilize at the recommended label rate every two or three months...' guidance (from the same Indoor Plants factsheet that names Araucaria heterophylla in its High Light list) was not used for fertilize_interval_days, because that fertilizing paragraph sits in a generic section covering all listed houseplant species collectively, not scoped to this species specifically -- unlike the RHS and NC State quotes used, which are on Araucaria heterophylla's own dedicated species page/profile."
+        "Clemson HGIC's generic 'Fertilize at the recommended label rate every two or three months...' guidance (from the same Indoor Plants factsheet that names Araucaria heterophylla in its High Light list) was not used for fertilize_interval_days, because that fertilizing paragraph sits in a generic section covering all listed houseplant species collectively, not scoped to this species specifically -- unlike the RHS and NC State quotes used, which are on Araucaria heterophylla's own dedicated species page/profile.",
+        "Size fields (mature_height_in_min/max, mature_spread_in_min/max) left null: the only size figures found are the outdoor/landscape stature — NC State Dimensions block \"Height: 60 ft. 0 in. - 80 ft. 0 in.\" / \"Width: 12 ft. 0 in. - 20 ft. 0 in.\" and UF/IFAS ST083 \"Height: 60 to 80 feet\" / \"Spread: 12 to 20 feet\" — both exceeding 120 in (10 ft). Since this species is catalogued as a houseplant and no page gives an indoor/houseplant/container-specific figure, per the outdoor-stature-over-10ft rule all four size fields are left null rather than recording a landscape-tree size in a houseplant record. (Corrected at landing: a page does give an indoor figure. NC State's description reads 'Indoors it prefers a bright, cool room (55-65 degrees F) and will reach heights of 9 feet.' (108 in), which the researcher missed and the auditor found. It is not landed: the research proposed these fields null and nothing was refuted, so standing rule 6 does not reach it and a landing does not set a value. A re-research could land mature_height_in max 108 with the min null; no page gives an indoor spread.)",
+        "RHS gives only open-ended bounds: \"Max Height Higher than 12 metres\" and \"Max Spread wider than 8 metres\" (searched both \"Max Height\"/\"Max Spread\" and \"Ultimate height\" wordings; \"Ultimate height\" returned 0 hits). These provide no usable lower or upper bound, so no RHS size figure was recorded.",
+        "attracts_pollinators left null: no page (NC State, RHS, UF/IFAS) has a structured Attracts/wildlife-pollinator field or an unconditional statement naming bees, butterflies, moths, or hummingbirds for this species. NC State's \"Wildlife Value\" field only says \"Seeds are a food source for small mammals\" — a food-source note, not pollination — so it was not read as support.",
+        "is_edible condition: NC State's Edibility field states only \"Seeds are edible (nut-like)\" — edibility applies to the seed only, not the whole plant or foliage. Checked NC State for 'Poison', 'Toxic', 'Problem for' before setting is_edible: the only 'Toxic' hits were tag-list entries reading \"non-toxic for cats\", \"non-toxic for horses\", \"non-toxic for dogs\" — no poisonous part, severity, toxic principle, preparation requirement, or pets warning was named on the page.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, taxonid=276635) refused this machine on two attempts (error:ProxyError, then error:ConnectError even with the host added to allowed_domains) — it could not be read and no claims or size figures were drawn from it."
       ],
       "citations": [
         {
@@ -1340,8 +1397,15 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/araucaria-heterophylla/",
           "quote": "In winter, mist in heated rooms and water sparingly."
+        },
+        {
+          "claim": "is_edible true (NC State Edibility: Seeds are edible (nut-like) — only the seeds are edible, not the whole plant)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/araucaria-heterophylla/",
+          "quote": "Seeds are edible (nut-like)"
         }
-      ]
+      ],
+      "is_edible": true
     },
     {
       "common_name": "Maidenhair Fern",
@@ -1390,7 +1454,13 @@
         "Clemson HGIC's 'Maidenhair Fern' page and UF/IFAS EDIS FP013 ('Adiantum spp. Maidenhair Fern') were reviewed but excluded from this record: Clemson's page covers only Adiantum pedatum and Adiantum capillus-veneris and never mentions A. raddianum; UF/IFAS FP013 covers the genus Adiantum generically (multiple species) without naming A. raddianum specifically. Per instructions against genus-level/sibling-species boilerplate, neither was used to support any field here.",
         "Penn State Extension, UMD Extension, and UGA CAES Field Report were searched but returned no page addressing Adiantum raddianum (or any Adiantum species relevant to it) at all, so none of the eight admissible publishers besides NC State, Missouri Botanical Garden, and RHS contributed to this record.",
         "soil_drainage — removed on audit: The record sets soil_drainage='moisture_retentive' citing only NC State prose about not letting roots dry out (a watering-frequency statement, not a drainage-character statement). But NC State's own structured Attributes sidebar for this exact species explicitly lists 'Soil Drainage: Good Drainage, Occasionally Wet,' and RHS's own structured 'Moisture' attribute (verified live) says 'Moist but well–drained.' Both admissible sources' own categorical drainage data contradict 'moisture_retentive' as a standalone characterization — the species is characterized as well-drained (with consistent moisture), not as retaining/poorly-draining soil. No other citation independently supports 'moisture_retentive' as a drainage claim, so per the audit's own rule the field's value itself, not merely one citation, is in doubt.",
-        "outdoor_sun_exposure — removed on audit: Lower-confidence secondary finding: NC State's own structured Light attribute for this species lists BOTH 'Dappled Sunlight (Shade through upper canopy all day)' and 'Partial Shade (Direct sunlight only part of the day, 2-6 hours),' and its prose says the fern 'needs partial shade to shade.' The record captures only part_shade and drops the shade/dappled-shade component that the source's own categorization and prose both affirm, understating the plant's documented shade tolerance/preference relative to the primary source's own classification."
+        "outdoor_sun_exposure — removed on audit: Lower-confidence secondary finding: NC State's own structured Light attribute for this species lists BOTH 'Dappled Sunlight (Shade through upper canopy all day)' and 'Partial Shade (Direct sunlight only part of the day, 2-6 hours),' and its prose says the fern 'needs partial shade to shade.' The record captures only part_shade and drops the shade/dappled-shade component that the source's own categorization and prose both affirm, understating the plant's documented shade tolerance/preference relative to the primary source's own classification.",
+        "is_edible left null: neither NC State nor RHS addresses eating this plant; no page mentions food use.",
+        "Searched NC State anchor page for 'Poison', 'Toxic', and 'Problem for' as required before setting is_edible — 0 hits on all three, so no toxicity information exists on that page to report.",
+        "attracts_pollinators left null: neither NC State's structured fields nor RHS's page mention bees, butterflies, moths, hummingbirds, or an 'attractive to pollinators' tag; NC State's only wildlife-related note is deer resistance, 'This plant is seldom damaged by deer.', which sits under 'Particularly Resistant To (Insects/Diseases/Other Problems)' (corrected at landing: the page has no Wildlife Value field), which is browsing resistance, not pollination, so it was not read as support.",
+        "mature_height_in / mature_spread_in recorded from NC State's Dimensions block (Height 1 ft.0in.-2 ft.0in.; Width 1 ft.0in.-2 ft.0in. = 12-24 inches each). RHS independently gives Max Height and Max Spread both 0.1-0.5 metres (≈ 3.9-19.7 in), a consistent but not identical range for the same houseplant-scale fern; NC State's structured Dimensions block was used as the anchor citation per instructions.",
+        "This species is catalogued as a houseplant; the recorded figures (12-24 in height and spread) are well under the 120-inch (10 ft) threshold, so they were recorded as published without needing to distinguish indoor vs. outdoor stature.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (ConnectError after allowing the domain) — could not be read; no data taken from it, none guessed."
       ],
       "citations": [
         {
@@ -1476,8 +1546,24 @@
           "quote": "Name Status: Correct",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/20650/adiantum-raddianum/details"
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Plant Toolbox Dimensions: Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/adiantum-raddianum/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Plant Toolbox Dimensions: Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/adiantum-raddianum/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     }
   ],
   "audit_summary": [
@@ -1520,6 +1606,7 @@
     "The audit caught a genuinely important, subtle safety nuance on Money Tree: NC State's own toxicity text states the toxic part is seeds-only, in the same sentence as \"Houseplants never produce seeds\" -- meaning a flat toxic_to_pets=true overstates the practical risk for the near-universal potted-specimen case this record otherwise describes throughout (is_houseplant=true, container-mix soil, indoor overwintering). Rather than just losing this nuance when the boolean was correctly nulled, added the missing citation and restored it as a toxicity_detail explaining the seeds-only/rarely-applicable caveat, so a reader still learns the real, conditional fact instead of nothing at all.",
     "A precise, well-cited catch on Flowering Dogwood: a watering check-depth was recorded as 12.7cm, silently converting UMD's stated \"4 to 6 inches deep\" range into an undisclosed 5-inch midpoint rather than taking a literal bound the way this catalog has consistently done elsewhere (e.g. Chinese Evergreen in b1, \"1-2 inches\" -> the 2-inch upper bound) -- correctly nulled as false precision the source never stated.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Money Tree -> true. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

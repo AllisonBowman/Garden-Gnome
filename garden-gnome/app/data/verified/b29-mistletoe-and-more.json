@@ -513,7 +513,14 @@
         "water_regime, water_dry_down_target: RHS's cultivation text states 'Water moderately when in growth, not at all when dormant in autumn/winter' -- a seasonal watering-amount instruction, not a soil dry-down cue between individual waterings, so it does not cleanly map to any of the fixed water_regime categories (keep_moist / dry_surface_between / dry_thoroughly_between / keep_barely_moist); no value taken.",
         "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: no admissible source gives a soil-check depth or a watering-frequency interval in days for this species.",
         "fertilize_interval_days, fertilize_strength, fertilize_active_months: RHS states only 'Apply a balanced liquid fertiliser 2 or 3 times in the growing season' -- a per-season application count, not a stated interval in days, named calendar months, or a dilution strength, so none of the fertilize_* fields can be populated without inventing a value the quote doesn't give. Clemson's fertilizing figures ('Use a low nitrogen fertilizer such as 5-10-5 once a month from June through September') again come from the shared multi-genus 'Culture of Arid Climate Cacti' section, not a Golden-Barrel-specific statement.",
-        "No profile page for Echinocactus grusonii (or its synonym Kroenleinia grusonii) could be found on plants.ces.ncsu.edu, plantfinder.mobot.org/missouribotanicalgarden.org, edis.ifas.ufl.edu/ask.ifas.ufl.edu, extension.psu.edu, extension.umd.edu, or fieldreport.caes.uga.edu; only RHS and Clemson HGIC returned admissible, species-naming content for this search."
+        "No profile page for Echinocactus grusonii (or its synonym Kroenleinia grusonii) could be found on plants.ces.ncsu.edu, plantfinder.mobot.org/missouribotanicalgarden.org, edis.ifas.ufl.edu/ask.ifas.ufl.edu, extension.psu.edu, extension.umd.edu, or fieldreport.caes.uga.edu; only RHS and Clemson HGIC returned admissible, species-naming content for this search.",
+        "is_edible left null: neither the RHS Echinocactus grusonii page nor the Clemson HGIC indoor-cacti page states that this species (or a part of it) is eaten or used for food. The Clemson page does mention edible fruit, but only for Opuntia (prickly pear) species elsewhere on the page -- not for Golden Barrel Cactus -- so it was not used as support.",
+        "attracts_pollinators left null: searched both pages for 'Pollinat', 'Attract', 'Wildlife', 'Bee', and 'Butterfl'. RHS has no attracts/wildlife tag or statement for this species (its only 'Wildlife' hit is an unrelated nav-menu link to a 'Wildlife gardening' section). Clemson's only 'Pollinat' hit is an unrelated site-wide tag-cloud entry ('Pollinator garden'), not a statement about this species. No page names bees, butterflies, moths, or hummingbirds for Echinocactus grusonii.",
+        "Checked RHS page for 'Poison' and 'Toxic' before setting any field: 0 hits for both, so no toxicity information exists to report.",
+        "mature_height_in and mature_spread_in are taken from RHS's structured Dimensions block for this species: 'Max Height 0.1-0.5 metres' and 'Max Spread 0.5-1 metres' (converted x39.37: 0.1m=3.9in, 0.5m=19.7in, 1m=39.4in). Clemson's indoor-cacti page has no per-species Dimensions figure for Golden Barrel Cactus (its 'Height/Spread' section is a general cacti-as-houseplants discussion with no numeric figure for this species), so RHS is the only size source, per the anchor-page hierarchy rule. This is RHS's general (not houseplant-specific) figure; no distinct indoor/container figure was found on either page. Both bounds are well under the 120 in (10 ft) indoor-headroom cutoff, so they were recorded as published rather than nulled.",
+        "This is not a climber/vine, so the climber-size exclusion (rule 4) does not apply.",
+        "This is not a cultivar-specific figure; the RHS page is for the species Echinocactus grusonii itself.",
+        "No page in this task's required set (ask.ifas.ufl.edu, plantfinder.mobot.org) was cited for this record, so there is nothing to report as refused for those hosts."
       ],
       "citations": [
         {
@@ -569,8 +576,24 @@
           "quote": "H1C: can be grown outside in the summer (5 - 10)",
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/6253/echinocactus-grusonii/details"
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "source": "RHS - Echinocactus grusonii",
+          "url": "https://www.rhs.org.uk/plants/6253/echinocactus-grusonii/details",
+          "quote": "Max Height         0.1-0.5 metres                 Max Spread         0.5-1 metres"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches: 0.5 x 39.37 = 19.7, 1 x 39.37 = 39.4)",
+          "source": "RHS - Echinocactus grusonii",
+          "url": "https://www.rhs.org.uk/plants/6253/echinocactus-grusonii/details",
+          "quote": "Max Height         0.1-0.5 metres                 Max Spread         0.5-1 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "common_name": "Weeping Willow",
@@ -1350,6 +1373,7 @@
     "2026-08-23: eleventh batch of the \"blind spots\" pass. Three high-priority safety gaps, all confirmed toxic_to_pets=true: American Mistletoe (completing a classic holiday-toxic-plant trio with Poinsettia and Holly already in this catalog; also this catalog's first hemiparasitic species -- it draws water/nutrients through a haustorium into a host tree's bark, not from soil, so soil_base/soil_ph/water_regime correctly landed inapplicable rather than forced), Monkshood (aconitine, often cited as among the most acutely toxic garden perennials grown), and Common Milkweed (cardiac glycosides, the same mechanism as oleander, despite being an increasingly deliberately-planted monarch host plant). Rounded out with Golden Barrel Cactus, Weeping Willow, American Sycamore, Sweet Potato, and Creeping Jenny. All 8 confirmed genuinely uncovered by grep before landing -- Platanus occidentalis had one prior hit, but it was only an incidental mention inside a River Birch citation quote in b25 (naming sycamore as another wet-tolerant exception tree), not an actual record.",
     "Monkshood's toxic_to_pets survived intact, but its toxicity_detail was correctly stripped after the audit found the whole symptom/mechanism narrative traced to NC State's genus-wide Aconitum page, reused verbatim across at least eight different NC State URLs (the genus page plus seven common-name-alias pages) -- and caught something the boilerplate itself gave away: the shared text lists \"bark\" as a poisoned plant part, which is physically impossible for an herbaceous perennial with no woody tissue at all, exactly the kind of tell that exposes copy-paste content dressed up as species-specific research.",
     "One schema bug this batch, again caught and self-corrected by the auditor itself before this landing pass ran its own check: American Mistletoe's scientific_name_accepted was written as an empty string despite genuinely being an unresolved four-source naming conflict (NC State, UF/IFAS, and RHS treat Phoradendron leucarpum as current; Penn State Extension treats P. serotinum as current) -- the auditor named the encoding defect on its own and the batch script's cleanup step correctly nulled it.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

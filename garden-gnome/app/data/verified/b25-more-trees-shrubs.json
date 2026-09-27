@@ -1051,7 +1051,14 @@
         "night_f_min 50 / night_f_max 55 is Clemson's bud-formation requirement (cool nights needed to trigger flower bud set). This is distinct from Missouri Botanical Garden's separate note that 'Temperatures below 60°F can produce malformed buds' (a bud-quality problem from cold snaps, not a bud-formation requirement). These describe different phenomena (bud initiation vs. bud malformation) rather than a direct numeric contradiction, so the Clemson figure was kept; the MOBOT caveat is flagged here for transparency rather than folded into the record.",
         "soil_ph_min 5.0 / soil_ph_max 6.5 comes from UF/IFAS's specific numeric range ('An acidic soil pH between 5.0 and 6.5 is required'). NC State and Clemson tag the species more coarsely as preferring 'Acid (<6.0)' / 'acid (with a pH of less than 6.0)' without giving a precise numeric range; that coarse category mostly overlaps with, but doesn't exactly match, UF/IFAS's upper bound of 6.5. Since only UF/IFAS supplies an actual numeric range while the others use a generic site-wide pH bucket, the UF/IFAS figure was used rather than treating this as an unresolvable conflict.",
         "day_f_min/day_f_max, humidity_pct_min/humidity_pct_max, light_fc_min/light_fc_good, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis are all left null -- no admissible source gives a numeric daytime temperature target, humidity percentage, foot-candle light figure, soil-check depth, or day-count watering interval for this species.",
-        "is_houseplant is true based on direct source support for container/conservatory culture (Missouri Botanical Garden explicitly lists 'Houseplant' as a Use and describes moving potted plants indoors before frost; RHS instructs growing under glass or bringing containers indoors below about 6°C). All admissible sources nonetheless treat this primarily as an outdoor landscape/foundation shrub (NC State Design Feature: Border, Hedge, Screen/Privacy, Specimen; UF/IFAS: hedges, ground covers, mass plantings, free-standing specimens), with container/indoor culture as a secondary, cold-climate-specific use -- consistent with the species being a landscape shrub rather than a plant bred primarily for interior culture."
+        "is_houseplant is true based on direct source support for container/conservatory culture (Missouri Botanical Garden explicitly lists 'Houseplant' as a Use and describes moving potted plants indoors before frost; RHS instructs growing under glass or bringing containers indoors below about 6°C). All admissible sources nonetheless treat this primarily as an outdoor landscape/foundation shrub (NC State Design Feature: Border, Hedge, Screen/Privacy, Specimen; UF/IFAS: hedges, ground covers, mass plantings, free-standing specimens), with container/indoor culture as a secondary, cold-climate-specific use -- consistent with the species being a landscape shrub rather than a plant bred primarily for interior culture.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's connection (ConnectError even after allowlisting the host) -- not queried, per task instructions that this host is known to refuse.",
+        "edis.ifas.ufl.edu/publication/EP338/pdf served as a raw PDF that qc.py's fetch-and-extract path could not turn into text (status: 'pdf', 0 bytes extracted), and its redirect/companion host ask.ifas.ufl.edu is separately blocked to this machine -- not queried; nothing from this source was used.",
+        "RHS lists Max Height 1-1.5 metres (39.4-59.1 in) and Max Spread 1-1.5 metres (39.4-59.1 in) for Gardenia jasminoides, smaller than NC State's Dimensions Height/Width of 4-8 ft (48-96 in). NC State was used as the anchor per instructions since it is a species-specific (not genus) page with a structured Dimensions block; RHS was not blended in.",
+        "NC State's page also carries: 'This plant has low severity poison characteristics', Poisonous to Humans / Poison Severity: Low, Poison Symptoms: 'Mild vomiting and/or diarrhea, hives.', Poison Toxic Principle: Genioposide, Gardenoside. No page (NC State, RHS, or Clemson HGIC) states any part of Gardenia jasminoides is eaten or grown for food -- combined with the ingestion-consistent poisoning symptoms, is_edible was set false rather than left null.",
+        "Clemson HGIC (hgic.clemson.edu) gives a Height/Spread of 3-8 ft 'depending upon the cultivar' with no species-wide figure distinct from cultivar variation, and has no Attracts/pollinator or edibility/toxicity statement anywhere on the page -- it was read but not used as the basis for any field.",
+        "No page gave a distinct houseplant/container/indoor-grown size for Gardenia jasminoides; the recorded height and spread (48-96 in) are NC State's general landscape Dimensions figures, which are at or under the 120 in (10 ft) houseplant threshold, so they were recorded as published rather than nulled.",
+        "Gardenia jasminoides is a shrub, not a vine/liana/climber, so the climber-size restriction (rule 4) does not apply and all four size fields were populated."
       ],
       "citations": [
         {
@@ -1149,8 +1156,38 @@
           "quote": "May be grown outdoors in pots and containers in moist but well-drained soil in partial or light dappled shade in a frost free site, but this must be in a sheltered, frost-free warm area. Best to bring indoors if temperature dips below about 6°C. Otherwise, grow under glass in lime-free soil in bright filtered light in moderate humidity",
           "source": "Royal Horticultural Society (RHS)",
           "url": "https://www.rhs.org.uk/plants/7605/i-gardenia-jasminoides-i/details"
+        },
+        {
+          "claim": "mature_height_in 48-96 (NC State Dimensions Height: 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Gardenia jasminoides",
+          "url": "https://plants.ces.ncsu.edu/plants/gardenia-jasminoides/",
+          "quote": "Height: 4 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-96 (NC State Dimensions Width: 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Gardenia jasminoides",
+          "url": "https://plants.ces.ncsu.edu/plants/gardenia-jasminoides/",
+          "quote": "Width: 4 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: Gardenia hips attract birds and other wildlife, and Attracts pollinators)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Gardenia jasminoides",
+          "url": "https://plants.ces.ncsu.edu/plants/gardenia-jasminoides/",
+          "quote": "Gardenia hips attract birds and other wildlife. Attracts pollinators."
+        },
+        {
+          "claim": "is_edible false (NC State: This plant has low severity poison characteristics; page names no edible use or food part)",
+          "source": "North Carolina Extension Gardener Plant Toolbox -- Gardenia jasminoides",
+          "url": "https://plants.ces.ncsu.edu/plants/gardenia-jasminoides/",
+          "quote": "This plant has  low severity  poison characteristics."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true,
+      "mature_height_in_min": 48,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 96
     },
     {
       "common_name": "Border Forsythia",
@@ -1573,6 +1610,7 @@
     "Camellia's soil_drainage catch is a nice example of the audit now enforcing its own precedent across the whole catalog, not just within one record: the same NC State three-tag combination ('Good Drainage, Moist, Occasionally Wet', missing 'Occasionally Dry') is correctly mapped to moisture_retentive on Jack-in-the-Pulpit in b22, but this record had mapped the identical tags to 'moderate' -- inconsistent with the catalog's own established convention, and caught by checking against it directly rather than judging the record in isolation.",
     "Fig's scientific_name_accepted and is_houseplant both landed null on careful, correct reasoning rather than data gaps: the accepted-name value is true but the citation supporting it doesn't actually establish taxonomic status (traceability failure, not a factual one), and is_houseplant was refused because every citation describes dormant winter cold-storage in an unheated garage or basement, not active indoor growing -- explicitly distinguished from this catalog's real houseplant precedents (Purple Shamrock in b21; Fiddle Leaf Fig and Rubber Plant, the catalog's other Ficus entries, in b2).",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Red Maple -> false. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

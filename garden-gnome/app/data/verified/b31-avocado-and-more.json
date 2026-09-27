@@ -50,7 +50,11 @@
         "toxic_to_pets specifically for dogs and cats: no admissible source (NC State, RHS, UF/IFAS) addresses avocado toxicity to dogs or cats by name. Documented pet-toxicity from RHS is specific to rabbits (leaves) and caged birds (fruit, if eaten repeatedly), and NC State separately flags horses via a 'problem for horses' tag. Widely repeated claims that avocado is toxic to dogs/cats are not corroborated by any of the eight admissible publishers searched for this record.",
         "Missouri Botanical Garden's Plant Finder page for Persea americana (plantfinder.mobot.org, taxonid=281661) could not be fetched due to a repeated TLS certificate verification error, so despite appearing in search results it was not used as a citation source for this record.",
         "toxic_to_pets — corrected at landing: the batch's own audit passed this field through unrefuted, but its value rested entirely on RHS's rabbit- and bird-scoped citations plus NC State's horse tag -- no cat/dog evidence at all, despite the record's own toxicity_detail text explicitly saying so. This catalog has repeatedly ruled that a target-animal-scoped finding (no cats/dogs named) should null the field rather than generalize to true (Elderberry in b28, Red Maple in b25); this record was inconsistent with that precedent and is corrected to match it.",
-        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/persea-americana/, https://www.rhs.org.uk/plants/21291/persea-americana/details, https://ask.ifas.ufl.edu/publication/MG213, https://hgic.clemson.edu, https://plantfinder.mobot.org, https://fieldreport.caes.uga.edu, https://extension.umd.edu, https://extension.psu.edu); none found, so the value stays null. Audited live."
+        "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/persea-americana/, https://www.rhs.org.uk/plants/21291/persea-americana/details, https://ask.ifas.ufl.edu/publication/MG213, https://hgic.clemson.edu, https://plantfinder.mobot.org, https://fieldreport.caes.uga.edu, https://extension.umd.edu, https://extension.psu.edu); none found, so the value stays null. Audited live.",
+        "is_edible=true: NC State's own Tags/Problems fields flag this plant '#problem for horses' and structured Problems field 'Problem for Horses'; RHS details page (21291) lists under Potentially harmful: 'Pets (rabbits): Leaves TOXIC if eaten' and 'Pets (incl. caged birds): Fruit harmful if eaten repeatedly - see the HTA guide to potentially harmful plants'. Only the ripe fruit flesh is the edible part; leaves and repeated fruit consumption are flagged as harmful to specific pets/animals.",
+        "attracts_pollinators left null: searched 'Attracts', 'Pollinator', 'bee', 'butterfl', 'Wildlife', 'hummingbird' on NC State, both RHS pages, and UF/IFAS -- no page has a structured Attracts/wildlife field or unconditional pollinator statement for this species. UF/IFAS actually states fruit 'does not attract wildlife', but that describes wildlife foraging on ripe fruit, not pollination, so it was not used to set the flag either way; left null per 'no mention = null'.",
+        "mature_height_in / mature_spread_in all left null: NC State's Dimensions block gives Height 30 ft. 0 in. - 60 ft. 0 in. (360-720 in) and Width 20 ft. 0 in. - 30 ft. 0 in. (240-360 in); UF/IFAS ask.ifas.ufl.edu/st435 gives Height: 30 to 40 feet (360-480 in), Spread: 25 to 35 feet (300-420 in); RHS details page (21291) gives Max Height 2.5-4 metres (98.4-157.5 in) and Max Spread 2.5-4 metres (98.4-157.5 in). All of these are outdoor/landscape/general-cultivation stature figures (none is explicitly labeled as an indoor/houseplant/container-grown size), and every one has a high end exceeding 120 inches (10 ft). Per the houseplant-headroom rule, none of these figures was recorded and all four size fields were left null; the RHS growing-guide page (avocado/growing-guide) confirms this species is grown as a houseplant but gives no numeric size for that form, only general care instructions.",
+        "No page among the four was refused by this machine -- all four (NC State, RHS growing-guide, RHS details/21291, ask.ifas.ufl.edu/st435) returned fetch status ok."
       ],
       "citations": [
         {
@@ -130,8 +134,15 @@
           "quote": "In winter, keep plants indoors at 13–18°C (55–65°F). ... Water as needed in spring and summer, especially in hot, sunny spells. Reduce watering in winter.",
           "source": "RHS Growing Guide",
           "url": "https://www.rhs.org.uk/plants/avocado/growing-guide"
+        },
+        {
+          "claim": "is_edible true (NC State: fruit has edible flesh, often eaten raw)",
+          "source": "NC State Extension Plant Toolbox — Persea americana",
+          "url": "https://plants.ces.ncsu.edu/plants/persea-americana/",
+          "quote": "The fruit contains edible flesh rich in vitamins and monounsaturated fat, often eaten raw or as a sandwich spread and in desserts."
         }
-      ]
+      ],
+      "is_edible": true
     },
     {
       "common_name": "Bradford Pear",
@@ -1148,7 +1159,13 @@
         "water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis: left null. RHS gives a watering frequency only in qualitative terms ('twice a week' during 'spring to autumn') rather than a literal numeric day-interval, and there is no soil medium to check a depth in; the qualitative guidance is captured instead in water_dry_down_target rather than converted into an invented day count.",
         "fertilize_interval_days/fertilize_active_months: left null. NC State says to fertilize 'during the growing season' but names no specific calendar months and gives no numeric day interval.",
         "fertilize_strength: mapped to 'half' from NC State's phrase 'dilute (half-strength or even less) liquid fertilizer'; the source's own wording allows for even more dilution than half-strength, so 'half' is used as the named reference point from the quote rather than a single precisely bounded value.",
-        "water_dry_down_target — removed on audit: The synthesized guidance text adds the parenthetical '(or tepid water)' as an alternative to rainwater. I fetched the raw HTML of both cited pages directly: RHS's cultivation text says only 'immerse in rainwater twice a week... drain well and allow to dry' with no mention of water temperature, and NC State's page (full text checked) never uses the words 'tepid,' 'warm,' or 'room temperature' anywhere. This specific detail is not traceable to either citation -- it's an invented addition, not a paraphrase."
+        "water_dry_down_target — removed on audit: The synthesized guidance text adds the parenthetical '(or tepid water)' as an alternative to rainwater. I fetched the raw HTML of both cited pages directly: RHS's cultivation text says only 'immerse in rainwater twice a week... drain well and allow to dry' with no mention of water temperature, and NC State's page (full text checked) never uses the words 'tepid,' 'warm,' or 'room temperature' anywhere. This specific detail is not traceable to either citation -- it's an invented addition, not a paraphrase.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page addresses eating this plant at all -- no mention of food use, and no Poison/Toxic/Problem-for language beyond a note that it is not troubled by pests or diseases (irrelevant to toxicity).",
+        "attracts_pollinators left null: searched both pages for 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' -- no structured Attracts/Wildlife field and no unconditional pollinator statement on either page.",
+        "Size fields taken from NC State (the anchor, structured Dimensions block: Height 0 ft. 6in.-1 ft. 0in. = 6-12in; Width 0 ft. 4in.-0 ft. 8in. = 4-8in), not from RHS's overlapping-but-different Max Height/Max Spread 0.1-0.5 metres (3.94-19.7in) figures, per the rule that NC State's structured page is the anchor when present.",
+        "Both target pages fetched successfully (fetch status: ok); no host refused this machine, so nothing was skipped.",
+        "Plant is not a climber/vine (NC State lists it as Epiphyte, Herbaceous Perennial, Houseplant), so the climber-exclusion rule does not apply and size fields were recorded normally.",
+        "All size figures are well under 120 inches (10 ft) and NC State explicitly lists it as a Houseplant, so no indoor-vs-outdoor size conflict exists."
       ],
       "citations": [
         {
@@ -1210,8 +1227,24 @@
           "quote": "Fertilize during the growing season with a dilute (half-strength or even less) liquid fertilizer.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/tillandsia-ionantha/"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/tillandsia-ionantha/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 4-8 (NC State Width: 0 ft. 4 in. - 0 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/tillandsia-ionantha/",
+          "quote": "Width: 0 ft. 4 in. - 0 ft. 8 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 4,
+      "mature_spread_in_max": 8
     },
     {
       "common_name": "American Persimmon",
@@ -1400,6 +1433,7 @@
     "The audit caught something more serious than a citation-quality issue on Bradford Pear: two specific, dated regulatory claims (\"Pennsylvania noxious weed list since 2024\"; \"South Carolina do-not-sell list effective October 1, 2024\") that don't appear anywhere on the actual cited Penn State or Clemson pages -- fabricated specifics layered onto an otherwise accurate general invasive-species note. Caught by direct re-fetch, not just citation-matching, and removed while the soundly-supported general invasive-species finding (from six other accurate citations) was kept.",
     "Jimsonweed's soil_drainage catch shows the audit now enforcing cross-batch consistency at real scale: the same \"Good Drainage\" + \"Moist\"/\"well-drained\" citation pattern mapped to 'moderate' here has already been explicitly audited and rejected across seven other records in this catalog (b11, b12, b14, b17, b18, and twice in b23) -- the audit cited each by file:line and applied the same established rule rather than treating this as a fresh judgment call.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Avocado -> none, American Persimmon -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

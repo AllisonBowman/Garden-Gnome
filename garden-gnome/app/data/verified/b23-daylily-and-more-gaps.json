@@ -233,7 +233,11 @@
         "soil_ph_min and soil_ph_max: left null. NC State gives only broad pH category checkboxes, 'Acid (<6.0)' and 'Neutral (6.0-8.0)' together, and RHS gives only the categorical 'Acid or Neutral.' Neither source states a specific numeric preferred range for this species.",
         "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. No admissible source gives a specific check-depth or day-interval watering figure for this species; only qualitative dry-down guidance was found, captured instead in water_dry_down_target and cool_rest_note.",
         "fertilize_active_months and fertilize_interval_days: left null. RHS says to fertilize 'when in growth' '2 or 3 times' but never names specific calendar months or gives a day interval.",
-        "fertilize_strength: left null. RHS's cultivation text says to apply 'a low nitrogen liquid fertiliser' -- this describes the fertilizer's nitrogen content/formulation, not a dilution strength (full/half/quarter), so it was not forced into this field."
+        "fertilize_strength: left null. RHS's cultivation text says to apply 'a low nitrogen liquid fertiliser' -- this describes the fertilizer's nitrogen content/formulation, not a dilution strength (full/half/quarter), so it was not forced into this field.",
+        "All four mature-size fields left null: this species is a climber/trailer, not a self-supporting plant with a stature height. NC State's structured Habit/Form field lists it as Cascading, Climbing, Prostrate; RHS lists Habit: Trailing and its genus note describes Ceropegia as \"climbing to trailing.\" Per the task rule, a climber gets no size fields recorded yet, regardless of any figures the pages publish.",
+        "RHS does publish a Dimensions block for this plant (Max Height: Up to 10 cm; Max Spread: 0.5-1 metres) and NC State's narrative text says stems drape down about 3 feet in cultivation and vines reach up to 12 feet long in native habitat -- none of these were used, per the climber exclusion above.",
+        "is_edible left null: neither the NC State nor the RHS page addresses eating this plant. Searched both pages for 'Edible', 'Poison', 'Toxic', and 'Problem for' (NC State) and 'Edible', 'Poison', 'Toxic' (RHS) -- zero hits on both pages, so there is no record either way.",
+        "Both anchor pages (NC State and RHS) fetched successfully (fetch status: ok); no page refused this machine, so nothing was skipped."
       ],
       "citations": [
         {
@@ -307,8 +311,15 @@
           "quote": "The String of Hearts prefers well-drained sandy, potting soil, and bright, indirect sunlight. Be careful not to overwater this plant. It should be allowed to dry out completely between waterings. It is dormant over the winter and watering should be reduced even further.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State structured Attracts: field lists Hummingbirds)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ceropegia woodii",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/",
+          "quote": "Hummingbirds"
         }
-      ]
+      ],
+      "attracts_pollinators": true
     },
     {
       "common_name": "Venus Flytrap",
@@ -361,7 +372,11 @@
         "is_houseplant is set true on NC State's structured \"Houseplant\" Plant Type tag/Landscape Location listing and RHS's \"It is relatively easy to grow as a houseplant.\" Missouri Botanical Garden is notably more cautious on this exact question without flatly contradicting it — \"Growth as a houseplant is possible but can be difficult because of the need for growing season sun, humidity and winter dormancy\" and \"Plants often do not grow well as houseplants\" — so the true value is kept, but this is not an easy-care tropical foliage plant indoors and that caveat should travel with the field.",
         "No schema field cleanly captures the plant's single most safety-critical care fact — that ordinary tap water can kill it. NC State: \"treated (chlorinated) water or hard water can kill the plant\"; RHS: \"tap water, especially in hard water areas, can kill it\"; Missouri Botanical Garden: \"It is best to use rain water, distilled water, or reverse osmosis water.\" This is captured in water_dry_down_target in the absence of a dedicated water-source/water-quality field.",
         "scientific_name_accepted: no conflict found — NC State, Missouri Botanical Garden, and RHS all consistently use Dionaea muscipula as both the given and the accepted name.",
-        "cool_rest_note — removed on audit: The field asserts RHS instructs 'avoiding a warm room,' but the citations array's RHS entry for cool_rest_note only quotes 'Give it a cooler rest period over winter' -- it does not include the warm-room language. I fetched the live RHS page and confirmed RHS really does say 'Avoid keeping in a warm room over winter - it needs a cool rest (but above 10 C/50 F),' so the claim is factually accurate, but that supporting quote was never entered into the citations array under any claim label. As constructed, this specific clause in the field's own value fails structural check 1 (every non-null field value must trace to an entry in citations) -- it traces only to text the record never cited, not to the RHS entry actually listed for this field."
+        "cool_rest_note — removed on audit: The field asserts RHS instructs 'avoiding a warm room,' but the citations array's RHS entry for cool_rest_note only quotes 'Give it a cooler rest period over winter' -- it does not include the warm-room language. I fetched the live RHS page and confirmed RHS really does say 'Avoid keeping in a warm room over winter - it needs a cool rest (but above 10 C/50 F),' so the claim is factually accurate, but that supporting quote was never entered into the citations array under any claim label. As constructed, this specific clause in the field's own value fails structural check 1 (every non-null field value must trace to an entry in citations) -- it traces only to text the record never cited, not to the RHS entry actually listed for this field.",
+        "is_edible left null: neither the NC State Extension page nor the RHS page contains any statement about the plant being eaten, grown for food, or being poisonous to eat; only NC State's tag list notes 'non-toxic for cats/horses/dogs', which is not an edibility statement.",
+        "plantfinder.mobot.org refused connections from this machine (ProxyError, then ConnectError on retry) -- could not be checked for any field.",
+        "RHS page's plant-grid widget lists 'Venus flytrap Dionaea muscipula ... Height No preference Width 0.1-0.5 metres' immediately followed by the identical figure for the AGM cultivar 'Akai Ryu' -- since the height is explicitly 'No preference' (unusable) and the width duplicates the cultivar's own figure, this RHS widget value was not used for species size; NC State's structured Dimensions block was used instead as the anchor source.",
+        "ask.ifas.ufl.edu was not one of the three assigned pages and was not attempted."
       ],
       "citations": [
         {
@@ -453,8 +468,31 @@
           "source": "Missouri Botanical Garden Plant Finder",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279896",
           "quote": "Plants flower in spring, produce new leaves (“traps”) in spring-summer and then mostly die back as winter approaches. Winter dormancy is usually triggered in fall when temperatures begin to fall below 50 degrees F as day lengths shorten."
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Dionaea muscipula",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-8 (NC State Width: 0 ft. 6 in. - 0 ft. 8 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Dionaea muscipula",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Width: 0 ft. 6 in. - 0 ft. 8 in."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State's structured Attracts field lists Bees)",
+          "source": "NC State Extension Plant Toolbox, Dionaea muscipula",
+          "url": "https://plants.ces.ncsu.edu/plants/dionaea-muscipula/",
+          "quote": "Bees"
         }
-      ]
+      ],
+      "attracts_pollinators": true,
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 8
     },
     {
       "common_name": "Chinese Wisteria",
@@ -810,7 +848,21 @@
         "humidity_pct_min/humidity_pct_max: no admissible source gives a numeric humidity percentage; only qualitative categories/instructions are given.",
         "humidity_need: set to 'high' based on NC State ('Chinese hibiscus appreciates high humidity') and Missouri Botanical Garden ('Plants appreciate consistent moisture and high humidity'). RHS's Plant Profile page's generic Cultivation blurb instead says 'moderate humidity,' but that blurb explicitly directs readers to a separate 'Hibiscus rosa-sinensis cultivation' page for species-specific advice, and that dedicated RHS growing guide instead calls for actively increasing humidity via damp gravel trays and describes 'humid conditions' as a requirement -- consistent with 'high' rather than contradicting it. This narrower RHS profile wording was not treated as a controlling conflict given the stronger, more specific corroboration elsewhere.",
         "scientific_name_accepted: see name_note -- RHS's own two admissible pages disagree on whether the correct name carries a × (hybrid) marker; the given plain binomial is retained here because it is what NC State, MOBOT, Clemson, and RHS's own growing-guide page all independently use, but this should be treated as unresolved rather than confidently verified.",
-        "outdoor_sun_exposure: 'part_sun' was not used; NC State's category is literally labeled 'Partial Shade (Direct sunlight only part of the day, 2-6 hours),' mapped to 'part_shade' per this catalog's established convention for that exact phrase."
+        "outdoor_sun_exposure: 'part_sun' was not used; NC State's category is literally labeled 'Partial Shade (Direct sunlight only part of the day, 2-6 hours),' mapped to 'part_shade' per this catalog's established convention for that exact phrase.",
+        "Not a climber (shrub/houseplant), so the climber size-suppression rule does not apply.",
+        "Houseplant sizing (corrected at landing): NC State's Dimensions figures (48-120 in tall, 60-96 in wide) are its landscape figures ('It grows 4 to 10 feet high and 5 to 8 feet wide, so consider its space requirements when determining its planting location') and were refuted on audit because a cited page gives an indoor figure. The sizes that land are that indoor figure (see the landing line at the end of these notes).",
+        "Searched NC State's anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- 0 hits for all three; no poisonous part, toxic principle, preparation requirement, or pets warning is named anywhere on the page.",
+        "is_edible is set true based only on NC State's structured 'Flower Value To Gardener: Edible' tag. No page (NC State, Clemson HGIC, RHS details, RHS growing guide, or the UF/IFAS publication) states in prose which part is eaten, whether raw or cooked, or gives any preparation detail -- the condition/part is unspecified beyond this single-word tag. (Landing note: is_edible stays true, part and preparation unspecified. The one-word 'Edible' sits in the Flower Value To Gardener field beside 'Showy', and the page's Landscape Theme also lists 'Edible Garden'; no page says in prose which part is eaten, raw or cooked, or how it is prepared. No page names a toxic part: NC State has no Poison section and neither RHS page has a 'Potentially harmful' field.)",
+        "Clemson HGIC 'Hibiscus' factsheet loaded successfully but its size and cultivation text for 'Chinese Hibiscus (Hibiscus rosa-sinensis)' gives no height/width figures for the species -- only flower size (4-8 in.) and hardiness zone; searched 'Height' and 'Width' and found size figures only for the unrelated Perennial Hibiscus section, which is a different species and was not used.",
+        "UF/IFAS ask.ifas.ufl.edu/publication/FE1158 loaded successfully (not refused) but is a cost/profitability publication for tropical hibiscus production; searched 'Edible', 'Poison', 'Toxic' -- 0 hits for all; no size, edibility, toxicity, or pollinator information found on this page.",
+        "plantfinder.mobot.org refused this machine (ConnectError on fetch) -- could not read its content at all; not guessed.",
+        "RHS species details page (rhs.org.uk/plants/8738/hibiscus-rosa-sinensis/details) gives Max Height 1-1.5 metres and Max Spread 0.5-1 metres (smaller, UK-grown figures) but was not used for the size fields since NC State is the designated anchor and its figures already fall within the recordable range; searched this RHS page for 'Attracts', 'pollinators', 'bee', 'butterfl', 'Poison', 'Toxic', 'Edible' -- no hits for any. (Landing note: still not used; the landed size is the RHS growing guide's indoor figure, which is larger at the top end, 2 m against the details page's 1.5 m height and 1 m spread.)",
+        "RHS growing guide (rhs.org.uk/plants/hibiscus/growing-guide), corrected at landing: it does carry the indoor size, worded without 'Max Height'/'Max Spread'. The page is RHS's advice guide to Hibiscus rosa-sinensis (Quick facts 'Botanical name - Hibiscus rosa-sinensis', 'Group - Evergreen houseplant for warm greenhouse or conservatory'); its introduction says 'Tropical hibiscus is native to China but widely grown throughout the tropics and subtropics where it can be tree-like. It is tender in Britain and is grown as a pot plant indoors where it may reach 2m (6½ft).' and its Quick facts say 'Height and spread - May reach 2m (6½ft)'. It has no 'Attracts', pollinator, 'Poison', 'Toxic' or 'Edible' text.",
+        "mature_height_in_min removed on audit: Refuted under check I (houseplant scale). The feet-to-inches conversion is right: NC State's 'Height: 4 ft. 0 in. - 10 ft. 0 in.' is 48-120 in, the quote is on the page in one run, and min <= max. But NC State ties that figure to planting location in the landscape ('It grows 4 to 10 feet high and 5 to 8 feet wide, so consider its space requirements when determining its planting location'), not to indoor growth. The RHS growing guide (rhs.org.uk/plants/hibiscus/growing-guide) does give an indoor figure. qc.py finds 'It is tender in Britain and is grown as a pot plant indoors where it may reach 2m (6½ft)' and 'Height and spread - May reach 2m (6½ft)', about 79 in. The researcher's unknowns say this page had 0 hits and 'contains no usable information'. That is wrong: they searched for 'Max Height', which is not how this page words it. Since a page gives an indoor figure, a height pair taken from the larger 4-10 ft outdoor figure has to go. The pair comes from one source, so both ends are nulled.",
+        "mature_height_in_max removed on audit: Refuted under check I. The value 120 in (10 ft) is NC State's landscape figure. It is larger than the indoor ceiling in the RHS growing guide ('grown as a pot plant indoors where it may reach 2m (6½ft)', about 79 in). The rule says to refute a size taken from a larger outdoor figure when a page gives an indoor or container figure. The conversion and quote are otherwise accurate.",
+        "mature_spread_in_min removed on audit: Refuted under check I. The conversion is right (NC State 'Width: 5 ft. 0 in. - 8 ft. 0 in.' is 60-96 in, one rendered run, min <= max). But it is the same landscape figure ('5 to 8 feet wide, so consider its space requirements when determining its planting location'). The RHS growing guide gives an indoor figure for spread too: 'Height and spread - May reach 2m (6½ft)', about 79 in. The RHS details page also gives a much smaller 'Max Spread 0.5-1 metres'. The 60-96 in pair comes from the larger outdoor figure, so both ends are nulled.",
+        "mature_spread_in_max removed on audit: Refuted under check I. The value 96 in (8 ft) is NC State's landscape width. It is larger than the RHS growing guide's indoor figure 'Height and spread - May reach 2m (6½ft)' (about 79 in). A page gives an indoor figure, so a spread taken from the larger outdoor figure is refuted.",
+        "mature_height_in_max and mature_spread_in_max landed at 78.7 in at landing (standing rule 6: the audit refuted NC State's landscape sizes because the RHS growing guide, already cited for this record, gives an indoor figure, and that figure lands in their place). Height: 'It is tender in Britain and is grown as a pot plant indoors where it may reach 2m (6½ft).' Spread: the Quick facts line 'Height and spread - May reach 2m (6½ft)'. 2 m x 39.37 = 78.7 in (RHS's own conversion is 6½ ft, 78 in). The page gives only an upper bound, so both minimums stay null."
       ],
       "citations": [
         {
@@ -1010,8 +1062,36 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
           "quote": "Attributes: Genus: Hibiscus Species: rosa Family: Malvaceae Life Cycle: Woody Recommended Propagation Strategy: Stem Cutting Country Or Region Of Origin: Asia Wildlife Value: ... Dimensions: ... Whole Plant Traits: ... Cultural Conditions: ... Flowers: ... Leaves: ... Stem: ... Landscape: ... Resistance To Challenges: Deer"
+        },
+        {
+          "claim": "attracts_pollinators is true (NC State's plant tags for this species include pollinator- and pollinator-visitor-related terms)",
+          "source": "NC State Extension Plant Toolbox: Hibiscus rosa-sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "#tsc #specialized bees #pollinator plant #nectar plant summer #tsc-s #bee friendly #houseplant #large flowers #showy flowers #tropical feel #interiorscape #glossy leaves #butterfly friendly #hummingbird friendly #deer resistant #evergreen shrub #wildlife friendly #fpp"
+        },
+        {
+          "claim": "is_edible is true (NC State lists the flower's value to gardener as including 'Edible'; no part, preparation, or condition specified -- see unknowns)",
+          "source": "NC State Extension Plant Toolbox: Hibiscus rosa-sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/hibiscus-rosa-sinensis/",
+          "quote": "Edible"
+        },
+        {
+          "claim": "mature_height_in max 78.7, min null (RHS growing guide for Hibiscus rosa-sinensis, its indoor figure: 'grown as a pot plant indoors where it may reach 2m (6½ft)'; 2 m x 39.37 = 78.7 in; an upper bound only, so the min stays null)",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "quote": "It is tender in Britain and is grown as a pot plant indoors where it may reach 2m (6½ft)."
+        },
+        {
+          "claim": "mature_spread_in max 78.7, min null (RHS growing guide Quick facts for Hibiscus rosa-sinensis, grouped as an 'Evergreen houseplant for warm greenhouse or conservatory': 'Height and spread - May reach 2m (6½ft)'; 2 m x 39.37 = 78.7 in; an upper bound only, so the min stays null)",
+          "url": "https://www.rhs.org.uk/plants/hibiscus/growing-guide",
+          "source": "Royal Horticultural Society (RHS) Advice",
+          "quote": "Height and spread - May reach 2m (6½ft)"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "mature_height_in_max": 78.7,
+      "mature_spread_in_max": 78.7
     },
     {
       "common_name": "Golden Bamboo",
@@ -1405,6 +1485,7 @@
     "The audit caught a striking cross-species contamination: NC State's toxicity block for Ceropegia woodii (a non-woody succulent vine) turned out to be byte-for-byte identical to its Wisteria sinensis block elsewhere in this same batch, down to \"wisterin glycoside\" (a compound named for Wisteria) and \"Bark\" as a poisoned part -- a templating/caching defect on the source site, not real data, and correctly excluded from both records.",
     "Chinese Hibiscus landed with toxic_to_pets correctly null after a genuinely thorough four-source search found no toxicity data at all for this species -- not assumed toxic by Malvaceae-family association, not assumed safe by silence. Zero fields were removed by the audit on this record, a rare clean pass.",
     "Golden Bamboo (Phyllostachys aurea) continues this catalog's running theme of common-name naming traps -- true bamboo (a grass, Poaceae), unrelated to \"Lucky Bamboo\" (Dracaena sanderiana, already covered) the way Sago Palm isn't a true palm and Mini Monstera isn't a Monstera. It's also a running, rhizome-spreading, invasive-listed species in multiple states -- captured at length in unknowns even though the schema has no dedicated field for it, since it materially affects whether a home gardener should plant it directly in the ground versus in a contained pot.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

@@ -1434,7 +1434,15 @@
         "fertilize_interval_days/fertilize_active_months/fertilize_strength: genuine conflict. RHS instructs to \"apply a balanced liquid fertiliser monthly\" during active growth (in its UK under-glass cultivation context), while UGA states the plant \"Does not need much fertilization\" and recommends only an annual top-dressing of the growing medium (\"once a year, add top dressing of the soil mixture between flat frond and slab\") — roughly a twelve-fold difference in frequency, and describing a different practice (medium top-dressing vs. liquid feed). Neither was adopted as a general schedule; no source names specific calendar months or a dilution strength.",
         "cool_rest_note: RHS's only cold-season note is \"Water sparingly in winter\" — a watering-reduction instruction, not a temperature-based rest/dormancy description, so it was not force-fit into this field; it is instead reflected as one of the conflicting data points under water_regime.",
         "toxicity_detail: left null because toxic_to_pets is false per NC State's structured tags (\"non-toxic for cats\"/\"non-toxic for dogs\"/\"non-toxic for horses\"/\"pet friendly\"), with no conflicting admissible source found — RHS's page for this species carries no toxicity tag at all (unlike RHS pages for toxic species, which explicitly state \"TOXIC to pets\"), and Clemson, Missouri Botanical Garden, and UGA do not address toxicity for this species.",
-        "direct_sun_hours_max — removed on audit: The value 6 is drawn from a single NC State citation (\"Partial Shade (Direct sunlight only part of the day, 2-6 hours)\") -- verified word-for-word against the live page. But UGA Extension's B737 Growing Ferns, cited elsewhere in this same record for outdoor_sun_exposure, carries a species-specific header \"Staghorn Fern / Platycerium bifurcatum\" (confirmed not boilerplate -- the neighboring Sword Fern and Rabbit's Foot Fern entries on the same page have distinctly different light text) with the instruction \"Bright light but avoid direct sun.\" That is a direct, admissible, species-specific statement that conflicts with treating 6 hours of direct sun as safe for this plant. The schema's own comment on this field (models.py: \"direct-beam tolerance... that difference is what scorches leaves\") marks it as a harm-capable field. No second, independent, unproblematic citation cleanly corroborates the number 6 -- RHS gives no hour figure at all, and UGA's species-specific guidance points the other way. Per the audit's conflict rule, this should have been left null rather than adopting NC State's literal upper bound over a conflicting same-species source."
+        "direct_sun_hours_max — removed on audit: The value 6 is drawn from a single NC State citation (\"Partial Shade (Direct sunlight only part of the day, 2-6 hours)\") -- verified word-for-word against the live page. But UGA Extension's B737 Growing Ferns, cited elsewhere in this same record for outdoor_sun_exposure, carries a species-specific header \"Staghorn Fern / Platycerium bifurcatum\" (confirmed not boilerplate -- the neighboring Sword Fern and Rabbit's Foot Fern entries on the same page have distinctly different light text) with the instruction \"Bright light but avoid direct sun.\" That is a direct, admissible, species-specific statement that conflicts with treating 6 hours of direct sun as safe for this plant. The schema's own comment on this field (models.py: \"direct-beam tolerance... that difference is what scorches leaves\") marks it as a harm-capable field. No second, independent, unproblematic citation cleanly corroborates the number 6 -- RHS gives no hour figure at all, and UGA's species-specific guidance points the other way. Per the audit's conflict rule, this should have been left null rather than adopting NC State's literal upper bound over a conflicting same-species source.",
+        "is_edible left null: no page addresses eating this plant. Searched 'Edib' on NC State Plant Toolbox (0 hits), RHS (0 hits), and UGA fieldreport (0 hits); Clemson and Missouri Botanical Garden PlantFinder could not be checked (see below), so no page confirms or denies edibility.",
+        "attracts_pollinators left null: no page has an Attracts/Wildlife field or an unconditional pollinator statement for this species. Searched 'Attracts' and 'Pollinator'/'pollinator' on NC State (0 hits) and RHS (0 hits); ferns are non-flowering so pollinator attraction is not expected, but left null per the no-record rule rather than inferred.",
+        "hgic.clemson.edu/factsheet/indoor-ferns/ refused this machine (HTTP 403); could not check it for edibility, pollinator, or size information.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=291406 refused this machine (connection error); could not check it.",
+        "UGA fieldreport (fieldreport.caes.uga.edu/publications/B737/growing-ferns/) gives only an anecdotal single-specimen note -- 'this staghorn fern is more than 15 years old and has a spread of about 7 feet' -- and a frond-growth note ('may be 4″ to 6″ reaching 3′ to 4′ in many years'), not a published typical-mature-size range; not used for the recorded size since it is a one-off specimen figure rather than a species range statement.",
+        "Size was recorded from NC State's Plant Toolbox (the designated anchor), which carries a structured Dimensions block: Height 2 ft. 0 in. - 3 ft. 0 in. and Width 2 ft. 0 in. - 3 ft. 0 in. (converted to 24-36 inches for both height and spread). RHS independently corroborates a similar range (Max Height / Max Spread both 0.5-1 metres, i.e. ~19.7-39.4 inches).",
+        "NC State lists 'Climbing Method: Clinging' for this species, but its Plant Type tags are Epiphyte / Fern / Houseplant with no Vine tag -- this reflects the epiphyte's attachment habit to a host surface, not a vine/liana growth form, so the climber size-suppression rule was judged not to apply.",
+        "NC State tags this plant 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs'; no other Poison/Toxic/Problem-for content was found on any reachable page. Not folded into an edibility citation since is_edible is null (no page states it is grown or used for food)."
       ],
       "citations": [
         {
@@ -1526,8 +1534,24 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/platycerium-bifurcatum/",
           "quote": "#non-toxic for cats\n#non-toxic for horses\n#non-toxic for dogs\n...\n#pet friendly"
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/platycerium-bifurcatum/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/platycerium-bifurcatum/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     }
   ],
   "audit_summary": [
@@ -1569,6 +1593,7 @@
     "Eastern White Pine is a TRUE pine (genus Pinus), completing a naming-trap thread already run through this catalog for Norfolk Island Pine (Araucaria heterophylla, not a true pine, in b24). Its toxic_to_pets landed null -- true pines are not generally documented as toxic in extension literature, and no admissible source addresses it either way for this species, so null is the honest answer rather than an assumed false.",
     "Lily of the Valley's toxicity_detail was correctly pared back after the audit found the record's own symptom narrative (\"coma, seizures, abdominal pain\") was lifted from NC State's human-toxicity section -- the record's own reasoning had already excluded a UGA table on the identical human-vs-pet distinction elsewhere in the same document, making the toxicity_detail lapse an inconsistency the audit caught by holding the record to its own stated standard. toxic_to_pets=true itself is untouched and remains well-supported independently.",
     "Tulip Tree's outdoor_sun_exposure catch is a good example of the audit enforcing a standard the record itself had already applied elsewhere: the record correctly nulled soil_ph over a genuine source conflict, but kept part_shade despite UGA Extension stating directly (not just about seedlings) that the species 'is intolerant of shade... needs full sun to become established and grow well' -- conflicting with two other sources' part-shade tolerance claims. The audit held the sun-exposure field to the same conflict-resolution discipline the record used for pH.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

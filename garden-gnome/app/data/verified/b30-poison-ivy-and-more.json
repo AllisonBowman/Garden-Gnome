@@ -1126,7 +1126,17 @@
         "toxicity_detail — removed on audit: The detail text claims Cattleya trianae's page was 'checked directly' and carries identical non-toxic tags, but the citations array contains no entry for Cattleya trianae (only Cattleya mossiae, which I live-verified as accurate: '#non-toxic for cats #non-toxic for horses #non-toxic for dogs'). This is an uncited, unverifiable factual assertion layered onto an otherwise well-supported field -- the underlying toxic_to_pets value itself remains sound via the genus page + mossiae citations, so only this specific embedded claim is being flagged, not the boolean field.",
         "soil_drainage — removed on audit: NC State's actual tag for Cattleya, confirmed live, is 'Good Drainage' (paired with 'Moist'), not a 'moderate' drainage description. The record maps this to 'moderate' per catalog convention, but its own unknowns section admits the coarse orchid-bark medium 'drains considerably faster than moderate typically implies' -- i.e., a specific value was assigned to a harm-adjacent field (watering/drainage interaction with root rot) while the record itself documents doubt about that value's accuracy, rather than leaving it null or picking a category the source's own tag actually supports.",
         "common_name: restored as \"Brazilian Orchid\" -- NC State's own listed common names (\"Brazilian Orchid, Cat Orchid, Corsage Orchid, Queen of orchids\") were already quoted in this record's own citations; \"Cattleya Orchid\" was a constructed label that didn't match any of them.",
-        "water_growing_days_est — removed at landing: the field's own unknowns text describes deriving 7 from MOBOT's phrasing ('about once a week or more'), but no citation entry anywhere in the record actually quotes that sentence -- the citations array has no water_growing_days_est-labeled claim at all. Nulled per this catalog's standard rule that every non-null field must trace to a citation entry, which this batch's own audit pass missed."
+        "water_growing_days_est — removed at landing: the field's own unknowns text describes deriving 7 from MOBOT's phrasing ('about once a week or more'), but no citation entry anywhere in the record actually quotes that sentence -- the citations array has no water_growing_days_est-labeled claim at all. Nulled per this catalog's standard rule that every non-null field must trace to a citation entry, which this batch's own audit pass missed.",
+        "is_edible left null: none of the five read pages (NC State Cattleya, NC State Cattleya mossiae, RHS Cattleya, Missouri Botanical Garden Cattleya, Clemson HGIC orchids) addresses whether Cattleya or any part of it is eaten or used for food.",
+        "attracts_pollinators left null: searched 'Attracts', 'Pollinator', 'pollinators', 'butterfl', 'bee', 'hummingbird', 'Wildlife' on NC State and RHS pages; NC State's structured field set has no 'Attracts' entry for this species, and RHS's single 'wildlife' hit was site navigation text, not a species statement.",
+        "Checked NC State page (anchor) for 'Poison', 'Toxic', 'Problem for' before setting is_edible: no 'Poison' or 'Problem for' hits; the only 'Toxic' hits are the tags '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' — no toxicity is stated, consistent with is_edible remaining null rather than being inferred true or false.",
+        "RHS Cattleya page (https://www.rhs.org.uk/plants/23490/cattleya/details) is a genus page whose 'Size' field reads 'No preference' — searched both 'Max Height'/'Max Spread' and 'Ultimate height' wordings, 0 hits for all three, so it carries no usable size figure and was not used.",
+        "Missouri Botanical Garden's Cattleya visual guide page (https://www.missouribotanicalgarden.org/gardens-gardening/your-garden/help-for-the-home-gardener/advice-tips-resources/visual-guides/cattleya) returned 0 hits for Dimensions, Height, Width, Attracts, Edible, Pollinator, Poison, Toxic, and Problem for — no relevant content found.",
+        "NC State's Cattleya mossiae page (https://plants.ces.ncsu.edu/plants/cattleya-mossiae/) gives the identical Height/Width range (0 ft. 3 in. - 2 ft. 0 in.) but is a different species (Easter Cattleya) from the genus-level record being merged into, so it was not used as the citation; the genus page's own matching Dimensions block was used instead.",
+        "Clemson HGIC 'Orchids' factsheet (https://hgic.clemson.edu/factsheet/orchids/) returned an http-403 status via qc.py — this host refused the fetch; not guessed or repaired, reported here per instructions.",
+        "Size figures used (Height and Width both 0 ft. 3 in. - 2 ft. 0 in. = 3-24 inches) come from NC State's Cattleya genus page, which is the exact page cited for this record since scientific_name_accepted is 'Cattleya' itself — not a genus-page substitute for a narrower species.",
+        "Cattleya is an epiphytic herbaceous perennial per NC State's Whole Plant Traits, not a vine/liana/climber, so the climber-exclusion rule for size fields does not apply.",
+        "The recorded size range (3-24 in. height and spread) is well under the 120-inch houseplant headroom threshold, so no size fields needed to be nulled for that reason; NC State's Houseplant tag also confirms indoor suitability."
       ],
       "citations": [
         {
@@ -1260,8 +1270,24 @@
           "quote": "The minimum night temperature recommended for phalaenopsis is 65 °F; cattleya, 60 °F; and dendrobium, 52 °F.",
           "source": "Clemson Cooperative Extension",
           "url": "https://hgic.clemson.edu/factsheet/orchids/"
+        },
+        {
+          "claim": "mature_height_in 3-24 (NC State Height: 0 ft. 3 in. - 2 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox - Cattleya",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/",
+          "quote": "Height: 0 ft. 3 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 3-24 (NC State Width: 0 ft. 3 in. - 2 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox - Cattleya",
+          "url": "https://plants.ces.ncsu.edu/plants/cattleya/",
+          "quote": "Width: 0 ft. 3 in. - 2 ft. 0 in."
         }
-      ]
+      ],
+      "mature_height_in_min": 3,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 3,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "German Chamomile",
@@ -1469,6 +1495,7 @@
     "Trumpet Vine's toxic_to_pets was correctly nulled after the audit found the record's sole support was RHS's generic ornamental-fruit \"not to be eaten\" advisory boilerplate, which never uses the words toxic/poisonous/harmful and is applied broadly regardless of actual toxicity -- a good example of the catalog's discipline against reading routine handling caution as a toxicity finding.",
     "One landing-time repair: Cattleya's common_name was nulled because \"Cattleya Orchid\" was a constructed label, not a name any source actually used -- restored as \"Brazilian Orchid\", the first of NC State's own listed common names, already directly quoted in an existing citation in this same record.",
     "One defect this batch's own audit missed and this landing pass caught independently: Cattleya's water_growing_days_est=7 had no citation with a matching claim label anywhere in the record -- the quote it was supposedly derived from (MOBOT's 'about once a week or more') was never actually added to the citations array. Nulled to match this catalog's consistent standard.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -541,7 +541,14 @@
         "water_regime keep_moist relies on NC State's and Missouri Botanical Garden's species-specific culture text (both instruct keeping the soil moist during the growing season); Clemson's Dracaena factsheet also contains drier-sounding watering advice ('allow to dry slightly... wait until the soil surface is dry to the touch') but that text is generic Dracaena-genus care rather than fragrans-specific, so it was not treated as a competing citation and the field was not nulled.",
         "toxicity_detail deliberately avoids NC State's own 'Poison Symptoms' text (which happens to name cats and dogs) because that text sits inside a field group whose header literally reads 'Poisonous to Humans:' on the source page; NC State's separate, non-human-headed 'Problem for Cats'/'Problem for Dogs' tags were used instead to support toxic_to_pets, and toxicity_detail draws on Clemson's pets-focused article and RHS instead.",
         "outdoor_sun_exposure includes full_sun from RHS's structured Position field, though NC State's and Clemson's indoor-culture prose both warn that direct/too much sun can burn foliage or prevent best leaf color indoors; treated as addressing different contexts (outdoor/greenhouse position vs. indoor placement) rather than a direct conflict, but noted here for transparency.",
-        "outdoor_sun_exposure — removed on audit: The 'full_sun' entry rests solely on RHS's structured Position tag ('Full sun, Partial shade'). Verified against the live pages, three independent pieces of species-specific evidence point the other way: NC State's own structured Light field for Dracaena fragrans lists only 'Dappled Sunlight', 'Deep shade', and 'Partial Shade' (Full Sun is not an option checked), plus its prose says 'Direct sun can burn the foliage.' MOBOT's structured Sun field is 'Part shade' only, with prose warning the plant should be 'protected from significant periods of direct sun' and that 'too much sun may prevent best foliage color from developing.' Even RHS's own cultivation prose (same source as the Position tag) hedges with 'Grow in peat-free, loam-based potting compost in full light with shade from hot sun' -- undercutting its own structured tag. The unknowns note rationalizes this as 'different contexts (outdoor/greenhouse position vs. indoor placement)' but nothing in any source ties the Position tag or RHS's cultivation advice specifically to outdoor-only siting, so this is a real, undisclosed-in-full disagreement resolved by picking the minority-supported value. 'part_shade' is not in question -- only 'full_sun' is unsound."
+        "outdoor_sun_exposure — removed on audit: The 'full_sun' entry rests solely on RHS's structured Position tag ('Full sun, Partial shade'). Verified against the live pages, three independent pieces of species-specific evidence point the other way: NC State's own structured Light field for Dracaena fragrans lists only 'Dappled Sunlight', 'Deep shade', and 'Partial Shade' (Full Sun is not an option checked), plus its prose says 'Direct sun can burn the foliage.' MOBOT's structured Sun field is 'Part shade' only, with prose warning the plant should be 'protected from significant periods of direct sun' and that 'too much sun may prevent best foliage color from developing.' Even RHS's own cultivation prose (same source as the Position tag) hedges with 'Grow in peat-free, loam-based potting compost in full light with shade from hot sun' -- undercutting its own structured tag. The unknowns note rationalizes this as 'different contexts (outdoor/greenhouse position vs. indoor placement)' but nothing in any source ties the Position tag or RHS's cultivation advice specifically to outdoor-only siting, so this is a real, undisclosed-in-full disagreement resolved by picking the minority-supported value. 'part_shade' is not in question -- only 'full_sun' is unsound.",
+        "is_edible left null: neither NC State nor RHS addresses eating or food use of Dracaena fragrans; RHS 'Potentially harmful: Pets (dogs, cats, rabbits, rodents): Harmful if eaten' is a toxicity statement, not an edibility statement, so it is not treated as evidence either way.",
+        "attracts_pollinators left null: no 'Attracts' field, wildlife field, or unconditional pollinator statement (bees, butterflies, moths, hummingbirds) found on the NC State or RHS pages; searched both 'Attracts' and 'Pollinator' wordings on each.",
+        "NC State's own Dimensions block gives Height: 3 ft. 0 in. - 14 ft. 6 in. (36-174 in) and Width: 1 ft. 0 in. - 3 ft. 0 in. (12-36 in), but this is the general/landscape figure (used in tropical climates as a landscape specimen/hedge per the page's own text) and its high end (174 in) exceeds the 120-in houseplant ceiling, so per rule 12 it was not recorded; RHS's houseplant-context Max Height/Max Spread figures (both under 120 in) were used instead.",
+        "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine with a connection error (ConnectError) and could not be read.",
+        "hgic.clemson.edu (Clemson HGIC poisonous houseplants page) refused this machine with an HTTP 403 and could not be read.",
+        "Confirmed this is not a climber: NC State lists Plant Type as Houseplant/Perennial/Shrub and RHS lists Habit as 'Columnar upright', so rule 4 (climbers get no size) does not apply.",
+        "NC State documents low-severity toxicity for this species (toxic principle: saponin; poison parts: flowers, fruits, leaves, roots, sap/juice, stems; symptoms in cats, dogs, and humans: mouth/stomach irritation, vomiting, loss of appetite, depression, drooling, difficulty breathing; sap may cause skin irritation), noted here for context though is_edible remains null rather than false since no page states it is inedible/not for eating."
       ],
       "citations": [
         {
@@ -645,8 +652,24 @@
           "quote": "Corn plant (Dracaena species) Toxic compounds: Saponins Symptoms: Vomiting (sometimes bloody), depression, anorexia, and hypersalivation. Cats may have dilated pupils",
           "url": "https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/",
           "source": "Clemson Cooperative Extension HGIC"
+        },
+        {
+          "claim": "mature_height_in 59.1-98.4 (RHS Max Height 1.5-2.5 metres, converted to inches: 1.5 x 39.37 = 59.1, 2.5 x 39.37 = 98.4)",
+          "quote": "Max Height         1.5-2.5 metres",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/6093/dracaena-fragrans/details"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+          "quote": "Max Spread         0.1-0.5 metres",
+          "source": "RHS",
+          "url": "https://www.rhs.org.uk/plants/6093/dracaena-fragrans/details"
         }
-      ]
+      ],
+      "mature_height_in_min": 59.1,
+      "mature_height_in_max": 98.4,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Kousa Dogwood",
@@ -900,7 +923,16 @@
         "soil_drainage: set to moderate on the balance of the evidence, despite mild tension with NC State's own structured Soil Drainage tags for this species ('Moist,' 'Occasionally Wet' -- notably not 'Good Drainage'). RHS's structured Moisture field literally reads 'Moist but well–drained,' and Clemson's prose independently says 'evenly moist, but not soggy,' both pointing the same direction; NC State's own prose also warns 'Cold and/or wet locations can cause root rot,' which is consistent with wanting some drainage rather than standing water. moderate was chosen as the value that best matches 'moist but well-drained' without forcing 'fast' or 'moisture_retentive.'",
         "soil_base: set to standard_potting from Penn State's container-growing passage ('loamy, rich organic soil') rather than a more specific enum, since no source names an actual potting-mix product; this is the closest fit to a general enriched container mix, not a specialty mix like cactus_succulent or orchid_bark.",
         "soil_ph_min/soil_ph_max: NC State's own pH tags for this species ('Acid <6.0, Alkaline >8.0, Neutral 6.0-8.0') cover almost the entire scale and were treated as non-specific boilerplate category coverage, not a real preference range; the specific 5.5-6.5 figure came only from Penn State Extension.",
-        "scientific_name_accepted — removed on audit: The only citation supporting this field (claim: 'scientific_name_accepted Zingiber officinale (Name Status Correct)') has a quote that is almost entirely RHS's generic Genus-level description box ('Genus Zingiber are aromatic rhizomatous perennials with alternate, oblong leaves in two ranks, and cone-like inflorescences...') -- boilerplate that RHS shows on every species page within the ~140-species Zingiber genus, not officinale-specific content. The words 'Name Status Correct' are tacked onto the end with no connecting punctuation and no explicit subject; the quote never actually contains the string 'officinale' or otherwise ties the 'Correct' status to this specific binomial. Per the re-derivation standard (does the quote literally state the value?), this citation does not literally establish that 'Zingiber officinale' itself carries a confirmed/correct name status -- it establishes generic genus traits plus an unattributed status word. There is no second, independent citation for this field to fall back on, so the field's only support is this weak/ambiguous one, meaning the value itself (not just one citation among several) is in doubt."
+        "scientific_name_accepted — removed on audit: The only citation supporting this field (claim: 'scientific_name_accepted Zingiber officinale (Name Status Correct)') has a quote that is almost entirely RHS's generic Genus-level description box ('Genus Zingiber are aromatic rhizomatous perennials with alternate, oblong leaves in two ranks, and cone-like inflorescences...') -- boilerplate that RHS shows on every species page within the ~140-species Zingiber genus, not officinale-specific content. The words 'Name Status Correct' are tacked onto the end with no connecting punctuation and no explicit subject; the quote never actually contains the string 'officinale' or otherwise ties the 'Correct' status to this specific binomial. Per the re-derivation standard (does the quote literally state the value?), this citation does not literally establish that 'Zingiber officinale' itself carries a confirmed/correct name status -- it establishes generic genus traits plus an unattributed status word. There is no second, independent citation for this field to fall back on, so the field's only support is this weak/ambiguous one, meaning the value itself (not just one citation among several) is in doubt.",
+        "attracts_pollinators left null: none of the readable pages (NC State species page, NC State genus page, RHS, PSU extension) contain an 'Attracts' field, a pollinator tag, or any unconditional statement naming bees, butterflies, moths, or hummingbirds visiting this species; searched 'Attracts', 'Pollinator', 'bee', 'butterfl', 'hummingbird', 'Wildlife' on each with no relevant hits.",
+        "Before setting is_edible, searched the NC State species page (the anchor) for 'Poison', 'Toxic', and 'Problem for': all returned 0 hits. No toxic part, severity, toxic principle, preparation requirement, or pets warning is named on that page, so no such text applies to carry into unknowns alongside the true value.",
+        "mature_height_in / mature_spread_in taken from the NC State SPECIES page (plants.ces.ncsu.edu/plants/zingiber-officinale/), which is the anchor since it exists for this species: 'Height: 2 ft. 0 in. - 4 ft. 0 in.' and 'Width: 2 ft. 0 in. - 3 ft. 0 in.' The NC State GENUS page (plants.ces.ncsu.edu/plants/zingiber/) was read but its 'Height: 2 ft. 0 in. - 6 ft. 0 in.' / 'Width: 2 ft. 0 in. - 5 ft. 0 in.' spans the whole Zingiber genus and was not used, per the rule that a genus page is not a substitute for a species figure.",
+        "RHS gives 'Max Height 0.5-1 metres' (19.7-39.4 in) and 'Max Spread 0.1-0.5 metres' (3.9-19.7 in) for this species, but was not used for the size fields because the NC State species page is the designated anchor when present.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287577 refused this machine (network ConnectError, no page content retrieved) -- could not check it for any field.",
+        "https://hgic.clemson.edu/how-to-grow-ginger-zingiber-officinale-why-its-the-star-of-gingerbread/ refused this machine (http-403, no page content retrieved) -- could not check it for any field.",
+        "https://extension.psu.edu/.../ginger was read; it gives container-growing dimensions (a 12 in deep, 18 in diameter pot) but no plant height/spread figure and no pollinator or toxicity statement, so it contributed nothing usable to any field.",
+        "Species is an herbaceous, clumping perennial (NC State: Habit/Form Clumping), not a vine/liana/climber, so the climber-exclusion rule for size does not apply.",
+        "All recorded size figures (24-48 in height, 24-36 in width) are well under the 120 in / 10 ft houseplant-headroom threshold, so no size field needed to be nulled for exceeding it."
       ],
       "citations": [
         {
@@ -1046,8 +1078,31 @@
           "quote": "Ginger will go dormant and lose all their stems with onset of winter days. The rhizomes can be stored over the winter by leaving them in the container with soil, or digging them up, cleaning, and storing the rhizomes in a brown paper bag in a cool, dry place. Do not refrigerate rhizomes for replanting.",
           "source": "Penn State Extension (York County Master Gardener)",
           "url": "https://extension.psu.edu/programs/master-gardener/counties/york/york-master-gardener-articles/growing-edibles/ginger"
+        },
+        {
+          "claim": "is_edible true (NC State Plant Toolbox: rhizomes, ginger root, and young sprouts are all edible)",
+          "source": "NC State Extension Gardener Plant Toolbox - Zingiber officinale",
+          "url": "https://plants.ces.ncsu.edu/plants/zingiber-officinale/",
+          "quote": "Rhizomes, ginger root and young sprouts are all edible."
+        },
+        {
+          "claim": "mature_height_in 24-48 (NC State Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Zingiber officinale",
+          "url": "https://plants.ces.ncsu.edu/plants/zingiber-officinale/",
+          "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox - Zingiber officinale",
+          "url": "https://plants.ces.ncsu.edu/plants/zingiber-officinale/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
-      ]
+      ],
+      "is_edible": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 48,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Horseradish",
@@ -1449,6 +1504,7 @@
     "One landing-time repair: Panicle Hydrangea's scientific_name_given was nulled by the audit for lacking its own dedicated citation, but that field is bookkeeping (the binomial the species was researched under), not a claim requiring citation traceability under the actual pipeline rules -- restored directly rather than left null, which would have been inconsistent with every other record in this catalog.",
     "Ginger and Blazing Star both landed scientific_name_accepted null on citation-quality grounds worth noting as a pattern: both citations were RHS genus-level description boxes with a bare \"Name Status Correct\" tag stapled on with no text actually tying that status to the specific species epithet -- the audit correctly refused to accept a page-URL-only inference (\"the URL slug says spicata, so this must be about spicata\") as sufficient under the literal re-derivation standard, even though the underlying facts are very likely correct.",
     "Horseradish's soil_base landed null after the audit found a genuine, undissolved disagreement it hadn't fully credited: RHS's own growing guide explicitly recommends AGAINST open-ground planting (\"forms a vigorous spreading clump that can be hard to control or remove\") and recommends containers instead, while NC State and MOBOT support garden-bed planting -- a real conflict with a stated hard-to-reverse consequence for whichever way a reader goes, not a case where one source is simply wrong.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

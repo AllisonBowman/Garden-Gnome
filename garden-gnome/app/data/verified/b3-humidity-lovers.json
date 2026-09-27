@@ -89,6 +89,18 @@
           "source": "UF/IFAS Extension ENH1030/EP285 (genus Calathea)",
           "url": "https://edis.ifas.ufl.edu/publication/EP285",
           "quote": "Keep pH close to 6"
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Height 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Goeppertia orbifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/goeppertia-orbifolia/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+          "source": "North Carolina Extension Gardener Plant Toolbox: Goeppertia orbifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/goeppertia-orbifolia/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -102,8 +114,18 @@
         "fertilize_active_months — the source says 'growing season' without naming months; April-September is my operationalization, not a quoted range.",
         "soil_ph_min — REMOVED IN AUDIT RECONCILIATION. Both auditors rejected the 6.0/6.0 point pH: 'Keep pH close to 6' is a commercial-production tolerance statement, and no source states a range. No source-backed replacement range exists, so removed.",
         "soil_ph_max — REMOVED IN AUDIT RECONCILIATION. Both auditors rejected the 6.0/6.0 point pH: 'Keep pH close to 6' is a commercial-production tolerance statement, and no source states a range. No source-backed replacement range exists, so removed.",
-        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Unsupported: the source says 'monthly during the growing season' and names no months. April-September was an operationalization, not a sourced window."
-      ]
+        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Unsupported: the source says 'monthly during the growing season' and names no months. April-September was an operationalization, not a sourced window.",
+        "is_edible left null: neither the NC State Plant Toolbox page nor the UF/IFAS EDIS EP285 page addresses whether Goeppertia orbifolia or any part of it is eaten; no edibility statement of any kind was found.",
+        "attracts_pollinators left null: neither page has an 'Attracts' field or any mention of bees, butterflies, moths, hummingbirds, or other pollinators; NC State's page has no Attracts field populated at all.",
+        "NC State's tag list includes 'non-toxic for cats' and 'non-toxic for dogs' (searched for 'Poison'/'Toxic'/'Problem for' per instructions); this is a pet-safety tag, not a statement about human edibility, so it does not support setting is_edible true, and is_edible is still null.",
+        "The EDIS EP285 page (https://edis.ifas.ufl.edu/publication/EP285) is a commercial-production cultural guide with no 'Dimensions', 'Height:', or 'Width:' plant-size fields (searched 'Dimensions', 'Height:', 'Width:', 'ft', 'inch' -- the only inch hits were container pot sizes '6- or 8-inch pots' and a cultivar leaf-margin width, not plant stature); no size data was drawn from it.",
+        "Plant is not a vine/climber (NC State Habit/Form: 'Clumping'), so the climber-exclusion rule does not apply and the NC State Dimensions figures were recorded as published.",
+        "No cultivar-specific size figure was used; the recorded height/spread come from the species page's general Dimensions block, not a named cultivar."
+      ],
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Boston Fern",
@@ -194,6 +216,18 @@
           "source": "Clemson Cooperative Extension HGIC, Indoor Plants - Light Requirements",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "Medium (minimum 100 to 150 ft-c, 200 to 500 preferred)"
+        },
+        {
+          "claim": "mature_height_in 24-36 (NC State Dimensions block: Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/nephrolepis-exaltata/",
+          "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Dimensions block: Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/nephrolepis-exaltata/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -206,8 +240,18 @@
         "Note a mild source conflict on temperature: NC State says 60-70 F generally, Clemson gives the more specific 68-72 F day / 50-55 F night split. I used the more specific one.",
         "fertilize_active_months are quoted (April-September); the Clemson rate is genus-general for ferns, not species-specific.",
         "night_f_min — REMOVED IN AUDIT RECONCILIATION. Unsupported: the 50-55 F night band comes from a genus-general indoor-ferns sheet and conflicts with this record's own NC State species text (60-70 F). With chill_damage_f null it would have become the app's de-facto cold floor.",
-        "night_f_max — REMOVED IN AUDIT RECONCILIATION. Removed with night_f_min; a lone night ceiling with no floor is not usable guidance."
-      ]
+        "night_f_max — REMOVED IN AUDIT RECONCILIATION. Removed with night_f_min; a lone night ceiling with no floor is not usable guidance.",
+        "Both Clemson pages (hgic.clemson.edu/factsheet/indoor-ferns/ and hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/) refused this machine with http-403 -- not read, not repaired, not guessed at.",
+        "is_edible left null: searched the NC State page for 'Edible', 'Poison', 'Toxic', 'Problem for' -- the only 'Edible' hit was the unrelated course title 'Edibles, Bulbs, and Houseplants' (a video credit), and no text on the page states the plant or any part of it is eaten or not eaten. No page addresses edibility.",
+        "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Wildlife', and 'pollinat' -- zero hits for all three. No structured Attracts field and no unconditional pollinator statement on the page.",
+        "NC State's page tags this plant 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' and shows zero hits for 'Poison' -- noted here for completeness even though is_edible is null (the rule requiring toxicity disclosure applies only when is_edible is true).",
+        "Species is not a vine/climber (NC State lists it as Epiphyte, Fern, Herbaceous Perennial, Houseplant), so the climber-exclusion rule does not apply.",
+        "Size figures used are NC State's general Dimensions block (Height: 2 ft. 0 in. - 3 ft. 0 in.; Width: 2 ft. 0 in. - 3 ft. 0 in.), which is also repeated in prose ('grows to 2 to 3 feet in height and width'); no separate houseplant-specific or cultivar-specific figure was given, and the value is well under the 120 in indoor-headroom cap so no size fields were nulled for that reason."
+      ],
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Prayer Plant",
@@ -291,6 +335,18 @@
           "source": "Clemson Cooperative Extension HGIC, Indoor Plants - Light Requirements",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "Medium (minimum 100 to 150 ft-c, 200 to 500 preferred)"
+        },
+        {
+          "claim": "mature_height_in 6-12 (NC State Dimensions block: Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches; this is the species' own houseplant/container-grown stature, Plant Type: Houseplant, Landscape Location: Container/Houseplants)",
+          "source": "NC State Extension Gardener Plant Toolbox - Maranta leuconeura",
+          "url": "https://plants.ces.ncsu.edu/plants/maranta-leuconeura/",
+          "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-24 (NC State Dimensions block: Width: 0 ft. 6 in. - 2 ft. 0 in., converted to inches; species' own dimensions, grown as a houseplant/container plant)",
+          "source": "NC State Extension Gardener Plant Toolbox - Maranta leuconeura",
+          "url": "https://plants.ces.ncsu.edu/plants/maranta-leuconeura/",
+          "quote": "Width: 0 ft. 6 in. - 2 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -305,8 +361,18 @@
         "The Clemson light-table entry is for the cv. Erythroneura form of the species, and fertilize_active_months (April-September) is my operationalization of 'growing season'.",
         "outdoor_sun_exposure — houseplant.",
         "chill_damage_f — REMOVED IN AUDIT RECONCILIATION. Unsupported by both auditors: 'prefers temperatures that do not dip below 60 F' is a comfort preference stored in a field that asserts tissue injury. No injury threshold is published for this species.",
-        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Unsupported: Missouri Botanical Garden names no months. April-September was an operationalization."
-      ]
+        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Unsupported: Missouri Botanical Garden names no months. April-September was an operationalization.",
+        "hgic.clemson.edu (Clemson HGIC indoor plants factsheet) refused this machine: fetch returned http-403. Could not be searched for edibility/toxicity/pollinator content.",
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, kempercode=b604) refused this machine: fetch returned a connection error even after adding it to allowed network domains. Could not be searched.",
+        "is_edible left null: searched the only page that loaded (NC State) for 'Edible', 'Poison', 'Toxic', and 'Problem for' -- none present. No page addressed eating this plant one way or the other (the pages this record must stay anchored to could not all be read; see refusals above).",
+        "attracts_pollinators left null: searched NC State for an 'Attracts'/'Wildlife' field and for 'Pollinator', 'butterfl', 'bee', 'hummingbird' -- none present. NC State does note the flowers are 'small and insignificant', which is consistent with no pollinator claim, but that is not itself a statement about pollinators either way.",
+        "Species is not a cultivar and not a climber -- NC State's own habit description is a low-growing houseplant/subshrub ('Habit/Form', tags include #subshrub #spreading), so the size-suppression rules for cultivars and climbers do not apply here.",
+        "Size figures used are NC State's Dimensions block for the species itself (not a genus page, not a cultivar), and the plant is explicitly tagged Plant Type: Houseplant and Landscape Location: Container/Houseplants, so the recorded height (6-12 in) and spread (6-24 in) are the houseplant-scale figures the app needs; no separate, larger outdoor/landscape figure was found on this page."
+      ],
+      "mature_height_in_min": 6,
+      "mature_height_in_max": 12,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Nerve Plant",
@@ -390,6 +456,18 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/fittonia-albivenis/",
           "quote": "Adelaster albivenis ... Eranthemum rubronervium ... Fittonia argyroneura"
+        },
+        {
+          "claim": "mature_height_in 3-8 (NC State Dimensions Height: 0 ft. 3 in. - 0 ft. 8 in., already in inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Fittonia albivenis",
+          "url": "https://plants.ces.ncsu.edu/plants/fittonia-albivenis/",
+          "quote": "Height: 0 ft. 3 in. - 0 ft. 8 in."
+        },
+        {
+          "claim": "mature_spread_in 6-18 (NC State Dimensions Width: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox: Fittonia albivenis",
+          "url": "https://plants.ces.ncsu.edu/plants/fittonia-albivenis/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 6 in."
         }
       ],
       "unknowns": [
@@ -406,8 +484,17 @@
         "humidity_need — REMOVED IN AUDIT RECONCILIATION. Unsupported: a genuine unresolved source conflict (NC State 'medium humidity' vs Missouri Botanical Garden 'high humidity'). The conflict was disclosed but not settled, so no value is stored.",
         "water_growing_days_est — REMOVED IN AUDIT RECONCILIATION. Killed: auditor 1 wanted 3 rounded up to 4, auditor 2 wanted the bare interval dropped entirely because water_regime is null. Taking the more conservative outcome, the record ships no watering interval.",
         "water_estimate_basis — REMOVED IN AUDIT RECONCILIATION. Removed with water_growing_days_est; a basis note with no estimate behind it is dangling.",
-        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Empty array set to null: [] renders as 'never feed', which is a positive care claim. The honest fact is that no accepted source publishes a feeding schedule for this species."
-      ]
+        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Empty array set to null: [] renders as 'never feed', which is a positive care claim. The honest fact is that no accepted source publishes a feeding schedule for this species.",
+        "plantfinder.mobot.org refused this machine (ConnectError / ProxyError on repeated attempts) -- could not be read; not guessed.",
+        "NC State Plant Toolbox page has no 'Attracts' field and no mention of bees, butterflies, moths, or hummingbirds anywhere on the page -- attracts_pollinators left null (no record), not false.",
+        "NC State page has no 'Edible' or eating-related text anywhere -- is_edible left null (no record), not false.",
+        "Searched NC State page for 'Poison', 'Toxic', and 'Problem for' before setting any flags: 'Poison' and 'Problem for' returned 0 hits; 'Toxic' returned 6 hits but all were the plant's tag list -- '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' -- not a poisoning warning, so this does not bear on is_edible (which is null anyway).",
+        "Size figures used are NC State's structured Dimensions block (Height: 0 ft. 3 in. - 0 ft. 8 in.; Width: 0 ft. 6 in. - 1 ft. 6 in.), which is under the 10 ft indoor/outdoor threshold and matches this species' cataloguing as a houseplant (page also tags it #houseplant), so all four size fields are recorded as published."
+      ],
+      "mature_height_in_min": 3,
+      "mature_height_in_max": 8,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 18
     },
     {
       "common_name": "Parlor Palm",
@@ -503,6 +590,18 @@
           "source": "Clemson Cooperative Extension HGIC, Indoor Plants - Light Requirements",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "Low (minimum 100 ft-c, 75 to 200 preferred for good growth)"
+        },
+        {
+          "claim": "mature_height_in max 60, min null (NC State's indoor figure for Chamaedorea elegans: 'Stems can grow up to 5 feet in indoor environments', 5 ft x 12 = 60 in; an upper bound only, so the min stays null)",
+          "url": "https://plants.ces.ncsu.edu/plants/chamaedorea-elegans/",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "quote": "Stems can grow up to 5 feet in indoor environments but usually are smaller."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Dimensions: Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/chamaedorea-elegans/"
         }
       ],
       "unknowns": [
@@ -520,8 +619,21 @@
         "fertilize_interval_days — REMOVED IN AUDIT RECONCILIATION. Unsupported: 60 days was arithmetic derived from 'two to three times a year', and the derivation leaned toward the most frequent end against a source warning about over-feeding. 90 was suggested but is equally derived, not stated.",
         "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Unsupported: Clemson says 'spring and summer months' and names no months.",
         "water_regime — REMOVED IN AUDIT RECONCILIATION. Unsupported: keep_moist resolved a source conflict toward continuous moisture, which inverts the real indoor risk for this palm (rot, not drought). NC State's own species text says it tolerates short dry spells. The suggested replacement is not stated by any source.",
-        "water_dry_down_target — REMOVED IN AUDIT RECONCILIATION. Removed with water_regime; the dry-down text restated the rejected regime."
-      ]
+        "water_dry_down_target — REMOVED IN AUDIT RECONCILIATION. Removed with water_regime; the dry-down text restated the rejected regime.",
+        "attracts_pollinators left null: NC State's Chamaedorea elegans page has no \"Attracts\" field (0 hits searching 'Attracts' and 'Pollinator') and neither Clemson page addresses pollinators for this species.",
+        "is_edible left null: no page states the plant or any part of it is grown or used for food. NC State does carry a poison entry (Poison Severity: Low; Poison Symptoms: 'Juice from the fruit may cause skin irritation.'; Poison Toxic Principle: Unknown) and separately states 'It is not hazardous for pets.' -- this is toxicity/skin-irritation information, not a statement about eating, so it does not support setting is_edible true or false.",
+        "Searched NC State page for 'Edible' as well: the only hit is the controlled-vocabulary field 'Flower Value To Gardener: Edible', which is NC State's ornamental-garden-value taxonomy label, not a claim that the flower is eaten by humans -- not used as edibility evidence.",
+        "https://hgic.clemson.edu/pet-safe-indoor-houseplants-whats-safe-for-cats-and-dogs/ refused this machine (http-403 on two attempts) -- could not be read.",
+        "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/ refused this machine (http-403 on two attempts) -- could not be read.",
+        "https://hgic.clemson.edu/factsheet/indoor-palms/ discusses 'Parlor palms (Chamaedorea species)' only narratively (thin stems, wide spread, tolerates low light) with no numeric height or spread given for this species specifically, so it was not used for the size fields; NC State's species-specific Dimensions block was used instead.",
+        "Species is not a climber (upright understory palm) and the NC State dimensions are given for the species itself, not a named cultivar, so the climber and cultivar exclusion rules do not apply.",
+        "Sizes (corrected at landing): the height is NC State's indoor figure, 'Stems can grow up to 5 feet in indoor environments but usually are smaller.', landed as max 60 in with the min null (see the last line); the Dimensions-block height ('Height: 2 ft. 0 in. - 7 ft. 6 in.') is not used. The spread is still the Dimensions block's 'Width: 2 ft. 0 in. - 3 ft. 0 in.' (24-36 in): the page gives no indoor spread, and its only other spread figure is the outdoor one ('When grown outdoors in a warm climate, it can reach 6 or 7 feet tall and the leaf spread can be up to 3 feet wide.'), which matches the block's 36 in. An outdoor figure at or under 120 in stands under the houseplant rule.",
+        "mature_height_in_max removed on audit: Check I: houseplant scale. The 90 converts 7 ft. 6 in. correctly, so check A is fine. But the NC State page does give an indoor figure. Its description says \"Stems can grow up to 5 feet in indoor environments but usually are smaller.\" That is 60 in, and I confirmed the text with qc.py. The next sentence gives the outdoor stature: \"When grown outdoors in a warm climate, it can reach 6 or 7 feet tall.\" The 90 in value comes from the general Dimensions block, which is at or above that outdoor figure. The rule says that where a page gives an indoor figure, a size taken from a larger outdoor figure is refuted. The researcher's note that no page published an as-houseplant size is false. If this field is re-proposed, it should be 60 in, quoting \"Stems can grow up to 5 feet in indoor environments\".",
+        "mature_height_in landed at landing as max 60, min null (standing rule 6): the audit refuted the 90 in max because NC State, already cited for this record, gives the indoor figure 'Stems can grow up to 5 feet in indoor environments', so that figure lands in its place. It is a ceiling, so it fills the max only, and the 24 in minimum, which came only from the refuted outdoor Dimensions block, was nulled. The Dimensions-block citation was replaced by one quoting the indoor sentence."
+      ],
+      "mature_height_in_max": 60,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Anthurium",
@@ -593,6 +705,24 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/anthurium-andraeanum/",
           "quote": "Calcium oxalate crystals ... Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems"
+        },
+        {
+          "claim": "is_edible false (NC State: toxic if ingested by pets or humans)",
+          "source": "NC State Extension Plant Toolbox — Anthurium andraeanum",
+          "url": "https://plants.ces.ncsu.edu/plants/anthurium-andraeanum/",
+          "quote": "The Flamingo Flower is toxic if ingested by pets or humans."
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State: as a houseplant, grows 1 to 1.5 feet tall, converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Anthurium andraeanum",
+          "url": "https://plants.ces.ncsu.edu/plants/anthurium-andraeanum/",
+          "quote": "As a houseplant, the plant will grow 1 to 1.5 feet tall and 9 to 12 inches wide."
+        },
+        {
+          "claim": "mature_spread_in 9-12 (NC State: as a houseplant, grows 9 to 12 inches wide, converted to inches)",
+          "source": "NC State Extension Plant Toolbox — Anthurium andraeanum",
+          "url": "https://plants.ces.ncsu.edu/plants/anthurium-andraeanum/",
+          "quote": "As a houseplant, the plant will grow 1 to 1.5 feet tall and 9 to 12 inches wide."
         }
       ],
       "unknowns": [
@@ -608,8 +738,19 @@
         "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Unsupported: NC State says 'during the plant's growing season' and names no months.",
         "fertilize_interval_days — REMOVED IN AUDIT RECONCILIATION. Unsupported: a 7-day interval with fertilize_strength null renders as weekly label-rate feed on a salt-sensitive aroid. The cited weekly program assumes a dilute rate the record does not carry.",
         "soil_drainage — REMOVED IN AUDIT RECONCILIATION. Unsupported: the record declares soil_base unknown and then asserts that unknown medium's drainage class. Drainage is a property of the medium.",
-        "toxicity_detail — REVISED IN AUDIT RECONCILIATION. REFUTED by the sourcing audit: the original text claimed airway swelling and 'a veterinary call', language that appears nowhere on the cited NC State page, which rates poison severity LOW and lists only oral signs. Replaced with the auditor's source-backed wording."
-      ]
+        "toxicity_detail — REVISED IN AUDIT RECONCILIATION. REFUTED by the sourcing audit: the original text claimed airway swelling and 'a veterinary call', language that appears nowhere on the cited NC State page, which rates poison severity LOW and lists only oral signs. Replaced with the auditor's source-backed wording.",
+        "attracts_pollinators left null: the anchor page (NC State Plant Toolbox) has no 'Attracts', 'Pollinator', or 'Wildlife' field or statement anywhere on the page; searched all three terms with 0 hits each.",
+        "is_edible set to false (not merely a poison note) because the page states plainly: 'The Flamingo Flower is toxic if ingested by pets or humans.'",
+        "Poison detail from the same page, reported per rule 5 since edibility is being addressed: Poison Severity: Low. Poisonous to Humans and to pets (dogs, cats). Poison Part: Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems (corrected at landing; the note had Flowers, Fruits). Poison Toxic Principle: Calcium oxalate crystals. Causes Contact Dermatitis: Yes. Poison Symptoms: 'If ingested, chewing and biting this plant will release toxins and cause symptoms that include drooling, oral pain, mouth, lip, and tongue swelling, difficulty swallowing, decreased appetite, and vomiting. Contac with the sap can cause irritation of the skin and eyes resulting in redness and stinging.' Tags include #problem for dogs, #problem for cats, #problem for children, #poisonous if ingested, #contact dermatitis.",
+        "Species is not a vine, liana, or climber -- page lists Plant Type as Epiphyte, Herbaceous Perennial, Houseplant, Perennial -- so the climber-exclusion rule (rule 4) does not apply and size fields were recorded normally.",
+        "Size figures used are the page's explicit as-grown-indoors/houseplant statement ('As a houseplant, the plant will grow 1 to 1.5 feet tall and 9 to 12 inches wide'), which matches the structured Dimensions block (Height: 1 ft. 0 in. - 1 ft. 6 in.; Width: 0 ft. 9 in. - 1 ft. 0 in.) exactly -- both under the 10 ft / 120 in ceiling, so recorded as published per rule 12.",
+        "No RHS or other secondary page was consulted; the task specified NC State's page as the sole anchor to read for this species, and it fully covers size, edibility/toxicity, and pollinator fields."
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Moth Orchid",
@@ -681,6 +822,18 @@
           "source": "Clemson Cooperative Extension HGIC, Pet-Safe Indoor Houseplants",
           "url": "https://hgic.clemson.edu/pet-safe-indoor-houseplants-whats-safe-for-cats-and-dogs/",
           "quote": "Moth Orchids (Phalaenopsis species)"
+        },
+        {
+          "claim": "mature_height_in 18-24 (NC State Height: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Phalaenopsis",
+          "url": "https://plants.ces.ncsu.edu/plants/phalaenopsis/",
+          "quote": "Height: 1 ft. 6 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 6-24 (NC State Width: 0 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox, Phalaenopsis",
+          "url": "https://plants.ces.ncsu.edu/plants/phalaenopsis/",
+          "quote": "Width: 0 ft. 6 in. - 2 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -693,8 +846,18 @@
         "fertilize_active_months — the source states NO seasonal window for orchids, unlike the foliage plants here. April-September is my conservative operationalization and is less well grounded than the other records; year-round dilute feeding is also defensible.",
         "This is a genus record, so every value is genus-level and may not hold for an unusual species.",
         "outdoor_sun_exposure — houseplant.",
-        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Killed: refuted by both auditors and they disagreed on the fix (auditor 1 said empty, auditor 2 said year-round). April-September is stated by no source and switches feeding off during spiking and bloom. Conservative outcome is no value."
-      ]
+        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Killed: refuted by both auditors and they disagreed on the fix (auditor 1 said empty, auditor 2 said year-round). April-September is stated by no source and switches feeding off during spiking and bloom. Conservative outcome is no value.",
+        "is_edible left null: neither the NC State page nor the Clemson page (which could not be read) addresses eating Phalaenopsis; no record of edibility either way.",
+        "attracts_pollinators left null: NC State's page has no 'Attracts' field and no mention of bees, butterflies, moths, or hummingbirds visiting the plant; searched for 'Attracts', 'Pollinator', and 'Wildlife' with 0 hits each.",
+        "https://hgic.clemson.edu/pet-safe-indoor-houseplants-whats-safe-for-cats-and-dogs/ refused this machine (http-403 on fetch) -- could not check it for edibility, pollinator, or size information; not guessing what it would have said.",
+        "NC State's page tags list Phalaenopsis as '#non-toxic for cats #non-toxic for horses #non-toxic for dogs' -- this is a pet-toxicity tag, not a statement about human edibility, so it was not used to set is_edible.",
+        "Size figures (Height: 1 ft. 6 in. - 2 ft. 0 in.; Width: 0 ft. 6 in. - 2 ft. 0 in.) come from NC State's structured Dimensions block for Phalaenopsis (corrected at landing: this is NC State's genus page, which matches this genus-level record, and not a cultivar), and the species is correctly catalogued as a houseplant per NC State's own 'Plant Type: Houseplant' tag; both figures are well under the 120 in / 10 ft indoor-headroom threshold so they were recorded as published.",
+        "The same page's prose gives a lower floor than its Dimensions block (noted at landing, verified against the cached copy): 'Moth orchids can range from a few inches to 2 feet in height and up to 2 feet (but usually less) in spread.' The block's 18-24 in height was kept; the two agree on the 2 ft ceilings."
+      ],
+      "mature_height_in_min": 18,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 24
     },
     {
       "common_name": "Dumb Cane",
@@ -772,6 +935,18 @@
           "source": "Clemson Cooperative Extension HGIC, Indoor Plants - Light Requirements",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "Medium (minimum 100 to 150 ft-c, 200 to 500 preferred)"
+        },
+        {
+          "claim": "mature_height_in 36-96 (NC State Height 3 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dieffenbachia-seguine/",
+          "quote": "Height: 3 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/dieffenbachia-seguine/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -785,8 +960,19 @@
         "water_*_days_est — no interval published; the dry-down target is the real fact.",
         "The foot-candle values reach this record through a naming chain: Clemson lists D. amoena and D. maculata, which NC State places in D. seguine. Sound, but one inference longer than the other light values in this batch.",
         "outdoor_sun_exposure — houseplant.",
-        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Empty array set to null for the same reason as Fittonia: [] reads as 'never feed' rather than 'no schedule published'."
-      ]
+        "fertilize_active_months — REMOVED IN AUDIT RECONCILIATION. Empty array set to null for the same reason as Fittonia: [] reads as 'never feed' rather than 'no schedule published'.",
+        "is_edible left null: neither anchor page (NC State) states the plant or any part is eaten or grown for food; searched for 'Edible' (0 hits) on the NC State page. Clemson page (hgic.clemson.edu factsheet) returned http-403 and could not be read on this machine, so its content is unknown -- not guessed.",
+        "attracts_pollinators left null: NC State page has no 'Attracts', 'Pollinator', 'bee', 'butterfl', 'hummingbird', or 'Wildlife' hits -- no structured attracts field and no unconditional pollinator statement found.",
+        "NC State lists this plant as toxic: 'This plant has high severity poison characteristics.' Poison Toxic Principle: 'Calcium oxalate crystals, oxalic acid.' Causes Contact Dermatitis: Yes. Poison Part: Leaves. Tags include #problem for cats #problem for children #problem for dogs #problem for horses #poisonous if ingested #contact dermatitis. Body text: 'Although Dieffenbachia is grown as a houseplant, it can be toxic for pets and children... Sap exposure to the eyes can result in damage to the cornea. It may be fatal to pets and livestock.' Recorded here for completeness even though is_edible is null (the rule requiring this in unknowns applies when is_edible is true, but the toxicity is decision-relevant regardless).",
+        "Size figures used are the NC State Dimensions block (Height 3-8 ft, Width 2-3 ft); this species is catalogued as a houseplant, the plant is listed with Plant Type including 'Houseplant', and the max height (96 in) is under the 120 in / 10 ft threshold, so the figure is recorded as published without further adjustment.",
+        "No cultivar-specific figure was used -- the Dimensions block is for the species Dieffenbachia seguine, not a named cultivar.",
+        "Species is not a vine/climber (erect broadleaf evergreen perennial per NC State), so the climber-exclusion rule (rule 4) does not apply and size fields are populated normally.",
+        "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/ refused this machine (http-403) -- not attempted to repair, reported here as required."
+      ],
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     }
   ],
   "audit_summary": {
@@ -917,6 +1103,7 @@
     "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
     "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
-    "2026-08-16: citation labels rewritten into the structured convention used by b1/b2/b5 (leading field name). This batch was written in prose, so the claim loader — which pairs a value to a citation by field name — could not read any of it. Only the labels changed; values, quotes, sources and URLs are untouched."
+    "2026-08-16: citation labels rewritten into the structured convention used by b1/b2/b5 (leading field name). This batch was written in prose, so the claim loader — which pairs a value to a citation by field name — could not read any of it. Only the labels changed; values, quotes, sources and URLs are untouched.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

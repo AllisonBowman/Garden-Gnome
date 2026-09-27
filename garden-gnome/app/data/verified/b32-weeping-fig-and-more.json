@@ -47,7 +47,16 @@
         "fertilize_interval_days / fertilize_active_months / fertilize_strength: Clemson only says plants should be \"fed every month or two during the growing season with a liquid fertilizer\" — no exact day interval, no named months, and no dilution/strength is given, so none of these were converted into numbers.",
         "RHS's \"Potentially harmful\" field reads \"Humans/Pets (dogs): Skin allergen; harmful if eaten\", explicitly scoped to dogs (and humans) rather than a generic \"pets\" claim; this narrower RHS wording was not used to support toxic_to_pets on its own — that field instead rests on NC State's structured attribute list, which separately and explicitly names both \"Problem for Cats\" and \"Problem for Dogs\".",
         "name_note — removed on audit: This non-null field has no citation in the array whose claim label contains 'name_note' (violates structural check 1), but more substantively it asserts as fact that 'Missouri Botanical Garden and UF/IFAS' independently 'use the same binomial with no source proposing an alternative accepted name' — yet neither Missouri Botanical Garden (plantfinder.mobot.org / missouribotanicalgarden.org) nor UF/IFAS appears anywhere in the citations array for this record. This is an uncited corroboration claim about sources the record never actually shows was consulted for this specific point; it should either be dropped or backed by an actual citation entry.",
-        "outdoor_sun_exposure — removed on audit: The citation's quote from NC State literally lists 'Dappled Sunlight, Deep shade, Full sun, Partial Shade' (confirmed live) — there is no 'Partial Sun' tag among NC State's categories for this species. The record's claim label asserts 'full_sun, part_sun, part_shade, and full_shade,' silently mapping NC State's distinct 'Dappled Sunlight' category (continuous filtered/canopy light) onto 'part_sun' (conventionally 4-6 hrs of direct sun) — a value the quote does not literally support and which is a debatable horticultural equivalence (dappled light is arguably closer to light shade than to partial sun). This is exactly the kind of 'asserting a category the quote doesn't literally support' the audit calls out in check 4."
+        "outdoor_sun_exposure — removed on audit: The citation's quote from NC State literally lists 'Dappled Sunlight, Deep shade, Full sun, Partial Shade' (confirmed live) — there is no 'Partial Sun' tag among NC State's categories for this species. The record's claim label asserts 'full_sun, part_sun, part_shade, and full_shade,' silently mapping NC State's distinct 'Dappled Sunlight' category (continuous filtered/canopy light) onto 'part_sun' (conventionally 4-6 hrs of direct sun) — a value the quote does not literally support and which is a debatable horticultural equivalence (dappled light is arguably closer to light shade than to partial sun). This is exactly the kind of 'asserting a category the quote doesn't literally support' the audit calls out in check 4.",
+        "Both Clemson HGIC pages (hgic.clemson.edu/factsheet/weeping-ficus/ and hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/) returned http-403 for this machine and were not fetched or guessed at; is_edible and any pet-toxicity detail those pages might add could not be checked against them.",
+        "is_edible left null: neither NC State nor RHS states the plant or any part of it is grown or used for food. NC State's only 'Edible' hit was an unrelated course title ('Edibles, Bulbs, and Houseplants'). Clemson pages that might address edibility/toxicity were inaccessible (403), so this is not a confirmed absence across all four target pages.",
+        "attracts_pollinators left null: NC State's structured 'Attracts' field returned zero hits and RHS has no 'Attracts' or pollinator field; RHS describes the flowers as 'insignificant.' No page makes any pollinator statement.",
+        "NC State tags this species 'Problem for Cats,' 'Problem for Dogs,' and 'Problem for Horses' (toxicity to pets) under its Problems field, though no severity, toxic principle, plant part, or preparation detail is given beyond those three tag names. Flagged here as decision-relevant even though is_edible stayed null (not true), since the pet-toxicity tags exist independent of edibility.",
+        "mature_spread_in left null: no houseplant/container-specific spread figure was found. NC State's Dimensions block gives 'Width: 3 ft. 0 in. - 30 ft. 0 in.' and its body text separately gives an outdoor 'spread of 25 to 30 feet' for the tree form; both are landscape/general figures whose high end exceeds the 120 in (10 ft) indoor threshold, and neither is stated as a houseplant/container spread, so per the houseplant-size rule they were not recorded. RHS's Max Spread ('1.5-2.5 metres' = 59.1-98.4 in) and Max Height ('2.5-4 metres' = 98.4-157.5 in) are also outdoor/garden-grown figures (full sun, garden soil types), not houseplant figures, so not used either.",
+        "NC State's general 'Dimensions:' block ('Height: 5 ft. 0 in. - 30 ft. 0 in.') was not used for mature_height_in because the page separately states an explicit houseplant-specific range ('usually kept in the range of 2 to 10 feet tall'), which was preferred per instructions.",
+        "NC State notes the cultivar 'Pandora' reaches 'maximum height 6 feet as a houseplant' -- a cultivar-specific figure, correctly excluded from the species-level size fields.",
+        "RHS describes the species generally as 'An evergreen shrub or tree to 3m or more' -- a general/outdoor growth-habit statement, not a houseplant figure, so not used.",
+        "RHS's Potentially harmful field (noted at landing, verified against the cached copy; the auditor flagged its omission): 'Humans/Pets (dogs): Skin allergen; harmful if eaten.' It would support is_edible false in a re-research; a landing does not set a value, so is_edible stays null."
       ],
       "citations": [
         {
@@ -115,8 +124,16 @@
           "quote": "Toxic compounds: Ficin and ficusin. Symptoms: Gastrointestinal upset, skin irritation, blistering. ... All parts are irritating or potentially toxic, especially the white, milky sap.",
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/pet-owners-beware-11-poisonous-houseplants-to-avoid/"
+        },
+        {
+          "claim": "mature_height_in 24-120 (NC State: As a houseplant, it is usually kept in the range of 2 to 10 feet tall, converted to inches: 2 ft = 24 in, 10 ft = 120 in)",
+          "source": "NC State Extension Gardener Plant Toolbox - Ficus benjamina",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-benjamina/",
+          "quote": "As a houseplant, however, it is usually kept in the range of 2 to 10 feet tall."
         }
-      ]
+      ],
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 120
     },
     {
       "common_name": "Prickly Pear",
@@ -932,7 +949,18 @@
         "toxicity_detail: NC State's detailed Poison Severity/Poison Symptoms/Poison Toxic Principle fields (\"Low\" severity; vomiting and diarrhea; eugenol) are filed on the page under a heading reading \"Poisonous to Humans:\", not a pets-specific heading, so they were not used to describe pet-specific symptoms; only NC State's separate \"Problem for Cats\"/\"Problem for Dogs\" tags and UGA's \"Minor Toxicity\" classification were used for toxic_to_pets/toxicity_detail.",
         "chill_damage_f: RHS's growing guide gives the actionable numeric threshold (\"Bay can withstand temperatures down to -5°C (23°F), but frost and cold winter winds can damage the foliage\"). NC State corroborates only categorically (\"brought indoors in the winter in areas colder than zone 8b to prevent frost damage\") without a literal Fahrenheit figure, so it was not used for the numeric claim itself.",
         "soil_drainage — removed on audit: Value 'moderate' is not stated anywhere in its sole supporting citation. The quote is NC State's structured attribute line 'Soil Drainage: Good Drainage Occasionally Dry Occasionally Wet' (verified by direct fetch of https://plants.ces.ncsu.edu/plants/laurus-nobilis/, which reproduces this exact text) -- the word 'moderate' never appears, and 'Good Drainage' as the lead/primary tag is the source's own signal that the plant needs well-drained soil, which in this catalog's own three-value schema (fast / moderate / moisture_retentive, confirmed by grepping app/data/verified/*.json) more naturally corresponds to 'fast' than 'moderate'. There is no second, independent citation for soil_drainage in this record, so rule 2's carve-out (another unproblematic citation independently supports the value) does not apply -- the field itself is unsupported. Critically, this exact quote-to-'moderate' mapping is not a novel judgment call: it is verbatim boilerplate already used elsewhere in this same catalog (app/data/verified/b14-annual-flowers2.json, 'Common Morning Glory' entry: identical claim text 'soil_drainage moderate (Good Drainage; also tolerates Occasionally Dry and Occasionally Wet)' with the identical NC State quote), and that same file's own audit trail explicitly flags this precise pattern as a defect twice over ('Value \"moderate\" is not stated anywhere... \"Good Drainage\" does not map to \"moderate\"; the record invented an intermediate value that contradicts... the source's own structured field' and again '\"moderate\" never appears in that quote... a cited source's own structured field was not checked before a value was picked'), and self-flags it a third time as a non-literal inferred reading even where retained. Bay Laurel's record reproduces the exact defect this catalog has already identified and removed elsewhere.",
-        "2026-09-02 corpus-wide quote verification: the UGA C1245 'House and garden plants may be toxic to cats and dogs...' guide-scope quote is not on the cited page (the page says 'it is important to know which plants are safe, as even common plants can be deadly') and was removed; toxic_to_pets=true still rests on NC State's explicit 'Problem for Cats' and 'Problem for Dogs' tags, which satisfy the cat/dog scoping rule on their own."
+        "2026-09-02 corpus-wide quote verification: the UGA C1245 'House and garden plants may be toxic to cats and dogs...' guide-scope quote is not on the cited page (the page says 'it is important to know which plants are safe, as even common plants can be deadly') and was removed; toxic_to_pets=true still rests on NC State's explicit 'Problem for Cats' and 'Problem for Dogs' tags, which satisfy the cat/dog scoping rule on their own.",
+        "mature_height_in and mature_spread_in left null: the only size figures found are outdoor/landscape/native-habitat stature, all exceeding the 120 in (10 ft) houseplant ceiling, and no page gives a houseplant- or container-specific numeric size (NC State's page just says grown in NC 'in a container as a patio or houseplant' it is 'much smaller' than its native 60 ft habit, with no number attached).",
+        "NC State Plant Toolbox Dimensions block: 'Height: 8 ft. 0 in. - 12 ft. 0 in.' (96-144 in) and 'Width: 8 ft. 0 in. - 30 ft. 0 in.' (96-360 in) -- height max of 144 in exceeds the 120 in threshold, so per the houseplant rule all four size fields are left null rather than recording this outdoor/cultivated-landscape figure.",
+        "RHS species page (9876): 'Max Height 8-12 metres' (315-472 in, converted) and 'Max Spread wider than 8 metres' (open-ended, no usable upper bound even if it were usable) -- both landscape stature, both over the ceiling, not recorded.",
+        "RHS growing guide: 'bay trees grow as a large bushy shrub or small tree, reaching a height of 7.5m (23ft) or more' in the garden -- outdoor stature, over the ceiling, not recorded. Its container-cultivation section covers potting/repotting/feeding practice but publishes no houseplant-specific height or spread number.",
+        "is_edible set TRUE conditionally, not as a bare true: NC State's Edibility field states the leaves 'are used to flavor foods while cooking, but the leaves should not be eaten' whole (choking/digestive-tract cutting hazard from the sharp leaf), and the RHS growing guide states 'Laurus nobilis AGM (bay tree) is most commonly cultivated and used for culinary purposes' -- i.e. leaves used as a cooking flavoring, not eaten directly.",
+        "Because is_edible is true, the toxicity information named on the same NC State anchor page is surfaced here per instructions: 'This plant has low severity poison characteristics'; Poisonous to Humans / Poison Severity: Low; Poison Symptoms: 'Vomiting and diarrhea; Large ingestion of whole leaves can cause obstruction'; Poison Toxic Principle: 'Eugenol, and other essential oils'; Causes Contact Dermatitis: No. NC State's tag list also carries '#problem for cats #problem for dogs #problem for horses'. Separately, the UGA CAES pet-safety fact sheet (fieldreport.caes.uga.edu/publications/C1245) lists 'Bay Laurel (Sweet Bay) Laurus nobilis Toxicity class: Minor Toxicity' for pets.",
+        "attracts_pollinators set TRUE from the RHS species page's own 'Plants for pollinators' badge/tag shown for this plant. NC State's own 'Attracts' field names only Songbirds (not a pollinator claim) and its Wildlife Value field says only 'Trees attract birds' -- neither supports the pollinator flag on its own.",
+        "Bay Laurel is a tree/shrub, not a vine/liana/climber, so the climber size-exclusion rule does not apply here; the null size fields above are solely due to the houseplant-ceiling rule, not the climber rule.",
+        "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d418 refused this machine (network error / host block) -- not read, no data taken from it, per the known list of hosts that refuse this machine.",
+        "hgic.clemson.edu/factsheet/herbs/ refused this machine (HTTP 403) -- not read, no data taken from it.",
+        "The RHS species page also names a part not to eat (noted at landing, verified against the cached copy): its Potentially harmful field reads 'Fruit are ornamental - not to be eaten.  Wear gloves and other protective equipment when handling' and 'Pets: Fruit are ornamental - not to be eaten'. is_edible true is the leaves, used as a cooking flavouring."
       ],
       "citations": [
         {
@@ -1024,8 +1052,28 @@
           "source": "Royal Horticultural Society (RHS) — Bay tree growing guide",
           "url": "https://www.rhs.org.uk/plants/bay-tree/growing-guide",
           "quote": "Water container-grown bay moderately. Over-watering can cause root damage"
+        },
+        {
+          "claim": "is_edible true (NC State: leaves used to flavor foods while cooking, but should not be eaten directly)",
+          "source": "NC State Extension Plant Toolbox - Laurus nobilis",
+          "url": "https://plants.ces.ncsu.edu/plants/laurus-nobilis/",
+          "quote": "Leaves are used to flavor foods while cooking, but the leaves should not be eaten for a variety of reasons including but not limited to choking and creating cuts inside the digestive tract or/ and mouth because the leaves are sharp."
+        },
+        {
+          "claim": "is_edible true (RHS: Laurus nobilis AGM (bay tree) is most commonly cultivated and used for culinary purposes)",
+          "source": "RHS Growing Guide - Bay Tree (Laurus nobilis)",
+          "url": "https://www.rhs.org.uk/plants/bay-tree/growing-guide",
+          "quote": "Laurus nobilis  AGM (bay tree) is most commonly cultivated and used for culinary purposes"
+        },
+        {
+          "claim": "attracts_pollinators true (RHS species page badge: Plants for pollinators)",
+          "source": "RHS - Laurus nobilis (bay tree) details",
+          "url": "https://www.rhs.org.uk/plants/9876/laurus-nobilis-bay-tree-bay/details",
+          "quote": "Plants for pollinators"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Eastern Columbine",
@@ -1453,6 +1501,7 @@
     "Weeping Fig, Prickly Pear (dogs-specific, cats undocumented -- correctly reported as dog-scoped rather than generalized to both), Catawba Rhododendron, and Bay Laurel all confirmed toxic_to_pets=true with clean, properly-scoped cat and/or dog evidence. Bloodroot and Burning Bush both correctly landed toxic_to_pets=null after the audit found their only pet-relevant citations named no animal or the wrong one -- notably for Bloodroot, NC State (the source that normally adds explicit Problem-for-Cats/Dogs tags when warranted) carries no animal tag for this species at all, only human-scoped poison data, which the audit treated as a meaningful negative signal rather than mere silence.",
     "Prickly Pear's is_houseplant catch shows the audit checking a record against the very page it cites: the record asserted false with a claim that \"no admissible source describes indoor houseplant use,\" but the audit re-fetched the same cited RHS URL and found it carries a direct link reading \"See houseplant cacti and succulent cultivation for further advice\" -- contradicting the record's own claim about its own source.",
     "Bay Laurel's soil_drainage catch is another example of the audit enforcing established cross-batch precedent by name: the same NC State \"Good Drainage / Occasionally Dry / Occasionally Wet\" tag mapped to 'moderate' here was already flagged as a defect twice over on the Common Morning Glory record in b14, and this record reproduced the identical mapping.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -359,7 +359,17 @@
         "UGA C1245 exclusion: this source lists an entry for 'Amaryllis spp.' (Minor Toxicity, Dermatitis) rather than 'Hippeastrum.' NC State's own page explicitly warns that the common name 'Amaryllis' is used both for Hippeastrum (documented here) and for a separate South African genus Amaryllis, and NC State separately states Hippeastrum 'Causes Contact Dermatitis: No' -- the opposite of UGA's 'Dermatitis' toxicity class -- consistent with UGA's entry describing the other genus. This record therefore does not cite UGA C1245 as pet-toxicity evidence for Hippeastrum. The same genus-name ambiguity applies to a UGA CAES Field Report holiday-plants article ('Amaryllis – the bulbs and seeds') that was likewise not cited for this reason.",
         "Missouri Botanical Garden: plantfinder.mobot.org's Hippeastrum page could not be retrieved (a TLS certificate error on direct fetch and a bot-detection block in the browser), so it was not used as a source for this record.",
         "outdoor_sun_exposure full_sun nuance: two UF/IFAS sources describe a trade-off around full sun exposure -- FP255 says foliage 'will discolor when plants are grown in full sun, although they will flower better,' and a second UF/IFAS circular (EP060) says the plant 'does best in light shade' and that 'leaves may yellow in full sun.' full_sun is still included because NC State and RHS's cultivar page both list it as a plain structured position category without qualification, but this foliage/flowering trade-off is noted here rather than silently dropped.",
-        "outdoor_sun_exposure — removed on audit: The 'part_sun' member of this array rests solely on UF/IFAS FP255's Culture field, which I confirmed via raw HTML is a single continuous prose value -- 'Light requirement: plant grows in part shade/part sun' -- not two independently checked categories the way NC State's Light field displays 'Full sun' and 'Partial Shade' as separate structured <dd> entries. No other admissible source (NC State: full sun/partial shade only; RHS Bestseller: full sun/partial shade only) independently names 'part sun' as a category distinct from 'part shade.' Treating one ambiguous compound descriptor from a single source as confirmation of two separate categorical tags overstates what that source establishes, so the 'part_sun' value is not solidly supported even though 'full_sun' and 'part_shade' are fine."
+        "outdoor_sun_exposure — removed on audit: The 'part_sun' member of this array rests solely on UF/IFAS FP255's Culture field, which I confirmed via raw HTML is a single continuous prose value -- 'Light requirement: plant grows in part shade/part sun' -- not two independently checked categories the way NC State's Light field displays 'Full sun' and 'Partial Shade' as separate structured <dd> entries. No other admissible source (NC State: full sun/partial shade only; RHS Bestseller: full sun/partial shade only) independently names 'part sun' as a category distinct from 'part shade.' Treating one ambiguous compound descriptor from a single source as confirmation of two separate categorical tags overstates what that source establishes, so the 'part_sun' value is not solidly supported even though 'full_sun' and 'part_shade' are fine.",
+        "is_edible left null: none of the read pages (NC State, both RHS pages, Clemson [refused], UMD, IFAS FP255, IFAS EP06000 [PDF, unreadable], UGA pet-safety page) state that Amaryllis/Hippeastrum, or a part of it, is grown or eaten as food.",
+        "attracts_pollinators left null: no page carries a structured 'Attracts' or 'attractive to pollinators' field naming bees, butterflies, moths or hummingbirds. NC State lists 'Butterfly Garden' only under 'Landscape Theme' (a design-use suggestion), which per the rules does not count as an attracts-pollinators statement, so it was not used as support.",
+        "NC State (anchor page) flags toxicity even though is_edible was left null (not set true): 'This plant has medium severity poison characteristics.' Poison Symptoms: 'Toxic if eaten in large quantities. Vomiting, salvation, diarrhea; large ingestions cause convulsions, low blood pressure, tremors, and cardiac arrhythmias. Bulbs are the most poisonous part. Especially harmful to pets.' Poison Toxic Principle: 'Alkaloid lycorine'. Tags include #problem for cats #problem for dogs #problem for horses.",
+        "hgic.clemson.edu/factsheet/amaryllis/ refused this machine (http-403 both without and with the domain explicitly allowlisted) -- could not be read for size, edibility, or pollinator content.",
+        "https://ask.ifas.ufl.edu/pdffiles/EP/EP06000.pdf returned a non-text 'pdf' fetch status from qc.py (not extractable) -- could not be read.",
+        "https://www.rhs.org.uk/plants/8748/hippeastrum/details (RHS genus/species page) and https://www.rhs.org.uk/advice/profile?pID=118&cID=894 (RHS general profile) were searched for 'Max Height', 'Max Spread', 'Ultimate height', 'Attracts', 'pollinator', 'Edib', 'Poison', and 'Toxic' -- zero hits on all terms on both pages; no usable size, edibility, or pollinator content found. (Corrected at landing: the RHS profile page does carry a size. Its Quick facts, for 'Hippeastrum species and cultivars', read 'Height & spread 25-90cm (10in-3ft) by 30cm (12in)', and it says 'Hippeastrum is a tender bulb and needs to be planted in a pot indoors.' That agrees with NC State's 12-36 in by 9-12 in and was not used.)",
+        "https://www.rhs.org.uk/plants/63784/hippeastrum-bestseller/details does carry 'Max Height 0.1-0.5 metres' and 'Max Spread 0.1-0.5 metres', but this is the named cultivar Hippeastrum 'Bestseller', not the species Hippeastrum, so per the rules it was not recorded as the species' size.",
+        "https://extension.umd.edu/resource/amaryllis-care was searched for size, edibility, and pollinator terms -- zero hits on all; no usable content found.",
+        "https://fieldreport.caes.uga.edu/publications/C1245/keep-your-pets-safe-around-plants/ lists Amaryllis spp. as 'Toxicity class: Minor Toxicity, Dermatitis' -- corroborates toxicity but does not address edibility or pollinators, and has no size data (it is a pet-safety list, not a growing guide).",
+        "mature_height_in and mature_spread_in are recorded from NC State's structured Dimensions block for the species itself (not a cultivar, not indoor-specific), and the plant is a bulb/houseplant, not a climber, so all four size fields were filled rather than left null. IFAS FP255 independently gives Height 1-2 ft and Spread 1-2 ft (12-24 in both), which is consistent with but not used in place of the NC State anchor figures per the source-priority rule."
       ],
       "citations": [
         {
@@ -607,8 +617,24 @@
           "source": "University of Georgia Cooperative Extension, Circular 1245, \"Keep Your Pets Safe Around Plants\"",
           "url": "https://fieldreport.caes.uga.edu/publications/C1245/keep-your-pets-safe-around-plants/",
           "quote": "Amaryllis spp.\nToxicity class: Minor Toxicity, Dermatitis"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox - Hippeastrum",
+          "url": "https://plants.ces.ncsu.edu/plants/hippeastrum/"
+        },
+        {
+          "claim": "mature_spread_in 9-12 (NC State Width: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+          "quote": "Width: 0 ft. 9 in. - 1 ft. 0 in.",
+          "source": "NC State Extension Gardener Plant Toolbox - Hippeastrum",
+          "url": "https://plants.ces.ncsu.edu/plants/hippeastrum/"
         }
-      ]
+      ],
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 9,
+      "mature_spread_in_max": 12
     },
     {
       "common_name": "Angel's Trumpet",
@@ -665,7 +691,16 @@
         "is_houseplant is supported for the genus generally; no admissible source distinguishes which of the seven species specifically tolerate sustained indoor culture year-round versus only being brought indoors seasonally for winter protection.",
         "Clemson HGIC (hgic.clemson.edu) and University of Maryland Extension (extension.umd.edu) were both searched specifically for Brugmansia/Angel's Trumpet content. Clemson's only hit was a one-line mention in a 'Growing Annuals' factsheet listing 'Angel's Trumpet (Brugmansia species)' under fragrant annuals with no care detail. UMD's 'EB314 - 100 Poisonous Plants of Maryland' PDF was located and fetched but its content was not machine-readable (rendered as corrupted/binary text), so no usable Brugmansia entry could be confirmed or quoted from it. UGA Cooperative Extension's 'Landscape Plants for Georgia' (B625) publication does not include Brugmansia at all.",
         "toxicity_detail — removed on audit: Direct fetch of the cited pages confirms NC State's alkaloid/symptom data sits explicitly under a 'Poisonous to Humans' heading, and UF/IFAS EP648's alkaloid and symptom sentences come from a publication framed around human/child poisoning risk -- exactly the human-toxicity-section content structural check 3 asks to screen out of an animal-facing toxicity_detail field. The record's own text discloses this framing honestly, but disclosure doesn't cure the overreach: citations 10-13, which supply the bulk of the field's specific content (severity rating, named alkaloids, the multi-symptom list), are not animal-toxicity content and are not rescued by independent corroboration the way is_houseplant/soil_base were -- removing them leaves only thin general statements ('highly poisonous,' 'poisonous if eaten, especially seeds and leaves' from citations 14-15). No admissible source supplies an actual animal-specific mechanism or symptom list; the only genuinely pet-specific evidence anywhere in this record is the bare, unelaborated 'TOXIC to pets' tag on three RHS species pages, which is used for toxic_to_pets but doesn't license the detailed human-sourced narrative presented under toxicity_detail.",
-        "2026-09-02 corpus-wide quote verification: a quote that lightly paraphrased the page was replaced with the page's verbatim sentence (facts unchanged)."
+        "2026-09-02 corpus-wide quote verification: a quote that lightly paraphrased the page was replaced with the page's verbatim sentence (facts unchanged).",
+        "mature_height_in_min/max and mature_spread_in_min/max left null: NC State Plant Toolbox (the anchor for this genus-level record) gives Dimensions Height: 6 ft. 0 in. - 35 ft. 0 in. and Width: 3 ft. 0 in. - 10 ft. 0 in., which read as outdoor/landscape stature (max height 420 in exceeds the 120 in / 10 ft houseplant-headroom threshold). This species is catalogued as a houseplant and no page gives a bounded indoor/houseplant/container-specific size figure; the closest is RHS's growing guide statement that plants indoors 'can reach well over 2m (6⅔ft) tall,' which is open-ended and gives no usable upper bound. Per the houseplant-headroom rule, all four size fields are left null rather than recording the outdoor figure. (Corrected at landing: a bounded container figure does exist. NC State's description reads 'It is a small tree growing 6 to 15 feet in containers and up to 35 feet in the landscape.' (72-180 in). Under the houseplant rule a container figure is what lands, but the research proposed these fields null and nothing was refuted, so a landing does not set it. A re-research could land mature_height_in 72-180 from that sentence; no page gives a container spread.)",
+        "RHS individual species pages for Brugmansia arborea (Max Height 2.5-4 metres / Max Spread 1.5-2.5 metres) and Brugmansia suaveolens (Max Height 1.5-2.5 metres / Max Spread 1.5-2.5 metres) do carry structured size fields, but these are species-level figures, not for the genus-level 'Brugmansia' record being merged into here, so they were not used for size. The third RHS page, Brugmansia × candida 'Grand Marnier' (Max Height 2.5-4 metres / Max Spread 1.5-2.5 metres), is additionally excluded because it names a cultivar, not the species/genus.",
+        "Searched the RHS genus page (rhs.org.uk/plants/brugmansia) and RHS growing guide for both 'Max Height'/'Max Spread' and 'Ultimate height' wording at the genus level; neither structured field is present on either page.",
+        "is_edible set to false from NC State's structured 'Edibility' field. Per the required Poison/Toxic/Problem-for check on that same anchor page before setting the flag: Poison Severity: High; Poison Part: Flowers, Leaves, Seeds (corrected at landing: the field lists all three, and the Poison Symptoms text says 'The poisonous parts are the flowers, leaves, and seeds.'); Poison Toxic Principle: Atropine, scopolamine, and hyoscyamine; listed under Problems as 'Poisonous to Humans' and 'Problem for Children'; Poison Symptoms text: 'TOXIC ONLY IF LARGE QUANTITIES EATEN. This plant is poisonous through ingestion and/or inhalation of flowers... Poisonous symptoms may include the following: hallucinations, dry mouth, muscle weakness, increased blood pressure and pulse, fever, dilated pupils, paralysis.'",
+        "RHS growing guide and RHS genus overview page independently corroborate high toxicity: 'Brugmansias are extremely poisonous, and their sap can be a skin irritant' and 'All parts of this plant are highly poisonous and the sap can irritate skin.'",
+        "fieldreport.caes.uga.edu (UGA CAES Field Report, 'Angel trumpets easy to propagate') states 'Both brugmansias and daturas are poisonous if eaten, especially the seeds and leaves,' consistent with is_edible false; this page carries no structured size data and no pollinator-attraction statement.",
+        "ask.ifas.ufl.edu/publication/EP648 loaded successfully on this machine (fetch status ok) and gives a single unbounded landscape figure ('can grow to a height of up to 30 feet tall') for Brugmansia in general; not used for size since it is a single max-only figure on an outdoor/landscape stature that would still exceed the 120 in houseplant threshold, and NC State's structured Dimensions block is the authoritative anchor already covering this ground.",
+        "attracts_pollinators set to true from NC State's structured 'Attracts: Hummingbirds, Moths' field and its 'Wildlife Value: Fragrance attracts pollinating moths' statement. No RHS page (genus page, growing guide, or the three species/cultivar pages) carries an 'attractive to pollinators' tag or any wildlife/pollinator-attraction statement, so RHS contributed nothing to this field. (Corrected at landing: the RHS growing guide does carry a pollinator statement, 'Here, most species are pollinated by moths, which is why the flowers are noticeably more fragrant in the evening.', and notes that Brugmansia sanguinea is 'pollinated in the wild by hummingbirds'. It agrees with the NC State citation and is not cited.)",
+        "All 8 assigned pages returned an ok fetch status; none of them refused this machine, so there is nothing to report as an unreachable page."
       ],
       "citations": [
         {
@@ -805,8 +840,22 @@
           "quote": "In winter, water only occasionally, as they will not be in active growth",
           "source": "Royal Horticultural Society (RHS) Growing Guide",
           "url": "https://www.rhs.org.uk/plants/brugmansia/growing-guide"
+        },
+        {
+          "claim": "is_edible false (NC State Edibility: \"Angel's Trumpet is among the most toxic of ornamental plants.\")",
+          "source": "NC State Extension Gardener Plant Toolbox — Brugmansia",
+          "url": "https://plants.ces.ncsu.edu/plants/brugmansia/",
+          "quote": "Angel's Trumpet is among the most toxic of ornamental plants."
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Wildlife Value: \"Fragrance attracts pollinating moths.\")",
+          "source": "NC State Extension Gardener Plant Toolbox — Brugmansia",
+          "url": "https://plants.ces.ncsu.edu/plants/brugmansia/",
+          "quote": "Fragrance attracts pollinating moths."
         }
-      ]
+      ],
+      "is_edible": false,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Century Plant",
@@ -1480,6 +1529,7 @@
     "The audit caught a real, subtle citation-and-precedent gap on Crocus vernus: is_houseplant was set false with zero supporting citation, and a live fetch found RHS's own page for this exact species lists 'Patio and container plants' among its suggested uses -- directly contradicting the record's blanket claim. The audit explicitly named this the same defect already caught twice in b20 for Tulip and Daffodil (forcing spring bulbs indoors in pots is a well-documented practice), holding this record to the catalog's own established precedent rather than judging it in isolation.",
     "Century Plant (Agave americana) surfaced a genuinely subtle taxonomic-rank mismatch: the only citation offering a formal name-status determination is RHS's page for 'Agave americana subsp. americana' specifically (an infraspecific rank), not the unranked binomial the record wrote into scientific_name_accepted -- the record's own inserted botanical argument (autonym convention) is probably correct in fact but isn't something any cited quote states, so both the field and its supporting name_note were nulled on a traceability failure rather than a factual one.",
     "One schema bug this batch, caught and self-corrected by the auditor itself (no manual fix needed): Water Lily's scientific_name_accepted was written as an empty string instead of JSON null, even though the record's own name_note and unknowns text both already said 'left null' -- the auditor named this specific format defect as its own finding, which the batch script's cleanup step then correctly nulled.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
