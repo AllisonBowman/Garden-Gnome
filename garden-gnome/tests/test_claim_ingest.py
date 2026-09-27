@@ -330,7 +330,8 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # perennial were equally unknown to it.
     # + 48 (b84).
     # + 55 (b85).
-    assert report.claims_written == 4681
+    # + 63 (b86).
+    assert report.claims_written == 4744
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
