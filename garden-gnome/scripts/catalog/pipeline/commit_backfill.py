@@ -11,6 +11,7 @@ fields, or when the tranche invariants fail. A MISS on an older citation in a to
 it predates the landing.
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -28,8 +29,8 @@ def claims(records):
     return sum(len(claims_from_record(r)[0]) for r in records)
 
 
-def run(cmd):
-    return subprocess.run(cmd, capture_output=True, text=True)
+def run(cmd, env=None):
+    return subprocess.run(cmd, capture_output=True, text=True, env=env)
 
 
 def main() -> int:
@@ -45,7 +46,7 @@ def main() -> int:
 
     fatal = []
     for f in batches:
-        out = run(['.venv/bin/python', 'scripts/catalog/verify_quotes.py', f]).stdout
+        out = run(['.venv/bin/python', 'scripts/catalog/verify_quotes.py', f], env={**os.environ, 'VQ_CACHE_ONLY': '1'}).stdout
         summary = [ln for ln in out.splitlines() if ' hit, ' in ln]
         misses = [ln for ln in out.splitlines() if ln.startswith('MISS')]
         new = [m for m in misses if any(s in m for s in STEMS)]

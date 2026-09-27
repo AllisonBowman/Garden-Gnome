@@ -34,6 +34,7 @@ skipped rather than downloaded.
 import hashlib
 import html
 import json
+import os
 import re
 import sys
 import time
@@ -117,6 +118,9 @@ def fetch(url: str) -> tuple[str, str]:
     if key.exists():
         d = json.loads(key.read_text())
         return d["status"], d["text"]
+    if os.environ.get("VQ_CACHE_ONLY"):
+        # Check against the warmed cache only (warm_cache.py fetches outside the sandbox first); no live fetch.
+        return "error:uncached", ""
     host = urlparse(url).netloc
     wait = HOST_GAP - (time.time() - _last.get(host, 0))
     if wait > 0:
