@@ -1,9 +1,9 @@
 import {
   conditionText, weekday, exposureSummary, translateWeather,
 } from './translate';
-import { Environment, Weather, WeatherDay } from '../types';
+import { GrowingArea, Weather, WeatherDay } from '../types';
 
-function makeEnv(partial: Partial<Environment> = {}): Environment {
+function makeEnv(partial: Partial<GrowingArea> = {}): GrowingArea {
   return {
     id: 1,
     uuid: 'u',

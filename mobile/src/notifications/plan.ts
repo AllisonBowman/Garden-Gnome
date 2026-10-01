@@ -105,7 +105,7 @@ interface PlanInput {
   /** Local hour of day to deliver reminders (default 9am). */
   deliveryHour?: number;
   /**
-   * Optional per-environment weather nudge, keyed by environment id. Populated
+   * Optional per-growing area weather nudge, keyed by growing area id. Populated
    * only when the user opts in (Settings → weather adjustments). Absent = no
    * weather influence, so the schedule is identical to the weather-free plan.
    */
@@ -187,12 +187,12 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
       // Due when the plant enters its care window ("every 7–10 days" → day 7)
       const due = new Date(anchorMs + schedule.interval_days_min * 86_400_000);
 
-      // Opt-in weather nudge: only watering, only for plants whose environment
+      // Opt-in weather nudge: only watering, only for plants whose growing area
       // has a signal, clamped so weather can't move a reminder more than a
       // couple of days. Advancing past `nextSlot` is floored below, so an
       // overdue-after-shift plant simply lands in the next delivery slot.
-      if (careType === 'water' && weatherByEnv && plant.environment_id != null) {
-        const shift = weatherByEnv[plant.environment_id]?.waterShiftDays ?? 0;
+      if (careType === 'water' && weatherByEnv && plant.growing_area_id != null) {
+        const shift = weatherByEnv[plant.growing_area_id]?.waterShiftDays ?? 0;
         if (shift) {
           const bounded = Math.max(-MAX_WEATHER_SHIFT_DAYS, Math.min(MAX_WEATHER_SHIFT_DAYS, shift));
           due.setDate(due.getDate() + bounded);

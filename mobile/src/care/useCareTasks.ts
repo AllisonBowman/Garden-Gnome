@@ -13,7 +13,7 @@ interface CareTasksData {
   plants: Awaited<ReturnType<typeof fetchPlants>>;
 }
 
-// One aggregate load feeding both the environment calendar and the Plants
+// One aggregate load feeding both the growing area calendar and the Plants
 // to-do list: plants, each plant's care logs, and full species records (plant
 // lists embed species WITHOUT care_schedules, so the schedules — the whole
 // point — must be fetched per unique species, exactly as reminders.ts does).
@@ -44,11 +44,11 @@ export interface UseCareTasksResult {
 
 /**
  * Next-due care tasks across all of the user's plants, recomputed against the
- * live clock. Pass an `environmentId` to scope to one environment (the
+ * live clock. Pass an `growingAreaId` to scope to one growing area (the
  * calendar); omit it for everything (the to-do list). The heavy fetch is
  * shared under one query key, so both screens hit the cache, not the network.
  */
-export function useCareTasks(environmentId?: number): UseCareTasksResult {
+export function useCareTasks(growingAreaId?: number): UseCareTasksResult {
   const { data, isLoading, isError, refetch, isRefetching } = useQuery({
     queryKey: CARE_TASKS_QUERY_KEY,
     queryFn: fetchCareTasksData,
@@ -57,10 +57,10 @@ export function useCareTasks(environmentId?: number): UseCareTasksResult {
   const tasks = useMemo(() => {
     if (!data) return [];
     const all = computeCareTasks(data);
-    return environmentId == null
+    return growingAreaId == null
       ? all
-      : all.filter((t) => t.environmentId === environmentId);
-  }, [data, environmentId]);
+      : all.filter((t) => t.growingAreaId === growingAreaId);
+  }, [data, growingAreaId]);
 
   return { tasks, isLoading, isError, refetch, isRefetching };
 }

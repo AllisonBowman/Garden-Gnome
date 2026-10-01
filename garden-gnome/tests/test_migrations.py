@@ -10,6 +10,21 @@ from pathlib import Path
 from tests.conftest import ROOT
 
 
+def head_revision() -> str:
+    """The revision `alembic upgrade head` lands on, read from the scripts.
+
+    Tests that mean "this database reached head" used to spell out the
+    revision that happened to be head when they were written, so every new
+    migration broke two unrelated tests. Asking the script directory says what
+    they meant."""
+    from alembic.config import Config
+    from alembic.script import ScriptDirectory
+
+    cfg = Config(str(ROOT / "alembic.ini"))
+    cfg.set_main_option("script_location", str(ROOT / "alembic"))
+    return ScriptDirectory.from_config(cfg).get_current_head()
+
+
 def _upgrade(url: str) -> None:
     import os
 
@@ -38,7 +53,7 @@ def test_fresh_db_reaches_full_schema(tmp_path: Path):
     tables = {r[0] for r in conn.execute(
         "SELECT name FROM sqlite_master WHERE type='table'")}
     assert {"user", "authidentity", "refreshtoken", "plant", "species",
-            "carelog", "careschedule", "environment", "speciestrait",
+            "carelog", "careschedule", "growingarea", "speciestrait",
             "stewardshiprecord", "alembic_version"} <= tables
 
     plant_cols = {r[1] for r in conn.execute("PRAGMA table_info(plant)")}
@@ -225,3 +240,4 @@ def test_aloe_rename_applies_unless_it_would_collide(tmp_path: Path):
         "SELECT scientific_name FROM species WHERE scientific_name LIKE 'Aloe%'"))
     assert names == ["Aloe barbadensis miller", "Aloe vera"]
     conn.close()
+

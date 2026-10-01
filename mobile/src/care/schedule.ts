@@ -22,7 +22,7 @@ export type CareTaskStatus = 'overdue' | 'due' | 'upcoming';
 export interface CareTask {
   plantId: number;
   nickname: string;
-  environmentId?: number;
+  growingAreaId?: number;
   careType: CareType;
   /** When this plant next enters its care window (anchor + interval_min). */
   dueDate: Date;
@@ -112,7 +112,7 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
         tasks.push({
           plantId: plant.id,
           nickname: plant.nickname,
-          environmentId: plant.environment_id,
+          growingAreaId: plant.growing_area_id,
           careType,
           dueDate,
           windowEndDate,
@@ -152,7 +152,7 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
       tasks.push({
         plantId: plant.id,
         nickname: plant.nickname,
-        environmentId: plant.environment_id,
+        growingAreaId: plant.growing_area_id,
         careType,
         dueDate,
         windowEndDate,

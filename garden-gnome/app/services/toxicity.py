@@ -59,6 +59,10 @@ class Toxicity:
     effect: str = ""                          # "mouth irritation", "kidney failure"
     agent: str = ""                           # "calcium oxalate", "tomatine"
     source: str = ""
+    # The authority whose claim settled the flag, when one did. A False an
+    # extension service stated is a different fact from a False the legacy
+    # catalog defaulted to, and the sentence has to say which.
+    cited_to: str = ""
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -194,20 +198,41 @@ def parse_toxicity(text: str, source: str = "") -> Toxicity | None:
                     severity=severity, agent=agent, source=source)
 
 
-def from_legacy(toxic_to_pets: bool | None, scientific_name: str = "") -> Toxicity:
+def from_legacy(toxic_to_pets: bool | None, scientific_name: str = "",
+                cited_to: str = "") -> Toxicity:
     """Upgrade the existing boolean, consulting known nuance first.
 
     A stored `False` means 'no toxicity recorded', which is weaker than 'safe' —
-    it is reported as such rather than promoted to a guarantee."""
+    it is reported as such rather than promoted to a guarantee. `cited_to`
+    names the authority whose claim settled the flag, when one did."""
     known = lookup(scientific_name)
     if known:
         return known
     if toxic_to_pets is True:
         return Toxicity(toxic=True, parts=["all"], at_risk=["pets"],
-                        severity="unknown", source="catalog (legacy flag)")
+                        severity="unknown", source="catalog (legacy flag)",
+                        cited_to=cited_to)
     if toxic_to_pets is False:
-        return Toxicity(toxic=False, source="catalog (legacy flag)")
+        return Toxicity(toxic=False, source="catalog (legacy flag)",
+                        cited_to=cited_to)
     return Toxicity(toxic=None)
+
+
+def cited_authority(provenance: dict | None, sources: list | None,
+                    field: str = "toxic_to_pets") -> str:
+    """The authority whose page settled `field`, or "" when nothing cited it.
+
+    Read off the row's `care_sources` (recompute.py: name, link and field
+    names, sorted) and only when the provenance says the value was sourced:
+    a genus page never speaks for a species on toxicity (ADR 0002), and a
+    row resolved before sources were materialised has provenance but no
+    page to credit."""
+    if (provenance or {}).get(field) != "sourced":
+        return ""
+    for entry in sources or []:
+        if field in (entry.get("fields") or []) and not entry.get("inferred"):
+            return entry.get("authority") or ""
+    return ""
 
 
 # --- the reader-facing sentence ---------------------------------------------
@@ -237,10 +262,21 @@ def describe(tox: Toxicity, common_name: str = "This plant") -> str:
     that is the case a flat label gets wrong and the reason people stop
     trusting warnings."""
     if tox.toxic is None:
+        # "No information" would be untrue of a row whose cited description
+        # of harm sits server-side with no verdict yet (ADR 0003 keeps the
+        # passage there). What is missing is the verdict.
         return (
-            f"No toxicity information recorded for {common_name.lower()} yet — "
+            f"No toxicity verdict recorded for {common_name.lower()} yet — "
             f"treat it as unknown rather than safe, and keep it away from pets "
             f"that chew plants."
+        )
+    if tox.toxic is False and tox.cited_to:
+        # An authority said so. "Nothing noted" would undersell that, and for
+        # a plant whose hazard is to people rather than pets it is untrue.
+        return (
+            f"{tox.cited_to} records no toxicity to pets for "
+            f"{common_name.lower()}. That is not a guarantee of safety — keep "
+            f"it away from pets that chew plants."
         )
     if tox.toxic is False:
         return (
@@ -281,6 +317,7 @@ def describe(tox: Toxicity, common_name: str = "This plant") -> str:
 
 
 def describe_for_species(scientific_name: str, common_name: str,
-                         toxic_to_pets: bool | None) -> str:
+                         toxic_to_pets: bool | None, cited_to: str = "") -> str:
     """The entry point the app uses: best available nuance for a catalog row."""
-    return describe(from_legacy(toxic_to_pets, scientific_name), common_name)
+    return describe(from_legacy(toxic_to_pets, scientific_name, cited_to),
+                    common_name)

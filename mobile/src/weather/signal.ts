@@ -2,7 +2,7 @@
 // unit-tested directly. Deliberately conservative: it looks only a few days
 // out and returns a small whole-day shift for WATERING, gated by the same
 // physical exposure the advisor uses. Sheltered/indoor spots always yield 0.
-import { Environment, Weather } from '../types';
+import { GrowingArea, Weather } from '../types';
 import { WeatherSignal } from '../notifications/plan';
 
 // How far ahead the reminder nudge reacts. Kept short so a distant day-5
@@ -11,7 +11,7 @@ const LOOKAHEAD_DAYS = 3;
 const RAIN_CHANCE_PCT = 60;
 const HOT_HIGH_F = 90;
 
-export function computeWeatherSignal(env: Environment, weather: Weather): WeatherSignal {
+export function computeWeatherSignal(env: GrowingArea, weather: Weather): WeatherSignal {
   const days = (weather.daily ?? []).slice(0, LOOKAHEAD_DAYS);
   const unsheltered = env.shelter === 'partial' || env.shelter === 'exposed';
   const outdoor = env.temp_exposure === 'outdoor';

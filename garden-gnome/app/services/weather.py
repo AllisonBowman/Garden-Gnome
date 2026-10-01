@@ -1,6 +1,6 @@
 """Apple WeatherKit REST weather service.
 
-The ONLY place that talks to a weather provider. Given an Environment's
+The ONLY place that talks to a weather provider. Given an GrowingArea's
 coordinates the backend fetches Apple Weather via the WeatherKit REST API,
 authenticated with an ES256 JWT signed by a WeatherKit key (the same
 `.p8`/Key-ID/Team-ID machinery the app already uses for Sign in with Apple),

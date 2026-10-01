@@ -1,6 +1,6 @@
 """Phase 5 acceptance: auth API integration tests with mocked providers.
 
-Covers first sign-in (user + identity + default environment created), repeat
+Covers first sign-in (user + identity + default growing area created), repeat
 sign-in, email-based identity linking, refresh rotation, logout, and 401s.
 Provider verification is monkeypatched at the router's import site; the token
 service and database run for real against the migrated test DB.
@@ -11,7 +11,7 @@ from sqlmodel import Session, create_engine, select
 
 from app.config import get_settings
 from app.models.models import (
-    AuthIdentity, Environment, User,
+    AuthIdentity, GrowingArea, User,
 )
 from app.services.oauth import ProviderTokenError
 from app.services.oauth.apple import AppleClaims
@@ -99,8 +99,8 @@ def test_apple_first_sign_in_creates_everything(api, monkeypatch):
         fernet = Fernet(get_settings().fernet_key.encode())
         assert fernet.decrypt(
             idents[0].apple_refresh_token_enc.encode()).decode() == "apple-rt-1"
-        envs = s.exec(select(Environment).where(
-            Environment.user_id == user.id)).all()
+        envs = s.exec(select(GrowingArea).where(
+            GrowingArea.user_id == user.id)).all()
         assert [(e.name, e.type.value) for e in envs] == [("My Home", "home")]
 
     # The issued access token works on /me
@@ -120,10 +120,10 @@ def test_apple_repeat_sign_in_reuses_account(api, monkeypatch):
         uid = first["user"]["id"]
         idents = s.exec(select(AuthIdentity).where(
             AuthIdentity.user_id == uid)).all()
-        envs = s.exec(select(Environment).where(
-            Environment.user_id == uid)).all()
+        envs = s.exec(select(GrowingArea).where(
+            GrowingArea.user_id == uid)).all()
         assert len(idents) == 1  # no duplicate identity
-        assert len(envs) == 1    # no duplicate default environment
+        assert len(envs) == 1    # no duplicate default growing_area
 
 
 def test_google_links_to_existing_user_by_verified_email(api, monkeypatch):
@@ -139,18 +139,18 @@ def test_google_links_to_existing_user_by_verified_email(api, monkeypatch):
         idents = s.exec(select(AuthIdentity).where(
             AuthIdentity.user_id == apple_user["id"])).all()
         assert sorted(i.provider.value for i in idents) == ["apple", "google"]
-        envs = s.exec(select(Environment).where(
-            Environment.user_id == apple_user["id"])).all()
+        envs = s.exec(select(GrowingArea).where(
+            GrowingArea.user_id == apple_user["id"])).all()
         assert len(envs) == 1  # linking creates no second default env
 
 
-def test_google_new_user_gets_default_environment(api, monkeypatch):
+def test_google_new_user_gets_default_growing_area(api, monkeypatch):
     _mock_google(monkeypatch, sub="google-sub-new", email="new-g@example.com")
     body = api.client.post("/auth/google", json={"id_token": "mocked"}).json()
     assert body["user"]["display_name"] == "Gee User"
     with api.db() as s:
-        envs = s.exec(select(Environment).where(
-            Environment.user_id == body["user"]["id"])).all()
+        envs = s.exec(select(GrowingArea).where(
+            GrowingArea.user_id == body["user"]["id"])).all()
         assert [(e.name, e.type.value) for e in envs] == [("My Home", "home")]
 
 

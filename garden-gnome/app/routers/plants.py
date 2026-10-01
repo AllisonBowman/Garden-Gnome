@@ -8,8 +8,8 @@ from sqlmodel import Session, select
 from app.db.database import get_session
 from app.deps import get_current_user
 from app.models.models import (
-    OUTCOMES_BY_ACTION, CareLog, CareSchedule, CareType, Environment,
-    EnvironmentType, Plant, Species, StewardshipRecord, User,
+    OUTCOMES_BY_ACTION, CareLog, CareSchedule, CareType, GrowingArea,
+    GrowingAreaType, Plant, Species, StewardshipRecord, User,
 )
 from app.models.schemas import (
     AdviceRequest, CareLogCreate, PlantBulkCreate, PlantBulkResult, PlantCreate,
@@ -40,10 +40,10 @@ def _owned_plant(plant_id: int, user: User, session: Session) -> Plant:
     return plant
 
 
-def _owned_environment(env_id: int, user: User, session: Session) -> Environment:
-    env = session.get(Environment, env_id)
+def _owned_growing_area(env_id: int, user: User, session: Session) -> GrowingArea:
+    env = session.get(GrowingArea, env_id)
     if env is None or env.user_id != user.id:
-        raise HTTPException(status_code=404, detail="Environment not found")
+        raise HTTPException(status_code=404, detail="GrowingArea not found")
     return env
 
 
@@ -61,24 +61,24 @@ def _default_nickname(species: Species, location: str) -> str:
     return f"{name} — {place}" if place else name
 
 
-def _resolve_environment_id(
+def _resolve_growing_area_id(
     requested_id: Optional[int], user: User, session: Session,
 ) -> Optional[int]:
     """A provided id must belong to the caller; otherwise fall back to the
-    caller's default (oldest) environment, creating "My Home" if the account
-    somehow has none. NEVER "first environment in the DB" — that leaked across
-    accounts once environments became user-owned."""
+    caller's default (oldest) growing_area, creating "My Home" if the account
+    somehow has none. NEVER "first growing area in the DB" — that leaked across
+    accounts once growing areas became user-owned."""
     if requested_id is not None:
-        _owned_environment(requested_id, user, session)
+        _owned_growing_area(requested_id, user, session)
         return requested_id
     default_env = session.exec(
-        select(Environment)
-        .where(Environment.user_id == user.id)
-        .order_by(Environment.id.asc())
+        select(GrowingArea)
+        .where(GrowingArea.user_id == user.id)
+        .order_by(GrowingArea.id.asc())
     ).first()
     if default_env is None:
-        default_env = Environment(
-            name="My Home", type=EnvironmentType.home, user_id=user.id)
+        default_env = GrowingArea(
+            name="My Home", type=GrowingAreaType.home, user_id=user.id)
         session.add(default_env)
         session.flush()
     return default_env.id
@@ -94,21 +94,21 @@ def _stage_plant(payload: PlantCreate, user: User, session: Session) -> Plant:
     if species is None:
         raise HTTPException(status_code=400, detail="species_id does not exist")
 
-    environment_id = _resolve_environment_id(payload.environment_id, user, session)
+    growing_area_id = _resolve_growing_area_id(payload.growing_area_id, user, session)
 
     data = payload.model_dump()
-    data["environment_id"] = environment_id
+    data["growing_area_id"] = growing_area_id
     if not (data.get("nickname") or "").strip():
         data["nickname"] = _default_nickname(species, data.get("location", ""))
-    # Stamp ownership; keeps plant.user_id == environment.user_id invariant
+    # Stamp ownership; keeps plant.user_id == growing area.user_id invariant
     plant = Plant(**data, user_id=user.id)
     session.add(plant)
     session.flush()  # assigns plant.id without ending the transaction
 
-    if environment_id is not None:
+    if growing_area_id is not None:
         session.add(StewardshipRecord(
             plant_id=plant.id,
-            environment_id=environment_id,
+            growing_area_id=growing_area_id,
             installation_uuid=_installation_uuid(),
         ))
 
@@ -174,10 +174,26 @@ def create_plants_bulk(
 
 @router.get("/", response_model=list[PlantRead])
 def list_plants(
+    growing_area_id: Optional[int] = None,
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    return session.exec(select(Plant).where(Plant.user_id == user.id)).all()
+    """The caller's plants, optionally only those in one growing area.
+
+    The filter is new with the fit feature and the app has been doing it
+    client-side since the care calendar shipped -- fetching every plant and
+    discarding the ones that live elsewhere. That is fine for a phone with
+    twelve plants and wrong for a bed with three hundred, and the misfit
+    endpoint needs the same question answered server-side anyway.
+
+    An id the caller does not own returns an empty list rather than a 404:
+    this is a filter on their own collection, and an id that is not theirs
+    simply matches none of it. Probing for other people's areas goes through
+    the growing-areas router, which 404s (see its `_owned`)."""
+    query = select(Plant).where(Plant.user_id == user.id)
+    if growing_area_id is not None:
+        query = query.where(Plant.growing_area_id == growing_area_id)
+    return session.exec(query).all()
 
 
 @router.get("/{plant_id}", response_model=PlantRead)
@@ -207,7 +223,7 @@ def transfer_plant(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    """Move a plant to a different environment, preserving its plant_uuid.
+    """Move a plant to a different growing_area, preserving its plant_uuid.
 
     Closes the current stewardship record and opens a new one. The plant's
     canonical UUID doesn't change, so the census treats it as the same
@@ -215,15 +231,15 @@ def transfer_plant(
     the plant's timeline.
 
     v1 rule (decision 4): BOTH sides must belong to the caller — the plant
-    (and thus its current environment) and the destination. No cross-account
+    (and thus its current growing_area) and the destination. No cross-account
     transfers."""
     plant = _owned_plant(plant_id, user, session)
-    if plant.environment_id is not None:
+    if plant.growing_area_id is not None:
         # Belt-and-braces: the from-side must also be caller-owned even if
         # the plant/env ownership invariant ever drifted.
-        _owned_environment(plant.environment_id, user, session)
+        _owned_growing_area(plant.growing_area_id, user, session)
 
-    new_env = _owned_environment(payload.to_environment_id, user, session)
+    new_env = _owned_growing_area(payload.to_growing_area_id, user, session)
 
     # Close the active stewardship record
     current = session.exec(
@@ -235,16 +251,16 @@ def transfer_plant(
         current.ended_at = datetime.utcnow()
         session.add(current)
 
-    # Open new stewardship in the destination environment
+    # Open new stewardship in the destination growing area
     session.add(StewardshipRecord(
         plant_id=plant_id,
-        environment_id=payload.to_environment_id,
+        growing_area_id=payload.to_growing_area_id,
         installation_uuid=_installation_uuid(),
         transfer_notes=payload.transfer_notes,
     ))
 
-    # Update the plant's current environment pointer
-    plant.environment_id = payload.to_environment_id
+    # Update the plant's current growing area pointer
+    plant.growing_area_id = payload.to_growing_area_id
     session.add(plant)
     session.commit()
 
@@ -294,10 +310,10 @@ def split_plant(
             ),
         )
 
-    environment_id = (
-        _owned_environment(payload.to_environment_id, user, session).id
-        if payload.to_environment_id is not None
-        else plant.environment_id
+    growing_area_id = (
+        _owned_growing_area(payload.to_growing_area_id, user, session).id
+        if payload.to_growing_area_id is not None
+        else plant.growing_area_id
     )
     location = payload.location if payload.location is not None else plant.location
 
@@ -309,7 +325,7 @@ def split_plant(
         species_id=plant.species_id,
         quantity=payload.quantity,
         split_from_uuid=plant.plant_uuid,
-        environment_id=environment_id,
+        growing_area_id=growing_area_id,
         location=location,
         maturity_stage=plant.maturity_stage,
         acquired_on=plant.acquired_on,
@@ -318,10 +334,10 @@ def split_plant(
     session.add(offshoot)
     session.flush()
 
-    if environment_id is not None:
+    if growing_area_id is not None:
         session.add(StewardshipRecord(
             plant_id=offshoot.id,
-            environment_id=environment_id,
+            growing_area_id=growing_area_id,
             installation_uuid=_installation_uuid(),
             transfer_notes=payload.notes,
         ))
@@ -492,7 +508,7 @@ async def advise_plant(
 ):
     """Generate care advice for a plant by reasoning over its species care
     facts, care schedules (ground truth), recent care history, and — for plants
-    whose environment is exposed to the weather — the local forecast. Optionally
+    whose growing area is exposed to the weather — the local forecast. Optionally
     accepts free-text `symptoms` in the body for conversational diagnosis."""
     symptoms = payload.symptoms if payload else ""
 
@@ -515,19 +531,19 @@ async def advise_plant(
     ).all()
 
     # Weather grounding: only for plants the outside world reaches, only when
-    # the environment has coordinates. Any failure (no key, no coords, fetch
+    # the growing area has coordinates. Any failure (no key, no coords, fetch
     # error) leaves weather None and advice degrades to weather-free.
-    environment = (
-        session.get(Environment, plant.environment_id)
-        if plant.environment_id is not None else None
+    growing_area = (
+        session.get(GrowingArea, plant.growing_area_id)
+        if plant.growing_area_id is not None else None
     )
     weather = None
-    if weather_applies(environment) and environment.lat is not None and environment.lng is not None:
-        weather = await fetch_weather(environment.lat, environment.lng)
+    if weather_applies(growing_area) and growing_area.lat is not None and growing_area.lng is not None:
+        weather = await fetch_weather(growing_area.lat, growing_area.lng)
 
     try:
         result = get_care_advice(
-            species, plant, recent_logs, care_schedules, symptoms, environment, weather
+            species, plant, recent_logs, care_schedules, symptoms, growing_area, weather
         )
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e

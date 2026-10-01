@@ -98,11 +98,11 @@ export const DATA_FLOWS: DataFlow[] = [
   },
   {
     id: 'location',
-    title: 'A growing environment’s location',
+    title: 'A growing area’s location',
     destination: 'partner',
     summary: 'Coordinates reach Apple Weather. They never reach the census.',
     detail:
-      'If you give an environment an address, its coordinates are stored and '
+      'If you give a growing area an address, its coordinates are stored and '
       + 'sent to Apple Weather to fetch that spot’s forecast — that is how '
       + 'outdoor advice knows rain is coming. Precise coordinates stay on the '
       + 'server: they are excluded from every shared view by construction, not '

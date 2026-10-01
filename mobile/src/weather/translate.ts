@@ -1,8 +1,8 @@
-// Pure "outside → in here" translation of a forecast for a grow environment.
+// Pure "outside → in here" translation of a forecast for a growing area.
 // No React/React-Native imports so it can be unit-tested directly (mirrors the
 // backend advisor's weather nudges — kept deliberately conservative and
 // display-only; the precise, species-aware timing lives in each plant's advice).
-import { Environment, Weather } from '../types';
+import { GrowingArea, Weather } from '../types';
 
 // WeatherKit reports camelCase condition codes (e.g. "MostlyCloudy"). Friendly
 // text for the common ones; fall back to spacing the camelCase.
@@ -36,7 +36,7 @@ export function weekday(dateStr: string): string {
 
 // One plain sentence describing how much weather reaches this spot, from its
 // own exposure characteristics.
-export function exposureSummary(env: Environment): string {
+export function exposureSummary(env: GrowingArea): string {
   const sheltered = env.shelter === 'sheltered';
   const indoor = env.temp_exposure === 'indoor';
   if (sheltered && indoor) {
@@ -51,11 +51,11 @@ export function exposureSummary(env: Environment): string {
   return 'Roofed but out in the open air — plants here feel the temperature swings, though rain mostly misses them.';
 }
 
-// Translated implications, each gated by the environment's physical exposure so
+// Translated implications, each gated by the growing area's physical exposure so
 // a desk plant surfaces nothing beyond day-length. Thresholds mirror the
 // backend's stub nudges (rain ≥60%, UV ≥8); heat/cold use generic outdoor
-// bands here since the environment view has no single species.
-export function translateWeather(env: Environment, weather: Weather): string[] {
+// bands here since the growing area view has no single species.
+export function translateWeather(env: GrowingArea, weather: Weather): string[] {
   const lines: string[] = [];
   const days = weather.daily ?? [];
   const unsheltered = env.shelter === 'partial' || env.shelter === 'exposed';

@@ -167,3 +167,42 @@ def test_derived_field_survives_serialization_to_the_api_schema():
         out = schema.model_validate(sp, from_attributes=True)
         assert "cats" in out.toxicity_description
         assert out.toxic_to_pets is True, "the raw flag stays available for filtering"
+
+
+# --- what a claim settled ---------------------------------------------------
+
+def test_no_verdict_is_not_reported_as_no_information():
+    """A minted row can hold a cited description of harm server-side and no
+    verdict yet; 'no information recorded' would be untrue of it."""
+    text = tx.describe(tx.Toxicity(toxic=None), "Winter Daphne")
+    assert text.startswith("No toxicity verdict recorded for winter daphne yet")
+    assert "unknown rather than safe" in text
+
+
+def test_a_cited_false_names_who_said_so():
+    """'Nothing harmful has been noted' is the legacy flag's story. When an
+    authority stated the flag, the sentence credits it -- and stays short of
+    a guarantee, because a hazard to people is not a hazard to pets."""
+    text = tx.describe_for_species("Toxicodendron radicans", "Poison Ivy", False,
+                                   cited_to="UGA Cooperative Extension")
+    assert text.startswith(
+        "UGA Cooperative Extension records no toxicity to pets for poison ivy")
+    assert "not a guarantee" in text
+    assert "nothing harmful" not in text
+
+
+def test_a_legacy_false_keeps_its_legacy_wording():
+    text = tx.describe_for_species("Ficus lyrata", "Fiddle Leaf Fig", False)
+    assert "nothing harmful has been noted" in text
+
+
+def test_cited_authority_is_read_off_the_page_that_won_the_flag():
+    page = {"authority": "UGA Cooperative Extension", "url": "https://x/",
+            "fields": ["toxic_to_pets"], "inferred": False}
+    other = {"authority": "NC State Extension", "url": "https://y/",
+             "fields": ["soil_base"], "inferred": False}
+    assert tx.cited_authority({"toxic_to_pets": "sourced"}, [other, page]) == \
+        "UGA Cooperative Extension"
+    assert tx.cited_authority({"toxic_to_pets": "sourced"}, [other]) == ""
+    assert tx.cited_authority({"toxic_to_pets": "sourced"}, None) == ""
+    assert tx.cited_authority(None, [page]) == ""

@@ -17,7 +17,7 @@ import { CARE_PRESENTATION } from './labels';
 // plant × care-type that is overdue or due today, most-overdue first. Checking
 // a row logs that care (which re-anchors its schedule, so the row clears) and
 // deep-links into the plant. Upcoming care is intentionally NOT shown here —
-// that lives on the environment calendar; this list stays a short, honest
+// that lives on the growing area calendar; this list stays a short, honest
 // "do these today".
 /** How many to-do rows this header renders before summarising the rest. */
 const MAX_VISIBLE_TODOS = 8;

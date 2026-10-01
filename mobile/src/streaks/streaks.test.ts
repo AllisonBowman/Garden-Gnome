@@ -19,7 +19,7 @@ function species(maxDays = 10): Species {
 function plant(id: number, acquired: string): Plant {
   return {
     id, plant_uuid: `p${id}`, nickname: `Plant ${id}`, species_id: 100,
-    environment_id: 1, location: '', maturity_stage: 'mature',
+    growing_area_id: 1, location: '', maturity_stage: 'mature',
     intake_notes: '', acquired_on: acquired,
   } as Plant;
 }

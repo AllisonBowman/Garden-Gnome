@@ -70,14 +70,14 @@ export default function CensusScreen() {
       {/* Totals */}
       <View style={styles.totalsRow}>
         <TotalCard styles={styles} label="Plants" value={summary.total_plants} color={palette.acc} />
-        <TotalCard styles={styles} label="Environments" value={summary.total_environments} color={palette.sub} />
+        <TotalCard styles={styles} label="GrowingAreas" value={summary.total_growingAreas} color={palette.sub} />
       </View>
 
-      {/* Environments by type */}
+      {/* GrowingAreas by type */}
       <Card style={styles.card}>
-        <Card.Title title="Environments by type" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title="GrowingAreas by type" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
-          {Object.entries(summary.environments_by_type).map(([type, count]) => (
+          {Object.entries(summary.growingAreas_by_type).map(([type, count]) => (
             <View key={type} style={styles.envRow}>
               <Text variant="bodySmall" style={styles.envLabel}>
                 {ENV_LABEL[type] ?? type}

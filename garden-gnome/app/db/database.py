@@ -48,6 +48,11 @@ def migrate_db() -> None:
                 "CREATE UNIQUE INDEX IF NOT EXISTS ix_plant_plant_uuid ON plant (plant_uuid)"
             ))
 
+        # Deliberately still the pre-rename names. This function only ever runs
+        # against a database that predates Alembic, where the table is
+        # `environment` and the column `environment_id`; 0017 renames both, and
+        # renaming them here instead would add a column no historical schema
+        # has and leave the real one missing.
         if "environment_id" not in existing_cols:
             conn.execute(text(
                 "ALTER TABLE plant ADD COLUMN environment_id INTEGER REFERENCES environment(id)"

@@ -30,7 +30,7 @@ from pathlib import Path
 from sqlmodel import Session, select
 
 from app.db.database import engine
-from app.models.models import Species
+from app.models.models import Species, SpeciesSource
 from app.data.expansion.run_expansion import import_record
 from app.data.expansion.recompute_xrefs import recompute_cross_references
 from app.data.expansion.sample import to_review_entry, weighted_sample
@@ -59,6 +59,29 @@ def is_admissible(issues: list[str]) -> bool:
         if not issue.startswith(SOFT_PREFIXES):
             return False
     return True
+
+
+def review_candidates(rows) -> list[dict]:
+    """Rows eligible for the citation-pass sample: Perenual imports only.
+
+    A claims-minted row (ADR 0005) is skipped before anything else is asked
+    of it -- its evidence is already cited, and it carries none of the legacy
+    values the review envelope asks a reviewer to check.
+    """
+    candidates = []
+    for s in rows:
+        if s.source == SpeciesSource.claims:
+            continue
+        if s.source != SpeciesSource.perenual:
+            continue
+        candidates.append(
+            {"common_name": s.common_name, "scientific_name": s.scientific_name,
+             "source": s.source, "review_status": s.review_status,
+             "light_need": s.light_need, "toxic_to_pets": s.toxic_to_pets,
+             "humidity_pct_min": s.humidity_pct_min, "humidity_pct_max": s.humidity_pct_max,
+             "temp_f_min": s.temp_f_min, "temp_f_max": s.temp_f_max,
+             "soil_type": s.soil_type, "care_notes": s.care_notes})
+    return candidates
 
 
 def main() -> int:
@@ -105,16 +128,8 @@ def main() -> int:
         if not args.dry_run:
             (OUT_DIR / "review_queue.json").write_text(
                 json.dumps(keep, indent=2, ensure_ascii=False), encoding="utf-8")
-            expansion_recs = [
-                {"common_name": s.common_name, "scientific_name": s.scientific_name,
-                 "source": s.source, "review_status": s.review_status,
-                 "light_need": s.light_need, "toxic_to_pets": s.toxic_to_pets,
-                 "humidity_pct_min": s.humidity_pct_min, "humidity_pct_max": s.humidity_pct_max,
-                 "temp_f_min": s.temp_f_min, "temp_f_max": s.temp_f_max,
-                 "soil_type": s.soil_type, "care_notes": s.care_notes}
-                for s in session.exec(select(Species).where(
-                    Species.source == "perenual")).all()
-            ]
+            expansion_recs = review_candidates(
+                session.exec(select(Species)).all())
             sample = [to_review_entry(r) for r in
                       weighted_sample(expansion_recs, args.sample_fraction)]
             (OUT_DIR / "review_sample.json").write_text(

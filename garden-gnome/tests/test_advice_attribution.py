@@ -13,7 +13,7 @@ import pytest
 from sqlmodel import Session, create_engine, select
 
 from app.models.models import (
-    Environment, EnvironmentType, Plant, Shelter, Species, TempExposure, User,
+    GrowingArea, GrowingAreaType, Plant, Shelter, Species, TempExposure, User,
 )
 from app.services import tokens
 
@@ -75,13 +75,13 @@ def api(migrated_db_url, monkeypatch):
         s.add(user)
         s.flush()
 
-        outside = Environment(
-            name="balcony", type=EnvironmentType.balcony, user_id=user.id,
+        outside = GrowingArea(
+            name="balcony", type=GrowingAreaType.balcony, user_id=user.id,
             shelter=Shelter.exposed, temp_exposure=TempExposure.outdoor,
             lat=37.77, lng=-122.42,
         )
-        inside = Environment(
-            name="living room", type=EnvironmentType.home, user_id=user.id,
+        inside = GrowingArea(
+            name="living room", type=GrowingAreaType.home, user_id=user.id,
             shelter=Shelter.sheltered, temp_exposure=TempExposure.indoor,
         )
         s.add(outside)
@@ -92,7 +92,7 @@ def api(migrated_db_url, monkeypatch):
         for label, env in (("outdoor", outside), ("indoor", inside)):
             p = Plant(
                 nickname=f"{label}-plant", species_id=species_id,
-                environment_id=env.id, user_id=user.id)
+                growing_area_id=env.id, user_id=user.id)
             s.add(p)
             s.flush()
             plants[label] = p.id

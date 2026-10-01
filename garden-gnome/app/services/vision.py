@@ -27,6 +27,7 @@ import logging
 import os
 
 from app.models.models import Species, Plant, CareSchedule
+from app.services.care_facts import species_fact_lines
 from app.services.grounding import grounding_failures, log_rejection
 from app.services.name_match import classify_matches, match_species
 from app.services.persona import PERSONA_PREAMBLE
@@ -210,23 +211,10 @@ async def _anthropic_vision_chat(
 def _build_context(
     species: Species, plant: Plant, care_schedules: list[CareSchedule]
 ) -> str:
-    # Same rule as the advisor: derived humidity (imported rows) never enters
-    # a block headed "authoritative".
-    humidity_line = (
-        f"- Humidity: {species.humidity_pct_min}-{species.humidity_pct_max}%\n"
-        if species.humidity_sourced else ""
-    )
-    facts = (
-        f"SPECIES CARE FACTS (authoritative):\n"
-        f"- Common name: {species.common_name}\n"
-        f"- Scientific name: {species.scientific_name}\n"
-        f"- Light need: {species.light_need.value}\n"
-        f"{humidity_line}"
-        f"- Temperature: {species.temp_f_min}-{species.temp_f_max} F\n"
-        f"- Soil: {species.soil_type}\n"
-        f"- Toxic to pets: {'yes' if species.toxic_to_pets else 'no'}\n"
-        f"- Curated notes: {species.care_notes or '(none)'}\n"
-    )
+    # The same block the advisor builds (care_facts.py): resolved values
+    # first, genus-borrowed ones labelled, derived humidity never included.
+    facts = ("SPECIES CARE FACTS (authoritative):\n"
+             + "\n".join(species_fact_lines(species)) + "\n")
 
     if care_schedules:
         lines = [

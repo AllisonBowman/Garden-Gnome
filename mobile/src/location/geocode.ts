@@ -1,5 +1,5 @@
 // Pure helpers for turning a device-geocoder result into the fields an
-// Environment stores. No expo/react-native imports so they unit-test directly.
+// GrowingArea stores. No expo/react-native imports so they unit-test directly.
 // (The actual geocoder calls live in lookup.ts.)
 
 // Mirrors the shape of expo-location's LocationGeocodedAddress (only the fields
@@ -46,7 +46,7 @@ export function formatAddress(a: GeocodedAddress): string {
   return out.join(', ');
 }
 
-/** Combine a geocoder result + coordinates into the stored Environment fields.
+/** Combine a geocoder result + coordinates into the stored GrowingArea fields.
  *  City falls back to district/subregion for rural places that report no city. */
 export function resolvePlace(a: GeocodedAddress, lat: number, lng: number): ResolvedPlace {
   return {

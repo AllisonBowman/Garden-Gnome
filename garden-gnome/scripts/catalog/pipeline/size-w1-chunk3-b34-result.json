@@ -1,0 +1,143 @@
+{
+  "landed": [
+    {
+      "batch": "b34-hemlock-and-more.json",
+      "record": {
+        "attracts_pollinators": true,
+        "citations": [
+          {
+            "claim": "mature_height_in 96-144 (NC State Dimensions block: Height: 8 ft. 0 in. - 12 ft. 0 in., converted to inches)",
+            "source": "NC State Extension Gardener Plant Toolbox - Hibiscus syriacus",
+            "url": "https://plants.ces.ncsu.edu/plants/hibiscus-syriacus/",
+            "quote": "Height: 8 ft. 0 in. - 12 ft. 0 in."
+          },
+          {
+            "claim": "mature_spread_in 72-120 (NC State Dimensions block: Width: 6 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+            "source": "NC State Extension Gardener Plant Toolbox - Hibiscus syriacus",
+            "url": "https://plants.ces.ncsu.edu/plants/hibiscus-syriacus/",
+            "quote": "Width: 6 ft. 0 in. - 10 ft. 0 in."
+          },
+          {
+            "claim": "attracts_pollinators true (NC State Play Value field lists the plant as attracting pollinators; the structured Attracts field separately lists Butterflies, Hummingbirds, Pollinators, and Specialized Bees)",
+            "source": "NC State Extension Gardener Plant Toolbox - Hibiscus syriacus",
+            "url": "https://plants.ces.ncsu.edu/plants/hibiscus-syriacus/",
+            "quote": "Attracts Pollinators"
+          }
+        ],
+        "common_name": "Rose of Sharon",
+        "is_edible": null,
+        "mature_height_in_max": 144,
+        "mature_height_in_min": 96,
+        "mature_spread_in_max": 120,
+        "mature_spread_in_min": 72,
+        "scientific_name_accepted": "Hibiscus syriacus",
+        "unknowns": [
+          "is_edible left null: no readable page (NC State, RHS, UGA CAES fieldreport) states Hibiscus syriacus or any part of it is eaten/used as food, or that it is poisonous to eat; no record of edibility either way.",
+          "Checked the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting any edibility-adjacent field: 'Poison' had 0 hits, 'Problem for' had 0 hits, and the 6 'Toxic' hits are all the tags 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- i.e. the page reports the plant as NOT toxic to those animals, no toxic part or principle is named.",
+          "Rose of Sharon is a shrub/small tree (NC State: 'Shrub', 'Tree'; UGA: 'Grows eight to 12 feet tall and generally has a tree form'), not a vine/liana/climber, so the climber exclusion (rule 4) does not apply and all four size fields were populated normally.",
+          "https://hgic.clemson.edu/factsheet/hibiscus/ refused this machine (fetch status: error:ProxyError) -- could not be read, skipped.",
+          "https://hgic.clemson.edu/bring-on-the-heat-bring-on-the-blooms-with-rose-of-sharon/ returned http-403 -- could not be read, skipped.",
+          "https://edis.ifas.ufl.edu/publication/ST295 returned http-410 (page gone) -- could not be read, skipped.",
+          "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c522 refused this machine (fetch status: error:ConnectError) -- could not be read, skipped, consistent with it being a known-refusing host.",
+          "https://www.rhs.org.uk/plants/40530/hibiscus-syriacus/details was read successfully and gives Max Height 2.5-4 metres / Max Spread 2.5-4 metres, but was NOT used for size because NC State has a species-specific page and is the designated anchor when available; RHS also had 0 hits for edible/poison/toxic/pollinator/butterfly/bee/hummingbird terms, so it added no other data.",
+          "https://fieldreport.caes.uga.edu/news/turn-overgrown-shrubs-into-trees/ was read successfully and independently corroborates the height range ('Grows eight to 12 feet tall'); it had no edibility, toxicity, or pollinator content for this species."
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read every page with qc.py and nothing needs refuting. NC State's species page shows 'Height: 8 ft. 0 in. - 12 ft. 0 in.' and 'Width: 6 ft. 0 in. - 10 ft. 0 in.' each on a single rendered line. These convert correctly to 96-144 in and 72-120 in, with no feet figures left unconverted, and the ranges are real ranges on the page, not single figures stretched. UGA backs up the height (8-12 feet), and RHS's 2.5-4 m is close to both. The plant is a shrub or tree, not a climber, and the page covers the species rather than a cultivar. attracts_pollinators=true rests on a verbatim 'Attracts Pollinators' Play Value item, plus a structured Attracts list naming Butterflies, Hummingbirds, Pollinators and Specialized Bees. is_edible is correctly null: the only 'toxic' hits are non-toxic pet tags, and RHS and UGA say nothing about edibility. MOBOT, both Clemson pages and UF EDIS could not be read from here, which matches the researcher's own notes on them (for EDIS I got a ProxyError where the researcher recorded http-410; both mean unreadable). All citation labels contain the required field names."
+    },
+    {
+      "batch": "b34-hemlock-and-more.json",
+      "record": {
+        "common_name": "Saucer Magnolia",
+        "scientific_name_accepted": "Magnolia × soulangeana",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "mature_height_in_min": 180,
+        "mature_height_in_max": 396,
+        "mature_spread_in_min": 180,
+        "mature_spread_in_max": 300,
+        "unknowns": [
+          "is_edible left null: no page that could be fetched (NC State Plant Toolbox, RHS, IFAS ST388) addresses eating, food use, or toxicity for Saucer Magnolia; searched 'Edible', 'Poison', 'Toxic', 'Problem for' with zero hits on each.",
+          "attracts_pollinators left null: no page that could be fetched has a structured Attracts/wildlife field or an unconditional pollinator statement; searched 'Attracts', 'pollinator', 'butterfl', 'bee' with zero hits on NC State and RHS pages.",
+          "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a885 refused this machine (ProxyError on every attempt) -- could not check it for size, edibility, or pollinator info.",
+          "ask.ifas.ufl.edu/publication/FP370 was readable (corrected at landing: it did not refuse this machine). It is the named-cultivar page for Magnolia x soulangiana 'Lennei' ('Height: 20 to 25 feet', 'Spread: 15 to 25 feet') and has no edibility or pollinator text, so it was not used for the species, per the cultivar rule.",
+          "hgic.clemson.edu/factsheet/magnolia/ refused this machine (ProxyError on every attempt) -- could not check it.",
+          "ask.ifas.ufl.edu/publication/ST388 (Magnolia x soulangeana 'Burgundy') is a named-cultivar page -- its dimensions (25 ft tall, 20-30 ft spread) and content were not used for the species per the cultivar rule.",
+          "RHS lists Max Height and Max Spread both as 4-8 metres, but NC State's Plant Toolbox page (the anchor, with a structured Dimensions/Height/Width block) exists for this species, so RHS's size figures were not used, per instructions to prefer the NC State anchor when present.",
+          "Saucer Magnolia is a tree/shrub, not a climber, so the climber-size exclusion rule does not apply."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 180-396 (NC State Height 15 ft. 0 in. - 33 ft. 0 in., converted to inches)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/magnolia-x-soulangeana/common-name/saucer-magnolia/",
+            "quote": "Height: 15 ft. 0 in. - 33 ft. 0 in."
+          },
+          {
+            "claim": "mature_spread_in 180-300 (NC State Width 15 ft. 0 in. - 25 ft. 0 in., converted to inches)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/magnolia-x-soulangeana/common-name/saucer-magnolia/",
+            "quote": "Width: 15 ft. 0 in. - 25 ft. 0 in."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read all six pages with qc.py. All six proposed values hold up and none is refuted. On NC State, 'Height: 15 ft. 0 in. - 33 ft. 0 in.' converts to 180-396 in and 'Width: 15 ft. 0 in. - 25 ft. 0 in.' converts to 180-300 in. The feet were converted, each min is at or below its max, the ranges come from the species page and not a cultivar, and the plant is not a climber. Both quotes appear verbatim as single lines, and both citation labels contain the literal field names. is_edible and attracts_pollinators are correctly null: every page I could fetch was silent on both. The unknowns contain one factual error. The researcher says ask.ifas.ufl.edu/publication/FP370 gave ProxyError on every attempt, but it fetched fine for me. It is the 'Lennei' cultivar page (Height 20 to 25 feet, Spread 15 to 25 feet) and says nothing about edibility or pollinators, so it would not have changed any value. That unknowns entry should say it was excluded as a cultivar page rather than that it was unreachable. MOBOT (a885) and Clemson did return ProxyError for me, which matches the researcher's notes."
+    },
+    {
+      "batch": "b34-hemlock-and-more.json",
+      "record": {
+        "attracts_pollinators": true,
+        "is_edible": true,
+        "common_name": "Sweet Cherry",
+        "scientific_name_accepted": "Prunus avium",
+        "mature_height_in_min": 180,
+        "mature_height_in_max": 360,
+        "mature_spread_in_min": 180,
+        "mature_spread_in_max": 360,
+        "unknowns": [
+          "Toxicity (required accompaniment to is_edible=true): NC State Plant Toolbox lists this plant with medium poison severity to humans. Poison Part: Flowers, Fruits, Leaves, Seeds. Poison Symptoms: \"The leaves, flowers, green fruits, ripe fruits and seeds contain cyanide compounds in detectable quantities, but the seeds and fruit stalks have the highest concentration of toxins. If a couple of pits (stones, which enclose the seeds) are accidentally swallowed, it will not cause poisoning, but care should be taken to remove pits before fruits are processed in a blender or any other machine that will crack open the pits. Symptoms include gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma and respiratory failure.\" Poison Toxic Principle: Cyanogenic glycosides (amygdalin & prunasin). The page's tags also flag it as a problem for cats, dogs, and horses. Only the ripe fruit flesh is the edible part; the pits/seeds, leaves, and flowers are the toxic parts and must not be eaten.",
+          "RHS (rhs.org.uk/plants/13950/prunus-avium/details) gives size as open-ended 'Max Height Higher than 12 metres' and 'Max Spread wider than 8 metres' -- per instructions, an open-ended RHS bound gives no usable figure, so it was not used; NC State's concrete '15 to 30 feet with a matching spread' was used instead for both height and spread.",
+          "RHS 'grow-your-own' cherries page (rhs.org.uk/fruit/cherries/grow-your-own) was not used as a citation source because its size/edibility figures there are given for named cultivars and rootstocks, not the species Prunus avium itself (rule 3).",
+          "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=l860 was not read: fetching it via qc.py from this machine is expected to be refused per task instructions for this host, and no attempt-derived content is included here as a property of the page.",
+          "fieldreport.caes.uga.edu (Minor Fruits and Nuts in Georgia) and extension.psu.edu (orchard frost critical temperatures) were not cited (corrected at landing: the note called them both unqueried and searched). Both are readable. UGA confirms sweet cherry (Prunus avium) is grown for fruit and that sweet cherries other than 'Stella' are self-infertile and need cross-pollination; PSU gives only frost critical temperatures. Neither gives a cherry size figure or a toxicity statement, so neither changes a field.",
+          "Prunus avium is a tree, not a climber, so the size-nulling climber rule (rule 4) does not apply here."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 180-360 (NC State: \"grows to a height of 15 to 30 feet\", converted to inches: 15 ft = 180 in, 30 ft = 360 in)",
+            "source": "NC State Extension Gardener Plant Toolbox - Prunus avium",
+            "url": "https://plants.ces.ncsu.edu/plants/prunus-avium/",
+            "quote": "grows to a height of 15 to 30 feet with a matching spread."
+          },
+          {
+            "claim": "mature_spread_in 180-360 (NC State: spread stated to match the 15 to 30 foot height, converted to inches: 15 ft = 180 in, 30 ft = 360 in)",
+            "source": "NC State Extension Gardener Plant Toolbox - Prunus avium",
+            "url": "https://plants.ces.ncsu.edu/plants/prunus-avium/",
+            "quote": "grows to a height of 15 to 30 feet with a matching spread."
+          },
+          {
+            "claim": "is_edible true (NC State states the fruit is edible raw or cooked)",
+            "source": "NC State Extension Gardener Plant Toolbox - Prunus avium",
+            "url": "https://plants.ces.ncsu.edu/plants/prunus-avium/",
+            "quote": "Fruit edible raw or cooked."
+          },
+          {
+            "claim": "attracts_pollinators true (RHS tags this species under Plants for pollinators)",
+            "source": "RHS - Prunus avium (wild cherry) details",
+            "url": "https://www.rhs.org.uk/plants/13950/prunus-avium/details",
+            "quote": "Plants for pollinators"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read all the pages I could reach with qc.py: NC State, RHS 13950, RHS grow-your-own, UGA B992 and PSU. The MOBOT (plantfinder.mobot.org) fetch was blocked by the sandbox network proxy, as the task expected, and the record claims nothing from it.\n\nAll six proposed fields hold up. The size fields are 15 to 30 ft from NC State, which gives 180 to 360 in with the feet correctly converted. The range is published, min <= max, the page is species-level, and the plant is a tree, not a climber. Spread comes from NC State's 'with a matching spread', which is verified text. is_edible is supported by NC State ('Fruit edible raw or cooked.') and by the RHS 'Fruit Edible' tag. NC State's full cyanide/poison warning (medium severity) is carried verbatim in unknowns, so F passes. attracts_pollinators rests on the RHS 'Plants for pollinators' tag, and NC State corroborates it with its pollinator-garden prose and tag. All four quotes are verbatim single runs, and every citation label contains its field name.\n\nOne issue is not a refutation but a reviewer should look at it. RHS 13950 gives 'Max Height Higher than 12 metres' (more than 472 in) against NC State's 30 ft (360 in) maximum. The RHS figure is open-ended, so the run's rule excludes it, but the two sources do conflict on the upper end. Excluding the grow-your-own page was right: its sizes are all rootstock sizes ('Gisela 5' 3–4m, 'Colt' 6–8m), not species sizes. Minor wording problem in unknowns: it says UGA and PSU were 'not queried' and also that nothing was 'located' on them. That is self-contradictory. In fact UGA only confirms cherries are grown for fruit and have cross-pollination needs, and PSU only covers frost temperatures, so neither page changes any field."
+    }
+  ],
+  "unverified": [],
+  "no_research": []
+}

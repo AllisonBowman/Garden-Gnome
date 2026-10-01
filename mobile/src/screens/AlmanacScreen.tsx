@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { fetchPlants } from '../api/plants';
+import { fetchGrowingAreas, fetchCandidates } from '../api/growingAreas';
 import { Species } from '../types';
 import { tierOf, fingerprint, matchesQuery, TIER_LABELS, Tier } from '../almanac/tier';
 import { useAppTheme } from '../theme/ThemeProvider';
@@ -69,6 +70,8 @@ export default function AlmanacScreen() {
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
+  // Which growing area to narrow the catalog to, or null for the whole thing.
+  const [areaId, setAreaId] = useState<number | null>(null);
 
   const { data: species = [], isLoading } = useQuery({
     queryKey: ['species'],
@@ -82,10 +85,32 @@ export default function AlmanacScreen() {
     [plants],
   );
 
+  const { data: areas = [] } = useQuery({
+    queryKey: ['growingAreas'],
+    queryFn: fetchGrowingAreas,
+  });
+
+  // The fit rules live on the server and are asked for, not re-implemented
+  // here. `care/facts.ts` mirrors the backend's *wording*, which can drift
+  // harmlessly; a verdict cannot — two places deciding what suits a space
+  // would eventually disagree about it, and the user would see both. React
+  // Query's cache covers the offline case that a local copy would have.
+  const { data: candidates = [], isFetching: fitLoading } = useQuery({
+    queryKey: ['growingAreaCandidates', areaId, 'almanac'],
+    queryFn: () => fetchCandidates(areaId as number, 500),
+    enabled: areaId != null,
+  });
+  const fitIds = useMemo(
+    () => new Set(candidates.map((c) => c.species_id)),
+    [candidates],
+  );
+
   const shown = useMemo(
     () => species.filter((s) =>
-      matchesQuery(s, query) && (filter === 'all' || tierOf(s) === filter)),
-    [species, query, filter],
+      matchesQuery(s, query)
+      && (filter === 'all' || tierOf(s) === filter)
+      && (areaId == null || fitIds.has(s.id))),
+    [species, query, filter, areaId, fitIds],
   );
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
@@ -121,11 +146,45 @@ export default function AlmanacScreen() {
           ))}
         </ScrollView>
 
+        {areas.length > 0 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
+            <Chip
+              selected={areaId === null}
+              onPress={() => setAreaId(null)}
+              style={styles.filterChip}
+              compact
+            >
+              Anywhere
+            </Chip>
+            {areas.map((a) => (
+              <Chip
+                key={a.id}
+                selected={areaId === a.id}
+                onPress={() => setAreaId(a.id)}
+                style={styles.filterChip}
+                compact
+              >
+                {`Fits ${a.name}`}
+              </Chip>
+            ))}
+          </ScrollView>
+        ) : null}
+
         <Eyebrow style={styles.eyebrow}>Species · {shown.length} shown</Eyebrow>
+
+        {areaId != null && !fitLoading ? (
+          <Text style={styles.fitNote}>
+            Showing only species a source confirms suit this spot. A plant the
+            catalog can’t judge isn’t hidden because it’s wrong — it’s absent
+            because nothing is known.
+          </Text>
+        ) : null}
 
         {shown.length === 0 ? (
           <Text style={styles.empty}>
-            Nothing matches that. Try a different name, or widen the filter.
+            {fitLoading
+              ? 'Checking what suits that spot…'
+              : 'Nothing matches that. Try a different name, or widen the filter.'}
           </Text>
         ) : (
           shown.map((s) => (
@@ -160,4 +219,5 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   fpItem: { color: p.sub, fontSize: 12 },
   owned: { color: p.good, fontSize: 12, marginTop: 8, fontWeight: '600' },
   empty: { color: p.faint, fontStyle: 'italic', textAlign: 'center', marginTop: 32 },
+  fitNote: { color: p.faint, fontSize: 12.5, lineHeight: 18, marginBottom: 10 },
 });

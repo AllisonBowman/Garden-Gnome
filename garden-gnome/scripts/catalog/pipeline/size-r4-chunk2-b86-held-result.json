@@ -1,0 +1,204 @@
+{
+ "landed": [
+  {
+   "batch": "b86-bulbs-patio.json",
+   "record": {
+    "common_name": "Calla Lily",
+    "scientific_name_accepted": "Zantedeschia aethiopica",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 24,
+    "mature_height_in_max": 39,
+    "mature_spread_in_min": 12,
+    "mature_spread_in_max": 24,
+    "unknowns": [
+     "is_edible left null: no page describes this plant as food. NC State's page had 0 hits for 'Edible' and RHS's page had 0 hits for 'Edible' or 'edible', but RHS's Potentially harmful field reads 'Harmful if eaten; skin/eye irritant.' and 'Pets: Harmful if eaten; skin/eye irritant' (corrected at landing: the note said no page addressed eating; verified against the cached copy). plantfinder.mobot.org refused this machine (ProxyError) and was not read; do not treat that as evidence either way.",
+     "NC State: This plant has medium severity poison characteristics. Poison Symptoms: 'Oral irritation, pain, and swelling of mouth, tongue, and lips, excessive drooling, stomach pain, vomiting (not horses), diarrhea, difficulty swallowing'. Poison Toxic Principle: calcium oxalate. Causes Contact Dermatitis: Yes. Poison Part: Flowers, Leaves, Roots, Sap/Juice, Stems. Tags include #problem for cats #problem for dogs #problem for horses #poisonous (corrected at landing: the note had listed Poison Part as Flowers and Leaves only and had dropped the symptoms' opening words; verified against the cached copy).",
+     "mature_height_in and mature_spread_in taken from NC State's structured Dimensions block, the anchor page for this species (a dedicated species page exists, so RHS was not needed for size).",
+     "RHS page checked for edibility and pollinator wording ('Edible', 'edible', 'pollinator') and all returned 0 hits; its Max Height/Max Spread figures were not used since NC State's species-specific Dimensions block is the anchor and takes priority.",
+     "Plant is not a climber/vine (NC State lists Plant Type as Bulb, Houseplant, Perennial, Poisonous, Water Plant; Poisonous added at landing), so the climber-exclusion rule (rule 4) does not apply and size fields were recorded normally.",
+     "Both height and spread figures are well under the 120-inch (10 ft) houseplant/room-headroom cutoff, so the outdoor-vs-houseplant distinction in rule 12 does not change anything here."
+    ],
+    "citations": [
+     {
+      "claim": "attracts_pollinators true (NC State Attracts: Bees)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/zantedeschia-aethiopica/common-name/calla-lily/",
+      "quote": "Bees"
+     },
+     {
+      "claim": "mature_height_in 24-39 (NC State Height: 2 ft. 0 in. - 3 ft. 3 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/zantedeschia-aethiopica/common-name/calla-lily/",
+      "quote": "Height: 2 ft. 0 in. - 3 ft. 3 in."
+     },
+     {
+      "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/zantedeschia-aethiopica/common-name/calla-lily/",
+      "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"Beetles and bees pollinate the flowers.\"",
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 2 ft. 0 in. - 3 ft. 3 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 2 ft. 0 in. - 3 ft. 3 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 1 ft. 0 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 1 ft. 0 in. - 2 ft. 0 in.\""
+   ],
+   "summary": "I re-read NC State and RHS with qc.py. MOBOT gave a ProxyError again. All six values hold. Height 24-39 in comes from 'Height: 2 ft. 0 in. - 3 ft. 3 in.', and spread 12-24 in comes from 'Width: 1 ft. 0 in. - 2 ft. 0 in.'. Both are converted correctly, come from the species page (not a cultivar), are not for a climber, are under 120 in, and agree with the RHS 0.5-1 m height. attracts_pollinators true is backed by 'Beetles and bees pollinate the flowers.' is_edible stays null. Both cited quotes contain U+23CE, so each got a corrected_quote. The unknowns text also needs a fix: it lists NC State's Poison Part as only Flowers, Leaves, but the page also lists Roots, Sap/Juice and Stems, and it leaves out RHS's 'Harmful if eaten; skin/eye irritant'."
+  },
+  {
+   "batch": "b86-bulbs-patio.json",
+   "record": {
+    "common_name": "Common Snowdrop",
+    "scientific_name_accepted": "Galanthus nivalis",
+    "is_edible": false,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 4,
+    "mature_height_in_max": 10,
+    "mature_spread_in_min": 3,
+    "mature_spread_in_max": 6,
+    "unknowns": [
+     "mature_height_in and mature_spread_in taken from NC State Plant Toolbox's structured Dimensions block for this exact species page (galanthus-nivalis), not a genus page or cultivar figure.",
+     "is_edible set false because NC State's Edibility field states 'Bulbs are toxic if eaten'; the same page also rates it 'low severity poison characteristics' and lists 'Poisonous to Humans' under Problems -- consistent with a non-edible determination, not a conditional-edibility case.",
+     "attracts_pollinators set true from NC State's structured Attracts field, which lists Bees (an unconditional wildlife-attraction field, not seed predation or deer browsing).",
+     "Galanthus nivalis is a bulb/herbaceous perennial, not a vine, liana, or other climber, so the climber-exclusion rule for size fields does not apply and all four size fields were populated normally.",
+     "The other listed pages (RHS, Missouri Botanical PlantFinder, Clemson HGIC, and the NC State pages for Galanthus elwesii and Leucojum aestivum) were not needed as sources: the anchor NC State Galanthus nivalis page already carried a complete species-level Dimensions block plus Edibility and Attracts fields, so no genus-level or other-species substitute was used for any of the six fields."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 4-10 (NC State Height: 0 ft. 4 in. - 0 ft. 10 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Galanthus nivalis",
+      "url": "https://plants.ces.ncsu.edu/plants/galanthus-nivalis/",
+      "quote": "Height: 0 ft. 4 in. - 0 ft. 10 in."
+     },
+     {
+      "claim": "mature_spread_in 3-6 (NC State Width: 0 ft. 3 in. - 0 ft. 6 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Galanthus nivalis",
+      "url": "https://plants.ces.ncsu.edu/plants/galanthus-nivalis/",
+      "quote": "Width: 0 ft. 3 in. - 0 ft. 6 in."
+     },
+     {
+      "claim": "is_edible false (NC State Edibility field: Bulbs are toxic if eaten)",
+      "source": "NC State Extension Gardener Plant Toolbox - Galanthus nivalis",
+      "url": "https://plants.ces.ncsu.edu/plants/galanthus-nivalis/",
+      "quote": "Bulbs are toxic if eaten"
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Attracts field: Bees)",
+      "source": "NC State Extension Gardener Plant Toolbox - Galanthus nivalis",
+      "url": "https://plants.ces.ncsu.edu/plants/galanthus-nivalis/",
+      "quote": "Bees"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State Galanthus nivalis page with qc.py and found nothing wrong: all six values match the page exactly. Height is 4-10 in (0 ft 4 in to 0 ft 10 in) and spread is 3-6 in (0 ft 3 in to 0 ft 6 in). All of these are converted correctly, are real published ranges and are species-level, and snowdrop is a bulb, not a climber. is_edible false rests on an explicit denial ('Bulbs are toxic if eaten'), and RHS agrees ('Harmful if eaten'). attracts_pollinators true rests on 'Attracts: Bees' and is backed by RHS 'Plants for pollinators'. Every citation claim names its field and every quote is verbatim on the page, so nothing is refuted and no quote needs correcting. I could not open the Missouri Botanical page because the sandbox blocked it. I did not re-read Clemson or the other two NC State pages either, since the proposal does not use any of them."
+  },
+  {
+   "batch": "b86-bulbs-patio.json",
+   "record": {
+    "common_name": "Grape Hyacinth",
+    "scientific_name_accepted": "Muscari armeniacum",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 6,
+    "mature_height_in_max": 9,
+    "mature_spread_in_min": 3,
+    "mature_spread_in_max": 6,
+    "unknowns": [
+     "is_edible left null. NC State's page does not address eating Muscari armeniacum, but RHS's Potentially harmful field reads 'Ornamental bulbs - not to be eaten. Wear gloves and other protective equipment when handling' and, for pets, 'Ornamental bulbs - not to be eaten' (corrected at landing: the note said neither page addresses eating; verified against the cached copy). The research did not propose false on that line, and a landing does not add a value, so the field stays null.",
+     "NC State's tag list separately marks the species non-toxic for cats, horses, and dogs (search terms 'Poison'/'Toxic'/'Problem for' were run before setting is_edible per instructions), but since is_edible stayed null this detail isn't required in a citation -- noting it here for completeness only.",
+     "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, kempercode=q880) refused this machine's fetch (ProxyError / sandbox network denial) -- it was skipped entirely; no content was read from it and nothing about its contents is asserted.",
+     "Species is a bulb/herbaceous perennial per NC State's Plant Type field, not a vine/liana/climber, so the climber-exclusion rule does not apply and all four size fields were populated normally.",
+     "Size and pollinator figures are for the species Muscari armeniacum itself as listed on both anchor pages, not a named cultivar -- no cultivar-specific figures were encountered."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 6-9 (NC State Dimensions: Height: 0 ft. 6 in. - 0 ft. 9 in., already in inches, low end 6, high end 9)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/muscari-armeniacum/",
+      "quote": "Height: 0 ft. 6 in. - 0 ft. 9 in."
+     },
+     {
+      "claim": "mature_spread_in 3-6 (NC State Dimensions: Width: 0 ft. 3 in. - 0 ft. 6 in., already in inches, low end 3, high end 6)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/muscari-armeniacum/",
+      "quote": "Width: 0 ft. 3 in. - 0 ft. 6 in."
+     },
+     {
+      "claim": "attracts_pollinators true: RHS tags this species under its structured 'Plants for pollinators' designation",
+      "source": "RHS Plant Finder",
+      "url": "https://www.rhs.org.uk/plants/11247/muscari-armeniacum/details",
+      "quote": "Plants for pollinators"
+     },
+     {
+      "claim": "attracts_pollinators true: NC State's structured Attracts field also lists this species as attracting a pollinator",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/muscari-armeniacum/",
+      "quote": "Bees"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State and RHS with qc.py; MOBOT kempercode=q880 returned ProxyError again and could not be checked. All five non-null values hold up. Height 6-9 in and spread 3-6 in match NC State's 'Height: 0 ft. 6 in. - 0 ft. 9 in.' and 'Width: 0 ft. 3 in. - 0 ft. 6 in.' exactly, with no unconverted feet, and they are consistent with RHS (to 20cm tall, spread 0-0.1 m). The figures are for the species, the plant is a bulb and not a climber, and all quotes are verbatim single runs. attracts_pollinators true is supported by NC State's Attracts field ('Bees') and RHS's 'Plants for pollinators' tag. is_edible stays null, but the researcher's unknowns note is wrong: it claims RHS says nothing about edibility, when RHS actually says 'Ornamental bulbs - not to be eaten' under 'Potentially harmful'. That note should be corrected, and is_edible must never be set true."
+  },
+  {
+   "batch": "b86-bulbs-patio.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies and Hummingbirds)",
+      "source": "NC State Extension Plant Toolbox — Lilium lancifolium",
+      "url": "https://plants.ces.ncsu.edu/plants/lilium-lancifolium/",
+      "quote": "Butterflies"
+     },
+     {
+      "claim": "mature_height_in 24-72 (NC State Height: 2 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox — Lilium lancifolium",
+      "url": "https://plants.ces.ncsu.edu/plants/lilium-lancifolium/",
+      "quote": "Height: 2 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox — Lilium lancifolium",
+      "url": "https://plants.ces.ncsu.edu/plants/lilium-lancifolium/",
+      "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+     }
+    ],
+    "common_name": "Tiger Lily",
+    "is_edible": null,
+    "mature_height_in_max": 72,
+    "mature_height_in_min": 24,
+    "mature_spread_in_max": 24,
+    "mature_spread_in_min": 12,
+    "scientific_name_accepted": "Lilium lancifolium",
+    "unknowns": [
+     "Edibility conflict between the two anchor pages: NC State's Edibility field reads \"The bulbs are said to be edible\" (a hedged, folklore-style claim), while RHS's Potentially harmful field states plainly \"Ornamental bulbs - not to be eaten. Wear gloves and other protective equipment when handling. TOXIC to pets if eaten (cats)\". The research set is_edible false on the RHS line and the audit nulled it (see the removal line below). It lands null: a poisonous plant whose only food mention is a hedged 'said to be edible' lands null in this catalog (corrected at landing: the note still said false).",
+     "Toxicity/pets warnings found on the anchor pages, recorded per rule 5: NC State tags list \"non-toxic for horses\", \"non-toxic for dogs\", and \"problem for cats\" (Problems field: \"Problem for Cats\"); RHS's Potentially harmful field adds \"TOXIC to pets if eaten (cats)\" and a handling caution (\"Wear gloves and other protective equipment when handling\").",
+     "Size fields were taken from NC State (the anchor, since a species-specific NC State page exists) rather than RHS: NC State Dimensions gives Height 2 ft. 0 in. - 6 ft. 0 in. (24-72 in.) and Width 1 ft. 0 in. - 2 ft. 0 in. (12-24 in.). RHS's own Max Height/Max Spread fields give smaller, conflicting figures (Max Height 1-1.5 metres = 39.4-59.1 in.; Max Spread 0.1-0.5 metres = 3.9-19.7 in.), noted here but not used, per the anchor-page rule.",
+     "Plant is a bulb/herbaceous perennial, not a vine, liana, or other climber, so the climber-null rule (rule 4) does not apply and all four size fields were populated normally.",
+     "No cultivar-specific figures were encountered on either page; the size and edibility text applies to the species itself.",
+     "Searched RHS for 'Ultimate height', 'Attracts', and 'pollinator' explicitly per the anchor-page keyword guidance; none of those terms/fields appear on the RHS page (0 hits each), so attracts_pollinators support came from NC State alone.",
+     "Both https://plants.ces.ncsu.edu/plants/lilium-lancifolium/ and https://www.rhs.org.uk/plants/19924/lilium-lancifolium-ixcd/details fetched ok for the researcher, but the auditor could not re-read the RHS page (ProxyError on three attempts), which is part of why the audit nulled is_edible. At landing the cached RHS copy was read and its Potentially harmful line confirmed as quoted above, so is_edible stays null on the two pages' conflict and the catalog's edibility rule, not on an unverifiable quote (corrected at landing).",
+     "is_edible removed on audit: The value false rests only on the RHS page, and that page could not be re-read from this machine. qc.py returned fetch status error:ProxyError with 0 bytes on three attempts: in the sandbox, with www.rhs.org.uk allowed, and with the sandbox off. So the quote \"Ornamental bulbs - not to be eaten.\" could not be checked, even though the researcher reports that RHS fetched ok (H). The anchor page also contradicts the value: NC State's Edibility field, which I verified, reads \"The bulbs are said to be edible.\" The RHS line reads like a generic caution attached to ornamental bulbs, not a species-specific denial. With the anchor saying edible (hedged), and the only denial unverifiable and possibly boilerplate, false is not a sourced denial here. The field should be null, with the conflict kept in unknowns. If a later run can fetch RHS and confirm the quote, false could be reconsidered, but the anchor-page conflict would still argue for null."
+    ]
+   },
+   "applied": [
+    "is_edible: false -> null (The value false rests only on the RHS page, and that page could not be re-read from this machine. qc.py returned fetch status error:ProxyError with 0 bytes on three attempts: in the sandbox, with www.rhs.org.uk allowed, and with the sandbox off. So the quote \"Ornamental bulbs - not to be eaten.\" could not be checked, even though the researcher reports that RHS fetched ok (H). The anchor page also contradicts the value: NC State's Edibility field, which I verified, reads \"The bulbs are said to be edible.\" The RHS line reads like a generic caution attached to ornamental bulbs, not a species-specific denial. With the anchor saying edible (hedged), and the only denial unverifiable and possibly boilerplate, false is not a sourced denial here. The field should be null, with the conflict kept in unknowns. If a later run can fetch RHS and confirm the quote, false could be reconsidered, but the anchor-page conflict would still argue for null.)"
+   ],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"Flowers attract swallowtail butterflies.\""
+   ],
+   "summary": "I re-read the NC State page, which fetched fine. The RHS page failed every time (ProxyError, 0 bytes), even with its host allowed and with the sandbox off. Height (24-72 in. from 'Height: 2 ft. 0 in. - 6 ft. 0 in.') and spread (12-24 in. from 'Width: 1 ft. 0 in. - 2 ft. 0 in.') are converted correctly, trace to single rendered lines, apply to the species, are correctly labelled, and are not a climber's sizes, so both stand. attracts_pollinators true stands: NC State's Attracts field lists Butterflies and Hummingbirds, and its Wildlife Value field says the flowers attract swallowtail butterflies. I gave a clearer corrected quote. I refuted is_edible false. Its only support is the RHS quote, which I could not verify, and it contradicts the anchor page's Edibility field ('The bulbs are said to be edible.'), so it should be null with the conflict kept in unknowns."
+  }
+ ],
+ "unverified": [],
+ "no_research": []
+}

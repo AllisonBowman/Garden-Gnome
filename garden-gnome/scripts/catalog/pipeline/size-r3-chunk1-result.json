@@ -1,0 +1,1716 @@
+{
+ "landed": [
+  {
+   "batch": "b51-native-woodland-2.json",
+   "record": {
+    "common_name": "Woodland Phlox",
+    "scientific_name_accepted": "Phlox divaricata",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 6,
+    "mature_height_in_max": 12,
+    "mature_spread_in_min": 10,
+    "mature_spread_in_max": 20,
+    "unknowns": [
+     "is_edible left null: no page among the anchor set (NC State, Clemson HGIC, RHS) addresses eating this plant at all -- no 'Edible' hits on any of them.",
+     "No 'Poison'/'Toxic'/'Problem for' hits on NC State or Clemson or RHS either, so there is no toxicity note to carry into unknowns alongside edibility.",
+     "mature_height_in and mature_spread_in taken from NC State Plant Toolbox (species-specific page, the anchor per instructions), not RHS, since NC State has its own structured Dimensions block for this species: Height: 0 ft. 6 in. - 1 ft. 0 in. (6-12 in), Width: 0 ft. 10 in. - 1 ft. 8 in. (10-20 in).",
+     "RHS gives a different, wider range (Max Height 0.1-0.5 metres = 3.9-19.7 in, against NC State's 6-12 in; Max Spread 0.1-0.5 metres = 3.9-19.7 in, against NC State's 10-20 in) but was not used since NC State's species page takes priority. RHS's own description, 'A semi-evergreen perennial to 30cm in height', puts the top at about 12 in, NC State's maximum. Corrected at landing: this line had called the RHS range narrower; verified against the cached copy.",
+     "Clemson HGIC gives 'Plants grow 12 to 15 inches tall when blooming' -- a bloom-height figure that does not match NC State's structured Dimensions block; not used, since NC State's Dimensions field is the anchor and Clemson's number describes flowering stem height rather than a min/max range.",
+     "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=285428&isprofile=1&basic=Phlox+divaricata refused this machine (fetch status: error:ProxyError) -- not read, and no content from it is guessed at.",
+     "Phlox divaricata is an herbaceous perennial wildflower, not a vine/liana/climber, so the climber-exclusion rule does not apply and all four size fields are populated.",
+     "https://plants.ces.ncsu.edu/plants/phlox-maculata/ (a different species, Phlox maculata) was not used for any field on this Phlox divaricata record -- it is out of scope for this species."
+    ],
+    "citations": [
+     {
+      "claim": "attracts_pollinators (NC State Attracts field: Bees, Butterflies, Hummingbirds, Small Mammals; also 'Its flowers attract hummingbirds, butterflies, and bees')",
+      "source": "NC State Extension Plant Toolbox - Phlox divaricata",
+      "url": "https://plants.ces.ncsu.edu/plants/phlox-divaricata/",
+      "quote": "Its flowers attract hummingbirds, butterflies, and bees, The foliage attracts rabbits."
+     },
+     {
+      "claim": "attracts_pollinators (NC State structured Attracts field)",
+      "source": "NC State Extension Plant Toolbox - Phlox divaricata",
+      "url": "https://plants.ces.ncsu.edu/plants/phlox-divaricata/",
+      "quote": "Bees"
+     },
+     {
+      "claim": "mature_height_in 6-12 (NC State Dimensions Height: 0 ft. 6 in. - 1 ft. 0 in., converted to inches: 0.5 ft = 6 in, 1 ft = 12 in)",
+      "source": "NC State Extension Plant Toolbox - Phlox divaricata",
+      "url": "https://plants.ces.ncsu.edu/plants/phlox-divaricata/",
+      "quote": "Height: 0 ft. 6 in. - 1 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 10-20 (NC State Dimensions Width: 0 ft. 10 in. - 1 ft. 8 in., converted to inches: 10 in and 1 ft 8 in = 20 in)",
+      "source": "NC State Extension Plant Toolbox - Phlox divaricata",
+      "url": "https://plants.ces.ncsu.edu/plants/phlox-divaricata/",
+      "quote": "Width: 0 ft. 10 in. - 1 ft. 8 in."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 0 ft. 6 in. - 1 ft. 0 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 0 ft. 6 in. - 1 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 0 ft. 10 in. - 1 ft. 8 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 0 ft. 10 in. - 1 ft. 8 in.\"",
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"Its flowers attract hummingbirds, butterflies, and bees, The foliage attracts rabbits.\""
+   ],
+   "summary": "I re-read NC State, Clemson HGIC and RHS with qc.py. MOBOT returned a ProxyError and could not be read. All six values survive. Height 6-12 in and spread 10-20 in come from the Phlox divaricata species page on NC State: 'Height: 0 ft. 6 in. - 1 ft. 0 in.' and 'Width: 0 ft. 10 in. - 1 ft. 8 in.'. I checked the conversions myself: there is no unconverted feet figure, each min is at or below its max, the figures are for the species rather than a cultivar, and the plant is not a climber. attracts_pollinators=true rests on bees, butterflies and hummingbirds (NC State) and on butterflies, bees and moths visiting for nectar (Clemson). is_edible is correctly null, since no page mentions edibility or toxicity. The defects are in the quotes. Four of the five citation quotes contain U+23CE and glue labels to values across newline boundaries: both size quotes and the structured 'Attracts:' quote. I supplied corrected single-line quotes, each checked with qc.py. One small error sits in the unknowns text. It calls RHS's '0.1-0.5 metres' (3.9-19.7 in) a 'narrower' range, but for height it is actually wider than NC State's 6-12 in. RHS prose also says 'to 30cm in height' (about 12 in), which agrees with the NC State maximum. This error does not change any field value."
+  },
+  {
+   "batch": "b52-native-woodland-3.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 12-24 (NC State Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/caulophyllum-thalictroides/",
+      "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 6-12 (NC State Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/caulophyllum-thalictroides/",
+      "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Attracts field lists Bees)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/caulophyllum-thalictroides/",
+      "quote": "Bees"
+     },
+     {
+      "claim": "is_edible false (NC State Edibility field states the seeds are toxic, and the page separately rates the whole plant as poisonous)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/caulophyllum-thalictroides/",
+      "quote": "Seeds are toxic."
+     }
+    ],
+    "common_name": "Blue Cohosh",
+    "is_edible": false,
+    "mature_height_in_max": 24,
+    "mature_height_in_min": 12,
+    "mature_spread_in_max": 12,
+    "mature_spread_in_min": 6,
+    "scientific_name_accepted": "Caulophyllum thalictroides",
+    "unknowns": [
+     "is_edible was set to false, not left null: NC State's Edibility field says only \"Seeds are toxic.\" -- no page states any part is eaten or grown for food -- and the plant carries a separate whole-plant poison rating.",
+     "Poison detail (required in unknowns whenever a poisonous part is named, kept here since it is the basis for the false edibility call): NC State rates the whole plant \"low severity\" poison characteristics; Poison Part = Roots, Seeds; Poison Toxic Principle = Alkaloids and saponins; Causes Contact Dermatitis = Yes; ingestion \"can result in vomiting and diarrhea. If eaten in excess, can cause high blood pressure and symptoms similar to nicotine poisoning.\"",
+     "NC State's Attracts field also lists \"Small Mammals\" and its Wildlife Value note says mice feed on the berries -- per the rule that seed/fruit consumption by animals is not pollination, this was NOT used to support attracts_pollinators; only \"Bees\" was used.",
+     "RHS (https://www.rhs.org.uk/plants/3233/caulophyllum-thalictroides/details) gives Max Height 0.5-1 metres (19.7-39.4 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in) for this species -- broadly the same order of magnitude as, but not identical to, NC State's figures. Per the anchor rule, NC State's structured species-level Dimensions block (Height/Width) was used for the recorded min/max instead, since it is the species-specific source this record is anchored to.",
+     "RHS's page carries no 'Attracts', 'pollinators', 'Edible', 'Poison', or 'Toxic' hits when searched via qc.py, so it offered no support or contradiction for attracts_pollinators or is_edible.",
+     "Habit/Form on NC State is listed as \"Ascending\" and \"Erect\" -- this is not a vine, liana, or other climber, so the climber exclusion rule does not apply and all four size fields were populated normally.",
+     "Both target pages (NC State and RHS) were reachable by this machine; no page had to be skipped as refusing the fetch."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read both pages and found nothing wrong with any of the six Blue Cohosh values. NC State's Dimensions block gives height as '1 ft. 0 in. - 2 ft. 0 in.' (12-24 in) and width as '0 ft. 6 in. - 1 ft. 0 in.' (6-12 in), and both were converted correctly. RHS gives Max Height 0.5-1 m and Max Spread 0.1-0.5 m for the same species, which is roughly consistent. The plant is an erect herbaceous perennial, not a climber. attracts_pollinators rests on 'Bees' in NC State's Attracts field, and the page's 'Pollen and nectar attract insects' note backs it up. is_edible false is an affirmative reading, not silence: NC State's Edibility field says 'Seeds are toxic.' and it lists the plant as 'Poisonous to Humans'. All four quotes are verbatim on single rendered lines, and every citation claim names its field."
+  },
+  {
+   "batch": "b52-native-woodland-3.json",
+   "record": {
+    "attracts_pollinators": null,
+    "citations": [
+     {
+      "claim": "mature_height_in 24-72 (NC State Height: 2 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/osmundastrum-cinnamomeum/",
+      "quote": "Height: 2 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-48 (NC State Width: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/osmundastrum-cinnamomeum/",
+      "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+     }
+    ],
+    "common_name": "Cinnamon Fern",
+    "is_edible": null,
+    "mature_height_in_max": 72,
+    "mature_height_in_min": 24,
+    "mature_spread_in_max": 48,
+    "mature_spread_in_min": 24,
+    "scientific_name_accepted": "Osmundastrum cinnamomeum",
+    "unknowns": [
+     "is_edible left null: neither the NC State page nor the RHS page addresses eating/food use of this plant at all -- searched 'Edible' on both, zero hits.",
+     "attracts_pollinators left null: NC State's structured 'Attracts:' field lists only 'Small Mammals' and 'Songbirds' -- no bees, butterflies, moths, or hummingbirds named. Searched 'Attracts', 'pollinator', 'bee', 'butterfl' on both NC State and RHS pages; zero hits for pollinator-related terms on either.",
+     "No toxicity/poison language found: searched 'Poison', 'Toxic', 'Problem for' on the NC State page and 'Poison', 'Toxic', 'Problem for' on the RHS page -- zero hits on both, so no toxicity content was withheld from unknowns.",
+     "Confirmed not a climber: searched 'vine', 'climb', 'liana', 'climbing' on the NC State page -- zero hits; it is listed as Plant Type: Fern, Herbaceous Perennial, so the size fields were filled normally.",
+     "https://hgic.clemson.edu/factsheet/hardy-ferns/ refused this machine (fetch status: error:ProxyError, 0 bytes, tried twice including with an explicit allowed-domain) -- could not check it for edibility, pollinator, or size language; not used as a source for any field.",
+     "RHS page (https://www.rhs.org.uk/plants/11998/osmunda-cinnamomea/details) does carry its own size data -- 'Max Height 1-1.5 metres' and 'Max Spread 0.5-1 metres' -- but NC State has a species-specific structured Dimensions block, so per the anchor rule NC State's figures were used for mature_height_in/mature_spread_in instead, and RHS's numbers were not merged in or cited."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State and RHS pages with qc.py; the Clemson page failed with ProxyError and 0 bytes, as the researcher reported. Nothing is wrong with this record. NC State gives Height 2-6 ft and Width 2-4 ft, and these convert correctly to 24-72 in and 24-48 in. All ranges come straight from page ranges. The page is for the species, with no cultivars listed. The plant is a fern and not a climber. Both quotes appear verbatim on one rendered line each. The citation labels contain the field names. is_edible and attracts_pollinators are correctly null, because both pages are silent on eating and on pollinators; NC State's Attracts field lists only Small Mammals and Songbirds."
+  },
+  {
+   "batch": "b52-native-woodland-3.json",
+   "record": {
+    "common_name": "Dwarf Crested Iris",
+    "scientific_name_accepted": "Iris cristata",
+    "is_edible": false,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 6,
+    "mature_height_in_max": 9,
+    "mature_spread_in_min": 6,
+    "mature_spread_in_max": 12,
+    "unknowns": [
+     "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (fetch returned ProxyError / sandbox denied plantfinder.mobot.org:443); it was not read and none of its content was used or guessed.",
+     "RHS (rhs.org.uk/plants/9229/iris-cristata/details) does publish size figures (Max Height: Up to 10 cm; Max Spread: 0-0.1 metre) but NC State Extension's Plant Toolbox has its own species page with a structured Dimensions block, so per the anchor rule NC State's figures were used for all four size fields and RHS's were not.",
+     "NC State's own description says the plant 'reaches only 4-9 inches tall', a lower bottom end than its Dimensions block (Height: 0 ft. 6 in. - 0 ft. 9 in.); the structured 6-9 in range was used. Noted at landing, verified against the cached copy.",
+     "RHS (rhs.org.uk/plants/9229/iris-cristata/details) has no 'Edible', 'Poison', 'Toxic' or 'pollinator' hits, but its 'Potentially harmful' field reads 'Harmful if eaten. Wear gloves and other protective equipment when handling. Pets: Harmful if eaten.' That is a second page saying the plant is harmful to eat, consistent with is_edible false; RHS makes no pollinator statement. Corrected at landing: this line had said RHS makes no statement about edibility or toxicity; verified against the cached copy.",
+     "is_edible is set to false, not null, because NC State's anchor page explicitly states the plant 'has low severity poison characteristics' and 'causes only low toxicity if eaten,' with poisonous parts listed as Roots, Sap/Juice, and Seeds -- no page found states the plant or any part is grown or used for food.",
+     "Iris cristata is a low herbaceous groundcover, not a vine/liana/climber, so the climber size restriction (rule 4) does not apply and both size fields were filled normally."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 6-9 (NC State Height: 0 ft. 6 in. - 0 ft. 9 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Iris cristata",
+      "url": "https://plants.ces.ncsu.edu/plants/iris-cristata/",
+      "quote": "Height: 0 ft. 6 in. - 0 ft. 9 in."
+     },
+     {
+      "claim": "mature_spread_in 6-12 (NC State Width: 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Iris cristata",
+      "url": "https://plants.ces.ncsu.edu/plants/iris-cristata/",
+      "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State's structured Attracts field lists Bees, Butterflies, and Hummingbirds for this species)",
+      "source": "NC State Extension Gardener Plant Toolbox - Iris cristata",
+      "url": "https://plants.ces.ncsu.edu/plants/iris-cristata/",
+      "quote": "Bees"
+     },
+     {
+      "claim": "is_edible false (NC State states the plant has poison characteristics and causes low toxicity if eaten; poisonous parts are roots, sap/juice, and seeds)",
+      "source": "NC State Extension Gardener Plant Toolbox - Iris cristata",
+      "url": "https://plants.ces.ncsu.edu/plants/iris-cristata/",
+      "quote": "It causes only low toxicity if eaten."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State and RHS with qc.py. MBG Plant Finder is still unreachable (ProxyError), as the researcher disclosed. All four proposed values hold up: height 6-9 in and spread 6-12 in match NC State's Dimensions block, and neither is an unconverted feet figure. Pollinators are true because NC State names bees, butterflies and hummingbirds. Edible is false because NC State says outright that the plant is poisonous to humans, listing roots, sap and seeds, rather than saying nothing. All citation claims contain the field names and every quote is on the page verbatim. Not a defect, just a note: NC State's own prose gives the height as 4-9 inches and RHS says up to 10 cm, a little lower than the structured 6-9 in that the anchor rule chose. Nothing is refuted and no quote needs replacing."
+  },
+  {
+   "batch": "b52-native-woodland-3.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 6-18 (NC State Height: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/dicentra-eximia/",
+      "quote": "Height: 0 ft. 6 in. - 1 ft. 6 in."
+     },
+     {
+      "claim": "mature_spread_in 18-24 (NC State Width: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/dicentra-eximia/",
+      "quote": "Width: 1 ft. 6 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Wildlife Value field names bees, butterflies, hummingbirds)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/dicentra-eximia/",
+      "quote": "Attracts bees, butterflies, and hummingbirds"
+     }
+    ],
+    "common_name": "Fringed Bleeding Heart",
+    "is_edible": null,
+    "mature_height_in_max": 18,
+    "mature_height_in_min": 6,
+    "mature_spread_in_max": 24,
+    "mature_spread_in_min": 18,
+    "scientific_name_accepted": "Dicentra eximia (Ker Gawl.) Torr.",
+    "unknowns": [
+     "is_edible left null: neither NC State nor RHS states this plant or any part of it is eaten or grown for food; plantfinder.mobot.org could not be checked (see below), so it is not ruled out either, but no page found addresses eating at all.",
+     "NC State (the anchor page) names this plant as toxic even though edibility is unaddressed: 'This plant has low severity poison characteristics', 'All parts of this plant are toxic if consumed in large quantities', Poison Severity: Low, Poison Symptoms: 'Trembling, staggering, vomiting, diarrhea, convulsions, labored breathing if eaten in large quantities. Skin irritation after repeated contact with the cell sap is mild and short-lasting.', Poison Toxic Principle: 'Several isoquinolone alkaloids.c', Causes Contact Dermatitis: Yes, Poison Part: Flowers, Fruits, Leaves, Seeds, Stems.",
+     "plantfinder.mobot.org refused this machine (fetch status: error:ProxyError) -- could not check it for size, edibility, or pollinator confirmation; not guessing what it would have shown.",
+     "RHS gives Max Height 0.5-1 metres and Max Spread 0.5-1 metres (about 19.7-39.4 inches). The spread overlaps NC State's 18-24 in, but the height sits above NC State's 6-18 in with no overlap; NC State was used for the recorded min/max since it is the anchor page with a structured species-level Dimensions block. Corrected at landing: this line had called the RHS range roughly consistent with NC State's.",
+     "Searched RHS for 'pollinators' and found no hit; RHS page carries no explicit pollinator-attraction statement for this species, so its silence was not used either way -- the true attracts_pollinators value rests on NC State's Wildlife Value and Attracts fields only.",
+     "This is not a climber, so rule 4 (no size for climbers) does not apply; it is an herbaceous perennial per NC State's description."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State and RHS with qc.py; Missouri Botanical Garden still returns ProxyError. All six values survive, so none is refuted. Height 6-18 in and spread 18-24 in are correct conversions of NC State's species-level Dimensions lines ('Height: 0 ft. 6 in. - 1 ft. 6 in.', 'Width: 1 ft. 6 in. - 2 ft. 0 in.'). Each quote sits on one rendered line with no line break inside it. The plant is not a climber, and the cultivars are listed separately on the page. attracts_pollinators=true rests on NC State's named bees, butterflies and hummingbirds, and the page's Attracts field also lists Pollinators. is_edible is correctly null. One small inaccuracy is in the unknowns prose, not in any field: RHS Max Height 0.5-1 m (about 20-39 in) is taller than NC State's 6-18 in, so calling the height 'roughly consistent' overstates the agreement. Only the spread actually overlaps."
+  },
+  {
+   "batch": "b52-native-woodland-3.json",
+   "record": {
+    "common_name": "Goat's Beard",
+    "scientific_name_accepted": "Aruncus dioicus",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 36,
+    "mature_height_in_max": 72,
+    "mature_spread_in_min": 24,
+    "mature_spread_in_max": 48,
+    "unknowns": [
+     "is_edible left null: none of the three readable cited pages (NC State, RHS, Penn State Extension) addresses eating or food use of Aruncus dioicus; Missouri Botanical Garden PlantFinder could not be checked (see below), so absence there is not evidence either way. Corrected at landing: this line had said 'four cited' while naming three.",
+     "Missouri Botanical Garden PlantFinder (https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=286433) refused this machine's fetch (ProxyError on every attempt, including with the host explicitly allowed) -- skipped; its content on edibility, toxicity, or size was not read and nothing from it is guessed.",
+     "No 'Poison', 'Toxic', or 'Problem for' warnings were found on the NC State or RHS pages for this species, so no toxicity caveat applies (moot here since is_edible is null, not true).",
+     "Aruncus dioicus is not a climber -- NC State lists it as 'Herbaceous Perennial' -- so the climber-null rule does not apply and size fields are populated normally.",
+     "NC State's Plant Toolbox page for Aruncus dioicus (the species-level anchor) carries a structured Dimensions block: Height 3 ft. 0 in. - 6 ft. 0 in., Width 2 ft. 0 in. - 4 ft. 0 in.; these were used in preference to the RHS species page's figures (Max Height 1.5-2.5 metres, Max Spread 0.5-1 metres; its description reads 'A herbaceous perennial to 2m tall'). Corrected at landing: this line had called the RHS figures genus-adjacent, but rhs.org.uk/plants/128979 is the Aruncus dioicus species page.",
+     "Penn State Extension's fact sheet only lists Aruncus dioicus in a table with a single height range (3-6 Feet, consistent with NC State) and no width, edibility, toxicity, or pollinator-attraction detail specific to this species.",
+     "RHS qualifies its 'Plants for pollinators' tag in its description: 'female plants bear greener, more pendent flowers' and 'Great for pollinators, but only of you get a male form' [sic]. NC State's Attracts field (Bees, Butterflies, Pollinators, Songbirds) and its sentence 'The flowers attract pollinators like butterflies and bees.' carry no such condition, so attracts_pollinators stays true for the species, with this caveat. Noted at landing, verified against the cached copy."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 36-72 (NC State Dimensions Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox, Aruncus dioicus",
+      "url": "https://plants.ces.ncsu.edu/plants/aruncus-dioicus/",
+      "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-48 (NC State Dimensions Width: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox, Aruncus dioicus",
+      "url": "https://plants.ces.ncsu.edu/plants/aruncus-dioicus/",
+      "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State structured Attracts field lists Bees, Butterflies, and Pollinators for Aruncus dioicus)",
+      "source": "NC State Extension Gardener Plant Toolbox, Aruncus dioicus",
+      "url": "https://plants.ces.ncsu.edu/plants/aruncus-dioicus/",
+      "quote": "Pollinators"
+     },
+     {
+      "claim": "attracts_pollinators true (RHS tags Aruncus dioicus under Plants for pollinators)",
+      "source": "RHS Plants, Aruncus dioicus",
+      "url": "https://www.rhs.org.uk/plants/128979/aruncus-dioicus/details",
+      "quote": "Plants for pollinators"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"The flowers attract pollinators like butterflies and bees.\""
+   ],
+   "summary": "None of the six field values is refuted. I re-read NC State, RHS and Penn State with qc.py. Missouri Botanical Garden again failed with ProxyError, so it could not be checked. The sizes are correct conversions of NC State's species-level Dimensions: 3-6 ft becomes 36-72 in and 2-4 ft becomes 24-48 in. Penn State's \"3-6 Feet\" agrees. The plant is an herbaceous perennial, not a climber, and every quote is verbatim as one rendered line. RHS gives 1.5-2.5 m by 0.5-1 m, which conflicts; the researcher disclosed this and preferred NC State. attracts_pollinators true is backed by named bees and butterflies (NC State) and RHS's \"Plants for pollinators\" tag. Its bare NC State quote \"Pollinators\" is ambiguous, so I supplied a replacement: the verified sentence \"The flowers attract pollinators like butterflies and bees.\" is_edible null is correct because no readable page mentions eating, food use or toxicity. Two small notes: unknowns says \"four cited\" but lists three, and it omits RHS's caveat that the pollinator value holds only for male plants."
+  },
+  {
+   "batch": "b52-native-woodland-3.json",
+   "record": {
+    "common_name": "Goldenseal",
+    "scientific_name_accepted": "Hydrastis canadensis",
+    "is_edible": false,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 9,
+    "mature_height_in_max": 12,
+    "mature_spread_in_min": 9,
+    "mature_spread_in_max": 12,
+    "unknowns": [
+     "plantfinder.mobot.org refused this machine (network sandbox denied plantfinder.mobot.org:443) -- not read, not guessed.",
+     "extension.psu.edu/goldenseal was read in full; searched 'Height', 'height', 'spread', 'Width', 'Attracts', 'attract', 'Edible', 'edible', 'Pollinator', 'pollinat', 'Poison', 'Toxic', 'Problem for' -- the page is a grower's production guide with no plant-size, edibility, or pollinator-value statements (the 'Width' hits are bed-spacing instructions for cultivation, not plant dimensions); it contributed nothing to this record.",
+     "is_edible is FALSE per NC State (plants.ces.ncsu.edu/plants/hydrastis-canadensis/): 'The inedible fruit is berry-like, crimson.' The same page lists the plant as Poisonous to Humans, Poison Severity: Low, Poison Symptoms: 'CAUSES ONLY LOW TOXICITY IF EATEN. Nausea, vomiting, diarrhea, nervousness, and depression.', Poison Toxic Principle: Isoquinoline alkaloids, Causes Contact Dermatitis: No, Poison Part: Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems.",
+     "attracts_pollinators is TRUE from NC State's structured 'Attracts:' field listing 'Bees' (and 'Songbirds', which is not pollinator support and was not used to justify the flag) alongside the narrative 'This plant attracts birds, bees, flies, and squirrels.'",
+     "Confirmed not a climber: NC State lists Plant Type as Herbaceous Perennial, so rule 4 (climbers get no size) does not apply and the NC State size figures were used as-is.",
+     "No cultivar-specific size language was found on any readable page; the NC State Height/Width figures are given for the species."
+    ],
+    "citations": [
+     {
+      "claim": "is_edible false (NC State: inedible fruit)",
+      "source": "NC State Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/hydrastis-canadensis/",
+      "quote": "The inedible fruit is berry-like, crimson."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Attracts field and wildlife value text)",
+      "source": "NC State Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/hydrastis-canadensis/",
+      "quote": "This plant attracts birds, bees, flies, and squirrels."
+     },
+     {
+      "claim": "mature_height_in 9-12 (NC State Height: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+      "source": "NC State Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/hydrastis-canadensis/",
+      "quote": "Height: 0 ft. 9 in. - 1 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 9-12 (NC State Width: 0 ft. 9 in. - 1 ft. 0 in., converted to inches)",
+      "source": "NC State Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/hydrastis-canadensis/",
+      "quote": "Width: 0 ft. 9 in. - 1 ft. 0 in."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State and Penn State pages with qc.py. The Missouri Botanical Garden page failed to fetch (ProxyError), which matches what the researcher reported. None of the six proposed values is refuted.\n\nNC State gives Height and Width each as '0 ft. 9 in. - 1 ft. 0 in.' on its own rendered line. Converting to inches gives 9 to 12, so the feet figures were not left unconverted. The page lists the plant as a species-level Herbaceous Perennial with a Clumping habit. It has no climber language and its cultivar section is empty. The other Width hit is 'Leaf Width', and it was correctly left out.\n\nis_edible false rests on an explicit denial, not silence: the page says 'The inedible fruit is berry-like, crimson.' and also marks the plant 'Poisonous to Humans'.\n\nattracts_pollinators true rests on the structured Attracts field listing 'Bees' and the Wildlife Value sentence that names bees and flies. The page also has pollinator tags, including 'NC Native Pollinator Plant'.\n\nThe Penn State page gives no plant size, edibility or pollinator statement. Its inch and foot figures are about bed width, planting depth and spacing, and its 'pollinat' and 'bees' hits are only in the site navigation.\n\nAll four citation labels contain their field names, and every quote is verbatim as one rendered run. No quote needed correcting."
+  },
+  {
+   "batch": "b53-native-woodland-and-wet-meadow.json",
+   "record": {
+    "common_name": "Cardinal Flower",
+    "scientific_name_accepted": "Lobelia cardinalis",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 48,
+    "mature_height_in_max": 60,
+    "mature_spread_in_min": 12,
+    "mature_spread_in_max": 24,
+    "unknowns": [
+     "is_edible left null: neither NC State nor RHS says the plant or any part of it is eaten or grown for food (searched 'Edible', 'food'; zero hits on both). Both say it is harmful to eat: NC State's Poison Symptoms open 'TOXIC ONLY IF LARGE QUANTITIES EATEN', and RHS's 'Potentially harmful' field reads 'Harmful if eaten; skin irritant. Wear gloves and other protective equipment when handling. Pets: Harmful if eaten; skin irritant.' No researcher proposed false, so the field lands null. Corrected at landing: this line had said the RHS page does not address eating; verified against the cached copy.",
+     "Before setting any edibility value, searched the NC State anchor page for 'Poison'/'Toxic'/'Problem for': the page states this plant has medium-severity poison characteristics, is tagged #poisonous and #poisonous leaves, lists 'problem for cats', 'problem for dogs', 'problem for horses', gives Poison Symptoms ('TOXIC ONLY IF LARGE QUANTITIES EATEN. Nausea, depression, vomiting, diarrhea, salivation, exhaustion and weakness, dilation of pupils, convulsions, and coma, abdominal pain, heart rhythm disturbances.'), Poison Toxic Principle ('Alkaloids lobelamine, lobeline, and others, plus a volatile oil'), and Poison Part (Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems). Recorded here in full per rule 5 even though is_edible ended up null rather than true. Corrected at landing: the Poison Part list had named Flowers only; verified against the cached copy.",
+     "hgic.clemson.edu/cardinal-flower/ refused this machine (ProxyError, non-ok fetch status) -- could not read it, so nothing from it is reflected in this record.",
+     "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=278870 refused this machine (ProxyError, non-ok fetch status) -- could not read it, so nothing from it is reflected in this record.",
+     "This is not a climber (NC State classes it as Herbaceous Perennial, native wildflower of moist sites/wet meadows/streams/ponds), so rule 4's climber exclusion does not apply and all four size fields are populated normally.",
+     "RHS gives Max Height 0.5-1 metres (19.7-39.4 in), below NC State's 48-60 in with no overlap, and Max Spread 0.1-0.5 metres (3.9-19.7 in), which overlaps NC State's 12-24 in. Neither was used for the recorded values, since NC State Plant Toolbox has its own species page and is the anchor per the sourcing rule (RHS is only used when no NC State species page exists). Corrected at landing: this line had called the RHS figures consistent with the recorded values."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 48-60 (NC State Height 4 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Lobelia cardinalis",
+      "url": "https://plants.ces.ncsu.edu/plants/lobelia-cardinalis/",
+      "quote": "Height: 4 ft. 0 in. - 5 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-24 (NC State Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Lobelia cardinalis",
+      "url": "https://plants.ces.ncsu.edu/plants/lobelia-cardinalis/",
+      "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators is true per NC State Wildlife Value field",
+      "source": "NC State Extension Gardener Plant Toolbox - Lobelia cardinalis",
+      "url": "https://plants.ces.ncsu.edu/plants/lobelia-cardinalis/",
+      "quote": "Its flowers are attractive to hummingbirds, butterflies and other pollinators."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read all four pages. NC State and RHS fetched; Missouri Botanical Garden and Clemson returned ProxyError, as the record says. None of the proposed field values is refuted. Height 48-60 in and spread 12-24 in are correct conversions of NC State's 'Height: 4 ft. 0 in. - 5 ft. 0 in.' and 'Width: 1 ft. 0 in. - 2 ft. 0 in.'. They are species-level, the plant is not a climber, the quotes are verbatim, and the citation labels are correct. attracts_pollinators=true is supported by the verbatim Wildlife Value line, which names pollinators explicitly. is_edible=null is acceptable, but the unknowns text should be corrected in two places. First, RHS does address eating ('Harmful if eaten; skin irritant.'), so the claim that it is silent is wrong. Second, the NC State Poison Part list includes Fruits, Leaves, Roots, Sap/Juice, Seeds and Stems, not just Flowers."
+  },
+  {
+   "batch": "b53-native-woodland-and-wet-meadow.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators true (NC State Play Value/Attracts field naming pollinators and bees)",
+      "quote": "Attracts Pollinators",
+      "source": "NC State Extension Gardener Plant Toolbox - Stylophorum diphyllum",
+      "url": "https://plants.ces.ncsu.edu/plants/stylophorum-diphyllum/"
+     }
+    ],
+    "common_name": "Celandine Poppy",
+    "is_edible": null,
+    "mature_height_in_max": null,
+    "mature_height_in_min": null,
+    "mature_spread_in_max": null,
+    "mature_spread_in_min": null,
+    "scientific_name_accepted": "Chelidonium diphyllum",
+    "unknowns": [
+     "mature_height_in_min removed on audit: The value 12 is right. NC State says 'Height: 1 ft. 0 in. - 1 ft. 2 in.', which is 12-14 in, correctly converted, for a herbaceous perennial species (not a climber or cultivar). But the only height citation is an unfilled placeholder: empty quote, empty source, empty url, and a claim reading '12-960', which contradicts the proposed 12-14. Rule G requires a real citation, and this one has no provenance, so the field is refuted. A re-run can land 12 with quote 'Height: 1 ft. 0 in. - 1 ft. 2 in.', a single verified line on the NC State page.",
+     "mature_height_in_max removed on audit: Same defect as the min. 14 is correct (NC State 'Height: 1 ft. 0 in. - 1 ft. 2 in.', and 1 ft 2 in = 14 in), but it is backed only by the placeholder citation with empty quote, source and url and a bogus '12-960' claim. Refuted for a missing citation, not a wrong number. The RHS page has no height or spread text, and the MBG page (m450) could not be fetched (ProxyError), so NC State is the only size source.",
+     "mature_spread_in_min removed on audit: 9 is correctly derived from NC State 'Width: 0 ft. 9 in. - 1 ft. 0 in.' (9-12 in). But the record has no citation whose claim contains 'mature_spread_in'; the citations list has only the pollinator entry and the height placeholder. Rule G: a field with no citation is refuted. A re-run can land it with quote 'Width: 0 ft. 9 in. - 1 ft. 0 in.', a single verified line on the NC State page.",
+     "mature_spread_in_max removed on audit: 12 is correct (NC State 'Width: 0 ft. 9 in. - 1 ft. 0 in.', and 1 ft 0 in = 12 in), but no 'mature_spread_in' citation exists in the record. Refuted under rule G for a missing citation."
+    ]
+   },
+   "applied": [
+    "mature_height_in_min: 12 -> null (The value 12 is right. NC State says 'Height: 1 ft. 0 in. - 1 ft. 2 in.', which is 12-14 in, correctly converted, for a herbaceous perennial species (not a climber or cultivar). But the only height citation is an unfilled placeholder: empty quote, empty source, empty url, and a claim reading '12-960', which contradicts the proposed 12-14. Rule G requires a real citation, and this one has no provenance, so the field is refuted. A re-run can land 12 with quote 'Height: 1 ft. 0 in. - 1 ft. 2 in.', a single verified line on the NC State page.)",
+    "mature_height_in_max: 14 -> null (Same defect as the min. 14 is correct (NC State 'Height: 1 ft. 0 in. - 1 ft. 2 in.', and 1 ft 2 in = 14 in), but it is backed only by the placeholder citation with empty quote, source and url and a bogus '12-960' claim. Refuted for a missing citation, not a wrong number. The RHS page has no height or spread text, and the MBG page (m450) could not be fetched (ProxyError), so NC State is the only size source.)",
+    "mature_spread_in_min: 9 -> null (9 is correctly derived from NC State 'Width: 0 ft. 9 in. - 1 ft. 0 in.' (9-12 in). But the record has no citation whose claim contains 'mature_spread_in'; the citations list has only the pollinator entry and the height placeholder. Rule G: a field with no citation is refuted. A re-run can land it with quote 'Width: 0 ft. 9 in. - 1 ft. 0 in.', a single verified line on the NC State page.)",
+    "mature_spread_in_max: 12 -> null (12 is correct (NC State 'Width: 0 ft. 9 in. - 1 ft. 0 in.', and 1 ft 0 in = 12 in), but no 'mature_spread_in' citation exists in the record. Refuted under rule G for a missing citation.)"
+   ],
+   "review": [],
+   "summary": "I re-read the NC State page with qc.py. The RHS page loaded but has no size, pollinator or edibility text. The MBG page (kempercode=m450) could not be fetched because of a ProxyError, so I could not check it. All four size numbers are right: NC State gives Height 1 ft 0 in to 1 ft 2 in (12-14 in) and Width 0 ft 9 in to 1 ft 0 in (9-12 in). There is no unit error or invented range, and the size is for the species itself, a herbaceous perennial that does not climb. The record is still unfinished. The height citation is an empty placeholder (no quote, source or url) claiming '12-960'. The spread has no citation at all. And unknowns holds the literal string 'placeholder'. So I refuted all four size fields on the citation rule (G), not on their values. A re-run could land them with the verified quotes 'Height: 1 ft. 0 in. - 1 ft. 2 in.' and 'Width: 0 ft. 9 in. - 1 ft. 0 in.' The attracts_pollinators true stands on 'Attracts Pollinators', backed by 'Bees are attracted to the flowers.' is_edible correctly stays null. The 'placeholder' entry in unknowns should be dropped."
+  },
+  {
+   "batch": "b53-native-woodland-and-wet-meadow.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies, Pollinators, Songbirds)",
+      "source": "NC State Extension Plant Toolbox, Packera aurea",
+      "url": "https://plants.ces.ncsu.edu/plants/packera-aurea/",
+      "quote": "Pollinators"
+     },
+     {
+      "claim": "mature_height_in 6-30 (NC State Height: 0 ft. 6 in. - 2 ft. 6 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox, Packera aurea",
+      "url": "https://plants.ces.ncsu.edu/plants/packera-aurea/",
+      "quote": "Height: 0 ft. 6 in. - 2 ft. 6 in."
+     },
+     {
+      "claim": "mature_spread_in 6-18 (NC State Width: 0 ft. 6 in. - 1 ft. 6 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox, Packera aurea",
+      "url": "https://plants.ces.ncsu.edu/plants/packera-aurea/",
+      "quote": "Width: 0 ft. 6 in. - 1 ft. 6 in."
+     }
+    ],
+    "common_name": "Golden Ragwort",
+    "is_edible": null,
+    "mature_height_in_max": 30,
+    "mature_height_in_min": 6,
+    "mature_spread_in_max": 18,
+    "mature_spread_in_min": 6,
+    "scientific_name_accepted": "Packera aurea",
+    "unknowns": [
+     "is_edible left null: none of the four reachable anchor pages (NC State, RHS, UMD, PSU) address the plant being eaten or grown for food; NC State does not use the word 'Edible' anywhere on the page (0 hits searched).",
+     "NC State marks this species Poisonous: Poison Severity Low, Poison Symptoms 'Liver toxicity; skin irritation following contact.', Poison Toxic Principle 'Pyrrolizidine alkaloids', Causes Contact Dermatitis Yes, Poison Part Leaves -- recorded here even though is_edible is null, since it is decision-relevant to any future edibility judgment on this species.",
+     "RHS page (https://www.rhs.org.uk/plants/109858/packera-aurea/details) carries no size, edibility, poison, or pollinator data at all: searched 'Max Height', 'Max Spread', 'Ultimate height', 'Attracts', 'Edible', 'Poison', 'Toxic', 'pollinators' -- all 0 hits.",
+     "plantfinder.mobot.org refused this machine (network denied to that host, ProxyError) -- not read, no data taken from it or guessed.",
+     "UMD page gives Height as 'foliage to 6 inches, flowering stems to 2.5 feet' -- not a clean min/max range comparable to NC State's Dimensions block, so it was not used for the size fields; NC State's structured range was used instead as the higher-priority anchor since NC State has its own species page for this record.",
+     "PSU page gives a single Height figure of 12 inches with no explicit min or max wording (not a range) -- not used for the size fields since NC State already supplies a proper ranged Dimensions block for this species; also PSU gives no Width/Spread figure to convert.",
+     "Golden Ragwort (Packera aurea) is an herbaceous perennial groundcover, not a vine, liana, or climber, so the climber-exclusion rule for size fields does not apply."
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"The blooms are attractive to butterflies, bees, and other insect pollinators.\"",
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 0 ft. 6 in. - 2 ft. 6 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 0 ft. 6 in. - 2 ft. 6 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 0 ft. 6 in. - 1 ft. 6 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 0 ft. 6 in. - 1 ft. 6 in.\""
+   ],
+   "summary": "All six values for Golden Ragwort survive the audit. I re-read NC State, UMD, PSU and RHS; MOBOT is unreachable (ProxyError). Height is 6-30 in, from NC State's '0 ft. 6 in. - 2 ft. 6 in.', and UMD's 'flowering stems to 2.5 feet' also gives 30 in. Spread is 6-18 in, from NC State's '0 ft. 6 in. - 1 ft. 6 in.'. Both were converted correctly, both are ranges the page itself gives, both are for the species, and the plant is not a climber. attracts_pollinators=true is backed by pollinator text on three pages. is_edible=null is correct because the pages say nothing about eating it, and the poison data sits in unknowns. The one defect is that all three citation quotes fail the provenance check: they contain U+23CE characters and join labels to values across line breaks. I supplied a corrected quote for each field, each verified with qc.py as a single rendered run. Nothing needs to be nulled."
+  },
+  {
+   "batch": "b53-native-woodland-and-wet-meadow.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 60-84 (NC State Dimensions Height: 5 ft. 0 in. - 7 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/eutrochium-purpureum/",
+      "quote": "Height: 5 ft. 0 in. - 7 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-48 (NC State Dimensions Width: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/eutrochium-purpureum/",
+      "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State structured Attracts field names Bees, Butterflies, Pollinators)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/eutrochium-purpureum/",
+      "quote": "Pollinators"
+     }
+    ],
+    "common_name": "Joe Pye Weed",
+    "is_edible": null,
+    "mature_height_in_max": 84,
+    "mature_height_in_min": 60,
+    "mature_spread_in_max": 48,
+    "mature_spread_in_min": 24,
+    "scientific_name_accepted": "Eutrochium purpureum",
+    "unknowns": [
+     "is_edible left null: searched 'Edible' on NC State (0 hits) and RHS (0 hits) -- neither page addresses eating this plant at all, so no record either way.",
+     "Searched NC State and RHS for 'Poison', 'Toxic', 'Problem for' -- 0 hits on all three; no toxicity information found on the anchor or RHS pages.",
+     "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ProxyError) even with the host explicitly allowed -- could not check it for edibility, pollinator, or size data; not used as a source for any field.",
+     "Species is an herbaceous perennial wildflower, not a vine/liana/climber, so the climber-exclusion rule (rule 4) does not apply; size fields were populated normally.",
+     "mature_height_in and mature_spread_in taken from NC State (the anchor, present for this species) rather than RHS; RHS gives a different range (Max Height 1.5-2.5 m = 59.1-98.4 in, Max Spread 0.5-1 m = 19.7-39.4 in) but was not used since NC State's structured Dimensions block takes precedence per instructions.",
+     "No figures found that were specific to a named cultivar; the NC State and RHS figures both describe the species."
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"The flowers attract butterflies, skippers, moths, and bees.\""
+   ],
+   "summary": "I re-read NC State and RHS with qc.py. The Missouri Botanical Garden page still fails to load (ProxyError). All six values stand. The NC State sizes, 5-7 ft by 2-4 ft, are correctly converted to 60-84 by 24-48 in. Each end of both ranges appears on the page, the figures are for the species (the 'Little Red' cultivar is listed separately at 3-4 ft), and the plant is not a climber. attracts_pollinators true is supported by named pollinators (butterflies, skippers, moths, bees), but its quote was defective: it contained U+23CE and glued the 'Attracts:' label to values across line breaks. I replaced it with the verified single-run sentence 'The flowers attract butterflies, skippers, moths, and bees.' is_edible stays null because both readable pages say nothing about eating the plant."
+  },
+  {
+   "batch": "b53-native-woodland-and-wet-meadow.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators (NC State Play Value: \"Attracts Pollinators\"; Attracts: \"Pollinators\", \"Specialized Bees\")",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/uvularia-grandiflora/",
+      "quote": "Attracts Pollinators"
+     },
+     {
+      "claim": "mature_height_in 18-24 (NC State Dimensions Height: 1 ft. 6 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/uvularia-grandiflora/",
+      "quote": "Height: 1 ft. 6 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-18 (NC State Dimensions Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/uvularia-grandiflora/",
+      "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+     }
+    ],
+    "common_name": "Large-flowered Bellwort",
+    "is_edible": null,
+    "mature_height_in_max": 24,
+    "mature_height_in_min": 18,
+    "mature_spread_in_max": 18,
+    "mature_spread_in_min": 12,
+    "scientific_name_accepted": "Uvularia grandiflora",
+    "unknowns": [
+     "is_edible left null: neither the NC State page nor the RHS page addresses eating this plant at all (searched 'Edible' on both, 0 hits); no page states it is grown/used for food or that it is poisonous to eat, so per the rule this is 'no record', not false.",
+     "Searched NC State page for 'Poison', 'Toxic', and 'Problem' as required before setting is_edible: 'Poison' and 'Toxic' returned 0 hits; 'Problem' hits only describe insect/deer problems (slugs and snails on flowers/foliage, frequently damaged by white-tailed deer/wildlife feeding on foliage) -- no toxicity or edibility language found, consistent with leaving is_edible null.",
+     "Species is not a vine/climber (NC State lists Plant Type: Herbaceous Perennial, Native Plant, Wildflower), so the climber-exclusion rule does not apply and size fields were populated normally.",
+     "mature_height_in and mature_spread_in taken from NC State's Plant Toolbox, the anchor page for this species (it has a species-specific structured Dimensions block, not a genus page). RHS gives corroborating but not identical figures (Max Height 0.5-1 metres = 19.7-39.4 in; Max Spread 0.1-0.5 metres = 3.9-19.7 in) which were not used since NC State is the designated anchor when a species-level NC State page exists.",
+     "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=282005 could not be read: the fetch returned a network/proxy error (not an HTTP page), consistent with this host refusing this machine. Retried once with the domain explicitly allowed through the sandbox and got the same ProxyError, confirming it is not a local sandbox block. No content from this page was used or guessed at."
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 1 ft. 6 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 1 ft. 6 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 1 ft. 0 in. - 1 ft. 6 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 1 ft. 0 in. - 1 ft. 6 in.\""
+   ],
+   "summary": "I refuted none of the values after re-reading the NC State and RHS pages. The Missouri Botanical Garden page (taxonid=282005) still returns ProxyError. attracts_pollinators=true is backed by NC State's 'Attracts Pollinators' and its Attracts: Pollinators / Specialized Bees list. is_edible=null is correct because every page is silent on it. Height 18-24 in and spread 12-18 in are correct conversions of NC State's species-level 'Height: 1 ft. 6 in. - 2 ft. 0 in.' and 'Width: 1 ft. 0 in. - 1 ft. 6 in.'. The plant is an herbaceous perennial, not a climber, and all the citation labels are present. The one defect is the size citation's quote: it contains U+23CE and joins 'Dimensions:', the Height line and the Width line across newlines. All four size fields carry corrected quotes: 'Height: 1 ft. 6 in. - 2 ft. 0 in.' for the height pair and 'Width: 1 ft. 0 in. - 1 ft. 6 in.' for the spread pair."
+  },
+  {
+   "batch": "b53-native-woodland-and-wet-meadow.json",
+   "record": {
+    "common_name": "White Turtlehead",
+    "scientific_name_accepted": "Chelone glabra",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 12,
+    "mature_height_in_max": 36,
+    "mature_spread_in_min": 12,
+    "mature_spread_in_max": 24,
+    "unknowns": [
+     "is_edible left null: none of the four reachable pages (NC State, Penn State Extension, RHS, UGA CAES) address eating this plant at all -- no edible or non-edible statement found for Chelone glabra specifically.",
+     "Searched NC State (the anchor page) for 'Poison', 'Toxic', and 'Problem for' per rule 5 before setting any edibility-adjacent field: 0 hits for all three. No toxicity information was found on any of the four reachable pages either.",
+     "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=j780 (Missouri Botanical Garden Plant Finder) refused this machine (ProxyError on fetch, confirmed even after adding the host to the sandbox allowlist) -- not read, and no content from it is guessed or used.",
+     "Plant confirmed NOT a climber: NC State lists Habit/Form as 'Erect' and describes it as an Herbaceous Perennial/Wildflower, so the climber-exclusion rule (rule 4) does not apply and all four size fields are populated.",
+     "Two independent size sources agree closely: NC State gives Height 1 ft. 0 in. - 3 ft. 0 in. (12-36 in) and Width 1 ft. 0 in. - 2 ft. 0 in. (12-24 in); UGA CAES gives Size '2 to 3 feet tall and 18 to 24 inches wide' (24-36 x 18-24 in), a subset of the NC State range, and Penn State Extension gives Height '24 to 36 inches' (no width given), also within the NC State range. NC State (the anchor, with the most complete published range and an explicit low end) was used as the citation for both mature_height_in and mature_spread_in.",
+     "RHS page (https://www.rhs.org.uk/plants/20494/chelone-glabra/details) does carry 'Max Height 0.5-1 metres' and 'Max Spread 0.1-0.5 metres' but was not used for size since NC State (a species-specific structured Dimensions block) is the required anchor and was available; RHS was checked for 'Attracts'/'Pollinator' wording and had 0 hits for both, so it contributes no pollinator evidence here.",
+     "attracts_pollinators set true from NC State's structured 'Attracts' field listing Bees, Butterflies, Hummingbirds, Pollinators, corroborated by Penn State Extension's unconditional prose ('attracts bumblebees, other pollinators, and hummingbirds') and UGA CAES ('flowers attract butterflies and bumblebees'); none of this rests on birds eating seed or deer browsing foliage."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 12-36 (NC State Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Chelone glabra",
+      "url": "https://plants.ces.ncsu.edu/plants/chelone-glabra/",
+      "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Chelone glabra",
+      "url": "https://plants.ces.ncsu.edu/plants/chelone-glabra/",
+      "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State structured Attracts field lists Bees, Butterflies, Hummingbirds, Pollinators)",
+      "source": "NC State Extension Gardener Plant Toolbox - Chelone glabra",
+      "url": "https://plants.ces.ncsu.edu/plants/chelone-glabra/",
+      "quote": "Pollinators"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"mature_height_in\" -- NOT applied, ground-truth it: \"Height: 1 ft. 0 in. - 3 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in\" -- NOT applied, ground-truth it: \"Width: 1 ft. 0 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"This plant attracts hummingbirds, butterflies, bees, and other pollinators.\""
+   ],
+   "summary": "I re-read NC State, Penn State, RHS and UGA CAES with qc.py; MoBot still fails with ProxyError. No field is refuted. Height 12-36 in and spread 12-24 in are converted correctly from NC State's 1-3 ft x 1-2 ft. They are for the species, not a cultivar, and the plant is not a climber (Habit/Form: Erect). UGA's '2 to 3 feet tall and 18 to 24 inches wide' and Penn State's '24 to 36 inches' fall inside those ranges. attracts_pollinators true rests on named bees, butterflies and hummingbirds from three sources. is_edible null is right because every page is silent on it. The real defect is quote provenance: all three citation quotes contain U+23CE and glue labels to values across newline boundaries. Each gets a corrected_quote verified as a single rendered run: 'Height: 1 ft. 0 in. - 3 ft. 0 in.', 'Width: 1 ft. 0 in. - 2 ft. 0 in.', and 'This plant attracts hummingbirds, butterflies, bees, and other pollinators.'"
+  },
+  {
+   "batch": "b54-native-meadow.json",
+   "record": {
+    "common_name": "Early Meadow-rue",
+    "scientific_name_accepted": "Thalictrum dioicum",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "mature_height_in_min": 12,
+    "mature_height_in_max": 24,
+    "mature_spread_in_min": 12,
+    "mature_spread_in_max": 24,
+    "unknowns": [
+     "is_edible left null: neither of the two reachable pages (NC State, RHS) addresses eating this plant at all; searched 'Edible' on both, 0 hits on each. Corrected at landing: this line had said 'three reachable pages' while naming two.",
+     "attracts_pollinators left null: neither reachable page states or tags pollinator attraction; searched 'Attracts', 'Pollinator', 'butterfl', 'bee', 'hummingbird', 'Wildlife' on NC State (0 hits on all) and RHS (0 hits on all except a single 'Wildlife gardening' nav-menu link, a site category link rather than a statement about this species). NC State does say 'This plant is pollinated by the wind.' That says how the plant is pollinated, not that pollinators never visit it, so the field stays null rather than false. Corrected at landing: this line had said 'three reachable pages' and missed the wind-pollination sentence; verified against the cached copy.",
+     "Poison/Toxic/Problem for searched on NC State: 0 hits each; on RHS: 0 hits each. No toxicity information found on either reachable page.",
+     "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (ProxyError / sandbox network denial) and could not be read at all -- not used for any field, size, edibility, or pollinator determination.",
+     "RHS also carries a size range (Max Height 0.5-1 metres = 19.7-39.4 in; Max Spread 0.5-1 metres = 19.7-39.4 in) but was not used because NC State, the anchor page, already supplies a species-specific Height/Width Dimensions block and takes priority.",
+     "Confirmed this is not a climber/vine/liana (NC State Habit/Form: Erect, Open; searched 'Vine', 'climb', 'Liana' on NC State, 0 hits each), so all four size fields were populated rather than left null under the climber rule."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 12-24 (NC State Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/thalictrum-dioicum/",
+      "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/thalictrum-dioicum/",
+      "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State and RHS with qc.py; MOBOT returned ProxyError and could not be read. All six fields survive. Height and spread of 12-24 in each come from NC State's Dimensions block ('Height: 1 ft. 0 in. - 2 ft. 0 in.' and 'Width: 1 ft. 0 in. - 2 ft. 0 in.'). Both are correctly converted from feet, are real published ranges, and belong to the species, not a cultivar. The plant is not a climber (Habit/Form Erect, Open). Both quotes are verbatim single-line runs, and the citations are labelled with the field names. is_edible and attracts_pollinators are correctly null because the pages are silent. One note is missing from the unknowns: NC State states the plant 'is pollinated by the wind', which the researcher's 'Pollinator' search missed. It does not change the null. Separately, the unknowns miscount the reachable pages as three; only two were reachable."
+  },
+  {
+   "batch": "b54-native-meadow.json",
+   "record": {
+    "common_name": "New York Ironweed",
+    "scientific_name_accepted": "Vernonia noveboracensis",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 60,
+    "mature_height_in_max": 96,
+    "mature_spread_in_min": 36,
+    "mature_spread_in_max": 48,
+    "unknowns": [
+     "is_edible left null: neither NC State Plant Toolbox nor RHS mentions eating, food use, or toxicity for this species (0 hits for 'Edible', 'Poison', 'Toxic', 'Problem for' on the NC State page; 0 hits for 'Edible', 'Poison', 'Toxic' on RHS) -- no record either way.",
+     "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ProxyError, non-ok status) -- could not be read; not used for any field.",
+     "Not a climber -- NC State lists Plant Type as Herbaceous Perennial, Native Plant, Wildflower, so Rule 4 (no size for climbers) does not apply.",
+     "Size figures are for the species itself, not a named cultivar -- the NC State Cultivars/Varieties section was empty/blank on this fetch, and the Dimensions block sits under the main species entry.",
+     "RHS gives Max Height 1.5-2.5 metres (59.1-98.4 in), close to NC State's 60-96 in, and Max Spread 0.5-1 metres (19.7-39.4 in), which only overlaps the bottom of NC State's 36-48 in; NC State was used as the anchor per instructions since it has its own species page with a structured Dimensions block, so RHS size was not used to avoid mixing two measurement sets into one range. Corrected at landing: this line had called both RHS figures consistent in range with NC State's."
+    ],
+    "citations": [
+     {
+      "claim": "attracts_pollinators true (NC State Attracts: Bees, Butterflies, Pollinators, Songbirds, Specialized Bees; Wildlife Value: flowers attractive to butterflies, bees and other pollinators)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/vernonia-noveboracensis/",
+      "quote": "Pollinators"
+     },
+     {
+      "claim": "mature_height_in 60-96 (NC State Height: 5 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/vernonia-noveboracensis/",
+      "quote": "Height: 5 ft. 0 in. - 8 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 36-48 (NC State Width: 3 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/vernonia-noveboracensis/",
+      "quote": "Width: 3 ft. 0 in. - 4 ft. 0 in."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 5 ft. 0 in. - 8 ft. 0 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 5 ft. 0 in. - 8 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 3 ft. 0 in. - 4 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 3 ft. 0 in. - 4 ft. 0 in.\"",
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"Attracts Pollinators\""
+   ],
+   "summary": "I re-read NC State (fetched), RHS (fetched) and MOBOT (ProxyError, could not be read) with qc.py. None of the six values is refuted. The four size numbers are all correctly converted from NC State's feet figures ('Height: 5 ft. 0 in. - 8 ft. 0 in.' becomes 60-96 in, 'Width: 3 ft. 0 in. - 4 ft. 0 in.' becomes 36-48 in). The ranges are ranges on the page, and the figures belong to the species itself, a herbaceous perennial with no cultivars listed and no climbing habit. attracts_pollinators true rests on bees, butterflies and specialized bees that the page names. is_edible is correctly null because both readable pages say nothing about eating or toxicity. Every quote was defective, though: each contains U+23CE and splices labels to values across rendered line breaks. I have given single-line replacement quotes, all checked present verbatim, one per field. The height pair and the spread pair share one citation, so whoever applies the corrections should keep the Height line and the Width line as separate quotes, or join them with ' | ', which verify_quotes accepts. A minor point: the unknowns note calls RHS spread (0.5-1 m, about 20-39 in) 'consistent' with NC State's 36-48 in, but they only overlap slightly. That affects no field value, because only NC State was used."
+  },
+  {
+   "batch": "b54-native-meadow.json",
+   "record": {
+    "common_name": "Obedient Plant",
+    "scientific_name_accepted": "Physostegia virginiana",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 36,
+    "mature_height_in_max": 48,
+    "mature_spread_in_min": 24,
+    "mature_spread_in_max": 36,
+    "unknowns": [
+     "is_edible left null: neither NC State nor RHS makes any statement about this species being eaten, used for food, or being inedible/poisonous to eat; Missouri Botanical Garden's page could not be checked (see below).",
+     "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: all three returned 0 hits, so no toxicity information exists on that page.",
+     "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=g620 refused this machine (fetch status: error:ProxyError, 0 bytes) even after allow-listing the host -- could not check it for edibility, toxicity, or size data; not guessing what it would say.",
+     "Size fields are taken from NC State's structured Dimensions block (Height: 3 ft. 0 in. - 4 ft. 0 in.; Width: 2 ft. 0 in. - 3 ft. 0 in.), since NC State has a species-specific page for Physostegia virginiana -- per the anchor rule this is used instead of RHS's Max Height/Max Spread (0.5-1 metres / 0.1-0.5 metres), even though RHS was also checked.",
+     "The NC State figures are for the species itself, not a named cultivar, and the plant is an herbaceous perennial (NC State 'Whole Plant Traits: Herbaceous Perennial'), not a climber, so all four size fields are populated normally.",
+     "attracts_pollinators set true from NC State's own structured fields: 'Wildlife Value: Attracts bees, butterflies, hummingbirds.' and 'Attracts: Bees / Butterflies / Hummingbirds / Pollinators' -- unconditional statements naming pollinators, not seed-eating birds or foliage browsers."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 36-48 (NC State Height: 3 ft. 0 in. - 4 ft. 0 in., converted to inches: 3 ft = 36 in, 4 ft = 48 in)",
+      "source": "North Carolina Extension Gardener Plant Toolbox - Physostegia virginiana",
+      "url": "https://plants.ces.ncsu.edu/plants/physostegia-virginiana/",
+      "quote": "Height: 3 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches: 2 ft = 24 in, 3 ft = 36 in)",
+      "source": "North Carolina Extension Gardener Plant Toolbox - Physostegia virginiana",
+      "url": "https://plants.ces.ncsu.edu/plants/physostegia-virginiana/",
+      "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Wildlife Value and Attracts fields name bees, butterflies, and hummingbirds)",
+      "source": "North Carolina Extension Gardener Plant Toolbox - Physostegia virginiana",
+      "url": "https://plants.ces.ncsu.edu/plants/physostegia-virginiana/",
+      "quote": "Attracts bees, butterflies, hummingbirds."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State and RHS with qc.py; Missouri Botanical Garden still fails to fetch (ProxyError, 0 bytes). All four size values are feet correctly converted to inches: height 36-48 from 'Height: 3 ft. 0 in. - 4 ft. 0 in.' and spread 24-36 from 'Width: 2 ft. 0 in. - 3 ft. 0 in.' They are species-level figures for an erect herbaceous perennial, not a climber, and their citations are correctly labelled with verbatim quotes. attracts_pollinators=true rests on explicit bee/butterfly/hummingbird/pollinator fields. is_edible=null is correct because every readable page is silent. Nothing refuted. RHS's smaller figures (0.5-1 m high, 0.1-0.5 m spread) overlap only partly with NC State's, but the anchor rule favours NC State."
+  },
+  {
+   "batch": "b54-native-meadow.json",
+   "record": {
+    "common_name": "Oxeye Sunflower",
+    "scientific_name_accepted": "Heliopsis helianthoides",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 36,
+    "mature_height_in_max": 72,
+    "mature_spread_in_min": 24,
+    "mature_spread_in_max": 48,
+    "unknowns": [
+     "is_edible left null: no page among the three anchors (NC State Plant Toolbox, RHS) addresses eating the plant or any part of it at all; MOBOT Plant Finder could not be checked (see below), so no record of edibility exists in the readable sources.",
+     "mobot.org (plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277204) refused this machine's fetch (ProxyError on two attempts, including with the host explicitly allowlisted) -- not read, unknowns only, no guess made about its content.",
+     "No Poison/Toxic/Problem for language appeared on the NC State anchor page (0 hits for 'Poison', 'Toxic', 'Problem for'), and RHS likewise had 0 hits for 'Poison'/'Toxic', so is_edible is not being set true against a known toxicity flag -- it is simply null for lack of any edibility statement.",
+     "Species confirmed non-climber (Herbaceous Perennial per NC State Whole Plant Traits), so the climber-size exclusion in rule 4 does not apply; all four size fields are populated from NC State's structured Dimensions block.",
+     "Size figures are the species range from NC State's Dimensions block (Height: 3 ft. 0 in. - 6 ft. 0 in.; Width: 2 ft. 0 in. - 4 ft. 0 in.), not from any cultivar entry -- the page's separate Cultivars/Varieties list (e.g. 'Asahi' up to 30 inches tall) was not used for these fields.",
+     "RHS's own Max Height (1-1.5 metres) / Max Spread (0.5-1 metres) figures were read but not used for the size fields since NC State (a species-specific page, not a genus page) is the anchor per the task's source-priority rule; RHS was used only to corroborate the pollinator flag via its 'Plants for pollinators' tag."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 36-72 (NC State Dimensions block: Height: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Heliopsis helianthoides",
+      "url": "https://plants.ces.ncsu.edu/plants/heliopsis-helianthoides/",
+      "quote": "Height: 3 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-48 (NC State Dimensions block: Width: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Heliopsis helianthoides",
+      "url": "https://plants.ces.ncsu.edu/plants/heliopsis-helianthoides/",
+      "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators is true: NC State's structured Attracts field names butterflies, hummingbirds and pollinators, and its Wildlife Value text names bees and butterflies",
+      "source": "NC State Extension Gardener Plant Toolbox - Heliopsis helianthoides",
+      "url": "https://plants.ces.ncsu.edu/plants/heliopsis-helianthoides/",
+      "quote": "Pollinators"
+     },
+     {
+      "claim": "attracts_pollinators is true, corroborated by RHS's own pollinator tag for this species",
+      "source": "RHS - Heliopsis helianthoides (smooth ox-eye)",
+      "url": "https://www.rhs.org.uk/plants/8559/heliopsis-helianthoides/details",
+      "quote": "Plants for pollinators"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 3 ft. 0 in. - 6 ft. 0 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 3 ft. 0 in. - 6 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 2 ft. 0 in. - 4 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 2 ft. 0 in. - 4 ft. 0 in.\"",
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"Its flowers are attractive to bees, butterflies and other pollinators.\""
+   ],
+   "summary": "I re-read NC State and RHS with qc.py. MOBOT failed again with a ProxyError, so it was not read. All six values stand; none is refuted. Height 36-72 and spread 24-48 are NC State's species Dimensions figures (3-6 ft and 2-4 ft), correctly converted to inches. They are not cultivar figures, and the plant is a non-climbing Herbaceous Perennial. attracts_pollinators=true is backed by NC State's 'attractive to bees, butterflies and other pollinators' and RHS's 'Plants for pollinators' tag. is_edible=null is correct because both readable pages say nothing about edibility or toxicity. Every quote fails check H, though. Each one contains the U+23CE glyph and joins a label to its values across newline lines. The fixes are: height 'Height: 3 ft. 0 in. - 6 ft. 0 in.', spread 'Width: 2 ft. 0 in. - 4 ft. 0 in.', NC State pollinator 'Its flowers are attractive to bees, butterflies and other pollinators.', and RHS pollinator 'Plants for pollinators'."
+  },
+  {
+   "batch": "b54-native-meadow.json",
+   "record": {
+    "common_name": "Queen of the Prairie",
+    "scientific_name_accepted": "Filipendula rubra",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "plantfinder.mobot.org refused this machine (ProxyError on every fetch attempt, including with the host explicitly allowlisted) -- no content from that page was read, so nothing from it is guessed; this is the anchor page named in the task and it could not be checked at all.",
+     "RHS page (rhs.org.uk/plants/94327/filipendula-rubra/details) fetched successfully (142152 bytes, title 'Filipendula rubra | queen of the prairie') but its 'Size'/'Botanical Details' sections contain no Max Height or Max Spread values -- only 'Time to Maturity: No preference', Family, Genus description, Name Status, and Plant Range. Searched for: 'Height', 'Spread', 'Max Height', 'Max Spread', 'Ultimate height', 'Ultimate Height', 'Ultimate Spread', 'metres', 'eventual' -- all zero hits. mature_height_in_min/max and mature_spread_in_min/max left null because no page I could reach publishes a size figure for this species (not a cultivar issue, not a climber issue -- this is a herbaceous perennial forb, rule 4 does not apply).",
+     "Searched the RHS page for edibility and toxicity language: 'edible', 'poisonous', 'toxic', 'Poison', 'Toxic' -- all zero hits. is_edible left null: no page I could reach addresses whether this species is eaten.",
+     "Searched the RHS page for pollinator/wildlife language: 'pollinat', 'Attracts', 'butterfl', 'bee', 'hummingbird' -- all zero hits ('Wildlife' and 'Problem' only matched RHS site-navigation menu items, not species content). attracts_pollinators left null: no page I could reach makes a pollinator claim for this species.",
+     "No new citations are being added because no field could be sourced from a reachable page; per the placeholder rule, every field that lacks a real, verbatim-quoted citation is set to null rather than filled with an invented or stub citation."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "Nothing to refute: all six fields are null and the citations list is empty, and re-reading the pages backs the nulls. The RHS page (fetched ok, 142152 bytes) has 0 hits for height, spread, metre or cm figures, edible/toxic/poison, and pollinator/bee/butterfly. Its Size section shows only 'Time to Maturity: No preference'. The MOBOT anchor page returned error:ProxyError with 0 bytes on every try, including with plantfinder.mobot.org allowlisted, so neither the researcher nor this audit could read it. None of checks A to H fail on the proposed record. Retry this species once MOBOT is reachable, because that page is the likely source of size and pollinator data."
+  },
+  {
+   "batch": "b54-native-meadow.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators (NC State Attracts: Butterflies, Pollinators, Predatory Insects)",
+      "source": "NC State Extension Plant Toolbox, Asclepias incarnata",
+      "url": "https://plants.ces.ncsu.edu/plants/asclepias-incarnata/",
+      "quote": "Pollinators"
+     },
+     {
+      "claim": "mature_height_in 36-60 (NC State Height: 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox, Asclepias incarnata",
+      "url": "https://plants.ces.ncsu.edu/plants/asclepias-incarnata/",
+      "quote": "Height: 3 ft. 0 in. - 5 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox, Asclepias incarnata",
+      "url": "https://plants.ces.ncsu.edu/plants/asclepias-incarnata/",
+      "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+     }
+    ],
+    "common_name": "Swamp Milkweed",
+    "is_edible": null,
+    "mature_height_in_max": 60,
+    "mature_height_in_min": 36,
+    "mature_spread_in_max": 36,
+    "mature_spread_in_min": 24,
+    "scientific_name_accepted": "Asclepias incarnata",
+    "unknowns": [
+     "is_edible left null: none of the three readable assigned pages (NC State, RHS, PSU Extension; Missouri Botanical Garden could not be read) says the plant is eaten or grown for food. Two of them say it is harmful to eat. NC State lists Problems: Contact Dermatitis, Poisonous to Humans, Problem for Cats, Problem for Dogs, Problem for Horses; Poison Severity: Low; Poison Symptoms: 'Can cause stomach upset, nausea, vomiting, abdominal pain, diarrhea, weakness, lethargy, and confusion if eaten in quantity. Milky sap can cause contact dermatitis and eye irritation'; Poison Toxic Principle: Cardiac glycosides and resinoids; Poison Part: Flowers, Fruits, Leaves, Roots, Seeds, Stems; and 'Stems exude a toxic milky sap when cut.' RHS's 'Potentially harmful' field reads 'Harmful if eaten. Wear gloves and other protective equipment when handling'. No researcher proposed false, so the field lands null. Corrected at landing: this line had cut the Poison Part list short, omitted the RHS warning, and said toxicity is recorded only when is_edible is true; verified against the cached copy.",
+     "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=g410 refused this machine (sandbox denied outbound connection to plantfinder.mobot.org:443, ProxyError) -- not fetched, not used as a source, nothing guessed about its content.",
+     "RHS (rhs.org.uk/plants/56419/asclepias-incarnata/details) carries its own Max Height 1-1.5 metres / Max Spread 0.1-0.5 metres, but was not used for size since NC State's structured Dimensions block is the required anchor when present; RHS has no Attracts, pollinator, Edible or Poison hits, though it does carry the 'Harmful if eaten' warning recorded above. Corrected at landing: this line had implied RHS carries no hazard text.",
+     "PSU Extension (extension.psu.edu/rain-garden-plants-swamp-milkweed) gives Height: 36 to 48 inches and independently confirms pollinator attraction (attracts hummingbirds, butterflies, and other pollinators; host plant for monarch caterpillar) but has no Width/spread figure and no edibility or toxicity mention; not used as the size citation since it duplicates/narrows the NC State anchor range rather than replacing it.",
+     "Species is an herbaceous perennial (NC State Plant Type: Herbaceous Perennial), not a vine/liana/climber, so the climber-null rule does not apply and all four size fields were populated normally.",
+     "No cultivar-specific figures were encountered on any of the three fetched pages; all size and attraction data cited applies to the species Asclepias incarnata itself."
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"This plant provides nectar for pollinators including Monarch (Danaus plexippus) butterflies.\"",
+    "quote correction proposed for \"mature_height_in\" -- NOT applied, ground-truth it: \"Height: 3 ft. 0 in. - 5 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in\" -- NOT applied, ground-truth it: \"Width: 2 ft. 0 in. - 3 ft. 0 in.\""
+   ],
+   "summary": "I re-read NC State, RHS and PSU with qc.py. MOBOT failed to fetch (ProxyError), as the researcher said. All three non-null values stand: height 36-60 in comes from NC State 3-5 ft, spread 24-36 in comes from 2-3 ft, and attracts_pollinators is true, backed by NC State's nectar-for-pollinators text and by PSU. is_edible is correctly null. The one defect is that all three quotes contain U+23CE and glue labels across rendered lines. I supplied a single-run replacement for each: 'Height: 3 ft. 0 in. - 5 ft. 0 in.', 'Width: 2 ft. 0 in. - 3 ft. 0 in.', and the NC State Wildlife Value sentence about pollinators."
+  },
+  {
+   "batch": "b55-native-meadow-2.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 48-96 (NC State Height: 4 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/silphium-perfoliatum/",
+      "quote": "Height: 4 ft. 0 in. - 8 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-36 (NC State Width: 1 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/silphium-perfoliatum/",
+      "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State structured Attracts field lists Bees, Butterflies, Hummingbirds, Pollinators)",
+      "source": "NC State Extension Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/silphium-perfoliatum/",
+      "quote": "Hummingbirds"
+     }
+    ],
+    "common_name": "Cup Plant",
+    "is_edible": null,
+    "mature_height_in_max": 96,
+    "mature_height_in_min": 48,
+    "mature_spread_in_max": 36,
+    "mature_spread_in_min": 12,
+    "scientific_name_accepted": "Silphium perfoliatum",
+    "unknowns": [
+     "is_edible left null: neither NC State nor RHS addresses eating or food use of Silphium perfoliatum by humans; no toxicity/poison warning found either (searched 'Poison', 'Toxic', 'Problem for', 'Edible', 'Eat', 'Culinary', 'food' on NC State — only bird-seed-eating and pollinator food-source mentions came back, not human edibility).",
+     "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (ProxyError, non-ok status) and could not be checked; not used for any field.",
+     "RHS page (https://www.rhs.org.uk/plants/17358/silphium-perfoliatum/details) gives Max Height 1.5-2.5 metres (≈59.1-98.4 in) and Max Spread 0.5-1 metres (≈19.7-39.4 in), a somewhat different range than NC State's structured Dimensions field; NC State was used as the anchor per instructions since a species-specific NC State page exists. RHS carries no Attracts/pollinator tag and no Edible/Poison/Toxic text for this species.",
+     "Species is an upright herbaceous perennial forb (not a vine/liana/climber), so the climber exclusion in rule 4 does not apply and all four size fields were filled normally.",
+     "Birds (goldfinches) eating the seed and bumblebees/honeybees nesting in the plant were noted on NC State but were not used as pollinator evidence per rule 7 (seed-eating is not pollination); the structured 'Attracts:' field (Bees, Butterflies, Hummingbirds, Pollinators) was used instead."
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"The flowers attract hummingbirds and butterflies.\""
+   ],
+   "summary": "All six proposed values hold up after re-reading the pages. NC State's species page gives height 4-8 ft, which becomes 48-96 in, and width 1-3 ft, which becomes 12-36 in. Both are converted correctly, min <= max, and both ends of each range are on the page. The page lists no cultivars, and Cup Plant is not a climber. RHS agrees: 1.5-2.5 m tall and 0.5-1 m wide. The height and spread quotes are verbatim single lines. attracts_pollinators true is backed by NC State's structured Attracts list (Bees, Butterflies, Hummingbirds, Pollinators) and by the Wildlife Value sentence about flowers attracting hummingbirds and butterflies. I suggested that sentence as a stronger replacement for the bare 'Hummingbirds' quote. is_edible stays null because neither page mentions edibility or toxicity. MOBOT PlantFinder returned a ProxyError here and could not be checked, the same as for the researcher."
+  },
+  {
+   "batch": "b55-native-meadow-2.json",
+   "record": {
+    "common_name": "Cutleaf Coneflower",
+    "scientific_name_accepted": "Rudbeckia laciniata",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 36,
+    "mature_height_in_max": 120,
+    "mature_spread_in_min": 18,
+    "mature_spread_in_max": 36,
+    "unknowns": [
+     "is_edible left null: neither the NC State Plant Toolbox page nor the RHS page makes any statement about this plant being eaten or grown for food.",
+     "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting any edibility-adjacent field -- all three returned 0 hits, so no toxicity information exists on the page to fold in alongside an edibility claim.",
+     "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=m200 could not be fetched (network/proxy error reaching plantfinder.mobot.org) -- this is a host known to refuse this machine, so it was skipped rather than guessed at.",
+     "The two NC State common-name URL variants (cutleaf-coneflower, green-headed-coneflower) and the base species URL all resolve to the same page content (identical Dimensions, Attracts, and Wildlife Value text), confirmed by fetching all three.",
+     "Plant is a herbaceous perennial/ground cover per NC State's Plant Type field, not a vine or climber, so the climber-exclusion rule does not apply and both height and width/spread were recorded normally.",
+     "RHS gives Max Height and Max Spread both as 1.5-2.5 metres for this species, but that figure was not used for the final size fields since the NC State structured Dimensions block (Height/Width in ft/in) is the anchor per the task's priority rule, and NC State has a species-specific page here."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 36-120 (NC State Dimensions Height: 3 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox - Rudbeckia laciniata",
+      "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-laciniata/",
+      "quote": "Height: 3 ft. 0 in. - 10 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 18-36 (NC State Dimensions Width: 1 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox - Rudbeckia laciniata",
+      "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-laciniata/",
+      "quote": "Width: 1 ft. 6 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true: NC State's structured Attracts field lists Butterflies and Pollinators, and the Wildlife Value text states nectar and pollen attract butterflies and bees",
+      "source": "NC State Extension Plant Toolbox - Rudbeckia laciniata",
+      "url": "https://plants.ces.ncsu.edu/plants/rudbeckia-laciniata/",
+      "quote": "Nectar and pollen attract butterflies and bees."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State base page, both of its common-name variants, and the RHS page with qc.py; the MOBOT page fails with a ProxyError. All six proposed values hold up. Height 36-120 in converts correctly from the NC State 'Height: 3 ft. 0 in. - 10 ft. 0 in.', and spread 18-36 in from 'Width: 1 ft. 6 in. - 3 ft. 0 in.'. Both quotes are single rendered lines with no U+23CE, the page lists no cultivars, and the plant is a herbaceous perennial, not a climber. attracts_pollinators true rests on NC State's Attracts field (Butterflies, Pollinators) and a verbatim nectar/pollen sentence, and RHS tags it 'Plants for pollinators'. is_edible is correctly null because no page mentions toxicity or eating. Every non-null field's citation label names the field. One thing to know: RHS puts spread at 1.5-2.5 m (about 59-98 in), far wider than NC State's 18-36 in. The researcher disclosed this and followed the NC State anchor rule, so nothing is refuted."
+  },
+  {
+   "batch": "b55-native-meadow-2.json",
+   "record": {
+    "common_name": "False Aster",
+    "scientific_name_accepted": "Boltonia asteroides",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 36,
+    "mature_height_in_max": 60,
+    "mature_spread_in_min": 24,
+    "mature_spread_in_max": 36,
+    "unknowns": [
+     "is_edible left null: no reachable cited page (NC State, RHS, UMD fall-flowering-plants) states that Boltonia asteroides or any part of it is eaten or is poisonous to eat; Missouri Botanical Garden PlantFinder could not be checked (see below).",
+     "Searched NC State's page for 'Poison', 'Toxic', and 'Problem for' before setting any edibility value: 0 hits for all three, so no toxicity warning was found or omitted.",
+     "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=277173 refused/could not be fetched by qc.py (ProxyError, 0 bytes) on repeated attempts -- skipped per instructions rather than guessed.",
+     "RHS page (https://www.rhs.org.uk/plants/72681/boltonia-asteroides/details) returned 0 hits for 'Max Height', 'Max Spread', 'Ultimate height', 'Height', 'Spread', 'Attracts', 'Edible', 'Poison', 'Toxic', 'Problem for', 'Pollinator'/'pollinator', 'bee', 'butterfl', 'moth', and 'hummingbird' -- this RHS page carries no extractable size, edibility, or pollinator content, so it was not used for any field.",
+     "UMD extension.umd.edu/resource/fall-flowering-plants gives no size for Boltonia. Its sentence 'The cultivars typically sold in our region grow 18 -36 inches tall and include Blue Star, Esther, Golden Spray, and Pink Cloud.' ends the preceding Aster paragraph, just before the Boltonia heading, so it describes aster cultivars; the Boltonia paragraph names only the cultivar Snowbank and gives no figure. The page was not used for mature_height_in/mature_spread_in. Corrected at landing: this line had attributed that sentence to Boltonia cultivars; verified against the cached copy.",
+     "The one pollinator sentence on the UMD page ('Its very large blossoms are a favorite for attracting pollinators... derived from a Native American medicine man who used the plant for healing') describes a different fall-flowering plant on that page (Joe-Pye weed), not Boltonia, and was not used as support for attracts_pollinators.",
+     "Boltonia asteroides is an herbaceous perennial wildflower, not a vine/liana/climber, so the climber size restriction does not apply and both height and spread were populated from NC State's structured Dimensions block.",
+     "mature_height_in_min/max taken from NC State's Height: 3 ft. 0 in. - 5 ft. 0 in. = 36-60 inches; mature_spread_in_min/max from its Width: 2 ft. 0 in. - 3 ft. 0 in. = 24-36 inches."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 36-60 (NC State Height 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/boltonia-asteroides/",
+      "quote": "Height: 3 ft. 0 in. - 5 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/boltonia-asteroides/",
+      "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Play Value: Attracts Pollinators)",
+      "source": "NC State Extension Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/boltonia-asteroides/",
+      "quote": "Attracts Pollinators"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State, RHS and UMD with qc.py; MBG still fails with ProxyError, 0 bytes. None of the six fields is refuted. The sizes 36-60 in and 24-36 in convert correctly from NC State's species Dimensions block (\"Height: 3 ft. 0 in. - 5 ft. 0 in.\", \"Width: 2 ft. 0 in. - 3 ft. 0 in.\"). Both are ranges the page itself gives, the plant is an erect herbaceous perennial and not a climber, and all quotes are verbatim single runs. attracts_pollinators=true is backed by NC State's Play Value entry \"Attracts Pollinators\", plus \"Attracts butterflies.\" and nectar/pollen tags. is_edible is correctly null because every reachable page is silent. One wrong note, which does not change any value: an unknowns entry says UMD's \"18 -36 inches tall ... Blue Star, Esther, Golden Spray, and Pink Cloud\" sentence refers to Boltonia cultivars. It actually ends the Aster paragraph, just before the Boltonia heading; those are aster cultivars. The Boltonia paragraph gives no size at all. Excluding it was still right, but that unknowns text should be reworded to say the figure belongs to aster cultivars."
+  },
+  {
+   "batch": "b55-native-meadow-2.json",
+   "record": {
+    "common_name": "Golden Alexanders",
+    "scientific_name_accepted": "Zizia aurea",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 12,
+    "mature_height_in_max": 24,
+    "mature_spread_in_min": 12,
+    "mature_spread_in_max": 24,
+    "unknowns": [
+     "is_edible left null: none of the three reachable pages (NC State Plant Toolbox, RHS, Penn State Extension) address whether Zizia aurea is eaten or used for food; searched 'Edible' on all three (0 hits each), so no record either way.",
+     "No poisonous/toxic warning found: searched 'Poison', 'Toxic', and 'Problem for' on the NC State anchor page (0 hits each) and 'Poison'/'Toxic' on RHS and Penn State (0 hits each); nothing to report, consistent with is_edible staying null rather than being set true or false.",
+     "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine (ProxyError on two attempts, including with the host explicitly allowlisted for network egress) -- could not check it for size, edibility, or pollinator data; not used as a source for any field.",
+     "Species is not a climber (herbaceous perennial forb), so the vine/climber size exclusion in rule 4 does not apply -- all four size fields are populated normally."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 12-24 (NC State Dimensions Height: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Zizia aurea",
+      "url": "https://plants.ces.ncsu.edu/plants/zizia-aurea/",
+      "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-24 (NC State Dimensions Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Zizia aurea",
+      "url": "https://plants.ces.ncsu.edu/plants/zizia-aurea/",
+      "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Wildlife Value states the plant attracts butterflies and bees, and the structured Attracts field lists Butterflies, Pollinators, and Specialized Bees)",
+      "source": "NC State Extension Gardener Plant Toolbox - Zizia aurea",
+      "url": "https://plants.ces.ncsu.edu/plants/zizia-aurea/",
+      "quote": "This plant attracts butterflies and bees."
+     },
+     {
+      "claim": "attracts_pollinators true (structured Attracts field)",
+      "source": "NC State Extension Gardener Plant Toolbox - Zizia aurea",
+      "url": "https://plants.ces.ncsu.edu/plants/zizia-aurea/",
+      "quote": "Pollinators"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 1 ft. 0 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 1 ft. 0 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 1 ft. 0 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 1 ft. 0 in. - 2 ft. 0 in.\"",
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"This plant attracts butterflies and bees.\""
+   ],
+   "summary": "I refuted none of the six values; all six hold up after re-reading the pages. The two size ranges were correctly converted from feet to inches: NC State gives 1-2 ft for both height and width, which is 12-24 in. Penn State separately confirms a height of '12 to 24 inches'. The plant is not a climber, and the figures are for the species rather than a cultivar. RHS gives different sizes: height 0.5-1 m (about 20-39 in) and spread 0.1-0.5 m (about 4-20 in). That is a disagreement between sources, not a data error. attracts_pollinators=true is backed by NC State naming bees, butterflies, Pollinators and Specialized Bees. is_edible=null is correct because none of the three pages mention edibility or toxicity. The one real problem is the quotes. All four citation quotes contain the U+23CE newline marker and join labels to values across line breaks. I supplied a corrected single-line quote for each field ('Height: 1 ft. 0 in. - 2 ft. 0 in.', 'Width: 1 ft. 0 in. - 2 ft. 0 in.', 'This plant attracts butterflies and bees.'), each checked with qc.py."
+  },
+  {
+   "batch": "b55-native-meadow-2.json",
+   "record": {
+    "common_name": "Sneezeweed",
+    "scientific_name_accepted": "Helenium autumnale",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 36,
+    "mature_height_in_max": 60,
+    "mature_spread_in_min": 24,
+    "mature_spread_in_max": 36,
+    "unknowns": [
+     "is_edible left null: neither NC State nor RHS states the plant or a part of it is eaten; NC State instead lists it as having 'medium severity poison characteristics' (see below), which is a toxicity statement, not an edibility statement, so it does not by itself satisfy the FALSE condition (page must state 'not edible' or 'poisonous to eat') -- leaving null per the no-record rule.",
+     "Toxicity context found on the NC State anchor page while checking is_edible (recorded here since is_edible is null, but kept visible given its safety relevance): 'This plant has medium severity poison characteristics.' Poison Symptoms: 'Salivation, elevated temperature and pulse, difficulty of breathing, vomiting, and convulsions. TOXIC ONLY IF INGESTED IN LARGE QUANTITIES.' Poison Toxic Principle: 'Sesquiterpene lactone'. Causes Contact Dermatitis: 'Yes'. Poison Part: 'Flowers', 'Leaves', 'Seeds'. Corrected at landing: the Poison Part list had omitted Seeds; verified against the cached copy.",
+     "plantfinder.mobot.org/plantfinderdetails.aspx?kempercode=c930 refused this machine (fetch status: error:ProxyError) on every attempt -- could not be read, so it contributes no data or citations to this record.",
+     "RHS gives 'Max Height 1-1.5 metres' (about 39.4-59.1 in), close to NC State's 36-60 in, and 'Max Spread 0.1-0.5 metres' (about 3.9-19.7 in), narrower than NC State's 24-36 in. NC State's species-specific Dimensions block (Height: 3 ft. 0 in. - 5 ft. 0 in.; Width: 2 ft. 0 in. - 3 ft. 0 in.), which its prose repeats ('It grows 3 to 5 feet tall and 2 to 3 feet wide.'), was used as the anchor; RHS was not used, to avoid conflicting size claims on the same fields. Corrected at landing: this line had misquoted the NC State figures as '60 in.; 36-72 in.'; verified against the cached copy."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 36-60 (NC State Height 3 ft. 0 in. - 5 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox: Helenium autumnale",
+      "url": "https://plants.ces.ncsu.edu/plants/helenium-autumnale/",
+      "quote": "Height: 3 ft. 0 in. - 5 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox: Helenium autumnale",
+      "url": "https://plants.ces.ncsu.edu/plants/helenium-autumnale/",
+      "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies and Pollinators)",
+      "source": "NC State Extension Plant Toolbox: Helenium autumnale",
+      "url": "https://plants.ces.ncsu.edu/plants/helenium-autumnale/",
+      "quote": "Pollinators"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"#pollinator plant #NC native #NC Native Pollinator Plant\""
+   ],
+   "summary": "I re-read the NC State and RHS pages with qc.py; the Missouri Botanical Garden page still gives ProxyError. All six values stand. Height 36-60 and spread 24-36 are correctly converted from NC State's 'Height: 3 ft. 0 in. - 5 ft. 0 in.' and 'Width: 2 ft. 0 in. - 3 ft. 0 in.', and the prose '3 to 5 feet tall and 2 to 3 feet wide' confirms them. The figures are for the species, not a cultivar, and the plant is a clumping erect perennial, not a climber. attracts_pollinators true is backed by NC State (Pollinators, nectar/pollen tags) and by RHS ('pollen for bees and nectar for bees'). The Attracts quote, though, glues the label to four values that sit on separate lines, so it needs replacing with '#pollinator plant #NC native #NC Native Pollinator Plant'. is_edible null is right: toxicity is stated but inedibility is not. Two small fixes are needed in unknowns. The Poison Part list leaves out 'Seeds', and the NC State sizes are misquoted as '60 in.; 36-72 in.'."
+  },
+  {
+   "batch": "b55-native-meadow-2.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 48-72 (NC State Height 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox - Senna hebecarpa",
+      "url": "https://plants.ces.ncsu.edu/plants/senna-hebecarpa/",
+      "quote": "Height: 4 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 36-48 (NC State Width 3 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox - Senna hebecarpa",
+      "url": "https://plants.ces.ncsu.edu/plants/senna-hebecarpa/",
+      "quote": "Width: 3 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Play Value field lists Attracts Pollinators, and the Attracts field lists Bees and Butterflies)",
+      "source": "NC State Extension Plant Toolbox - Senna hebecarpa",
+      "url": "https://plants.ces.ncsu.edu/plants/senna-hebecarpa/",
+      "quote": "Attracts Pollinators"
+     }
+    ],
+    "common_name": "Wild Senna",
+    "is_edible": null,
+    "mature_height_in_max": 72,
+    "mature_height_in_min": 48,
+    "mature_spread_in_max": 48,
+    "mature_spread_in_min": 36,
+    "scientific_name_accepted": "Senna hebecarpa",
+    "unknowns": [
+     "UMD 'Species Recommended MD Coastal Plain Meadow Projects' PDF could not be fetched by qc.py (fetch status: pdf, 0 bytes, exit code 1) -- it refused this machine's extraction path and was skipped; its content was not guessed.",
+     "RHS page (https://www.rhs.org.uk/plants/69841/senna-hebecarpa/details) fetched with status ok, but the returned extract contained only navigation/header/synonym content -- the Details panel (size, edibility, toxicity, attracts fields) was not present in this fetch. Searched for 'Max Height', 'Max Spread', 'Ultimate height', 'Edible', 'Poison', 'Toxic', 'Problem for', 'Attracts', 'Pollinator', 'pollinators', 'hardy', 'sun', 'soil' -- all 0 hits except the plant name itself. This is reported as what was searched, not as a property of the page.",
+     "is_edible left null: NC State page returned 0 hits for 'Edible'; RHS detail content was unavailable in this fetch; UMD PDF was unreadable. No page addressed whether this species or any part of it is eaten, so there is no record either way.",
+     "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting any edibility-adjacent field -- 0 hits for each, so no toxicity information exists on that page to report.",
+     "NC State page confirmed as the species page (Senna hebecarpa), not a genus page and not a named cultivar, so its Dimensions block applies to the species.",
+     "The plant is described on NC State as a Herbaceous Perennial / Shrub with no vine, liana, or climbing habit indicated (0 hits for 'vine' or 'climb'), so the climber-exclusion rule does not apply and size fields were populated normally."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read all three pages with qc.py, and all six proposed values hold up, with nothing to refute. The NC State species page gives 'Height: 4 ft. 0 in. - 6 ft. 0 in.' and 'Width: 3 ft. 0 in. - 4 ft. 0 in.', and both were correctly converted to inches: height 48-72 and spread 36-48. Each min <= max, and each range is published on the page. The page lists no cultivars, and the plant is not a climber: it is a Herbaceous Perennial/Shrub with a Rounded habit and 0 hits for vine or climb. attracts_pollinators=true rests on real pollinator evidence: 'Attracts Pollinators' in Play Value, Bees and Butterflies under Attracts, and bumblebees attracted to pollen under Wildlife Value. is_edible stays null because every source is silent or could not be read. NC State has 0 hits for Edible, Poison and Toxic. The RHS page was fetched but its details panel did not render (0 hits for any size, edibility or pollinator term). The UMD PDF returned 0 bytes. Every citation label contains its field name, and all three quotes appear verbatim, each on a single rendered line."
+  },
+  {
+   "batch": "b56-native-meadow-3.json",
+   "record": {
+    "common_name": "Arkansas Bluestar",
+    "scientific_name_accepted": "Amsonia hubrichtii",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 24,
+    "mature_height_in_max": 36,
+    "mature_spread_in_min": 24,
+    "mature_spread_in_max": 36,
+    "unknowns": [
+     "is_edible left null: none of the readable pages (NC State x2, RHS, Clemson HGIC) address eating, food use, or culinary use of Amsonia hubrichtii at all; this is genuinely no-record, not inferred from the genus.",
+     "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder, kempercode=w810) refused this machine (fetch status: error:ProxyError, 0 bytes, confirmed on retry) -- could not be checked for size, edibility, or pollinator data.",
+     "Not a climber (herbaceous perennial forb per NC State Whole Plant Traits: Plant Type = Herbaceous Perennial), so the vine/liana size exclusion (rule 4) does not apply; all four size fields were filled normally.",
+     "Not a cultivar figure: both NC State pages and Clemson give size for the species Amsonia hubrichtii itself, not a named cultivar.",
+     "Searched RHS page for 'Ultimate height' as well as 'Max Height'/'Max Spread' per instructions; RHS uses 'Max Height 0.5-1 metres' and 'Max Spread 0.1-0.5 metres' (=19.7-39.4 in / 3.9-19.7 in), which conflicts somewhat with NC State's 24-36 x 24-36 in. NC State was used as the anchor per the task's stated priority (species-specific structured Dimensions block takes precedence over RHS), so RHS's figures were not merged in.",
+     "Searched RHS page for 'attractive to pollinators', 'pollinator', 'eaten', 'food', 'culinary' -- none found; RHS contributed nothing usable to any of the six fields for this species.",
+     "Checked NC State anchor page for 'Poison', 'Toxic', 'Problem for' (0 hits each) before setting any edibility value; the page's Insects/Diseases note mentions the milky white sap can cause skin irritation, but since is_edible is being left null (not true), this is noted here for decision-relevance rather than folded into an is_edible=true condition.",
+     "Clemson HGIC page separately notes Amsonia (Dogbane family, covering both A. hubrichtii and A. tabernaemontana) has a milky sap 'slightly toxic to dogs' with an unpleasant taste that deters deer/rabbits -- again noted for decision-relevance, not attached to is_edible since that field is null, not true.",
+     "attracts_pollinators set true on NC State's structured 'Attracts: Butterflies' field plus its 'Attracts Pollinators' play-value tag, corroborated by Clemson's unconditional statement that the plant 'attract[s] a wide variety of butterflies and bees'; no hummingbird or moth mentions found on any page."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 24-36 (NC State Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Amsonia hubrichtii, Dimensions block",
+      "url": "https://plants.ces.ncsu.edu/plants/amsonia-hubrichtii/",
+      "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Amsonia hubrichtii, Dimensions block",
+      "url": "https://plants.ces.ncsu.edu/plants/amsonia-hubrichtii/",
+      "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Play Value tag and Attracts field)",
+      "source": "NC State Extension Gardener Plant Toolbox - Amsonia hubrichtii, Play Value / Attracts fields",
+      "url": "https://plants.ces.ncsu.edu/plants/amsonia-hubrichtii/",
+      "quote": "Attracts Pollinators"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read all five pages with qc.py and none of the six fields is refuted. The Dimensions block on both NC State pages says 'Height: 2 ft. 0 in. - 3 ft. 0 in.' and 'Width: 2 ft. 0 in. - 3 ft. 0 in.'. Converting 2-3 ft gives 24-36 in, and that matches the proposed values. The NC State descriptive text and Clemson HGIC ('height and width of 2 to 3 feet') confirm it for the species. There is no unconverted feet figure, no single figure made into a range, no cultivar scope, and it is not a climber (Herbaceous Perennial, clumping and erect). The only tension is RHS Max Spread 0.1-0.5 m (about 4-20 in) against the 24-36 in spread. The researcher disclosed it and resolved it by the anchor priority, and two US extension sources agree on 2-3 ft wide. attracts_pollinators=true rests on named butterflies and bees: NC State 'Attracts Pollinators' and 'Attracts: Butterflies', plus Clemson's 'attract a wide variety of butterflies and bees'. is_edible=null is correct because no page speaks to eating. The sap notes (skin irritation per NC State, slightly toxic to dogs per Clemson) are already in unknowns. MOBOT still returns ProxyError. All three citation quotes are verbatim single rendered runs, and each citation's claim contains the correct field name."
+  },
+  {
+   "batch": "b56-native-meadow-3.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 36-48 (NC State Height: 3 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Pycnanthemum muticum",
+      "url": "https://plants.ces.ncsu.edu/plants/pycnanthemum-muticum/",
+      "quote": "Height: 3 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Pycnanthemum muticum",
+      "url": "https://plants.ces.ncsu.edu/plants/pycnanthemum-muticum/",
+      "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "is_edible true: NC State's Edibility field states the leaves and flowers are used for tea",
+      "source": "NC State Extension Gardener Plant Toolbox - Pycnanthemum muticum",
+      "url": "https://plants.ces.ncsu.edu/plants/pycnanthemum-muticum/",
+      "quote": "Leaves and flowers used for tea"
+     },
+     {
+      "claim": "attracts_pollinators true: NC State's Wildlife Value field states the plant attracts butterflies and other pollinators",
+      "source": "NC State Extension Gardener Plant Toolbox - Pycnanthemum muticum",
+      "url": "https://plants.ces.ncsu.edu/plants/pycnanthemum-muticum/",
+      "quote": "Attracts butterflies and other pollinators."
+     }
+    ],
+    "common_name": "Blunt Mountain Mint",
+    "is_edible": true,
+    "mature_height_in_max": 48,
+    "mature_height_in_min": 36,
+    "mature_spread_in_max": 36,
+    "mature_spread_in_min": 24,
+    "scientific_name_accepted": "Pycnanthemum muticum",
+    "unknowns": [
+     "Searched the NC State anchor page for \"Poison\", \"Toxic\", and \"Problem for\" per rule 5: zero hits for all three. No toxic part, severity, preparation requirement, or pets warning is named on the anchor page, so is_edible=true is not qualified by any toxicity caveat found.",
+     "Edibility on the anchor page is unconditional (\"Leaves and flowers used for tea\"; Flower Value To Gardener and Leaf Value To Gardener both tagged \"Edible\") -- not a cultivar-specific or climber-specific figure, and the species is an herbaceous perennial, not a climber, so rule 4 does not apply and all four size fields are populated.",
+     "Did not need to consult the RHS, Missouri Botanical Garden Plant Finder, or Penn State rain-garden pages for these six fields because the NC State Plant Toolbox anchor page carried a complete, unambiguous structured Dimensions block (Height and Width) plus explicit Edibility and Wildlife Value (Attracts) fields, so no other page's figures were needed or mixed in."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "Nothing to null. I re-read the pages with qc.py and all six proposed values stand. NC State gives Height 3-4 ft (36-48 in) and Width 2-3 ft (24-36 in), both converted correctly and quoted verbatim on single lines. The figures are for the species, and the plant is an herbaceous perennial, not a climber. Edibility ('Leaves and flowers used for tea') and pollinator support ('Attracts butterflies and other pollinators.') are explicit. No toxic part or preparation requirement appears on NC State, RHS or Penn State, and every field has a correctly labelled citation. Other pages give different sizes: RHS 0.5-1 m for height and spread, Penn State 24-36 in for height. Neither was mixed into the record, which uses the NC State figures. I could not reach the Missouri Botanical Garden page (ProxyError, then ConnectError), so I did not check it."
+  },
+  {
+   "batch": "b56-native-meadow-3.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators true (NC State Attracts: Pollinators, Songbirds; Play Value: Attracts Pollinators)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/anacis-tripteris/",
+      "quote": "Pollinators"
+     },
+     {
+      "claim": "mature_height_in 24-120 (NC State Height: 2 ft. 0 in. - 10 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/anacis-tripteris/",
+      "quote": "Height: 2 ft. 0 in. - 10 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-96 (NC State Width: 2 ft. 0 in. - 8 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/anacis-tripteris/",
+      "quote": "Width: 2 ft. 0 in. - 8 ft. 0 in."
+     }
+    ],
+    "common_name": "Golden Crown",
+    "is_edible": null,
+    "mature_height_in_max": 120,
+    "mature_height_in_min": 24,
+    "mature_spread_in_max": 96,
+    "mature_spread_in_min": 24,
+    "scientific_name_accepted": "Anacis tripteris",
+    "unknowns": [
+     "is_edible left null: neither NC State (anchor) nor RHS states the plant or any part is eaten, grown for food, or poisonous to eat; no page addresses edibility at all, so per the rule this is 'no record' rather than false.",
+     "Searched NC State page for 'Poison', 'Toxic', and 'Problem for': 'Poison' had 0 hits, 'Problem for' had 0 hits, and the 6 'Toxic' hits were all the tag phrases 'non-toxic for cats', 'non-toxic for horses', 'non-toxic for dogs' -- no poisonous part, severity, toxic principle, or pets warning was named on the page.",
+     "RHS page (https://www.rhs.org.uk/plants/30617/coreopsis-tripteris/details) corroborates size and pollinator value but was not used as the size citation since NC State is the anchor and already carries a species-specific Dimensions block: RHS gives Max Height 1.5-2.5 metres (59.1-98.4 in) and Max Spread 1.5-2.5 metres (59.1-98.4 in), and tags the plant 'Plants for pollinators'.",
+     "MoBot Plant Finder (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=g470) refused the fetch (ProxyError, non-ok status) both without and with the host explicitly allowed through the sandbox proxy -- not read, not guessed.",
+     "Species is an herbaceous perennial wildflower per NC State (Plant Type: Herbaceous Perennial, Native Plant, Wildflower), not a vine/liana/climber, so the climber-exclusion rule (rule 4) does not apply and all four size fields were populated normally.",
+     "NC State lists a cultivar 'Gold Standard' ('up to 6 feet tall, sturdier stems than the species, disease-resistant') separately from the species Dimensions block; that cultivar figure was not used for the species mature_height_in fields per rule 3."
+    ]
+   },
+   "applied": [],
+   "review": [
+    "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"Height: 2 ft. 0 in. - 10 ft. 0 in.\"",
+    "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"Height: 2 ft. 0 in. - 10 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"Width: 2 ft. 0 in. - 8 ft. 0 in.\"",
+    "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"Width: 2 ft. 0 in. - 8 ft. 0 in.\"",
+    "quote correction proposed for \"attracts_pollinators\" -- NOT applied, ground-truth it: \"Nectar from the flowers attract pollinators and birds eat its seeds.\""
+   ],
+   "summary": "I re-read NC State and RHS with qc.py. MoBot still fails with a ProxyError. All six values hold. Height 24-120 and spread 24-96 are properly converted from NC State's species Dimensions block (2-10 ft and 2-8 ft). The plant is an herbaceous perennial, not a climber. The cultivar 'Gold Standard' (up to 6 ft) was correctly left out. attracts_pollinators true has direct pollinator evidence from NC State ('Nectar from the flowers attract pollinators', 'Attracts Pollinators') and from RHS ('Plants for pollinators'). is_edible stays null because none of the pages address edibility. The defect is in all three citation quotes: each contains U+23CE and glues labels to values across newline boundaries. I supplied corrected single-line quotes ('Height: 2 ft. 0 in. - 10 ft. 0 in.', 'Width: 2 ft. 0 in. - 8 ft. 0 in.', 'Nectar from the flowers attract pollinators and birds eat its seeds.'). There is also a small error in unknowns: it reports 6 'Toxic' hits where qc.py shows 2."
+  },
+  {
+   "batch": "b56-native-meadow-3.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators (NC State Wildlife Value: \"Attracts pollinators, especially bees. Host plant to Silvery Checkerspot butterfly as well as some moths. Goldfinches will eat the seeds.\"; Attracts field lists Bees, Butterflies, Pollinators, Predatory Insects, Songbirds)",
+      "source": "NC State Extension Plant Toolbox - Ratibida pinnata",
+      "url": "https://plants.ces.ncsu.edu/plants/ratibida-pinnata/",
+      "quote": "Attracts pollinators, especially bees. Host plant to Silvery Checkerspot butterfly as well as some moths. Goldfinches will eat the seeds."
+     },
+     {
+      "claim": "mature_height_in 39.4-59.1 (RHS Max Height 1-1.5 metres, converted to inches: 1 x 39.37 = 39.4, 1.5 x 39.37 = 59.1)",
+      "source": "RHS - Ratibida pinnata (pinnate prairie coneflower)",
+      "url": "https://www.rhs.org.uk/plants/111312/ratibida-pinnata/details",
+      "quote": "Max Height 1-1.5 metres"
+     },
+     {
+      "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches: 0.1 x 39.37 = 3.9, 0.5 x 39.37 = 19.7)",
+      "source": "RHS - Ratibida pinnata (pinnate prairie coneflower)",
+      "url": "https://www.rhs.org.uk/plants/111312/ratibida-pinnata/details",
+      "quote": "Max Spread 0.1-0.5 metres"
+     }
+    ],
+    "common_name": "Grey-head Coneflower",
+    "is_edible": null,
+    "mature_height_in_max": 59.1,
+    "mature_height_in_min": 39.4,
+    "mature_spread_in_max": 19.7,
+    "mature_spread_in_min": 3.9,
+    "scientific_name_accepted": "Ratibida pinnata",
+    "unknowns": [
+     "is_edible left null: neither NC State nor RHS addresses eating this plant at all (searched 'Edible', 'Poison', 'Toxic', 'Problem for', 'Poisonous', 'Edibility', 'Toxicity' on both pages, all 0 hits) -- no record either way.",
+     "NC State's page has no structured size data at all: searched 'Dimensions', 'Height:', 'Height', 'ft.', 'Width:', 'Spread' -- only Fruit Length/Width and Leaf Length/Width (< 1 inch fruit, 3-6 inch leaves) were found, which are not whole-plant mature size and were not used.",
+     "Size fields (mature_height_in, mature_spread_in) are sourced from RHS only, since NC State carries no plant-level Height/Width block for this species (a genus page is not a substitute and none was used).",
+     "Not a climber: NC State lists Habit/Form as 'Erect' and RHS lists Habit as 'Columnar upright', so all four size fields apply normally (not zeroed out under the climber rule).",
+     "RHS page confirmed as the species page (title 'Ratibida pinnata | pinnate prairie coneflower', Genus note describing Ratibida as biennials/perennials), not a named cultivar, so its Max Height/Max Spread figures were accepted as species-level.",
+     "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=l940 refused this machine (ProxyError on fetch, confirmed both through the sandbox and with the host explicitly allowed) -- not consulted for any field, per instructions to skip and not guess its content.",
+     "attracts_pollinators is supported independently by NC State's Wildlife Value narrative and its structured 'Attracts' field (Bees, Butterflies, Pollinators, Predatory Insects, Songbirds); RHS page itself had no pollinator/bee/butterfly/wildlife content for this species (searched 'bee', 'butterfl', 'moth', 'hummingbird', 'wildlife', 'Wildlife', 'RHS Plants for Pollinators' -- all 0 relevant hits beyond nav-menu boilerplate)."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the RHS and NC State pages with qc.py. The Missouri Botanical Garden page failed to load (ProxyError), and the proposal does not use it. All six proposed values hold. Height of 39.4-59.1 in and spread of 3.9-19.7 in are correctly converted from RHS 'Max Height 1-1.5 metres' and 'Max Spread 0.1-0.5 metres'. Both are species-level, not a climber (Habit 'Columnar upright' / 'Erect'), and min is below max. The attracts_pollinators value of true is backed by NC State's verbatim text 'Attracts pollinators, especially bees', plus its Attracts field listing Bees, Butterflies and Pollinators. is_edible is correctly null because neither page has any hits for edible, toxic or poison. Citation labels name their fields, and every quote was found verbatim as one rendered run. No refutations and no corrected quotes."
+  },
+  {
+   "batch": "b56-native-meadow-3.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 24-36 (NC State Height: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/echinacea-pallida/",
+      "quote": "Height: 2 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-18 (NC State Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/echinacea-pallida/",
+      "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Wildlife Value field names pollinators)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/echinacea-pallida/",
+      "quote": "Attracts hummingbirds, honey bees, bumblebees, butterflies and skippers."
+     }
+    ],
+    "common_name": "Pale Purple Coneflower",
+    "is_edible": null,
+    "mature_height_in_max": 36,
+    "mature_height_in_min": 24,
+    "mature_spread_in_max": 18,
+    "mature_spread_in_min": 12,
+    "scientific_name_accepted": "Echinacea pallida",
+    "unknowns": [
+     "is_edible left null: none of the readable pages (NC State, RHS, Clemson HGIC) state the plant or any part of it is grown or used for food, nor that it is inedible/poisonous to eat.",
+     "Decision-relevant note: NC State's Toxic/Poison search found one relevant passage: \"There are no known toxic effects to birds, cats, dogs, horses, livestock, or humans.\" This is a non-toxicity statement, not an edibility statement, so it did not move is_edible off null.",
+     "RHS (https://www.rhs.org.uk/plants/63244/echinacea-pallida/details) lists Max Height 1-1.5 metres and Max Spread 0.1-0.5 metres for this species, which conflicts with NC State's figures. Per instructions, NC State's species-specific Plant Toolbox page is the anchor when one exists, so the RHS figures were not used.",
+     "Clemson HGIC (https://hgic.clemson.edu/factsheet/echinacea/) corroborates size for pallida in prose (\"reaches 2 to 3 feet tall and 18 inches wide\"), consistent with NC State's structured Dimensions block, but this page added no new edibility or pollinator claim specific to pallida (its lone 'Pollinator' hit was an unrelated tag-cloud entry, not a species-specific statement), so it was not cited.",
+     "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=c570 refused this machine (network denied to that host / ProxyError) — could not be read, per instructions this is recorded rather than guessed.",
+     "https://extension.umd.edu/sites/extension.umd.edu/files/2025-06/25Jun20L.pdf could not be read: qc.py reported fetch status 'pdf' with 0 extracted bytes, so no text was available to search or quote from this source.",
+     "Not a climber (herbaceous perennial per NC State), so the climber-size exclusion rule does not apply; no cultivar-specific figure was involved — the size figures used are for the species Echinacea pallida itself."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State, RHS and Clemson HGIC with qc.py. The proposed values check out and none are refuted. NC State gives Height 2-3 ft and Width 1-1.5 ft, and 24-36 in and 12-18 in are correct conversions from real two-ended ranges for the species itself, an erect herbaceous perennial, not a climber. The pollinator claim is backed by named pollinators in NC State's Wildlife Value field. is_edible is correctly left null. All three quotes appear verbatim as single rendered runs, and every citation label contains its field name. RHS gives much larger figures (1-1.5 m tall, 0.1-0.5 m spread). That is a real disagreement, and it is recorded in unknowns, with NC State used as the anchor."
+  },
+  {
+   "batch": "b56-native-meadow-3.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "attracts_pollinators true (NC State Wildlife Value: bees, butterflies, hummingbirds; also structured Attracts tags: Butterflies, Hummingbirds, Moths, Pollinators, Specialized Bees)",
+      "source": "NC State Extension Plant Toolbox - Monarda fistulosa",
+      "url": "https://plants.ces.ncsu.edu/plants/monarda-fistulosa/",
+      "quote": "Attracts bees, butterflies, and hummingbirds."
+     },
+     {
+      "claim": "attracts_pollinators true, corroborated by UMD Extension",
+      "source": "University of Maryland Extension - Wild Bergamot",
+      "url": "https://extension.umd.edu/resource/wild-bergamot",
+      "quote": "This plant attracts diverse pollinators ranging from swallowtail butterflies to hummingbird moths to bumble bees."
+     },
+     {
+      "claim": "is_edible true (NC State: leaves used in teas; also tagged Leaf Value To Gardener: Edible)",
+      "source": "NC State Extension Plant Toolbox - Monarda fistulosa",
+      "url": "https://plants.ces.ncsu.edu/plants/monarda-fistulosa/",
+      "quote": "The toothed, opposite, aromatic, oblong, grayish-green leaves (to 4\") of the wild bergamot may be used in teas."
+     },
+     {
+      "claim": "mature_height_in 24-48 (NC State Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox - Monarda fistulosa",
+      "url": "https://plants.ces.ncsu.edu/plants/monarda-fistulosa/",
+      "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-36 (NC State Width: 2 ft. 0 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Plant Toolbox - Monarda fistulosa",
+      "url": "https://plants.ces.ncsu.edu/plants/monarda-fistulosa/",
+      "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+     }
+    ],
+    "common_name": "Wild Bergamot",
+    "is_edible": true,
+    "mature_height_in_max": 48,
+    "mature_height_in_min": 24,
+    "mature_spread_in_max": 36,
+    "mature_spread_in_min": 24,
+    "scientific_name_accepted": "Monarda fistulosa",
+    "unknowns": [
+     "plantfinder.mobot.org refused connection to this machine (fetch status: error:ProxyError) for both attempts; could not check it for corroborating or conflicting size/edibility/pollinator data.",
+     "RHS page gives Max Height 1-1.5 metres (39.4-59.1 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in), which conflicts with NC State's species-specific figures; RHS was not used because NC State's own species page (not a genus page) exists and is the designated anchor per the sourcing rule.",
+     "UMD Extension gives only 'Height: up to 4 ft' (a single max figure, consistent with NC State's high end) and no width figure at all, so it was used only to corroborate the height max and pollinator attraction, not as a standalone size source.",
+     "Searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: no toxicity warning for Monarda fistulosa itself was found. The only 'Toxic' hits were an unrelated tag ('black walnut toxicity tolerant', describing the plant's own tolerance of juglone, not a hazard to people eating it) and the word did not otherwise appear.",
+     "is_edible is specifically supported by leaf use in teas ('leaves ... may be used in teas') and a 'Leaf Value To Gardener: Edible' tag; no page addressed other plant parts (flowers, whole plant) as food, so the edibility claim should be understood as leaf/tea use only."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State, UMD and RHS with qc.py; MOBOT failed with ProxyError. All six proposed values hold. The height (24-48 in) and spread (24-36 in) are correct conversions of NC State's 'Height: 2 ft. 0 in. - 4 ft. 0 in.' and 'Width: 2 ft. 0 in. - 3 ft. 0 in.'. Both are species-level ranges for a non-climbing herbaceous perennial. attracts_pollinators rests on explicit mentions of bees, butterflies, hummingbirds and moths on NC State and UMD. is_edible rests on NC State's leaf tea text and its Edible tag, and no page names a toxic part or a required preparation. Every citation label contains its field name, and every quote appears verbatim as a single rendered run. The RHS size conflict and the unreachable MOBOT page are both disclosed in unknowns. Nothing is refuted."
+  },
+  {
+   "batch": "b57-native-prairie.json",
+   "record": {
+    "common_name": "Indian Grass",
+    "scientific_name_accepted": "Sorghastrum nutans",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 60,
+    "mature_height_in_max": 84,
+    "mature_spread_in_min": 12,
+    "mature_spread_in_max": 24,
+    "unknowns": [
+     "hgic.clemson.edu/indian-grass-sorghastrum-nutans/ returned a non-ok status (ProxyError) through qc.py on this machine, even after adding the host to the sandbox allowlist; it was skipped, and no content from it was guessed.",
+     "www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?kempercode=g780 also returned a non-ok status (ProxyError) through qc.py; it was skipped, and no content from it was guessed.",
+     "RHS gives Max Height 1-1.5 metres and Max Spread 0.5-1 metres for this species, but NC State's Plant Toolbox carries a species-specific structured Dimensions block (Height 5 ft.-7 ft., Width 1 ft.-2 ft.) and is the anchor per instructions, so the RHS figures were not used for the size fields and are noted here only for completeness.",
+     "University of Maryland Extension gives Height: 4 to 8 feet, but was not used for the size fields since NC State's Dimensions block is the designated anchor and a species-specific NC State page exists.",
+     "is_edible left null: none of the three readable pages (NC State, RHS, UMD Extension) contain any statement about this plant or a part of it being eaten, used for food, or not edible -- no record either way.",
+     "No poisonous, toxic, or 'problem for' language was found anywhere on the NC State anchor page (searched 'Poison', 'Toxic', 'Problem for') for this species, so no toxicity caveat applies to the (null) edibility field.",
+     "attracts_pollinators set true on NC State's structured 'Attracts' field, which lists Butterflies (also Small Mammals and Songbirds, which are not pollination and were not used as support).",
+     "attracts_pollinators rests on NC State's structured Attracts field ('Butterflies', beside Small Mammals and Songbirds) and its '#pollinator plant' tag. The same page also tags the grass '#larval host plant', and its Wildlife Value text ('Provides excellent cover year-round. Seeds are eaten by songbirds and small mammals. Preferred food source for various grasshopper species.') names no pollinator visiting the flowers. The flag meets the rule (a pollinator named in a structured field) but is a weak one. Noted at landing, verified against the cached copy."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 60-84 (NC State Height: 5 ft. 0 in. - 7 ft. 0 in., converted to inches)",
+      "quote": "Height: 5 ft. 0 in. - 7 ft. 0 in.",
+      "source": "North Carolina Extension Gardener Plant Toolbox — Sorghastrum nutans (Indiangrass, Yellow Indiangrass)",
+      "url": "https://plants.ces.ncsu.edu/plants/sorghastrum-nutans/"
+     },
+     {
+      "claim": "mature_spread_in 12-24 (NC State Width: 1 ft. 0 in. - 2 ft. 0 in., converted to inches)",
+      "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in.",
+      "source": "North Carolina Extension Gardener Plant Toolbox — Sorghastrum nutans (Indiangrass, Yellow Indiangrass)",
+      "url": "https://plants.ces.ncsu.edu/plants/sorghastrum-nutans/"
+     },
+     {
+      "claim": "attracts_pollinators true (NC State's structured Attracts field names Butterflies)",
+      "quote": "Butterflies",
+      "source": "North Carolina Extension Gardener Plant Toolbox — Sorghastrum nutans (Indiangrass, Yellow Indiangrass)",
+      "url": "https://plants.ces.ncsu.edu/plants/sorghastrum-nutans/"
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State, RHS and UMD with qc.py and could not refute any field. Clemson and Missouri Botanical Garden both returned ProxyError again, the same as for the researcher. Height 60-84 in and spread 12-24 in convert correctly from NC State's 'Height: 5 ft. 0 in. - 7 ft. 0 in.' and 'Width: 1 ft. 0 in. - 2 ft. 0 in.'. The page is for the species, the plant is a clumping erect grass rather than a climber, and all quotes are verbatim single rendered runs. attracts_pollinators=true rests on NC State's structured Attracts field naming Butterflies, plus a '#pollinator plant' tag. It is weakened by the plant being a wind-pollinated grass whose butterfly value is probably as a larval host, but it passes the rule. is_edible is correctly null because the pages say nothing about it."
+  },
+  {
+   "batch": "b57-native-prairie.json",
+   "record": {
+    "attracts_pollinators": true,
+    "citations": [
+     {
+      "claim": "mature_height_in 24-48 (NC State Dimensions Height: 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/schizachyrium-scoparium/",
+      "quote": "Height: 2 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 18-36 (NC State Dimensions Width: 1 ft. 6 in. - 3 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/schizachyrium-scoparium/",
+      "quote": "Width: 1 ft. 6 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Attracts field lists Butterflies and Pollinators; also tagged 'NC Native Pollinator Plant')",
+      "source": "NC State Extension Gardener Plant Toolbox",
+      "url": "https://plants.ces.ncsu.edu/plants/schizachyrium-scoparium/",
+      "quote": "NC Native Pollinator Plant"
+     }
+    ],
+    "common_name": "Little Bluestem",
+    "is_edible": null,
+    "mature_height_in_max": 48,
+    "mature_height_in_min": 24,
+    "mature_spread_in_max": 36,
+    "mature_spread_in_min": 18,
+    "scientific_name_accepted": "Schizachyrium scoparium",
+    "unknowns": [
+     "is_edible left null: neither NC State nor RHS addresses eating this plant; searched NC State for 'Edible' (0 hits), 'Poison' (0 hits), 'Toxic' (2 hits, both an unrelated '#black walnut toxicity tolerant' tag meaning juglone tolerance, not toxicity of the plant itself), and 'Problem for' (0 hits); searched RHS for 'Edible', 'Poison', 'Toxic', 'Problem for' (0 hits each). No poisonous part, severity, or pets warning was found on either page.",
+     "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, taxonid=285323) refused this machine with a proxy error and could not be read; nothing in this record is drawn from it, and no guess was made about its content.",
+     "Size fields (mature_height_in, mature_spread_in) were taken from NC State's structured Dimensions block, the anchor per instructions, rather than from RHS, since NC State has a species-specific (not genus) page for Schizachyrium scoparium.",
+     "RHS was also checked for size: 'Max Height' and 'Max Spread' both read '0.5-1 metres' (19.7-39.4 in, broadly consistent with NC State's 24-48 in height / 18-36 in width) but were not used to fill the fields since NC State is the designated anchor.",
+     "attracts_pollinators set true from NC State's structured 'Attracts:' field (Butterflies, Pollinators) and its 'NC Native Pollinator Plant' tag; RHS had no 'Attracts' or pollinator-related field for this species (0 hits for 'Attracts', 'pollinator', 'bee', 'butterfl', 'hummingbird').",
+     "Little Bluestem (Schizachyrium scoparium) is a herbaceous bunchgrass, not a vine/liana/climber, so rule 4 (no size for climbers) does not apply here; size fields were populated normally."
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State and RHS pages with qc.py. The Missouri Botanical Garden page still fails with a proxy error, and nothing in the record uses it. All six values stand. Height 24-48 in and spread 18-36 in are correct conversions of NC State's 'Height: 2 ft. 0 in. - 4 ft. 0 in.' and 'Width: 1 ft. 6 in. - 3 ft. 0 in.'. They are species values, not cultivar values, and the plant is a clumping grass, not a climber. attracts_pollinators true is backed by NC State's 'Attracts: Butterflies, Pollinators' field and its 'NC Native Pollinator Plant' tag. is_edible is correctly null because both pages are silent. The only 'toxic' hits are the black walnut toxicity tolerance tag. Every quote is verbatim on one line, and every citation label names its field literally. No refutations and no quote corrections."
+  },
+  {
+   "batch": "b57-native-prairie.json",
+   "record": {
+    "common_name": "Purple Prairie Clover",
+    "scientific_name_accepted": "Dalea purpurea",
+    "is_edible": true,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 12,
+    "mature_height_in_max": 36,
+    "mature_spread_in_min": 12,
+    "mature_spread_in_max": 18,
+    "unknowns": [
+     "is_edible rests on NC State's Edibility field alone: 'The leaves are used for making tea and medicines, and the roots are palatable when chewed.' That is tea from the leaves and chewing the roots, not a vegetable or fruit crop. No cooking or other preparation requirement, no named poisonous part, and no severity/toxic-principle/pets warning appears anywhere on the page, and the two RHS pages (114561, 327559) carry no harm, poison or toxicity text either. Corrected at landing: this line had called the edibility conditional, but no page states a condition; verified against the cached copies.",
+     "Before setting is_edible, searched the NC State anchor page for 'Poison', 'Toxic', and 'Problem': 0 hits for Poison and Toxic; the one Problem hit was the unrelated 'Insects, Diseases, and Other Plant Problems: This perennial has no serious insect or disease issues.' No toxicity or pets warning was found on this page.",
+     "The two RHS pages (taxonid 114561 dalea-purpurea; 327559 petalostemon-purpureum) and the MOBOT PlantFinder page were not queried for these six fields: the NC State Plant Toolbox anchor page already carried a full structured Dimensions block (Height and Width), an explicit Edibility statement, and an Attracts field, covering all six target fields for the species itself (not a cultivar and not a genus page), so no other source was needed to fill or contradict them.",
+     "Purple Prairie Clover is an herbaceous perennial forb (NC State Plant Type: Herbaceous Perennial, Wildflower), not a vine/liana/climber, so the climber size-exclusion rule does not apply here and all four size fields were populated from the page's Dimensions block."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 12-36 (NC State Dimensions Height: 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1 ft = 12 in, 3 ft = 36 in)",
+      "source": "NC State Extension Gardener Plant Toolbox - Dalea purpurea",
+      "url": "https://plants.ces.ncsu.edu/plants/dalea-purpurea/",
+      "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 12-18 (NC State Dimensions Width: 1 ft. 0 in. - 1 ft. 6 in., converted to inches: 1 ft = 12 in, 1 ft 6 in = 18 in)",
+      "source": "NC State Extension Gardener Plant Toolbox - Dalea purpurea",
+      "url": "https://plants.ces.ncsu.edu/plants/dalea-purpurea/",
+      "quote": "Width: 1 ft. 0 in. - 1 ft. 6 in."
+     },
+     {
+      "claim": "is_edible true (NC State Edibility field: leaves used for tea and medicines, roots palatable when chewed)",
+      "source": "NC State Extension Gardener Plant Toolbox - Dalea purpurea",
+      "url": "https://plants.ces.ncsu.edu/plants/dalea-purpurea/",
+      "quote": "The leaves are used for making tea and medicines, and the roots are palatable when chewed."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State: nectar source for bees, bumblebees, and butterflies; structured Attracts field lists Bees, Butterflies, Specialized Bees)",
+      "source": "NC State Extension Gardener Plant Toolbox - Dalea purpurea",
+      "url": "https://plants.ces.ncsu.edu/plants/dalea-purpurea/",
+      "quote": "as well as a nectar source for many pollinators such as bees, bumblebees, and butterflies."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State anchor page with qc.py. All four cited quotes are on it verbatim, each as one rendered line; the height and width quotes include their labels. The unit conversions are correct: 1-3 ft is 12-36 in and 1 ft to 1 ft 6 in is 12-18 in. Both are published ranges from the species page. The plant is a herbaceous perennial, not a climber. There are 0 hits for poison or toxic, so no edibility condition is missing from unknowns. The pollinator support names bees, bumblebees and butterflies, plus a structured Attracts field. Every citation label contains its field name. Both RHS pages (114561, 327559) fetched but showed no height, spread, toxicity or climber text, so they contradict nothing. The MOBOT PlantFinder page (taxonid 280337) returned ProxyError on two tries with plantfinder.mobot.org allowed, so I could not check it for a conflicting size or a toxicity note. No field refuted."
+  },
+  {
+   "batch": "b57-native-prairie.json",
+   "record": {
+    "common_name": "Rattlesnake Master",
+    "scientific_name_accepted": "Eryngium yuccifolium",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 48,
+    "mature_height_in_max": 72,
+    "mature_spread_in_min": 36,
+    "mature_spread_in_max": 72,
+    "unknowns": [
+     "is_edible left null: neither NC State Plant Toolbox nor RHS addresses eating this plant at all (searched 'Edible', 'Poison', 'Toxic', 'Problem for' on both pages -- zero hits on either).",
+     "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276023 refused this machine (fetch returned error:ProxyError, both without and with the host explicitly allowed) -- not read, no data taken from it.",
+     "RHS lists Max Height 0.5-1 metres (19.7-39.4 in) and Max Spread 0.1-0.5 metres (3.9-19.7 in) for this species, but NC State carries a species-specific Dimensions block and is used as the anchor per the size-source rule, so RHS's figures were not used.",
+     "Not a climber and no cultivar-specific figures were encountered -- size and both flags apply to the species as a whole."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 48-72 (NC State Height: 4 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "North Carolina Extension Gardener Plant Toolbox: Eryngium yuccifolium",
+      "url": "https://plants.ces.ncsu.edu/plants/eryngium-yuccifolium/",
+      "quote": "Height: 4 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 36-72 (NC State Width: 3 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "North Carolina Extension Gardener Plant Toolbox: Eryngium yuccifolium",
+      "url": "https://plants.ces.ncsu.edu/plants/eryngium-yuccifolium/",
+      "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Wildlife Value states the plant attracts pollinator insects)",
+      "source": "North Carolina Extension Gardener Plant Toolbox: Eryngium yuccifolium",
+      "url": "https://plants.ces.ncsu.edu/plants/eryngium-yuccifolium/",
+      "quote": "Attracts pollinator insects including wasps, flies, bees, and butterflies like monarchs and skippers."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State and RHS with qc.py. MBG returned ProxyError, as the researcher disclosed. All six values survive. Height 48-72 and spread 36-72 correctly convert NC State's 4-6 ft and 3-6 ft ranges to inches. They are species-level figures for a clumping, erect, non-climbing perennial. The RHS metric figures conflict sharply (0.5-1 m tall, 0.1-0.5 m wide), but that was disclosed in unknowns and set aside under the anchor rule. attracts_pollinators true rests on NC State text that names bees, wasps, flies and butterflies. is_edible stays null because every edibility and toxicity term got zero hits on both pages. All three quotes are verbatim single-line runs with no U+23CE, and the citation labels contain the field names."
+  },
+  {
+   "batch": "b57-native-prairie.json",
+   "record": {
+    "common_name": "Rough Goldenrod",
+    "scientific_name_accepted": "Solidago rugosa",
+    "is_edible": null,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 24,
+    "mature_height_in_max": 60,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "mature_spread_in_min/max left null: NC State's Solidago rugosa page has no whole-plant spread/width field (its only 'Width' hits are Fruit Width and Leaf Width, not habit spread), and the RHS species page (https://www.rhs.org.uk/plants/46560/solidago-rugosa/details) loaded but its 'Size' field is blank with no Max Spread/Ultimate Spread data at all -- searched 'Ultimate', 'Max Spread', 'Spread', 'Size' with no usable result.",
+     "is_edible left null: searched NC State and RHS for 'Edible', 'edible', 'eat', 'food', 'Poison', 'Toxic', and 'Problem for' -- no page states the plant or any part is grown or used for human food, and none names it poisonous. The only 'eat'/'food' hits are insect food-source tags (nectar/pollen) and 'Songbirds eat the seeds', which is wildlife forage, not human edibility, so this is not read as support for either true or false.",
+     "RHS page (https://www.rhs.org.uk/plants/46560/solidago-rugosa/details) returned fetch status ok (119509 bytes) but the actual plant-detail content (cultivation, size, pollinators, edibility) is not present in the fetched text -- only site-navigation boilerplate plus a generic Genus description and a blank 'Size' field ('Size / Time to Maturity: No preference'). It was not used as evidence for any field.",
+     "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=277368) refused this machine (ProxyError, non-ok status) both with and without an explicit network allowance -- skipped per instructions; did not guess what it would have said.",
+     "mature_height_in range (24-60) comes from NC State's Description field: 'A compact, cascading, clump-forming native with 2-5 foot stems'. A later paragraph on the same page says 'Rough-Leaf Goldenrod is a herbaceous perennial that grows to 4 feet.' (48 in), below the 60-in top taken from the stem length. The stem range, the page's only two-ended figure, was kept, and the disagreement is disclosed here. Corrected at landing: this line had said the 4-foot figure raised no contradiction and sat in the same paragraph; verified against the cached copy.",
+     "Species is an herbaceous clumping perennial wildflower, not a vine/liana/climber, so the climber-exclusion rule for size fields does not apply."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 24-60 (NC State Description: '2-5 foot stems', converted 2 ft = 24 in, 5 ft = 60 in)",
+      "source": "NC State Extension Gardener Plant Toolbox - Solidago rugosa",
+      "url": "https://plants.ces.ncsu.edu/plants/solidago-rugosa/",
+      "quote": "A compact, cascading, clump-forming native with 2-5 foot stems that have radiating light yellow flowers at the tips."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Wildlife Value: flowers attractive to butterflies, bees, and other pollinators)",
+      "source": "NC State Extension Gardener Plant Toolbox - Solidago rugosa",
+      "url": "https://plants.ces.ncsu.edu/plants/solidago-rugosa/",
+      "quote": "Flowers are attractive to butterflies, bees, and other pollinators."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State page and the RHS page with qc.py; the MOBOT fetch failed with ProxyError. Nothing in the proposed record is wrong. NC State's species Description gives '2-5 foot stems', which converts correctly to 24-60 in. The page states that range itself, it is the species rather than the 'Fireworks' cultivar, and the plant is clumping, not a climber. Spread and edibility are rightly null because no page gives a whole-plant spread or says anything about human edibility. attracts_pollinators true rests on text that names butterflies, bees and other pollinators. Both quotes appear verbatim as single runs on the page, and both citation labels contain their field names."
+  },
+  {
+   "batch": "b57-native-prairie.json",
+   "record": {
+    "common_name": "White False Indigo",
+    "scientific_name_accepted": "Baptisia alba",
+    "is_edible": false,
+    "attracts_pollinators": true,
+    "mature_height_in_min": 24,
+    "mature_height_in_max": 72,
+    "mature_spread_in_min": 24,
+    "mature_spread_in_max": 48,
+    "unknowns": [
+     "NC State Plant Toolbox (plants.ces.ncsu.edu/plants/baptisia-alba/) is the anchor and has a species-specific Dimensions block, so RHS/other pages were not needed for size and were not used to override it.",
+     "is_edible set to false, not left null, because the NC State page's Poison Symptoms field states the plant 'CAUSES ONLY LOW TOXICITY IF EATEN. Poisonous through ingestion. All parts are poisonous,' which is a page statement that it is poisonous to eat (rule 6).",
+     "Full poison detail for context: Poison Severity Low; Poison Symptoms 'THIS PLANT CAUSES ONLY LOW TOXICITY IF EATEN. Poisonous through ingestion. All parts are poisonous. Symptoms include nausea, vomiting, and diarrhea.'; Poison Toxic Principle 'Baptisin and cytisine'; Causes Contact Dermatitis 'No'; Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems. Corrected at landing: the Poison Part list had named Bark and Flowers only; verified against the cached copy.",
+     "The anchor page's own search for 'Edible' returned zero hits -- no page text separately addresses culinary/food use, so the edibility determination rests entirely on the poison/toxicity language above, not on a distinct edibility statement.",
+     "Baptisia alba is a herbaceous perennial (Plant Type field), not a vine or climber, so the climber-exclusion rule (rule 4) does not apply and all four size fields were populated normally.",
+     "The other five pages listed in the task (fieldreport.caes.uga.edu, rhs.org.uk/plants/85945/baptisia-alba, hgic.clemson.edu, missouribotanicalgarden.org, plants.ces.ncsu.edu/plants/baptisia-australis) were not queried because the NC State Baptisia alba page already supplied a species-specific, structured Dimensions block plus explicit Attracts and Poison fields covering every requested field with no gaps to fill."
+    ],
+    "citations": [
+     {
+      "claim": "mature_height_in 24-72 (NC State Height 2 ft. 0 in. - 6 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Baptisia alba",
+      "url": "https://plants.ces.ncsu.edu/plants/baptisia-alba/",
+      "quote": "Height: 2 ft. 0 in. - 6 ft. 0 in."
+     },
+     {
+      "claim": "mature_spread_in 24-48 (NC State Width 2 ft. 0 in. - 4 ft. 0 in., converted to inches)",
+      "source": "NC State Extension Gardener Plant Toolbox - Baptisia alba",
+      "url": "https://plants.ces.ncsu.edu/plants/baptisia-alba/",
+      "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+     },
+     {
+      "claim": "attracts_pollinators true (NC State Play Value field lists Attracts Pollinators; the Attracts field also lists Bees, Butterflies, Pollinators)",
+      "source": "NC State Extension Gardener Plant Toolbox - Baptisia alba",
+      "url": "https://plants.ces.ncsu.edu/plants/baptisia-alba/",
+      "quote": "Attracts Pollinators"
+     },
+     {
+      "claim": "is_edible false (NC State Poison Symptoms field states the plant causes toxicity if eaten, i.e. it is poisonous to eat, not a food plant)",
+      "source": "NC State Extension Gardener Plant Toolbox - Baptisia alba",
+      "url": "https://plants.ces.ncsu.edu/plants/baptisia-alba/",
+      "quote": "THIS PLANT CAUSES ONLY LOW TOXICITY IF EATEN. Poisonous through ingestion. All parts are poisonous. Symptoms include nausea, vomiting, and diarrhea."
+     }
+    ]
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State Baptisia alba page with qc.py and found no defects, so I refuted none of the six values. It is a species page, not a genus page. Its Dimensions block gives Height 2-6 ft and Width 2-4 ft, which convert correctly to 24-72 and 24-48 inches. The plant is a herbaceous perennial, not a climber, and no cultivar is involved. attracts_pollinators true rests on the page's Attracts Pollinators, Bees and Butterflies entries. is_edible false rests on the page's explicit statement that all parts are poisonous if eaten, which is a denial rather than silence. All four quotes are verbatim single runs and every citation label names its field. One thing to know: the RHS page gives a much smaller size, 0.5-1 m high and 0.1-0.5 m spread. That conflicts with the anchor but is not a unit, range or scope defect. The Missouri Botanical Garden page was blocked by the sandbox proxy and not read, and nothing in the record uses it."
+  }
+ ],
+ "unverified": [],
+ "no_research": []
+}

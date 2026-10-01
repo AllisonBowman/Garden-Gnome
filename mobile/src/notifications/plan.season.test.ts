@@ -19,7 +19,7 @@ function species(schedules: Species['care_schedules']): Species {
 
 const PLANT = {
   id: 1, plant_uuid: 'p', nickname: 'Ferny', species_id: 100,
-  environment_id: 5, location: '', maturity_stage: 'mature', intake_notes: '',
+  growing_area_id: 5, location: '', maturity_stage: 'mature', intake_notes: '',
 } as Plant;
 
 const FEED_AND_WATER = [

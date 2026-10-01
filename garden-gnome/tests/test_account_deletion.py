@@ -1,7 +1,7 @@
 """Phase 7 acceptance: DELETE /me.
 
 Verifies: the deleted user's access and refresh tokens are rejected; every
-row they owned is gone (plants, care logs, stewardship, environments,
+row they owned is gone (plants, care logs, stewardship, growing_areas,
 identities, refresh tokens, the user itself); Apple revoke is called exactly
 once with the decrypted stored token; a Google-only account deletes with no
 revoke call; a failed revoke never blocks deletion; and the census export is
@@ -11,7 +11,7 @@ import pytest
 from sqlmodel import Session, create_engine, select
 
 from app.models.models import (
-    AuthIdentity, CareLog, Environment, Plant, RefreshToken,
+    AuthIdentity, CareLog, GrowingArea, Plant, RefreshToken,
     StewardshipRecord, User,
 )
 from app.services.oauth.apple import AppleClaims
@@ -110,10 +110,10 @@ def _populate_garden(api, signin) -> dict:
     }, headers=h).json()
     api.client.post(f"/plants/{plant['id']}/logs",
                     json={"action": "water"}, headers=h)
-    env2 = api.client.post("/environments/", json={
+    env2 = api.client.post("/growing-areas/", json={
         "name": "Second", "type": "balcony"}, headers=h).json()
     api.client.post(f"/plants/{plant['id']}/transfer",
-                    json={"to_environment_id": env2["id"]}, headers=h)
+                    json={"to_growing_area_id": env2["id"]}, headers=h)
     return {"plant_id": plant["id"], "headers": h}
 
 
@@ -142,8 +142,8 @@ def test_delete_me_wipes_everything_and_revokes_apple_once(
             CareLog.plant_id == plant_id)).all() == []
         assert s.exec(select(StewardshipRecord).where(
             StewardshipRecord.plant_id == plant_id)).all() == []
-        assert s.exec(select(Environment).where(
-            Environment.user_id == uid)).all() == []
+        assert s.exec(select(GrowingArea).where(
+            GrowingArea.user_id == uid)).all() == []
 
     # Both token kinds now rejected
     assert api.client.get("/me", headers=garden["headers"]).status_code == 401

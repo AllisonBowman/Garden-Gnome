@@ -8,13 +8,13 @@ the total rather than inventing plants the census would double-count.
 import pytest
 from sqlmodel import Session, create_engine, select
 
-from app.models.models import Environment, EnvironmentType, Plant, Species, User
+from app.models.models import GrowingArea, GrowingAreaType, Plant, Species, User
 from app.services import tokens
 
 
 @pytest.fixture()
 def garden(migrated_db_url):
-    """One user with an environment and an API client."""
+    """One user with a growing area and an API client."""
     from fastapi.testclient import TestClient
 
     from app.db.database import get_session
@@ -47,8 +47,8 @@ def garden(migrated_db_url):
         user = User(email="gardener@example.com")
         s.add(user)
         s.flush()
-        env = Environment(
-            name="Vegetable garden", type=EnvironmentType.home, user_id=user.id)
+        env = GrowingArea(
+            name="Vegetable garden", type=GrowingAreaType.home, user_id=user.id)
         s.add(env)
         s.flush()
         env_id, user_id = env.id, user.id
@@ -80,7 +80,7 @@ def test_a_plant_created_without_quantity_is_an_individual(garden):
     predates this column and must keep meaning exactly one physical plant."""
     r = garden.client.post("/plants/", headers=garden.headers, json={
         "nickname": "Bernie", "species_id": garden.species_id,
-        "environment_id": garden.env_id,
+        "growing_area_id": garden.env_id,
     })
     assert r.status_code == 201
     body = r.json()
@@ -91,7 +91,7 @@ def test_a_plant_created_without_quantity_is_an_individual(garden):
 def test_a_planting_carries_its_count(garden):
     r = garden.client.post("/plants/", headers=garden.headers, json={
         "species_id": garden.species_id, "quantity": 12,
-        "location": "south fence", "environment_id": garden.env_id,
+        "location": "south fence", "growing_area_id": garden.env_id,
     })
     assert r.status_code == 201
     assert r.json()["quantity"] == 12
@@ -100,7 +100,7 @@ def test_a_planting_carries_its_count(garden):
 def test_quantity_must_be_at_least_one(garden):
     r = garden.client.post("/plants/", headers=garden.headers, json={
         "species_id": garden.species_id, "quantity": 0,
-        "environment_id": garden.env_id,
+        "growing_area_id": garden.env_id,
     })
     assert r.status_code == 422
 
@@ -113,14 +113,14 @@ def test_a_planting_with_no_nickname_borrows_species_and_place(garden):
     name, so a blank would render as a hole in a sentence."""
     r = garden.client.post("/plants/", headers=garden.headers, json={
         "species_id": garden.species_id, "quantity": 12,
-        "location": "south fence", "environment_id": garden.env_id,
+        "location": "south fence", "growing_area_id": garden.env_id,
     })
     assert r.json()["nickname"] == "Garden Tomato — south fence"
 
 
 def test_a_nickname_free_plant_with_no_place_uses_the_species_alone(garden):
     r = garden.client.post("/plants/", headers=garden.headers, json={
-        "species_id": garden.species_id, "environment_id": garden.env_id,
+        "species_id": garden.species_id, "growing_area_id": garden.env_id,
     })
     assert r.json()["nickname"] == "Garden Tomato"
 
@@ -128,7 +128,7 @@ def test_a_nickname_free_plant_with_no_place_uses_the_species_alone(garden):
 def test_a_supplied_nickname_always_wins(garden):
     r = garden.client.post("/plants/", headers=garden.headers, json={
         "nickname": "Bernie", "species_id": garden.species_id,
-        "location": "south fence", "environment_id": garden.env_id,
+        "location": "south fence", "growing_area_id": garden.env_id,
     })
     assert r.json()["nickname"] == "Bernie"
 
@@ -140,9 +140,9 @@ def test_bulk_creates_every_plant_in_one_call(garden):
     r = garden.client.post("/plants/bulk", headers=garden.headers, json={
         "plants": [
             {"species_id": garden.species_id, "quantity": 12,
-             "location": "south fence", "environment_id": garden.env_id},
+             "location": "south fence", "growing_area_id": garden.env_id},
             {"species_id": garden.species_id, "quantity": 3,
-             "location": "by the gate", "environment_id": garden.env_id},
+             "location": "by the gate", "growing_area_id": garden.env_id},
         ]
     })
     assert r.status_code == 201
@@ -160,9 +160,9 @@ def test_a_bad_species_rolls_the_whole_batch_back(garden):
     r = garden.client.post("/plants/bulk", headers=garden.headers, json={
         "plants": [
             {"species_id": garden.species_id, "quantity": 12,
-             "environment_id": garden.env_id},
+             "growing_area_id": garden.env_id},
             {"species_id": 999_999, "quantity": 3,
-             "environment_id": garden.env_id},
+             "growing_area_id": garden.env_id},
         ]
     })
     assert r.status_code == 400
@@ -174,27 +174,27 @@ def test_a_bad_species_rolls_the_whole_batch_back(garden):
 def test_bulk_rejects_an_unbounded_batch(garden):
     r = garden.client.post("/plants/bulk", headers=garden.headers, json={
         "plants": [
-            {"species_id": garden.species_id, "environment_id": garden.env_id}
+            {"species_id": garden.species_id, "growing_area_id": garden.env_id}
         ] * 201
     })
     assert r.status_code == 422
 
 
-def test_bulk_will_not_plant_into_someone_elses_environment(garden):
+def test_bulk_will_not_plant_into_someone_elses_growing_area(garden):
     """Ownership is checked per entry, not just on the batch."""
     with garden.db() as s:
         stranger = User(email="stranger@example.com")
         s.add(stranger)
         s.flush()
-        their_env = Environment(
-            name="not yours", type=EnvironmentType.home, user_id=stranger.id)
+        their_env = GrowingArea(
+            name="not yours", type=GrowingAreaType.home, user_id=stranger.id)
         s.add(their_env)
         s.commit()
         their_env_id = their_env.id
 
     r = garden.client.post("/plants/bulk", headers=garden.headers, json={
         "plants": [
-            {"species_id": garden.species_id, "environment_id": their_env_id}
+            {"species_id": garden.species_id, "growing_area_id": their_env_id}
         ]
     })
     assert r.status_code == 404  # not 403 — no id probing
@@ -206,7 +206,7 @@ def test_bulk_will_not_plant_into_someone_elses_environment(garden):
 def test_splitting_conserves_the_total_and_records_the_origin(garden):
     created = garden.client.post("/plants/", headers=garden.headers, json={
         "species_id": garden.species_id, "quantity": 12,
-        "location": "south fence", "environment_id": garden.env_id,
+        "location": "south fence", "growing_area_id": garden.env_id,
     }).json()
 
     r = garden.client.post(
@@ -233,7 +233,7 @@ def test_splitting_the_whole_planting_is_refused(garden):
     """That is a transfer — it must preserve plant_uuid, not replace it."""
     created = garden.client.post("/plants/", headers=garden.headers, json={
         "species_id": garden.species_id, "quantity": 5,
-        "environment_id": garden.env_id,
+        "growing_area_id": garden.env_id,
     }).json()
 
     r = garden.client.post(
@@ -253,9 +253,9 @@ def test_summary_counts_plants_not_rows(garden):
     garden.client.post("/plants/bulk", headers=garden.headers, json={
         "plants": [
             {"species_id": garden.species_id, "quantity": 12,
-             "environment_id": garden.env_id},
+             "growing_area_id": garden.env_id},
             {"species_id": garden.species_id, "quantity": 3,
-             "environment_id": garden.env_id},
+             "growing_area_id": garden.env_id},
         ]
     })
     body = garden.client.get("/census/summary", headers=garden.headers).json()
@@ -276,7 +276,7 @@ def test_export_carries_quantity_and_split_lineage(garden):
 
     created = garden.client.post("/plants/", headers=garden.headers, json={
         "species_id": garden.species_id, "quantity": 12,
-        "environment_id": garden.env_id,
+        "growing_area_id": garden.env_id,
     }).json()
     garden.client.post(
         f"/plants/{created['id']}/split", headers=garden.headers,
@@ -293,7 +293,7 @@ def test_export_carries_quantity_and_split_lineage(garden):
     assert sum(p["quantity"] for p in mine) == 12
     offshoot = next(p for p in mine if p["split_from_uuid"])
     assert offshoot["split_from_uuid"] == created["plant_uuid"]
-    assert body["export_version"] == "2.1"
+    assert body["export_version"] == "3.0"
 
 
 def test_cannot_split_someone_elses_planting(garden):

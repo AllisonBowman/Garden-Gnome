@@ -3,8 +3,8 @@ import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import { fetchPlants, fetchCareLogs } from '../api/plants';
 import { fetchSpecies } from '../api/species';
-import { fetchEnvironments, fetchEnvironmentWeather } from '../api/environments';
-import { CareLog, CareType, Environment, Species } from '../types';
+import { fetchGrowingAreas, fetchGrowingAreaWeather } from '../api/growingAreas';
+import { CareLog, CareType, GrowingArea, Species } from '../types';
 import {
   computeReminderPlan, ReminderPrefs, REMINDER_CARE_TYPES, WeatherSignal,
 } from './plan';
@@ -75,23 +75,23 @@ export async function setWeatherShiftPref(enabled: boolean): Promise<void> {
   }
 }
 
-// Build the per-environment weather nudge map used by the planner when the
-// user has opted in. Only fetches weather for environments the outside world
+// Build the per-growing area weather nudge map used by the planner when the
+// user has opted in. Only fetches weather for growing areas the outside world
 // actually reaches and that have coordinates. Fully self-contained: any
-// failure yields no signal for that environment, so reminders still schedule
+// failure yields no signal for that growing area, so reminders still schedule
 // (just without the weather adjustment).
 async function buildWeatherSignals(
-  plants: { environment_id?: number }[],
+  plants: { growing_area_id?: number }[],
 ): Promise<Record<number, WeatherSignal>> {
   const out: Record<number, WeatherSignal> = {};
   try {
     const envIds = [...new Set(
-      plants.map((p) => p.environment_id).filter((id): id is number => id != null),
+      plants.map((p) => p.growing_area_id).filter((id): id is number => id != null),
     )];
     if (!envIds.length) return out;
 
-    const envById: Record<number, Environment> = {};
-    for (const env of await fetchEnvironments()) envById[env.id] = env;
+    const envById: Record<number, GrowingArea> = {};
+    for (const env of await fetchGrowingAreas()) envById[env.id] = env;
 
     await Promise.all(envIds.map(async (id) => {
       const env = envById[id];
@@ -99,16 +99,16 @@ async function buildWeatherSignals(
         && (env.temp_exposure === 'outdoor' || env.shelter !== 'sheltered');
       if (!weatherReaches || env.lat == null || env.lng == null) return;
       try {
-        const resp = await fetchEnvironmentWeather(id);
+        const resp = await fetchGrowingAreaWeather(id);
         if (resp.available && resp.weather) {
           out[id] = computeWeatherSignal(env, resp.weather);
         }
       } catch {
-        // Skip this environment's nudge; the rest still apply.
+        // Skip this growing area's nudge; the rest still apply.
       }
     }));
   } catch {
-    // No environments/weather available — return an empty map (no nudges).
+    // No growing area / weather available — return an empty map (no nudges).
   }
   return out;
 }

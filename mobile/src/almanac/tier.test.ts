@@ -118,6 +118,66 @@ test('the fingerprint shows a dash for derived humidity — that is what missing
   expect(fingerprint(sp({ humidity_sourced: false })).humidity).toBe('💦 —');
 });
 
+// --- rows without legacy values (ADR 0005) ----------------------------------
+// A row minted from the claim tranche carries no legacy columns at all, and a
+// resolved row carries something better. Nothing here may become NaN, and a
+// missing value must score like an unsourced one: it contributes nothing.
+
+test('a minted row with no legacy values still gets a finite tier', () => {
+  const bare = sp({
+    light_need: null, humidity_pct_min: null, humidity_pct_max: null,
+    temp_f_min: null, temp_f_max: null, soil_type: null,
+  });
+  expect(Number.isNaN(difficultyScore(bare))).toBe(false);
+  expect(tierOf(bare)).toBe('beginner');
+});
+
+test('a missing humidity band scores exactly like a derived one', () => {
+  const derived = sp({
+    humidity_pct_min: 70, humidity_pct_max: 85, humidity_sourced: false,
+    temp_f_min: 65, temp_f_max: 80, light_need: 'bright_indirect',
+  });
+  const missing = sp({
+    humidity_pct_min: null, humidity_pct_max: null,
+    temp_f_min: 65, temp_f_max: 80, light_need: 'bright_indirect',
+  });
+  expect(difficultyScore(missing)).toBe(difficultyScore(derived));
+});
+
+test('a resolved humidity need is preferred over the legacy band', () => {
+  // The legacy numbers alone would score nothing; the cited category says
+  // it wants a humidifier.
+  const legacyOnly = sp({ humidity_pct_min: 30, humidity_pct_max: 60 });
+  const cited = sp({ humidity_pct_min: 30, humidity_pct_max: 60, humidity_need: 'high' });
+  expect(difficultyScore(legacyOnly)).toBe(-1);
+  expect(difficultyScore(cited)).toBe(1);
+  expect(difficultyScore(sp({ humidity_need: 'average' }))).toBe(difficultyScore(legacyOnly));
+});
+
+test('a resolved day band is preferred over the legacy temperature band', () => {
+  const wideLegacy = sp({ temp_f_min: 50, temp_f_max: 90 });
+  const narrowDays = sp({ temp_f_min: 50, temp_f_max: 90, day_f_min: 68, day_f_max: 78 });
+  expect(difficultyScore(narrowDays)).toBe(difficultyScore(wideLegacy) + 2);
+});
+
+test('light contributes nothing when there is no light value', () => {
+  expect(difficultyScore(sp({ light_need: null })))
+    .toBe(difficultyScore(sp({ light_need: 'medium' })));
+});
+
+test('the fingerprint shows a dash for every missing stat', () => {
+  const f = fingerprint(sp({
+    light_need: null, humidity_pct_min: null, humidity_pct_max: null,
+  }));
+  expect(f.light).toBe('☀ —');
+  expect(f.humidity).toBe('💦 —');
+  expect(f.water).toBe('💧 —');
+});
+
+test('the fingerprint shows a resolved humidity need as its word', () => {
+  expect(fingerprint(sp({ humidity_need: 'high' })).humidity).toBe('💦 high');
+});
+
 // --- search -----------------------------------------------------------------
 
 test('search matches common and scientific names, case-insensitively', () => {

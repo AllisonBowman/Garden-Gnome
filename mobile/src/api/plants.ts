@@ -24,7 +24,7 @@ export interface PlantDraft {
   species_id: number;
   /** How many physical plants this row stands for. Omit for an individual. */
   quantity?: number;
-  environment_id?: number;
+  growing_area_id?: number;
   location?: string;
   intake_notes?: string;
   acquired_on?: string;
@@ -148,12 +148,12 @@ export async function deletePlant(plantId: number): Promise<void> {
 
 export async function transferPlant(
   plantId: number,
-  toEnvironmentId: number,
+  toGrowingAreaId: number,
   notes = '',
 ): Promise<Plant> {
   const client = await apiClient();
   const { data } = await client.post<Plant>(`/plants/${plantId}/transfer`, {
-    to_environment_id: toEnvironmentId,
+    to_growing_area_id: toGrowingAreaId,
     transfer_notes: notes,
   });
   return data;
