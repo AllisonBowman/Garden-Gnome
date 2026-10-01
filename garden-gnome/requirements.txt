@@ -1,13 +1,16 @@
-fastapi>=0.115
-uvicorn[standard]>=0.34
-sqlmodel>=0.0.22
-pydantic>=2.10
-pydantic-settings>=2.5
-python-multipart>=0.0.20
-httpx>=0.27
-python-dotenv>=1.0
-anthropic>=0.40
-pyjwt[crypto]>=2.9
-cryptography>=43
-alembic>=1.13
-slowapi>=0.1.9
+# Exact pins: a `>=` floor let SQLModel 0.0.47 into CI unannounced (42166bc).
+# Transitive versions are locked in constraints.txt; see its header to upgrade.
+-c constraints.txt
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+sqlmodel==0.0.47
+pydantic==2.13.5
+pydantic-settings==2.15.0
+python-multipart==0.0.32
+httpx==0.28.1
+python-dotenv==1.2.4
+anthropic==1.11.0
+pyjwt[crypto]==2.15.1
+cryptography==50.0.2
+alembic==1.20.0
+slowapi==0.1.10

@@ -1,0 +1,63 @@
+# Every package the backend resolves to, transitive ones included, at the
+# versions CI installed and the full suite passed on (Python 3.12, 2026-10-01).
+# requirements.txt pulls this in with -c, so `pip install -r requirements.txt`
+# in the Dockerfile and in CI both get exactly these. A constraints file only
+# fixes versions -- it never installs anything itself -- so a platform-specific
+# entry (uvloop has no Windows build) is harmless where it does not apply.
+#
+# Unpinned `>=` floors are how SQLModel 0.0.47 reached CI unannounced and broke
+# 60 tests (42166bc). To upgrade: bump the direct pin in requirements*.txt,
+# rebuild a clean 3.12 venv, run the suite, and regenerate this file with
+# `pip freeze --exclude pip --exclude setuptools` from that venv.
+alembic==1.20.0
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anthropic==1.11.0
+anyio==4.15.1
+certifi==2026.7.22
+cffi==2.1.1
+click==8.5.0
+cryptography==50.0.2
+Deprecated==3.0.0
+docstring_parser==0.18.0
+fastapi==0.142.2
+h11==0.16.0
+httpcore==1.0.9
+httpcore2==2.13.1
+httptools==0.8.0
+httpx==0.28.1
+httpx2==2.13.1
+idna==3.20
+iniconfig==2.3.0
+jiter==0.17.0
+limits==5.8.0
+Mako==1.4.3
+MarkupSafe==3.0.3
+opentelemetry-api==1.45.0
+packaging==26.3
+pillow==12.3.0
+pluggy==1.6.0
+pycparser==3.0
+pydantic==2.13.5
+pydantic-settings==2.15.0
+pydantic_core==2.46.5
+Pygments==2.21.0
+PyJWT==2.15.1
+pytest==9.1.1
+pytest-asyncio==1.4.0
+python-dotenv==1.2.4
+python-multipart==0.0.32
+PyYAML==6.0.3
+slowapi==0.1.10
+sniffio==1.3.1
+SQLAlchemy==2.0.54
+sqlmodel==0.0.47
+starlette==1.7.0
+truststore==0.10.4
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+uvicorn==0.54.0
+uvloop==0.23.0
+watchfiles==1.3.0
+websockets==17.1
+wrapt==2.5.0
