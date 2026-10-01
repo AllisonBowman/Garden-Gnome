@@ -3,8 +3,23 @@ from enum import Enum
 from typing import Optional
 from uuid import uuid4
 
-from sqlalchemy import JSON, Column, UniqueConstraint
+from sqlalchemy import JSON, Column, DateTime, UniqueConstraint
 from sqlmodel import SQLModel, Field, Relationship
+
+
+def _utc_naive(**kwargs):
+    """A datetime column that stores naive UTC, as every one here always has.
+
+    Every timestamp in this schema is written with `datetime.utcnow()` and read
+    back naive from SQLite, and the code compares them that way (token expiry,
+    the census, care-log ordering). SQLModel 0.0.47 changed what a bare
+    `datetime` field maps to: a UTC-aware column type that refuses a naive
+    value outright -- CI picked it up through the unpinned `sqlmodel>=` in
+    requirements.txt and 60 tests failed on their first insert. Making every
+    timestamp aware instead would change the stored representation and break
+    each comparison against a value already in the database. Naming the column
+    type keeps the schema exactly what it was on every SQLModel version."""
+    return Field(sa_type=DateTime(timezone=False), **kwargs)
 
 
 class MaturityStage(str, Enum):
@@ -239,15 +254,15 @@ class User(SQLModel, table=True):
     id: str = Field(default_factory=lambda: str(uuid4()), primary_key=True)
     email: Optional[str] = Field(default=None, index=True)
     display_name: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    last_login_at: Optional[datetime] = None
+    created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+    last_login_at: Optional[datetime] = _utc_naive(default=None)
     # Account deletion is HARD: DELETE /me removes this row and cascades
     # (see auth.delete_me; locked by test_account_deletion). This column is
     # kept as a defensive soft-deactivation guard — get_current_user, sign-in,
     # and the census export already reject/exclude any user whose deleted_at is
     # set — so a future soft-deactivation path would be safe by construction.
     # Nothing sets it today, so it is always None.
-    deleted_at: Optional[datetime] = None
+    deleted_at: Optional[datetime] = _utc_naive(default=None)
     # Census participation is per-user consent, default OFF (privacy decision
     # 2026-07-15). Export/sync include only opted-in users' data.
     census_opt_in: bool = Field(default=False)
@@ -274,7 +289,7 @@ class AuthIdentity(SQLModel, table=True):
     # Apple refresh token (Fernet-encrypted) — needed only to revoke the
     # user's Apple session on account deletion (App Store 5.1.1(v))
     apple_refresh_token_enc: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
 
     user: Optional[User] = Relationship(back_populates="identities")
 
@@ -288,9 +303,9 @@ class RefreshToken(SQLModel, table=True):
     user_id: str = Field(foreign_key="user.id", index=True)
     token_hash: str = Field(unique=True)
     family_id: str = Field(default_factory=lambda: str(uuid4()), index=True)
-    expires_at: datetime
-    revoked_at: Optional[datetime] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: datetime = _utc_naive()
+    revoked_at: Optional[datetime] = _utc_naive(default=None)
+    created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
 
     user: Optional[User] = Relationship(back_populates="refresh_tokens")
 
@@ -539,7 +554,7 @@ class Claim(SQLModel, table=True):
     citation_title: str = ""
     citation_url: str = ""
     quote: str = ""
-    collected_at: datetime = Field(default_factory=datetime.utcnow)
+    collected_at: datetime = _utc_naive(default_factory=datetime.utcnow)
 
     authority: Optional[Authority] = Relationship(back_populates="claims")
 
@@ -594,7 +609,7 @@ class GrowingArea(SQLModel, table=True):
     goals: Optional[list[str]] = Field(
         default=None, sa_column=Column(JSON, nullable=True))
 
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
 
     user: Optional[User] = Relationship(back_populates="growing_areas")
     plants: list["Plant"] = Relationship(back_populates="growing_area")
@@ -636,7 +651,7 @@ class Plant(SQLModel, table=True):
     location: str = ""
     maturity_stage: MaturityStage = MaturityStage.juvenile
     acquired_on: Optional[date] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
 
     # Intake snapshot — condition captured once at add-time, not a recurring
     # event like CareLog. Surfaced as the plant's first timeline entry.
@@ -661,7 +676,7 @@ class CareLog(SQLModel, table=True):
     # we don't invent records about what someone found in the soil.
     outcome: Optional[CareOutcome] = None
     notes: str = ""
-    logged_at: datetime = Field(default_factory=datetime.utcnow)
+    logged_at: datetime = _utc_naive(default_factory=datetime.utcnow)
 
     plant: Optional[Plant] = Relationship(back_populates="care_logs")
 
@@ -681,8 +696,8 @@ class StewardshipRecord(SQLModel, table=True):
     growing_area_id: int = Field(foreign_key="growingarea.id")
     # Which GardenGnome installation holds this stewardship
     installation_uuid: str = Field(default="", index=True)
-    started_at: datetime = Field(default_factory=datetime.utcnow)
-    ended_at: Optional[datetime] = None
+    started_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+    ended_at: Optional[datetime] = _utc_naive(default=None)
     transfer_notes: str = ""
 
     plant: Optional[Plant] = Relationship(back_populates="stewardship_records")
