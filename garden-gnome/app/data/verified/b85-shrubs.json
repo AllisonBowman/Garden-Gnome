@@ -878,6 +878,30 @@
           "source": "NC State Extension Gardener Plant Toolbox -- Euonymus fortunei",
           "url": "https://plants.ces.ncsu.edu/plants/euonymus-fortunei/",
           "quote": "Bees"
+        },
+        {
+          "claim": "climbs: NC State describes the species as a woody vine (and RHS lists habit Climbing)",
+          "source": "NC State Extension Gardener Plant Toolbox, Euonymus fortunei",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-fortunei/",
+          "quote": "Climbing Euonymus is an evergreen woody vine or sprawling shrub."
+        },
+        {
+          "claim": "climbs: RHS Habit lists Climbing",
+          "source": "Royal Horticultural Society, Euonymus fortunei details",
+          "url": "https://www.rhs.org.uk/plants/6980/euonymus-fortunei/details",
+          "quote": "Habit    Trailing, Climbing"
+        },
+        {
+          "claim": "mature_height_in 168-384 (NC State Height 14 ft. 0 in. - 32 ft. 0 in., converted to inches: 14x12=168, 32x12=384; this is the climbing reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Euonymus fortunei",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-fortunei/",
+          "quote": "Height: 14 ft. 0 in. - 32 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-120 (NC State Width 2 ft. 0 in. - 10 ft. 0 in., converted to inches: 2x12=24, 10x12=120)",
+          "source": "NC State Extension Gardener Plant Toolbox, Euonymus fortunei",
+          "url": "https://plants.ces.ncsu.edu/plants/euonymus-fortunei/",
+          "quote": "Width: 2 ft. 0 in. - 10 ft. 0 in."
         }
       ],
       "common_name": "Climbing Euonymus",
@@ -919,12 +943,14 @@
         "water_regime, water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis all left null: no admissible source frames watering for this in-ground shrub/vine as a schedule, dry-down target, or check-depth statement; NC State's 'moist to dry-mesic conditions' phrase is a soil-moisture preference inside a cultural-preference sentence ('Creeping Euonymus prefers full sun to medium shade, moist to dry-mesic conditions, and soil containing loam, clay-loam, sand, and gravelly material.'), not a watering instruction.",
         "Invasive status and climbing behavior (not schema fields but decision-relevant): NC State Extension states this species 'readily escapes into native forests' and is 'listed as invasive in North Carolina and in other states of the southeast and northeast'; it also states the vine 'can form new rootlets when its branches contact moist soil' and 'produces aerial rootlets along its branches' when climbing trees, distinguishing its groundcover-spreading habit from its rootlet-climbing habit.",
         "Clemson HGIC has only a genus-level, multi-species 'Euonymus' factsheet, not a dedicated Euonymus fortunei page, so it was excluded under the single-species-page requirement. No dedicated Euonymus fortunei page was located on hgic.clemson.edu, edis.ifas.ufl.edu, ask.ifas.ufl.edu, extension.umd.edu, extension.psu.edu, or fieldreport.caes.uga.edu during this research pass (a WebSearch budget limit and a TLS certificate error on plantfinder.mobot.org's direct species page also constrained further verification within this session), so any facts unique to those domains could not be confirmed and are not included.",
-        "mature_height_in_min/max and mature_spread_in_min/max are not carried on this record. NC State's Plant Type field lists this species as a Vine and its Description calls it 'an evergreen woody vine or sprawling shrub' that 'produces aerial rootlets along its branches' when climbing; under the pipeline's climber rule a climber takes no size at all, all four fields null and disclosed, whatever figures the page publishes, because a published height for a climber is the distance it travels along its support rather than the plant's own stature.",
         "common_name researched as 'Wintercreeper'; landed as 'Climbing Euonymus' on the audit's finding that 'Wintercreeper' is the fourth of six items in NC State's rendered Common Name(s) list and is led by neither dedicated page. 'Climbing Euonymus' is that list's first item and the name NC State's species prose uses throughout. No collision with an already-landed common_name.",
-        "Species confirmed a climber: NC State's Description reads \"an evergreen woody vine or sprawling shrub\" with Habit/Form \"Climbing\" and page tags including #vine and #climber; RHS lists Habit \"Trailing, Climbing\" and categorizes it \"Climber Wall Shrub.\" Per rule 4 all four mature-size fields are left null even though NC State publishes a Dimensions block (Height 14 ft. 0 in. - 32 ft. 0 in., Width 2 ft. 0 in. - 10 ft. 0 in.) and RHS publishes Max Height/Max Spread 1.5-2.5 metres -- for a climber these figures describe how far it runs along a support, not the plant's own stature, so they are not usable for mature_height_in/mature_spread_in.",
-        "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max all left null: species is a climber (rule 4), not a judgement call, regardless of the size figures both pages publish.",
         "is_edible set to false rather than left null: NC State's structured Poison Symptoms field states \"Toxic if eaten in large quantities. Can cause vomiting, diarrhea, weakness, chills, coma, and convulsions,\" gives Poison Severity \"Low\" and Poison Toxic Principle \"Unidentified, possibly a glycoside,\" and its narrative text adds \"the berries in particular should not be eaten by humans.\" RHS separately lists \"Potentially harmful -- Humans/Pets: Harmful if eaten; wear gloves and other protective equipment when handling.\" No text on either page states any part is grown or used for food.",
-        "Both cited pages (NC State Plant Toolbox and RHS) fetched successfully; no page refused this machine for this record."
+        "Both cited pages (NC State Plant Toolbox and RHS) fetched successfully; no page refused this machine for this record.",
+        "is_edible and attracts_pollinators were already landed on this record; returned null by instruction and not researched (a backfill never overwrites a landed value).",
+        "RHS publishes a different, smaller size for this species (Max Height 1.5-2.5 metres, Max Spread 1.5-2.5 metres, i.e. 59-98 inches); NC State's wider range was used as the anchor. The two sources disagree, and NC State's height is a climbing reach given support.",
+        "mature_height_in is a climber's reach (how far it climbs given support), not a free-standing shrub height; NC State also describes the plant as a vine or sprawling shrub, with a procumbent juvenile groundcover form.",
+        "NC State's Dimensions block is given for the species page; cultivar sizes were not used.",
+        "Searched NC State and RHS pages for Dimensions, Height:, Width:, Max Height, Max Spread, Ultimate height, Habit, Plant Type and Climb. No other registered-authority page was sought. No page refused this machine."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -933,7 +959,12 @@
       "water_growing_days_est": null,
       "water_regime": null,
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 168,
+      "mature_height_in_max": 384,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -1631,6 +1662,7 @@
   ],
   "normalizations": [
     "2026-09-27: b85 landed from the post-audit records by a session running alongside the b84 landing. Eight home-landscape shrubs and climbers; six were researched 2026-09-11 under the 35-field schema and two (Smooth Hydrangea, Koreanspice Viburnum) today under the grown schema, so only those two carry is_edible, attracts_pollinators and mature_*_in -- no size or flag was backfilled onto the other six, which the size backfill owns. Auditor CORRECTED WORDING used verbatim except in Smooth Hydrangea's name_note, where the phrase 'designates no primary entry' is banned outright by repair_lib and by the naming rule and was replaced with 'in alphabetical order'. Landing decisions: Euonymus fortunei lands as Climbing Euonymus, not the researched 'Wintercreeper' -- the audit FLAGGED that value because 'Wintercreeper' is the fourth of six items in NC State's rendered Common Name(s) list and RHS's only name for the taxon sits in an 'Other common names' field, while 'Climbing Euonymus' is that list's first item and the name NC State's own species prose uses throughout; the same record takes no mature size under the pipeline's climber rule (NC State Plant Type: Vine), disclosed in unknowns. Chaenomeles speciosa lands title-cased as Flowering Quince on MoBot's dedicated-page Common Name field, with the audit's requested size deferred to the backfill and the figures recorded in unknowns. Hydrangea quercifolia's water_regime stays null (refuted: MoBot's 'thrives in moist soils' is a soil adjective and NC State rates the species drought- and dry-soil-resistant) and its keep_moist citation was dropped. is_houseplant was false-and-cited on the four records that had left it null (Smooth Hydrangea, Common Lilac, Climbing Euonymus, plus the existing three). Seventeen quotes that were <title> metadata, raw markup, bare one-word name values, label+value splices or comma-joined runs of separately-stacked list items were replaced with the auditor's rendered substitutes, each re-fetched and re-verified through verify_quotes' own fetch+extract path before being applied. verify_quotes: every reachable quote verified; hgic.clemson.edu returns http-403 to this machine and plantfinder.mobot.org / www.missouribotanicalgarden.org refuse the connection, so those citations SKIP.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -627,6 +627,24 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/curio-rowleyanus/",
           "quote": "This plant is toxic to both humans and pets. Ingestion of the leaves can cause vomiting and diarrhea. The plant's sap can cause skin irritation and rash."
+        },
+        {
+          "claim": "mature_height_in 12-24 (NC State Dimensions Height 1 ft. 0 in. - 2 ft. 0 in., converted to inches at 12 in per ft; plant is a houseplant/hanging basket so this is the indoor figure; for a plant NC State types as Vine this is its reach)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/curio-rowleyanus/",
+          "quote": "Height: 1 ft. 0 in. - 2 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Dimensions Width 1 ft. 0 in. - 3 ft. 0 in., converted to inches at 12 in per ft)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/curio-rowleyanus/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "is_edible false (NC State Edibility field says toxic if ingested; page also lists Poisonous to Humans)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/curio-rowleyanus/",
+          "quote": "Toxic if ingested."
         }
       ],
       "unknowns": [
@@ -646,8 +664,19 @@
         "day_f_max: REMOVED IN AUDIT RECONCILIATION. Refuted with day_f_min: the published 70-80F range is seasonal, not diurnal, and re-labelling it as a day range is the same error the record refused to make for night temperatures.",
         "chill_damage_f: REMOVED IN AUDIT RECONCILIATION. Refuted by both audits. 'Intolerant of frost' bounds the damage point from above; it does not make 32F the injury threshold. For a tender succulent whose winter optimum both sources put at 50-60F, publishing 32 would tell a user 35-45F is safe.",
         "fertilize_active_months: REMOVED IN AUDIT RECONCILIATION. An empty array reads downstream as 'never fertilize', which no source states. Unknown must be encoded as null.",
-        "water_dry_down_target: REVISED IN AUDIT RECONCILIATION. water_dry_down_target revised: the previous wording ('do not leave it bone dry for long') softened NC State's 'Never allow your plant to completely dry out between watering' into a duration allowance the source does not give."
-      ]
+        "water_dry_down_target: REVISED IN AUDIT RECONCILIATION. water_dry_down_target revised: the previous wording ('do not leave it bone dry for long') softened NC State's 'Never allow your plant to completely dry out between watering' into a duration allowance the source does not give.",
+        "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Wildlife', 'butterfl' and 'bee' and found no hits.",
+        "is_edible set false: NC State's Edibility field reads 'Toxic if ingested.'; it also lists Poisonous to Humans, poison severity Low, and symptoms 'Ingestion of the leaves can cause vomiting and diarrhea. The plant's sap can cause skin irritation and rash.'. No part is listed as food.",
+        "climbs true rests on NC State 'Plant Type: Vine'. The same page's Habit/Form is Cascading and Creeping, and its description says the plant creeps along the ground and trails from baskets. The stem reach given for a climber is therefore the page's own 1-2 ft figure, and a grower should not read it as a tall climber.",
+        "Size is the NC State Dimensions block (Height 1-2 ft, Width 1-3 ft), also stated in the page prose as a houseplant mature size; no larger outdoor figure applies, so it is within the 120 inch limit. The NC State page has a 'Vareigata' cultivar entry, but the Dimensions block is for the species.",
+        "Missouri Botanical Garden page (plantfinder.mobot.org taxonid=457444) was not loaded in this pass, so nothing from it is used. No other registered-authority page was searched, because the NC State page already gave a usable size.",
+        "climbs removed on audit: Refute: NC State never says the plant climbs. Its own Habit/Form field reads 'Cascading' and 'Creeping', not climbing. The description says the leaves 'grow on trailing stems that spill downward ... over the side of the planter', and that in the wild the plant 'creeps and crawls along the ground' (qc: 1 hit), rooting wherever it touches soil. The bullet list says 'succulent vine with trailing stems'. qc found 0 hits for 'climb', and nothing about twining, tendrils or self-clinging. The page uses 'Vine' (Plant Type, and 'succulent vine') loosely, for a trailer or creeper, and its own habit field contradicts any climbing habit. This is the trailer case C2 says to refute. The researcher's unknowns concede the point ('a grower should not read it as a tall climber'). Separately, the cited quote fails provenance (H): qc gives 0 hits for the quoted sentence because the cached page text has non-breaking spaces ('is a&nbsp;succulent vine that is&nbsp;popularly grown'). Only fragments such as 'succulent vine' and 'popularly grown as an ornamental in hanging baskets' match as plain runs. Null the field. The size values do not depend on it, because they are the plain species Dimensions figures."
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 24,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Dragon Tree",
@@ -737,6 +766,18 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "If plants go into a winter rest period, do not give them fertilizer."
+        },
+        {
+          "claim": "mature_height_in 0-72 recorded as max 72 only (NC State: as houseplants they grow to 6 feet, 6 ft x 12 = 72 inches; indoor houseplant figure used instead of the larger landscape Dimensions; min null)",
+          "source": "NC State Extension Gardener Plant Toolbox, Dracaena reflexa var. angustifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/dracaena-marginata/",
+          "quote": "as houseplants, they grow to 6 feet but can be pruned to a smaller size"
+        },
+        {
+          "claim": "is_edible false (NC State Poison Symptoms: toxic to humans, saponins; not a food plant)",
+          "source": "NC State Extension Gardener Plant Toolbox, Dracaena reflexa var. angustifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/dracaena-marginata/",
+          "quote": "Toxic to humans, cats, and dogs."
         }
       ],
       "unknowns": [
@@ -752,8 +793,18 @@
         "fertilize_interval_days / fertilize_active_months: from Clemson's general indoor-plant factsheet, not a species-specific recommendation; the months are our encoding of 'winter rest'.",
         "fertilize_active_months: REMOVED IN AUDIT RECONCILIATION. Marked unsupported by both audits: no source states months for this species, the only anchor is Clemson's generic winter-rest line, and the batch derived two different windows from that same sentence. Conservative outcome is unknown.",
         "fertilize_interval_days: NULLED IN NORMALISATION (2026-08-08). The interval came from Clemson's generic indoor-plant factsheet ('every two or three months'), not a species statement — the same wording the audit removed from Aspidistra. One rule for everyone.",
-        "fertilize_strength: NULLED IN NORMALISATION (2026-08-08). Same generic factsheet; removed with the interval."
-      ]
+        "fertilize_strength: NULLED IN NORMALISATION (2026-08-08). Same generic factsheet; removed with the interval.",
+        "mature_height_in_min left null: the houseplant figure on NC State is only 'grow to 6 feet' (a single upper figure, so max 72 and min null). NC State's Dimensions block gives Height 6 ft. 0 in. - 20 ft. 0 in. (72-240 inches) and the page says 'In their native habitat or as landscape plants in the tropics, they can reach 20 feet'; that outdoor/landscape figure exceeds 120 inches and was NOT recorded, the houseplant figure was used instead (rule 12).",
+        "mature_spread_in 36-120 is NC State's Dimensions Width (3 ft. 0 in. - 10 ft. 0 in.); the page gives no separate indoor spread, and 10 ft is within the 120 inch limit so it is recorded as published.",
+        "is_edible set false: NC State's Poison Symptoms read 'Toxic to humans, cats, and dogs.' (humans: mouth and stomach irritation, nausea, vomiting, diarrhea; skin irritation from sap), toxic principle Saponins, severity low; poison parts listed include flowers and fruits; tags include #poisonous if ingested. No page states any part is used as food.",
+        "attracts_pollinators left null: searched the NC State page for 'Attracts' and found no hit; no pollinator, butterfly, bee or hummingbird statement. Page notes flowers and berries rarely appear on house plants.",
+        "climbs left null: NC State Habit/Form reads Arching and Erect; no page calls it a climber or vine.",
+        "Only the NC State page was read via qc.py. The MOBOT Plant Finder and Clemson pages and RHS/UF-IFAS pages were not loaded in this pass, so no additional size or attracts data from them is claimed.",
+        "mature_spread_in_min removed on audit: Taken from an outdoor-stature block while an indoor figure exists (check I). 36 comes from NC State's Dimensions block, 'Width: 3 ft. 0 in. - 10 ft. 0 in.'. That block is paired with 'Height: 6 ft. 0 in. - 20 ft. 0 in.', and the page attributes the 20 ft end to 'native habitat or as landscape plants in the tropics'. So the block describes the full outdoor/landscape plant, not indoor growth. The page gives an indoor size figure ('as houseplants, they grow to 6 feet') and nothing ties the Width row to indoor or container growth. The record also mixes measures: an indoor-only height (max 72) with a landscape spread. The conversion itself is right (3 ft = 36 in), but the scope is wrong. The MOBOT page (connect error on two tries) and the Clemson page (HTTP 403) would not load, so no indoor spread could be found to replace it.",
+        "mature_spread_in_max removed on audit: Same defect as spread min (check I). 120 in is the 10 ft top of NC State's Dimensions 'Width: 3 ft. 0 in. - 10 ft. 0 in.'. That block's Height row runs to 20 ft (240 in), the stature the page assigns to native-habitat or tropical-landscape plants. A 10 ft spread next to a houseplant that 'grow[s] to 6 feet' is the landscape plant's footprint, not the indoor one. 120 does not exceed the 120 in threshold. But the rule also refutes a size taken from the larger outdoor figure when the page gives an indoor figure, and nothing on the page links the Width row to indoor or container growth. The conversion (10 x 12 = 120) and the quote are fine, so the defect is scope, not arithmetic."
+      ],
+      "is_edible": false,
+      "mature_height_in_max": 72
     },
     {
       "common_name": "Cast Iron Plant",
@@ -983,6 +1034,12 @@
           "source": "Clemson Cooperative Extension HGIC",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/",
           "quote": "If plants go into a winter rest period, do not give them fertilizer."
+        },
+        {
+          "claim": "climbs: NC State describes Hoya carnosa as having a climbing habit (it climbs; also tagged vine/climber)",
+          "source": "NC State Extension Gardener Plant Toolbox, Hoya carnosa",
+          "url": "https://plants.ces.ncsu.edu/plants/hoya-carnosa/",
+          "quote": "Given its climbing habit and rapid growth, the wax plant is a great choice for hanging baskets."
         }
       ],
       "unknowns": [
@@ -1001,8 +1058,14 @@
         "fertilize_strength: REMOVED IN AUDIT RECONCILIATION. Removed with the rest of the feeding block flagged unsupported for this record; no source states a rate for this species.",
         "light_fc_good: REMOVED IN AUDIT RECONCILIATION. Rejected by the horticultural audit as a class-floor artifact: 500 is the bottom of Clemson's band for an entire light class, and MoBot recommends at least half a day of direct sun for this species. Conservative outcome is null.",
         "toxicity_detail: REVISED IN AUDIT RECONCILIATION. toxicity_detail narrowed: the retained quote is '#non-toxic for cats' and cleared three animals. Extending a non-toxicity finding beyond the animal the source names manufactures reassurance.",
-        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). Clemson's High class minimum band spans 150-1000 ft-c; the audit killed the companion fc_good as a class-floor artifact, and a floor read off the extreme bottom of a 7x band understates a high-light plant. Re-source in the verification pass. Same pattern as Aloe and Crassula — an orphaned class-band floor."
-      ]
+        "light_fc_min: NULLED IN NORMALISATION (2026-08-08). Clemson's High class minimum band spans 150-1000 ft-c; the audit killed the companion fc_good as a class-floor artifact, and a floor read off the extreme bottom of a 7x band understates a high-light plant. Re-source in the verification pass. Same pattern as Aloe and Crassula — an orphaned class-band floor.",
+        "mature_height_in and mature_spread_in left null (rule 12): the only published figure is RHS 'Max Height 4-8 metres' / 'Max Spread 1-1.5 metres' (157-315 in height, 39-59 in spread), a garden/conservatory figure for a climber that exceeds the 120 in houseplant cap; no page gives an indoor or container size. RHS also says 'A vigorous evergreen stem-rooting climber to 5m'.",
+        "NC State Plant Toolbox page for Hoya carnosa has no Dimensions block (searched 'Dimensions', 'Height:'; only Leaf Length/Width appear), so no size from it.",
+        "is_edible left null: searched NC State and RHS for 'Edible', 'Poison', 'Toxic'; no page addresses eating (NC State tags say only non-toxic for cats/dogs/horses, which is not an edibility statement).",
+        "attracts_pollinators left null: searched NC State and RHS for 'Attracts', 'Pollinator', 'butterfl', 'Wildlife'; no attracts/pollinator field or statement found.",
+        "https://hgic.clemson.edu/factsheet/indoor-plants-cleaning-fertilizing-containers-light-requirements/ refused this machine (http-403); https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276833 not fetched (known to refuse this machine). Penn State 'Hoyas as Houseplants' read: no size, edibility or pollinator statement for H. carnosa."
+      ],
+      "climbs": true
     }
   ],
   "audit_summary": {
@@ -1133,6 +1196,7 @@
     "2026-08-08: Zamioculcas light_fc_min nulled — UF/IFAS's 25 ft-c is a survival/placement floor, and one column must not carry two meanings (all other fc_min are growth minimums).",
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
     "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

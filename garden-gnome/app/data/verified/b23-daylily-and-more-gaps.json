@@ -234,10 +234,17 @@
         "water_check_depth_cm, water_growing_days_est, water_dormant_days_est, water_estimate_basis: left null. No admissible source gives a specific check-depth or day-interval watering figure for this species; only qualitative dry-down guidance was found, captured instead in water_dry_down_target and cool_rest_note.",
         "fertilize_active_months and fertilize_interval_days: left null. RHS says to fertilize 'when in growth' '2 or 3 times' but never names specific calendar months or gives a day interval.",
         "fertilize_strength: left null. RHS's cultivation text says to apply 'a low nitrogen liquid fertiliser' -- this describes the fertilizer's nitrogen content/formulation, not a dilution strength (full/half/quarter), so it was not forced into this field.",
-        "All four mature-size fields left null: this species is a climber/trailer, not a self-supporting plant with a stature height. NC State's structured Habit/Form field lists it as Cascading, Climbing, Prostrate; RHS lists Habit: Trailing and its genus note describes Ceropegia as \"climbing to trailing.\" Per the task rule, a climber gets no size fields recorded yet, regardless of any figures the pages publish.",
         "RHS does publish a Dimensions block for this plant (Max Height: Up to 10 cm; Max Spread: 0.5-1 metres) and NC State's narrative text says stems drape down about 3 feet in cultivation and vines reach up to 12 feet long in native habitat -- none of these were used, per the climber exclusion above.",
         "is_edible left null: neither the NC State nor the RHS page addresses eating this plant. Searched both pages for 'Edible', 'Poison', 'Toxic', and 'Problem for' (NC State) and 'Edible', 'Poison', 'Toxic' (RHS) -- zero hits on both pages, so there is no record either way.",
-        "Both anchor pages (NC State and RHS) fetched successfully (fetch status: ok); no page refused this machine, so nothing was skipped."
+        "Both anchor pages (NC State and RHS) fetched successfully (fetch status: ok); no page refused this machine, so nothing was skipped.",
+        "is_edible left null: searched the NC State and RHS pages for Edible, Poison, Toxic and Problem for and found no text on eating, toxicity or pets on either page.",
+        "attracts_pollinators already landed; not researched, returned null.",
+        "mature_height_in_min left null: RHS gives only 'Up to 10 cm', a single upper figure (10 cm = 3.9 in); no lower end published.",
+        "mature_height_in_max 3.9 is RHS's Max Height as published (10 cm x 0.3937). It conflicts with the same RHS page's 'long trailing stems to 1m or more' and NC State's 'hang down about 3 feet' and 'vines can reach up to 12 feet long in their native habitat'; it is not a real climbing reach, so treat it as a weak figure. NC State's 3 ft is a hanging length from a container, not a published Height field, so it was not used.",
+        "NC State page has no Dimensions, Height or Width block (searched 'Dimensions', 'Height', 'Width', 'Max Height', 'Max Spread'); only leaf length/width, which are not plant size.",
+        "RHS page is titled Ceropegia linearis subsp. woodii (the RHS-accepted name for this species); its size fields were recorded from that page. RHS Habit field says 'Trailing', but NC State's Habit/Form lists Climbing and its tags include #climber, so climbs is set from NC State.",
+        "No additional registered-authority page (UF/IFAS, Clemson, etc.) was searched or loaded; only the two pages the record is already cited to were read.",
+        "mature_height_in_max removed on audit: The conversion is right (RHS 'Max Height Up to 10 cm' = 3.94 in) and the quote is on the page verbatim. The problem is meaning. This record sets climbs=true, and under 0020/RESOLVER 5 a climber's mature_height_in is read as its published REACH, so the app would say 'climbs to 4 in'. RHS's 10 cm is the stature of a plant that RHS's own Habit field calls 'Trailing', not a reach. The same RHS page says 'long trailing stems to 1m or more', and NC State says the stems 'hang down about 3 feet' and 'vines can reach up to 12 feet long in their native habitat'. The researcher's own unknowns admit 3.9 'is not a real climbing reach'. Under C2, a climber's height must be its published reach, and 3.9 in is not one, so it would misstate the plant by a factor of about 10. No page gives an indoor or container climbing reach as a Height field. NC State's 3 ft is a hanging length, and its 12 ft is native-habitat (I: over 120 in, not tied to container growth). Null it rather than land a figure that becomes false once paired with climbs=true."
       ],
       "citations": [
         {
@@ -317,9 +324,24 @@
           "source": "NC State Extension Gardener Plant Toolbox - Ceropegia woodii",
           "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/",
           "quote": "Hummingbirds"
+        },
+        {
+          "claim": "climbs: NC State Plant Toolbox tags this plant as a #climber (Habit/Form lists Climbing)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/ceropegia-woodii/",
+          "quote": "#houseplant #container plant #hanging baskets #succulent #perennial #interesting flowers #interesting leaves #cascading #hummingbird friendly #prostrate #climber"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres converted to inches, x 39.37)",
+          "source": "Royal Horticultural Society",
+          "url": "https://www.rhs.org.uk/plants/74288/ceropegia-linearis-subsp-woodii/details",
+          "quote": "Max Spread         0.5-1 metres"
         }
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "common_name": "Venus Flytrap",
@@ -545,14 +567,18 @@
         "toxicity_detail — removed on audit: The field's value embeds NC State's human-toxicity-section specifics verbatim -- 'Poison Severity (\"Low\") / Symptoms (\"Vomiting (sometimes with blood), diarrhea, depression\") / Toxic Principle (\"Lectin, wisterin glycoside\")' -- inside a field that is supposed to describe toxicity to PETS. Wrapping it in a disclaimer ('was deliberately not carried into this pet-facing field') doesn't stop the human clinical symptom/mechanism data from sitting in the toxicity_detail text itself; a consumer of this field is exposed to human-scoped poisoning detail as if it were relevant pet context. This is exactly the human-vs-animal-toxicity contamination the audit's check 3 warns about, just achieved through a disclaimer rather than a direct copy. Separately, none of that quoted NC State language ('Poison Severity: Low', the symptom list, 'Lectin, wisterin glycoside') appears anywhere in the citations array -- citation #5's quote is only the bare tag line 'Problems: Invasive Species Problem for Cats Problem for Dogs Problem for Horses Weedy' -- so this portion of the field fails citation-traceability (check 1) independent of the scoping problem. The one genuinely pet-scoped, cited fact ('Pets: Harmful if eaten' from RHS) is sound on its own, but the field as authored goes well beyond it.",
         "soil_drainage — removed on audit: The value 'moderate' does not match the actual drainage language in its own citation. Citation #9's quote reads 'slightly acidic, humusy, moderately fertile, medium moisture, well-drained soils' -- the word 'moderately' there modifies FERTILITY, not drainage, and the quote's actual drainage descriptor is 'well-drained.' 'Moderate' appears to be a mapping error (borrowing 'moderately fertile' or 'medium moisture' language onto the wrong attribute). This is compounded by a second admissible source the record itself is aware of: its own unknowns text cites NC State's explicit 'Soil Drainage: Good Drainage, Moist' tag, which also does not say 'moderate' -- both available sources describe drainage as good/well-drained, and neither was reconciled with or cited in support of the chosen 'moderate' value.",
         "unknowns — removed on audit: The invasive-species paragraph in unknowns attributes specific, quotation-styled claims to Clemson HGIC ('highly invasive vine and should not be planted in the landscape'), University of Maryland Extension ('Tier 2', 'prohibited under Maryland law', the Louisiana/Wisconsin range), and Penn State Extension ('introduced invasive vine', 'the seeds are poisonous') -- but none of these three sources appear anywhere in the citations array: no URL, no independently checkable quote entry. I independently verified all three via web search and found the substance accurate (including confirming the Penn State 'seeds are poisonous' line actually describes 'Japanese and Chinese wisteria species' collectively, which does still cover sinensis by name), but the record itself provides no way to verify any of it -- a real citation-traceability gap on a populated field, per the audit's structural check 1.",
-        "Wisteria sinensis is a vine (NC State Plant Toolbox lists Plant Type: Vine, and describes it as a 'Counterclockwise-twining, woody vine'). Per the climber rule, all four size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null even though NC State publishes a structured Dimensions block ('Height: 10 ft. 0 in. - 25 ft. 0 in.' / 'Width: 4 ft. 0 in. - 30 ft. 0 in.') and RHS publishes Max Height/Max Spread figures -- for a climber this distance is how far it runs on its support, not the plant's own stature, so it is not recorded as size.",
         "RHS's own size figures for Wisteria sinensis are open-ended in any case: 'Max Height Higher than 12 metres' and 'Max Spread wider than 8 metres' give no usable bound, reinforcing the null on both ends.",
         "is_edible set to TRUE but is conditional, not a bare edibility claim: NC State's Edibility field states only 'Flowers edible raw or cooked (stems removed).' -- the flowers alone, after removing the stems; no other part of the plant is described as food.",
         "The same NC State anchor page names toxicity for this species, required in unknowns whenever is_edible is true: 'This plant has low severity poison characteristics.' Poison Severity: Low. Poison Symptoms: 'Vomiting (sometimes with blood), diarrhea, depression.' Poison Toxic Principle: 'Lectin, wisterin glycoside.' Poison Part: Bark, Flowers, Leaves, Roots, Sap/Juice, Seeds, Stems. Causes Contact Dermatitis: No. The page also tags the species 'problem for dogs', 'problem for horses', and 'problem for cats'.",
         "attracts_pollinators set to TRUE from NC State's structured Landscape 'Attracts: Butterflies, Pollinators' field and its Play Value tag 'Attracts Pollinators'; the Wildlife Value note ('Very few wildlife species use wisteria because of the large seed size, whoever does attract butterflies') is consistent with this.",
         "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280632 returned a connection error (fetch status: error:ConnectError) -- this host refused the machine, so it was not read and no data was drawn from it.",
         "https://plants.ces.ncsu.edu/plants/wisteria-frutescens/ describes a different species (American Wisteria, Wisteria frutescens). It was searched for 'sinensis' and only returned comparative text about growth habit and twining direction relative to Wisteria sinensis -- no size, edibility, or pollinator data about Wisteria sinensis itself -- so nothing from it was used for any field.",
-        "The RHS Wisteria sinensis page (rhs.org.uk) was searched for 'Attracts', 'pollinators', 'Edible', 'Poison', and 'Toxic' and returned zero hits for all of them -- it carries no structured attracts/wildlife tag and no edibility or toxicity text, so it contributed nothing to is_edible or attracts_pollinators."
+        "The RHS Wisteria sinensis page (rhs.org.uk) was searched for 'Attracts', 'pollinators', 'Edible', 'Poison', and 'Toxic' and returned zero hits for all of them -- it carries no structured attracts/wildlife tag and no edibility or toxicity text, so it contributed nothing to is_edible or attracts_pollinators.",
+        "is_edible and attracts_pollinators left null: already landed on this record, not researched in this pass.",
+        "NC State's prose gives a narrower figure than its Dimensions block (10 to 20 feet high, 4 to 30 feet wide); the structured Dimensions block (10-25 ft height) was used, so the 300 inch max reach may exceed the prose's 240.",
+        "RHS (rhs.org.uk/plants/19126) lists Max Height 'Higher than 12 metres' and Max Spread 'wider than 8 metres'; both are open-ended with no usable upper bound, so they were not used for size (they are consistent with the NC State figures only as lower bounds).",
+        "Searched the NC State and RHS pages for 'Ultimate height', 'Max Height', 'Max Spread', 'Dimensions', 'Height:', 'Width:'; no cultivar-specific figures were used.",
+        "plantfinder.mobot.org and the W. frutescens NC State page were not read in this pass; the species page on NC State supplied all size and habit data."
       ],
       "citations": [
         {
@@ -626,10 +652,33 @@
           "source": "NC State Extension Gardener Plant Toolbox -- Wisteria sinensis",
           "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
           "quote": "Attracts Pollinators"
+        },
+        {
+          "claim": "climbs: NC State describes Chinese wisteria as a climbing, twining woody vine",
+          "source": "NC State Extension Gardener Plant Toolbox, Wisteria sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Chinese wisteria is a deciduous, climbing, woody vine in the Fabaceae (bean) family"
+        },
+        {
+          "claim": "mature_height_in 120-300 (NC State Height 10 ft. 0 in. - 25 ft. 0 in., converted to inches: 10 ft = 120, 25 ft = 300; for this climber it is the reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Wisteria sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Height: 10 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-360 (NC State Width 4 ft. 0 in. - 30 ft. 0 in., converted to inches: 4 ft = 48, 30 ft = 360)",
+          "source": "NC State Extension Gardener Plant Toolbox, Wisteria sinensis",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-sinensis/",
+          "quote": "Width: 4 ft. 0 in. - 30 ft. 0 in."
         }
       ],
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 360
     },
     {
       "common_name": "Jackman's Clematis",
@@ -683,12 +732,15 @@
         "is_houseplant — removed on audit: The only citation supporting is_houseplant=false quotes text ('Clematis can be trained to climb a wall, trellis, fence, arbor, porch, lamppost or other stationary structure... Containers.') that does not appear anywhere on the cited URL (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280) -- I fetched the full live page and confirmed zero matches for 'lamppost', 'trellis, fence', 'stationary structure', 'framework for small gardens', or 'scramble over old stumps'. A web search traced this exact phrasing to Missouri Botanical Garden's page for a different cultivar, Clematis 'Henryi', not 'Jackmanii'. This is reused sibling-cultivar boilerplate misattributed to the Jackmanii URL, so the field's only citation is invalid.",
         "soil_base — removed on audit: The NC State quote ('Use Jackman's clematis where it can grow vertically such as on a rock wall, a patio trellis, or trees and shrubs in a woodland area') does not establish in-ground garden_bed as opposed to container growing -- a trellis or rock wall can equally be container-based. I fetched the live NC State page and confirmed its own structured 'Landscape Location' field lists 'Container' as the first tag, ahead of Patio, Rock Wall, Vertical Spaces, and Woodland. The record's unknowns note cites this Container tag only to justify is_houseplant=false but never reconciles it against soil_base=garden_bed, effectively picking the vaguer narrative sentence while ignoring the source's own container designation for this specific field.",
         "name_note — removed on audit: The note asserts 'The hybrid-formula name \"Clematis × jackmanii\" is used as the working scientific name on both NC State Extension's and Missouri Botanical Garden's plant pages.' This is false for Missouri Botanical Garden: I fetched the live MOBOT page (kempercode=a280) and it is titled 'Clematis 'Jackmanii'' (cultivar-style name, matching what RHS calls accepted) -- a full-text search of the page for 'Clematis × jackmanii' / 'Clematis x jackmanii' returns zero matches anywhere. MOBOT never uses the hybrid-formula name at all, contradicting the note's premise that only RHS resolves accepted/synonym status while the other two sources are neutral, silent users of the hybrid-formula name.",
-        "mature_height_in and mature_spread_in (all four fields) left null: NC State's own Dimensions field (\"Height: 10 ft. 0 in. - 15 ft. 0 in.\", \"Width: 3 ft. 0 in. - 6 ft. 0 in.\") and RHS's Max Height 2.5-4 metres / Max Spread 0.5-1 metres are NOT used, per rule 4 -- NC State lists Climbing Method: Twining and Plant Type: Vine, and RHS lists Habit: Climbing, so this is a climber and its height/width figures describe how far it runs along a support, not its own stature.",
         "is_edible set false rather than null because NC State states, under Poison, that the plant has 'high severity' poison characteristics, names Toxic Principle protoanemonin, Poison Part Flowers and Fruits, and lists exposure routes 'Dermatitis, ingestion, inhalation' with symptoms including mouth ulcers, skin redness/burning, salivation, vomiting, and diarrhea; the plant is also tagged 'problem for dogs', 'problem for horses', 'problem for cats'. No page (NC State or RHS) states any part of this plant is grown or used for food, and the poisoning-by-ingestion language is treated as an is-not-edible statement.",
         "RHS separately notes under Botanical Details: 'Potentially harmful ... Skin irritant. Wear gloves and other protective equipment when handling. Pets (rabbits): Harmful if eaten.' -- consistent with the NC State toxicity finding, recorded here for completeness even though is_edible is not true.",
         "attracts_pollinators set true from NC State's structured Attracts field, which lists Bees, Butterflies, Hummingbirds unconditionally (not tied to seed-eating or browsing). RHS's own page was searched for both 'Attracts' and 'pollinators' and returned 0 hits for each -- RHS carries no pollinator claim for this cultivar page, positive or negative.",
         "plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a280 refused this machine (fetch status: error:ConnectError, 0 bytes) -- not read, and nothing from it is represented in this record.",
-        "RHS page was also searched for 'Ultimate height', 'Poisonous', 'Toxic', and 'Edible' -- all 0 hits; RHS carries no edibility or toxicity statement of its own for this record."
+        "RHS page was also searched for 'Ultimate height', 'Poisonous', 'Toxic', and 'Edible' -- all 0 hits; RHS carries no edibility or toxicity statement of its own for this record.",
+        "is_edible: already landed, not researched in this pass.",
+        "attracts_pollinators: already landed, not researched in this pass.",
+        "RHS and Missouri Botanical Garden pages not re-read; NC State's own species page supplied all size and habit figures.",
+        "NC State's published height of 10-15 ft is the plant's reach on support, since it is a climber."
       ],
       "citations": [
         {
@@ -792,10 +844,33 @@
           "source": "NC State Extension Gardener Plant Toolbox -- Clematis x jackmanii",
           "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
           "quote": "Dermatitis, ingestion, inhalation"
+        },
+        {
+          "claim": "climbs: NC State describes Jackman's clematis as a twining, perennial climber",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "a woody, deciduous, twining, perennial climber"
+        },
+        {
+          "claim": "mature_height_in 120-180 (reach as a climber; NC State Height 10 ft. 0 in. - 15 ft. 0 in., converted to inches: 10 ft x 12 = 120, 15 ft x 12 = 180)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Height: 10 ft. 0 in. - 15 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width 3 ft. 0 in. - 6 ft. 0 in., converted to inches: 3 ft x 12 = 36, 6 ft x 12 = 72)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/clematis-x-jackmanii/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
         }
       ],
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 180,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Chinese Hibiscus",
@@ -1485,6 +1560,7 @@
     "The audit caught a striking cross-species contamination: NC State's toxicity block for Ceropegia woodii (a non-woody succulent vine) turned out to be byte-for-byte identical to its Wisteria sinensis block elsewhere in this same batch, down to \"wisterin glycoside\" (a compound named for Wisteria) and \"Bark\" as a poisoned part -- a templating/caching defect on the source site, not real data, and correctly excluded from both records.",
     "Chinese Hibiscus landed with toxic_to_pets correctly null after a genuinely thorough four-source search found no toxicity data at all for this species -- not assumed toxic by Malvaceae-family association, not assumed safe by silence. Zero fields were removed by the audit on this record, a rare clean pass.",
     "Golden Bamboo (Phyllostachys aurea) continues this catalog's running theme of common-name naming traps -- true bamboo (a grass, Poaceae), unrelated to \"Lucky Bamboo\" (Dracaena sanderiana, already covered) the way Sago Palm isn't a true palm and Mini Monstera isn't a Monstera. It's also a running, rhizome-spreading, invasive-listed species in multiple states -- captured at length in unknowns even though the schema has no dedicated field for it, since it materially affects whether a home gardener should plant it directly in the ground versus in a contained pot.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."

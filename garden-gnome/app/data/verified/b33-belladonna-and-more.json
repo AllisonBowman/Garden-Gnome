@@ -220,11 +220,14 @@
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source addresses fertilizing this species, consistent with it not being cultivated.",
         "toxicity_detail intentionally omits NC State's dermatitis-related tags: the page's Problems list and Tags both include 'Contact Dermatitis' / '#skin irritation,' but the page's own structured field directly states 'Causes Contact Dermatitis: No' -- an internal inconsistency on NC State's own page. Since this contradiction isn't about pet toxicity specifically (the field the catalog tracks) it was left out of toxicity_detail rather than resolved either way.",
         "toxicity to humans is documented in more depth by NC State (e.g. the ethnobotany note that the plant was historically used medicinally despite being toxic) but is out of scope for the toxic_to_pets/toxicity_detail fields, which this catalog restricts to cats/dogs; that broader human-toxicity material was not blended in.",
-        "All four size fields (mature_height_in_min/max, mature_spread_in_min/max) left null per rule 4: this species is a climber, not a candidate for size fields yet. NC State lists Plant Type as 'Vine' and 'Shrub', Habit/Form as 'Climbing' and 'Spreading', Climbing Method 'Scrambler', tags include '#woody vine #perennial vines #climber', and describes it as 'a perennial vine or scrambling shrub'. RHS independently confirms: Habit 'Climbing', tagged 'Climber Wall Shrub', and describes it as 'A deciduous woody, or herbaceous climber reaching 2.5m.' Both pages do publish size-shaped numbers (NC State Dimensions Height: 2 ft. 0 in. - 10 ft. 0 in., Width: 2 ft. 0 in. - 8 ft. 0 in.; RHS Max Height 1.5-2.5 metres, Max Spread 0.5-1 metres) but per the rule these are not recorded because for a climber they may describe reach/run rather than the plant's own stature.",
         "is_edible set false on NC State's explicit 'non-edible' statement. The same page also documents toxicity in detail: 'This plant has high severity poison characteristics'; Poison Symptoms: 'Highly toxic, may be fatal if eaten. Nausea, vomiting, salivation, drowsiness, abdominal pain, low blood pressure, low heart rate, diarrhea, dilated pupils, weakness, respiratory depression; may be fatal to humans, pets, and livestock.'; Poison Toxic Principle: 'Solanine and other alkaloids'; tags include '#problem for cats #problem for children #problem for dogs #problem for horses #poisonous #poisonous if ingested #skin irritation'; and 'All parts of the bittersweet nightshade are toxic to humans, pets, and livestock.' RHS corroborates: Habit page notes 'Potentially harmful: Harmful if eaten. Wear gloves and other protective equipment when handling' and 'Pets (dogs): Harmful if eaten.'",
         "attracts_pollinators set true from NC State's structured 'Attracts:' field (Bees, Songbirds) and its narrative 'The flowers attract bumblebees and insects.' RHS's page for this species had zero hits for 'pollinator' and did not carry an attracts/wildlife field, so it offers no independent support either way; the true value rests on NC State alone.",
         "Neither page named this species' size on a per-cultivar basis, so rule 3 (cultivar sizes don't count) did not come into play.",
-        "Neither anchor page refused this machine; both plants.ces.ncsu.edu and www.rhs.org.uk fetched successfully via qc.py after clearing a stale cached ProxyError entry from an earlier sandboxed attempt."
+        "Neither anchor page refused this machine; both plants.ces.ncsu.edu and www.rhs.org.uk fetched successfully via qc.py after clearing a stale cached ProxyError entry from an earlier sandboxed attempt.",
+        "is_edible and attracts_pollinators already landed on this record; returned null by instruction, not researched.",
+        "Height is the NC State figure for a scrambling vine, treated as its reach on adjacent vegetation; the page does not say whether the 2-10 ft range assumes support.",
+        "The RHS page was not read for size in this pass; the NC State page supplied both size ranges, so no other source was needed.",
+        "The NC State page lists Climbing Method as Scrambler and says the plant has no tendrils; it climbs by scrambling over adjacent vegetation, not by twining or clinging."
       ],
       "citations": [
         {
@@ -298,10 +301,33 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/solanum-dulcamara/",
           "quote": "The plant is toxic, especially the leaves and berries, and is non-edible."
+        },
+        {
+          "claim": "mature_height_in 24-120 (NC State Height 2 ft. 0 in. - 10 ft. 0 in., converted to inches: 2 ft = 24, 10 ft = 120); this is the reach of a climbing vine",
+          "source": "NC State Extension Gardener Plant Toolbox, Solanum dulcamara",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-dulcamara/",
+          "quote": "Height: 2 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-96 (NC State Width 2 ft. 0 in. - 8 ft. 0 in., converted to inches: 2 ft = 24, 8 ft = 96)",
+          "source": "NC State Extension Gardener Plant Toolbox, Solanum dulcamara",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-dulcamara/",
+          "quote": "Width: 2 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State Quick ID Hints describe a semi-woody vine that climbs on adjacent vegetation",
+          "source": "NC State Extension Gardener Plant Toolbox, Solanum dulcamara",
+          "url": "https://plants.ces.ncsu.edu/plants/solanum-dulcamara/",
+          "quote": "low climbing, scrambling, sprawling semi-woody vine that climbs on adjacent vegetation"
         }
       ],
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 24,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 96
     },
     {
       "common_name": "Panicle Hydrangea",
@@ -1504,6 +1530,7 @@
     "One landing-time repair: Panicle Hydrangea's scientific_name_given was nulled by the audit for lacking its own dedicated citation, but that field is bookkeeping (the binomial the species was researched under), not a claim requiring citation traceability under the actual pipeline rules -- restored directly rather than left null, which would have been inconsistent with every other record in this catalog.",
     "Ginger and Blazing Star both landed scientific_name_accepted null on citation-quality grounds worth noting as a pattern: both citations were RHS genus-level description boxes with a bare \"Name Status Correct\" tag stapled on with no text actually tying that status to the specific species epithet -- the audit correctly refused to accept a page-URL-only inference (\"the URL slug says spicata, so this must be about spicata\") as sufficient under the literal re-derivation standard, even though the underlying facts are very likely correct.",
     "Horseradish's soil_base landed null after the audit found a genuine, undissolved disagreement it hadn't fully credited: RHS's own growing guide explicitly recommends AGAINST open-ground planting (\"forms a vigorous spreading clump that can be hard to control or remove\") and recommends containers instead, while NC State and MOBOT support garden-bed planting -- a real conflict with a stated hard-to-reverse consequence for whichever way a reader goes, not a case where one source is simply wrong.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

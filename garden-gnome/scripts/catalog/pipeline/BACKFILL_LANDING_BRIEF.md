@@ -29,7 +29,8 @@ or `no_research` are held back -- do not land them.
    and null the field(s) it alone supports.
 3. **Hold the rules the research agents were given.** Sizes are INCHES (a 6-ft shrub is 72, never 6). One published
    figure fills one end; never centre it into a range. A cultivar's size is not the species'. A climber (vine, liana,
-   anything that climbs) takes NO size at all -- all four size fields null, whatever the page says. `is_edible` true
+   anything a page says climbs) sets `climbs` true and lands its published size AS REACH (since 0020_climbs; before
+   that it took no size). `climbs` is never false; a sprawler, trailer or bramble no page calls a climber stays null. `is_edible` true
    needs a page saying it is grown or used for food, and if any page names a toxic part or a required preparation,
    that condition must be in unknowns. False needs a page denying it; silence is null. `attracts_pollinators` true
    needs bees, butterflies, moths, hummingbirds or other pollinators named -- seed-eating birds are not pollinators.
@@ -48,3 +49,16 @@ or `no_research` are held back -- do not land them.
 The merge_backfill plan totals (species written, fields written), every `review` line and what you did with it,
 every field you nulled at landing and why, the verify_quotes summary line per touched file, the invariants result
 and the new claim total.
+
+## Round 5 additions (species already asked once; `newPages`)
+
+- **New pages.** A citation URL the record did not already carry must be on a registered domain
+  (`app/data/claims/authorities.py` REGISTRY) and must be the species' OWN page -- not a genus page, a cultivar page
+  or another species'. Drop a citation that fails this and null what it alone supported. The orchestrator warms the
+  cache for new URLs before you start; a new-page citation verify_quotes SKIPs was never checked -- drop it.
+- **Stale notes.** After `--apply`, run
+  `.venv/bin/python scripts/catalog/pipeline/strip_stale_size_notes.py <result.json> [--apply]`: for every species
+  that now carries a size, it removes the earlier unknowns lines that said the size was deliberately left null
+  (the old climber rule, the indoor rule). It prints every line it removes; read them.
+- `have` fields were already landed and are skipped by the merge if re-reported unchanged; a DIFFERENT value for a
+  landed field is a merge problem -- null it in the result file (a backfill never overwrites).

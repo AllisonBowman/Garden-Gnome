@@ -165,6 +165,12 @@
           "source": "NC State Extension Gardener Plant Toolbox — Hedera helix",
           "url": "https://plants.ces.ncsu.edu/plants/hedera-helix/",
           "quote": "Leaves and berries are toxic to humans."
+        },
+        {
+          "claim": "climbs: English ivy is a vine that climbs trees and shrubs (NC State prose; Habit/Form also lists Climbing and Plant Type lists Vine)",
+          "source": "NC State Extension Gardener Plant Toolbox, Hedera helix",
+          "url": "https://plants.ces.ncsu.edu/plants/hedera-helix/",
+          "quote": "Its aggressive and vining nature causes English ivy to climb trees and shrubs and will eventually kill them."
         }
       ],
       "unknowns": [
@@ -191,9 +197,17 @@
         "attracts_pollinators left null: NC State's structured \"Attracts\" field lists only \"Songbirds\" (birds eating berries, not pollination). No page among the five (NC State checked fully; RHS houseplant page checked for 'Max Height'/'Max Spread'/'Ultimate height'/'Attracts'/'pollinator', all 0 hits; UF EDIS EP243 checked for 'Attracts'/'pollinator', 0 hits) mentions bees, butterflies, moths, or hummingbirds for this species, so no true/false support exists.",
         "is_edible set false on NC State's explicit Edibility field: \"Leaves and berries are toxic to humans.\" NC State also gives severity/detail: \"This plant has medium severity poison characteristics\", \"Ingestion of leaves can result in delirium, stupor, convulsions, hallucinations, fever and rash, vomiting, abdominal pain, hypersalivation, and diarrhea. Foliage is more toxic than berries. English ivy contains allergens that may affect humans.\", Poison Toxic Principle: \"Triterpenoid saponins and polyacetylene compounds\", Causes Contact Dermatitis: \"Yes\", and tags include \"problem for cats\", \"problem for dogs\", \"problem for horses\". UF EDIS EP243 was checked for Poison/Toxic/Edible and had 0 hits (no additional info).",
         "Both hgic.clemson.edu pages (growing-english-ivy-indoors and indoor-plants-cleaning-fertilizing-containers-light-requirements) returned http-403 and refused this machine via qc.py; they could not be read and are skipped rather than guessed at.",
-        "RHS ivy-as-a-houseplant page loaded successfully (title: 'How to grow ivy indoors / RHS Growing Guide') but had 0 hits for every searched term (Max Height, Max Spread, Ultimate height, Poison, Toxic, Attracts, pollinator, Edible); it appears to carry no size, toxicity, edibility, or pollinator data for this species on this page."
+        "RHS ivy-as-a-houseplant page loaded successfully (title: 'How to grow ivy indoors / RHS Growing Guide') but had 0 hits for every searched term (Max Height, Max Spread, Ultimate height, Poison, Toxic, Attracts, pollinator, Edible); it appears to carry no size, toxicity, edibility, or pollinator data for this species on this page.",
+        "is_edible: already landed, not researched, returned null per instructions.",
+        "attracts_pollinators: left null. NC State's Attracts field lists only Songbirds; no bees, butterflies or other pollinators named on any page read (searched NC State for 'Pollinator', 'butterfl' and 'Attracts'; searched RHS ivy-as-a-houseplant for 'pollinat'). Songbirds are not pollinators.",
+        "mature_height_in_min / mature_height_in_max / mature_spread_in_min / mature_spread_in_max: all four left null under the houseplant headroom rule. The only size published is NC State's outdoor Dimensions block, 'Height: 20 ft. 0 in. - 80 ft. 6 in.' (240-966 inches of climbing reach) and 'Width: 3 ft. 0 in. - 50 ft. 0 in.' (36-600 inches), which exceeds 120 inches. No indoor or container figure was found.",
+        "UF/IFAS EP243 (commercial interiorscape Hedera guide) was searched for Dimensions, Height:, Width: and ' ft'/inches: no species size figure. RHS ivy-as-a-houseplant was searched for Max Height, Max Spread, Ultimate, ' ft', feet and inches: none found.",
+        "Clemson HGIC growing-english-ivy-indoors refused this machine (http-403), so what it says about size, pollinators or climbing is unknown. The other two Clemson/RHS registered pages were not needed further; no species-specific NC State alternative beyond the anchor page exists.",
+        "No separate RHS or UF/IFAS species page for Hedera helix with a Max Height/Max Spread block was located, so the size fields have no source below 120 inches.",
+        "NC State also states under Edibility: 'Leaves and berries are toxic to humans.' and lists the plant as poisonous with medium severity, problem for cats, dogs and horses (relevant if is_edible is ever evaluated; it should not be true)."
       ],
-      "is_edible": false
+      "is_edible": false,
+      "climbs": true
     },
     {
       "common_name": "African Violet",
@@ -1111,6 +1125,18 @@
           "source": "Royal Horticultural Society",
           "url": "https://www.rhs.org.uk/plants/59390/chrysalidocarpus-lutescens/details",
           "quote": "Growing Conditions Loam Moisture Well–drained pH Acid or Neutral Position Partial shade Aspect North–facing or East–facing Exposure Sheltered"
+        },
+        {
+          "claim": "mature_height_in 72-84 (Clemson HGIC: areca palm grows 6 to 7 feet tall indoors, converted to inches x12; houseplant figure)",
+          "source": "Clemson HGIC Indoor Palms",
+          "url": "https://hgic.clemson.edu/factsheet/indoor-palms/",
+          "quote": "this very popular palm grows 6 to 7 feet tall indoors."
+        },
+        {
+          "claim": "is_edible false (NC State: heart-of-palm is cyanogenic and should not be consumed)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/chrysalidocarpus-lutescens/",
+          "quote": "The heart-of-palm (the meristem and young leaf buds) are cyanogenic and should not be consumed."
         }
       ],
       "unknowns": [
@@ -1124,8 +1150,17 @@
         "cool_rest_note - no source describes a cool or dry winter rest for this species.",
         "UF/IFAS publications FR309 and ST165 cover this species, but every edis.ifas.ufl.edu URL (including the PDF paths) now 301-redirects to ask.ifas.ufl.edu, which is outside the admissible domain list. Nothing was taken from them.",
         "Provenance warning: the first fetch of https://plants.ces.ncsu.edu/plants/dypsis-lutescens/ returned a Dracaena sanderiana page (wrong species, with its own 'problem for dogs / problem for cats / Saponins' toxicity block). All NC State values here were re-fetched from the canonical https://plants.ces.ncsu.edu/plants/chrysalidocarpus-lutescens/, which contains no Dracaena content.",
-        "soil_drainage — removed on audit: The value \"moderate\" is not stated by any cited source. The NC State quote reads \"Soil Drainage: Good Drainage Moist\" — \"Good Drainage\" and \"Moist\" are two separate entries from NC State's own drainage category list, and \"Good Drainage\" is the drainage entry. Every other admissible source agrees and says the same thing: NC State's care prose says \"Grow in well-drained potting soil\", RHS gives \"Moisture Well–drained\", MOBOT gives \"moist but well-drained soils\". Nothing anywhere says drainage is moderate. The citation label gives the derivation away — \"moderate (well-drained but kept moist)\" — the researcher averaged a drainage property against a moisture-retention property to land on a middle value, which is a category error: moisture retention is already carried by water_regime=keep_moist, and folding it into the drainage field double-counts it while downgrading the drainage rate below what all three sources state. The supported value is good/well-drained (whatever the schema's term for that is), not moderate."
-      ]
+        "soil_drainage — removed on audit: The value \"moderate\" is not stated by any cited source. The NC State quote reads \"Soil Drainage: Good Drainage Moist\" — \"Good Drainage\" and \"Moist\" are two separate entries from NC State's own drainage category list, and \"Good Drainage\" is the drainage entry. Every other admissible source agrees and says the same thing: NC State's care prose says \"Grow in well-drained potting soil\", RHS gives \"Moisture Well–drained\", MOBOT gives \"moist but well-drained soils\". Nothing anywhere says drainage is moderate. The citation label gives the derivation away — \"moderate (well-drained but kept moist)\" — the researcher averaged a drainage property against a moisture-retention property to land on a middle value, which is a category error: moisture retention is already carried by water_regime=keep_moist, and folding it into the drainage field double-counts it while downgrading the drainage rate below what all three sources state. The supported value is good/well-drained (whatever the schema's term for that is), not moderate.",
+        "is_edible set false because NC State states the heart-of-palm (terminal bud) is cyanogenic and should not be consumed. Full NC State text: 'Poison Severity: Low'; 'Poison Symptoms: The heart-of-palm (the meristem and young leaf buds) are cyanogenic and should not be consumed. Symptoms include nausea and vomiting.'; 'Poison Toxic Principle: cyanogenic glycoside(s)'; 'Causes Contact Dermatitis: No'; 'Poison Part: Leaves, Stems'. No searched page states any part is grown or used for food. NC State's 'Poisonous to Pets' and 'Problem for' searched: 0 hits.",
+        "attracts_pollinators left null: searched NC State for 'Attracts' and 'pollinator' (0 hits; its only Wildlife Value is 'In its native habitat, some birds will eat the fruits', which is seed/fruit eating, not pollination), RHS for 'pollinator' (0 hits).",
+        "climbs left null: NC State Habit/Form is Arching, Erect and RHS Habit is Bushy; no page calls it a climber.",
+        "mature_height_in 72-84 is the Clemson HGIC indoor figure (6 to 7 feet tall indoors, x12). Outdoor figures not used: NC State Dimensions Height 10 ft. 0 in. - 30 ft. 0 in. (120-360 in), and RHS Max Height 4-8 metres (about 157-315 in), exceed 120 in.",
+        "mature_spread_in_min/max left null: the only spread figures found are outdoor/landscape ones above the 120-inch cutoff at the high end (NC State Width: 8 ft. 0 in. - 15 ft. 0 in., 96-180 in; RHS Max Spread 2.5-4 metres, about 98-157 in); no page gives an indoor spread.",
+        "Not read: plantfinder.mobot.org and fieldreport.caes.uga.edu were not loaded in this pass. edis.ifas.ufl.edu returned ProxyError (sandbox denied the host), so no UF/IFAS page was read."
+      ],
+      "is_edible": false,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 84
     },
     {
       "common_name": "Baby Rubber Plant",
@@ -1566,6 +1601,7 @@
   "normalizations": [
     "2026-08-19: two defects fixed before landing, found by re-running the strict loader over the workflow's raw output rather than trusting the adversarial audit's pass alone. Haworthiopsis attenuata was missing common_name (a schema-required field the audit doesn't check); set to \"Zebra Plant\", the name NC State's own cited quote uses for it. Lucky Bamboo's light_fc_good=200 claim resolved to a citation quoting only \"100 to 150 ft-c\" -- the loader picks the first matching citation in array order, and the incomplete one came first; a second, genuine citation for the same claim already in the record quotes the full \"200 to 500 preferred\" legend, so this was a reorder, not a rewrite.",
     "2026-08-24: retroactive normalization from the new corpus-wide invariant test (tests/test_tranche_invariants.py). outdoor_sun_exposure held free-text source phrases from before the four-token convention settled; mapped onto the OutdoorSunExposure enum (partial/dappled -> part_shade, deep shade -> full_shade, 'shade' on Purple Coneflower -> full_shade per its own UF/IFAS 'plant grows in the shade' citation). Values only -- every citation quote is untouched.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }
