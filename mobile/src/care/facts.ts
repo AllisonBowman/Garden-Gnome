@@ -98,6 +98,7 @@ const RESOLVED_COLUMNS: (keyof Species)[] = [
   'is_houseplant', 'is_edible', 'attracts_pollinators',
   'mature_height_in_min', 'mature_height_in_max',
   'mature_spread_in_min', 'mature_spread_in_max',
+  'climbs',
 ];
 const LEGACY_COLUMNS: (keyof Species)[] = [
   'light_need', 'humidity_pct_min', 'humidity_pct_max', 'temp_f_min',
@@ -115,6 +116,14 @@ const feet = (v: number) => (v < 24 ? `${num(v)} in` : `${num(Math.round((v / 12
 
 /** A mature-size range. Null at both ends means nobody measured it, which is
  *  not the same as a plant with no size — so the row simply does not appear. */
+/** A climber's height is reach given support (0020), so it reads as how far
+ *  it climbs rather than how tall it stands. */
+function climb(lo: number | null | undefined, hi: number | null | undefined): string | null {
+  if (lo == null && hi == null) return null;
+  if (lo != null && hi != null) return `climbs ${feet(lo)}-${feet(hi)}`;
+  return lo != null ? `climbs from ${feet(lo)}` : `climbs up to ${feet(hi!)}`;
+}
+
 function span(lo: number | null | undefined, hi: number | null | undefined, word: string): string | null {
   if (lo == null && hi == null) return null;
   if (lo != null && hi != null) return `${feet(lo)}-${feet(hi)} ${word}`;
@@ -232,14 +241,18 @@ const CONCEPTS: { key: CareFactKey; label: string; join: string; read: (s: Speci
   // Size answers a different question from the care rows above: not "what
   // does it need from me" but "does it belong in this space".
   { key: 'size', label: 'Mature size', join: ', ', read: (s) => concept([
-    [span(s.mature_height_in_min, s.mature_height_in_max, 'tall'),
-      ['mature_height_in_min', 'mature_height_in_max']],
+    s.climbs
+      ? [climb(s.mature_height_in_min, s.mature_height_in_max),
+        ['mature_height_in_min', 'mature_height_in_max', 'climbs']]
+      : [span(s.mature_height_in_min, s.mature_height_in_max, 'tall'),
+        ['mature_height_in_min', 'mature_height_in_max']],
     [span(s.mature_spread_in_min, s.mature_spread_in_max, 'wide'),
       ['mature_spread_in_min', 'mature_spread_in_max']],
   ]) },
   { key: 'place', label: 'Where it lives', join: '; ', read: (s) => concept([
     [s.is_houseplant == null ? null : (s.is_houseplant ? 'grown indoors' : 'an outdoor plant'),
       ['is_houseplant']],
+    [s.climbs ? 'a climber that needs a support' : null, ['climbs']],
     [s.is_edible ? 'grown to eat' : null, ['is_edible']],
     [s.attracts_pollinators ? 'feeds pollinators' : null, ['attracts_pollinators']],
   ]) },

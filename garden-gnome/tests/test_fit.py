@@ -218,6 +218,33 @@ def test_a_zero_would_have_been_a_disaster_and_null_is_not_zero():
         Axis.footprint) == Verdict.unknown
 
 
+def test_a_climber_over_the_headroom_is_a_misfit_that_says_it_climbs():
+    """A 40 ft wisteria against a 7 ft fence: still a misfit, but the reason
+    is reach, and the sentence has to say what that costs the gardener."""
+    area = make_area(**OUTDOOR_BED, headroom_in=84)
+    f = fit.assess(make_species(climbs=True, mature_height_in_max=480), area)
+    found = next(x for x in f if x.axis == Axis.footprint)
+    assert found.verdict == Verdict.misfits
+    assert "climbs to 40 ft" in found.sentence
+    assert "cutting back" in found.sentence
+
+
+def test_a_climber_inside_the_headroom_fits_and_still_says_climbs():
+    area = make_area(**OUTDOOR_BED, headroom_in=96)
+    f = fit.assess(make_species(climbs=True, mature_height_in_max=72), area)
+    found = next(x for x in f if x.axis == Axis.footprint)
+    assert found.verdict == Verdict.fits
+    assert "climbs to" in found.sentence and "reaches" not in found.sentence
+
+
+def test_a_climber_with_no_size_is_unknown_and_says_why():
+    area = make_area(**OUTDOOR_BED, headroom_in=96)
+    found = next(x for x in fit.assess(make_species(climbs=True), area)
+                 if x.axis == Axis.footprint)
+    assert found.verdict == Verdict.unknown
+    assert "climber" in found.sentence.lower()
+
+
 # --- upkeep ----------------------------------------------------------------
 
 def test_upkeep_is_only_asked_when_the_gardener_asked_for_it():

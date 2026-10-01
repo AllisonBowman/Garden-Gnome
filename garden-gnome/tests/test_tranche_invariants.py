@@ -42,7 +42,7 @@ TRANCHE_FIELDS = frozenset({
     "water_regime", "water_dry_down_target", "water_check_depth_cm",
     "water_growing_days_est", "water_dormant_days_est", "water_estimate_basis",
     "fertilize_interval_days", "fertilize_active_months", "fertilize_strength",
-    "is_edible", "attracts_pollinators",
+    "is_edible", "attracts_pollinators", "climbs",
     "mature_height_in_min", "mature_height_in_max",
     "mature_spread_in_min", "mature_spread_in_max",
     "unknowns", "citations",

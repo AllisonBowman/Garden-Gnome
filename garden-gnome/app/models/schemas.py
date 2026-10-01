@@ -257,6 +257,7 @@ class SpeciesRead(SQLModel):
     is_houseplant: Optional[bool] = None
     is_edible: Optional[bool] = None
     attracts_pollinators: Optional[bool] = None
+    climbs: Optional[bool] = None
     mature_height_in_min: Optional[float] = None
     mature_height_in_max: Optional[float] = None
     mature_spread_in_min: Optional[float] = None

@@ -259,10 +259,14 @@ def _soil(species: Species, area: GrowingArea) -> Finding:
 
 
 # --- footprint -------------------------------------------------------------
-# The axis the catalog cannot answer yet, and the reason the fit feature needed
-# a research pass at all. Nothing in 600 researched records carries a mature
-# size, so this returns `unknown` almost everywhere today -- correctly, and
-# visibly, rather than silently passing everything through.
+# The axis the fit feature needed a research pass for: until the size backfill
+# no record carried a mature size. Where one is still missing this returns
+# `unknown` -- visibly, rather than silently passing the species through.
+#
+# A climber (0020) is compared the same way with a different meaning. Its
+# height is reach -- how far it runs given support -- so a 40 ft wisteria
+# against 7 ft of headroom is still a misfit, but the sentence says what that
+# means for a vine: it will need a support and cutting back, every year.
 
 def _inches_across(area_sqft: float) -> float:
     """The width of a square of that many square feet, in inches.
@@ -279,17 +283,21 @@ def _footprint(species: Species, area: GrowingArea) -> Finding:
     height = species.mature_height_in_max
     spread = species.mature_spread_in_max
 
+    climber = species.climbs is True
     if height is None and spread is None:
+        if climber:
+            return _unknown(axis, "A climber, but no source says how far it climbs.")
         return _unknown(axis, "No source gives this species a mature size yet.")
 
     problems = []
     fits = []
+    rises = "climbs to" if climber else "reaches"
     if height is not None and area.headroom_in is not None:
         if height > area.headroom_in:
             problems.append(
-                f"reaches {_ft(height)} and there is {_ft(area.headroom_in)} of headroom")
+                f"{rises} {_ft(height)} and there is {_ft(area.headroom_in)} of headroom")
         else:
-            fits.append(f"reaches {_ft(height)}, under the {_ft(area.headroom_in)} here")
+            fits.append(f"{rises} {_ft(height)}, under the {_ft(area.headroom_in)} here")
     if spread is not None and area.area_sqft is not None:
         across = _inches_across(area.area_sqft)
         if spread > across:
@@ -299,9 +307,13 @@ def _footprint(species: Species, area: GrowingArea) -> Finding:
             fits.append(f"spreads to {_ft(spread)}, inside the space")
 
     fields = ("mature_height_in_max", "mature_spread_in_max")
+    if climber:
+        fields += ("climbs",)
     if problems:
+        tail = (" It would need a support and hard cutting back every year to stay."
+                if climber else "")
         return _finding(axis, Verdict.misfits,
-                        "Outgrows this spot: " + "; ".join(problems) + ".",
+                        "Outgrows this spot: " + "; ".join(problems) + "." + tail,
                         species, *fields)
     if fits:
         return _finding(axis, Verdict.fits, "Fits the space: " + "; ".join(fits) + ".",

@@ -36,7 +36,11 @@ from .store import resolve_from_db
 #: claims that were already in the tranche and never had a column to go to,
 #: so this bump is what actually fills 507 rows; the other six arrive empty
 #: and fill as batches are re-researched. Every row is rewritten once.
-RESOLVER_VERSION = "4"
+#:
+#: "5": `climbs` lands (0020). A climber's height is its reach, and fifty
+#: climbers that took no size while the field could not say so are
+#: re-researched with it. Every row is rewritten once.
+RESOLVER_VERSION = "5"
 
 #: The only columns a Claim is allowed to set. An allowlist rather than a
 #: denylist: a claim naming `scientific_name` or `review_status` must not be
@@ -64,6 +68,8 @@ RESOLVED_FIELDS = frozenset({
     "is_houseplant", "is_edible", "attracts_pollinators",
     "mature_height_in_min", "mature_height_in_max",
     "mature_spread_in_min", "mature_spread_in_max",
+    # 0020: qualifies the height above -- for a climber it is reach.
+    "climbs",
 })
 
 #: Resolved fields a client never sees: verbatim passages held as audit

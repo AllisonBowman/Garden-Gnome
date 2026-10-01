@@ -109,3 +109,11 @@ shows — a plant nobody can judge is absent from it, not listed as fine.
 A Species put forward for a Growing area: zero Misfits *and* at least one
 confirmed fit. The second half is what keeps an unresearched species — nothing
 against it because nothing is known about it — out of a recommendation.
+
+**Reach**:
+What a climber's mature height means. A vine's published height is how far it
+runs given something to climb, not a stature it holds on its own, so where a
+Species `climbs` its height is read as reach: "climbs to 40 ft", never
+"reaches 40 ft". It is still compared against a Growing area's headroom — a
+40 ft wisteria on a 7 ft fence is a Misfit — but the finding says what that
+costs: a support, and cutting back every year.

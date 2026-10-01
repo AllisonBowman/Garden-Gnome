@@ -404,6 +404,11 @@ class Species(SQLModel, table=True):
     # batches are re-researched.
     is_edible: Optional[bool] = None
     attracts_pollinators: Optional[bool] = None
+    # A climber (0020). Where true, the mature height below is the REACH the
+    # source publishes -- how far the vine runs given something to climb --
+    # not a stature it holds on its own, and everything that shows it says
+    # "climbs to" rather than "reaches".
+    climbs: Optional[bool] = None
 
     # Mature size in inches, as a range because that is how sources publish it
     # ("3 to 6 feet"). The max is what decides whether a plant outgrows a

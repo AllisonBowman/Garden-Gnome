@@ -149,6 +149,8 @@ export interface Species {
   is_houseplant?: boolean | null;
   is_edible?: boolean | null;
   attracts_pollinators?: boolean | null;
+  /** A climber (0020): its mature height is reach given support, not stature. */
+  climbs?: boolean | null;
   mature_height_in_min?: number | null;
   mature_height_in_max?: number | null;
   mature_spread_in_min?: number | null;

@@ -11,7 +11,7 @@ const REPO = '/Users/allisonbowman/Developer/Garden-Gnome/garden-gnome'
 const SPECIES = args
 
 const FIELDS = [
-  'is_edible', 'attracts_pollinators',
+  'is_edible', 'attracts_pollinators', 'climbs',
   'mature_height_in_min', 'mature_height_in_max',
   'mature_spread_in_min', 'mature_spread_in_max',
 ]
@@ -23,6 +23,7 @@ const RECORD_SCHEMA = {
     scientific_name_accepted: { type: 'string' },
     is_edible: { type: ['boolean', 'null'] },
     attracts_pollinators: { type: ['boolean', 'null'] },
+    climbs: { type: ['boolean', 'null'] },
     mature_height_in_min: { type: ['number', 'null'] },
     mature_height_in_max: { type: ['number', 'null'] },
     mature_spread_in_min: { type: ['number', 'null'] },
@@ -40,7 +41,7 @@ const RECORD_SCHEMA = {
       },
     },
   },
-  required: ['common_name', 'scientific_name_accepted', 'is_edible', 'attracts_pollinators',
+  required: ['common_name', 'scientific_name_accepted', 'is_edible', 'attracts_pollinators', 'climbs',
     'mature_height_in_min', 'mature_height_in_max', 'mature_spread_in_min',
     'mature_spread_in_max', 'unknowns', 'citations'],
 }
@@ -84,13 +85,41 @@ function houseplantAudit(s) {
 `
 }
 
+// Round 5 (s.newPages): these species were already asked against their cited
+// pages and came back with nothing usable -- re-asking the same pages returns
+// the same nothing. So the researcher may also use the species' OWN page on a
+// registered authority; a domain outside the registry resolves to nothing at
+// load (authorities.py), so a page anywhere else would be wasted work.
+const REGISTERED = [
+  'plants.ces.ncsu.edu (NC State Extension Gardener Plant Toolbox)',
+  'www.rhs.org.uk (Royal Horticultural Society)',
+  'edis.ifas.ufl.edu (UF/IFAS Extension -- strong on houseplants and tropicals)',
+  'hgic.clemson.edu (Clemson HGIC)',
+  'extension.umd.edu (University of Maryland Extension)',
+  'extension.psu.edu (Penn State Extension)',
+  'fieldreport.caes.uga.edu (UGA Extension)',
+]
+
+function pageScope(s) {
+  const cited = s.urls.map((u) => '  ' + u).join('\n')
+  if (!s.newPages) {
+    return `READ ONLY THESE PAGES -- they are the exact pages this record is already cited to, so its evidence stays anchored to the same authorities:
+${cited}`
+  }
+  return `START WITH THESE PAGES -- the ones this record is already cited to:
+${cited}
+An earlier pass read exactly these and found no usable size. So you MAY ALSO find and read this species' OWN page on one of these registered authorities, and on no other site (a page anywhere else is discarded at load):
+${REGISTERED.map((d) => '  ' + d).join('\n')}
+Find a page with WebSearch or by its site's species URL pattern; it must be about ${s.latin} itself -- not a genus page, not a cultivar page, not a different species. Before you quote a new page, load it through qc.py (below) so it lands in the shared cache the quote checker reads; a quote from a page qc.py cannot load is unusable. For a houseplant, an indoor or container figure is exactly what you are looking for (UF/IFAS houseplant and foliage-plant sheets often give one).`
+}
+
 function researchPrompt(s) {
-  return `You are adding SIX fields to an already-landed record in an evidence-backed plant-care catalog (PlantAdvocate). The species is "${s.common}" (${s.latin}). Everything else about this record is already researched and cited; you are not re-doing it and must not touch it.
+  return `You are adding SEVEN fields to an already-landed record in an evidence-backed plant-care catalog (PlantAdvocate). The species is "${s.common}" (${s.latin}). Everything else about this record is already researched and cited; you are not re-doing it and must not touch it.
 
-THE ONLY FIELDS YOU RESEARCH: ${FIELDS.join(', ')}.
+THE ONLY FIELDS YOU RESEARCH: ${FIELDS.filter((f) => !(s.have || []).includes(f)).join(', ')}.${(s.have || []).length ? `
+ALREADY LANDED, return as null and do not research: ${s.have.join(', ')}. A backfill never overwrites a landed value.` : ''}
 
-READ ONLY THESE PAGES -- they are the exact pages this record is already cited to, so its evidence stays anchored to the same authorities:
-${s.urls.map((u) => '  ' + u).join('\n')}
+${pageScope(s)}
 
 HOW TO READ THEM. Run, from ${REPO}:
   .venv/bin/python scripts/catalog/pipeline/qc.py "<URL>" "<regex>" "<regex>" ...
@@ -103,11 +132,11 @@ THE RULES.
 1. MATURE SIZE IS IN INCHES. Convert yourself: 3 ft = 36, "60 ft. 0 in." = 720, "2 ft. 6 in." = 30. Put the published LOW end in mature_height_in_min and the HIGH end in mature_height_in_max; same for spread/width. Getting this wrong by a factor of twelve is the single likeliest defect in this task, so state the conversion in the citation's claim text.
 2. ONE FIGURE FILLS ONE END. A page that says only "to 6 ft" gives you a max of 72 and a min of null. NEVER centre a single figure into an invented range, and never make up the other end.
 3. A CULTIVAR'S SIZE IS NOT THE SPECIES'. If the figure is given for a named cultivar, it does not go in. Say so in unknowns.
-4. A CLIMBER GETS NO SIZE AT ALL, YET. If the plant is a vine, liana or other climber, leave ALL FOUR size fields null and say so in unknowns, whatever figures the page publishes. This is not a judgement call and it is not the page's fault: an extension "Height: 30-50 ft" for a climber is the distance it travels along whatever it is given, and mature_height_in has no way yet to say whether it means a plant's own stature or its run. Two earlier runs read the identical NC State field opposite ways on two vines, and a catalog where one vine has a height and its twin does not is worse than one where neither does. Set the flags as normal -- edibility and pollinator value are unaffected.
+4. A CLIMBER'S HEIGHT IS ITS REACH. If a page describes the plant as a vine, liana or climber (NC State "Habit/Form: Climbing" or "Plant Type: Vine", RHS "Habit: Climbing", or prose such as "a twining vine", "climbs by tendrils", "self-clinging"), set climbs TRUE with a citation whose claim contains the word "climbs" and whose quote is that habit text. Then record the size the page publishes AS PUBLISHED: for a climber, mature_height_in is how far it climbs given support -- "Height: 30 ft. 0 in. - 50 ft. 0 in." is a reach of 360-600 inches, and that is exactly what this field now means for a climber. Say "reach" in the size citation's claim text. Never set climbs FALSE: a plant no page calls a climber is null. A sprawling groundcover, a trailing basket plant or an arching bramble is NOT a climber unless a page says it climbs.
 5. BEFORE you set is_edible at all, search the anchor page for "Poison", "Toxic" and "Problem for" and read what comes back. Every edible-plant record in the last run that lost its value lost it because a toxic part was named on the very page the researcher cited and never reached unknowns. If the page names a poisonous part, a severity, a toxic principle, a preparation requirement or a pets warning, that text goes in unknowns WHENEVER is_edible is true -- all of it, not a summary.
 6. is_edible is TRUE only where a page states the plant or a named part of it is grown or used for food. FALSE only where a page states it is not edible or is poisonous to eat. Where no page addresses eating at all, NULL. Null is "no record" here, exactly as with toxicity -- never infer edibility from a genus of edibles. If edibility is CONDITIONAL (cooked only, ripe fruit only, one part edible while another is toxic), set true and put the whole condition in unknowns: a bare true on a plant with a poisonous part is the dangerous half-truth this field must not tell.
 7. attracts_pollinators is TRUE where a structured attracts/wildlife field or an unconditional statement names bees, butterflies, moths, hummingbirds or other pollinators. NC State's "Attracts" field and RHS's "attractive to pollinators" tag both count. Birds eating the SEED, or deer browsing the foliage, is NOT pollination -- do not read it as support. No mention at all is NULL, not false.
-8. EVERY non-null field needs a citation whose "claim" text CONTAINS THE FIELD NAME LITERALLY. For size, use the STEM so one citation covers both ends of a range: write the claim as "mature_height_in 720-960 (NC State Height 60 ft. 0 in. - 80 ft. 0 in., converted to inches)" and "mature_spread_in 480-960 (...)". For the two flags, the claim must literally contain "is_edible" or "attracts_pollinators".
+8. EVERY non-null field needs a citation whose "claim" text CONTAINS THE FIELD NAME LITERALLY. For size, use the STEM so one citation covers both ends of a range: write the claim as "mature_height_in 720-960 (NC State Height 60 ft. 0 in. - 80 ft. 0 in., converted to inches)" and "mature_spread_in 480-960 (...)". For the three flags, the claim must literally contain "is_edible", "attracts_pollinators" or "climbs".
 9. QUOTES ARE VERBATIM RENDERED TEXT, copied from qc.py's output. Never fabricated, never paraphrased, never a label glued to its value across a U+23CE boundary, never a truncated or extended tag list. Every quote is mechanically re-fetched and checked after you finish; one that is not on the page WILL be found.
 10. All nulls are real JSON null, never the string "null".
 11. unknowns: one line for anything decision-relevant that does not fit a field, one line for every field you deliberately left null and why, and one line for every page that refused this machine.
@@ -120,25 +149,26 @@ Return ONLY the JSON.`
 }
 
 function verifyPrompt(record, s) {
-  return `You are an adversarial auditor. A researcher has proposed six new field values for the already-landed catalog record "${s.common}" (${s.latin}). Find what is wrong. Do not rubber-stamp; a finding of "everything is fine" is only acceptable after you have actually re-read the pages.
+  return `You are an adversarial auditor. A researcher has proposed seven new field values for the already-landed catalog record "${s.common}" (${s.latin}). Find what is wrong. Do not rubber-stamp; a finding of "everything is fine" is only acceptable after you have actually re-read the pages.
 
 The proposed record:
 ${JSON.stringify(record, null, 2)}
 
 Re-read the pages yourself from ${REPO}:
   .venv/bin/python scripts/catalog/pipeline/qc.py "<URL>" "<regex>" ...
-Pages: ${s.urls.join(' , ')}
+Pages: ${s.urls.join(' , ')}${s.newPages ? ' -- plus any page the record above newly cites. A new page must be the species\' own page on a registered authority (plants.ces.ncsu.edu, www.rhs.org.uk, edis.ifas.ufl.edu, ask.ifas.ufl.edu, hgic.clemson.edu, extension.umd.edu, extension.psu.edu, fieldreport.caes.uga.edu); refute every value whose only support is a page on any other domain, a genus page, or another species\' page.' : ''}
 The page cache in scripts/catalog/.quote_cache is SHARED by every agent running right now: never delete, move or edit anything in it -- not one entry, never a glob. On 2026-09-27 two agents ran 'rm -f .quote_cache/*.json' and wiped the pages forty other agents were reading. A page that will not load is reported in unknowns, not repaired; a failed fetch is no longer cached, so simply retrying is safe.
 
 CHECK EVERY ONE OF THESE, and emit a finding per field you examined (refuted true or false):
 
 A. UNIT CONVERSION. Is a size value plainly the page's FEET figure left unconverted? A 60-80 ft tree recorded as 60-80 inches, or a 2 ft perennial as 2, is the defect this audit exists for. Re-derive every number from the quoted page text yourself.
 B. RANGE INTEGRITY. min <= max. A single published figure must NOT have become a range. Both ends must trace to text actually on the page.
-C. SCOPE. Is the size a cultivar's rather than the species'? Is an RHS "ultimate height" for a different taxon on a shared page? And REFUTE EVERY size value on a climber: a vine, liana or other climbing habit takes no size in this run at all, by rule, however clearly the page states one.
+C. SCOPE. Is the size a cultivar's rather than the species'? Is an RHS "ultimate height" for a different taxon on a shared page? Is it from a GENUS page or a different species' page? Refute any of those.
+C2. CLIMBERS. climbs TRUE needs a page that says the plant climbs (a habit field or prose: vine, liana, twining, tendrils, self-clinging). Refute it for a sprawler, trailer or arching bramble no page calls a climber, and refute climbs FALSE outright (it is never set false). A climber's size is its published reach and IS allowed -- do not refute a climber's height for being a vine.
 D. SILENCE IS NULL. Refute any is_edible or attracts_pollinators set to FALSE where the pages are simply silent. False is a claim that a source denied it; silence is null.
 E. POLLINATOR EVIDENCE. Refute attracts_pollinators true if its support is seed-eating birds, deer browsing, or general "wildlife value" prose that names no pollinator.
 F. EDIBILITY SAFETY. If is_edible is true and any page names a toxic part or a required preparation, the condition MUST appear in unknowns. Refute if it does not.
-G. CITATION LABELS. Every non-null field needs a citation whose claim contains the field name literally -- "mature_height_in" for the height pair, "mature_spread_in" for the spread pair, "is_edible", "attracts_pollinators". Refute a field whose citation is missing or mislabelled.
+G. CITATION LABELS. Every non-null field needs a citation whose claim contains the field name literally -- "mature_height_in" for the height pair, "mature_spread_in" for the spread pair, "is_edible", "attracts_pollinators", "climbs". Refute a field whose citation is missing or mislabelled.
 H. QUOTE PROVENANCE. Is each quote really on the page, verbatim, as one rendered run? Refute a quote containing U+23CE, a label glued to a value across a newline boundary, or text you cannot find with qc.py. When the value stands but the quote is defective, set refuted false and supply corrected_quote with page text you verified.
 
 ${houseplantAudit(s)}Set refuted TRUE to null the field. Use corrected_quote ONLY when the value survives and just its quote needs replacing. Be specific in reason: name the number, the page, and what it actually says.`

@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from app.data.claims.tranche import claims_from_record  # noqa: E402
 
-STEMS = ('is_edible', 'attracts_pollinators', 'mature_height_in', 'mature_spread_in')
+STEMS = ('is_edible', 'attracts_pollinators', 'climbs', 'mature_height_in', 'mature_spread_in')
 TEST = 'tests/test_claim_ingest.py'
 DOCS = '../docs/2026-09-02-catalog-truth-collection-run.md'
 

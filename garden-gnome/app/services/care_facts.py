@@ -41,6 +41,7 @@ RESOLVED_COLUMNS = (
     "is_houseplant", "is_edible", "attracts_pollinators",
     "mature_height_in_min", "mature_height_in_max",
     "mature_spread_in_min", "mature_spread_in_max",
+    "climbs",
 )
 
 # Wording for the categorical fields. A token like `chunky_aroid` is a column
@@ -290,9 +291,15 @@ def _size(sp: Species, tag: Tag) -> Told:
     question: not "what does it need from me" but "does it belong here".
     """
     lines = []
+    # A climber's published height is how far it runs given support, not a
+    # stature it holds on its own (0020) -- so it is named as reach.
+    climber = sp.climbs is True
+    height_fields = ("mature_height_in_min", "mature_height_in_max")
+    if climber:
+        height_fields += ("climbs",)
     for label, low, high, fields in (
-        ("Mature height", sp.mature_height_in_min, sp.mature_height_in_max,
-         ("mature_height_in_min", "mature_height_in_max")),
+        ("Climbs to" if climber else "Mature height",
+         sp.mature_height_in_min, sp.mature_height_in_max, height_fields),
         ("Mature spread", sp.mature_spread_in_min, sp.mature_spread_in_max,
          ("mature_spread_in_min", "mature_spread_in_max")),
     ):
@@ -306,6 +313,8 @@ def _size(sp: Species, tag: Tag) -> Told:
             span = f"up to {_feet(high)}"
         lines.append(f"- {label}: {tag(span, *fields)}")
 
+    if climber:
+        lines.append(f"- Habit: {tag('a climber -- it needs something to climb', 'climbs')}")
     if sp.is_houseplant is not None:
         grown = "grown indoors" if sp.is_houseplant else "an outdoor plant"
         lines.append(f"- Where it lives: {tag(grown, 'is_houseplant')}")

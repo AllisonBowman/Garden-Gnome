@@ -125,6 +125,16 @@ test('the cold row is a survival floor, kept apart from the damage point', () =>
   expect(by.cold).toBe('Survives to 0°F outdoors');
 });
 
+test('a climber reads its height as reach, not stature', () => {
+  const vine = minted({ climbs: true, mature_height_in_min: 360, mature_height_in_max: 600 });
+  const by = Object.fromEntries(careFactRows(vine).map((r) => [r.key, r.value]));
+  expect(by.size).toBe('Climbs 30 ft-50 ft');
+  expect(by.place).toBe('A climber that needs a support');
+  const shrub = minted({ mature_height_in_min: 36, mature_height_in_max: 72 });
+  expect(Object.fromEntries(careFactRows(shrub).map((r) => [r.key, r.value])).size)
+    .toBe('3 ft-6 ft tall');
+});
+
 test('a leading unit symbol keeps its case: "pH", never "PH"', () => {
   expect(values(minted({ soil_ph_min: 6, soil_ph_max: 6.5 }))).toBe('pH 6–6.5');
   expect(values(minted({ soil_ph_max: 6 }))).toBe('pH up to 6');

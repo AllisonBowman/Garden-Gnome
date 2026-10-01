@@ -36,7 +36,7 @@ VERIFIED = Path(__file__).resolve().parents[3] / "app" / "data" / "verified"
 #: filtered -- a record that contains a field it was told not to touch is not
 #: a record to trust the rest of.
 BACKFILL_FIELDS = (
-    "is_edible", "attracts_pollinators",
+    "is_edible", "attracts_pollinators", "climbs",
     "mature_height_in_min", "mature_height_in_max",
     "mature_spread_in_min", "mature_spread_in_max",
 )
@@ -91,6 +91,10 @@ def plan(payload: dict):
             if value is None:
                 continue
             if existing.get(field) is not None:
+                # A researcher re-reporting the value already landed is not a
+                # conflict -- only a different value is.
+                if existing.get(field) == value:
+                    continue
                 problems.append(
                     f"{name}: {field} already holds {existing[field]!r}; a backfill "
                     "never overwrites a landed value")
@@ -133,15 +137,22 @@ def apply(payload: dict, by_batch: dict) -> list[str]:
         existing, err = _find(data["records"], proposed["common_name"])
         if err:
             continue
-        wrote_any = False
+        written = []
         for field in BACKFILL_FIELDS:
             value = proposed.get(field)
             if value is not None and existing.get(field) is None:
                 existing[field] = value
-                wrote_any = True
-        if not wrote_any:
+                written.append(field)
+        if not written:
             continue
-        existing.setdefault("citations", []).extend(proposed.get("citations", []))
+        # Only the citations that support a field this merge actually wrote.
+        # A citation for a value that was already landed (and skipped above)
+        # would add a second claim for it -- evidence nobody audited for that
+        # purpose -- so it stays out.
+        stems = {f.removesuffix("_min").removesuffix("_max") for f in written}
+        existing.setdefault("citations", []).extend(
+            c for c in proposed.get("citations", [])
+            if any(stem in c.get("claim", "") for stem in stems))
         # The researcher's disclosures travel with the values they explain.
         new_unknowns = [u for u in proposed.get("unknowns", []) if u]
         if new_unknowns:
