@@ -50,7 +50,6 @@
         "soil_drainage — removed on audit: Value 'moderate' is not stated by either cited source. Live-fetched NC State page shows the literal tags 'Good Drainage' and 'Moist' (matching the quote used), and MOBOT's quote says 'well-drained loams' and 'Intolerant of wet soils.' Neither source uses 'moderate' or a synonym for it; NC State's 'Good Drainage' is its favorable/top drainage category, not obviously 'moderate.' This is an uncredited categorical translation, not a value the sources actually state.",
         "soil_base — removed on audit: The primary citation attached to this claim (NC State: 'Soil Texture: Loam (Silt) ... Soil Drainage: Good Drainage Moist') says nothing about planting location or bed type -- it only describes soil composition/drainage. The only textual support for 'garden_bed' is the secondary MOBOT citation's mention of planting 'in hills' 6-8' apart, so the citation presented as primary support for this field does not actually address it.",
         "is_houseplant — removed on audit: The MOBOT quote ('Seed can also be started indoors about 3 weeks before the last spring frost date, with young plants set out after last frost date') describes seed-starting logistics, not whether the mature plant is or isn't grown as a houseplant. It does not actually state that watermelon is not a houseplant -- the false value is inferred by the researcher, not asserted by the source, even though the researcher's own annotation frames it as if directly supported.",
-        "All four size fields left null: NC State Plant Toolbox tags Citrullus lanatus's Whole Plant Traits as 'Vine' and its Description calls it a 'prostrate, vining vegetable.' The page does publish Height: 0 ft. 4 in. - 0 ft. 8 in. and Width: 5 ft. 0 in. - 10 ft. 0 in., but per the climber rule these figures are not recorded because for a vine the field cannot distinguish the plant's own stature from the distance it runs.",
         "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279562&isprofile=1&basic=citrullus+lanatus refused this machine (fetch status: error:ConnectError, 0 bytes) -- skipped, not guessed.",
         "https://hgic.clemson.edu/factsheet/watermelons/ refused this machine (fetch status: http-403, 0 bytes) -- skipped, not guessed.",
         "https://www.rhs.org.uk/plants/157831/citrullus-lanatus/details carries no relevant content: searched 'Max Height', 'Max Spread', 'Ultimate height', 'Edible', 'Poison', 'Toxic', 'pollinator', and 'Attracts' -- zero hits for every term.",
@@ -58,7 +57,12 @@
         "Before setting is_edible, the NC State anchor page was searched for 'Poison', 'Toxic', and 'Problem for' -- zero hits for each, so no toxic part, severity, or preparation warning applies to this record.",
         "is_edible removed on audit: Rule F violation. NC State's Edibility field reads, in one run, \"The fruit can be eaten raw or pickled. The rind is edible after cooking.\" — the rind carries a required preparation (cooking). The record's unknowns instead assert the opposite: \"no toxic part, severity, or preparation warning applies to this record,\" reached by searching only for 'Poison', 'Toxic' and 'Problem for'. I reproduced those three searches (0 hits each, confirmed), but the preparation condition does not live under any of those words — it is in the Edibility text the researcher themselves quoted. Since the condition is named on a page and is absent from unknowns, is_edible is nulled. The value itself is well supported; the fix is to carry \"rind edible only after cooking\" into unknowns, after which is_edible true with this same NC State quote stands.",
         "is_edible=true is conditional: NC State states the flesh (fruit) can be eaten raw or pickled, but the rind is edible only after cooking — the condition (raw flesh vs. cooked rind) is the whole basis for the true value.",
-        "Before setting is_edible, searched the NC State anchor page for \"Poison\", \"Toxic\", and \"Problem\": 0 hits for \"Poison\" and \"Toxic\"; the 3 \"Problem\" hits refer only to insect and disease problems (mites, squash vine borers, aphids, blossom-end rot, fusarium wilt, weed management), not to any toxic part, severity, toxic principle, preparation requirement, or pets warning — no toxicity signal was found on the anchor page."
+        "Before setting is_edible, searched the NC State anchor page for \"Poison\", \"Toxic\", and \"Problem\": 0 hits for \"Poison\" and \"Toxic\"; the 3 \"Problem\" hits refer only to insect and disease problems (mites, squash vine borers, aphids, blossom-end rot, fusarium wilt, weed management), not to any toxic part, severity, toxic principle, preparation requirement, or pets warning — no toxicity signal was found on the anchor page.",
+        "is_edible and attracts_pollinators were already landed on this record and deliberately returned null (a backfill never overwrites a landed value).",
+        "mature_height_in 4-8 is the NC State figure as published (Height 0 ft. 4 in. - 0 ft. 8 in.), recorded as published even though the plant is flagged as a tendril-climbing vine; NC State also lists Habit/Form as Prostrate and Spreading, so this reads as height above the ground when sprawling, not a trellised reach. No page gave a climbing reach.",
+        "RHS https://www.rhs.org.uk/plants/157831/citrullus-lanatus/details loaded ok but a search for Dimensions, Height, Width, Max Height, Max Spread, Ultimate, Habit, vine, climb and tendril returned 0 hits, so it gives no size or habit text.",
+        "Clemson HGIC https://hgic.clemson.edu/factsheet/watermelons/ refused this machine (http-403); skipped, not guessed.",
+        "plantfinder.mobot.org and rhs.org.uk/fruit/melons/grow-your-own were not re-read; NC State supplied all five fields and they are the anchor source."
       ],
       "citations": [
         {
@@ -162,10 +166,33 @@
           "source": "NC State Extension Gardener Plant Toolbox — Citrullus lanatus",
           "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
           "quote": "The fruit can be eaten raw or pickled. The rind is edible after cooking."
+        },
+        {
+          "claim": "mature_height_in 4-8 (NC State Height 0 ft. 4 in. - 0 ft. 8 in., converted to inches: 4 in. and 8 in.); published as the plant's height, with climbing reach not given",
+          "source": "NC State Extension Gardener Plant Toolbox, Citrullus lanatus",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Height: 0 ft. 4 in. - 0 ft. 8 in."
+        },
+        {
+          "claim": "mature_spread_in 60-120 (NC State Width 5 ft. 0 in. - 10 ft. 0 in., converted to inches: 5 ft = 60, 10 ft = 120)",
+          "source": "NC State Extension Gardener Plant Toolbox, Citrullus lanatus",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Width: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "climbs true: NC State lists the plant as a vine with stems bearing curly tendrils (Plant Type Vine, Climbing Method Tendrils)",
+          "source": "NC State Extension Gardener Plant Toolbox, Citrullus lanatus",
+          "url": "https://plants.ces.ncsu.edu/plants/citrullus-lanatus/",
+          "quote": "Dense woolly hairs on round to angular stems with curly tendrils"
         }
       ],
       "attracts_pollinators": true,
-      "is_edible": true
+      "is_edible": true,
+      "climbs": true,
+      "mature_height_in_min": 4,
+      "mature_height_in_max": 8,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Blackberry",
@@ -677,12 +704,18 @@
         "soil_base: no source uses the term 'garden bed'; 'garden_bed' is inferred from every admissible source uniformly describing outdoor, in-ground vineyard/garden cultivation (spacing, planting depth, trellising/support systems) with no source mentioning container growing.",
         "is_houseplant: set false because every admissible source frames Vitis vinifera exclusively as an outdoor vine requiring full sun, structural support, and vineyard/garden-style pruning; none mentions container or indoor growing.",
         "cool_rest_note — removed on audit: The UMD 'Grape 100-600' chilling-hours figure is not Vitis-vinifera-specific. I fetched extension.umd.edu/resource/starting-home-fruit-garden directly: its own species table lists 'Grape | Vitis labrusca, Vitis vinifera | North America, Europe, SW Asia | Various hybrids' as one combined row, and the page separately notes Muscadine (Vitis rotundifolia) is 'too cold-sensitive for most of Maryland' — signaling the home-garden 'Grape' entries on this Maryland extension page are dominated by American/hybrid cultivars typically grown in that climate, not European wine grapes specifically. The cited '100-600' range is a blended figure spanning multiple species/hybrids under one common-name row, not a Vitis-vinifera-derived number, so presenting it in cool_rest_note as 'the chilling requirement...for grape' (in a record specifically about Vitis vinifera) overstates how specific this source is to the species being profiled — this is the genus/common-name-vs-species conflation the audit brief warns about. (The record does correctly keep this separate from chill_damage_f, and the 32-45°F parenthetical is genuinely sourced from the same UMD page's definition of chilling hours, so those parts are sound — only the species-specificity of the 100-600 figure is the issue.)",
-        "mature_height_in and mature_spread_in (all four fields) left null: Vitis vinifera is a woody vine/climber (NC State tags '#woody vine', Climbing Method: Tendrils; RHS Habit: Climbing, Genus note 'vigorous deciduous climbing shrubs with tendrils'), so per the climber rule no size field is recorded even though figures exist on the pages (NC State's own Dimensions/Height block was absent for this species -- searched 'Dimensions', 'Height', 'Width', 'Max Height', 'Max Spread', 'Ultimate height' and found no structured size block; RHS lists Max Height 'Higher than 12 metres' and Max Spread '2.5-4 metres', but for a climber that height is the distance the vine travels along its support, not the plant's own stature, so it is not usable as mature_height_in/mature_spread_in).",
         "attracts_pollinators left null: no page carries a structured Attracts/wildlife field or an unconditional statement naming bees, butterflies, moths, or hummingbirds for this species specifically. Searched 'Attracts', 'pollinator', 'bee', 'butterfl', 'hummingbird', 'Wildlife' on NC State (0 hits for Attracts/Wildlife) and RHS (0 hits for 'pollinator'). Penn State's backyard-grape-growing page only surfaces generic site navigation links ('Pollination and Bees') with no grape-specific pollinator-attraction statement in body text. UMD's 'Starting a Home Fruit Garden' discusses pollination requirements (bees needed for fruit set) generically across all listed fruit species, not as a grape-specific attracts-pollinators claim, so it was not used as support.",
         "is_edible true is not unconditional: RHS lists a pets warning under Botanical Details -- 'Potentially harmful -- Pets (dogs): Harmful if eaten whether fruits are edible or ornamental -- for further information and contact numbers regarding pets, see the HTA guide to potentially harmful plants.' No poisonous-part-to-humans, severity, or toxic-principle statement was found on the NC State anchor page (searched 'Poison', 'Toxic', 'Problem for' -- 0 hits each) or on RHS (searched 'Poisonous', 'Toxic' -- 0 hits each) regarding human consumption; the only toxicity-adjacent finding anywhere is the RHS dog-toxicity note above.",
         "https://hgic.clemson.edu/factsheet/bunch-grapes/ refused this machine (http-403 status from qc.py) -- skipped, not guessed.",
         "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=287551 refused this machine (connection error from qc.py) -- skipped, not guessed.",
-        "https://extension.umd.edu/resource/understanding-grapevine-bud-damage carried no relevant text for any of the six fields (searched 'pollinat', 'Toxic', 'Poison', 'edible' -- 0 hits each)."
+        "https://extension.umd.edu/resource/understanding-grapevine-bud-damage carried no relevant text for any of the six fields (searched 'pollinat', 'Toxic', 'Poison', 'edible' -- 0 hits each).",
+        "is_edible: already landed, not researched here, returned null by instruction.",
+        "attracts_pollinators left null: searched the NC State and RHS Vitis vinifera pages for Attracts, Pollinator, bee, butterfl, hummingbird and Wildlife; neither carries an attracts or pollinator statement. The other starting pages were not re-read by me.",
+        "NC State Plant Toolbox page has no Dimensions, Height or Width block for the plant itself (searched 'Dimensions', 'Height', 'Width'; only Fruit Width and Leaf Width appear), so NC State gives no size.",
+        "RHS Max Height reads 'Higher than 12 metres', an open-ended value with no usable upper bound, so it was not used; mature_height_in instead comes from the RHS description prose 'about 15-18m tall', which is the vine's reach as a climber (15 m x 39.37 = 590.6, 18 m x 39.37 = 708.7, rounded to 591 and 709). It is consistent with, not contradicted by, the 'Higher than 12 metres' field.",
+        "RHS mature_spread_in 98-157: Max Spread 2.5-4 metres converted at 39.37 in/m = 98.4 and 157.5, rounded down to whole inches.",
+        "RHS flags a pets (dogs) warning: 'Pets (dogs): Harmful if eaten whether fruits are edible or ornamental' (relevant to the already-landed is_edible record; not touched here).",
+        "plantfinder.mobot.org, extension.psu.edu, hgic.clemson.edu and the UMD pages were not re-read in this pass (prior pass found no usable size); no new registered-authority page beyond NC State and RHS was needed. No host refused this machine."
       ],
       "citations": [
         {
@@ -792,9 +825,32 @@
           "source": "NC State Extension Plant Toolbox: Vitis vinifera",
           "url": "https://plants.ces.ncsu.edu/plants/vitis-vinifera/",
           "quote": "Fruits edible raw, cooked, or dried to make raisins.  Some cultivars are grown to be fermented and used to make wine and vinegar."
+        },
+        {
+          "claim": "climbs: RHS Habit is Climbing, and the description says the woody plant climbs by tendrils",
+          "source": "RHS Vitis vinifera | grape vine",
+          "url": "https://www.rhs.org.uk/plants/134401/i-vitis-vinifera-i/details",
+          "quote": "climbing by tendrils"
+        },
+        {
+          "claim": "mature_height_in 591-709 (RHS 'about 15-18m tall' for this climber, i.e. its reach given support; 15 m and 18 m converted to inches at 39.37 in/m)",
+          "source": "RHS Vitis vinifera | grape vine",
+          "url": "https://www.rhs.org.uk/plants/134401/i-vitis-vinifera-i/details",
+          "quote": "about 15-18m tall"
+        },
+        {
+          "claim": "mature_spread_in 98-157 (RHS Max Spread 2.5-4 metres, converted to inches at 39.37 in/m = 98.4-157.5)",
+          "source": "RHS Vitis vinifera | grape vine",
+          "url": "https://www.rhs.org.uk/plants/134401/i-vitis-vinifera-i/details",
+          "quote": "Max Spread         2.5-4 metres"
         }
       ],
-      "is_edible": true
+      "is_edible": true,
+      "climbs": true,
+      "mature_height_in_min": 591,
+      "mature_height_in_max": 709,
+      "mature_spread_in_min": 98,
+      "mature_spread_in_max": 157
     },
     {
       "chill_damage_f": null,
@@ -1320,6 +1376,7 @@
   ],
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. First batch to run after the conflict-resolution and always-populate-scientific_name_accepted fixes from b10/b11 -- both held, and a batch-wide scan for the conflict pattern specifically found nothing. Watermelon's audit caught a subtler variant of source-overreach than seen before: is_houseplant was set false on a citation that only described seed-starting-indoors-for-later-outdoor-transplant, which the source never actually used to assert the plant isn't grown indoors -- the researcher's own annotation framed an absence of evidence as a stated fact. Grape's toxicity call is correctly captured (RHS: potentially harmful to dogs) despite being a common food crop, and correctly distinguished from a genuine conflict: the other sources are silent on pet toxicity, not contradicting, so nothing was nulled. This was the first successful run after a mid-run account-wide weekly usage limit forced a retry; the batch's 8 species were restored to the front of the collection queue and re-run in full once the limit cleared, rather than silently dropped.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

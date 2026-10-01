@@ -700,12 +700,15 @@
         "water_check_depth_cm/water_dry_down_target/water_growing_days_est/water_dormant_days_est/water_estimate_basis: no source gives a specific watering depth, dry-down target, or interval to base a day-count estimate on",
         "cool_rest_note: no source addresses a dormant or rest period",
         "water_regime — removed on audit: The record asserts water_regime = 'keep_moist' citing only MOBOT's prose 'grown as an annual in moist, well-drained soils.' But I fetched the raw MOBOT page and confirmed it carries its own dedicated structured attribute field, printed right alongside the 'Sun: Full sun' line the record DID cite for outdoor_sun_exposure: 'Water: Medium'. This is a distinct, source-native rating that the record never quotes, cites, or reconciles, and 'Medium' is not self-evidently the same thing as 'keep constantly moist' (MOBOT uses a Dry/Medium/Wet-style scale elsewhere, where 'Medium' is the middle/average category, not the wettest one). This is exactly the 'structured field vs. quoted prose' conflict the audit brief specifically instructs checking for on harm-capable fields -- the record picked a value from one part of the source while ignoring a directly conflicting structured field on the same page. Should be null or should surface the conflict rather than asserting keep_moist outright.",
-        "Moonflower is a climbing vine (NC State Plant Type: Vine; Habit/Form: Climbing; Climbing Method: Scrambler, Twining) — per the climber rule, all four size fields (mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max) are left null even though NC State publishes a structured Dimensions block (Height: 10 ft. 0 in. - 30 ft. 0 in.; Width: 3 ft. 0 in. - 6 ft. 0 in.) and body text says it \"can grow to 15 feet in height and 3 to 6 feet in width\" — for a vine that figure is ambiguous between plant stature and climbing run, so it is deliberately excluded, not overlooked.",
-        "mature_height_in_min/max and mature_spread_in_min/max left null for the reason above; RHS was checked as the alternate size source but returned no Max Height/Max Spread text on this fetch anyway (see below), so it would not have resolved the ambiguity even if the species were not a climber.",
         "RHS (https://www.rhs.org.uk/plants/101906/ipomoea-alba/details) was searched for both 'Max Height'/'Max Spread' and 'Ultimate height' wordings, plus Attracts, pollinator, edible, toxic, and poison terms — none were found on this fetch; the only species-relevant text returned was a generic Genus-level description, so RHS contributed no data or citations for this record.",
         "plantfinder.mobot.org refused the fetch (ConnectError) — skipped per instructions; no guess is made about what it would have shown.",
         "is_edible is set false, not null, because NC State explicitly names poisoning from the plant (see the is_edible citation) rather than staying silent on eating it. Full toxicity text found while checking Poison/Toxic before setting the field: 'This plant has  low severity  poison characteristics.' Poisonous to Humans: yes, Poison Severity: Low, Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations, Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine), Causes Contact Dermatitis: No, Poison Part: Seeds.",
-        "NC State also tags the plant 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' — a pets-toxicity warning worth keeping alongside the human toxicity data even though it doesn't map to a field in this schema."
+        "NC State also tags the plant 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' — a pets-toxicity warning worth keeping alongside the human toxicity data even though it doesn't map to a field in this schema.",
+        "is_edible and attracts_pollinators were already landed on this record and were deliberately returned null (a backfill never overwrites a landed value).",
+        "NC State page for Ipomoea alba lists 'Poisonous to Humans' with low severity (seeds; symptoms vomiting, large amounts of seeds may cause hallucinations; toxic principle indole alkaloids) and tags 'problem for dogs/horses/cats'; relevant to the already-landed edibility value, not touched here.",
+        "mature_height_in is the climbing reach given support (NC State Height 10 ft. 0 in. - 30 ft. 0 in. = 120-360 inches); the same page's prose says 'can grow to 15 feet in height' (180 in), which sits inside the structured range and was not used.",
+        "RHS page (rhs.org.uk/plants/101906/ipomoea-alba/details) loaded ok but searches for Dimensions, Height, Width, Max Height, Max Spread, Ultimate, Habit, Plant Type returned 0 hits, so it gave no size; not used.",
+        "plantfinder.mobot.org page was not fetched (skipped; not needed since NC State supplied the size)."
       ],
       "citations": [
         {
@@ -785,10 +788,33 @@
           "source": "NC State Extension Plant Toolbox — Ipomoea alba",
           "url": "https://plants.ces.ncsu.edu/plants/ipomoea-alba/",
           "quote": "Vomiting, large amounts of seeds may cause hallucinations"
+        },
+        {
+          "claim": "climbs: NC State describes Moonflower as a vertical climbing vine needing a support structure (Habit/Form Climbing, Plant Type Vine)",
+          "source": "NC State Extension Gardener Plant Toolbox, Ipomoea alba",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-alba/",
+          "quote": "Since Moonflower is a vertical climbing vine, it needs a support structure like a fence, arbor, or trellis to grow."
+        },
+        {
+          "claim": "mature_height_in 120-360 (NC State Height 10 ft. 0 in. - 30 ft. 0 in., converted to inches: 10 ft x 12 = 120, 30 ft x 12 = 360; for a climber this is its reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Ipomoea alba",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-alba/",
+          "quote": "Height: 10 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width 3 ft. 0 in. - 6 ft. 0 in., converted to inches: 3 ft x 12 = 36, 6 ft x 12 = 72)",
+          "source": "NC State Extension Gardener Plant Toolbox, Ipomoea alba",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-alba/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
         }
       ],
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "chill_damage_f": null,
@@ -888,6 +914,30 @@
           "quote": "Vomiting, large amounts of seeds may cause hallucinations",
           "source": "NC State Extension Gardener Plant Toolbox - Ipomoea purpurea",
           "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/"
+        },
+        {
+          "claim": "climbs: NC State describes it as a twining annual vine (Habit/Form Climbing, Climbing Method Twining), so it climbs",
+          "source": "NC State Extension Gardener Plant Toolbox, Ipomoea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/",
+          "quote": "It is a twining annual vine that can reach 6 to 10 feet tall and 3 to 6 feet wide in one season."
+        },
+        {
+          "claim": "climbs: RHS describes it as a twining climber (Habit Climbing)",
+          "source": "RHS Ipomoea purpurea, common morning glory",
+          "url": "https://www.rhs.org.uk/plants/56562/i-ipomoea-purpurea-i/details",
+          "quote": "A short-lived perennial twining climber to 5m tall, usually grown as an annual."
+        },
+        {
+          "claim": "mature_height_in 72-120 (NC State: can reach 6 to 10 feet tall in one season, converted to inches x12; this is the reach of a twining vine given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Ipomoea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/",
+          "quote": "It is a twining annual vine that can reach 6 to 10 feet tall and 3 to 6 feet wide in one season."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State: 3 to 6 feet wide in one season, converted to inches x12)",
+          "source": "NC State Extension Gardener Plant Toolbox, Ipomoea purpurea",
+          "url": "https://plants.ces.ncsu.edu/plants/ipomoea-purpurea/",
+          "quote": "It is a twining annual vine that can reach 6 to 10 feet tall and 3 to 6 feet wide in one season."
         }
       ],
       "common_name": "Common Morning Glory",
@@ -932,13 +982,18 @@
         "toxicity_detail — removed on audit: The severity/symptom/mechanism content is misattributed across target organism. NC State's page (confirmed by direct fetch) has two distinct sections: 'Poisonous to Humans' (Poison Severity: Low; Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations; Poison Toxic Principle: Indole alkaloids...) and a separate 'Problems:' section (Problem for Cats / Problem for Dogs / Problem for Horses / Weedy) that carries NO severity, symptom, mechanism, or plant-part detail at all. Citation #3's own quote literally begins with the words 'Poisonous to Humans:' yet its claim label repurposes that human-toxicology content to support toxic_to_pets/toxicity_detail. The UGA citation (#14) is the same problem one level worse: I fetched the actual PDF and its table is titled 'Ornamental Plants Reported To Be Toxic When Ingested by HUMANS' (confirmed on p.3 of the PDF) -- it is not a pet/animal toxicity table at all, on top of already being genus-level (Ipomoea spp.), which the record does disclose but the human-vs-pet mismatch it does not. As a result, toxicity_detail's lead sentence 'Seeds are the specifically implicated toxic part' is not established by any source that actually addresses pet toxicity -- the two sources that do speak to pets (RHS 'Pets: Harmful if eaten' and NC State's Problem-for-Cats/Dogs/Horses tags) name no plant part and no severity at all. The seed-specific attribution and the 'Low' severity rating are both imported wholesale from human-poisoning data without disclosing that gap, which is exactly the kind of over-reach the audit is meant to catch given seeds' well-documented toxicity/psychoactivity in this genus. toxic_to_pets=true itself is fine (independently supported by RHS's explicit pets line and NC State's Problem tags), but the elaborated toxicity_detail overstates what is actually known about the pet-specific picture.",
         "water_regime — removed on audit: This is the 'structured field contradicts the prose quote' trap the audit specifically warns about. I fetched the live MoBot page and its structured 'Growing Conditions' summary reads: Sun: Full sun / Water: Medium / Maintenance: Low -- MoBot's own middle/average moisture tier, not their wettest category. The record's citation #7 quotes only the prose culture line ('consistently moist, well-drained soils,' which is MoBot's standard boilerplate phrasing for plants in its Water:Medium tier) and on that basis alone settles on water_regime = keep_moist, without ever surfacing or reconciling MoBot's own 'Water: Medium' structured rating on the very same page. RHS's structured 'Moisture: Moist but well-drained' field (citation #11) is internally consistent with the RHS prose quoted, but 'moist but well-drained' is RHS's default/most-common moisture category for ordinary garden plants and does not resolve the tension with MoBot's explicitly moderate 'Medium' rating for this same species -- a genuine unflagged cross-source disagreement on a harm-capable field.",
         "2026-09-02 corpus-wide quote verification: soil_drainage 'moderate' rested on an NC State Soil Drainage quote claiming 'Good Drainage Occasionally Dry Occasionally Wet'; the live page carries only 'Good Drainage' and 'Moist' -- the same fabricated-tag pattern caught on Leyland Cypress in b42. Citation removed and the value left null rather than re-derived without an auditor.",
-        "All four mature size fields left null: Ipomoea purpurea is a twining climber (NC State: \"Climbing Method: Twining\"; RHS: \"Habit: Climbing\" and \"A short-lived perennial twining climber to 5m tall\"), so per the climber rule no height/spread figure is recorded even though RHS publishes Max Height 4-8 metres and Max Spread 0.5-1 metres and NC State has no Height/Width dimensions block at all.",
         "is_edible left null: none of the readable sources (NC State, RHS) states the plant or any part of it is eaten or grown for food. NC State's page has no Edible field (0 hits searching 'Edible'); RHS has no edibility statement either (0 hits searching 'Edible').",
         "Not used because is_edible is null, but recorded for the next researcher: NC State lists the plant as \"Poisonous to Humans\" with \"Poison Severity: Low\", \"Poison Symptoms: Vomiting, large amounts of seeds may cause hallucinations\", and \"Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine)\"; RHS separately flags \"Potentially harmful. Harmful if eaten\" for people and \"Harmful if eaten\" for pets.",
         "https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf refused this machine: qc.py's fetch path returns status 'pdf' with 0 bytes (the quote-checker pipeline does not fetch/extract PDF content), so it could not be searched for size, edibility, or pollinator text -- skipped rather than guessed.",
         "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b754 refused this machine: fetch returned status error:ConnectError, so it could not be searched -- skipped rather than guessed.",
         "is_edible set to false rather than left null: RHS states \"Potentially harmful\" / \"Harmful if eaten\" for both humans and pets; NC State states the plant \"has low severity poison characteristics,\" is \"Poisonous to Humans,\" Poison Severity: Low, Poison Symptoms: \"Vomiting, large amounts of seeds may cause hallucinations,\" Poison Toxic Principle: Indole alkaloids (Lysergic acid, lysergamide, elymoclavine and chanoclavine). No page on the citation list states any part of the plant is grown or used for food.",
-        "Searched the NC State page for 'Edible': 0 hits -- the page makes no edibility claim of its own; the edibility conclusion rests on its poison/toxicity fields plus RHS's 'Harmful if eaten' statement."
+        "Searched the NC State page for 'Edible': 0 hits -- the page makes no edibility claim of its own; the edibility conclusion rests on its poison/toxicity fields plus RHS's 'Harmful if eaten' statement.",
+        "is_edible and attracts_pollinators: already landed, returned null per instructions; not researched.",
+        "NC State's species page has no structured 'Dimensions:' block (searched Dimensions, Height, Max Height, Max Spread: 0 hits; 'Width' only matched fruit and leaf width). The size figures come from its prose description: 6 to 10 feet tall and 3 to 6 feet wide 'in one season'. Converted x12: 6 ft = 72 in, 10 ft = 120 in, 3 ft = 36 in, 6 ft = 72 in.",
+        "RHS page for the same species gives a different, larger figure: Max Height 4-8 metres (157-315 in) and Max Spread 0.5-1 metres (20-39 in), with 'to 5m tall' in its description. I recorded the NC State figures and did not mix the two sources. The larger RHS reach (UK-grown) is a discrepancy a reviewer may want to weigh.",
+        "Reach: height is the reach of a twining annual vine given support, in a single season. A perennial form in warm climates may reach more.",
+        "plantfinder.mobot.org and the UGA PDF (C-957_4.pdf) were not re-read in this pass; the task states an earlier pass found no usable size there. No other registered-host pages were consulted.",
+        "Toxicity note (not a field here): RHS lists the plant as 'Potentially harmful: Harmful if eaten', and NC State tags it 'problem for dogs/cats/horses'. is_edible is not set, so nothing is asserted about eating."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -947,7 +1002,12 @@
       "water_growing_days_est": null,
       "water_regime": null,
       "attracts_pollinators": true,
-      "is_edible": false
+      "is_edible": false,
+      "climbs": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Nasturtium",
@@ -995,13 +1055,18 @@
         "toxicity_detail: NC State's structured 'Problems:' field flags 'Problem for Cats', 'Problem for Dogs', and 'Problem for Horses' for this species, but the page gives no toxic compound, plant part, or symptom detail beyond the tag itself, and no other admissible source addresses animal toxicity for this species at all (RHS's 'Potentially harmful' note is specifically about human skin contact/handling, not animals, so it neither corroborates nor conflicts).",
         "is_houseplant — removed on audit: Value is false, but the record's own citation admits the basis is silence, not a statement: 'no source describes indoor cultivation.' The quoted NC State text ('It is popular in various types of gardens') only describes outdoor garden popularity — it never says the species is unsuited to indoor growing. This is exactly the pattern the audit's structural check #3 warns about: a negative claim (is_houseplant=false) manufactured from absence of evidence and presented as a settled field value rather than left null or hedged.",
         "outdoor_sun_exposure — removed on audit: One of the three citations behind full_sun/part_shade is University of Maryland Extension's page, which is titled generically 'Tropaeolum sp.' and covers the genus rather than confirming T. majus specifically — a fact the record itself flags as a reason to distrust that same UMD source for water_regime, but does not flag when reusing it here. The final full_sun+part_shade value happens to still be corroborated independently by NC State and RHS, so the value survives, but citing an admittedly non-species-confirmed source as plain supporting evidence in one field while treating it as suspect in another is an inconsistent evidentiary standard the record doesn't disclose.",
-        "All four size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null because Tropaeolum majus is documented as a climber: NC State lists Habit/Form as 'Climbing' (alongside Clumping, Mounding) and Climbing Method as 'Twining', and RHS describes the species itself as 'A strong-growing, annual climber which will scramble over the ground or up a support.' Per the climber rule this applies regardless of the figures published.",
         "NC State does publish a structured Dimensions block ('Height: 1 ft. 0 in. - 10 ft. 0 in.', 'Width: 1 ft. 0 in. - 3 ft. 0 in.') and RHS publishes 'Max Height 1.5-2.5 metres' / 'Max Spread 1.5-2.5 metres' -- neither was used, per the climber rule.",
         "UGA CAES (fieldreport.caes.uga.edu) gives Nasturtium (Tropaeolum majus, described there as 'bush and trailing types') a height range of 1 to 6 ft, distinct from its separate mention of 'Canary Bird Vine' (Tropaeolum peregrinum, a different species) as a vine on the same page. This figure was not used because two of the three readable anchor pages (NC State, RHS) independently classify T. majus itself as a climber.",
         "Because is_edible is true, note per the toxicity-honesty rule: NC State's tag list for this species includes '#problem for dogs #problem for horses #problem for cats' alongside its edible-garden tags. The page's body text does not explain which part, what severity, or what toxic principle underlies these pets-warning tags -- only the tags themselves were found. Searches for 'Poison' and 'Toxic' on the NC State anchor page returned zero hits.",
         "NC State also lists common insect and disease problems for this species (aphids, mealybugs, whiteflies; Southern Bacterial Wilt) -- these are cultivation/pest problems, not a toxicity finding, and are not related to the pets-warning tags above.",
         "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ConnectError) and could not be read; nothing from it is recorded in this record.",
-        "is_edible removed on audit: Value is well sourced (NC State 'All parts, with exception of the roots, are edible.  It has a spicy flavor.' verifies verbatim; UMD 'Both the flowers and foliage have a peppery flavor and can be added to fresh salads.' verifies verbatim), but it fails the edibility-safety rule. The RHS anchor page carries a Botanical Details field reading 'Potentially harmful      Skin allergen.  Wear gloves and other protective equipment when handling' (verified verbatim on https://www.rhs.org.uk/plants/85362/i-tropaeolum-majus-i/details) -- a named harm plus a required handling precaution, and it appears nowhere in unknowns. The researcher only searched NC State for 'Poison'/'Toxic' and never checked RHS, so the unknowns assert the pet tags were the only warning found when they were not. Separately, NC State's own edibility sentence excludes the roots, and that exclusion is also absent from unknowns. Re-land is_edible: true only once both conditions (RHS skin-allergen/gloves warning, roots excepted from edibility) are written into unknowns."
+        "is_edible removed on audit: Value is well sourced (NC State 'All parts, with exception of the roots, are edible.  It has a spicy flavor.' verifies verbatim; UMD 'Both the flowers and foliage have a peppery flavor and can be added to fresh salads.' verifies verbatim), but it fails the edibility-safety rule. The RHS anchor page carries a Botanical Details field reading 'Potentially harmful      Skin allergen.  Wear gloves and other protective equipment when handling' (verified verbatim on https://www.rhs.org.uk/plants/85362/i-tropaeolum-majus-i/details) -- a named harm plus a required handling precaution, and it appears nowhere in unknowns. The researcher only searched NC State for 'Poison'/'Toxic' and never checked RHS, so the unknowns assert the pet tags were the only warning found when they were not. Separately, NC State's own edibility sentence excludes the roots, and that exclusion is also absent from unknowns. Re-land is_edible: true only once both conditions (RHS skin-allergen/gloves warning, roots excepted from edibility) are written into unknowns.",
+        "is_edible is conditional/part-specific: NC State says 'All parts, with exception of the roots, are edible.  It has a spicy flavor.' and 'Leaves, buds, flowers, pods, and seeds are edible with a spicy, peppery taste. Flowers are a colorful addition to salads, and seeds can be used as a substitute for capers.  The buds contain mustard oil and are used as a seasoning.' Roots are not listed as edible.",
+        "Toxicity/pets on the NC State anchor page: searched for 'Poison' and 'Toxic' (0 hits); 'Problem for' hits are the tags '#problem for dogs #problem for horses #problem for cats' with no severity, toxic part or toxic principle stated on the page. RHS lists 'Potentially harmful  Skin allergen.  Wear gloves and other protective equipment when handling'.",
+        "Size is a wide range because NC State covers both forms: 'Available in both climbing and bushy forms.  The bushy dwarf types range from 12\" tall and 2' wide.' and 'The climbing types that can grow up to 10' tall'. The Height 1-10 ft (12-120 in) is recorded as published, reflecting the climbing reach at the upper end. RHS gives a narrower, different figure (Max Height 1.5-2.5 metres = 59.1-98.4 in; Max Spread 1.5-2.5 metres = 59.1-98.4 in) which was not used because NC State is the anchor; the two sources disagree on spread (36 in vs ~98 in max).",
+        "attracts_pollinators deliberately returned null: already landed, not researched (NC State also lists Attracts: Butterflies, Hummingbirds, Pollinators).",
+        "Pages already on the record (extension.umd.edu, fieldreport.caes.uga.edu) were not re-read for size; an earlier pass found no usable size there. plantfinder.mobot.org was not fetched or relied on; no guesses made about its content.",
+        "No separate UF/IFAS, Clemson or Penn State page was sought because NC State and RHS both carry a species-specific size block."
       ],
       "citations": [
         {
@@ -1111,9 +1176,51 @@
           "source": "RHS — Tropaeolum majus",
           "url": "https://www.rhs.org.uk/plants/85362/i-tropaeolum-majus-i/details",
           "quote": "Plants for pollinators"
+        },
+        {
+          "claim": "is_edible true: NC State states all parts except the roots are edible (conditional: roots excluded; see unknowns)",
+          "source": "NC State Extension Gardener Plant Toolbox, Tropaeolum majus",
+          "url": "https://plants.ces.ncsu.edu/plants/tropaeolum-majus/",
+          "quote": "All parts, with exception of the roots, are edible."
+        },
+        {
+          "claim": "is_edible true: leaves, buds, flowers, pods and seeds are edible per NC State",
+          "source": "NC State Extension Gardener Plant Toolbox, Tropaeolum majus",
+          "url": "https://plants.ces.ncsu.edu/plants/tropaeolum-majus/",
+          "quote": "Leaves, buds, flowers, pods, and seeds are edible with a spicy, peppery taste."
+        },
+        {
+          "claim": "climbs true: NC State describes the plant as available in climbing forms; climbing types reach up to 10 ft",
+          "source": "NC State Extension Gardener Plant Toolbox, Tropaeolum majus",
+          "url": "https://plants.ces.ncsu.edu/plants/tropaeolum-majus/",
+          "quote": "The climbing types that can grow up to 10' tall can quickly cover fences, trellises, and banks."
+        },
+        {
+          "claim": "climbs true: RHS calls it an annual climber that scrambles up a support",
+          "source": "Royal Horticultural Society, Tropaeolum majus",
+          "url": "https://www.rhs.org.uk/plants/85362/i-tropaeolum-majus-i/details",
+          "quote": "A strong-growing, annual climber which will scramble over the ground or up a support."
+        },
+        {
+          "claim": "mature_height_in 12-120 (NC State Height 1 ft. 0 in. - 10 ft. 0 in., converted to inches: 1 ft = 12, 10 ft = 120; for the climbing form this is its reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Tropaeolum majus",
+          "url": "https://plants.ces.ncsu.edu/plants/tropaeolum-majus/",
+          "quote": "Height: 1 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Width 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1 ft = 12, 3 ft = 36)",
+          "source": "NC State Extension Gardener Plant Toolbox, Tropaeolum majus",
+          "url": "https://plants.ces.ncsu.edu/plants/tropaeolum-majus/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "is_edible": true,
+      "climbs": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Pansy",
@@ -1489,6 +1596,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Two findings worth keeping in mind for future name-resolution work. Annual Geranium's scientific_name_accepted was set to Pelargonium x hybridum on a single source's say-so, but the audit fetched the record's other cited sources directly and found RHS explicitly rates the name status 'Unresolved' while Clemson, MOBOT and UF/IFAS all still use the given name (x hortorum) as their working name -- a genuine cross-source dispute, not a settled reclassification. Nulled, along with a name_note whose own final sentence contradicted the evidence it had just laid out. Petunia's resolution to Petunia x atkinsiana was left alone as a materially different situation: one source (RHS) makes an explicit accepted/synonym determination that the other sources are simply silent about, not actively disputing.",
     "Common Morning Glory's toxicity handling separated two questions the source itself keeps apart: NC State's page has a distinct 'Poisonous to Humans' section (with mechanism and symptoms) and a separate, undetailed 'Problem for Cats/Dogs/Horses' tag. The record had cross-attributed the human section's specific content to toxicity_detail; the audit correctly stripped only that text, leaving toxic_to_pets=true standing on the tag that actually supports it. Nasturtium's toxic_to_pets=true rests on a bare but specific three-animal tag with no mechanism given -- thinner than most, but a different evidentiary situation from Kohlrabi's b10 case, where the tag named only an animal (horses) unrelated to the field's actual question and left cats/dogs unaddressed.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."

@@ -1228,6 +1228,12 @@
           "quote": "Occasionally Wet",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/elaeagnus-pungens/"
+        },
+        {
+          "claim": "climbs TRUE: NC State Plant Toolbox lists Vine among the Plant Type values for Elaeagnus pungens (the plant climbs as a vine-like shrub per Plant Type: Vine)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/elaeagnus-pungens/",
+          "quote": "Vine"
         }
       ],
       "common_name": "Thorny Elaeagnus",
@@ -1264,14 +1270,22 @@
         "Soil pH left null: NC State Extension tags this species across three categorical bins -- Acid (<6.0), Neutral (6.0-8.0), and Alkaline (>8.0) -- without giving precise numeric endpoints for the tolerated range, so soil_ph_min/soil_ph_max are left null rather than guessing exact numbers.",
         "Water regime left null: Missouri Botanical Garden's Culture note describes 'average, medium moisture, well-drained soils,' says established plants are 'very drought tolerant,' and advises to avoid 'wet, poorly drained soils' -- this qualitative picture doesn't clearly resolve to any single one of the four water_regime tokens (which are calibrated for container/houseplant watering cadence), so water_regime is left null.",
         "is_houseplant=false is inferred from the uniform outdoor-landscape framing in every admissible source (USDA zone 7-9/7a-9b winter hardiness outdoors; used as a large hedge/screen/windbreak/erosion-control shrub) rather than from any source explicitly stating it is not grown indoors -- no admissible source discusses indoor/houseplant culture for this species at all.",
-        "Several schema fields have no admissible-source coverage for this species because every source treats it strictly as an outdoor landscape/garden shrub rather than a houseplant: chill_damage_f, cool_rest_note, day/night temperature ranges, humidity_need and humidity percentages, light_fc_min/light_fc_good, direct_sun_hours_max, water_dry_down_target, water_check_depth_cm, water_growing_days_est/water_dormant_days_est, water_estimate_basis, and all fertilize_* fields. Left null rather than estimated from general plant knowledge."
+        "Several schema fields have no admissible-source coverage for this species because every source treats it strictly as an outdoor landscape/garden shrub rather than a houseplant: chill_damage_f, cool_rest_note, day/night temperature ranges, humidity_need and humidity percentages, light_fc_min/light_fc_good, direct_sun_hours_max, water_dry_down_target, water_check_depth_cm, water_growing_days_est/water_dormant_days_est, water_estimate_basis, and all fertilize_* fields. Left null rather than estimated from general plant knowledge.",
+        "mature_height_in and mature_spread_in left null: NC State page for Elaeagnus pungens was loaded through qc.py and searched for 'Dimensions', 'Height' and 'Width'; the only Width hit is Fruit Width and there is no plant Height or Dimensions block.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279924 refused this machine (fetch status error:ConnectError); not read, not guessed.",
+        "RHS species URL https://www.rhs.org.uk/plants/elaeagnus-pungens returned http-404; UF/IFAS EDIS guess returned ProxyError and Clemson HGIC returned http-403, so no alternative size source was found. No other registered-host page was located for this species.",
+        "is_edible left null: NC State page was searched for 'Edible', 'Poison', 'Problem for'; none present. Its tags include '#food source soft mast fruit' but that describes wildlife food, and the Wildlife Value field says fruits are a food source for birds, so no page states human edibility.",
+        "attracts_pollinators left null: NC State 'Attracts' field lists only Songbirds; searches for 'bee' and 'butterfl' returned 0 hits. Bird use of fruit is not pollination.",
+        "climbs is true on the strength of NC State listing 'Vine' among Plant Type values (Perennial, Shrub, Vine), but the same page's Habit/Form is Arching, Dense, Erect, Spreading and its prose says 'Vine-like shrub', so it is a mixed shrub/vine; no reach figure is published, so no size is recorded.",
+        "NC State also tags the plant #aggressive, #weedy, #thorns and lists it on invasive plant lists (non-toxic for cats, dogs and horses per tags); decision-relevant for recommendations."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "climbs": true
     }
   ],
   "audit_summary": [
@@ -1310,6 +1324,7 @@
   ],
   "normalizations": [
     "2026-08-23: twentieth batch of the \"blind spots\" pass -- Virginia Creeper (a deliberate identification-confusion companion to Poison Ivy, already in this catalog -- confirmed distinct toxicity mechanisms, oxalic-acid GI risk versus urushiol contact dermatitis, with no content bleed), American Beech, Eastern Cottonwood, and five common Southern landscape shrubs (Red Tip Photinia, Chinese Fringe Flower, Tea Olive, Japanese Pittosporum, Thorny Elaeagnus). Virginia Creeper's toxic_to_pets=true rests on Clemson's citation naming dogs specifically ('moderately toxic to humans and dogs') -- properly scoped per this catalog's rule. American Beech's toxic_to_pets=true rests on RHS naming dogs specifically ('Pets (dogs): Harmful if eaten') -- also properly scoped, a plant most people wouldn't expect to carry a toxicity flag. This batch caught an entirely new defect: Chinese Fringe Flower's raw record carried an extraneous field, name_note_placeholder_unused, not part of this catalog's schema at all -- caught by extending the independent landing-time verification script to diff each record's keys against the full known field list, not just check values within known fields; deleted outright rather than nulled, since it isn't a real field. Three records had name_note refuted for bundling multiple sub-claims where some had real accuracy defects, not just citation gaps -- all three repaired by keeping only the sub-claims the audit confirmed clean and dropping the rest, matching this catalog's now-established per-sub-claim repair discipline (b35, b37): Photinia's name_note was trimmed to its one clean sub-claim (confusability with Camellia japonica/Photinia glabra/Photinia serratifolia) after the audit found the RHS cultivar-name claim silently dropped its 'Red Robin' qualifier and the parentage/nursery-origin claim misattributed a specific botanical name to Missouri Botanical Garden that MoBOT's page doesn't use; Chinese Fringe Flower's name_note kept its two clean sub-claims (former Hamamelis chinensis synonym; RHS's 'Chinese witch hazel' name) and added a new UF/IFAS citation for the 'Chinese Fringe Bush' name using the auditor's own confirmed publication title, dropping an uncited witch-hazel genus-distinction aside entirely; Tea Olive's name_note kept its genus-breadth framing and Clemson corroboration, widened its Missouri Botanical Garden citation to the source's full common-name list per the auditor's own confirmed quote, and dropped its NC State sub-claim outright after the audit found it misattributed 'Fortune's tea olive' (the source actually says 'Fortune's osmanthus') and invented a cold-hardiness distinction the source never mentions -- a genuine factual error, not merely an uncited-but-true gap. Virginia Creeper's and (following b37's Bugleweed precedent) no other record's scientific_name_accepted were left null on the same conservative standard: consistent usage across sources isn't the same as an explicit statement of current taxonomic acceptance.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."

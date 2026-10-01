@@ -153,6 +153,24 @@
           "source": "NC State Extension Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/lonicera-sempervirens/",
           "quote": "The inedible rounded red berries form in late summer to early fall and can be ornamentally attractive."
+        },
+        {
+          "claim": "climbs: NC State lists Habit/Form Climbing, Climbing Method Twining, and describes the species as a twining vine",
+          "source": "NC State Extension Gardener Plant Toolbox, Lonicera sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-sempervirens/",
+          "quote": "This is a twining vine that can reach 10 to 20 feet tall."
+        },
+        {
+          "claim": "mature_height_in 120-240 (NC State Height 10 ft. 0 in. - 20 ft. 0 in., converted to inches at 12 in/ft; for this climber it is the reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Lonicera sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-sempervirens/",
+          "quote": "Height: 10 ft. 0 in. - 20 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width 3 ft. 0 in. - 6 ft. 0 in., converted to inches at 12 in/ft)",
+          "source": "NC State Extension Gardener Plant Toolbox, Lonicera sempervirens",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-sempervirens/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
         }
       ],
       "common_name": "Trumpet Honeysuckle",
@@ -193,10 +211,14 @@
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: NC State's Description only warns that 'High nitrogen fertilizer will produce foliage at the expense of flowers,' a fertilizer-type caution rather than a schedule, interval, or dilution strength.",
         "RHS toxicity quote retains its double spaces exactly as rendered on the fetched page (two adjacent text nodes).",
         "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/lonicera-sempervirens/, https://www.rhs.org.uk/plants/91239/lonicera-sempervirens/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d990, https://edis.ifas.ufl.edu/fp354, https://ask.ifas.ufl.edu/fp354, https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-957_4.pdf); none found, so the value stays null. Audited live.",
-        "All four size fields (mature_height_in_min/max, mature_spread_in_min/max) left null on purpose: NC State's Plant Type/Habit-Form list this species as a twining Vine/Climbing, and per rule 4 a climber gets no size fields filled regardless of published figures. NC State does publish a Dimensions block (Height: 10 ft. 0 in. - 20 ft. 0 in. / Width: 3 ft. 0 in. - 6 ft. 0 in.) and RHS publishes Max Height 2.5-4 metres / Max Spread 0.5-1 metres, but these were not recorded because for a climber the field cannot distinguish plant stature from run length.",
         "is_edible set to false, not null, because both anchor pages address eating directly: NC State's Fruit Description calls the berries 'inedible,' and RHS's Botanical Details flags the fruit as 'Potentially harmful... Fruit are ornamental - not to be eaten. Wear gloves and other protective equipment when handling. Pets: Fruit are ornamental - not to be eaten.' No poisonous-part/severity/toxic-principle language needs to migrate here per rule 5 because that rule only triggers when is_edible is true; recording it anyway for safety context since RHS does name a toxicity/handling caution for the fruit.",
         "plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=278967 refused this machine (ConnectError on fetch) -- not read, and no data from it (size, edibility, or pollinator) is reflected here.",
-        "RHS page was searched for 'Attracts', 'pollinator', 'bee', 'butterfl', 'hummingbird', and 'wildlife' and carries no pollinator-attraction statement or tag for this species; the true attracts_pollinators value rests on NC State alone."
+        "RHS page was searched for 'Attracts', 'pollinator', 'bee', 'butterfl', 'hummingbird', and 'wildlife' and carries no pollinator-attraction statement or tag for this species; the true attracts_pollinators value rests on NC State alone.",
+        "is_edible and attracts_pollinators: already landed in this record, returned null per instructions (a backfill never overwrites).",
+        "Size figures are NC State's species page for Lonicera sempervirens, a climber, so mature_height_in is the reach given support (10-20 ft = 120-240 in), not a free-standing height. Width 3-6 ft = 36-72 in.",
+        "NC State's description also says the plant can sprawl as a ground cover without support; the published Height is the climbing figure.",
+        "The RHS and Missouri Botanical Garden pages were not re-read in this pass; NC State was sufficient and the earlier pass found no usable size on them.",
+        "No page refused this machine."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -205,7 +227,12 @@
       "water_growing_days_est": null,
       "water_regime": null,
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 120,
+      "mature_height_in_max": 240,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Crossvine",
@@ -251,13 +278,18 @@
         "day_f/night_f range fields, chill_damage_f, cool_rest_note, humidity_need/humidity_pct fields, light_fc fields, direct_sun_hours_max, and all fertilize_* and water_dry_down_target/water_check_depth_cm/water_growing_days_est/water_dormant_days_est/water_estimate_basis fields left null: this is an in-ground native landscape vine, and no admissible source frames its care in these potted-houseplant terms (no temperature range, humidity target, footcandle light level, direct-sun-hour figure, or fertilizer schedule/strength was found stated for the species).",
         "outdoor_sun_exposure excludes part_sun and full_shade: NC State's structured Light field lists only Dappled Sunlight, Full sun, and Partial Shade (no Full Shade), and MoBot's Sun field ('Full sun to part shade') and Clemson HGIC's prose corroborate a full-sun-to-part-shade range without independently supporting part_sun or full_shade as distinct values.",
         "is_houseplant set to false based on NC State's and MoBot's structured data describing the species as a native, woody, perennial outdoor vine hardy across USDA zones 5-9 (NC State) / 5-9 (MoBot), not as a plant grown indoors; no admissible source treats it as a houseplant.",
-        "All four mature size fields left null: NC State's own \"Plant Type\" field lists Bignonia capreolata as Native Plant, Perennial, Vine, and its \"Habit/Form\" is Climbing/Spreading with Climbing Method: Tendrils -- this is a climber, so per the task rule no size field is recorded, whatever the page publishes.",
         "NC State's Dimensions block does publish \"Height: 30 ft. 0 in. - 50 ft. 0 in.\" and \"Width: 6 ft. 0 in. - 9 ft. 0 in.\" (720 sq: converts to 360-600 in height, 72-108 in width) but this was deliberately NOT recorded, because on a vine that figure is the distance the plant travels along its support, not a stature bound.",
         "is_edible left null: no page addressed eating or food use of Bignonia capreolata at all. Searched NC State (\"Edible\": 0 hits) and RHS (\"Edible\": 0 hits); Clemson and Missouri Botanical Garden could not be checked (see below). Null recorded as \"no record\", not as a claim of non-edibility.",
         "Per the task's toxicity-check rule, searched NC State for \"Poison\" and \"Toxic\" before setting is_edible -- 0 hits on both; no toxicity, poisonous-part, severity, or pets-warning language was found anywhere on the anchor page.",
         "RHS page (https://www.rhs.org.uk/plants/27943/bignonia-capreolata/details) fetched successfully (HTTP 200, title 'Bignonia capreolata | cross vine') but its plant-detail panel (Max Height / Max Spread / Attracts / Edible / Poison / Toxic) did not appear in the static HTML -- 0 hits for every searched term including both 'Max Height'/'Max Spread' and 'Ultimate height' wordings, and 'Attracts'/'Pollinator'/'Edible'/'Poison'/'Toxic'/'climb'. Could not confirm any size, edibility, or toxicity data from RHS as a result.",
         "https://hgic.clemson.edu/cross-vine/ returned HTTP 403 -- refused this machine, not read, contents not guessed.",
-        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=242332 returned a connection error -- refused this machine, not read, contents not guessed."
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=242332 returned a connection error -- refused this machine, not read, contents not guessed.",
+        "is_edible left null: the NC State page returned 0 hits for 'Poison', 'Toxic', 'Problem for' and 'Edible', so no page read addresses eating this plant.",
+        "attracts_pollinators left null: already landed in this record; not researched, per instructions.",
+        "RHS page (rhs.org.uk/plants/27943) loaded but searches for 'Max Height', 'Max Spread', 'Ultimate height', 'Habit' and 'climb' returned 0 hits, so it supplied no size; NC State was used instead.",
+        "Clemson HGIC page (hgic.clemson.edu/cross-vine/) refused this machine (fetch status http-403); skipped, not guessed at.",
+        "plantfinder.mobot.org was not fetched; it is a host known to refuse this machine, so nothing is claimed from it.",
+        "Size is a reach for a climber: NC State gives Height 30-50 ft (360-600 in) and Width 6-9 ft (72-108 in), converted by 12 in per ft; height is how far it climbs given support."
       ],
       "citations": [
         {
@@ -391,9 +423,32 @@
           "source": "NC State Extension Gardener Plant Toolbox — Bignonia capreolata",
           "url": "https://plants.ces.ncsu.edu/plants/bignonia-capreolata/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 360-600 (NC State Height 30 ft. 0 in. - 50 ft. 0 in., converted to inches at 12 in per ft; this is the reach of a climber given support)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/bignonia-capreolata/",
+          "quote": "Height: 30 ft. 0 in. - 50 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-108 (NC State Width 6 ft. 0 in. - 9 ft. 0 in., converted to inches at 12 in per ft)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/bignonia-capreolata/",
+          "quote": "Width: 6 ft. 0 in. - 9 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State describes cross-vine as climbing by tendrils",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/bignonia-capreolata/",
+          "quote": "The cross-vine climbs by using branched tendrils to wrap around stems or bark to support the vine as it grows up tall objects like fences or pine trees."
         }
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 600,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 108
     },
     {
       "chill_damage_f": null,
@@ -553,6 +608,24 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/wisteria-frutescens/",
           "quote": "Nausea, frequent vomiting, abdominal pain depression, and diarrhea can result from eating 1 or 2 seed pods."
+        },
+        {
+          "claim": "climbs: NC State describes Wisteria frutescens as a counterclockwise twining woody vine (also Habit/Form: Climbing, Plant Type: Vine, Climbing Method: Twining)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-frutescens/",
+          "quote": "a counterclockwise twining deciduous woody vine that grows to 40 feet or more"
+        },
+        {
+          "claim": "mature_height_in 180-480 (NC State Height 15 ft. 0 in. - 40 ft. 0 in., converted to inches: 15 ft = 180, 40 ft = 480; this is the reach of a climber given support)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-frutescens/",
+          "quote": "Height: 15 ft. 0 in. - 40 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-96 (NC State Width 4 ft. 0 in. - 8 ft. 0 in., converted to inches: 4 ft = 48, 8 ft = 96)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/wisteria-frutescens/",
+          "quote": "Width: 4 ft. 0 in. - 8 ft. 0 in."
         }
       ],
       "common_name": "American Wisteria",
@@ -591,12 +664,16 @@
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength are left null: both NC State and MoBot say only that 'An application of fertilizer in early spring can also help stimulate flowering,' a word-based seasonal cadence with no literal day interval, month number, or dilution/strength fraction stated.",
         "chill_damage_f, cool_rest_note, day/night temperature fields, humidity fields, and light_fc/direct_sun_hours_max are left null: no admissible source for this species states numeric temperature thresholds, humidity requirements, foot-candle light levels, or a species-specific direct-sun-hours figure (NC State's Light field only carries the generic full-sun/partial-shade category legend, which the rules exclude as a source for direct_sun_hours_max).",
         "Clemson HGIC (hgic.clemson.edu) and UF/IFAS (edis.ifas.ufl.edu, ask.ifas.ufl.edu) were searched for a Wisteria frutescens-specific factsheet but no accessible species page was found (search results and direct guessed URLs returned 404 or no matching content); Penn State, U Maryland, and UGA sources were not found to carry a dedicated American Wisteria page either. Only plants.ces.ncsu.edu and plantfinder.mobot.org supplied verified, species-confirmed content for this record.",
-        "All four mature-size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null because Wisteria frutescens is a twining climbing vine: NC State's own record gives Plant Type 'Vine' and Habit/Form 'Climbing' (Climbing Method: Twining). Per the climber rule, a vine's published Height/Width or Max Height/Max Spread figures describe how far it runs along its support, not plant stature, so no size field is populated even though NC State publishes 'Height: 15 ft. 0 in. - 40 ft. 0 in.' / 'Width: 4 ft. 0 in. - 8 ft. 0 in.' and RHS publishes 'Max Height 8-12 metres' / 'Max Spread 1.5-2.5 metres'.",
-        "mature_height_in_min/max and mature_spread_in_min/max: left null per the climber rule, as explained above -- not a missing-data case, a deliberate exclusion.",
         "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280631) refused this fetching machine (error:ConnectError) and could not be read; no data from that source is reflected here, and I have not guessed at its content.",
         "RHS (https://www.rhs.org.uk/plants/94290/wisteria-frutescens/details) was searched for 'Edib', 'Poison', 'Toxic', 'pollinator', and 'Attract' with zero hits for all -- it has no edibility, toxicity, or pollinator-attraction information for this species; only the (excluded, per above) Max Height/Max Spread figures were found there.",
         "is_edible is set false because NC State explicitly states the plant is poisonous to eat: 'Poisonous to Humans' / 'Poison Severity: Medium' / 'Poison Symptoms: Nausea, frequent vomiting, abdominal pain depression, and diarrhea can result from eating 1 or 2 seed pods.' / 'Poison Toxic Principle: Saponin called wisterin, Lectin' / 'Poison Part: Seeds'. The general 'Edibility:' text on the same page also says 'Ingestion of any part of the plant can cause discomfort... roots, bark, branches, fruits, and seeds contain triterpene-based saponins that can cause gastro-intestinal distress. The seeds also contain a molecule called canavanine.' No page states any part is grown or used for food, so this is a straightforward false, not a conditional-true case.",
-        "Species identity confirmed: NC State page title is 'Wisteria frutescens (American Wisteria, Kentucky Wisteria, Texas Wisteria)', matching the existing record's common_name and scientific_name_accepted; no cultivar-specific figures were used for any field."
+        "Species identity confirmed: NC State page title is 'Wisteria frutescens (American Wisteria, Kentucky Wisteria, Texas Wisteria)', matching the existing record's common_name and scientific_name_accepted; no cultivar-specific figures were used for any field.",
+        "is_edible and attracts_pollinators left null: already landed in this record, not researched in this pass.",
+        "For the record's existing edibility handling: the NC State page names a poisonous plant. It lists Poison Severity Medium, symptoms 'Nausea, frequent vomiting, abdominal pain depression, and diarrhea can result from eating 1 or 2 seed pods.', toxic principle 'Saponin called wisterin, Lectin', poison part Seeds, and its Edibility field says ingestion of any part (roots, bark, branches, fruits, seeds) can cause gastro-intestinal distress, with the seeds also containing canavanine. It also carries #problem for dogs, #problem for horses and #problem for cats tags. RHS says 'Harmful if eaten.' including to pets.",
+        "mature_height_in is a climber's reach, not a free-standing height (NC State Habit/Form Climbing, Plant Type Vine, Climbing Method Twining).",
+        "RHS publishes a different size for this species: Max Height 8-12 metres (315-472 in) and Max Spread 1.5-2.5 metres (59-98 in), a UK-grown figure. Not used because NC State is the anchor; the two ranges roughly overlap at the top end for height (NC State 480 in max vs RHS 472 in max).",
+        "Searched NC State for 'Max Height' and 'Max Spread' (0 hits; NC State labels these Height/Width under Dimensions) and RHS for 'Dimensions' and 'Width' (0 hits; RHS uses Max Height/Max Spread).",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=280631 was not read in this pass because NC State supplied the size; no claim rests on it. No other registered-authority page was needed."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -605,7 +682,12 @@
       "water_growing_days_est": null,
       "water_regime": null,
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 480,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 96
     },
     {
       "chill_damage_f": null,
@@ -771,6 +853,24 @@
           "source": "RHS -- Celastrus scandens / American bittersweet",
           "url": "https://www.rhs.org.uk/plants/101010/celastrus-scandens/details",
           "quote": "Harmful if eaten."
+        },
+        {
+          "claim": "mature_height_in 240-300 (NC State Height 20 ft. 0 in. - 25 ft. 0 in., converted to inches: 20x12=240, 25x12=300; this is the reach of a climber given support)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/celastrus-scandens/",
+          "quote": "Height: 20 ft. 0 in. - 25 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-96 (NC State Width 2 ft. 0 in. - 8 ft. 0 in., converted to inches: 2x12=24, 8x12=96)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/celastrus-scandens/",
+          "quote": "Width: 2 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "climbs is true: NC State describes American bittersweet as a twining vine whose stems twine around structures or trees",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/celastrus-scandens/",
+          "quote": "American bittersweet is a rapidly growing twining vine"
         }
       ],
       "common_name": "American Bittersweet",
@@ -807,11 +907,15 @@
         "Missouri Botanical Garden's dedicated page (plantfinder.mobot.org kempercode=a151) was reached by the audit after the researcher's search failed; its Common Name field, naming prose, Culture statement and fruit-only poison statement are cited at landing. Its Common Names tooltip list exists only in the link's markup and is not quoted.",
         "Clemson HGIC, UGA fieldreport.caes.uga.edu, Penn State extension, UF/IFAS (edis/ask.ifas), and extension.umd.edu were checked for a Celastrus scandens page; none returned an accessible, confirmed species-specific page in this research pass, so no corroborating or conflicting light, soil, water, or dioecious-planting content from those domains could be cited. All non-NC-State-supported fields (scientific_name_accepted, chill_damage_f, day/night temperature fields, humidity fields, direct_sun_hours_max, soil_base beyond the generic outdoor garden_bed inference, soil_ph_min/max, water_regime and related watering fields, fertilize fields) are left null for lack of admissible-source support.",
         "Dioecious-planting statements (need for separate male/female plants to fruit) were not found stated on the NC State page in the fetched content, and per task instructions such statements are not care values in any case, so none are included.",
-        "mature_height_in and mature_spread_in left null on all four ends: this species is a woody twining vine/climber (NC State Habit/Form: 'Climbing', 'Spreading'; RHS Habit: 'Climbing', tagged 'Climber'), so per catalog policy climbers get no size fields yet even though both anchor pages publish species-level figures -- NC State 'Height: 20 ft. 0 in. - 25 ft. 0 in.' and 'Width: 2 ft. 0 in. - 8 ft. 0 in.'; RHS 'Max Height 8-12 metres' and 'Max Spread 4-8 metres' (converted, 8-12 m = 315-472.4 in, 4-8 m = 157.5-315 in) -- none of these were recorded.",
         "attracts_pollinators left null: no page names bees, butterflies, moths, or hummingbirds. NC State's structured 'Attracts' field lists only 'Songbirds' (fruit predation in winter, not pollination -- per rule this is not pollinator support), and RHS carries no pollinator/wildlife-attraction tag at all.",
         "is_edible set false on toxicity, not silence: NC State's structured 'Edibility:' field reads 'Poison', with 'Poisonous to Humans' detail -- Poison Severity: Low; Poison Symptoms: 'Vomiting, diarrhea, loss of consciousness, seizures'; Poison Toxic Principle: 'Cardenolides, alkaloids'; Causes Contact Dermatitis: No; Poison Part: Bark, Flowers, Fruits, Leaves, Roots, Sap/Juice, Seeds, Stems. RHS separately lists 'Potentially harmful -- Harmful if eaten. Wear gloves and other protective equipment when handling' plus a Pets (dogs, cats) warning 'Harmful if eaten'.",
         "plantfinder.mobot.org (https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=a151) refused this machine with error:ConnectError on direct fetch -- not read, and no claim in this record is sourced from it.",
-        "NC State names two cultivars, 'Indian Brave' (male pollen donor) and 'Indian Maiden' (female, produces the colorful fruit), but publishes no cultivar-specific size figures for either, so the cultivar-size exclusion (rule 3) did not come into play -- the species-level figures were withheld solely under the climber rule."
+        "is_edible: already landed, returned null per instructions. For the record, the NC State page lists Edibility as Poison and Problems as Poisonous to Humans, and RHS says Harmful if eaten (pets too); nothing here supports an edible claim.",
+        "attracts_pollinators left null: NC State's Attracts field lists only Songbirds (not pollination); the RHS page has no pollinator tag (searched 'ollinator', 'bees': 0 hits); NC State's only 'pollinator' text concerns a male plant needed for fruit set, not a pollinator attractant claim.",
+        "Size conflict between sources: RHS gives Max Height 8-12 metres (315-472 in) and Max Spread 4-8 metres (157-315 in), time to maturity 10-20 years. NC State figures (the anchor) were used: reach 240-300 in, width 24-96 in. NC State's 'Width: 2 ft - 8 ft' is a narrow range for a twining vine; the real reach and spread depend on support.",
+        "plantfinder.mobot.org was not fetched (known to refuse this machine); no claim rests on it.",
+        "Earlier pass found no usable size on these pages; NC State's Dimensions block does carry Height and Width, found by searching 'Dimensions', 'Height', 'Width'.",
+        "NC State names two cultivars, 'Indian Brave' (male pollen donor) and 'Indian Maiden' (female, produces the colorful fruit), but publishes no cultivar-specific size figures for either, so the size recorded is the species-level figure."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -819,7 +923,12 @@
       "water_estimate_basis": null,
       "water_growing_days_est": null,
       "water_regime": null,
-      "is_edible": false
+      "is_edible": false,
+      "climbs": true,
+      "mature_height_in_min": 240,
+      "mature_height_in_max": 300,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 96
     },
     {
       "chill_damage_f": null,
@@ -925,6 +1034,12 @@
           "source": "NC State Extension Gardener Plant Toolbox -- Vitis rotundifolia",
           "url": "https://plants.ces.ncsu.edu/plants/vitis-rotundifolia/",
           "quote": "The muscadine grape attracts bees, pollinators, small mammals and songbirds and is a natural addition to pollinator, native and edible gardens."
+        },
+        {
+          "claim": "climbs: NC State Plant Toolbox describes Vitis rotundifolia as a woody, deciduous, climbing vine (it climbs by tendrils)",
+          "source": "NC State Extension Gardener Plant Toolbox - Vitis rotundifolia",
+          "url": "https://plants.ces.ncsu.edu/plants/vitis-rotundifolia/",
+          "quote": "The muscadine grape is a woody, deciduous, climbing vine native to the southern United States."
         }
       ],
       "common_name": "Muscadine Grape",
@@ -973,7 +1088,13 @@
         "mature_height_in and mature_spread_in left null: NC State's Plant Toolbox page has no structured Dimensions/Height/Width block for this species, and its narrative text states \"The height and width of the vine varies due to the amount of support that the vine receives\" -- for a climber, a height/width figure tied to its support is not the plant's own dimension (rule 4), so no usable figure exists there.",
         "RHS page (https://www.rhs.org.uk/plants/136288/vitis-rotundifolia/details) was searched for 'Height', 'Spread', 'Max Height', 'Max Spread', 'Ultimate height', and 'metres' -- zero hits for every term; the page carries no size data for this species to record.",
         "Clemson HGIC factsheet (https://hgic.clemson.edu/factsheet/muscadine-grape/) returned an http-403 status -- it refused this machine. Not read, not used for any field, per instructions to skip and disclose rather than guess.",
-        "is_edible=true is unconditional: NC State's anchor page was searched for 'Poison', 'Toxic', and 'Problem for' with zero hits for all three, so no toxic part, severity, or preparation requirement was found on the cited page to attach as a condition."
+        "is_edible=true is unconditional: NC State's anchor page was searched for 'Poison', 'Toxic', and 'Problem for' with zero hits for all three, so no toxic part, severity, or preparation requirement was found on the cited page to attach as a condition.",
+        "is_edible and attracts_pollinators: already landed, deliberately returned null (not researched, not overwritten).",
+        "mature_height_in_min/max and mature_spread_in_min/max: left null. The NC State page has no Dimensions/Height/Width block (searched Dimensions, Height, Width, Max Height, Max Spread, ft.); its only size-related text is 'The height and width of the vine varies due to the amount of support that the vine receives', which gives no figure. Its 'Available Space To Plant: 3 feet-6 feet' is a planting-space field, not mature size, so it was not used.",
+        "RHS page (136288) carries no Max Height / Max Spread / Height / Width fields for this species (searched those labels plus 'feet' and 'ft.'); only a genus line, which is not a substitute.",
+        "Clemson HGIC (hgic.clemson.edu/factsheet/muscadine-grape/) refused this machine (fetch status http-403); not read.",
+        "UF/IFAS EDIS hs100 (The Muscadine Grape, Vitis rotundifolia) could not be loaded: qc.py returned ProxyError even with edis.ifas.ufl.edu allowed, and the sandbox then denied the redirect target ask.ifas.ufl.edu, which is a host that refuses this machine. Its contents are unknown; not guessed.",
+        "UGA, UMD and Penn State pages found by search (home-garden muscadine/grape guides, Penn State wild grape) were not loaded or used; they are not confirmed species size pages and search-snippet figures were not used."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -982,7 +1103,8 @@
       "water_growing_days_est": null,
       "water_regime": null,
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true
     },
     {
       "chill_damage_f": null,
@@ -1253,6 +1375,7 @@
   "normalizations": [
     "2026-09-05: fiftieth batch (cruise throttle) -- native vines and a rhododendron: Trumpet Honeysuckle, Crossvine, American Wisteria, American Bittersweet, Muscadine Grape, and Rosebay Rhododendron. Clean first run (12/12 agents, 1.33M subagent tokens); land_check.py and covered.py ran clean; verify_quotes.py 77/79 reachable quotes before repair, both MISSes fixed here (a synthesized confused-with quote and a semicolon-joined Poison block, now cited value by value). Two researchers reported RHS or MoBot unreachable where the auditors reached them; the URLs come from the auditors' own fetches (RHS 94290 for Wisteria frutescens, RHS 101010 and MoBot a151 for Celastrus scandens) and only auditor-quoted text is cited -- both records keep scientific_name_accepted null because the Name Status value was not captured. Trumpet Honeysuckle's RHS URL carried the placeholder 'wd' slug (the wrong-species shape that bit Sourwood); rewritten to the epithet slug and re-verified. Values changed: none. Citation-form repairs: a fabricated NC State Plant Type entry ('Woody Plant', the head of the next field's label) on Crossvine, one-word 'Correct' quotes paired with the H1 or title, pipe-joined and label+value NC State quotes newline-stacked, and 'is' for 'are' in MoBot's Rhododendron toxicity sentence. Four toxicity_detail fields were repaired as trimmed safety fields with the auditor's verbatim additions: American Wisteria drops a fabricated 'Fruit Value To Gardener: Edible / Berry' conflict bled in from a berry crop and gains NC State's Edibility sentence naming roots, bark, branches, fruits and seeds plus RHS's handling warning; American Bittersweet gains NC State's 'Edibility: Poison', RHS's handling warning and 'Pets (dogs, cats)' line, and MoBot's fruit-only counterpoint; Rosebay Rhododendron gains RHS's handling warning and pet list against NC State's Low/No; Trumpet Honeysuckle gains NC State's ethnobotany use of the leaves against RHS's handling warning and the page's high-flammability Fire Risk statement. Every name_note was replaced with the auditor's corrected wording (invented 'N entries marks no primary' conventions, overstated leads and counts, an NC State prose count mis-sourced against its own list lead). Muscadine's soil pH stays null with Clemson's 6.0-6.5 pre-plant liming target disclosed rather than used. toxic_to_pets=true on American Wisteria, American Bittersweet and Rosebay Rhododendron rests on NC State's cat and dog tags (RHS's 'Pets (dogs, cats)' lines now corroborate two of them); the other three are null (RHS's unscoped 'Pets' language does not count).",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Trumpet Honeysuckle -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

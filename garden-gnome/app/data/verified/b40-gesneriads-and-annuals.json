@@ -482,6 +482,24 @@
           "source": "NC State Extension Gardener Plant Toolbox — Aeschynanthus radicans",
           "url": "https://plants.ces.ncsu.edu/plants/aeschynanthus-radicans/",
           "quote": "In its native habitat, nectar from the tubular red flowers attracts hummingbirds."
+        },
+        {
+          "claim": "mature_height_in 19.7-39.4 (RHS Max Height 0.5-1 metres, converted to inches at 39.37 in per metre; indoor house/conservatory plant figure; trailing habit, so a reach if it is given support)",
+          "source": "RHS Aeschynanthus radicans | lipstick plant",
+          "url": "https://www.rhs.org.uk/plants/562/aeschynanthus-radicans/details",
+          "quote": "Max Height         0.5-1 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches at 39.37 in per metre)",
+          "source": "RHS Aeschynanthus radicans | lipstick plant",
+          "url": "https://www.rhs.org.uk/plants/562/aeschynanthus-radicans/details",
+          "quote": "Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "climbs: NC State lists the plant type as a Vine (also Epiphyte, Herbaceous Perennial, Houseplant)",
+          "source": "NC State Extension Gardener Plant Toolbox, Aeschynanthus radicans",
+          "url": "https://plants.ces.ncsu.edu/plants/aeschynanthus-radicans/",
+          "quote": "Vine"
         }
       ],
       "common_name": "Lipstick Plant",
@@ -524,11 +542,16 @@
         "NC State tags this plant's flower fragrance as malodorous/unpleasant -- a notable care detail for owners expecting a pleasant scent -- and lists cultivars ('Curly', 'Mona Lisa', 'Rasta', 'Tangerine', 'Variegata') with differing leaf or flower coloring that could cause identification confusion with the straight species.",
         "direct_sun_hours_max (6) is derived from the upper bound of NC State's 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)' light-tolerance tag -- the highest sun-exposure category this species is tagged as tolerating -- rather than from an explicit standalone 'maximum sun hours' statement.",
         "is_edible left null: none of the readable pages (NC State's own A. radicans page, RHS, or NC State's A. humilis page) address eating this plant at all -- no 'Edible', 'Poison', or 'Toxic' hits on the NC State radicans page or the RHS page.",
-        "mature_height_in_min/max and mature_spread_in_min/max all left null: A. radicans is a climber/vine, not a plant with a settled stature -- NC State's own common names for it are 'Basket Vine' and 'Lipstick Vine', and its tag list includes '#vine'. Per the no-size-for-climbers rule this holds regardless of RHS's published figures.",
         "RHS (https://www.rhs.org.uk/plants/562/aeschynanthus-radicans/details) does publish 'Max Height 0.5-1 metres' and 'Max Spread 0.1-0.5 metres' for this species, but these were NOT recorded because the species is a climber (see above).",
         "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b542 refused this machine (fetch status: error:ConnectError). It was not read and contributed no data to this record.",
         "https://plants.ces.ncsu.edu/plants/aeschynanthus-humilis/common-name/lipstick-plant/ was read but describes a different species, Aeschynanthus humilis, which also shares the common name 'Lipstick Plant'/'Lipstick Vine'. Its Dimensions block (Height 0 ft. 4 in. - 0 ft. 8 in.; Width 0 ft. 8 in. - 3 ft. 0 in.) belongs to A. humilis, not A. radicans, and was not used for this record.",
-        "RHS and the NC State A. humilis page have no 'Attracts', 'pollinator', 'butterfl', or 'bee' mentions for A. radicans; the only pollinator evidence used is from NC State's own A. radicans page."
+        "RHS and the NC State A. humilis page have no 'Attracts', 'pollinator', 'butterfl', or 'bee' mentions for A. radicans; the only pollinator evidence used is from NC State's own A. radicans page.",
+        "is_edible left null: searched the NC State page for 'Edible', 'Poison', 'Toxic' and 'Problem for' (0 hits each) and the RHS page for 'Edible' (0 hits); no page states anything about eating this plant.",
+        "attracts_pollinators returned null by instruction (already landed); not researched.",
+        "climbs is set true on NC State's Plant Type value 'Vine' (the same page also lists Habit/Form 'Arching' and 'Cascading', and RHS lists Habit 'Trailing'; RHS's genus text says Aeschynanthus 'can be climbers, subshrubs or trailing perennials', which is genus-level and not used). No page publishes a climbing reach for this species, so the size fields hold the RHS trailing figures, not a measured climbing reach.",
+        "Size is RHS Max Height 0.5-1 metres and Max Spread 0.1-0.5 metres, converted at 39.37 in per metre (19.7-39.4 in and 3.9-19.7 in). The RHS page is written for growing it as a house or conservatory plant, so this is an indoor/container figure, well under the 120 in headroom threshold.",
+        "NC State page has no Dimensions, Height, Width, Max Height or Max Spread block (searched all of these; 0 hits). Its only size-like value is 'Available Space To Plant: 12 inches-3 feet', a spacing figure that was not used as height or spread.",
+        "plantfinder.mobot.org and the NC State A. humilis common-name page were not re-read; the NC State and RHS species pages loaded fine and supplied all values. No UF/IFAS, Clemson, UMD, Penn State or UGA species page was found; a web search returned only non-registered sites, which were not used."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -536,7 +559,12 @@
       "water_estimate_basis": null,
       "water_growing_days_est": null,
       "water_regime": "keep_moist",
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 19.7,
+      "mature_height_in_max": 39.4,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "chill_damage_f": null,
@@ -1470,6 +1498,7 @@
   "normalizations": [
     "2026-08-23: twenty-second batch, and the fortieth overall since research began -- Gasteria bicolor, a Gesneriad houseplant cluster (Florist's Gloxinia, Lipstick Plant, Goldfish Plant), Stromanthe sanguinea (deliberately researched as a companion to Calathea and Maranta leuconeura already in this catalog; resolved to its reclassified accepted name Stromanthe thalia, no duplicate against either prior record), and three common annuals (Edging Lobelia, Flowering Tobacco, Wishbone Flower). This batch's research and verify prompts added a required, non-nullable common_name sanity check after b39 found the generic refute-and-null path had no protection for it -- the check immediately paid off, catching and flagging (not silently nulling) two genuinely wrong common names: Gasteria's record pulled 'Ox Tongue' from a taxonomically unplaced, multi-species-conflated NC State page (titled 'Gasteria gracilis', internally referencing a third, distinct species, Gasteria obliqua) rather than from the POWO-confirmed var. liliputana's own dedicated RHS page, which actually leads with 'Small bi-coloured ox tongue' -- corrected using that citation. Stromanthe's record pulled 'variegated bloody stromanthe Triostar' from a secondary 'Other common names' field on its cultivar page, when the page's own true headline subtitle is 'calathea Triostar' -- the very cross-genus trade-name error the record's own name_note already flags as wrong -- while a separate, dedicated RHS species page cleanly leads with 'Stromanthe sanguinea | bloody stromanthe'; corrected to 'Bloody Stromanthe' using that page instead. Also caught a second script-level gap paralleling the common_name fix: Wishbone Flower's outdoor_sun_exposure was nulled ENTIRELY by the generic refute-and-null path after the audit flagged only the full_sun entry (sourced to a single UK RHS page, contradicted by three independent US-based dedicated sources -- MOBOT, NC State, and Clemson -- all placing this species in shade to part-shade) -- restored to just the well-supported ['part_shade', 'full_shade'], dropping only the disputed citation, rather than losing the whole field's legitimate content; the same all-or-nothing null risk likely applies to any future refuted array-valued field, not just this one instance. Three more repairs used the auditor's own already-cited or live-confirmed evidence: Sinningia's cool_rest_note was restored using its two already-cited, already-accurate quotes (NC State's dormancy sequence, Clemson's 2-4 month dry-soil rest) after the audit found the record's prose had spliced an earlier, separate pruning step ('cut back... to encourage a second bloom') onto the front of the dormancy instructions in a way that inverted the source's actual two-step sequence; Sinningia's name_note was trimmed to its three individually-cited sub-claims, dropping an accurate-but-uncited '(genus Gloxinia)' parenthetical; Lobelia's name_note gained a new citation for its 'trailing lobelia' sub-claim (RHS's own page subtitle, live-confirmed) and its toxicity_detail was restored with a corrected, fuller NC State quote (adding the previously-dropped Poison Part list) plus an explicit note that the assessment is human-scoped, not cat/dog-scoped, alongside a disclosed caveat that a corroborating UGA genus-level citation is filed under 'Cardinal Flower', the common name of a different toxic sibling species (Lobelia cardinalis), not Lobelia erinus itself. Flowering Tobacco's toxic_to_pets=true rests on RHS naming dogs specifically ('Pets (dogs): Harmful if eaten') -- properly scoped.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Edging Lobelia -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
