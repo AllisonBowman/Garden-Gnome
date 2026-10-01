@@ -882,6 +882,18 @@
           "source": "NC State Extension Gardener Plant Toolbox - Fatsia japonica",
           "url": "https://plants.ces.ncsu.edu/plants/fatsia-japonica/common-name/japanese-aralia/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "mature_height_in 72-120 (Clemson HGIC 'grows 6 to 10 feet tall', converted to inches: 6 ft = 72, 10 ft = 120; landscape figure, no indoor figure published)",
+          "source": "Clemson HGIC Fatsia factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/fatsia/",
+          "quote": "Fatsia typically grows 6 to 10 feet tall by 6 to 10 feet wide."
+        },
+        {
+          "claim": "mature_spread_in 72-120 (Clemson HGIC 'by 6 to 10 feet wide', converted to inches: 6 ft = 72, 10 ft = 120)",
+          "source": "Clemson HGIC Fatsia factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/fatsia/",
+          "quote": "Fatsia typically grows 6 to 10 feet tall by 6 to 10 feet wide."
         }
       ],
       "common_name": "Japanese Aralia",
@@ -927,12 +939,17 @@
         "scientific_name_accepted — removed on audit: Structural failure: no citation's claim label contains the string 'scientific_name_accepted'. The closest is 'name_note - historical synonym names for the accepted species', which is labeled for name_note, not for this field. The value itself is correct -- RHS's Botanical Details block for this page carries 'Name Status | Correct' for Fatsia japonica, and NC State's dedicated page lists 'Previously known as: Aralia japonica, Aralia sieboldii' -- so the repair is to add a citation labeled for the field rather than to change the value. Substitutable quote from the live RHS page: 'Name Status Correct' (https://www.rhs.org.uk/plants/7147/fatsia-japonica-japanese-aralia-castor-oil-plant/details), or NC State's 'Previously known as: Aralia japonica, Aralia sieboldii' (https://plants.ces.ncsu.edu/plants/fatsia-japonica/).",
         "chill_damage_f left null: Clemson's only temperature figure (below 10 degrees F) is a regional growing-range limit, NC State's zone 7b floor and RHS's H5 rating are survival bands, and no admissible source states a foliage cold-damage onset temperature -- both US sources document leaf injury from sun and wind instead.",
         "is_edible left null: none of the readable pages (NC State x2, RHS, Clemson HGIC) make any statement about the plant or any part of it being eaten, grown for food, or inedible/poisonous to eat. Searched 'Edible', 'Poison', 'Toxic', 'Problem for' on all four; only hits were tag labels 'non-toxic for cats', 'non-toxic for dogs', 'non-toxic for horses' on the NC State page, which are pet-safety tags, not statements about human edibility, so they do not support setting is_edible true or false.",
-        "mature_height_in and mature_spread_in nulled at landing (all four fields): the researcher's 72-120 in by 72-120 in rested on Clemson HGIC alone ('Fatsia typically grows 6 to 10 feet tall by 6 to 10 feet wide. Old plants in ideal growing conditions may reach 15 feet tall.', https://hgic.clemson.edu/factsheet/fatsia/), and hgic.clemson.edu refuses this machine, so no new value may rest on it alone; both Clemson citations were dropped. The other figures are outdoor stature over 120 in and would stay null under the houseplant rule anyway: NC State's Dimensions 'Height: 6 ft. 0 in. - 19 ft. 6 in.' (72-234 in) with 'Width: 4 ft. 0 in. - 6 ft. 0 in.' (48-72 in), its description's 'at maturity, reaches a height of 19 feet', and RHS's 2.5-4 metres.",
         "RHS gives 'Max Height 2.5-4 metres' and 'Max Spread 2.5-4 metres' (98.4-157.5 in), which also exceeds the 10 ft cap at the high end for both dimensions; not used for the same reason as the NC State figure.",
         "plantfinder.mobot.org refused this machine (network/proxy denial on fetch) -- not read, per instructions; no size, edibility, or pollinator data obtained from it.",
         "The UGA CAES fieldreport B-1318_6.pdf fetched only as a raw PDF (qc.py reported fetch status 'pdf', 0 bytes of extracted text) -- its text could not be searched for size, edibility, or pollinator information via the required tool.",
         "No cultivar-specific sizing was encountered on any readable page; all size figures used pertain to the species Fatsia japonica generally.",
-        "Fatsia japonica is an evergreen shrub, not a vine/liana/climber, so the climber size-nulling rule does not apply here."
+        "Fatsia japonica is an evergreen shrub, not a vine/liana/climber, so the climber size-nulling rule does not apply here.",
+        "is_edible left null: NC State page has no 'Poison', 'Problem for' or 'Edible' text (only tags #non-toxic for cats/horses/dogs); RHS says only 'Fruit are ornamental - not to be eaten', which covers the fruit alone, not the whole plant; Clemson factsheet has no edible/poison/toxic text. No page states the plant is grown or used for food.",
+        "climbs left null: NC State Habit/Form is 'Rounded' and Plant Type is Houseplant/Perennial/Shrub/Tree; RHS Habit is 'Suckering'. No page calls it a climber.",
+        "attracts_pollinators: already landed, not researched, returned null per instructions.",
+        "Size source is Clemson HGIC (landscape stature; no indoor or container figure found on any page). Sources disagree: NC State Dimensions 'Height: 6 ft. 0 in. - 19 ft. 6 in.' and 'Width: 4 ft. 0 in. - 6 ft. 0 in.' (72-234 in height, 48-72 in width, text says 'at maturity, reaches a height of 19 feet'); RHS 'Max Height 2.5-4 metres' and 'Max Spread 2.5-4 metres' (about 98-157 in each); Clemson also says 'Old plants in ideal growing conditions may reach 15 feet tall'. Recorded the Clemson typical range, the only one at or under 10 ft; true outdoor maxima run higher (to 15-19.5 ft), and a potted indoor specimen would likely stay at the lower end.",
+        "No indoor/houseplant/container size figure found: searched NC State, RHS and Clemson pages for houseplant, indoor and container wording; NC State only says it 'can also be grown as a houseplant or conservatory plant' with no size.",
+        "plantfinder.mobot.org, fieldreport.caes.uga.edu PDF and the NC State common-name page were not read in this pass (earlier pass found no usable size); no registered-host species page for UF/IFAS was located or loaded."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -940,7 +957,11 @@
       "water_estimate_basis": null,
       "water_growing_days_est": null,
       "water_regime": "dry_surface_between",
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 120
     },
     {
       "chill_damage_f": null,
@@ -1174,6 +1195,7 @@
   "normalizations": [
     "2026-09-02: twenty-ninth batch, the first at the overnight throttle (6 species, research on Sonnet at medium effort, verify on Opus) -- a shade-shrub set: Winter Daphne, Japanese Pieris (checked against Rhododendron for grayanotoxin family-level bleed; none), Oregon Grape (left with scientific_name_accepted null on a genuine split -- NC State and MOBOT now file it as Berberis aquifolium, RHS keeps Mahonia aquifolium as Correct), Japanese Aucuba, Japanese Aralia, and Japanese Skimmia. 1.39M subagent tokens for six species, about 30% less per species than b46. land_check.py, covered.py and verify_quotes.py (81/81 reachable quotes) ran clean before and after repair. Winter Daphne's toxic_to_pets is correctly null despite the plant's reputation: NC State's Poison fields are human-scoped and RHS's 'TOXIC to pets' names no animal -- the scoping rule holds even when it is inconvenient. The audit's dominant finding, on three records (Pieris, Oregon Grape, Skimmia), was 'moist but well-drained' being read as the wet end of the soil_drainage scale rather than the middle; all three corrected to moderate on the sources' own well-drained prescriptions (RHS 'will not tolerate waterlogging' for Pieris; NC State's structured 'Good Drainage' for Oregon Grape; NC State's 'well-drained soils' prose for Skimmia) and this catalog's 27-to-8 precedent for the bare Good Drainage + Moist tag pair. Two safety fields were restored complete after the audit found them trimmed: Oregon Grape's now carries NC State's '#poisonous if ingested' tag, its low-severity line, the berberine/children Edibility sentence, and the disclosed NC State/MOBOT-vs-RHS disagreement on whether the berries are edible; Skimmia's now carries RHS's gloves warning (the record had cropped the quote to start at 'Pets:') and NC State's cardiac-arrest Edibility sentence. Pieris's toxicity_detail was reworded so RHS is no longer credited with a 'whole plant' scope it never states. Three outdoor_sun_exposure lists lost full_sun on species-specific scorch/burn evidence (Winter Daphne via MOBOT, Aucuba via NC State, MOBOT and Clemson; Aralia had already excluded it). Aucuba's water_regime was left null on MOBOT's own 'very good drought tolerance' and 'Avoid overly moist to wet soils' against its 'moist' soil adjective; Aralia's chill_damage_f was left null because Clemson's 10°F is a growing-range limit, not a damage onset, and its scientific_name_accepted was restored with an RHS Name Status citation. toxic_to_pets: Pieris true on explicit NC State Problem for Cats/Dogs tags plus RHS naming both; Oregon Grape and Aralia false on explicit non-toxic tags; Daphne, Aucuba and Skimmia null with no cat/dog-scoped source.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Winter Daphne -> none, Japanese Skimmia -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."

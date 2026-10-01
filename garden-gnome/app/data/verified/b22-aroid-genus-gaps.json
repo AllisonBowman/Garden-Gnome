@@ -52,7 +52,11 @@
         "Boilerplate check: NC State's toxicity write-up for this species ('Toxic, if ingested. Symptoms include mouth irritation, excessive drooling, difficulty swallowing, difficulty breathing, and stomach irritation... Wearing gloves is suggested') was compared against NC State's Monstera deliciosa page, a sibling aroid also tagged Poisonous/Contact Dermatitis. The two use materially different wording and different toxic-principle text ('Calcium oxalate crystals' here vs. 'Needle-like calcium oxalate crystals; possibly other unidentified toxins' for M. deliciosa), so this does not look like reused genus-wide boilerplate.",
         "Species-identity check: every admissible source used here anchors specifically to the binomial Rhaphidophora tetrasperma, not to Monstera deliciosa. RHS's own page flags 'Monstera minima misapplied' as a synonym to reject rather than accept, and NC State's cultivation notes explicitly distinguish this plant from Monstera deliciosa and from Philodendron by name. No content in this record was drawn from a Monstera deliciosa or Philodendron page.",
         "soil_drainage — removed on audit: The value 'moderate' is a categorical inference from NC State's raw tag pair 'Good Drainage' + 'Moist' -- no enum label is literally stated. Cross-checking the same catalog shows this exact NC State tag combination ('Soil Drainage: Good Drainage Moist') is mapped inconsistently elsewhere: the Ageratum record in b12-fruit-and-flowers1.json cites the identical tag text and maps it to soil_drainage='moisture_retentive' ('good drainage, kept moist'), while this record (and Sweet Pea in b15) map the same tags to 'moderate'. Since 'Moist' is the operative descriptor here (not a claim of average/middling drainage), 'moisture_retentive' is at least as defensible a reading as 'moderate', and with only one citation backing the field and no independent corroborating source, the value itself -- not just one citation -- is in doubt.",
-        "direct_sun_hours_max — removed on audit: 6 is derived by taking the upper bound of NC State's category-definition range 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)', not a species-specific maximum the source actually asserts. Surveying the rest of the catalog for this identical quote shows it is overwhelmingly left null (including Majesty Palm in this very same b21-houseplant-gaps batch, plus Blackberry, Highbush Blueberry, Tansy, Horned Violet, Oleander, Sago Palm, Boxwood, Spanish Moss, and ~30 more records all citing the same '2-6 hours' text); only a small number of outlier records (Rex Begonia, Scarlet Star, Persian Cyclamen) promote it to a numeric 6. The dominant, more defensible convention treats '2-6 hours' as merely defining where the 'Partial Shade' category sits relative to 'Full sun', not as a stated ceiling for this species -- so populating direct_sun_hours_max=6 here is an overreach relative to what the source and the catalog's own established practice support."
+        "direct_sun_hours_max — removed on audit: 6 is derived by taking the upper bound of NC State's category-definition range 'Partial Shade (Direct sunlight only part of the day, 2-6 hours)', not a species-specific maximum the source actually asserts. Surveying the rest of the catalog for this identical quote shows it is overwhelmingly left null (including Majesty Palm in this very same b21-houseplant-gaps batch, plus Blackberry, Highbush Blueberry, Tansy, Horned Violet, Oleander, Sago Palm, Boxwood, Spanish Moss, and ~30 more records all citing the same '2-6 hours' text); only a small number of outlier records (Rex Begonia, Scarlet Star, Persian Cyclamen) promote it to a numeric 6. The dominant, more defensible convention treats '2-6 hours' as merely defining where the 'Partial Shade' category sits relative to 'Full sun', not as a stated ceiling for this species -- so populating direct_sun_hours_max=6 here is an overreach relative to what the source and the catalog's own established practice support.",
+        "mature_height_in and mature_spread_in left null (all four size fields): NC State's Dimensions block reads 'Height: 2 ft. 0 in. - 15 ft. 0 in.' and 'Width: 1 ft. 0 in. - 4 ft. 0 in.' (reach 24-180 in, spread 12-48 in), but it is not labelled as an indoor or container figure, and its 15 ft (180 in) upper height exceeds the 120 in houseplant headroom limit, so it is not recorded. No page gave an indoor or container size.",
+        "RHS page (506806) loaded ok; searched for Dimensions, Height, Width, Max Spread, Attracts, Edible, Poison, Toxic, Habit, Plant Type, Pollinator and climb and found no matches in the extracted text, so it supplies no size, habit or pollinator information. No additional registered-authority page (UF/IFAS, Clemson, etc.) was searched or loaded.",
+        "attracts_pollinators left null: NC State page has no 'Attracts' field and no pollinator, bee or butterfly mention in the searched text; RHS page has none either.",
+        "is_edible set false on NC State's statement that the plant is toxic if ingested; no page states any part is eaten. NC State also gives poison severity low, toxic principle calcium oxalate crystals, poison parts flowers and fruits (list continues past the excerpt read), and skin irritation from handling (gloves suggested)."
       ],
       "citations": [
         {
@@ -132,8 +136,22 @@
           "quote": "The plant will thrive in high humidity levels of 60%.",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/rhaphidophora-tetrasperma/"
+        },
+        {
+          "claim": "is_edible false: NC State says the plant is toxic if ingested (poisonous to eat); no page states it is used for food",
+          "source": "NC State Extension Gardener Plant Toolbox, Rhaphidophora tetrasperma",
+          "url": "https://plants.ces.ncsu.edu/plants/rhaphidophora-tetrasperma/",
+          "quote": "Toxic, if ingested. Symptoms include mouth irritation, excessive drooling, difficulty swallowing, difficulty breathing, and stomach irritation."
+        },
+        {
+          "claim": "climbs true: NC State describes Mini Monstera as a climbing plant (aerial roots help it attach itself and climb)",
+          "source": "NC State Extension Gardener Plant Toolbox, Rhaphidophora tetrasperma",
+          "url": "https://plants.ces.ncsu.edu/plants/rhaphidophora-tetrasperma/",
+          "quote": "It is a tropical, climbing, evergreen herbaceous perennial"
         }
-      ]
+      ],
+      "is_edible": false,
+      "climbs": true
     },
     {
       "common_name": "Voodoo Lily",
@@ -1011,6 +1029,7 @@
     "One landing-time repair: Xanthosoma's common_name was nulled because \"Elephant Ear\" wasn't actually the name either source gave (a shape simile got mistaken for a naming statement) -- restored as \"Tannia\", the name both sources actually use, already quoted in an existing citation.",
     "Several removals in this batch cited specific precedent from earlier batches for consistency (e.g. how NC State's bare \"Good Drainage\"/\"Moist\" tag pairing has been handled in b10/b12/b15/b21) -- the audit is now checking its own decisions against the catalog's established conventions, not just each record in isolation.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Water Lettuce -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

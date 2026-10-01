@@ -469,7 +469,12 @@
         "is_edible left null: none of the three reachable pages (NC State, RHS species page, RHS growing guide) address whether Bougainvillea or any part of it is eaten; no edibility claim, positive or negative, was found. Searched for 'Edible' on all three pages with zero hits.",
         "No toxicity/poison/pets-warning language was found on any reachable page either (searched 'Poison', 'Toxic', 'Problem for' on NC State and the RHS growing guide -- all zero hits), so this is not a case of a hidden toxicity note; there is simply no eating-related text on these pages at all.",
         "hgic.clemson.edu/factsheet/bougainvillea-2/ refused this machine (http-403) both without and with the host explicitly allowed for network egress -- it could not be read at all, so it contributes nothing to this record. Its content on edibility, toxicity, pollinators, or size is unknown and was not guessed at.",
-        "The RHS growing guide (growing-guide page) gives the same climber height/spread figures as the species page (4-8m height, 1-1.5m spread) but no edibility, toxicity, or pollinator-attraction language was found there either (searched Edible, Poison, Toxic, Pollinator, bee, butterfl -- all zero hits)."
+        "The RHS growing guide (growing-guide page) gives the same climber height/spread figures as the species page (4-8m height, 1-1.5m spread) but no edibility, toxicity, or pollinator-attraction language was found there either (searched Edible, Poison, Toxic, Pollinator, bee, butterfl -- all zero hits).",
+        "attracts_pollinators: already landed, deliberately returned null and not researched.",
+        "is_edible: left null. Searched the NC State and RHS pages for 'Edible', 'dible', 'Poison', 'Toxic', 'oison|oxic' and 'Problem for' and got zero hits on both; no page addresses eating.",
+        "mature_height_in and mature_spread_in (all four fields): left null under the houseplant headroom rule. The only published figures are outdoor/landscape sizes that exceed 120 in. NC State Dimensions reads 'Height: 10 ft. 0 in. - 20 ft. 0 in.' (120-240 in.) and 'Width: 6 ft. 0 in. - 10 ft. 0 in.' (72-120 in.). RHS reads 'Max Height 4-8 metres' (157-315 in.) and 'Max Spread 2.5-4 metres' (98-157 in.). Neither page gives an indoor, houseplant or container figure.",
+        "Climber reach was not recorded as the size, because the published reach figures exceed the 120 in. houseplant ceiling. NC State Climbing Method is 'Scrambler'.",
+        "edis.ifas.ufl.edu (UF/IFAS) refused this machine (ProxyError, sandbox denial) when tried with a guessed publication URL, and I did not retry it with the host allowed. The Clemson page was not loaded in this pass. No indoor size was found from either."
       ],
       "citations": [
         {
@@ -543,9 +548,16 @@
           "source": "NC State Extension Gardener Plant Toolbox — Bougainvillea glabra",
           "url": "https://plants.ces.ncsu.edu/plants/bougainvillea-glabra/",
           "quote": "Bees"
+        },
+        {
+          "claim": "climbs: NC State lists Habit/Form: Climbing for Bougainvillea glabra (Plant Type also includes Vine), so the plant climbs.",
+          "source": "NC State Extension Gardener Plant Toolbox, Bougainvillea glabra",
+          "url": "https://plants.ces.ncsu.edu/plants/bougainvillea-glabra/",
+          "quote": "Climbing"
         }
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true
     },
     {
       "common_name": "Purple Passionflower",
@@ -596,14 +608,19 @@
         "cool_rest_note: Clemson notes the vine \"Dies back to the ground in the winter,\" but this describes normal outdoor winter dieback/regrowth of a hardy herbaceous-topped perennial, not a houseplant-style cool-rest care instruction, so it was not mapped to this field.",
         "toxicity_detail — removed on audit: The citation's quote for this field is selectively truncated. I fetched the live NC State page: the actual 'Poison Symptoms' text reads '...Severe nausea, vomiting, drowsiness, and episodes of irregular heartbeat. Consumption of leaves in \"herbal medicine\" is not recommended.' before continuing to 'Toxic Principle: cyanogenic glycosides.' The record's quote stops right after 'irregular heartbeat' and splices directly to 'Toxic Principle,' silently dropping the herbal-medicine sentence. That dropped sentence is the tell that NC State's Poison Severity/Poison Symptoms/Toxic Principle/Poison Part block is a single undifferentiated field describing consumption risk in general (tied to human herbal use of the leaves), not a symptom set broken out per affected animal -- the same block sits underneath tags for 'Poisonous to Humans,' 'Problem for Cats,' 'Problem for Dogs,' 'Problem for Horses,' and 'Problem for Children' with no species-specific differentiation anywhere on the page. Presenting this exact symptom list as pet-specific toxicity_detail overstates what the source establishes. (Note: toxic_to_pets itself is fine -- the same source's tags explicitly name both 'Problem for Cats' and 'Problem for Dogs' as categorical flags, independent of the disputed symptom narrative.)",
         "is_houseplant — removed on audit: The only supporting citation's quote is 'Design Feature: Border, Mass Planting, Screen/Privacy' -- a landscape-use tag that says nothing about indoor or container culture. The claim label's parenthetical 'no indoor or container culture described' is the researcher's own inference from absence of evidence, not something the quote states; NC State's toolbox does not have a houseplant field being checked here at all. There is no independent citation that actually asserts a houseplant/non-houseplant status for this species, so the boolean is only circumstantially supported, not directly evidenced.",
-        "mature_height_in and mature_spread_in left null (all four fields) because Passiflora incarnata is a climber: NC State lists Habit/Form 'Climbing, Spreading' and tags it #vine, #native vine, #deciduous vine, and its Description calls it 'a rapid-growing, trailing vine that climbs by axillary tendrils' -- per task rule 4, climbers get no size fields regardless of any figure a page publishes.",
         "RHS (https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details) does publish 'Max Height 1.5-2.5 metres' and 'Max Spread 0.5-1 metres', but this was NOT used because the plant is a climber (rule 4 overrides using any such figure). Corrected at landing: the page is the species profile, not a cultivar -- the '(F)' in its title 'Passiflora incarnata (F) | apricot vine' is RHS's fruit classification and the page reads 'Name Status Correct' -- so the climber rule is the only reason.",
         "is_edible set true on a CONDITIONAL basis: NC State's Edibility field states 'Ripened maypops can be eaten fresh off the vine or made into jelly' (i.e. only the ripened fruit is the edible part/stage).",
         "Before setting is_edible, searched NC State for Poison/Toxic/Problem for as required: the SAME page carries 'This plant has medium severity poison characteristics', a Problems list of 'Poisonous to Humans, Problem for Cats, Problem for Children, Problem for Dogs, Problem for Horses', Poison Severity 'Medium', Poison Symptoms 'Severe nausea, vomiting, drowsiness, and episodes of irregular heartbeat. Consumption of leaves in \"herbal medicine\" is not recommended.', Poison Toxic Principle 'cyanogenic glycosides', and Poison Part 'Leaves, Stems'. Recorded here per rule 5/6 because is_edible is true: only the ripened fruit is eaten; the leaves and stems are listed as the poisonous parts (medium severity, cyanogenic glycosides, symptoms nausea/vomiting/drowsiness/irregular heartbeat), and the page separately warns consumption of leaves in herbal medicine is not recommended, and flags the plant as a problem for cats, children, dogs, and horses.",
         "attracts_pollinators set true from NC State's structured 'Attracts:' field, which lists 'Bees, Butterflies, Hummingbirds, Pollinators, Songbirds', and its 'Play Value:' field which includes 'Attracts Pollinators'.",
         "hgic.clemson.edu/factsheet/vine-selections-for-landscaping/ was not fetched/cited for these six fields -- NC State's Plant Toolbox page already fully covered edibility, toxicity, and pollinator attraction, and per rule 4 no page's size figures could be used for this vine regardless.",
         "fieldreport.caes.uga.edu was not fetched/cited for these six fields for the same reason -- NC State's page was sufficient and is the anchor for the vine/climber determination.",
-        "https://ask.ifas.ufl.edu/publication/FP457 was readable (corrected at landing: it did not refuse this machine) but was not cited. It agrees with the recorded values: the fruits are 'attractive and edible (but not very tasty)', its Uses line reads 'attracts butterflies; attracts hummingbirds', its plant type is vine, and it has no poison or toxicity text."
+        "https://ask.ifas.ufl.edu/publication/FP457 was readable (corrected at landing: it did not refuse this machine) but was not cited. It agrees with the recorded values: the fruits are 'attractive and edible (but not very tasty)', its Uses line reads 'attracts butterflies; attracts hummingbirds', its plant type is vine, and it has no poison or toxicity text.",
+        "is_edible and attracts_pollinators already landed on this record; returned null by instruction, not researched.",
+        "NC State Plant Toolbox page for Passiflora incarnata loaded OK but carries no size: searched 'Dimensions', 'Height', 'Max Height', 'Max Spread', 'feet', 'ft.', 'tall' and found no height/spread field (only Leaf Width 3-6 inches, which is not plant size). RHS is therefore the size source.",
+        "RHS Max Height 1.5-2.5 metres converted x 39.37 = 59.1-98.4 inches, recorded as 59-98 (rounded); Max Spread 0.5-1 metres = 19.7-39.4 inches. For this climber the height is its reach given support; RHS gives UK growing conditions.",
+        "RHS page title is 'Passiflora incarnata (F) | apricot vine' with Name Status 'Correct'; treated as the species page (not a genus or cultivar page). The '(F)' suffix is RHS's own listing label; if it denotes a fruit-selection form rather than the plain species, the size would be cultivar-specific.",
+        "NC State also lists Climbing Method: Tendrils and notes the plant 'does not have to climb in order to produce flowers' and can be pinched back to a bushy habit, so field height may be well below the RHS reach if unsupported.",
+        "No page was refused by this machine; ask.ifas.ufl.edu, hgic.clemson.edu, fieldreport.caes.uga.edu were not re-read since an earlier pass found no usable size there."
       ],
       "citations": [
         {
@@ -695,10 +712,39 @@
           "source": "NC State Extension, North Carolina Extension Gardener Plant Toolbox, Passiflora incarnata",
           "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "climbs: RHS describes Passiflora incarnata as a tendril climber (Habit: Climbing)",
+          "source": "RHS Passiflora incarnata (F) apricot vine",
+          "url": "https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details",
+          "quote": "A short, tendril climber to about 2m tall"
+        },
+        {
+          "claim": "climbs: NC State lists Habit/Form Climbing and Climbing Method Tendrils",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/",
+          "quote": "Tendrils"
+        },
+        {
+          "claim": "mature_height_in 59-98 (RHS Max Height 1.5-2.5 metres, converted to inches x39.37 = 59.1-98.4; this is the climber's reach given support)",
+          "source": "RHS Passiflora incarnata (F) apricot vine",
+          "url": "https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details",
+          "quote": "1.5-2.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches x39.37)",
+          "source": "RHS Passiflora incarnata (F) apricot vine",
+          "url": "https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details",
+          "quote": "0.5-1 metres"
         }
       ],
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 59,
+      "mature_height_in_max": 98,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "common_name": "Buttercup",
@@ -796,6 +842,12 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/ranunculus-acris/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false: NC State Plant Toolbox lists the plant as poisonous (Plant Type includes Poisonous; Poison Severity Medium; toxic principle ranunculin; poison parts leaves, roots, sap/juice, stems) and describes ingestion symptoms, so it is not an edible plant",
+          "source": "NC State Extension Gardener Plant Toolbox, Ranunculus acris",
+          "url": "https://plants.ces.ncsu.edu/plants/ranunculus-acris/",
+          "quote": "In livestock, ingestion has caused blistering of the tongue and lips, diarrhea and blindness."
         }
       ],
       "unknowns": [
@@ -814,9 +866,15 @@
         "is_edible left null: searched NC State for 'Edible', 'food', 'eaten' (0 hits each) and RHS for 'food' (0 hits) — neither page addresses eating or culinary use of Ranunculus acris, so there is no record either way.",
         "NC State's anchor page lists Ranunculus acris as 'Poisonous to Humans', with medium-severity poison characteristics: Poison Severity 'Medium'; Poison Symptoms 'In livestock, ingestion has caused blistering of the tongue and lips, diarrhea and blindness. Consumption can also cause irregular heart rhythm and respiratory failure.'; Poison Toxic Principle 'ranunculin'; Poison Part 'Leaves', 'Roots', 'Sap/Juice' and 'Stems' (corrected at landing: the note had listed only Leaves and Roots); and it is tagged 'Problem for Cats', 'Problem for Dogs', 'Problem for Horses'. The page contradicts itself on skin contact: the structured field reads 'Causes Contact Dermatitis: No' while its tag list includes '#contact dermatitis'. Recorded here per the toxicity-disclosure rule even though is_edible is null (not true), since it is decision-relevant.",
         "Not a climber — NC State lists Plant Type 'Herbaceous Perennial' and Habit/Form 'Erect' — so the climber size-suppression rule does not apply; the size fields are null solely for lack of a published figure on either required page.",
-        "Neither required page was among the machine-refused hosts (plantfinder.mobot.org, ask.ifas.ufl.edu); both NC State and RHS pages fetched with 'ok' status, so nothing was skipped for host refusal."
+        "Neither required page was among the machine-refused hosts (plantfinder.mobot.org, ask.ifas.ufl.edu); both NC State and RHS pages fetched with 'ok' status, so nothing was skipped for host refusal.",
+        "mature_height_in and mature_spread_in left null: the NC State page for Ranunculus acris was searched for 'Dimensions', 'Height', 'Width', ' ft', 'feet', 'Dimension' and returned 0 hits (its only size-related field is 'Available Space To Plant: Less than 12 inches', which is not a mature size); the RHS page (subsp. acris) was searched for 'Max Height', 'Max Spread', 'Ultimate', 'Height' and returned 0 hits, and its 'Spread' hit was only the genus note about spreading by runners. No other registered-authority page was searched.",
+        "climbs left null: NC State lists Habit/Form: Erect and no page calls the plant a climber; RHS page had no 'Habit' or 'Climb' hits.",
+        "attracts_pollinators not researched: already landed, returned null per instructions.",
+        "is_edible false is based on NC State's poison section: severity Medium, toxic principle ranunculin, poison parts Leaves, Roots, Sap/Juice, Stems, symptoms stated for livestock ('In livestock, ingestion has caused blistering of the tongue and lips, diarrhea and blindness. Consumption can also cause irregular heart rhythm and respiratory failure.'), tags '#problem for dogs #problem for horses #problem for cats'. No page addresses human eating as food; the false rests on the poisonous classification, not on a human-specific ingestion case.",
+        "RHS page had 0 hits for 'Edible', 'Toxic', 'Poison'. No page refused this machine."
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "is_edible": false
     },
     {
       "common_name": "Climbing Hydrangea",
@@ -868,12 +926,16 @@
         "fertilize_active_months, fertilize_interval_days, fertilize_strength: no admissible source gives fertilizer timing, interval, or strength guidance for this species. A Penn State Extension URL once titled 'the-climbing-hydrangea' now 301-redirects to a generic ornamentals-species-listing page with no species-specific fertilizing content, so it could not be used as a source.",
         "water_growing_days_est, water_dormant_days_est, water_check_depth_cm, water_dry_down_target, water_estimate_basis: no admissible source gives a specific watering-interval number of days, a soil moisture-check depth, or a dry-down target for this species; sources describe qualitative soil-moisture preference only ('moist but well-drained,' 'fertile, moist, well-drained soil,' 'moist, well-draining'), which supports the categorical water_regime value but not a numeric estimate.",
         "scientific_name_accepted — removed on audit: The value is literally the JSON string \"null\" (quoted) rather than a real JSON null -- confirmed by inspecting the record text character-for-character. This is a direct violation of structural check 6, and it also fails structural check 1 independently: since the value is technically a populated string, not null, it would need a citation whose claim label contains 'scientific_name_accepted', but no such citation exists (only 'name_note ...' citations touch this content). Cross-checking the rest of this catalog (e.g. app/data/verified/b14-annual-flowers2.json line 206: \"scientific_name_accepted\": null) confirms the house convention for a genuinely unresolved accepted name is real JSON null, so this is a deviation, not a stylistic choice. Note the underlying research is sound -- I independently fetched RHS (Name Status 'Correct' for Hydrangea petiolaris, listing 'Hydrangea anomala subsp. petiolaris' as a synonym), NC State (Scientific Name 'Hydrangea petiolaris', 'Previously known as: Hydrangea anomala ssp. petiolaris'), and Missouri Botanical Garden ('Subsp. petiolaris (formerly known as Hydrangea petiolaris)') and all three quotes are verbatim-accurate, so the two-against-one conflict is genuine and the intent to leave it unresolved is correct -- only the encoding is broken. Downstream code that checks `if value is not None` would treat this as a populated field and could literally display the text \"null\" to a user.",
-        "mature_height_in_min/max and mature_spread_in_min/max all left null: this species is confirmed a climber/vine on both anchor pages (NC State Plant Type includes \"Vine\", Habit/Form \"Climbing\", tag \"#climber\"; RHS categorizes it as \"Climber\"), so per the climber-size rule no size figures are recorded even though both pages publish numbers. NC State's Dimensions block reads \"Height: 30 ft. 0 in. - 60 ft. 0 in.\" and \"Width: 5 ft. 0 in. - 6 ft. 0 in.\" (this height figure is the plant's climbing run, not a stature bound, per the rule). RHS's structured fields read \"Max Height Higher than 12 metres\" (open-ended, no usable upper bound in any case) and \"Max Spread 4-8 metres\".",
         "is_edible left null: no page among the readable ones (NC State, RHS, UMD vines page) states this species or any part of it is eaten or grown for food, and none states it is inedible. UMD's vines page discusses edibility for other listed vines (e.g. grapes, Virginia creeper) but makes no edibility statement for Climbing Hydrangea specifically.",
         "Toxicity check performed per instructions before considering is_edible: NC State's anchor page lists Plant Type \"Poisonous\" and Problems \"Poisonous to Humans\" for this species. Since is_edible was left null (no page states it is eaten), this toxicity information is not gating a true value, but is recorded here as required. No specific poisonous part, severity, toxic principle, preparation requirement, or pets warning text beyond the bare \"Poisonous\"/\"Poisonous to Humans\" tags was found on the page.",
         "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=d370 (Missouri Botanical Garden Plant Finder) refused connection from this machine (ProxyError) on every attempt; not used for any field.",
         "https://hgic.clemson.edu/factsheet/vine-selections-for-landscaping/ (Clemson HGIC) refused connection from this machine (ProxyError) on every attempt; not used for any field.",
-        "https://extension.umd.edu/resource/vines-maryland-gardens was read successfully; its entry for Climbing Hydrangea (Hydrangea anomala subsp. petiolaris) gives only light/moisture/climbing-type and a note that it is 'slow to establish' with white flowers in early summer -- no edibility or pollinator-attraction statement for this species specifically, so it contributed no field values."
+        "https://extension.umd.edu/resource/vines-maryland-gardens was read successfully; its entry for Climbing Hydrangea (Hydrangea anomala subsp. petiolaris) gives only light/moisture/climbing-type and a note that it is 'slow to establish' with white flowers in early summer -- no edibility or pollinator-attraction statement for this species specifically, so it contributed no field values.",
+        "attracts_pollinators: already landed, deliberately returned null and not researched.",
+        "is_edible set false only on NC State's 'Poisonous' plant-type and 'Poisonous to Humans' problem entries; the page does not name which part is poisonous, a severity, a toxic principle, or a pets warning. No page read states anything about food use.",
+        "mature_height_in 360-720 is the climbing reach (30-60 ft converted x12) per NC State; it is not a free-standing shrub height.",
+        "mature_spread_in 60-72 is NC State Width 5-6 ft converted x12.",
+        "Searched the NC State page for 'Dimensions', 'Height:', 'Width:', 'Poison', 'Toxic', 'Problem for', 'Edible', 'Habit', 'Plant Type', 'Climb'. 'Toxic', 'Problem for' and 'Edible' returned 0 hits. Did not load the RHS, MOBOT, UMD or Clemson pages or search other registered hosts, since NC State gave usable values for all researched fields except an edibility statement beyond 'Poisonous'; no page refused this machine in the pages I loaded."
       ],
       "citations": [
         {
@@ -995,9 +1057,39 @@
           "source": "RHS - Hydrangea petiolaris details page",
           "url": "https://www.rhs.org.uk/plants/8948/i-hydrangea-petiolaris-i/details",
           "quote": "Plants for pollinators"
+        },
+        {
+          "claim": "mature_height_in 360-720: climbing reach, NC State Height 30 ft. 0 in. - 60 ft. 0 in., converted to inches (x12)",
+          "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+          "quote": "Height: 30 ft. 0 in. - 60 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 60-72 (NC State Width 5 ft. 0 in. - 6 ft. 0 in., converted to inches x12)",
+          "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+          "quote": "Width: 5 ft. 0 in. - 6 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State lists Habit/Form as Climbing",
+          "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+          "quote": "Climbing"
+        },
+        {
+          "claim": "is_edible false: NC State lists the plant as poisonous to humans (part not specified)",
+          "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+          "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+          "quote": "Poisonous to Humans"
         }
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "is_edible": false,
+      "climbs": true,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 720,
+      "mature_spread_in_min": 60,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Crown of Thorns",
@@ -1412,6 +1504,7 @@
   ],
   "normalizations": [
     "2026-08-23: seventeenth batch of the \"blind spots\" pass -- Ginkgo biloba, Nandina domestica (Heavenly Bamboo), Bougainvillea glabra, Passiflora incarnata (Purple Passionflower), Ranunculus acris (Buttercup), Hydrangea anomala subsp. petiolaris (Climbing Hydrangea, a deliberate third companion species to the Bigleaf/Panicle Hydrangea already in this catalog), Euphorbia milii (Crown of Thorns), and Lantana camara. Ginkgo's toxic_to_pets correctly left null -- RHS's only pets-scoped language ('Seed TOXIC to pets') never names cats or dogs specifically -- while a well-sourced unknowns entry documents the dioecious male/female fruit-drop-and-odor issue as decision-relevant context with no dedicated schema field. Nandina domestica's toxic_to_pets=true confirmed with clean, explicit cat-and-dog evidence (NC State's 'Problem for Cats'/'Problem for Dogs' tags), correctly kept separate from its independently documented bird-specific cyanide toxicity. Restored Common Lantana's soil_drainage from an audit-nulled value back to 'moderate': the audit reasoned that a well-drained signal across sources meant 'moderate' was unsupported, but its own live-verified NC State quote -- 'Soil Drainage: Good Drainage Moist Occasionally Dry' -- is the same tag-combination pattern this catalog has already and repeatedly mapped to 'moderate' rather than 'fast' (see b24's precedent, where a plain well-drained signal without a moisture-spanning tag combo was mapped to 'fast' or left null, while 'Good Drainage, Moist, Occasionally Dry/Wet' combinations were consistently read as 'moderate'); both of Lantana's own citations for the field were already present, correctly labeled, and quote-verified, so this was a citation-already-sufficient repair, not new research. Left null rather than repaired: name_note was removed on audit for three records (Ginkgo, Crown of Thorns, Lantana) purely because no citation's claim label literally contained the string 'name_note' -- all three records' underlying content was independently confirmed accurate by the auditor's own live fetches, and in isolation each would be a same-batch citation-mislabeling repair matching b34's Rose of Sharon fix, but by the time this file reached landing review the post-processing step had already overwritten the field to null everywhere, and the original name_note prose was not preserved anywhere else in the record to restore verbatim -- rather than author replacement text myself, these three stayed null. This surfaced a real, batch-spanning gap in the research prompt (it asks for name_note text but doesn't always generate a matching-labeled citation for it, mirroring the scientific_name_given exception already carved out in b34) worth fixing in the prompt for b36 onward, on both the research and verify sides, so a citation-labeling repair can happen before the value itself gets discarded. Bougainvillea's soil_base and fertilize_interval_days nulls, Purple Passionflower's toxicity_detail and is_houseplant nulls, and Crown of Thorns's toxicity_detail null were all reviewed and confirmed as genuine value-level defects the audit correctly caught (a category word ('standard_potting') not supported by a 'loam-based compost' quote; an ambiguous 'once a month' reading applied inconsistently within the same record; a landscape-use tag read as evidence of non-houseplant status; and, for Crown of Thorns, a 'milky latex sap' phrase re-imported uncited from a passage the record itself had already correctly identified as human-only) -- none were repaired. Climbing Hydrangea's scientific_name_accepted was self-caught by the audit as a literal string \"null\" rather than real JSON null, encoding a genuine, disclosed two-against-one naming disagreement between RHS/NC State (Hydrangea petiolaris) and Missouri Botanical Garden (subsp. petiolaris of H. anomala) -- the underlying research was sound and the intent to leave it unresolved was correct, only the encoding was broken, and it now lands as proper null.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

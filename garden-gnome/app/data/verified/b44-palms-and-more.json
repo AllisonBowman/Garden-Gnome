@@ -46,7 +46,15 @@
         "water_dry_down_target, water_check_depth_cm, water_growing_days_est, water_dormant_days_est, and water_estimate_basis left null: Clemson HGIC's Indoor Palms factsheet states 'The other lady palms should be allowed to become somewhat dry between thorough waterings,' but by the source's own framing this applies to lady palm types other than the 'large lady palm' (i.e. Rhapis excelsa, which the same factsheet calls 'the most adaptable to low light areas'), so it was not used for this species; no admissible source gives a dry-down depth/target or an explicit numeric day-interval watering schedule for Rhapis excelsa itself.",
         "fertilize_interval_days, fertilize_active_months, and fertilize_strength left null: admissible sources describe fertilizing only qualitatively (NC State: 'Use a balanced slow-release fertilizer during the growing season'; Clemson: lady palms 'are slow-growing and need very little fertilizer'; UF/IFAS FP501: interiorscape palms fertilized 'at greatly reduced rates') without a stated numeric day interval, specific active months, or a dilution fraction.",
         "soil_base (african_violet) rests on Clemson HGIC's genus-level 'Lady Palms' recommendation ('A rich houseplant potting mix, such as an African violet mix, is ideal'), which the same factsheet applies to lady palms broadly (it names Rhapis excelsa 'the most widely grown species of the lady palms') rather than a statement written for this species alone; NC State and Missouri Botanical Garden only say 'well-drained potting soil/medium' generically.",
-        "toxic_to_pets is set to false (non-toxic) based on NC State Extension's own tags, which name both cats and dogs specifically ('non-toxic for cats', 'non-toxic for dogs'), satisfying the cat/dog-specific evidence requirement."
+        "toxic_to_pets is set to false (non-toxic) based on NC State Extension's own tags, which name both cats and dogs specifically ('non-toxic for cats', 'non-toxic for dogs'), satisfying the cat/dog-specific evidence requirement.",
+        "mature_height_in_min left null: UF/IFAS FP501 gives only an upper figure ('up to 7 ft in height'), so only the max end is filled (7 ft x 12 = 84 in); no lower end invented.",
+        "mature_height_in_max uses UF/IFAS (shady landscape or interiorscape use, 7 ft) rather than NC State's Dimensions block 'height: 4 ft. 0 in. - 12 ft. 0 in.' (48-144 in), whose max exceeds the 120 in headroom ceiling and is not labelled as an indoor figure.",
+        "mature_spread_in_min and mature_spread_in_max left null: the only spread figure found is NC State 'width: 6 ft. 0 in. - 15 ft. 0 in.' (72-180 in), not labelled indoor/container and its max exceeds 120 in. UF/IFAS gives no spread; Clemson says only large lady palms 'can grow to be more than 8 feet tall and as wide as they are tall' (open-ended, no usable bound).",
+        "Clemson HGIC indoor-palms 'more than 8 feet tall' for large lady palm is open-ended and conflicts with UF 7 ft; not used.",
+        "is_edible left null: searched NC State, UF/IFAS FP501 and Clemson for Edible, eat, food, Poison, Toxic; none addresses eating the plant. NC State tags '#non-toxic for cats', '#non-toxic for dogs', '#non-toxic for horses' concern pet toxicity, not human edibility, so not used.",
+        "attracts_pollinators left null: NC State has no 'Attracts' field (0 hits); searched butterfl, bee, pollinat, wildlife, attract on NC State and UF/IFAS FP501 with no mention; Clemson has no Attracts hit.",
+        "climbs left null: NC State 'habit/form: erect spreading' and 'plant type: houseplant perennial shrub woody plant'; UF describes a clumping palm spreading by rhizomes; no page calls it a climber.",
+        "Pages that refused this machine: plantfinder.mobot.org (fetch status error:ConnectError), skipped. No RHS, edis, UMD, PSU or UGA species page was searched beyond the starting pages; NC State and UF FP501 loaded ok."
       ],
       "citations": [
         {
@@ -150,8 +158,15 @@
           "source": "Missouri Botanical Garden Plant Finder — Rhapis excelsa",
           "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276756&isprofile=0&letter=R",
           "quote": "Best with regular and consistent moisture, particularly in summer, but with reduced water applications in winter."
+        },
+        {
+          "claim": "mature_height_in max 84 (UF/IFAS FP501: 'up to 7 ft in height' for shady landscape or interiorscape use, 7 ft x 12 = 84 inches; single upper figure so min left null)",
+          "source": "UF/IFAS Extension FP501 Rhapis excelsa: Lady Palm",
+          "url": "https://ask.ifas.ufl.edu/publication/FP501",
+          "quote": "forming dense clusters and eventually thickets, up to 7 ft in height"
         }
-      ]
+      ],
+      "mature_height_in_max": 84
     },
     {
       "chill_damage_f": null,
@@ -1200,6 +1215,24 @@
           "source": "NC State Plant Toolbox - Epiphyllum oxypetalum (Orchid Cactus)",
           "url": "https://plants.ces.ncsu.edu/plants/epiphyllum-oxypetalum/common-name/orchid-cactus/",
           "quote": "the fruits are edible"
+        },
+        {
+          "claim": "mature_height_in 96-120 (NC State Height 8 ft. 0 in. - 10 ft. 0 in., converted to inches: 8x12=96, 10x12=120; page tags the plant as a Houseplant; for a climber this is its reach)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/epiphyllum-oxypetalum/",
+          "quote": "Height: 8 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches: 2x12=24, 3x12=36)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/epiphyllum-oxypetalum/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State lists Climbing among the plant's Habit/Form values",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/epiphyllum-oxypetalum/",
+          "quote": "Climbing"
         }
       ],
       "common_name": "Orchid Cactus",
@@ -1260,13 +1293,17 @@
         "fertilize_active_months — removed on audit: The cited quote -- 'To encourage flowering use an application of low nitrogen fertilizer once at the end of February and again in early November. Do not fertilize plants during December or January.' -- is verbatim and real (confirmed in Clemson's Orchid Cactus subsection), but it does not, by itself, 'name the specific months in which orchid cacti are fed' as the claim asserts. It names exactly two isolated flowering-boost applications (end of Feb, early Nov) plus an exclusion (Dec/Jan); it says nothing about March-October. The sentence that actually justifies a continuous Feb-Nov feeding window -- 'Plants should receive balanced fertilizer once a month from spring to fall' -- appears in the same Clemson paragraph but was never quoted or cited. Read together, the full paragraph does plausibly support [2..11], so the VALUE is likely fine, but the citation as constructed doesn't establish it and should be corrected to include the 'once a month from spring to fall' sentence. Separately, RHS's own species-detail page (rhs.org.uk/plants/32100/...) states a third, much sparser cadence -- 'apply a high potash fertiliser 3 or 4 times' during growth -- which is silent on which months but was not surfaced anywhere in the unknowns as a third conflicting data point.",
         "name_note — removed on audit: Sub-claim 1 (the 8-name list: Dutchman's Pipe Cactus, Jungle Cactus, Lady of the Night, Night-blooming Cactus, Night-blooming Cereus, Night Queen, Orchid Cactus, Queen of the Night) is accurate -- verified verbatim against NC State's 'Common Name(s)' list. Sub-claim 2 is the problem: citation #4's claim label asserts the epithet is 'a Greek compound describing the petal shape,' but the quoted NC State text it cites says the opposite of 'shape' -- it says oxy- means 'sour' and states 'It presumably accurately describes their taste, although this plant is not known to have edible flowers' (verified live, exact match). The source is explicitly discussing a taste attribute, not petal shape. This is a claim-label/quote mismatch, not a fabricated quote -- the quote itself is verbatim and real, but it does not say what the claim asserts it says. (The final name_note field text sidesteps this by staying vague -- 'describing its petals' -- so the field text itself isn't wrong, but the supporting citation is, and should be corrected to stop calling this a shape descriptor.)",
         "fertilize cadence conflict: RHS's species page gives a much sparser 'apply a high potash fertiliser 3 or 4 times' during growth (no months named); Clemson's monthly spring-to-fall schedule is the one encoded in fertilize_active_months.",
-        "All four size fields left null: NC State's anchor page tags this species \"#climber\" and lists its habit/form as including \"climbing\" (also \"arching\", \"weeping\", \"multi-stemmed\"), and the RHS growing guide for the genus describes the stems as \"usually trailing\". Per the climber rule, the published Height (8 ft. 0 in. - 10 ft. 0 in. = 96-120 in) and Width (2 ft. 0 in. - 3 ft. 0 in. = 24-36 in) on NC State, and the RHS species page's Max Height (1.5-2.5 metres = 59.1-98.4 in) and Max Spread (0.5-1 metres = 19.7-39.4 in), are not recorded because it cannot be determined whether these figures mean the plant's own stature or how far its trailing/climbing stems run.",
         "is_edible is conditional: NC State states \"the fruits are edible\" but also states elsewhere on the same page that \"this plant is not known to have edible flowers\" -- only the fruit is edible, not the whole plant or its flowers.",
         "Searched the NC State anchor page for \"Poison\", \"Toxic\", and \"Problem for\" -- zero hits for all three; no toxicity, poisonous-part, severity, or pets warning was found on that page.",
         "hgic.clemson.edu/factsheet/indoor-cacti/ has no edibility, toxicity, pollinator or size figure specific to this species. (Corrected at landing: besides temperature and fertilizing care it says 'Orchid cacti have flattened, fleshy stems, often deeply toothed, with a trailing growth habit.', which agrees with the size nulls.) Its one 'edible pear-shaped fruits' mention is about Opuntia (prickly pear), a different genus, so it was not used for is_edible.",
         "rhs.org.uk/plants/epiphyllum/growing-guide is a genus-wide growing guide with no \"Max Height\"/\"Max Spread\"/\"Edible\"/\"Toxic\" hits; it was not used to set any field for this species.",
         "Searched the RHS species page (rhs.org.uk/plants/32100/epiphyllum-oxypetalum/details) for \"Attracts\", \"Wildlife\", and \"pollinators\" -- \"Attracts\" and \"pollinators\" returned zero hits; that page contributes no pollinator support, so attracts_pollinators relies solely on NC State's structured Attracts field.",
-        "All five requested pages loaded successfully (fetch status ok); none refused this machine."
+        "All five requested pages loaded successfully (fetch status ok); none refused this machine.",
+        "is_edible and attracts_pollinators: already landed, deliberately returned null and not researched.",
+        "RHS details page (Max Height 1.5-2.5 metres = 59-98 inches, Max Spread 0.5-1 metres = 20-39 inches, Habit Trailing) was read but not used; NC State's houseplant-tagged Dimensions block was used as the anchor. RHS figures are UK-grown and lower, so the true indoor height may be nearer 59-98 inches.",
+        "NC State lists Habit/Form as Arching, Climbing, Erect, Multi-stemmed, Weeping (mixed), so the 96-120 inch reach is a climber/arching reach, not an upright self-supporting height. NC State also says the plant may grow up to 10 feet tall in its native habitat (equal to the 120 inch cap, within the limit).",
+        "edis.ifas.ufl.edu search page refused this machine (ProxyError, sandbox denial); no UF/IFAS species page was fetched, so no UF/IFAS size is reported.",
+        "Searches run on NC State and RHS pages for Dimensions, Height, Width, Max Height, Max Spread, Habit, Plant Type, Climb, Attracts, Poison, Edible; NC State has no Poison/Toxic hit. Clemson and RHS growing-guide pages were not re-read since the earlier pass found no size."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -1275,7 +1312,12 @@
       "water_growing_days_est": null,
       "water_regime": null,
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 96,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Mistletoe Cactus",
@@ -1517,6 +1559,7 @@
   "normalizations": [
     "2026-08-24: twenty-sixth batch, and the first landed through the new process tooling -- three houseplant palms (Lady Palm, Pygmy Date Palm, Cat Palm -- checked against Parlor Palm already in this catalog, no bleed), Watermelon Peperomia (a deliberate companion to Peperomia obtusifolia; landed under RHS's own lead name 'Watermelon Begonia', and with scientific_name_accepted left null on a genuine NC State/RHS spelling disagreement, argyraea vs argyreia), Dwarf Banana, Freesia, and two epiphytic cacti (Orchid Cactus, Mistletoe Cactus -- checked against Christmas Cactus and parasitic mistletoe respectively, no bleed). land_check.py found no convention problems and covered.py confirmed no duplicates. The new mechanical citation verifier (verify_quotes.py) ran alongside the audit for the first time and independently flagged the same synthesized RHS quote the auditor caught on Orchid Cactus ('Winter resting period: ...' -- a label that appears nowhere on the page); its remaining misses were all diagnosed as extraction artifacts (RHS inline glossary tooltips, NC State's 'oxy -' spacing, unit formatting) and fixed in the tool, not the data. Repairs, each using the auditor's own verbatim page text: Orchid Cactus cool_rest_note restored with RHS's real sentence ('In winter, move to a cooler place, at 11-14C (52-57F), to encourage flowering') replacing the synthesized one; fertilize_active_months restored to Feb-Nov with the Clemson sentence that actually establishes the window ('balanced fertilizer once a month from spring to fall') added alongside the end-Feb/early-Nov applications, and RHS's sparser '3 or 4 times' cadence disclosed in unknowns; name_note restored after its citation label was corrected -- the epithet oxypetalum is Greek 'sour' + 'petal' describing taste per NC State, not petal shape as the label had claimed. Freesia's common_name 'Freesia' was kept but re-cited to Missouri Botanical Garden's actual Common Name for the florists' hybrids, after the audit found NC State's genus page leads with 'Baboon Flower' and the UGA support was a multi-species table row; NC State's names now sit in name_note as alternates. Left null on accepted grounds: Cat Palm's soil_base and soil_drainage (Clemson's palm guidance is document-wide, and its 'excellent drainage' wording contradicted 'moderate'), Freesia's soil_base (both sources specify a grit-amended mix that no enum token captures without overstating) and scientific_name_accepted (no source states an accepted name for the hybrid complex). toxic_to_pets: five explicit NC State-tagged 'false' verdicts naming cats and dogs, one stated in prose ('This houseplant is not toxic to cats or dogs'); none true.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Cat Palm -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

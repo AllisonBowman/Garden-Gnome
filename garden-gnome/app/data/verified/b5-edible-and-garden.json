@@ -450,6 +450,24 @@
           "source": "NC State Extension Gardener Plant Toolbox, Cucumis melo",
           "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
           "quote": "The cantaloupe plant attracts bees and other pollinators."
+        },
+        {
+          "claim": "climbs: NC State describes Cucumis melo as a climbing vine (Habit/Form lists Climbing; Plant Type lists Vine).",
+          "source": "NC State Extension Gardener Plant Toolbox, Cucumis melo",
+          "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+          "quote": "Being a climbing vine, cantaloupe is suitable for growing on vertical spaces."
+        },
+        {
+          "claim": "mature_height_in 72-108 (NC State Height 6 ft. 0 in. - 9 ft. 0 in., converted to inches: 6 ft = 72, 9 ft = 108; for a climber this is its reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cucumis melo",
+          "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+          "quote": "Height: 6 ft. 0 in. - 9 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Width 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1 ft = 12, 3 ft = 36)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cucumis melo",
+          "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -467,12 +485,21 @@
         "water_* day estimates and water_estimate_basis null: in-ground crop, no stated pot/medium assumptions.",
         "toxic_to_pets false rests on NC State's explicit non-toxic tags for cats, dogs and horses, not on absence of evidence.",
         "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts.",
-        "mature_height_in and mature_spread_in left null (all four fields): NC State's Habit/Form field for this species reads 'Climbing, Spreading' and the page describes it as a 'climbing vine' / 'annual climber' (Plant Type includes 'Vine'); per the climber rule, no size figures are recorded even though the page does publish a Dimensions block ('Height: 6 ft. 0 in. - 9 ft. 0 in.', 'Width: 1 ft. 0 in. - 3 ft. 0 in.') because that figure cannot be reliably distinguished from run/spread along a support versus the plant's own stature.",
         "is_edible is conditional: NC State's Edibility field says the fruit is 'Eaten fresh, wrapped in prosciutto, in salads, or as a dessert' with a 'Watery, but delicate, flavor', but the same sentence warns 'Avoid the seeds as the sprouting seed produces a toxic substance in its embryo' -- i.e. the fruit is edible and the seeds are to be avoided, per the anchor page (corrected at landing from 'the seeds should not be eaten once they have sprouted': the page says plainly to avoid the seeds, and gives the sprouting seed's toxin as the reason).",
-        "https://hgic.clemson.edu/factsheet/cantaloupe-honeydew-melons/ refused this machine (qc.py fetch returned 'error:ProxyError', 0 bytes) -- it could not be read for this update, so no fields or unknowns are drawn from it here; nothing on it was guessed."
+        "https://hgic.clemson.edu/factsheet/cantaloupe-honeydew-melons/ refused this machine (qc.py fetch returned 'error:ProxyError', 0 bytes) -- it could not be read for this update, so no fields or unknowns are drawn from it here; nothing on it was guessed.",
+        "is_edible and attracts_pollinators were already landed on this record and are returned null, not re-researched.",
+        "The NC State page lists common names including Armenian Cucumber but is written mostly about cantaloupe; the Dimensions block is published for the species page Cucumis melo, not a named cultivar, but the species spans many cultivar groups (cantaloupe, honeydew, snake/American cucumber) so the size is a typical-garden figure, not specific to the snake melon group.",
+        "The NC State prose says it climbs 6 to 9 feet high given cages or trellises and may instead trail along the ground if there is room, so the height is a reach when supported.",
+        "https://hgic.clemson.edu/factsheet/cantaloupe-honeydew-melons/ refused this machine (fetch status http-403, 0 bytes); not used and not guessed at.",
+        "Did not search RHS, UF/IFAS or other registered hosts: the NC State species page already carries a structured Dimensions block for Cucumis melo."
       ],
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 72,
+      "mature_height_in_max": 108,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Sunflower",
@@ -651,6 +678,24 @@
           "source": "NC State Extension Gardener Plant Toolbox — Cucurbita maxima",
           "url": "https://plants.ces.ncsu.edu/plants/cucurbita-maxima/",
           "quote": "The fruits have a mild flavor and can be fried, baked, added to pasta, used in soups, and more."
+        },
+        {
+          "claim": "climbs: NC State describes the species as a vine that climbs up structures using tendrils (Habit/Form Climbing)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cucurbita maxima",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-maxima/",
+          "quote": "This large vine trails along the ground or climbs up structures using tendrils."
+        },
+        {
+          "claim": "mature_height_in 0-196.9 (max only) reach: RHS 'reaching 5m if unchecked', 5 m x 39.37 = 196.9 inches; no low end published so min is null",
+          "source": "RHS Cucurbita maxima",
+          "url": "https://www.rhs.org.uk/plants/158218/cucurbita-maxima/details",
+          "quote": "An annual which scrambles along the ground and over low shrubs, reaching 5m if unchecked."
+        },
+        {
+          "claim": "mature_spread_in 98.4-157.5 (RHS Max Spread 2.5-4 metres, converted to inches x 39.37)",
+          "source": "RHS Cucurbita maxima",
+          "url": "https://www.rhs.org.uk/plants/158218/cucurbita-maxima/details",
+          "quote": "Max Spread         2.5-4 metres"
         }
       ],
       "unknowns": [
@@ -666,14 +711,24 @@
         "water_* day estimates and water_estimate_basis null: in-ground crop, no defensible pot/medium assumption.",
         "water_check_depth_cm null: no source stated a probe depth.",
         "is_houseplant = false and soil_base = garden_bed are product classifications, not sourced facts.",
-        "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max all left null: NC State's own page classifies Cucurbita maxima as Habit/Form \"Climbing\" and Growth Habit \"Vine\" (\"This large vine trails along the ground or climbs up structures using tendrils,\" Climbing Method: Tendrils). Per the climber rule, no size fields are populated for a vine/climber regardless of any figures the page publishes, since mature_height_in cannot yet distinguish a plant's own stature from the distance it runs.",
         "The NC State page in fact carries no structured plant-dimension figures anyway: searches for 'Dimensions' and 'Height' returned zero hits; the only 'Width' hits found were Fruit Width (>3 inches) and Leaf Width (>6 inches), which are organ measurements, not whole-plant height/spread, and were not used for any field.",
         "attracts_pollinators left null: searched 'Attracts', 'Pollinator', 'bee', 'butterfl', 'hummingbird', and 'Wildlife' on the anchor page. There is no structured Attracts/Wildlife-value field and no unconditional statement naming bees, butterflies, moths, or hummingbirds visiting the flowers. The lone 'bee' hit was a false-positive substring match inside the word \"beetles\" (\"Slugs, aphids, and beetles\"), which is a pest listing, not pollinator support, so it was not read as evidence.",
         "Before setting is_edible, searched 'Poison', 'Toxic', and 'Problem for' as required. No poisonous part, toxic principle, severity, or preparation-safety warning was found for this species; the page's own tags state '#non-toxic for cats #non-toxic for horses #non-toxic for dogs'. No toxicity text needed to be carried into unknowns.",
         "is_edible context (not a toxicity condition, but noted for completeness): the page describes the fruit's culinary preparations as fried, baked, added to pasta, or used in soups — i.e., cooked preparations are what the page names; it does not separately state the fruit is eaten raw.",
-        "No page refused this machine; the single anchor page (NC State Plant Toolbox) fetched with an ok status."
+        "No page refused this machine; the single anchor page (NC State Plant Toolbox) fetched with an ok status.",
+        "is_edible left null: already landed, not researched here.",
+        "attracts_pollinators left null: NC State page has no Attracts field and no pollinator/bee/butterfly mention (searched Attracts, Pollinator, bee); it only has the tags 'wildlife friendly' and 'Wildlife Food Source', which do not name pollinators. RHS page has no pollinator tag either.",
+        "NC State page has no Dimensions/Height/Width block for the plant (searched Dimensions, Height, Width; only fruit and leaf widths appear), so size comes from the RHS page for Cucurbita maxima.",
+        "mature_height_in_max 196.9 is the RHS prose 'reaching 5m if unchecked' (5 m x 39.37 = 196.9 in), a reach figure with no published low end, so min is null. RHS's structured Max Height 0.1-0.5 metres (3.9-19.7 in) describes ground-level height of a scrambling habit and was not used as the climber's reach.",
+        "mature_spread_in 98.4-157.5 is RHS Max Spread 2.5-4 metres x 39.37. RHS habit is 'Spreading branched, Trailing' while NC State says Climbing with tendrils; the plant both trails and climbs.",
+        "RHS lists a potential harm: if crop is bitter, do not eat or feed to pets; not relevant to a null is_edible but noted for the landed edibility record.",
+        "No pages refused this machine."
       ],
-      "is_edible": true
+      "is_edible": true,
+      "climbs": true,
+      "mature_height_in_max": 196.9,
+      "mature_spread_in_min": 98.4,
+      "mature_spread_in_max": 157.5
     },
     {
       "common_name": "Common Peony",
@@ -735,6 +790,18 @@
           "source": "North Carolina Extension Gardener Plant Toolbox — Paeonia (Herbaceous Types)",
           "url": "https://plants.ces.ncsu.edu/plants/paeonia-herbaceous-types/",
           "quote": "Attracts butterflies and pollen-eating beetles."
+        },
+        {
+          "claim": "mature_height_in 19.7-39.4 (RHS Max Height 0.5-1 metres, converted to inches x39.37; plant is not a climber)",
+          "source": "RHS Paeonia officinalis | common peony",
+          "url": "https://www.rhs.org.uk/plants/41555/paeonia-officinalis/details",
+          "quote": "Max Height         0.5-1 metres"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches x39.37)",
+          "source": "RHS Paeonia officinalis | common peony",
+          "url": "https://www.rhs.org.uk/plants/41555/paeonia-officinalis/details",
+          "quote": "Max Spread         0.5-1 metres"
         }
       ],
       "unknowns": [
@@ -762,9 +829,19 @@
         "mature_height_in_min removed on audit: The unit conversion is right: 1 ft 0 in = 12 in, from the page line 'Height: 1 ft. 0 in. - 3 ft. 0 in.', which qc.py finds on a single line. The scope is wrong (check C). The unknowns call this 'the species-specific NC State page', but it is not. It is a genus/group page titled 'Paeonia – Herbaceous Types (Garden Peony, Herbaceous Peony, Hybrid Peony, Lactiflora Hybrids, Peony)'. It says growers classify these as 'Lactiflora cultivars (cultivars of P. lactiflora) or Herbaceous Hybrids'. 'officinalis' has 0 hits anywhere on the page. The Dimensions block therefore describes the garden group, which is mostly P. lactiflora cultivars and hybrids, and it is not a figure for Paeonia officinalis. The record's taxon has no species-level height on this page.",
         "mature_height_in_max removed on audit: The unit conversion is right: 3 ft 0 in = 36 in, and min 12 <= max 36. Both ends trace to 'Height: 1 ft. 0 in. - 3 ft. 0 in.' The scope is wrong for the same reason as the min: the page covers Paeonia herbaceous types as a group (Lactiflora cultivars and herbaceous hybrids), and 'officinalis' has zero hits. The researcher's claim that the figure is 'species-specific' is false.",
         "mature_spread_in_min removed on audit: The unit conversion is right: 1 ft 0 in = 12 in, from 'Width: 1 ft. 0 in. - 3 ft. 0 in.', which is verbatim on one line. The scope fails. This is the genus/group page for herbaceous peonies, including Lactiflora hybrids, and it never names P. officinalis, so this width is not the species' published spread.",
-        "mature_spread_in_max removed on audit: The unit conversion is right: 3 ft = 36 in, and min <= max, from 'Width: 1 ft. 0 in. - 3 ft. 0 in.' The scope fails. The figure belongs to the 'Paeonia – Herbaceous Types' group page, whose subject is Lactiflora cultivars and herbaceous hybrids. 'officinalis' has 0 hits on it, which contradicts the unknowns' description of the page as species-specific. There is no climber issue, since Plant Type is 'Herbaceous Perennial'."
+        "mature_spread_in_max removed on audit: The unit conversion is right: 3 ft = 36 in, and min <= max, from 'Width: 1 ft. 0 in. - 3 ft. 0 in.' The scope fails. The figure belongs to the 'Paeonia – Herbaceous Types' group page, whose subject is Lactiflora cultivars and herbaceous hybrids. 'officinalis' has 0 hits on it, which contradicts the unknowns' description of the page as species-specific. There is no climber issue, since Plant Type is 'Herbaceous Perennial'.",
+        "is_edible left null: neither the NC State herbaceous-types page (searched Poison, Toxic, Edible: 0 hits) nor the RHS P. officinalis page (searched Edible: 0 hits) addresses eating. RHS does list 'Potentially harmful: Pets (dogs, cats): Skin irritant.' and the NC State page tags #problem for dogs, horses, cats; these are pet warnings, not edibility statements.",
+        "climbs left null: NC State herbaceous page gives Habit/Form 'Clumping' and RHS gives Habit 'Bushy'; neither calls it a climber, and a plant no page calls a climber stays null rather than false.",
+        "attracts_pollinators already landed; returned null as instructed.",
+        "The NC State page already cited (paeonia-herbaceous-types) is a group page for garden/lactiflora hybrids (Height 1-3 ft), not P. officinalis itself, so its size was not used. NC State has no separate P. officinalis page (URL paeonia-officinalis returned http-404).",
+        "Size comes from the RHS species page for Paeonia officinalis: Max Height 0.5-1 metres and Max Spread 0.5-1 metres, converted x39.37 to 19.7-39.4 inches. RHS also describes it as 'to 70cm tall' in prose, within that range. These are RHS 'Max' figures from UK growing conditions.",
+        "RHS lists 'Plants for pollinators' tag on the page, but attracts_pollinators was not researched per instructions."
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "mature_height_in_min": 19.7,
+      "mature_height_in_max": 39.4,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "common_name": "Myrtle",
@@ -1000,6 +1077,7 @@
     "2026-08-08: fertilize intervals sourced to Clemson's generic indoor-plant factsheet killed (Ficus lyrata, Dracaena marginata) — the same wording the audit removed from Aspidistra. One rule for everyone.",
     "2026-08-08: outdoor_sun_exposure is now an array of every exposure the sources support; single first-checkbox readings corrected where a quote supports more (Mentha, Myrtus).",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Myrtle -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

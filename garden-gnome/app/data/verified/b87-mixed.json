@@ -178,6 +178,18 @@
           "source": "Clemson Cooperative Extension HGIC — Climbing Fig",
           "url": "https://hgic.clemson.edu/factsheet/climbing-fig/",
           "quote": "Fertilized female flowers produce pale green, pearlike inedible fruit."
+        },
+        {
+          "claim": "climbs: NC State describes Ficus pumila as a woody climber that climbs by attaching to walls or supports",
+          "source": "NC State Extension Gardener Plant Toolbox, Creeping Fig - Ficus pumila",
+          "url": "https://plants.ces.ncsu.edu/plants/ficus-pumila/common-name/creeping-fig/",
+          "quote": "Creeping fig is a broadleaf, evergreen, woody, climber in the mulberry family (Moraceae)."
+        },
+        {
+          "claim": "climbs: RHS describes Ficus pumila as an evergreen self-clinging climber",
+          "source": "RHS, Ficus pumila | creeping fig",
+          "url": "https://www.rhs.org.uk/plants/7210/ficus-pumila/details",
+          "quote": "An evergreen self-clinging climber or trailer to 3m"
         }
       ],
       "common_name": "Creeping Fig",
@@ -228,14 +240,21 @@
         "Cultivation caution (no dedicated schema field): Clemson HGIC warns that the vine's adhesive attachments damage structures on removal -- 'When the vines are removed, these attachments often remain, which mars the structure's appearance. Some surfaces, particularly wood and stucco, may be damaged when the stems are detached.' NC State separately notes the vine 'can cement itself to porous surfaces,' describing the adhesion rather than the damage. This is a structural/wall-damage caution, kept separate from the milky-latex skin-handling warning and from the cat/dog toxicity tags.",
         "Juvenile vs. mature foliage (no dedicated schema field): NC State, Clemson HGIC, and Missouri Botanical Garden all note the small, thin, heart-shaped juvenile leaves seen on climbing/indoor stems differ sharply from the larger, thicker, leathery, fruit-bearing mature foliage described on some pages — the size/light/water fields above reflect the common juvenile/climbing/houseplant form, not the mature fruiting form.",
         "attracts_pollinators left null rather than true: NC State's structured Attracts field for this species carries one value, 'Songbirds', which is seed and fruit eating rather than pollination, and the fig/fig-wasp sentence the research cited is reproductive biology inside a closed syconium, scoped to the outdoor adult form on a page whose next sentence reads 'Rarely flowers when grown indoors.' The citation was dropped with the value.",
-        "is_edible corrected to null on 2026-09-27, outside the size backfill, and the citation that supported only it was removed; this supersedes the line above that sets it true. NC State's Edibility field reads 'Not usually grown for edible fruit, but properly prepared it is popular in Asian countries.', a marginal food use, not a plant grown to eat, which is what is_edible true tells the app's users. The same page says of the figs 'They are insipid and not worth eating.' and 'Inedible figs appear after the spring flowers on plants grown outdoors', and tags the species '#problem for dogs #problem for horses #problem for cats'."
+        "is_edible corrected to null on 2026-09-27, outside the size backfill, and the citation that supported only it was removed; this supersedes the line above that sets it true. NC State's Edibility field reads 'Not usually grown for edible fruit, but properly prepared it is popular in Asian countries.', a marginal food use, not a plant grown to eat, which is what is_edible true tells the app's users. The same page says of the figs 'They are insipid and not worth eating.' and 'Inedible figs appear after the spring flowers on plants grown outdoors', and tags the species '#problem for dogs #problem for horses #problem for cats'.",
+        "mature_height_in and mature_spread_in left null (rule 12): the only height figures are outdoor stature above 10 ft. NC State: 'Height: 8 ft. 0 in. - 15 ft. 0 in.' (96-180 in) and 'Width: 3 ft. 0 in. - 6 ft. 0 in.'; its prose says 'in favorable conditions, will climb 8 to 15 feet high and spread 3 to 6 feet wide'. RHS: 'Max Height 2.5-4 metres' (98-157 in) and 'Max Spread 1.5-2.5 metres'. Neither page gives a separate indoor or container figure. I searched both pages for Indoors, houseplant and container: NC State gives only care text and cultivar notes ('Minima' used in terrariums or containers, no size).",
+        "is_edible left null: NC State's Edibility field says 'Not usually grown for edible fruit, but properly prepared it is popular in Asian countries.' but the same page says 'Inedible figs appear after the spring flowers on plants grown outdoors' and the fruit is 'insipid and not worth eating', so the page contradicts itself on eating. NC State tags the plant '#problem for dogs #problem for horses #problem for cats'. RHS lists 'Potentially harmful: Skin allergen. Wear gloves and other protective equipment when handling'. A search of NC State for Poison and Toxic returned no hits.",
+        "attracts_pollinators left null: NC State's Attracts field lists only Songbirds. The page's 'Landscape Theme: Butterfly Garden' is a design theme, not an attracts statement. Its flowering text says the fig is 'pollinated by fig wasps' and 'Rarely flowers when grown indoors', which is not an attracts-pollinators claim. I searched RHS for 'pollinator' and found nothing.",
+        "https://hgic.clemson.edu/factsheet/climbing-fig/ refused this machine (fetch status http-403, even with the host allowed). Not read.",
+        "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b599 was not fetched; I did not try it and say nothing about what it holds.",
+        "The NC State /climbing-fig/ page is the same species record and returned identical Dimensions text, so it adds no independent figure."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "climbs": true
     },
     {
       "common_name": "Asparagus Fern",
@@ -588,6 +607,30 @@
           "source": "NC State Extension Gardener Plant Toolbox — Philodendron erubescens",
           "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
           "quote": "#poisonous if ingested"
+        },
+        {
+          "claim": "mature_height_in 36 max only (NC State: when grown indoors typically 3 ft. tall = 36 inches; this is a climber, so as a houseplant reach is recorded as published, converted to inches at 12 in per ft)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+          "quote": "When grown indoors, It typically grows 3 ft. tall and 16 inches wide."
+        },
+        {
+          "claim": "mature_spread_in 16 max only (NC State: when grown indoors typically 16 inches wide, already in inches)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+          "quote": "When grown indoors, It typically grows 3 ft. tall and 16 inches wide."
+        },
+        {
+          "claim": "climbs true (NC State: indoors it climbs on a moss pole or trellis)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+          "quote": "When grown indoors, it can be a climber on a moss pole or trellis"
+        },
+        {
+          "claim": "is_edible false (NC State tags the plant poisonous if ingested)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+          "quote": "#poisonous if ingested"
         }
       ],
       "common_name": "Blushing Philodendron",
@@ -631,14 +674,24 @@
         "fertilize_interval_days, fertilize_active_months and fertilize_strength left null: no admissible source gives fertilizing guidance for this species.",
         "outdoor_sun_exposure includes only part_shade because NC State's structured Light field lists Dappled Sunlight and Partial Shade, and the species-specific description separately says direct sunlight should be avoided; full_sun/part_sun/full_shade were not included since no source supports them for this species.",
         "name_note left null: only one admissible source (NC State) yielded a usable common name, and its rendered Common Name(s) list leads with Blushing Philodendron, with the Description independently calling it 'commonly known as the Blushing Philodendron', so there was no cross-source split to disclose. The page-title parenthetical is <title> metadata rather than rendered content and carried no weight in this decision.",
-        "mature_height_in_min/max, mature_spread_in_min/max, is_edible and attracts_pollinators are not carried on this record, which was researched on 2026-09-11 before those six fields existed. They are left to the size backfill rather than filled at landing, so no figure or flag from today's sources is mixed into a record the auditor reviewed under the 35-field schema. NC State's Plant Type field lists this species as a Vine and its Description calls it 'a climbing tropical herbaceous perennial', so under the pipeline's climber rule it would take no mature size in any case."
+        "mature_height_in_min and mature_spread_in_min left null: the page gives only one indoor figure for each (3 ft tall, 16 inches wide), so it fills the max end only and no minimum is invented.",
+        "NC State's Dimensions block (Height: 2 ft. 0 in. - 60 ft. 0 in., Width: 1 ft. 0 in. - 2 ft. 0 in.) and the native-rainforest height (up to 60 feet) were NOT used; the indoor houseplant figure (3 ft tall, 16 inches wide) was recorded instead per the houseplant headroom rule. The 60 ft outdoor/native figure exceeds 120 inches.",
+        "mature_height_in 36 is the indoor 'typically grows 3 ft. tall' figure for a plant that climbs; NC State also says indoors it can climb a moss pole or trellis or spread outwards, so the real indoor reach with support may be greater than 36 in.",
+        "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Pollinator', 'butterfl' and 'Wildlife' and found no hits; no other registered-authority page was loaded.",
+        "is_edible set false from the NC State tag '#poisonous if ingested'. Related page text: poison severity low, 'If ingested, mouth and stomach irritation. Sap may cause skin irritation', toxic principle calcium oxalate crystals, causes contact dermatitis, poison parts flowers and fruits; tags 'problem for dogs', 'problem for cats', 'problem for children'.",
+        "Cultivar-specific notes on the NC State page ('Prince of Orange' non-vining, 'Pink Princess' upright vining, 'Red Emerald' climber) were not used for any field.",
+        "No RHS or UF/IFAS page was searched or loaded; only the NC State anchor page was read."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
       "water_dry_down_target": null,
       "water_estimate_basis": null,
       "water_growing_days_est": null,
-      "water_regime": null
+      "water_regime": null,
+      "is_edible": false,
+      "climbs": true,
+      "mature_height_in_max": 36,
+      "mature_spread_in_max": 16
     },
     {
       "chill_damage_f": null,
@@ -1560,6 +1613,7 @@
   ],
   "normalizations": [
     "2026-09-27: b87 landed from the post-audit records alongside the b86 and b88 landings. Eight mixed species; five were researched 2026-09-11 under the 35-field schema and three (Creeping Fig, Asparagus Fern, Cheddar Pink) today under the grown schema, so only those three carry is_edible, attracts_pollinators and mature_*_in -- nothing was backfilled onto the other five, which the size backfill owns, so the Clivia audit's 'add all six keys' finding is declined and disclosed in that record's unknowns instead. Auditor CORRECTED WORDING used verbatim throughout. Landing decisions: Ficus pumila takes NO mature size under the pipeline's climber rule (NC State Plant Type: Houseplant, Vine; Habit/Form: Climbing), its two size citations dropped and the published NC State and RHS figures recorded in unknowns; its outdoor_sun_exposure drops full_shade (Clemson says 'full sun or shade', not full shade, and three structured sun fields exclude it), its attracts_pollinators stays null with the fig-wasp citation dropped (NC State's Attracts field reads only 'Songbirds'), and humidity_need is set high on NC State's 'It does best in high humidity.' at the audit's instruction; it lands as Creeping Fig on RHS's subtitle and NC State's creeping-fig-titled page, with NC State's duplicate Climbing Fig page and Clemson's Climbing Fig factsheet disclosed, and its Edibility/Fruit Description contradiction resolved to one statement keeping is_edible true on the structured Edibility field alone. Clivia miniata lands title-cased as Bush Lily (no collision with the corpus's nine other lilies or its Daylily) and its water_regime stays null (refuted keep_moist; MoBot's sentence is outdoor-scoped and its second clause says to dry), citation dropped. Cosmos sulphureus lands as Yellow Cosmos, not the researched Sulphur Cosmos -- NC State auto-generates one alias page per common name so it ranks none, and RHS's title and subtitle rank yellow cosmos; its two slug-artifact citations were dropped. Cheddar Pink keeps toxic_to_pets true: NC State's structured Problems field values are 'Problem for Cats' and 'Problem for Dogs', cat/dog-scoped rather than a generic pets line, re-read live at landing. Four toxicity_detail fields (Creeping Fig, Asparagus Fern, Blushing Philodendron, Bush Lily) were removed on audit as trimmed and are restored here in full with the missing spine hazard, poisonous tags, horse scope and MoBot all-parts sentence added. is_houseplant was false-and-cited on the two records that had left it null (Lady's Mantle, Habanero Pepper). Three bare RHS Name Status 'Correct' citations the audit proposed dropping were instead relabelled with repair_lib's CORR and paired with the taxon-naming citation, per the landing brief's standing rule. verify_quotes: every reachable quote verified after repair; hgic.clemson.edu returns http-403 to this machine and plantfinder.mobot.org refuses the connection, so those citations SKIP -- the Clemson and MoBot substitutes rest on the auditor's live read and could not be re-fetched here.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

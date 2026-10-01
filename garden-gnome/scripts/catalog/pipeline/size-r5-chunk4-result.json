@@ -1,0 +1,964 @@
+{
+  "landed": [
+    {
+      "batch": "b35-ginkgo-and-more.json",
+      "record": {
+        "common_name": "Bougainvillea",
+        "scientific_name_accepted": "Bougainvillea glabra",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "attracts_pollinators: already landed, deliberately returned null and not researched.",
+          "is_edible: left null. Searched the NC State and RHS pages for 'Edible', 'dible', 'Poison', 'Toxic', 'oison|oxic' and 'Problem for' and got zero hits on both; no page addresses eating.",
+          "mature_height_in and mature_spread_in (all four fields): left null under the houseplant headroom rule. The only published figures are outdoor/landscape sizes that exceed 120 in. NC State Dimensions reads 'Height: 10 ft. 0 in. - 20 ft. 0 in.' (120-240 in.) and 'Width: 6 ft. 0 in. - 10 ft. 0 in.' (72-120 in.). RHS reads 'Max Height 4-8 metres' (157-315 in.) and 'Max Spread 2.5-4 metres' (98-157 in.). Neither page gives an indoor, houseplant or container figure.",
+          "Climber reach was not recorded as the size, because the published reach figures exceed the 120 in. houseplant ceiling. NC State Climbing Method is 'Scrambler'.",
+          "edis.ifas.ufl.edu (UF/IFAS) refused this machine (ProxyError, sandbox denial) when tried with a guessed publication URL, and I did not retry it with the host allowed. The Clemson page was not loaded in this pass. No indoor size was found from either."
+        ],
+        "citations": [
+          {
+            "claim": "climbs: NC State lists Habit/Form: Climbing for Bougainvillea glabra (Plant Type also includes Vine), so the plant climbs.",
+            "source": "NC State Extension Gardener Plant Toolbox, Bougainvillea glabra",
+            "url": "https://plants.ces.ncsu.edu/plants/bougainvillea-glabra/",
+            "quote": "Climbing"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [
+        "quote correction proposed for \"climbs\" -- NOT applied, ground-truth it: \"Lesser Bougainvillea is an evergreen, flowering vine in the 4-O'Clock family.\""
+      ],
+      "summary": "I re-read the NC State Bougainvillea glabra page, the RHS species page (91850) and the RHS growing guide with qc.py. Clemson's factsheet returned HTTP 403 on two tries and was not read. Nothing is refuted. climbs=true holds: NC State lists Habit/Form 'Climbing' and calls it a 'flowering vine', and RHS calls it a climber with Habit 'Climbing'. I replaced its bare one-word quote 'Climbing', which also matches the 'Climbing Method:' label, with a verified prose sentence. The four size fields stay null. All species-page heights are outdoor or glasshouse figures over 120 in: NC State 120-240 in, RHS 4-8 m (about 157-315 in). No page gives an indoor or container size. One correction to the researcher's unknowns: NC State width 72-120 in reaches the 120 in ceiling but does not exceed it. It is still a landscape figure paired with a 240 in height, so null stands. The RHS growing guide's sizes are from a genus page and cannot be used. is_edible stays null because all pages have zero edibility or toxicity hits. attracts_pollinators was not proposed. If it is ever revisited, NC State's 'attractive to bees, butterflies' is evidence for it."
+    },
+    {
+      "batch": "b35-ginkgo-and-more.json",
+      "record": {
+        "common_name": "Purple Passionflower",
+        "scientific_name_accepted": "Passiflora incarnata",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 59,
+        "mature_height_in_max": 98,
+        "mature_spread_in_min": 19.7,
+        "mature_spread_in_max": 39.4,
+        "unknowns": [
+          "is_edible and attracts_pollinators already landed on this record; returned null by instruction, not researched.",
+          "NC State Plant Toolbox page for Passiflora incarnata loaded OK but carries no size: searched 'Dimensions', 'Height', 'Max Height', 'Max Spread', 'feet', 'ft.', 'tall' and found no height/spread field (only Leaf Width 3-6 inches, which is not plant size). RHS is therefore the size source.",
+          "RHS Max Height 1.5-2.5 metres converted x 39.37 = 59.1-98.4 inches, recorded as 59-98 (rounded); Max Spread 0.5-1 metres = 19.7-39.4 inches. For this climber the height is its reach given support; RHS gives UK growing conditions.",
+          "RHS page title is 'Passiflora incarnata (F) | apricot vine' with Name Status 'Correct'; treated as the species page (not a genus or cultivar page). The '(F)' suffix is RHS's own listing label; if it denotes a fruit-selection form rather than the plain species, the size would be cultivar-specific.",
+          "NC State also lists Climbing Method: Tendrils and notes the plant 'does not have to climb in order to produce flowers' and can be pinched back to a bushy habit, so field height may be well below the RHS reach if unsupported.",
+          "No page was refused by this machine; ask.ifas.ufl.edu, hgic.clemson.edu, fieldreport.caes.uga.edu were not re-read since an earlier pass found no usable size there."
+        ],
+        "citations": [
+          {
+            "claim": "climbs: RHS describes Passiflora incarnata as a tendril climber (Habit: Climbing)",
+            "source": "RHS Passiflora incarnata (F) apricot vine",
+            "url": "https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details",
+            "quote": "A short, tendril climber to about 2m tall"
+          },
+          {
+            "claim": "climbs: NC State lists Habit/Form Climbing and Climbing Method Tendrils",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/",
+            "quote": "Tendrils"
+          },
+          {
+            "claim": "mature_height_in 59-98 (RHS Max Height 1.5-2.5 metres, converted to inches x39.37 = 59.1-98.4; this is the climber's reach given support)",
+            "source": "RHS Passiflora incarnata (F) apricot vine",
+            "url": "https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details",
+            "quote": "1.5-2.5 metres"
+          },
+          {
+            "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches x39.37)",
+            "source": "RHS Passiflora incarnata (F) apricot vine",
+            "url": "https://www.rhs.org.uk/plants/65975/passiflora-incarnata-f/details",
+            "quote": "0.5-1 metres"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read all five pages with qc.py. RHS 65975, NC State and UF FP457 loaded. The UGA C1029 page loaded but only lists Passiflora incarnata by name, with no size. hgic.clemson.edu returned HTTP 403 and goes in unknowns; I did not repair or retry it. Every proposed value survives. The RHS species page ('Passiflora incarnata (F)', Name Status Correct; '(F)' marks RHS's fruit entry for the species, not a cultivar) gives Max Height 1.5-2.5 metres and Max Spread 0.5-1 metres. Converted, that is 59.06-98.43 in (recorded as 59-98) and 19.69-39.37 in (recorded as 19.7-39.4). The figures were metres, so nothing was left unconverted from feet, and both ranges are true published ranges. climbs=true is supported by the RHS 'Habit Climbing' field, the NC State 'Climbing Method: Tendrils' field and the UF FP457 prose 'climbs by tendrils'. All quotes are verbatim single runs. One inaccuracy in the researcher's unknowns: the NC State page is not entirely size-free. It has an 'Available Space To Plant: 12-24 feet' field. That is a siting band, not a height or spread, so it does not change any value, but the unknown should mention it rather than say the page carries no size. Also worth noting: 12-24 ft of space is far larger than the RHS reach of about 2.5 m (about 8 ft). The RHS figure reflects UK growing conditions."
+    },
+    {
+      "batch": "b35-ginkgo-and-more.json",
+      "record": {
+        "common_name": "Buttercup",
+        "scientific_name_accepted": "Ranunculus acris",
+        "is_edible": false,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "mature_height_in and mature_spread_in left null: the NC State page for Ranunculus acris was searched for 'Dimensions', 'Height', 'Width', ' ft', 'feet', 'Dimension' and returned 0 hits (its only size-related field is 'Available Space To Plant: Less than 12 inches', which is not a mature size); the RHS page (subsp. acris) was searched for 'Max Height', 'Max Spread', 'Ultimate', 'Height' and returned 0 hits, and its 'Spread' hit was only the genus note about spreading by runners. No other registered-authority page was searched.",
+          "climbs left null: NC State lists Habit/Form: Erect and no page calls the plant a climber; RHS page had no 'Habit' or 'Climb' hits.",
+          "attracts_pollinators not researched: already landed, returned null per instructions.",
+          "is_edible false is based on NC State's poison section: severity Medium, toxic principle ranunculin, poison parts Leaves, Roots, Sap/Juice, Stems, symptoms stated for livestock ('In livestock, ingestion has caused blistering of the tongue and lips, diarrhea and blindness. Consumption can also cause irregular heart rhythm and respiratory failure.'), tags '#problem for dogs #problem for horses #problem for cats'. No page addresses human eating as food; the false rests on the poisonous classification, not on a human-specific ingestion case.",
+          "RHS page had 0 hits for 'Edible', 'Toxic', 'Poison'. No page refused this machine."
+        ],
+        "citations": [
+          {
+            "claim": "is_edible false: NC State Plant Toolbox lists the plant as poisonous (Plant Type includes Poisonous; Poison Severity Medium; toxic principle ranunculin; poison parts leaves, roots, sap/juice, stems) and describes ingestion symptoms, so it is not an edible plant",
+            "source": "NC State Extension Gardener Plant Toolbox, Ranunculus acris",
+            "url": "https://plants.ces.ncsu.edu/plants/ranunculus-acris/",
+            "quote": "In livestock, ingestion has caused blistering of the tongue and lips, diarrhea and blindness."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read both pages with qc.py and refuted nothing. Both pages loaded (the NC State page at 62,100 bytes, the RHS subsp. acris page at 118,944). The only non-null value, is_edible false, holds: NC State has a 'Poisonous to Humans' section (Medium severity, ranunculin, poisonous leaves, roots, sap/juice and stems), so this is not silence turned into false. Its citation is labelled 'is_edible', and the quote is on the page verbatim as one run. The sizes are rightly null, because neither page gives a mature height or spread in any unit. 'Available Space To Plant: Less than 12 inches' is a planting-space field, and the RHS 'Spread' hit is a genus note about runners. climbs is rightly null because the habit is Erect. attracts_pollinators was left null as instructed, although NC State does support true ('Attracts: Pollinators', 'especially hoverflies'). Two small flaws in the researcher's notes that change no value: 'No page addresses human eating' understates the explicit 'Poisonous to Humans' heading, and the list of tags leaves out '#contact dermatitis'."
+    },
+    {
+      "batch": "b35-ginkgo-and-more.json",
+      "record": {
+        "common_name": "Climbing Hydrangea",
+        "scientific_name_accepted": "Hydrangea anomala subsp. petiolaris",
+        "is_edible": false,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 360,
+        "mature_height_in_max": 720,
+        "mature_spread_in_min": 60,
+        "mature_spread_in_max": 72,
+        "unknowns": [
+          "attracts_pollinators: already landed, deliberately returned null and not researched.",
+          "is_edible set false only on NC State's 'Poisonous' plant-type and 'Poisonous to Humans' problem entries; the page does not name which part is poisonous, a severity, a toxic principle, or a pets warning. No page read states anything about food use.",
+          "mature_height_in 360-720 is the climbing reach (30-60 ft converted x12) per NC State; it is not a free-standing shrub height.",
+          "mature_spread_in 60-72 is NC State Width 5-6 ft converted x12.",
+          "Searched the NC State page for 'Dimensions', 'Height:', 'Width:', 'Poison', 'Toxic', 'Problem for', 'Edible', 'Habit', 'Plant Type', 'Climb'. 'Toxic', 'Problem for' and 'Edible' returned 0 hits. Did not load the RHS, MOBOT, UMD or Clemson pages or search other registered hosts, since NC State gave usable values for all researched fields except an edibility statement beyond 'Poisonous'; no page refused this machine in the pages I loaded."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 360-720: climbing reach, NC State Height 30 ft. 0 in. - 60 ft. 0 in., converted to inches (x12)",
+            "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+            "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+            "quote": "Height: 30 ft. 0 in. - 60 ft. 0 in."
+          },
+          {
+            "claim": "mature_spread_in 60-72 (NC State Width 5 ft. 0 in. - 6 ft. 0 in., converted to inches x12)",
+            "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+            "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+            "quote": "Width: 5 ft. 0 in. - 6 ft. 0 in."
+          },
+          {
+            "claim": "climbs: NC State lists Habit/Form as Climbing",
+            "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+            "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+            "quote": "Climbing"
+          },
+          {
+            "claim": "is_edible false: NC State lists the plant as poisonous to humans (part not specified)",
+            "source": "NC State Extension Gardener Plant Toolbox, Hydrangea petiolaris",
+            "url": "https://plants.ces.ncsu.edu/plants/hydrangea-petiolaris/",
+            "quote": "Poisonous to Humans"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "None of the seven values should be nulled. Height is 30-60 ft converted to 360-720 in and spread is 5-6 ft converted to 60-72 in. Both conversions are correct and every quote is verbatim on the NC State species page. climbs true has strong support, and is_edible false rests on a positive toxicity statement ('Poisonous to Humans'), so it is not a silence default. The main defect is that the researcher skipped RHS. Its species page gives 'Max Spread 4-8 metres' (about 157-315 in), which flatly conflicts with NC State's 5-6 ft width. It also adds 'Pets (dogs, cats): Harmful if eaten' and a skin-allergen warning. The unknowns should record the spread conflict and add RHS as a second citation for is_edible. MOBOT gave ConnectError and Clemson gave 403, so neither could be checked."
+    },
+    {
+      "batch": "b44-palms-and-more.json",
+      "record": {
+        "common_name": "Lady Palm",
+        "scientific_name_accepted": "Rhapis excelsa",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": 84,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "mature_height_in_min left null: UF/IFAS FP501 gives only an upper figure ('up to 7 ft in height'), so only the max end is filled (7 ft x 12 = 84 in); no lower end invented.",
+          "mature_height_in_max uses UF/IFAS (shady landscape or interiorscape use, 7 ft) rather than NC State's Dimensions block 'height: 4 ft. 0 in. - 12 ft. 0 in.' (48-144 in), whose max exceeds the 120 in headroom ceiling and is not labelled as an indoor figure.",
+          "mature_spread_in_min and mature_spread_in_max left null: the only spread figure found is NC State 'width: 6 ft. 0 in. - 15 ft. 0 in.' (72-180 in), not labelled indoor/container and its max exceeds 120 in. UF/IFAS gives no spread; Clemson says only large lady palms 'can grow to be more than 8 feet tall and as wide as they are tall' (open-ended, no usable bound).",
+          "Clemson HGIC indoor-palms 'more than 8 feet tall' for large lady palm is open-ended and conflicts with UF 7 ft; not used.",
+          "is_edible left null: searched NC State, UF/IFAS FP501 and Clemson for Edible, eat, food, Poison, Toxic; none addresses eating the plant. NC State tags '#non-toxic for cats', '#non-toxic for dogs', '#non-toxic for horses' concern pet toxicity, not human edibility, so not used.",
+          "attracts_pollinators left null: NC State has no 'Attracts' field (0 hits); searched butterfl, bee, pollinat, wildlife, attract on NC State and UF/IFAS FP501 with no mention; Clemson has no Attracts hit.",
+          "climbs left null: NC State 'habit/form: erect spreading' and 'plant type: houseplant perennial shrub woody plant'; UF describes a clumping palm spreading by rhizomes; no page calls it a climber.",
+          "Pages that refused this machine: plantfinder.mobot.org (fetch status error:ConnectError), skipped. No RHS, edis, UMD, PSU or UGA species page was searched beyond the starting pages; NC State and UF FP501 loaded ok."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in max 84 (UF/IFAS FP501: 'up to 7 ft in height' for shady landscape or interiorscape use, 7 ft x 12 = 84 inches; single upper figure so min left null)",
+            "source": "UF/IFAS Extension FP501 Rhapis excelsa: Lady Palm",
+            "url": "https://ask.ifas.ufl.edu/publication/FP501",
+            "quote": "forming dense clusters and eventually thickets, up to 7 ft in height"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read UF/IFAS FP501, NC State and Clemson indoor-palms; MOBOT refused the connection (ConnectError). The only non-null value, mature_height_in_max = 84, holds up. The citation quote appears verbatim on UF FP501, 7 ft was converted to 84 in, the single upper figure was not made into a range, the page is for the species, and 84 in is under the 120 in houseplant ceiling. Clemson's indoor figure is open-ended ('more than 8 feet') and larger, so no smaller indoor figure overrides it. NC State's 4-12 ft height and 6-15 ft width exceed 120 in and are not tied to indoor growth, so leaving them out was right. All other fields (height min, both spread ends, is_edible, attracts_pollinators, climbs) are null, and the pages support that: nothing on them speaks to human edibility, pollinators or climbing. Nothing was refuted."
+    },
+    {
+      "batch": "b44-palms-and-more.json",
+      "record": {
+        "common_name": "Banana",
+        "scientific_name_accepted": "Musa acuminata",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "is_edible: already landed, not researched in this pass.",
+          "mature_height_in and mature_spread_in (all four size fields) left null per the houseplant headroom rule: the only size on the pages is the outdoor/landscape stature. NC State Dimensions reads 'Height: 12 ft. 0 in. - 20 ft. 0 in.' and 'Width: 6 ft. 0 in. - 10 ft. 0 in.' (144-240 in tall, 72-120 in wide), and its prose says 'maturing to about 20 feet high'. The height exceeds 120 in and NC State gives no indoor or container size figure (it only says the plant can be grown in containers or as a houseplant). The 5 to 6 feet figure on the NC State page belongs to the cultivar 'Zebrina', so it is not usable for the species.",
+          "RHS page (rhs.org.uk/plants/11227/musa-acuminata/details) loaded OK; I searched it for 'Max Height', 'Max Spread', 'Ultimate', 'metres', 'Habit' and 'pollinator' and got no hits, so it gave no size, habit or pollinator text under those wordings.",
+          "attracts_pollinators left null: I searched the NC State page for 'Attracts', 'pollinat', 'butterfl', 'hummingbird', 'bees' and 'Wildlife' and the RHS page for 'pollinator', with no hits.",
+          "climbs left null: NC State Habit/Form is 'Erect' and Plant Type is Edible / Herbaceous Perennial / Houseplant. No page calls it a climber.",
+          "ask.ifas.ufl.edu/mg040 was not re-read in this pass (this machine is known to refuse that host); no other registered-authority page for Musa acuminata was found or loaded."
+        ],
+        "citations": []
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read all three pages and none of the seven nulls is refuted. NC State gives only outdoor stature: Height 12-20 ft (144-240 in, over the 120 in houseplant limit) and Width 6-10 ft. Its 5-6 ft figure belongs to the cultivar 'Zebrina', and the page gives no container or indoor figure. RHS loaded but has no size, habit, pollinator or toxicity text. UF/IFAS mg040 did load this time, despite the record's note that this machine refuses that host. It is shared by Musa acuminata and M. balbisiana, gives only sucker heights and cultivar comparisons, and has no pollinator, climber or indoor size text. Its 'without pollination' line is about fruit set, so attracts_pollinators should stay null, not false. The record makes no citations, so the label (G) and quote (H) checks have nothing to test. The only correction is that the unknowns entry calling mg040 unreachable is stale."
+    },
+    {
+      "batch": "b44-palms-and-more.json",
+      "record": {
+        "common_name": "Freesia",
+        "scientific_name_accepted": "Freesia x hybrida",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "mature_height_in_min/max and mature_spread_in_min/max left null: the only size block found is on the NC State page https://plants.ces.ncsu.edu/plants/freesia/ (Height: 1 ft. 0 in. - 2 ft. 0 in.; Width: 0 ft. 6 in. - 1 ft. 0 in., i.e. 12-24 in. and 6-12 in.), but that page is a GENUS page (its text says 'The genus is a member of the iris family' and 'Depending on the species or cultivar', and it does not name Freesia x hybrida), and a genus range is not a substitute for this species. If the owner accepts genus-level figures the conversion is height 12-24, width 6-12.",
+          "RHS https://www.rhs.org.uk/plants/freesia lists only other species (Freesia lactea, F. laxa, Babiana stricta) at Height 0.1-0.5 metres, Width 0-0.1 metre, not Freesia x hybrida; RHS growing guide had no Height, Width, Max Height, Max Spread or Dimensions text (searched all of these). No size recorded.",
+          "is_edible left null: searched the NC State page for Edible, Eat, food, Poison and Toxic and got 0 hits; no page addresses eating, so no record. (The 'Problem for' search on the NC State page also returned 0 hits.)",
+          "climbs left null: NC State Habit/Form reads Ascending, Clumping, Multi-stemmed; RHS pages had no 'climb' text. No page calls it a climber.",
+          "attracts_pollinators left null because it is already landed and a backfill never overwrites it (NC State does list Attracts: Bees, Butterflies).",
+          "plantfinder.mobot.org, fieldreport.caes.uga.edu and a UF/IFAS or other registered-host species page were not read in this pass: the earlier pass found no usable size on the cited pages, and no Freesia x hybrida species page on a registered host was located here."
+        ],
+        "citations": []
+      },
+      "applied": [],
+      "review": [],
+      "summary": "No refutations: all seven proposed values for Freesia x hybrida are null, and re-reading the pages confirms that is correct. The only size data are NC State's 1-2 ft by 0.5-1 ft (12-24 in by 6-12 in) and RHS's metre figures. The NC State page is a genus page that never names hybrida, and the RHS figures belong to other species on a page labelled 'RHS Genus Guide'. UGA B918 names Freesia x hybrida only in a list, with no size. No page calls Freesia a climber or mentions eating it or toxicity. NC State's 'Attracts: Bees, Butterflies' is genus-level, and the field was rightly left alone because it is already landed. plantfinder.mobot.org would not load (ConnectError) and is not a registered host anyway. To land a size, the record still needs a Freesia x hybrida species page on a registered host."
+    },
+    {
+      "batch": "b44-palms-and-more.json",
+      "record": {
+        "common_name": "Orchid Cactus",
+        "scientific_name_accepted": "Epiphyllum oxypetalum",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 96,
+        "mature_height_in_max": 120,
+        "mature_spread_in_min": 24,
+        "mature_spread_in_max": 36,
+        "unknowns": [
+          "is_edible and attracts_pollinators: already landed, deliberately returned null and not researched.",
+          "RHS details page (Max Height 1.5-2.5 metres = 59-98 inches, Max Spread 0.5-1 metres = 20-39 inches, Habit Trailing) was read but not used; NC State's houseplant-tagged Dimensions block was used as the anchor. RHS figures are UK-grown and lower, so the true indoor height may be nearer 59-98 inches.",
+          "NC State lists Habit/Form as Arching, Climbing, Erect, Multi-stemmed, Weeping (mixed), so the 96-120 inch reach is a climber/arching reach, not an upright self-supporting height. NC State also says the plant may grow up to 10 feet tall in its native habitat (equal to the 120 inch cap, within the limit).",
+          "edis.ifas.ufl.edu search page refused this machine (ProxyError, sandbox denial); no UF/IFAS species page was fetched, so no UF/IFAS size is reported.",
+          "Searches run on NC State and RHS pages for Dimensions, Height, Width, Max Height, Max Spread, Habit, Plant Type, Climb, Attracts, Poison, Edible; NC State has no Poison/Toxic hit. Clemson and RHS growing-guide pages were not re-read since the earlier pass found no size."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 96-120 (NC State Height 8 ft. 0 in. - 10 ft. 0 in., converted to inches: 8x12=96, 10x12=120; page tags the plant as a Houseplant; for a climber this is its reach)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/epiphyllum-oxypetalum/",
+            "quote": "Height: 8 ft. 0 in. - 10 ft. 0 in."
+          },
+          {
+            "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches: 2x12=24, 3x12=36)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/epiphyllum-oxypetalum/",
+            "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
+          },
+          {
+            "claim": "climbs: NC State lists Climbing among the plant's Habit/Form values",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/epiphyllum-oxypetalum/",
+            "quote": "Climbing"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read the NC State species page, the NC State common-name page and the RHS details page with qc.py, and all three loaded. I did not re-read the Clemson indoor-cacti page or the RHS genus growing guide: the record does not cite them, and a genus page could not support a value anyway. All four size numbers convert correctly from the NC State Dimensions block (8-10 ft becomes 96-120 in; 2-3 ft becomes 24-36 in). The quotes are verbatim, one line each, with correct citation labels, and they come from the species' own page. climbs=true is supported by NC State's Habit/Form value 'Climbing' and its '#climber' tag, even though RHS gives 'Habit Trailing'. I refuted nothing. One caution: the 120-inch height maximum equals NC State's native-habitat 'up to 10 feet tall', and the RHS houseplant-context maximum is lower (1.5-2.5 m, 59-98 in). But 120 does not exceed the 120-inch houseplant cap, and RHS does not tie its figure to indoor growth, so check I does not require refuting it. The reviewer may still choose the RHS figure. is_edible and attracts_pollinators remain null, which is acceptable. NC State does support edible fruit (but says the flowers are not known to be edible) and names bat and moth pollination in the native habitat, for any future pass."
+    },
+    {
+      "batch": "b22-aroid-genus-gaps.json",
+      "record": {
+        "common_name": "Mini Monstera",
+        "scientific_name_accepted": "Rhaphidophora tetrasperma",
+        "is_edible": false,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "mature_height_in and mature_spread_in left null (all four size fields): NC State's Dimensions block reads 'Height: 2 ft. 0 in. - 15 ft. 0 in.' and 'Width: 1 ft. 0 in. - 4 ft. 0 in.' (reach 24-180 in, spread 12-48 in), but it is not labelled as an indoor or container figure, and its 15 ft (180 in) upper height exceeds the 120 in houseplant headroom limit, so it is not recorded. No page gave an indoor or container size.",
+          "RHS page (506806) loaded ok; searched for Dimensions, Height, Width, Max Spread, Attracts, Edible, Poison, Toxic, Habit, Plant Type, Pollinator and climb and found no matches in the extracted text, so it supplies no size, habit or pollinator information. No additional registered-authority page (UF/IFAS, Clemson, etc.) was searched or loaded.",
+          "attracts_pollinators left null: NC State page has no 'Attracts' field and no pollinator, bee or butterfly mention in the searched text; RHS page has none either.",
+          "is_edible set false on NC State's statement that the plant is toxic if ingested; no page states any part is eaten. NC State also gives poison severity low, toxic principle calcium oxalate crystals, poison parts flowers and fruits (list continues past the excerpt read), and skin irritation from handling (gloves suggested)."
+        ],
+        "citations": [
+          {
+            "claim": "is_edible false: NC State says the plant is toxic if ingested (poisonous to eat); no page states it is used for food",
+            "source": "NC State Extension Gardener Plant Toolbox, Rhaphidophora tetrasperma",
+            "url": "https://plants.ces.ncsu.edu/plants/rhaphidophora-tetrasperma/",
+            "quote": "Toxic, if ingested. Symptoms include mouth irritation, excessive drooling, difficulty swallowing, difficulty breathing, and stomach irritation."
+          },
+          {
+            "claim": "climbs true: NC State describes Mini Monstera as a climbing plant (aerial roots help it attach itself and climb)",
+            "source": "NC State Extension Gardener Plant Toolbox, Rhaphidophora tetrasperma",
+            "url": "https://plants.ces.ncsu.edu/plants/rhaphidophora-tetrasperma/",
+            "quote": "It is a tropical, climbing, evergreen herbaceous perennial"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read NC State and RHS 506806 with qc.py; both loaded. None of the seven values is refuted. is_edible false rests on NC State's explicit 'Toxic, if ingested' (Poison Part lists every part). climbs true is backed by NC State's Description prose, Habit/Form 'Climbing' and Climbing Method 'Clinging'. attracts_pollinators null is correct because both pages are silent. The four size fields are null. NC State's unlabelled Height of 2-15 ft (24-180 in) exceeds the 120 in houseplant limit, so the height nulls are required. The Width of 1-4 ft (12-48 in) would not itself break that limit, but a null cannot be refuted. One unknowns detail is wrong without changing any value: the Poison Part list is Flowers, Fruits, Leaves, Roots, Sap/Juice, Stems, not just flowers and fruits. Both quotes are verbatim, single-run, and from a registered authority's species page."
+    },
+    {
+      "batch": "b22-aroid-genus-gaps.json",
+      "record": {
+        "common_name": "Tannia",
+        "scientific_name_accepted": "Xanthosoma sagittifolium",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "plantfinder.mobot.org refused this machine (qc.py status error:ConnectError); not read, nothing guessed from it.",
+          "RHS page (both /plants/82706/xanthosoma-sagittifolium-arrow-leaved-spoonflower-tania/details and /plants/82706/xanthosoma-sagittifolium/details) loaded ok via qc.py; searched for 'Max Height', 'Max Spread', 'Height', 'Spread', 'Habit', 'ollinator', 'dible', 'oison', 'oxic', 'limb', 'metres': 0 hits for each. The only hit was an empty 'Size' filter label in the site's Grow search widget; no size values published in the rendered text.",
+          "NC State Plant Toolbox: https://plants.ces.ncsu.edu/plants/xanthosoma-sagittifolium/ returned http-404, and a site-restricted web search surfaced no species page (only other plants).",
+          "UF/IFAS (edis.ifas.ufl.edu), Clemson, UMD, Penn State and UGA: web search surfaced no Xanthosoma sagittifolium page on any of them; none read.",
+          "is_edible left null: no registered-authority page read addresses eating this plant. Other sites (PMC articles) describe edible leaves and tubers but are not registered authorities and are discarded. Note for any future pass: tannia/cocoyam is known to need cooking because of calcium oxalate, so a bare true would be unsafe.",
+          "attracts_pollinators left null: no read page mentions pollinators.",
+          "climbs left null: no read page describes a habit; tannia is an upright herbaceous aroid, not a climber.",
+          "mature_height_in_min/max and mature_spread_in_min/max left null: no usable size on any page read."
+        ],
+        "citations": []
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read both pages with qc.py and confirmed every null in the Tannia record. Nothing is refuted. The MOBOT PlantFinder page (taxonid=276540) failed to load with error:ConnectError, as the record says. The RHS page 82706 loaded fine (140,717 bytes, title 'Xanthosoma sagittifolium | tannia'). On it, these terms got 0 hits: Height, Spread, ultimate, metres, any m/cm number, Habit, climb, dible, oxic, oison, ollinat and tubers. The only 'Size' hit is an empty label in the Grow-app search widget. The only 'ood' and 'bee' hits are site navigation. The NCSU URL returns http-404. No field is set false from silence, there are no citations, and every unknown is accurate. Two remarks in unknowns have no source: the calcium-oxalate cooking caution and the 'upright aroid, not a climber' note. Neither sets a value, so I refuted neither, but a future pass should not treat them as sourced."
+    },
+    {
+      "batch": "b22-aroid-genus-gaps.json",
+      "record": {
+        "common_name": "Queen of Hearts",
+        "scientific_name_accepted": "Homalomena rubescens",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "is_edible left null: already landed in this record, not researched in this backfill.",
+          "mature_height_in and mature_spread_in (all four size fields) left null: the NC State page (plants.ces.ncsu.edu/plants/homalomena/) is a Homalomena genus page, not a species page, and a search for 'Dimensions' and 'Height' found no hits on it (its only space figure is a planting-space recommendation, not a mature size). The RHS page (homalomena-rubescens-maggy) is a cultivar page for 'Maggy', and searches for 'Max Height', 'Max Spread' and 'Ultimate' returned 0 hits on it. No species-specific page on a registered authority was found by web search (results were other Queen of Hearts plants, Hydrangea, Petunia and Dicentra, plus Wikipedia, which is not registered). EDIS (UF/IFAS) was searched but no Homalomena rubescens page turned up.",
+          "climbs left null: NC State lists Habit/Form as Clumping and Erect, with no climbing or vine wording; the RHS page had 0 hits for 'Habit' and 'Climb'. No page calls it a climber.",
+          "attracts_pollinators left null: searched the NC State page for 'Attracts' (0 hits) and the RHS page for 'pollinator' (0 hits); neither addresses pollinators.",
+          "No page refused this machine; both NC State and RHS loaded with status ok."
+        ],
+        "citations": []
+      },
+      "applied": [],
+      "review": [],
+      "summary": "The researcher's record holds up: I found nothing wrong with it. All seven proposed fields are null, so nothing could be refuted. I re-read both pages with qc.py and both loaded (status ok). The NC State page (plants.ces.ncsu.edu/plants/homalomena/) is a page for the whole Homalomena genus. It gives no height or size dimensions. Its only figure, 'Available Space To Plant: 12 inches-3 feet', is a planting-space band, not a mature size. Its habit is 'Clumping' and 'Erect', with no climbing or vine wording, and it says nothing about pollinators. The RHS page (rhs.org.uk/plants/190705/homalomena-rubescens-maggy) is for the cultivar 'Maggy'. Searches for height, spread, ultimate, pollinator, climb, habit and edible or toxic all found 0 hits. Every explanation in the record's unknowns matches what the pages say. One note for whoever owns the is_edible value already in the record: NC State says 'If ingested, this plant is toxic to pets and humans' (genus-level wording), so is_edible should never be set true."
+    },
+    {
+      "batch": "b5-edible-and-garden.json",
+      "record": {
+        "common_name": "Melon (Armenian cucumber / snake melon)",
+        "scientific_name_accepted": "Cucumis melo",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 72,
+        "mature_height_in_max": 108,
+        "mature_spread_in_min": 12,
+        "mature_spread_in_max": 36,
+        "unknowns": [
+          "is_edible and attracts_pollinators were already landed on this record and are returned null, not re-researched.",
+          "The NC State page lists common names including Armenian Cucumber but is written mostly about cantaloupe; the Dimensions block is published for the species page Cucumis melo, not a named cultivar, but the species spans many cultivar groups (cantaloupe, honeydew, snake/American cucumber) so the size is a typical-garden figure, not specific to the snake melon group.",
+          "The NC State prose says it climbs 6 to 9 feet high given cages or trellises and may instead trail along the ground if there is room, so the height is a reach when supported.",
+          "https://hgic.clemson.edu/factsheet/cantaloupe-honeydew-melons/ refused this machine (fetch status http-403, 0 bytes); not used and not guessed at.",
+          "Did not search RHS, UF/IFAS or other registered hosts: the NC State species page already carries a structured Dimensions block for Cucumis melo."
+        ],
+        "citations": [
+          {
+            "claim": "climbs: NC State describes Cucumis melo as a climbing vine (Habit/Form lists Climbing; Plant Type lists Vine).",
+            "source": "NC State Extension Gardener Plant Toolbox, Cucumis melo",
+            "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+            "quote": "Being a climbing vine, cantaloupe is suitable for growing on vertical spaces."
+          },
+          {
+            "claim": "mature_height_in 72-108 (NC State Height 6 ft. 0 in. - 9 ft. 0 in., converted to inches: 6 ft = 72, 9 ft = 108; for a climber this is its reach given support)",
+            "source": "NC State Extension Gardener Plant Toolbox, Cucumis melo",
+            "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+            "quote": "Height: 6 ft. 0 in. - 9 ft. 0 in."
+          },
+          {
+            "claim": "mature_spread_in 12-36 (NC State Width 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1 ft = 12, 3 ft = 36)",
+            "source": "NC State Extension Gardener Plant Toolbox, Cucumis melo",
+            "url": "https://plants.ces.ncsu.edu/plants/cucumis-melo/",
+            "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "Nothing refuted. I re-read the NC State Cucumis melo species page myself with qc.py, and all three quotes are on it verbatim, each as one rendered run. Height 'Height: 6 ft. 0 in. - 9 ft. 0 in.' converts correctly to 72-108 in, and width 'Width: 1 ft. 0 in. - 3 ft. 0 in.' converts correctly to 12-36 in. No feet figure was left unconverted, both ranges have min <= max, and the prose ('climb 6 to 9 feet high and spread 1 to 3 feet wide') matches. climbs true is well supported: Habit/Form lists Climbing, Plant Type lists Vine, and Climbing Method lists Scrambler and Tendrils. The page is the species page, Armenian Cucumber is one of its common names, and the Flexuosus group is named in the prose, so there is no genus or cultivar scope problem. Every citation label contains its field name. The Clemson page still returns http-403 with 0 bytes, and the researcher correctly reported it in unknowns. is_edible and attracts_pollinators are null, as they were not re-researched. One thing outside this record: the page warns to avoid the seeds because the sprouting seed's embryo produces a toxic substance. If the already-landed is_edible is true, that warning should be in its caveats."
+    },
+    {
+      "batch": "b5-edible-and-garden.json",
+      "record": {
+        "common_name": "Pumpkin",
+        "scientific_name_accepted": "Cucurbita maxima",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": null,
+        "mature_height_in_max": 196.9,
+        "mature_spread_in_min": 98.4,
+        "mature_spread_in_max": 157.5,
+        "unknowns": [
+          "is_edible left null: already landed, not researched here.",
+          "attracts_pollinators left null: NC State page has no Attracts field and no pollinator/bee/butterfly mention (searched Attracts, Pollinator, bee); it only has the tags 'wildlife friendly' and 'Wildlife Food Source', which do not name pollinators. RHS page has no pollinator tag either.",
+          "NC State page has no Dimensions/Height/Width block for the plant (searched Dimensions, Height, Width; only fruit and leaf widths appear), so size comes from the RHS page for Cucurbita maxima.",
+          "mature_height_in_max 196.9 is the RHS prose 'reaching 5m if unchecked' (5 m x 39.37 = 196.9 in), a reach figure with no published low end, so min is null. RHS's structured Max Height 0.1-0.5 metres (3.9-19.7 in) describes ground-level height of a scrambling habit and was not used as the climber's reach.",
+          "mature_spread_in 98.4-157.5 is RHS Max Spread 2.5-4 metres x 39.37. RHS habit is 'Spreading branched, Trailing' while NC State says Climbing with tendrils; the plant both trails and climbs.",
+          "RHS lists a potential harm: if crop is bitter, do not eat or feed to pets; not relevant to a null is_edible but noted for the landed edibility record.",
+          "No pages refused this machine."
+        ],
+        "citations": [
+          {
+            "claim": "climbs: NC State describes the species as a vine that climbs up structures using tendrils (Habit/Form Climbing)",
+            "source": "NC State Extension Gardener Plant Toolbox, Cucurbita maxima",
+            "url": "https://plants.ces.ncsu.edu/plants/cucurbita-maxima/",
+            "quote": "This large vine trails along the ground or climbs up structures using tendrils."
+          },
+          {
+            "claim": "mature_height_in 0-196.9 (max only) reach: RHS 'reaching 5m if unchecked', 5 m x 39.37 = 196.9 inches; no low end published so min is null",
+            "source": "RHS Cucurbita maxima",
+            "url": "https://www.rhs.org.uk/plants/158218/cucurbita-maxima/details",
+            "quote": "An annual which scrambles along the ground and over low shrubs, reaching 5m if unchecked."
+          },
+          {
+            "claim": "mature_spread_in 98.4-157.5 (RHS Max Spread 2.5-4 metres, converted to inches x 39.37)",
+            "source": "RHS Cucurbita maxima",
+            "url": "https://www.rhs.org.uk/plants/158218/cucurbita-maxima/details",
+            "quote": "Max Spread         2.5-4 metres"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read both pages with qc.py and none failed to load. None of the proposed values needs refuting. climbs=true is supported by NC State's 'Habit/Form: Climbing', 'Climbing Method: Tendrils' and the tendril prose; that quote verifies once its non-breaking space is normalized. The size values come from the RHS species page, converted correctly from metres. Spread 2.5-4 m becomes 98.4-157.5 in, and the max-only height 5 m becomes 196.9 in, with min null. All quotes are verbatim single runs and the citation labels carry the field names. attracts_pollinators null is correct, because the pages only say 'wildlife friendly' and 'Wildlife Food Source'. The one judgment call is the 196.9 in height. RHS describes 5 m as a run 'along the ground and over low shrubs', and RHS's own Max Height is 0.1-0.5 m with a Trailing habit. The climbing evidence comes only from NC State, which gives no size. This still fits the 0020 rule that a climber's height is how far it runs, but the app will show 'climbs to 16 ft' for what the source describes mostly as ground-running length."
+    },
+    {
+      "batch": "b5-edible-and-garden.json",
+      "record": {
+        "common_name": "Common Peony",
+        "scientific_name_accepted": "Paeonia officinalis",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": 19.7,
+        "mature_height_in_max": 39.4,
+        "mature_spread_in_min": 19.7,
+        "mature_spread_in_max": 39.4,
+        "unknowns": [
+          "is_edible left null: neither the NC State herbaceous-types page (searched Poison, Toxic, Edible: 0 hits) nor the RHS P. officinalis page (searched Edible: 0 hits) addresses eating. RHS does list 'Potentially harmful: Pets (dogs, cats): Skin irritant.' and the NC State page tags #problem for dogs, horses, cats; these are pet warnings, not edibility statements.",
+          "climbs left null: NC State herbaceous page gives Habit/Form 'Clumping' and RHS gives Habit 'Bushy'; neither calls it a climber, and a plant no page calls a climber stays null rather than false.",
+          "attracts_pollinators already landed; returned null as instructed.",
+          "The NC State page already cited (paeonia-herbaceous-types) is a group page for garden/lactiflora hybrids (Height 1-3 ft), not P. officinalis itself, so its size was not used. NC State has no separate P. officinalis page (URL paeonia-officinalis returned http-404).",
+          "Size comes from the RHS species page for Paeonia officinalis: Max Height 0.5-1 metres and Max Spread 0.5-1 metres, converted x39.37 to 19.7-39.4 inches. RHS also describes it as 'to 70cm tall' in prose, within that range. These are RHS 'Max' figures from UK growing conditions.",
+          "RHS lists 'Plants for pollinators' tag on the page, but attracts_pollinators was not researched per instructions."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 19.7-39.4 (RHS Max Height 0.5-1 metres, converted to inches x39.37; plant is not a climber)",
+            "source": "RHS Paeonia officinalis | common peony",
+            "url": "https://www.rhs.org.uk/plants/41555/paeonia-officinalis/details",
+            "quote": "Max Height         0.5-1 metres"
+          },
+          {
+            "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches x39.37)",
+            "source": "RHS Paeonia officinalis | common peony",
+            "url": "https://www.rhs.org.uk/plants/41555/paeonia-officinalis/details",
+            "quote": "Max Spread         0.5-1 metres"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "All seven proposed fields stand and none is refuted. I re-read the RHS Paeonia officinalis species page: 'Max Height         0.5-1 metres' and 'Max Spread         0.5-1 metres' each render as one run with no U+23CE. They convert correctly to 19.7-39.4 in, the units are metres rather than feet, and the source is the species' own page with Name Status Correct. The prose '70cm tall' falls inside that range. The NC State page is a hybrid group page that never mentions officinalis, and the researcher correctly kept its size out. The NC State paeonia-officinalis URL does return 404. Both citation labels contain the right field names. The three nulls are right: climbs, because the habit is Bushy or Clumping and no page says it climbs; is_edible, because neither page mentions eating and the only warnings are about pets; and attracts_pollinators, which was already landed."
+    },
+    {
+      "batch": "b29-mistletoe-and-more.json",
+      "record": {
+        "common_name": "American Mistletoe",
+        "scientific_name_accepted": "Phoradendron leucarpum",
+        "is_edible": false,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "mature_height_in_min/max and mature_spread_in_min/max left null: the NC State page was searched for 'Dimensions', 'Height' and 'Width' and has no size block; the RHS details page was searched for 'Dimensions', 'Height', 'Width', 'Max Spread', 'metres', 'Spread' and 'Hardiness' and publishes no height or spread (Size appears only as an empty filter label). Penn State holiday-plants page has no size for mistletoe.",
+          "climbs left null: NC State lists Plant Type 'Native Plant / Poisonous / Shrub' and Habit/Form 'Clumping / Mounding' (not climbing); no page read calls the plant a vine or climber. It is a hemiparasitic shrub on host branches, which is not the same as climbing.",
+          "is_edible set false on NC State text: tagged #poisonous, 'medium severity poison characteristics', Poison Part: Fruits, Poison Symptoms: 'Toxic if large quantities of berries are eaten.  Stomach and intestinal irritation with diarrhea, vomiting, difficulty breathing, lowered blood pressure, and slow pulse.' Toxic principle: 'Amine, toxalbumin, pharatoxin viscumin (Lectins, Phoratoxins)'. Tags also include #problem for dogs, #problem for horses, #problem for cats. No page read states any part is used as food.",
+          "attracts_pollinators returned null because it is already landed; not researched.",
+          "https://hgic.clemson.edu/mistletoe/ refused this machine (http-403); skipped, not guessed. https://ask.ifas.ufl.edu/publication/IN267 is a known-refusing host and was not read.",
+          "Guessed URLs on edis.ifas.ufl.edu, extension.umd.edu and hgic.clemson.edu/factsheet/mistletoe returned ProxyError (sandbox denial); they were guesses, not confirmed pages for this species, and were not retried or used. No registered-authority page with a size for Phoradendron leucarpum was found."
+        ],
+        "citations": [
+          {
+            "claim": "is_edible false: NC State Plant Toolbox lists Poison Symptoms for American Mistletoe as toxic if berries are eaten (Poison Part: Fruits; medium severity poison); no page states any part is eaten as food",
+            "source": "NC State Extension Gardener Plant Toolbox, Phoradendron leucarpum",
+            "url": "https://plants.ces.ncsu.edu/plants/phoradendron-leucarpum/",
+            "quote": "Toxic if large quantities of berries are eaten."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [
+        "quote correction proposed for \"mature_height_in_min\" -- NOT applied, ground-truth it: \"This clumping shrub will mature to about 3 feet high and wide\"",
+        "quote correction proposed for \"mature_height_in_max\" -- NOT applied, ground-truth it: \"This clumping shrub will mature to about 3 feet high and wide\"",
+        "quote correction proposed for \"mature_spread_in_min\" -- NOT applied, ground-truth it: \"This clumping shrub will mature to about 3 feet high and wide\"",
+        "quote correction proposed for \"mature_spread_in_max\" -- NOT applied, ground-truth it: \"This clumping shrub will mature to about 3 feet high and wide\""
+      ],
+      "summary": "I re-read all five pages with qc.py, and none of the seven proposed values needs to be refuted. is_edible false holds. The NC State page names Fruits as the poisonous part, lists 'Poisonous to Humans' and gives poison symptoms, so the value is not resting on silence. The citation is labelled 'is_edible', and its quote is verbatim on the page as one run. climbs, attracts_pollinators and the four size fields are null, so there is nothing to refute. climbs null is also correct, since no page uses climb or vine language and NC State's habit is Clumping/Mounding.\n\nThe main defect is in the unknowns: it says the NC State page has no size. The page's description prose says 'This clumping shrub will mature to about 3 feet high and wide'. The researcher missed it by searching only for the labels 'Dimensions', 'Height' and 'Width'. That gives a usable single figure of 36 in for both height and spread (min=max=36, not a range) from the species' own page on a registered authority.\n\nSide notes on the other pages:\n- RHS has no ultimate height or spread.\n- Penn State has no size and treats the plant as P. serotinum.\n- Clemson https://hgic.clemson.edu/mistletoe/ still returns http-403.\n- ask.ifas.ufl.edu IN267 loaded fine, contrary to the unknowns. It is a butterfly fact sheet, not the plant's own page. It says oak mistletoe is insect-pollinated and that ingestions are mostly mild, but it does not call the plant food."
+    },
+    {
+      "batch": "b29-mistletoe-and-more.json",
+      "record": {
+        "common_name": "Sweet Potato",
+        "scientific_name_accepted": "Ipomoea batatas",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 72,
+        "mature_height_in_max": 120,
+        "mature_spread_in_min": 96,
+        "mature_spread_in_max": 120,
+        "unknowns": [
+          "is_edible and attracts_pollinators were already landed on this record and were deliberately returned null (not researched, not overwritten).",
+          "Only the NC State Plant Toolbox page for Ipomoea batatas was read in this pass (via qc.py, status ok); it carries a Dimensions block, so the other registered pages were not needed for size. The RHS, Clemson, UGA and Missouri Botanical Garden pages were not re-read.",
+          "NC State prose gives a different, smaller figure ('3 to 5 feet in width and 12 inches in height', i.e. 36-60 in wide and 12 in tall) for the plant grown as a ground cover; the structured Dimensions block (the climbing/vine reach) was used for the size fields. The page also says 'If grown as a vine, it needs training', so the 72-120 in height is a reach given support and the ground-cover form is much lower.",
+          "The NC State page covers both edible and ornamental sweetpotato under this species name; the Dimensions block is not split by cultivar group."
+        ],
+        "citations": [
+          {
+            "claim": "climbs (NC State Plant Toolbox Habit/Form lists Climbing for Ipomoea batatas)",
+            "source": "NC State Extension Gardener Plant Toolbox, Ipomoea batatas",
+            "url": "https://plants.ces.ncsu.edu/plants/ipomoea-batatas/",
+            "quote": "Climbing"
+          },
+          {
+            "claim": "mature_height_in 72-120 (NC State Height 6 ft. 0 in. - 10 ft. 0 in., converted to inches: 6 ft = 72, 10 ft = 120; the plant is a climber so this is its reach given support)",
+            "source": "NC State Extension Gardener Plant Toolbox, Ipomoea batatas",
+            "url": "https://plants.ces.ncsu.edu/plants/ipomoea-batatas/",
+            "quote": "Height: 6 ft. 0 in. - 10 ft. 0 in."
+          },
+          {
+            "claim": "mature_spread_in 96-120 (NC State Width 8 ft. 0 in. - 10 ft. 0 in., converted to inches: 8 ft = 96, 10 ft = 120)",
+            "source": "NC State Extension Gardener Plant Toolbox, Ipomoea batatas",
+            "url": "https://plants.ces.ncsu.edu/plants/ipomoea-batatas/",
+            "quote": "Width: 8 ft. 0 in. - 10 ft. 0 in."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read the pages with qc.py. NC State (ok), RHS (ok) and UGA B1489 (ok, no size or habit data) loaded. Missouri Botanical Garden failed with ConnectError, and both Clemson pages returned http-403, so I could not check those three. Every value survives. climbs=true is well supported: NC Habit/Form 'Climbing' and 'Climbing Method: Twining', plus RHS 'twining perennial climber' and Habit 'Climbing, Trailing'. The conversions are correct (6/10 ft -> 72/120 in, 8/10 ft -> 96/120 in). All quotes are verbatim single-line runs on the NC State species page, and every citation label is correct. Height agrees with RHS Max Height 2.5-4 m (about 98-157 in). The main defect is undisclosed. Unknowns say the other pages were 'not needed', but RHS gives Max Spread 0.5-1 metres (about 20-39 in), far below the proposed 96-120 in. NC's own prose also says 3-5 ft width. The 8-10 ft spread is the largest of three conflicting published figures, and the RHS figure should be added to unknowns before landing. Nothing I examined needed to be nulled."
+    },
+    {
+      "batch": "b46-herbs-aquatics-and-companions.json",
+      "record": {
+        "common_name": "Satin Pothos",
+        "scientific_name_accepted": "Scindapsus pictus",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 18,
+        "mature_height_in_max": 36,
+        "mature_spread_in_min": 24,
+        "mature_spread_in_max": 48,
+        "unknowns": [
+          "is_edible: already landed, not researched here. NC State page lists Plant Type 'Poisonous' and tags #problem for dogs, #problem for horses, #problem for cats; RHS: 'Harmful if eaten; skin/eye irritant'.",
+          "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Wildlife', 'pollinat', 'butterfl' and the RHS page for 'pollinator'; none present. NC State notes indoor plants rarely bloom.",
+          "mature_height_in: recorded the NC State indoor houseplant figure (1.5-3 ft = 18-36 in) per houseplant rule, not the larger Dimensions block 'Height: 3 ft. 0 in. - 10 ft. 0 in.' (36-120 in) nor the native-habitat 'up to 10 feet tall'. Indoor figure is for an upright-staked or trailing plant, so it is not the full climbing reach.",
+          "mature_spread_in 24-48 is from NC State Dimensions 'Width: 2 ft. 0 in. - 4 ft. 0 in.' (landscape/general block; no indoor-specific spread given).",
+          "RHS page (Scindapsus pictus 'Argyraeus', a cultivar page) gives Max Height 1-1.5 metres (39.4-59.1 in) and Max Spread 0.5-1 metres; not used because cultivar sizes are not the species'.",
+          "plantfinder.mobot.org not tried (known to refuse this machine); Clemson and UGA pages were not re-read, earlier pass found no usable size.",
+          "No UF/IFAS page was searched for or loaded."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 18-36 (NC State: 'The indoor plant grows 1.5 to 3 feet tall', converted to inches: 1.5 ft x 12 = 18, 3 ft x 12 = 36; houseplant figure, not climbing reach)",
+            "source": "NC State Extension Gardener Plant Toolbox, Scindapsus pictus",
+            "url": "https://plants.ces.ncsu.edu/plants/scindapsus-pictus/",
+            "quote": "The indoor plant grows 1.5 to 3 feet tall and should be trained on an upright stake, or it may allowed to trail downward from a hanging basket or pot."
+          },
+          {
+            "claim": "mature_spread_in 24-48 (NC State Dimensions Width 2 ft. 0 in. - 4 ft. 0 in., converted to inches: 2 ft x 12 = 24, 4 ft x 12 = 48)",
+            "source": "NC State Extension Gardener Plant Toolbox, Scindapsus pictus",
+            "url": "https://plants.ces.ncsu.edu/plants/scindapsus-pictus/",
+            "quote": "Width: 2 ft. 0 in. - 4 ft. 0 in."
+          },
+          {
+            "claim": "climbs: NC State describes satin pothos as a tropical evergreen climbing vine that climbs on tree trunks",
+            "source": "NC State Extension Gardener Plant Toolbox, Scindapsus pictus",
+            "url": "https://plants.ces.ncsu.edu/plants/scindapsus-pictus/",
+            "quote": "Satin pothos is a tropical evergreen climbing vine with variegated dark green and silvery foliage in the Arum family."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read every page through qc.py and found no field to refute. The NC State species page (plants.ces.ncsu.edu/plants/scindapsus-pictus/) loaded, and all three cited quotes are on it verbatim as single runs. Height 18-36 in correctly converts the page's indoor figure ('1.5 to 3 feet tall') and avoids the larger Dimensions block (3-10 ft) and the native-habitat 'up to 10 feet'. Spread 24-48 in correctly converts the 'Width: 2 ft. 0 in. - 4 ft. 0 in.' line; NC State gives no indoor spread, and 48 in is under the 120 in houseplant limit. climbs=true is backed by prose ('climbing vine', 'climbs on tree trunks, supported by rootlets') and by the Habit/Form field 'Climbing' on NC State, plus RHS Habit 'Climbing, Trailing'. is_edible and attracts_pollinators stay null, which is correct: NC State and RHS give toxicity text and no pollinator text, and Clemson's only 'pollinat' hit is a site navigation tag. Using no RHS sizes was correct, since that page is the cultivar 'Argyraeus' (1-1.5 m by 0.5-1 m). The Clemson page is a genus-level Epipremnum factsheet with a short Scindapsus pictus section that gives no size. The UGA PDF returned 'pdf' status with 0 bytes on two tries, and plantfinder.mobot.org failed with a ConnectError, so neither was read. That affects no proposed value."
+    },
+    {
+      "batch": "b46-herbs-aquatics-and-companions.json",
+      "record": {
+        "common_name": "Swiss Cheese Vine",
+        "scientific_name_accepted": "Monstera adansonii",
+        "is_edible": false,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 36,
+        "mature_height_in_max": 96,
+        "mature_spread_in_min": 12,
+        "mature_spread_in_max": 36,
+        "unknowns": [
+          "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Pollinator' and 'Wildlife' (0 hits each) and the RHS Monkey Mask page for 'Attracts' and 'Pollinator' (0 hits; its only 'Wildlife' hit was site navigation), so neither page names pollinators.",
+          "is_edible set false, not true: NC State lists the plant as poisonous (Plant Type: Poisonous; 'This plant has low severity poison characteristics'; Poison Toxic Principle: Calcium oxalate crystals; Poison Part: Flowers, Leaves; Causes Contact Dermatitis: Yes; tags 'problem for dogs', 'problem for cats', 'problem for children'). RHS (Monkey Mask cultivar page): 'Harmful if eaten; skin/eye irritant.'",
+          "Size recorded is NC State's indoor houseplant figure with a trellis or moss pole (3 to 8 ft tall, 1 to 3 ft wide). NC State's Dimensions block is wider for height (Height: 3 ft. 0 in. - 13 ft. 0 in., i.e. 36-156 in; Width: 1 ft. 0 in. - 3 ft. 0 in.) and outdoors it can grow 10 to 13 feet. The indoor figure was used under the houseplant rule.",
+          "The RHS page found (508006) is for the cultivar 'Monkey Mask' (Max Height 0.5-1 metres, Max Spread 0.5-1 metres), so its size was not used. The RHS how-to-grow and PSU extension pages and any UF/IFAS, Clemson, UMD or UGA species pages were not loaded or searched in this pass, so no figures from them are recorded.",
+          "No registered host refused this machine in this pass; both pages that were loaded returned status ok."
+        ],
+        "citations": [
+          {
+            "claim": "is_edible false: NC State states the plant is toxic to humans if ingested (poison part flowers and leaves, calcium oxalate crystals, low severity poison characteristics)",
+            "source": "NC State Extension Gardener Plant Toolbox, Monstera adansonii",
+            "url": "https://plants.ces.ncsu.edu/plants/monstera-adansonii/",
+            "quote": "This plant is toxic to humans and pets if ingested."
+          },
+          {
+            "claim": "climbs: NC State describes it as a climber (Habit/Form: Climbing; Plant Type: Vine)",
+            "source": "NC State Extension Gardener Plant Toolbox, Monstera adansonii",
+            "url": "https://plants.ces.ncsu.edu/plants/monstera-adansonii/",
+            "quote": "The Swiss Cheese Plant is a tender, evergreen, herbaceous perennial climber that hails from the tropical rainforests of Mexico, Central America, and South America."
+          },
+          {
+            "claim": "mature_height_in 36-96 (NC State: indoors with a trellis or moss pole it can reach up to 3 to 8 feet tall; 3 ft = 36 in, 8 ft = 96 in; a climber, so this is its reach given support)",
+            "source": "NC State Extension Gardener Plant Toolbox, Monstera adansonii",
+            "url": "https://plants.ces.ncsu.edu/plants/monstera-adansonii/",
+            "quote": "Using a trellis or moss pole, an Indoors plant can reach up to 3 to 8 feet tall and 1 to 3 feet wide."
+          },
+          {
+            "claim": "mature_spread_in 12-36 (NC State: indoors it is 1 to 3 feet wide; 1 ft = 12 in, 3 ft = 36 in)",
+            "source": "NC State Extension Gardener Plant Toolbox, Monstera adansonii",
+            "url": "https://plants.ces.ncsu.edu/plants/monstera-adansonii/",
+            "quote": "Using a trellis or moss pole, an Indoors plant can reach up to 3 to 8 feet tall and 1 to 3 feet wide."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "All seven values stand; I re-read all four pages with qc.py and every one loaded with status ok. The 36-96 in height and 12-36 in spread are NC State's indoor trellis-or-moss-pole figure ('3 to 8 feet tall and 1 to 3 feet wide'), converted from feet correctly. That figure is on the species' own page and stays under the 120 in houseplant limit. The outdoor 10 to 13 ft and the Dimensions maximum of 13 ft were correctly left out. The PSU Monstera page, which the researcher did not load, independently gives the same 3-8 ft by 1-3 ft as a houseplant figure for M. adansonii. climbs true rests on NC State's 'Habit/Form: Climbing', its 'Vine' plant type and its climber prose. is_edible false rests on NC State's affirmative 'toxic to humans and pets if ingested', and RHS's 'Harmful if eaten' backs it up. attracts_pollinators null is correct because no page names pollinators; PSU's hits are only site navigation. All citation labels contain the field names, and every quote is verbatim on the NC State page as one rendered run. One thing in the unknowns is out of date: it says the PSU and RHS how-to pages were not loaded. Both load now; neither changes any value, and PSU confirms the size."
+    },
+    {
+      "batch": "b87-mixed.json",
+      "record": {
+        "common_name": "Creeping Fig",
+        "scientific_name_accepted": "Ficus pumila",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "mature_height_in and mature_spread_in left null (rule 12): the only height figures are outdoor stature above 10 ft. NC State: 'Height: 8 ft. 0 in. - 15 ft. 0 in.' (96-180 in) and 'Width: 3 ft. 0 in. - 6 ft. 0 in.'; its prose says 'in favorable conditions, will climb 8 to 15 feet high and spread 3 to 6 feet wide'. RHS: 'Max Height 2.5-4 metres' (98-157 in) and 'Max Spread 1.5-2.5 metres'. Neither page gives a separate indoor or container figure. I searched both pages for Indoors, houseplant and container: NC State gives only care text and cultivar notes ('Minima' used in terrariums or containers, no size).",
+          "is_edible left null: NC State's Edibility field says 'Not usually grown for edible fruit, but properly prepared it is popular in Asian countries.' but the same page says 'Inedible figs appear after the spring flowers on plants grown outdoors' and the fruit is 'insipid and not worth eating', so the page contradicts itself on eating. NC State tags the plant '#problem for dogs #problem for horses #problem for cats'. RHS lists 'Potentially harmful: Skin allergen. Wear gloves and other protective equipment when handling'. A search of NC State for Poison and Toxic returned no hits.",
+          "attracts_pollinators left null: NC State's Attracts field lists only Songbirds. The page's 'Landscape Theme: Butterfly Garden' is a design theme, not an attracts statement. Its flowering text says the fig is 'pollinated by fig wasps' and 'Rarely flowers when grown indoors', which is not an attracts-pollinators claim. I searched RHS for 'pollinator' and found nothing.",
+          "https://hgic.clemson.edu/factsheet/climbing-fig/ refused this machine (fetch status http-403, even with the host allowed). Not read.",
+          "https://plantfinder.mobot.org/PlantFinderDetails.aspx?kempercode=b599 was not fetched; I did not try it and say nothing about what it holds.",
+          "The NC State /climbing-fig/ page is the same species record and returned identical Dimensions text, so it adds no independent figure."
+        ],
+        "citations": [
+          {
+            "claim": "climbs: NC State describes Ficus pumila as a woody climber that climbs by attaching to walls or supports",
+            "source": "NC State Extension Gardener Plant Toolbox, Creeping Fig - Ficus pumila",
+            "url": "https://plants.ces.ncsu.edu/plants/ficus-pumila/common-name/creeping-fig/",
+            "quote": "Creeping fig is a broadleaf, evergreen, woody, climber in the mulberry family (Moraceae)."
+          },
+          {
+            "claim": "climbs: RHS describes Ficus pumila as an evergreen self-clinging climber",
+            "source": "RHS, Ficus pumila | creeping fig",
+            "url": "https://www.rhs.org.uk/plants/7210/ficus-pumila/details",
+            "quote": "An evergreen self-clinging climber or trailer to 3m"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read RHS 7210 and both NC State URLs (/creeping-fig/ and /climbing-fig/, which have identical Dimensions). All seven proposed values hold. climbs=true has two verbatim, correctly labelled citations from registered-authority species pages. The pages also back it with Habit: Climbing and Climbing Method: Clinging. Height and spread are correctly null under rule I. The only figures are outdoor ones: NC State 8-15 ft (96-180 in) by 3-6 ft (36-72 in), tied to 'favorable conditions', and RHS 2.5-4 m (98-157 in) by 1.5-2.5 m (59-98 in). No page gives an indoor or container size; the container text covers only the 'Minima' and 'Quercifolia' cultivars, with no figures. The spread figures alone are under 120 in, but they belong to the same outdoor record, so leaving them null is defensible. is_edible and attracts_pollinators are correctly null. NC State's edibility text is contradictory and needs preparation, and it tags the plant a problem for pets. Its Attracts field lists only Songbirds, and fig-wasp pollination is not an attracts-pollinators claim. Every quote in unknowns checks out on the pages. Clemson HGIC returned http-403 for me as well. MOBOT (plantfinder.mobot.org) would not connect, and it is not a registered authority, so it could not support a value anyway. No field is refuted."
+    },
+    {
+      "batch": "b87-mixed.json",
+      "record": {
+        "common_name": "Blushing Philodendron",
+        "scientific_name_accepted": "Philodendron erubescens",
+        "is_edible": false,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": null,
+        "mature_height_in_max": 36,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": 16,
+        "unknowns": [
+          "mature_height_in_min and mature_spread_in_min left null: the page gives only one indoor figure for each (3 ft tall, 16 inches wide), so it fills the max end only and no minimum is invented.",
+          "NC State's Dimensions block (Height: 2 ft. 0 in. - 60 ft. 0 in., Width: 1 ft. 0 in. - 2 ft. 0 in.) and the native-rainforest height (up to 60 feet) were NOT used; the indoor houseplant figure (3 ft tall, 16 inches wide) was recorded instead per the houseplant headroom rule. The 60 ft outdoor/native figure exceeds 120 inches.",
+          "mature_height_in 36 is the indoor 'typically grows 3 ft. tall' figure for a plant that climbs; NC State also says indoors it can climb a moss pole or trellis or spread outwards, so the real indoor reach with support may be greater than 36 in.",
+          "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Pollinator', 'butterfl' and 'Wildlife' and found no hits; no other registered-authority page was loaded.",
+          "is_edible set false from the NC State tag '#poisonous if ingested'. Related page text: poison severity low, 'If ingested, mouth and stomach irritation. Sap may cause skin irritation', toxic principle calcium oxalate crystals, causes contact dermatitis, poison parts flowers and fruits; tags 'problem for dogs', 'problem for cats', 'problem for children'.",
+          "Cultivar-specific notes on the NC State page ('Prince of Orange' non-vining, 'Pink Princess' upright vining, 'Red Emerald' climber) were not used for any field.",
+          "No RHS or UF/IFAS page was searched or loaded; only the NC State anchor page was read."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 36 max only (NC State: when grown indoors typically 3 ft. tall = 36 inches; this is a climber, so as a houseplant reach is recorded as published, converted to inches at 12 in per ft)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+            "quote": "When grown indoors, It typically grows 3 ft. tall and 16 inches wide."
+          },
+          {
+            "claim": "mature_spread_in 16 max only (NC State: when grown indoors typically 16 inches wide, already in inches)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+            "quote": "When grown indoors, It typically grows 3 ft. tall and 16 inches wide."
+          },
+          {
+            "claim": "climbs true (NC State: indoors it climbs on a moss pole or trellis)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+            "quote": "When grown indoors, it can be a climber on a moss pole or trellis"
+          },
+          {
+            "claim": "is_edible false (NC State tags the plant poisonous if ingested)",
+            "source": "NC State Extension Gardener Plant Toolbox",
+            "url": "https://plants.ces.ncsu.edu/plants/philodendron-erubescens/",
+            "quote": "#poisonous if ingested"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read the NC State page (plants.ces.ncsu.edu/plants/philodendron-erubescens/) with qc.py; it loaded with status ok, 52,463 bytes. I found nothing to refute. All seven field values stand, and every cited quote appears verbatim on the page as one run with no U+23CE. The height is 36 in, from the indoor 3 ft converted at 12 in per ft. The spread is 16 in, from the indoor '16 inches wide', which was already in inches. Both were correctly taken from the indoor sentence and not from the 60 ft native height or the 2-60 ft Dimensions block, so the houseplant-scale check (I) passes, and the minimums rightly stay null because the page gives one figure each. climbs true is supported for the species by the prose ('a climbing tropical herbaceous perennial', 'can be a climber on a moss pole or trellis'), by 'Climbing Method: Clinging' and by the Plant Type 'Vine'. is_edible false rests on the explicit '#poisonous if ingested' tag, not on silence. attracts_pollinators stays null because the page has no pollinator text. No new page is cited, so no scope or domain problem arises."
+    },
+    {
+      "batch": "b17-perennials3.json",
+      "record": {
+        "common_name": "Primrose",
+        "scientific_name_accepted": "Primula vulgaris",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": 3.9,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "is_edible and attracts_pollinators: already landed, returned null per instructions (not re-researched).",
+          "climbs: null. NC State gives Habit/Form Clumping and RHS gives Habit Clump forming; no page calls it a climber.",
+          "SOURCE CONFLICT on size: NC State Plant Toolbox publishes Height 0 ft. 3 in. - 6 ft. 0 in. (3-72 in) and Width 4 ft. 0 in. - 8 ft. 0 in. (48-96 in) for Primula vulgaris, but RHS publishes Max Height Up to 10 cm (about 3.9 in) and Max Spread 0-0.1 metre. The NC State range (up to 6 ft tall, 8 ft wide) is implausible for a rosette primrose and contradicts RHS, so none of it was recorded; flag NC State size for human review.",
+          "mature_height_in_min: null; RHS gives only an upper bound ('Up to 10 cm'), and the NC State low end (3 in) was not mixed in because that page's figures conflict with RHS.",
+          "mature_spread_in_min and mature_spread_in_max: null; RHS '0-0.1 metre' is a degenerate range starting at zero, and the NC State width of 48-96 in contradicts it.",
+          "Searched both pages for: Dimensions, Height, Width, Max Height, Max Spread, Spread, Ultimate, Habit, Plant Type. No other registered-authority page was loaded.",
+          "Edibility context for the landed is_edible value (rule 5 check on the anchor page): NC State lists 'Leaves can be eaten raw or cooked', and also 'This plant has  low severity  poison characteristics.', Poisonous to Humans Poison Severity Low, Poison Symptoms 'Mild vomiting', Poison Toxic Principle 'Unknown', Causes Contact Dermatitis 'No', and Problems 'Problem for Cats', 'Problem for Dogs', 'Problem for Horses'. RHS tags include #problem for dogs #problem for horses #problem for cats #contact dermatitis."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in max 3.9 (RHS Max Height 'Up to 10 cm', converted to inches: 10 cm / 2.54 = 3.94, recorded 3.9; upper bound only, so min is null)",
+            "source": "RHS Primula vulgaris (Pr/Prim) | primrose",
+            "url": "https://www.rhs.org.uk/plants/13901/primula-vulgaris-(pr-prim)/details",
+            "quote": "Up to 10 cm"
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read both pages with qc.py and none of the seven fields is refuted. The only non-null value, mature_height_in_max 3.9, holds up. The RHS species page says 'Up to 10 cm', which is 3.94 in, and the quote is verbatim and correctly labelled. NC State's 3 in to 6 ft height and 4 to 8 ft width really are on its page and are implausible for a primrose that contradicts RHS, so leaving them out and flagging them for review is right. climbs stays null, since both pages say the plant is clump-forming. One problem in unknowns: the '#problem for dogs/horses/cats #contact dermatitis' tags are credited to RHS but appear on the NC State page. They are not on RHS. NC State also contradicts itself, with 'Causes Contact Dermatitis: No' alongside a #contact dermatitis tag."
+    },
+    {
+      "batch": "b32-weeping-fig-and-more.json",
+      "record": {
+        "common_name": "Bay Laurel",
+        "scientific_name_accepted": "Laurus nobilis",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "mature_height_in_min/max and mature_spread_in_min/max left null (rule 12): the only published figures are outdoor/landscape stature exceeding 120 in. NC State Plant Toolbox Dimensions block reads 'Height: 8 ft. 0 in. - 12 ft. 0 in.' and 'Width: 8 ft. 0 in. - 30 ft. 0 in.' (96-144 in tall, 96-360 in wide); the page does not label these as container or indoor figures, and its prose says 'In its native habitat, it can reach up to 60 feet tall. In NC, it is generally grown in a container as a patio or houseplant and is much smaller' with no number given for the container size.",
+          "RHS plant details page reads 'Max Height 8-12 metres' (315-472 in) and 'Max Spread wider than 8 metres' (open-ended, no usable bound); RHS growing guide reads 'Height and Spread - Up to 7.5m (23ft) unless clipped' (about 295 in). All are open-ground figures over 120 in, so none recorded.",
+          "climbs left null: NC State Habit/Form lists Conical, Dense, Oval, Pyramidal and RHS Habit reads Bushy; no page searched calls it a climber (searched 'Climb' on NC State and both RHS pages, 0 hits).",
+          "is_edible and attracts_pollinators returned null by instruction: already landed, not researched.",
+          "NC State poison block noted for reference only (is_edible not set): Poison Severity Low; symptoms 'Vomiting and diarrhea; Large ingestion of whole leaves can cause obstruction'; toxic principle 'Eugenol, and other essential oils'; tags include problem for cats, dogs and horses. RHS: 'Fruit are ornamental - not to be eaten.'",
+          "Pages not re-read this run: plantfinder.mobot.org, fieldreport.caes.uga.edu, hgic.clemson.edu factsheet (earlier pass found no usable size; nothing there could override the over-120-inch outdoor figures above)."
+        ],
+        "citations": []
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read the NC State page and both RHS pages, and every quote and conversion in the unknowns checks out: 8-12 ft is 96-144 in, 8-30 ft is 96-360 in, 8-12 m is 315-472 in, and 7.5 m is about 295 in. All published sizes are outdoor or native-habitat figures over 120 in, and no registered page gives a container number, so leaving all four size fields null is correct under rule I. No page calls bay a climber; habit is Conical/Dense/Oval/Pyramidal on NC State and 'Bushy' on RHS. is_edible and attracts_pollinators are null by instruction. Nothing is refuted. Citations are empty, which is correct because every field is null. I could not re-check two other pages: Clemson's herbs page returned http-403 and MOBOT gave a ConnectError. Neither could supply a size anyway, since Clemson's is a multi-herb page rather than the species' own page and MOBOT is not a registered authority."
+    },
+    {
+      "batch": "b47-shade-shrubs.json",
+      "record": {
+        "common_name": "Japanese Aralia",
+        "scientific_name_accepted": "Fatsia japonica",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": 72,
+        "mature_height_in_max": 120,
+        "mature_spread_in_min": 72,
+        "mature_spread_in_max": 120,
+        "unknowns": [
+          "is_edible left null: NC State page has no 'Poison', 'Problem for' or 'Edible' text (only tags #non-toxic for cats/horses/dogs); RHS says only 'Fruit are ornamental - not to be eaten', which covers the fruit alone, not the whole plant; Clemson factsheet has no edible/poison/toxic text. No page states the plant is grown or used for food.",
+          "climbs left null: NC State Habit/Form is 'Rounded' and Plant Type is Houseplant/Perennial/Shrub/Tree; RHS Habit is 'Suckering'. No page calls it a climber.",
+          "attracts_pollinators: already landed, not researched, returned null per instructions.",
+          "Size source is Clemson HGIC (landscape stature; no indoor or container figure found on any page). Sources disagree: NC State Dimensions 'Height: 6 ft. 0 in. - 19 ft. 6 in.' and 'Width: 4 ft. 0 in. - 6 ft. 0 in.' (72-234 in height, 48-72 in width, text says 'at maturity, reaches a height of 19 feet'); RHS 'Max Height 2.5-4 metres' and 'Max Spread 2.5-4 metres' (about 98-157 in each); Clemson also says 'Old plants in ideal growing conditions may reach 15 feet tall'. Recorded the Clemson typical range, the only one at or under 10 ft; true outdoor maxima run higher (to 15-19.5 ft), and a potted indoor specimen would likely stay at the lower end.",
+          "No indoor/houseplant/container size figure found: searched NC State, RHS and Clemson pages for houseplant, indoor and container wording; NC State only says it 'can also be grown as a houseplant or conservatory plant' with no size.",
+          "plantfinder.mobot.org, fieldreport.caes.uga.edu PDF and the NC State common-name page were not read in this pass (earlier pass found no usable size); no registered-host species page for UF/IFAS was located or loaded."
+        ],
+        "citations": [
+          {
+            "claim": "mature_height_in 72-120 (Clemson HGIC 'grows 6 to 10 feet tall', converted to inches: 6 ft = 72, 10 ft = 120; landscape figure, no indoor figure published)",
+            "source": "Clemson HGIC Fatsia factsheet",
+            "url": "https://hgic.clemson.edu/factsheet/fatsia/",
+            "quote": "Fatsia typically grows 6 to 10 feet tall by 6 to 10 feet wide."
+          },
+          {
+            "claim": "mature_spread_in 72-120 (Clemson HGIC 'by 6 to 10 feet wide', converted to inches: 6 ft = 72, 10 ft = 120)",
+            "source": "Clemson HGIC Fatsia factsheet",
+            "url": "https://hgic.clemson.edu/factsheet/fatsia/",
+            "quote": "Fatsia typically grows 6 to 10 feet tall by 6 to 10 feet wide."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I found nothing to refute in this record. I re-read the Clemson, NC State (both URLs) and RHS pages; the Missouri Botanical page failed to load (ConnectError) and the UGA PDF came back empty. The four size values (72-120 in height, 72-120 in spread) trace to the Clemson species factsheet line 'Fatsia typically grows 6 to 10 feet tall by 6 to 10 feet wide.' It is correctly converted from feet, min <= max, species-level and verbatim in one run. It does not exceed the 120 in houseplant limit, and no page gives an indoor or container figure. The larger outdoor figures (NC State 19.5 ft, RHS 2.5-4 m, Clemson 15 ft) were correctly left out. is_edible and climbs are correctly null: the pages are silent on food use, and the only climbing text belongs to x Fatshedera. Citation labels are correct."
+    },
+    {
+      "batch": "b59-native-prairie-3.json",
+      "record": {
+        "common_name": "Royal Catchfly",
+        "scientific_name_accepted": "Silene regia",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": null,
+        "mature_height_in_min": null,
+        "mature_height_in_max": null,
+        "mature_spread_in_min": null,
+        "mature_spread_in_max": null,
+        "unknowns": [
+          "plantfinder.mobot.org refused this machine (qc.py status error:ConnectError, 0 bytes); not read, nothing guessed about what it says.",
+          "RHS page https://www.rhs.org.uk/plants/130253/silene-regia/details loaded (ok, 118728 bytes, title 'Silene regia') but searches for Height, Spread, Width, Max, metre, Ultimate, Dimensions, Attracts, Pollinator, pollinat, bee, butterfl, hummingbird, Habit, Climb, Edible, Poison, Toxic and 'Problem for' returned 0 hits; the extracted text is only site navigation plus the plant name, so it carries no usable data for any of the seven fields.",
+          "NC State Plant Toolbox: https://plants.ces.ncsu.edu/plants/silene-regia/ returned http-404 and a find_a_plant search for 'silene regia' returned 0 plants, so no NC State page exists for this species.",
+          "No other registered-authority page (edis.ifas.ufl.edu, hgic.clemson.edu, extension.umd.edu, extension.psu.edu, fieldreport.caes.uga.edu) for Silene regia was found or loaded; web search surfaced only unregistered sites (Forest Service, Prairie Nursery, Grow Native, etc.), which are not usable.",
+          "is_edible left null: no usable page addresses eating, toxicity or poison for this species.",
+          "attracts_pollinators left null: no registered page loaded states pollinator, hummingbird or butterfly attraction (unregistered sites mention hummingbirds and Black Swallowtail but cannot be cited).",
+          "climbs left null: no page calls Silene regia a climber, and it is an upright perennial.",
+          "mature_height_in_min, mature_height_in_max, mature_spread_in_min and mature_spread_in_max left null: no usable published size on any loadable registered page."
+        ],
+        "citations": []
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I found nothing to refute. Every field in this record is null and it cites nothing, and my own reads with qc.py back up its unknowns. MOBOT gave a ConnectError (0 bytes). The RHS page loaded (118728 bytes) but its text is only site navigation, with 0 hits for Height, Spread, Ultimate, metre, pollinat, Climb, Edible and Toxic. The NC State species page returned http-404. Because nothing is cited, the checks for unit conversion, ranges, scope, citation labels and quotes have nothing to apply to. No field is set to false on silence, and climbs is null rather than false. The record makes no claim the pages fail to support."
+    },
+    {
+      "batch": "b84-edibles.json",
+      "record": {
+        "common_name": "Butternut Squash",
+        "scientific_name_accepted": "Cucurbita moschata",
+        "is_edible": null,
+        "attracts_pollinators": null,
+        "climbs": true,
+        "mature_height_in_min": 48,
+        "mature_height_in_max": 120,
+        "mature_spread_in_min": 36,
+        "mature_spread_in_max": 300,
+        "unknowns": [
+          "is_edible: already landed, not researched here, returned null per instructions.",
+          "attracts_pollinators left null: the NC State page has no 'Attracts' field (searched 'Attracts', 'Pollinator', 'bee', 'butterfl'; the only hits were photo captions, a landscape-garden name and the cultivar name 'Butterfly'), and the RHS page has no pollinator tag or statement (searched 'Pollinator', 'butterfl', 'bee'). The NC State tag '#wildlife friendly' does not name pollinators, so it was not used.",
+          "mature size is the NC State published range for a climber (reach given support): Height 4-10 ft = 48-120 in, Width 3-25 ft = 36-300 in. The RHS page gives a lower figure, Max Height 0.5-1 metres (19.7-39.4 in) and Max Spread 4-8 metres (157-315 in), and classes the habit as 'Trailing' rather than climbing; NC State was used as the anchor, but the two sources differ on height.",
+          "cucurbita-pepo NC State page was not read (different species, not needed).",
+          "NC State notes vigorous commercial varieties like 'Polaris' produce huge vines; that is a cultivar remark and was not used for any figure.",
+          "Toxicity text seen on the cited pages, recorded in case is_edible is later set: RHS 'Potentially harmful' field reads 'Humans/Pets: If crop is bitter, don't eat or feed to pets.  Wear gloves and other protective equipment when handling'. NC State has no 'Poison' or 'Problem for' text (searched both) and carries tags '#non-toxic for cats #non-toxic for horses #non-toxic for dogs'.",
+          "No page refused this machine; NC State and RHS both loaded with status ok."
+        ],
+        "citations": [
+          {
+            "claim": "climbs: NC State describes the plant as a vegetable vine that climbs up structures using tendrils (Habit/Form is also listed as Climbing)",
+            "source": "NC State Extension Gardener Plant Toolbox, Cucurbita moschata",
+            "url": "https://plants.ces.ncsu.edu/plants/cucurbita-moschata/",
+            "quote": "trails along the ground or climbs up structures using tendrils"
+          },
+          {
+            "claim": "mature_height_in 48-120, reach given support (NC State Height 4 ft. 0 in. - 10 ft. 0 in., converted to inches: 4 ft = 48, 10 ft = 120)",
+            "source": "NC State Extension Gardener Plant Toolbox, Cucurbita moschata",
+            "url": "https://plants.ces.ncsu.edu/plants/cucurbita-moschata/",
+            "quote": "Height: 4 ft. 0 in. - 10 ft. 0 in."
+          },
+          {
+            "claim": "mature_spread_in 36-300 (NC State Width 3 ft. 0 in. - 25 ft. 0 in., converted to inches: 3 ft = 36, 25 ft = 300)",
+            "source": "NC State Extension Gardener Plant Toolbox, Cucurbita moschata",
+            "url": "https://plants.ces.ncsu.edu/plants/cucurbita-moschata/",
+            "quote": "Width: 3 ft. 0 in. - 25 ft. 0 in."
+          }
+        ]
+      },
+      "applied": [],
+      "review": [],
+      "summary": "I re-read the C. moschata and C. pepo pages on NC State and the C. moschata page on RHS with qc.py. All three loaded with status ok. Nothing should be refuted, and I found no defect. All three quotes appear verbatim on the NC State C. moschata page, each on one rendered line. Height 4-10 ft converts to 48-120 in and width 3-25 ft to 36-300 in, and both are the species page's own published ranges. The C. pepo figures (height 1-3 ft) and the 'Polaris' cultivar remark were not used. climbs=true is supported by NC State prose ('climbs up structures using tendrils'), by Habit/Form: Climbing and by the #climber tag. RHS's 'Trailing' habit and its 0.5-1 m height are disclosed in unknowns. is_edible and attracts_pollinators are correctly null, since the pages are silent on pollinators and give only garden-name and photo-caption mentions. Every non-null field has a citation labelled with its field name."
+    }
+  ],
+  "unverified": [],
+  "no_research": []
+}
