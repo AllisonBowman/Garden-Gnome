@@ -110,7 +110,7 @@ ${cited}`
 ${cited}
 An earlier pass read exactly these and found no usable size. So you MAY ALSO find and read this species' OWN page on one of these registered authorities, and on no other site (a page anywhere else is discarded at load):
 ${REGISTERED.map((d) => '  ' + d).join('\n')}
-Find a page with WebSearch or by its site's species URL pattern; it must be about ${s.latin} itself -- not a genus page, not a cultivar page, not a different species. Before you quote a new page, load it through qc.py (below) so it lands in the shared cache the quote checker reads; a quote from a page qc.py cannot load is unusable. For a houseplant, an indoor or container figure is exactly what you are looking for (UF/IFAS houseplant and foliage-plant sheets often give one).`
+Find a page with WebSearch or by its site's species URL pattern; it must be about ${s.latin} itself -- not a genus page, not a cultivar page, not a different species. Before you quote a new page, load it through qc.py (below) so it lands in the shared cache the quote checker reads; a quote from a page qc.py cannot load is unusable. If qc.py fails on a registered host with a ProxyError or a sandbox denial, re-run that same command with the host in the Bash tool's allowed_domains. For a houseplant, an indoor or container figure is exactly what you are looking for (UF/IFAS houseplant and foliage-plant sheets often give one).`
 }
 
 function researchPrompt(s) {
