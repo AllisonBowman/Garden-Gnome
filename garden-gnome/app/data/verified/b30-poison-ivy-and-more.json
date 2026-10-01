@@ -55,13 +55,17 @@
         "toxicity_detail: RHS's Toxicodendron genus page states only that 'Plants within this genus produce urushiol oil which can irritate the skin,' worded at the genus level in a way that reads as boilerplate likely reused verbatim across every species page in the genus (T. vernix, T. diversilobum, etc.); it was treated only as weak, non-species-specific corroboration for the general urushiol/skin-irritation mechanism, not as independent support, per the task's caution about genus-wide boilerplate text.",
         "Missouri Botanical Garden's own poison-ivy identification page (missouribotanicalgarden.org) and Plant Finder entry (plantfinder.mobot.org) were both located, but plantfinder.mobot.org could not be directly fetched (repeated TLS certificate verification failure), so no Plant Finder structured fields (Sun/Water/Zone/etc.) for this species are cited here; the general missouribotanicalgarden.org identification page was fetched successfully and reviewed but contained no fact not already independently covered by NC State, Clemson, UF/IFAS, Penn State, UMD, or UGA, so it was not cited separately.",
         "name_note — removed on audit: Several specific claims inside name_note trace to no citation entry at all, failing structural check #1 (every non-null field value must trace to at least one citations entry). (a) The claim that NC State hosts this species page under three URL slugs -- 'poison-ivy,' 'eastern-poison-ivy,' and 'poison-oak' -- has zero supporting citation; I independently fetched https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/ and confirmed the header reads 'Toxicodendron radicans (Eastern Poison Ivy, Poison Ivy, Poison Oak)' with all three common-name slugs present, so the underlying fact is true, but the record itself never cites it. (b) The claim that the accepted name is 'used consistently across every admissible source consulted (NC State, Clemson, UF/IFAS, Missouri Botanical Garden, Penn State, UMD, UGA)' includes Missouri Botanical Garden, yet no citation entry anywhere in the array references missouribotanicalgarden.org or plantfinder.mobot.org -- the unknowns section admits MOBOT's identification page was reviewed but 'not cited separately.' (c) The claim 'RHS additionally lists Rhus toxicodendron as a synonym' is not supported by the record's own RHS citation, whose quote is only 'Name Status\\nCorrect' -- no citation quote anywhere captures the Rhus toxicodendron synonym text, even though I confirmed via direct fetch that RHS's synonym field does list both 'Rhus radicans, Rhus toxicodendron.' All three sub-claims happen to be factually accurate on independent verification, but the record as submitted provides no citation trail for any of them, which is exactly the documentation gap structural check #1 is meant to catch -- the researcher did the extra research but didn't log it as a citation.",
-        "mature_height_in and mature_spread_in left null on all four fields: Toxicodendron radicans is a woody climber. NC State, UGA/CAES, UF/IFAS, Clemson/HGIC, Penn State, and UMD all describe it as growing as a high-climbing vine (in addition to sometimes a shrub) that attaches to trees/structures with aerial rootlets, so per the climber rule its published size figures are not recorded even though NC State's Dimensions block reads 'Height: 1 ft. 0 in. - 150 ft. 0 in.' and 'Width: 1 ft. 0 in. - 10 ft. 0 in.' -- that Height range mixes shrub-form stature (to 6 ft, per the same page's body text) with vine climb length (60-150 ft up a support), which is exactly the ambiguity the vine rule exists to avoid.",
         "is_edible left null: none of the seven read pages (NC State, RHS, UGA/CAES, UF/IFAS, Clemson/HGIC, Penn State, UMD) state the plant or any part of it is eaten or grown for food -- searched for 'Edible' on every page and got 0 hits each time, and no page addresses eating it at all.",
         "Before setting is_edible, searched every anchor page for 'Poison', 'Toxic', and 'Problem for'. All toxicity language across all seven pages describes urushiol causing contact/skin dermatitis (rash, blisters) from touching the plant or its smoke, not a food-poisoning or ingestion hazard; 'Problem for' returned 0 hits on every page. No page frames edibility/toxicity-by-eating either way, consistent with leaving is_edible null rather than false.",
         "RHS page (https://www.rhs.org.uk/plants/357128/toxicodendron-radicans/details) carries no size data at all: searched 'Dimensions', 'Max Height', 'Max Spread', 'Ultimate height', 'Height:' and 'Width:' and got 0 hits for every pattern -- the extracted page text has no numeric size figure, only a 'Size' nav label and a 'Time to Maturity: No preference' field.",
         "UMD notes poison ivy berries are eaten by birds ('its berries provide nutritious food for migrating birds') -- this is wildlife seed-feeding, not pollination, so it was not used to support attracts_pollinators, per the rule that bird/seed consumption does not count as pollinator evidence.",
         "attracts_pollinators is set true from NC State's structured 'Attracts:' field, which lists Butterflies, Moths, and Songbirds; only Butterflies and Moths are pollinators and were relied on (Songbirds were not).",
-        "All seven target pages fetched successfully (fetch status: ok) on this run -- none refused this machine, so no page is being skipped for that reason."
+        "All seven target pages fetched successfully (fetch status: ok) on this run -- none refused this machine, so no page is being skipped for that reason.",
+        "is_edible left null: the NC State page tags the plant 'Poisonous' and 'Contact Dermatitis' (urushiol skin toxin) but no page read states whether it is poisonous to eat or edible, so I did not infer either way.",
+        "attracts_pollinators not researched: already landed, returned null per instructions.",
+        "NC State Height 1 ft - 150 ft spans the shrub form (about 6 ft per page prose) and the climbing vine form (60 to 150 ft); mature_height_in is recorded as published, as a reach for the climbing form, so the 12 inch minimum reflects a low shrubby/ground form.",
+        "RHS page (357128) loaded ok but showed no Max Height / Max Spread / Ultimate height fields; I searched for 'Max Height', 'Max Spread', 'Ultimate', 'Height', 'Spread' and 'metres' and found nothing, so RHS gave no size.",
+        "Did not re-fetch the other listed pages (UGA, Clemson, PSU, UMD) since NC State supplied a structured size; ask.ifas.ufl.edu not attempted."
       ],
       "citations": [
         {
@@ -177,9 +181,32 @@
           "source": "North Carolina Extension Gardener Plant Toolbox: Poison Ivy - Toxicodendron radicans",
           "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
           "quote": "Butterflies"
+        },
+        {
+          "claim": "mature_height_in 12-1800 (NC State Height 1 ft. 0 in. - 150 ft. 0 in., converted to inches: 1 ft = 12, 150 ft = 1800); for a climber this is its reach",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Height: 1 ft. 0 in. - 150 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-120 (NC State Width 1 ft. 0 in. - 10 ft. 0 in., converted to inches: 1 ft = 12, 10 ft = 120)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "Width: 1 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State says as a vine it reaches 60 to 150 feet and climbs high on trees, walls and fences",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/toxicodendron-radicans/common-name/poison-ivy/",
+          "quote": "when it grows as a vine, it can reach 60 to 150 feet tall and climb high on trees, walls, and fences or trail along the ground."
         }
       ],
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 1800,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Pokeweed",
@@ -464,11 +491,15 @@
         "soil_base ('garden_bed') and soil_drainage ('moderate') are best-fit mappings rather than literal source vocabulary: the schema's soil_base enum is oriented toward container/potting substrates, but every admissible source describes L. japonica growing directly in outdoor garden soil (Clay/Loam/Sand per NC State; Clay/Loam, 'Moist but well-drained' per RHS), never in a pot or houseplant mix -- garden_bed/moderate are the closest defensible values given that.",
         "toxic_to_pets — removed on audit: Direct fetch of the RHS page confirms there is no dedicated Toxicity section for this plant; the sole basis is RHS's generic 'Potentially harmful' boilerplate ('Fruit are ornamental - not to be eaten... Pets: Fruit are ornamental - not to be eaten'), which never uses the words toxic/poisonous/harmful and is standard RHS advisory language applied broadly to ornamental-fruit plants regardless of actual toxicity. NC State's page (the record's other source) has a full 'Poisonous to Humans' section but explicitly no 'Poisonous to Pets' section, which the record itself admits in unknowns. No admissible source affirmatively states this species is toxic or non-toxic to animals, so per the task's own rule this should have been left null rather than inferred as true from ambiguous advisory language.",
         "toxicity_detail — removed on audit: Built entirely on the same weak RHS 'not to be eaten' / 'wear gloves' advisory text, which is generic handling/eating caution (likely aimed at contact irritation and discouraging consumption of non-food berries), not a documented animal-toxicity mechanism or symptom set. No source names a toxic principle, symptom, or severity specific to pets/animals for this species -- unlike NC State's genuinely detailed human-toxicity entry (saponins, medium severity, specific symptoms), which the record correctly excluded as human-only. The pet-facing narrative here is a constructed inference from silence/boilerplate, not source-supported content, and should not exist as populated text.",
-        "mature_height_in and mature_spread_in (all four fields) left null: this species is a climber. NC State Plant Toolbox lists 'Plant Type: ... Vine', 'Habit/Form: Climbing', 'Climbing Method: Twining', and its own text calls it 'a twining, climbing vine or prostrate and trailing groundcover'; RHS likewise treats it as a climber. Both pages do publish size figures (NC State 'Dimensions: Height: 16 ft. 0 in. - 29 ft. 6 in. / Width: 3 ft. 0 in. - 6 ft. 0 in.'; RHS 'Max Height 8-12 metres / Max Spread 4-8 metres'), but per the climber rule these are run/spread-along-support distances, not plant stature, so none of the four size fields are populated.",
         "is_edible=true is conditional, not a bare yes: NC State's 'Edibility' field states only that nectar and flowers are eaten ('Nectar can be sucked from flowers without harm. Flowers are an ingredient in some Chinese dishes.'). The same anchor page also documents this species as poisonous: 'This plant has medium severity poison characteristics', Poison Severity: Medium, Poison Part: Fruits, Poison Toxic Principle: Saponins, Poison Symptoms: 'Vomiting, diarrhea, pupil dilation, cold sweat, rapid heartbeat, respiratory failure, convulsions, and coma. TOXIC ONLY IF LARGE QUANTITIES EATEN.', Causes Contact Dermatitis: No, and it is tagged/traited 'Poisonous to Humans', 'Problem for Children', and 'poisonous fruits'. No pets-specific warning was found on the page.",
         "attracts_pollinators=true is drawn from NC State's structured 'Attracts' field, which lists Butterflies, Hummingbirds, Moths, and Songbirds; only the first three (pollinators) support this flag -- Songbirds is not counted, consistent with the rule that birds/seed-eating is not pollination evidence.",
         "RHS (rhs.org.uk/plants/10480/lonicera-japonica) carries no pollinator or size use here (climber), but it does address eating -- its Potentially harmful field reads 'Fruit are ornamental - not to be eaten. Wear gloves and other protective equipment when handling.' with 'Pets: Fruit are ornamental - not to be eaten'. Corrected at landing: the researcher's line said this page had no toxicity evidence.",
-        "No page refused this machine: both anchor URLs (NC State and RHS) fetched with status 'ok'."
+        "No page refused this machine: both anchor URLs (NC State and RHS) fetched with status 'ok'.",
+        "is_edible and attracts_pollinators were already landed on this record; returned null by instruction, not researched.",
+        "Sources disagree on size. NC State (used here) gives Height 16 ft. 0 in. - 29 ft. 6 in. and Width 3 ft. 0 in. - 6 ft. 0 in. RHS gives Max Height 8-12 metres (about 315-472 in) and Max Spread 4-8 metres (about 157-315 in), which is larger; RHS also calls it 'about 10m tall'. NC State was chosen as the anchor; the true reach depends on support and growing conditions.",
+        "NC State describes the plant as both a climbing vine and a prostrate trailing groundcover, so the height figure is a reach only when it has support to twine on.",
+        "Both previously-cited pages did carry a usable size this time (NC State 'Dimensions' block; RHS 'Max Height' / 'Max Spread'), contrary to the earlier pass.",
+        "No other registered-authority page was searched for; no host refused this machine."
       ],
       "citations": [
         {
@@ -530,10 +561,33 @@
           "source": "NC State Extension Gardener Plant Toolbox - Japanese Honeysuckle (Lonicera japonica)",
           "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/",
           "quote": "Butterflies"
+        },
+        {
+          "claim": "climbs: NC State describes it as a twining, climbing vine (also lists Habit/Form Climbing and Climbing Method Twining)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/",
+          "quote": "It can be both a twining, climbing vine or prostrate and trailing groundcover"
+        },
+        {
+          "claim": "mature_height_in 192-354 (NC State Height 16 ft. 0 in. - 29 ft. 6 in., converted to inches: 16x12=192, 29.5x12=354; for a climber this is its reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/",
+          "quote": "Height: 16 ft. 0 in. - 29 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 36-72 (NC State Width 3 ft. 0 in. - 6 ft. 0 in., converted to inches: 3x12=36, 6x12=72)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lonicera-japonica/common-name/japanese-honeysuckle/",
+          "quote": "Width: 3 ft. 0 in. - 6 ft. 0 in."
         }
       ],
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 192,
+      "mature_height_in_max": 354,
+      "mature_spread_in_min": 36,
+      "mature_spread_in_max": 72
     },
     {
       "common_name": "Bald Cypress",
@@ -739,10 +793,13 @@
         "soil_base: garden_bed was inferred from the plant's landscape/garden soil description (clay, sand, loam soil types; grown in-ground against walls, fences, arbors, and trellises) rather than any explicit potting-mix statement, since no admissible source frames this species as a container/indoor plant. One UF/IFAS 'Uses' tag lists 'hanging basket,' but this is presented as an outdoor landscape use alongside 'veils a trellis' and 'woodland garden,' not indoor cultivation, so it was not used to support is_houseplant=true.",
         "Common name breadth: NC State also lists Cow-itch, Cow Vine, Devil's Shoestring, Foxglove Vine, Hellvine, and Trumpet Creeper as common names for this same species; only 'Trumpet Vine' (the name given in the task) was recorded in common_name.",
         "University of Maryland Extension's dedicated 'Trumpet Creeper' page (an admissible source) could not be reliably re-fetched for verbatim quotable text after an initial successful summary-only fetch (subsequent attempts returned HTTP 403 'Access denied'), so it was not cited to avoid using a non-verbatim paraphrase as a quote. Penn State Extension's 'Perennial Vines: Friend or Foe?' page was checked directly and does not characterize trumpet vine as invasive/aggressive or address containment, so it was not used for that claim.",
-        "mature_height_in and mature_spread_in left null on all four ends: NC State's Plant Type field lists this species as a Vine with Climbing Method: Clinging, so per the climber rule no size figures were recorded even though NC State's Dimensions block gives 'Height: 30 ft. 0 in. - 40 ft. 0 in.' and 'Width: 4 ft. 0 in. - 10 ft. 0 in.' -- for a clinging vine that figure is the distance it runs along its support, not a stature/spread the mature_height_in/mature_spread_in fields can safely represent yet. UF/IFAS corroborates the climber read: its Description literally lists 'Height: depends upon supporting structure' and 'Spread: depends upon supporting structure', giving no numeric bound at all for either.",
         "is_edible set to false, not left null, because NC State's Poison Symptoms field states 'Causes low toxicity if eaten' -- an explicit statement that eating it causes toxicity, not merely no mention. Per the toxicity check required before setting is_edible: NC State also lists Poison Severity: Low, Poison Toxic Principle: Unidentified, Causes Contact Dermatitis: Yes, and Poison Part: Flowers, Leaves; contact with the sap causes minor skin irritation with redness and swelling lasting a few minutes.",
         "RHS (rhs.org.uk), Clemson HGIC (hgic.clemson.edu), Missouri Botanical Garden Plant Finder (plantfinder.mobot.org), and the UGA CAES field report PDF (fieldreport.caes.uga.edu) were not queried for this pass -- the two anchor pages read (NC State Plant Toolbox and UF/IFAS ask.ifas.ufl.edu) independently agreed on both the climber-size read and on pollinator attraction (hummingbirds, bees, songbirds), so no conflict needed resolving against the remaining sources for these six fields.",
-        "attracts_pollinators set true on NC State's structured Attracts field (Bees, Hummingbirds, Pollinators, Songbirds) and its Wildlife Value sentence that hummingbirds are 'the principal pollinator of this plant'; UF/IFAS corroborates with 'This plant attracts pollinators, including hummingbirds' and notes visits from bees and songbirds. No genus-level inference was used -- the species page itself names pollinators unconditionally."
+        "attracts_pollinators set true on NC State's structured Attracts field (Bees, Hummingbirds, Pollinators, Songbirds) and its Wildlife Value sentence that hummingbirds are 'the principal pollinator of this plant'; UF/IFAS corroborates with 'This plant attracts pollinators, including hummingbirds' and notes visits from bees and songbirds. No genus-level inference was used -- the species page itself names pollinators unconditionally.",
+        "is_edible and attracts_pollinators were already landed and were not researched here; returned null so the existing values are kept.",
+        "Only the NC State Plant Toolbox page for Campsis radicans was loaded this pass; it carries the size block, so the RHS, UF/IFAS, Clemson, MOBOT and UGA pages were not re-read and none was found to conflict.",
+        "Searched the NC State page for 'Max Height', 'Max Spread' and 'Ultimate'; it uses 'Height:' and 'Width:' under 'Dimensions:' instead, and those were used.",
+        "NC State lists 'Poisonous' under Plant Type for this species; this matters to any existing is_edible value on the record but is not touched here."
       ],
       "citations": [
         {
@@ -924,10 +981,33 @@
           "source": "NC State Extension - North Carolina Extension Gardener Plant Toolbox, Campsis radicans",
           "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/",
           "quote": "The flowers are attractive to hummingbirds which are the principal pollinator of this plant."
+        },
+        {
+          "claim": "climbs: NC State describes trumpet vine as a vine that attaches to structures and climbs by aerial rootlets (Habit/Form also lists Climbing)",
+          "source": "NC State Extension Gardener Plant Toolbox, Campsis radicans",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/",
+          "quote": "attaches itself to structures and climbs by aerial rootlets"
+        },
+        {
+          "claim": "mature_height_in 360-480 (NC State Height 30 ft. 0 in. - 40 ft. 0 in., converted to inches: 30 ft x 12 = 360, 40 ft x 12 = 480; for a climber this is its reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Campsis radicans",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/",
+          "quote": "Height: 30 ft. 0 in. - 40 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 48-120 (NC State Width 4 ft. 0 in. - 10 ft. 0 in., converted to inches: 4 ft x 12 = 48, 10 ft x 12 = 120)",
+          "source": "NC State Extension Gardener Plant Toolbox, Campsis radicans",
+          "url": "https://plants.ces.ncsu.edu/plants/campsis-radicans/",
+          "quote": "Width: 4 ft. 0 in. - 10 ft. 0 in."
         }
       ],
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 360,
+      "mature_height_in_max": 480,
+      "mature_spread_in_min": 48,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Hens and Chicks",
@@ -1495,6 +1575,7 @@
     "Trumpet Vine's toxic_to_pets was correctly nulled after the audit found the record's sole support was RHS's generic ornamental-fruit \"not to be eaten\" advisory boilerplate, which never uses the words toxic/poisonous/harmful and is applied broadly regardless of actual toxicity -- a good example of the catalog's discipline against reading routine handling caution as a toxicity finding.",
     "One landing-time repair: Cattleya's common_name was nulled because \"Cattleya Orchid\" was a constructed label, not a name any source actually used -- restored as \"Brazilian Orchid\", the first of NC State's own listed common names, already directly quoted in an existing citation in this same record.",
     "One defect this batch's own audit missed and this landing pass caught independently: Cattleya's water_growing_days_est=7 had no citation with a matching claim label anywhere in the record -- the quote it was supposedly derived from (MOBOT's 'about once a week or more') was never actually added to the citations array. Nulled to match this catalog's consistent standard.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

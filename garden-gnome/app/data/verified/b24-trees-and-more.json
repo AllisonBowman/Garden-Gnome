@@ -1253,11 +1253,18 @@
         "fertilize_strength: NC State/MOBOT describe 'dilute liquid fertilizer' and RHS a 'balanced fertiliser' -- neither gives a specific dilution ratio (e.g., half or quarter strength) that would map to the fixed enum, so left null rather than guessing a fraction from the word 'dilute' alone.",
         "outdoor_sun_exposure -- MOBOT was not used to support part_shade despite its own structured Sun field reading 'Part shade', because that sits in tension with MOBOT's own prose, which recommends full sun both outdoors ('prefers... full sun') and indoors ('Full sun is normally best for developing compact symmetrical growth'). part_shade is instead supported independently by RHS's structured Position field and its 'sheltered, sunny position during the summer' outdoor-placement note, avoiding reliance on MOBOT's internally conflicted field.",
         "Clemson HGIC's generic 'Fertilize at the recommended label rate every two or three months...' guidance (from the same Indoor Plants factsheet that names Araucaria heterophylla in its High Light list) was not used for fertilize_interval_days, because that fertilizing paragraph sits in a generic section covering all listed houseplant species collectively, not scoped to this species specifically -- unlike the RHS and NC State quotes used, which are on Araucaria heterophylla's own dedicated species page/profile.",
-        "Size fields (mature_height_in_min/max, mature_spread_in_min/max) left null: the only size figures found are the outdoor/landscape stature — NC State Dimensions block \"Height: 60 ft. 0 in. - 80 ft. 0 in.\" / \"Width: 12 ft. 0 in. - 20 ft. 0 in.\" and UF/IFAS ST083 \"Height: 60 to 80 feet\" / \"Spread: 12 to 20 feet\" — both exceeding 120 in (10 ft). Since this species is catalogued as a houseplant and no page gives an indoor/houseplant/container-specific figure, per the outdoor-stature-over-10ft rule all four size fields are left null rather than recording a landscape-tree size in a houseplant record. (Corrected at landing: a page does give an indoor figure. NC State's description reads 'Indoors it prefers a bright, cool room (55-65 degrees F) and will reach heights of 9 feet.' (108 in), which the researcher missed and the auditor found. It is not landed: the research proposed these fields null and nothing was refuted, so standing rule 6 does not reach it and a landing does not set a value. A re-research could land mature_height_in max 108 with the min null; no page gives an indoor spread.)",
         "RHS gives only open-ended bounds: \"Max Height Higher than 12 metres\" and \"Max Spread wider than 8 metres\" (searched both \"Max Height\"/\"Max Spread\" and \"Ultimate height\" wordings; \"Ultimate height\" returned 0 hits). These provide no usable lower or upper bound, so no RHS size figure was recorded.",
         "attracts_pollinators left null: no page (NC State, RHS, UF/IFAS) has a structured Attracts/wildlife-pollinator field or an unconditional statement naming bees, butterflies, moths, or hummingbirds for this species. NC State's \"Wildlife Value\" field only says \"Seeds are a food source for small mammals\" — a food-source note, not pollination — so it was not read as support.",
         "is_edible condition: NC State's Edibility field states only \"Seeds are edible (nut-like)\" — edibility applies to the seed only, not the whole plant or foliage. Checked NC State for 'Poison', 'Toxic', 'Problem for' before setting is_edible: the only 'Toxic' hits were tag-list entries reading \"non-toxic for cats\", \"non-toxic for horses\", \"non-toxic for dogs\" — no poisonous part, severity, toxic principle, preparation requirement, or pets warning was named on the page.",
-        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, taxonid=276635) refused this machine on two attempts (error:ProxyError, then error:ConnectError even with the host added to allowed_domains) — it could not be read and no claims or size figures were drawn from it."
+        "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, taxonid=276635) refused this machine on two attempts (error:ProxyError, then error:ConnectError even with the host added to allowed_domains) — it could not be read and no claims or size figures were drawn from it.",
+        "is_edible: already landed, not researched (returned null per instructions).",
+        "mature_height_in_min left null: the NC State indoor figure is a single value ('will reach heights of 9 feet'), so it fills only the max end (9 ft x 12 = 108 inches).",
+        "mature_spread_in_min and mature_spread_in_max left null: the only spread figures are outdoor. NC State Dimensions 'Width: 12 ft. 0 in. - 20 ft. 0 in.' (144-240 inches) and prose 'a 12-60 foot spread' for cultivated trees both exceed 120 inches, and no indoor or container spread is published.",
+        "Outdoor stature not recorded: NC State Dimensions 'Height: 60 ft. 0 in. - 80 ft. 0 in.', prose 'Cultivated trees, grown in subtropical or Mediterranean climates typically grow to 60-100 feet', and 'In its native habitat, it reaches heights of 200 feet'. RHS 'Max Height Higher than 12 metres' and 'Max Spread wider than 8 metres' are open-ended, give no usable bound, and are outdoor stature anyway.",
+        "attracts_pollinators left null: searched NC State for 'Attracts' (0 hits) and RHS for 'pollinator' (0 hits); no page names pollinators. Not read as false.",
+        "climbs left null: NC State Plant Type is 'Perennial / Tree' and RHS Habit is 'Bushy'; neither page calls it a climber.",
+        "Edibility context for downstream (is_edible not set here): NC State lists 'Seeds are edible (nut-like)'; searched NC State for 'Poison' and found 0 hits. Tags include '#non-toxic for cats' and '#non-toxic for horses'.",
+        "Pages that refused this machine: not attempted, so not tested: plantfinder.mobot.org and ask.ifas.ufl.edu (the brief says these hosts refuse this machine). No other registered-authority species page (UF/IFAS EDIS, Clemson, etc.) was searched for or read."
       ],
       "citations": [
         {
@@ -1403,9 +1410,16 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/araucaria-heterophylla/",
           "quote": "Seeds are edible (nut-like)"
+        },
+        {
+          "claim": "mature_height_in 108 (NC State: as an indoor plant it will reach heights of 9 feet; 9 ft x 12 = 108 inches; single figure so max only, min left null)",
+          "source": "NC State Extension Gardener Plant Toolbox, Araucaria heterophylla",
+          "url": "https://plants.ces.ncsu.edu/plants/araucaria-heterophylla/",
+          "quote": "Indoors it prefers a bright, cool room (55-65 degrees F) and will reach heights of 9 feet."
         }
       ],
-      "is_edible": true
+      "is_edible": true,
+      "mature_height_in_max": 108
     },
     {
       "common_name": "Maidenhair Fern",
@@ -1606,6 +1620,7 @@
     "The audit caught a genuinely important, subtle safety nuance on Money Tree: NC State's own toxicity text states the toxic part is seeds-only, in the same sentence as \"Houseplants never produce seeds\" -- meaning a flat toxic_to_pets=true overstates the practical risk for the near-universal potted-specimen case this record otherwise describes throughout (is_houseplant=true, container-mix soil, indoor overwintering). Rather than just losing this nuance when the boolean was correctly nulled, added the missing citation and restored it as a toxicity_detail explaining the seeds-only/rarely-applicable caveat, so a reader still learns the real, conditional fact instead of nothing at all.",
     "A precise, well-cited catch on Flowering Dogwood: a watering check-depth was recorded as 12.7cm, silently converting UMD's stated \"4 to 6 inches deep\" range into an undisclosed 5-inch midpoint rather than taking a literal bound the way this catalog has consistently done elsewhere (e.g. Chinese Evergreen in b1, \"1-2 inches\" -> the 2-inch upper bound) -- correctly nulled as false precision the source never stated.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Money Tree -> true. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

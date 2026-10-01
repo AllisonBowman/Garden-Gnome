@@ -838,12 +838,16 @@
         "soil_ph is given as a numeric range only by Clemson (5.8-6.5); RHS separately categorizes the species as preferring \"Alkaline or Neutral\" soil, a qualitative label not merged into the numeric field.",
         "direct_sun_hours_max — removed on audit: The UMD page 'Growing Beans in a Home Garden' is confirmed (via fetch) to be a multi-species guide covering snap beans (P. vulgaris), lima beans, pole beans, scarlet runner beans (P. coccineus), fava beans (Vicia faba — a different genus), southern peas and asparagus beans (Vigna spp.) under one shared set of instructions. The 'prefers 8-10 hours/day' sun line is not attributed to any single species in the source — it is crop-category guidance. Taking the upper bound of that shared figure (10) as a Phaseolus-vulgaris-specific value is the genus/class-level-figure-presented-as-species-value failure the audit brief calls out, since fava beans and southern peas are not even congeneric with green beans.",
         "water_regime — removed on audit: Same sourcing problem as direct_sun_hours_max: the 'Keep the root zone moist by watering deeply and regularly during dry periods' line sits in the same undifferentiated multi-species UMD 'Beans' guide (snap, lima, fava, runner, southern pea, asparagus bean) with no per-species breakout, confirmed by fetching the page. It cannot be confirmed as evidence about Phaseolus vulgaris specifically rather than the general bean-crop category. Since water_regime is one of the highest-stakes fields (wrong values can kill a plant through over/under-watering), sourcing it to crop-category rather than species-specific guidance should be treated as unsound.",
-        "mature_height_in and mature_spread_in left null on all four ends: this species is a climber. NC State's structured fields say Climbing Method: Twining and Play Value photos are captioned climbing habit; RHS tags it Climber and gives Habit: Climbing. Per the climber rule this record gets no size at all, even though RHS separately publishes Max Height 2.5-4 metres and Max Spread 0.5-1 metres for this species -- those figures were deliberately not converted or used.",
         "attracts_pollinators left null: no page states that Phaseolus vulgaris itself attracts bees, butterflies, moths, or hummingbirds. Searched all four pages for Attracts/Pollinator/bee/butterfl/hummingbird/Wildlife. NC State has no Attracts field (its one Wildlife hit is 'Wildlife Food Source' under Play Value, i.e. animals eating the seed, not pollination). RHS has no Attracts field and no pollinator tag. The UMD page's 'attractive to hummingbirds' and 'Harvests are larger when pollinating bees are plentiful' sentences are about Scarlet runner bean (Phaseolus coccineus), a different species discussed on the same page -- not about this record's Phaseolus vulgaris -- so that text was not used.",
         "is_edible is conditional, not a bare true: NC State lists Plant Type: Edible and Play Value: Edible fruit, and RHS tags the species Fruit Edible and says the genus is 'Grown as crop plants for their edible seeds.' But NC State also rates it 'medium severity' poison and states: 'The raw or undercooked beans (especially kidney beans) cause severe nausea, vomiting, and diarrhea.  Usually resolves within a few hours.' Poison Toxic Principle: 'Phytohaemagglutinin, a lectin.' Poison Part: 'Seeds.' RHS separately states under Potentially harmful: 'Raw pods/beans harmful if eaten.  Wear gloves and other protective equipment when handling.  Pets (dogs): Raw pods/beans harmful if eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers.' So edibility here means properly cooked pods/seeds; raw or undercooked beans are toxic.",
         "hgic.clemson.edu (Bush & Pole-Type Snap Beans) had no usable content for any of the six fields: searched Attracts, Pollinator, bee, butterfl, Poison, Toxic, edible, Height and found no structured size, no toxicity statement, and no pollinator-attraction statement for this species.",
         "extension.umd.edu (Growing Beans in a Home Garden) has no Attracts, Pollinator, Poison, Toxic, edible, or Height labeled text either; its bean-eating/edibility language ('The whole young pods of bean plants...') was general narrative, not a page-level edibility field, and was not relied on since NC State and RHS already give a directly citable Edible tag.",
-        "All four pages fetched successfully with qc.py (one Clemson attempt hit a transient proxy error and was retried); no page in this task's list refused the fetch, so there is nothing to report as a refused host."
+        "All four pages fetched successfully with qc.py (one Clemson attempt hit a transient proxy error and was retried); no page in this task's list refused the fetch, so there is nothing to report as a refused host.",
+        "is_edible left null: already landed, not researched. For the record, NC State lists Poisonous to Humans, Poison Severity Medium, Poison Part Seeds: raw or undercooked beans cause severe nausea, vomiting and diarrhea; RHS says raw pods/beans harmful if eaten (dogs too).",
+        "attracts_pollinators left null: searched NC State for 'Attracts', 'bees|butterfl|pollinat' and RHS for 'pollinator'; no attracts field or statement about pollinators on either page (only a landscape-link title and a 'Wildlife Food Source' play value, which is not pollination).",
+        "NC State page has no Dimensions/Height/Width block for the plant (searched 'Dimensions', 'Height', 'Max Height', 'Max Spread'; only fruit width found), so size comes from RHS.",
+        "Size is the RHS figure for the climbing form (RHS page titled French bean): Max Height 2.5-4 metres converted x39.37 to 98.4-157.5 in; Max Spread 0.5-1 metres to 19.7-39.4 in. Bush forms are far shorter; the RHS figure is the climbing reach given support.",
+        "Clemson, UMD pages not re-read; earlier pass found no usable size there. No other registered-authority pages searched. No host refused this machine."
       ],
       "citations": [
         {
@@ -911,9 +915,32 @@
           "source": "RHS -- Phaseolus vulgaris (French bean)",
           "url": "https://www.rhs.org.uk/plants/105457/phaseolus-vulgaris/details",
           "quote": "Fruit Edible"
+        },
+        {
+          "claim": "mature_height_in 98.4-157.5 (RHS Max Height 2.5-4 metres, converted to inches x39.37); for a climber this is its reach given support",
+          "source": "RHS Phaseolus vulgaris | French bean",
+          "url": "https://www.rhs.org.uk/plants/105457/phaseolus-vulgaris/details",
+          "quote": "Max Height         2.5-4 metres"
+        },
+        {
+          "claim": "mature_spread_in 19.7-39.4 (RHS Max Spread 0.5-1 metres, converted to inches x39.37)",
+          "source": "RHS Phaseolus vulgaris | French bean",
+          "url": "https://www.rhs.org.uk/plants/105457/phaseolus-vulgaris/details",
+          "quote": "Max Spread         0.5-1 metres"
+        },
+        {
+          "claim": "climbs true: NC State says beans may take a climbing form and pole beans need a climbing trellis",
+          "source": "NC State Extension Gardener Plant Toolbox, Phaseolus vulgaris",
+          "url": "https://plants.ces.ncsu.edu/plants/phaseolus-vulgaris/",
+          "quote": "They may take a climbing, trailing, or bush-like form."
         }
       ],
-      "is_edible": true
+      "is_edible": true,
+      "climbs": true,
+      "mature_height_in_min": 98.4,
+      "mature_height_in_max": 157.5,
+      "mature_spread_in_min": 19.7,
+      "mature_spread_in_max": 39.4
     },
     {
       "common_name": "Beets",
@@ -1262,6 +1289,7 @@
   ],
   "normalizations": [
     "2026-08-21: one loader-found defect fixed before landing. Globe Artichoke's scientific_name_accepted was left null despite the record correctly determining and citing the accepted name -- 'Cynara cardunculus (Scolymus Group)' appears in its own name_note and citation but was never written into the field itself. Populated from that existing evidence, not invented. No other numeric, domain, or structural defects found.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

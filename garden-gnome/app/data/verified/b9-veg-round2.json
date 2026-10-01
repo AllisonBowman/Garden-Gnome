@@ -530,6 +530,18 @@
           "source": "UGA Cooperative Extension, Home Garden Cauliflower (C1023)",
           "url": "https://fieldreport.caes.uga.edu/publications/C1023/home-garden-cauliflower/",
           "quote": "Cauliflower should be eaten soon after harvest for best flavor and the highest amount of nutrients."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches at x39.37)",
+          "source": "RHS Brassica oleracea Botrytis Group | cauliflower",
+          "url": "https://www.rhs.org.uk/plants/106080/brassica-oleracea-botrytis-group/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches at x39.37)",
+          "source": "RHS Brassica oleracea Botrytis Group | cauliflower",
+          "url": "https://www.rhs.org.uk/plants/106080/brassica-oleracea-botrytis-group/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
       ],
       "unknowns": [
@@ -548,12 +560,21 @@
         "day_f_max — removed on audit: Same defect as day_f_min: Clemson's 'average temperatures of 60 to 65 °F for best growth' is applied to the daytime-only field without the source distinguishing day from night temperature, and the citation label doesn't lead with the exact field name (day_f_max).",
         "plantfinder.mobot.org (Missouri Botanical Garden PlantFinder) refused this machine (ProxyError, 0 bytes) — could not be read, so no data from that page is included here.",
         "No NC State Plant Toolbox page for this species was among the assigned sources, so RHS was checked for size per the fallback rule, but RHS's cauliflower grow-your-own page contains no 'Height'/'Width'/'Max Height'/'Max Spread'/'Ultimate height' fields for the mature plant — only seedling transplant sizes ('10cm (4in) tall', '10-15cm (4-6in) tall') and tennis-ball-size head references, neither of which describe overall mature plant height or spread.",
-        "mature_height_in_min/max and mature_spread_in_min/max all left null: searched all 4 reachable pages (UMD, UGA, RHS, Clemson) for 'Height', 'Width', 'tall', 'spread', 'grows to', 'reaches', 'Max Height', 'Max Spread', 'Ultimate height' and found only planting-spacing figures (e.g. UMD 'Spacing: 18\"-24\" in-rows x 24\"-36\" between rows', UGA 'plant seedlings 18 to 24 inches apart in rows with 24 inches between rows') and seedling transplant heights, never a stated mature plant height or spread; per the rules, planting spacing is not the plant's own dimensions, so no size figure was recorded.",
         "Checked all 4 reachable pages for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: none returned any hits, so no toxicity, poisonous part, severity, preparation requirement, or pets warning was found on any of them.",
         "attracts_pollinators left null: searched all 4 reachable pages for 'Pollinat', 'bee', 'butterfl', 'hummingbird', 'wildlife' and found no structured attracts/wildlife field or unconditional pollinator statement. RHS mentions caterpillars of moths/butterflies eating cauliflower leaves as a pest problem (not pollination), and Clemson's 'bee'/'Pollinator garden' hits are unrelated site-wide tag/navigation links, not statements about this species — neither counts as support.",
-        "Not a climber, so rule 4 (climbers get no size) does not apply here; the size fields are null purely for lack of any published mature-size figure on the reachable pages, not because the species is a vine."
+        "is_edible: already landed, not researched, returned null.",
+        "attracts_pollinators left null: the cited pages (UMD, Clemson, UGA, RHS grow-your-own) carry no attracts/pollinator statement for cauliflower (searched Pollinator, bees, Attracts). The NC State Plant Toolbox page that has an Attracts field is for Brassica oleracea (wild cabbage), not the Botrytis Group, so it was not used.",
+        "climbs left null: no page calls cauliflower a climber; RHS habit is 'Columnar upright'.",
+        "Size comes from the RHS Botrytis Group page (0.1-0.5 m, i.e. 3.9-19.7 in). This looks low next to the 18-24 in plant spacing in UGA and Clemson guidance, so treat it as the published RHS value, not a field-verified one. NC State has no Botrytis Group page (404); its Brassica oleracea species page (10-24 in tall, 12-24 in wide) was not used because it is a different taxon.",
+        "Reading note: the RHS values were rounded from 0.1 m = 3.937 in and 0.5 m = 19.685 in.",
+        "plantfinder.mobot.org and the Missouri Botanical Garden Plant Finder were not fetched, so its listed 24-30 in height was not used.",
+        "UMD, Clemson, UGA and the RHS grow-your-own guide have no plant height or spread figure (searched Height, Spread, inches, feet)."
       ],
-      "is_edible": true
+      "is_edible": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "chill_damage_f": null,
@@ -896,11 +917,16 @@
         "water_growing_days_est, water_dormant_days_est, water_check_depth_cm, water_dry_down_target: sources give a weekly water-volume requirement (min. 1 in./week) and an irrigation-moistening depth (6 in.), not a between-waterings day interval or a moisture-check depth, so these were left null rather than converted into an estimate.",
         "soil_drainage: sources describe soil as 'well-drained' but do not use language that maps unambiguously onto the fast/moderate/moisture_retentive categories.",
         "scientific_name_accepted — removed on audit: scientific_name_accepted IS populated (not the null-despite-name_note defect), but the reasoning in name_note that arrives at it overreaches. I fetched both cited pages directly. Clemson's actual sentence is \"Sweet corn (Zea mays var. rugosa) is a warm-season crop...\" -- it never mentions \"saccharata\" anywhere. UMD's sentence is \"Sweet corn (Zea mays convar. saccharata var. rugosa) is a variety of maize...\". name_note asserts \"Both admissible-domain sources agree on including the 'rugosa' varietal epithet alongside 'saccharata'\" -- that is false for Clemson, whose quote supports 'rugosa' REPLACING 'saccharata' in its usage, not 'rugosa' appearing alongside it. More fundamentally, both quotes are incidental parenthetical species labels used to introduce the crop in a growing guide, not statements from either source asserting what the taxonomically 'accepted' name is. Neither source is a taxonomic authority (e.g., USDA PLANTS/ITIS/GRIN), so treating an incidental wording difference between two Extension fact sheets as grounds to construct and prefer a novel composite trinomial ('Zea mays convar. saccharata var. rugosa') over the given, more standard name ('Zea mays var. saccharata') is not actually supported by what the cited quotes say.",
-        "mature_height_in (min and max) left null: none of the three anchor pages (Clemson HGIC, UMD Extension, UGA CAES) publish a height/dimensions figure for sweet corn -- searched 'Dimensions', 'Height', 'tall', 'feet' on each page with no plant-stature figures returned (UGA's 'feet' and 'ft' figures are fertilizer rates, the 500 ft isolation distance and the 3 ft row spacing, not plant size; corrected at landing).",
-        "mature_spread_in (min and max) left null: same three pages searched for 'Width', 'Spread', 'Dimensions' with zero hits on any page; no spread/width figure is published for sweet corn on these pages.",
         "attracts_pollinators left null: no page states sweet corn attracts bees, butterflies, moths, hummingbirds, or other pollinators. All 'pollinat'/'bee' hits across the three pages describe corn's own wind-pollination requirements (isolation distance, planting in blocks for kernel fill) or insect pests (corn earworm, Japanese beetles) -- none is a wildlife-attraction claim, so this is not read as support per rule 7.",
         "Checked the anchor pages for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: zero hits on Clemson HGIC, UMD Extension, or UGA CAES. No toxic part, severity, preparation requirement, or pets warning is named on any of the three pages.",
-        "UMD and UGA were read with qc.py. Clemson HGIC (hgic.clemson.edu) returned a ProxyError through qc.py when the auditor tried it, and the auditor checked it from a separate copy instead; no field in this record rests on it (corrected at landing: the note had said all three pages fetched through qc.py)."
+        "UMD and UGA were read with qc.py. Clemson HGIC (hgic.clemson.edu) returned a ProxyError through qc.py when the auditor tried it, and the auditor checked it from a separate copy instead; no field in this record rests on it (corrected at landing: the note had said all three pages fetched through qc.py).",
+        "is_edible left null: already landed in this record, not researched in this pass.",
+        "Size source caveat: NC State has no page for var. saccharata (guessed slugs zea-mays-var-saccharata, zea-mays-saccharata and zea-mays-convar-saccharata all returned 404). The size comes from NC State's page for the parent species Zea mays (Corn, Indian corn, Maize), which also covers sweet corn (its text discusses sweet corns and it lists a Zea mays convar. saccharata photo). The figure is therefore species-level for all corn, not sweet-corn-specific.",
+        "attracts_pollinators left null: I searched the NC State page for 'Attracts' and 'Wildlife' and found no hits. The UMD and UGA pages mention only that corn is wind-pollinated and name no pollinators.",
+        "climbs left null: NC State lists Habit/Form: Erect and Plant Type: Annual, Edible, Vegetable, Warm Season Vegetable. No page calls the plant a climber.",
+        "Clemson HGIC (https://hgic.clemson.edu/factsheet/sweet-corn/) refused this machine with http-403, so it was not read.",
+        "UF/IFAS EDIS (https://edis.ifas.ufl.edu/publication/MV017) failed to load with a ProxyError even with the host allowed, so it was not read.",
+        "The UMD, UGA, PSU and RHS sweetcorn pages carry no plant height or width. I searched for 'tall', 'feet tall', 'Height', 'Dimensions' and 'ft.'; RHS had one generic 'height' mention with no figure. The UMD, UGA and PSU pages gave no hits on Poison or Toxic. The NC State page also gave no hits on Poison or Toxic (is_edible not set in this pass)."
       ],
       "citations": [
         {
@@ -950,9 +976,25 @@
           "source": "Growing Sweet Corn in a Home Garden | University of Maryland Extension",
           "url": "https://extension.umd.edu/resource/growing-sweet-corn-home-garden",
           "quote": "Sweet corn ( Zea mays convar. saccharata var. rugosa ) is a variety of maize with a high sugar content. It is picked when immature (milk stage) and eaten as a vegetable, rather than a grain."
+        },
+        {
+          "claim": "mature_height_in 60-96 (NC State Plant Toolbox Zea mays page, Height 5 ft. 0 in. - 8 ft. 0 in., converted to inches: 5 ft x 12 = 60, 8 ft x 12 = 96)",
+          "source": "NC State Extension Gardener Plant Toolbox, Zea mays (Corn, Indian corn, Maize)",
+          "url": "https://plants.ces.ncsu.edu/plants/zea-mays/",
+          "quote": "Height: 5 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-24 (NC State Plant Toolbox Zea mays page, Width 1 ft. 0 in. - 2 ft. 0 in., converted to inches: 1 ft x 12 = 12, 2 ft x 12 = 24)",
+          "source": "NC State Extension Gardener Plant Toolbox, Zea mays (Corn, Indian corn, Maize)",
+          "url": "https://plants.ces.ncsu.edu/plants/zea-mays/",
+          "quote": "Width: 1 ft. 0 in. - 2 ft. 0 in."
         }
       ],
-      "is_edible": true
+      "is_edible": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 24
     },
     {
       "chill_damage_f": null,
@@ -1046,6 +1088,24 @@
           "source": "NC State Extension Gardener Plant Toolbox - Vigna unguiculata",
           "url": "https://plants.ces.ncsu.edu/plants/vigna-unguiculata/",
           "quote": "Attracts Pollinators"
+        },
+        {
+          "claim": "mature_height_in 60-120 (NC State Height 5 ft. 0 in. - 10 ft. 0 in., converted to inches: 5x12=60, 10x12=120; for a climber this is its reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox, Vigna unguiculata",
+          "url": "https://plants.ces.ncsu.edu/plants/vigna-unguiculata/",
+          "quote": "Height: 5 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 12-36 (NC State Width 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1x12=12, 3x12=36)",
+          "source": "NC State Extension Gardener Plant Toolbox, Vigna unguiculata",
+          "url": "https://plants.ces.ncsu.edu/plants/vigna-unguiculata/",
+          "quote": "Width: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State describes cowpea as an annual climber",
+          "source": "NC State Extension Gardener Plant Toolbox, Vigna unguiculata",
+          "url": "https://plants.ces.ncsu.edu/plants/vigna-unguiculata/",
+          "quote": "Cowpea or long bean is a tropical, annual climber in the bean family"
         }
       ],
       "common_name": "Cowpea (Black-eyed Pea)",
@@ -1088,12 +1148,18 @@
         "fertilize_interval_days, fertilize_active_months, fertilize_strength: Clemson gives a fertilizer rate (2-3 lb of 5-10-10 per 100 ft of row) and UMD/NC State describe it as a legume with low nutrient needs, but neither gives an interval in days, a month list, or a full/half/quarter strength value, so all three fields are left null.",
         "is_houseplant — removed on audit: The only citation backing is_houseplant=false is the NC State quote 'Cowpea or long bean is a tropical, annual climber in the bean family (Fabaceae) that is native to tropical Africa but cultivated throughout warm areas of the world.' That sentence never mentions indoor growing, containers, or houseplant use in either direction -- it is a generic habit/origin description, not a statement that the species is (or isn't) grown as a houseplant. The claim label's own parenthetical ('no source describes indoor/container growing') admits this is an absence-of-evidence inference dressed up as a sourced fact rather than a quote that actually states the value. Per check #1 (does the quote actually state this value, or does it merely sound related?), this fails -- it merely sounds related. The underlying value is plausibly true for a field bean crop, but the citation does not establish it, so the field should have been left null/unknown rather than asserted as false with a citation implying direct source support.",
         "2026-09-02 corpus-wide quote verification: a quote that lightly paraphrased the page was replaced with the page's verbatim sentence (facts unchanged).",
-        "Vigna unguiculata is a climbing/twining vine on the NC State anchor page (Climbing Method: Twining; Habit/Form: Climbing; tags include '#vine' and '#annual vine'), so per the task rule for climbers all four mature size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null even though NC State also publishes a Dimensions block (Height: 5 ft. 0 in. - 10 ft. 0 in.; Width: 1 ft. 0 in. - 3 ft. 0 in.) for this entry -- that figure describes the twining run/support-climbed distance, not necessarily the plant's own stature, and is deliberately not recorded.",
         "Before setting is_edible, the NC State anchor page was searched for 'Poison', 'Toxic', and 'Problem for' -- 0 hits for each -- so no toxicity/poison warning was found on that page for this species.",
         "is_edible is conditional, not a bare true: NC State's Edibility field states 'Fruits are edible when immature. The seeds can be harvested for dried beans' -- i.e. fruit is eaten only while immature (young pods), and separately the dry seeds are harvested as beans; no part is described as toxic or inedible-mature-fruit-only, but the condition itself is recorded here per the task rule for conditional edibility.",
         "attracts_pollinators is TRUE based on NC State's structured 'Play Value' list, which includes the unconditional tag 'Attracts Pollinators' (alongside 'Attractive Flowers', 'Edible fruit', 'Wildlife Food Source', etc.) -- no specific pollinator species (bee/butterfly/hummingbird) is named beyond the generic 'Attracts Pollinators' tag.",
         "https://hgic.clemson.edu/factsheet/southern-peas/ refused this machine (fetch status: error:ProxyError, 0 bytes, even after explicitly allowing the clemson.edu domain) -- it was not read, and no content from it is guessed at or represented in this record.",
-        "https://extension.umd.edu/resource/growing-southern-peas-home-garden was read and searched for 'Poison', 'Toxic', 'Problem for', 'Attracts', 'Pollinator', 'bee', 'butterfl', 'Edible', 'vine' and 'climb' with 0 hits, but those literal terms missed two passages (corrected at landing, verified against the cached copy): UMD says the peas grow 'on the bush, vining, or semi-vining plants', and it describes eating them fresh and dried ('For fresh peas; when the pea has reached full size pick the pod and shell the pea.' and 'For dried peas; leave the pods on the plants until it has died down but before the pods have split open.'). Neither changes a field: is_edible rests on NC State, and the size fields stay null under the climber rule on NC State's Climbing Method: Twining."
+        "is_edible and attracts_pollinators: already landed on this record; returned null by instruction, not researched.",
+        "The NC State Plant Toolbox page for Vigna unguiculata covers the species broadly (its title lists asparagus bean, cowpea, yardlong bean) and the Dimensions block is not specific to a cultivar or to black-eyed pea types; it is the species page, but the figure may reflect the climbing long-bean forms.",
+        "mature_height_in is a climber's reach given a trellis (NC State lists Habit/Form Climbing, Climbing Method Twining), not a free-standing height.",
+        "Searched the NC State page for Poison, Toxic and Problem for: 0 hits (not needed since is_edible is not set here).",
+        "UMD Extension southern peas page loaded ok but searched for Dimensions, Height, Width, Habit, vine, climb, tall, feet, inches: 0 hits; no usable size there.",
+        "Clemson HGIC southern-peas factsheet refused this machine (fetch status http-403); skipped, not guessed.",
+        "No additional RHS, UF/IFAS, Penn State or UGA page was searched; the NC State page already gave a structured size.",
+        "https://extension.umd.edu/resource/growing-southern-peas-home-garden was read and searched for 'Poison', 'Toxic', 'Problem for', 'Attracts', 'Pollinator', 'bee', 'butterfl', 'Edible', 'vine' and 'climb' with 0 hits, but those literal terms missed two passages (corrected at landing, verified against the cached copy): UMD says the peas grow 'on the bush, vining, or semi-vining plants', and it describes eating them fresh and dried ('For fresh peas; when the pea has reached full size pick the pod and shell the pea.' and 'For dried peas; leave the pods on the plants until it has died down but before the pods have split open.'). Neither changes a field: is_edible rests on NC State."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -1102,7 +1168,12 @@
       "water_growing_days_est": null,
       "water_regime": null,
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 60,
+      "mature_height_in_max": 120,
+      "mature_spread_in_min": 12,
+      "mature_spread_in_max": 36
     }
   ],
   "audit_summary": [
@@ -1142,6 +1213,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Two of the eight subagent researchers (Brussels Sprouts, Sweet Corn) ran with the workflow's safety classifier rate-limited, so both were read in full by hand rather than trusting the loader pass alone. Both held up: Brussels Sprouts' audit independently verified NC State's and RHS's actual page titles and correctly killed a spliced-together scientific name neither source uses; Sweet Corn's audit re-fetched Clemson's page and caught that its own name_note misread 'rugosa replacing saccharata' as 'rugosa alongside saccharata', correctly nulling a fabricated composite trinomial. The four Brassica oleracea varieties in this batch (Brussels Sprouts, Cabbage, Cauliflower, Collards) share pages and boilerplate on some source sites -- the audit caught cauliflower's 'full sun' citation as boilerplate copied verbatim from UMD's broccoli page, and caught three separate 'average temperature' figures being misapplied to the day-only field across cabbage, carrot and cauliflower. The one numeric flag from a first-pass check (Swiss Chard's water_growing_days_est=7, quote says 'per week') is the same class of unambiguous unit conversion already accepted in prior batches.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Collard Greens -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

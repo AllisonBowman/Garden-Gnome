@@ -350,6 +350,24 @@
           "quote": "Butterflies",
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/lathyrus-odoratus/"
+        },
+        {
+          "claim": "climbs: NC State describes sweet pea as a bushy or climbing annual with tendrils that climbs with support",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lathyrus-odoratus/",
+          "quote": "Sweet Pea is a bushy or climbing, flowering, cool weather annual in the bean family and native to the Mediterranean."
+        },
+        {
+          "claim": "mature_height_in 36-96 (NC State Height 3 ft. 0 in. - 8 ft. 0 in., converted to inches: 3 ft = 36, 8 ft = 96; for the climbing form this is its reach given support)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lathyrus-odoratus/",
+          "quote": "Height: 3 ft. 0 in. - 8 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-36 (NC State Width 2 ft. 0 in. - 3 ft. 0 in., converted to inches: 2 ft = 24, 3 ft = 36)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/lathyrus-odoratus/",
+          "quote": "Width: 2 ft. 0 in. - 3 ft. 0 in."
         }
       ],
       "unknowns": [
@@ -364,17 +382,21 @@
         "cool_rest_note — sources describe it only as an annual that completes its life cycle in one season (dies after flowering); no cold-rest/dormancy period is discussed.",
         "toxic_to_pets/toxicity_detail were deliberately sourced only from RHS's separate 'Pets:' tag ('Pods and seeds are not edible'); the fuller Lathyrism/paralysis symptom write-up on NC State and Missouri Botanical Garden is explicitly framed on those pages as toxicity 'to Humans', and that human-specific detail was withheld from the pet-facing fields to avoid blending targets.",
         "toxicity_detail — removed on audit: The value embeds the human-specific Lathyrism mechanism/symptom list ('paralysis, slow and weak pulse, shallow breathing, convulsions') sourced from NC State's 'Poisonous to Humans' block and MoBOT's human-toxicity prose, directly inside the pet-facing toxicity_detail string -- the exact anti-pattern audit check #3 targets (mechanism/symptom content copied from a human-toxicity section into a pet-tagged field). The record's own text claims this human write-up 'was NOT carried into this pet-facing field,' but the symptom list is literally present in the field value, just wrapped in a disclaiming sentence. The only genuinely pet-specific admissible source (RHS's 'Pets:' tag) says nothing more than 'Pods and seeds are not edible' -- no mechanism, no symptoms. Failure scenario: a downstream consumer (e.g. a pet-safety UI) surfaces toxicity_detail verbatim to a worried pet owner, who reads 'paralysis... convulsions' inside the pet toxicity field and reasonably concludes these are the symptoms sweet pea causes in animals, when no admissible source makes that claim for pets at all. The field should state only what RHS's pet-specific tag supports ('pods and seeds are not edible') and omit the human symptom list rather than quoting-then-disclaiming it.",
-        "Lathyrus odoratus is a climber (NC State: Plant Type includes 'Vine', Habit/Form includes 'Climbing', Stem Description 'Herbaceous vine with winged stems'; RHS: Habit 'Climbing') -- per the climber rule, all four size fields are left null even though NC State publishes a Dimensions block ('Height: 3 ft. 0 in. - 8 ft. 0 in.', 'Width: 2 ft. 0 in. - 3 ft. 0 in.') and RHS publishes 'Max Height 1.5-2.5 metres' / 'Max Spread 0.1-0.5 metres', because a climber's published height/spread conflates its own stature with how far it runs on a support.",
-        "mature_height_in_min left null: climber rule (see above).",
-        "mature_height_in_max left null: climber rule (see above).",
-        "mature_spread_in_min left null: climber rule (see above).",
-        "mature_spread_in_max left null: climber rule (see above).",
         "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (ConnectError: fetch status error) -- not consulted, not guessed at.",
         "is_edible set false based on NC State ('Sweet pea fruits are inedible and poisonous to humans') and RHS ('Pods and seeds are not edible'). Related toxicity information found on the same pages, included here for completeness though not mandatory since is_edible is false rather than true: NC State lists 'This plant has low severity poison characteristics', Poison Part 'Seeds', Poison Toxic Principle 'Amine, phenol, and glycoside', the syndrome '\"Lathyrism\": paralysis, slow and weak pulse, shallow breathing, convulsions', and the plain-text warning 'Sweet Peas are poisonous and should not be planted near edible peas'; RHS lists the plant under 'Potentially harmful', advises 'Wear gloves and other protective equipment when handling', and gives a pets warning that pods and seeds are not edible.",
-        "attracts_pollinators set true based on NC State's structured 'Attracts: Butterflies' field; RHS's page for this species did not carry an attracts/pollinator field or tag."
+        "attracts_pollinators set true based on NC State's structured 'Attracts: Butterflies' field; RHS's page for this species did not carry an attracts/pollinator field or tag.",
+        "is_edible and attracts_pollinators left null: already landed, not researched in this backfill. For the record's owner: the NC State page says sweet pea fruits are inedible and poisonous to humans, and lists a low-severity poison characteristic; this matters if is_edible is ever set.",
+        "mature_height_in 36-96 is NC State's published range for the species as grown either bushy (about 3 ft) or climbing (up to 8 ft with support); the page says a bush form reaches 3 ft and a climbing form reaches up to 8 ft. The max is the climbing reach.",
+        "RHS and Missouri Botanical Garden pages were not needed for size because NC State gave a structured Dimensions block. I did not re-read RHS or MOBOT in this pass; no size was taken from them.",
+        "No cultivar figures were used; NC State's cultivar notes were ignored."
       ],
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 36,
+      "mature_height_in_max": 96,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 36
     },
     {
       "common_name": "Vinca",
@@ -1299,6 +1321,7 @@
   "normalizations": [
     "2026-08-21: landed after one registry fix (garden-gnome commit 9afdde5), not a data fix. Black-Eyed Susan cited ask.ifas.ufl.edu/fp512 -- attributed in the researcher's own source string to the identical EDIS document edis.ifas.ufl.edu hosts -- which the loader correctly refused since the domain wasn't registered. Registered it alongside UF/IFAS's known domain, same authority, and the citations resolved cleanly on re-check.",
     "All three species flagged in advance for toxicity attention -- Sweet Pea (a different genus from the already-landed edible garden pea, despite the name), Vinca (source of the vinca alkaloids), and Butterfly Weed (a milkweed, cardiac glycosides) -- correctly resolved toxic_to_pets=true. Sweet Pea and Vinca both kept toxicity_detail null rather than borrow their sources' human-toxicity writeups -- Sweet Pea's audit explicitly caught and stripped an embedded Lathyrism symptom list that had been copied from a 'Poisonous to Humans' section into the pet-facing field, the same anti-pattern found in b14 now generalizing correctly across unrelated species without being re-taught per batch. Scarlet Sage's record separately cross-checked its own common name against a real collision -- a different species (Salvia coccinea) shares the name 'scarlet sage' in some sources.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",

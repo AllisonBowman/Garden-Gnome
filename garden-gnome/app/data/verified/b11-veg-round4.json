@@ -235,6 +235,24 @@
           "source": "Clemson Cooperative Extension HGIC, Garden Peas factsheet",
           "url": "https://hgic.clemson.edu/factsheet/garden-peas/",
           "quote": "Garden peas ( Pisum sativum L.) are cool-season crops that include the common green English pea and the edible-podded pea. English peas are shelled and only the seed eaten, whereas edible-podded peas are eaten whole."
+        },
+        {
+          "claim": "mature_height_in 12-18 (NC State Height 1 ft. 0 in. - 1 ft. 6 in., converted to inches; for a climber this is the published reach)",
+          "source": "NC State Extension Gardener Plant Toolbox, Lathyrus oleraceus",
+          "url": "https://plants.ces.ncsu.edu/plants/pisum-sativum/",
+          "quote": "Height: 1 ft. 0 in. - 1 ft. 6 in."
+        },
+        {
+          "claim": "mature_spread_in 6-12 (NC State Width 0 ft. 6 in. - 1 ft. 0 in., converted to inches)",
+          "source": "NC State Extension Gardener Plant Toolbox, Lathyrus oleraceus",
+          "url": "https://plants.ces.ncsu.edu/plants/pisum-sativum/",
+          "quote": "Width: 0 ft. 6 in. - 1 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State lists Habit/Form Climbing and a tendril climbing method",
+          "source": "NC State Extension Gardener Plant Toolbox, Lathyrus oleraceus",
+          "url": "https://plants.ces.ncsu.edu/plants/pisum-sativum/",
+          "quote": "Climbing"
         }
       ],
       "common_name": "Garden Pea",
@@ -278,10 +296,14 @@
         "soil_drainage (moderate) and soil_base (garden_bed): no source uses these exact schema category words; the values are inferred from qualitative descriptions of well-drained, moisture-retentive garden soil (NC State: 'Good Drainage'/'Moist'; Clemson: organic matter to loosen clay and retain moisture in sand) and explicit in-ground/row sowing instructions (UMD: 'Sow seed in garden'), so treat as a categorical read rather than a literal source term.",
         "chill_damage_f — removed on audit: Value 32 is sourced from the UGA CAES quote 'temperatures below 32 degrees can kill young blooms' — verified live against fieldreport.caes.uga.edu, which explicitly scopes the 32F kill point to young blooms/flowers only ('the plant will endure some cold weather' generally). The record's own Clemson citation in this same record confirms the general plant 'can withstand frosts and light freezes, although the blossoms cannot' — i.e. the whole plant tolerates temperatures at/below 32F and only the blooms are lost. Populating chill_damage_f (a whole-plant field) with a reproductive-tissue-specific kill temperature conflates 'this flower dies here' with 'this plant sustains chill damage here,' which is exactly the kind of survival-floor/scope mismatch the audit calls out. The digit itself is quoted correctly, but the field it was mapped onto over-generalizes a narrower claim.",
         "scientific_name_accepted — removed on audit: The supporting citation's quote — 'Synonym(s): Pisum abyssinicum, Pisum arvense, Pisum sativum, Pisum sativum subsp. arvense, Pisum sativum subsp. elatius' — is not verbatim from the cited NC State page. I fetched https://plants.ces.ncsu.edu/plants/pisum-sativum/ directly (three independent checks, including an explicit search for the literal string 'Synonym'): the page's actual heading for that list is 'Previously known as:', and the word 'Synonym' does not appear anywhere on the page. The underlying substantive conclusion (page titled 'Lathyrus oleraceus,' with Pisum sativum listed as a prior name) does check out and scientific_name_accepted='Lathyrus oleraceus' is verbatim from the source's own title, so the field value itself survives — but the citation's quote text was fabricated/paraphrased rather than lifted from the source, which fails the 'does the quote actually state this' verbatim-fidelity check regardless of whether the conclusion happens to be right.",
-        "mature_height_in and mature_spread_in left null: NC State (the anchor for this species) lists Habit/Form: Climbing and Climbing Method: Tendrils, i.e. this is a climber, so per rule all four size fields are left null even though the page publishes a structured Dimensions block (Height: 1 ft. 0 in. - 1 ft. 6 in.; Width: 0 ft. 6 in. - 1 ft. 0 in.) -- that figure cannot be trusted to mean the plant's own stature versus its climbing run.",
         "attracts_pollinators left null: searched NC State for 'Attracts', 'bee', 'butterfl', 'hummingbird', 'Wildlife', 'pollinat' -- no structured Attracts/wildlife field and no statement of bees/butterflies/hummingbirds visiting; the only pollination-related hit was 'Flowers can self-pollinate', which is about the flower's own pollination mechanism, not a pollinator attraction claim, so it does not count as support. Also checked Clemson (hgic.clemson.edu/factsheet/garden-peas/) for 'bee', 'butterfl', 'hummingbird', 'pollinat', 'Attracts' -- same result, no attraction statement found.",
         "Checked NC State for 'Poison' and 'Toxic' before setting is_edible: 0 hits for both. Also checked 'Problem' (5 hits) -- all describe insect and disease problems (cutworms, aphids, powdery mildew, root rot, damping-off), none describe toxicity, a poisonous part, or a pets warning. No toxicity caveat was found to carry into unknowns.",
-        "extension.umd.edu/resource/growing-green-peas-home-garden and fieldreport.caes.uga.edu/news/plant-cold-tolerant-peas-now/ were not queried in this pass; is_edible and the size/pollinator nulls are already settled by NC State (and corroborated for edibility by Clemson), so no additional page was needed to fill or contradict those six fields."
+        "extension.umd.edu/resource/growing-green-peas-home-garden and fieldreport.caes.uga.edu/news/plant-cold-tolerant-peas-now/ were not queried in this pass; is_edible and the size/pollinator nulls are already settled by NC State (and corroborated for edibility by Clemson), so no additional page was needed to fill or contradict those six fields.",
+        "is_edible already landed; not researched, returned null per instructions.",
+        "attracts_pollinators left null: NC State page has no Attracts field and no statement naming bees, butterflies or other pollinators (searched Attracts, pollinat, bee, butterfl, Wildlife); it only says flowers can self-pollinate, and Clemson, UMD and UGA pages were searched for pollinat/bee/butterfl/Attracts with no relevant statement.",
+        "Climber note: NC State gives Height 12-18 in (1 ft. 0 in. - 1 ft. 6 in.) and Width 6-12 in for the species page even though Habit/Form is Climbing with tendrils; recorded as published, so the figure is the page's stated reach and may understate how tall supported pea varieties climb.",
+        "No RHS, UF/IFAS, Penn State page was searched for this species; NC State page for Lathyrus oleraceus (pisum-sativum URL) was sufficient for size and habit.",
+        "Page lists many cultivars and varieties; the size figures are given at species level, not for a named cultivar."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -289,7 +311,12 @@
       "water_estimate_basis": null,
       "water_growing_days_est": null,
       "water_regime": "keep_moist",
-      "is_edible": true
+      "is_edible": true,
+      "climbs": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 18,
+      "mature_spread_in_min": 6,
+      "mature_spread_in_max": 12
     },
     {
       "chill_damage_f": null,
@@ -910,11 +937,17 @@
         "soil_ph: Clemson's winter squash/pumpkin factsheet gives a slightly different pH window (6.2-6.5) than its summer squash factsheet (6.0-6.5) used here, and NC State's general species tag is broader ('Neutral (6.0-8.0)'); the summer squash figures were used as the recorded value since they are the most specific numeric statement found.",
         "fertilize_interval_days — removed on audit: The only source for this number is RHS: 'Apply an organic-based, high potassium liquid fertiliser every 10 to 14 days once the first fruits start to swell' — and RHS explicitly qualifies this to container-grown plants only, immediately preceded by 'Squashes growing in the ground shouldn't need feeding.' The record's own soil_base field is 'garden_bed' (RHS: 'usually grown in the ground'), i.e. the record has already picked in-ground as the representative growing method — yet fertilize_interval_days=14 is populated as a general, unqualified field for that same record, which per the very same source needs NO feeding at all. A downstream consumer reading soil_base=garden_bed + fertilize_interval_days=14 would tell an in-ground grower to fertilize every 14 days, directly contradicting the cited source's guidance for that exact scenario. The 14-day figure is real (drawn from a genuine 10-14 day range) but its applicability condition (container-grown, post-fruit-set only) was dropped from the general field instead of being reflected as a caveat or left null/conditional.",
         "is_houseplant — removed on audit: The cited RHS quote ('Squashes are usually grown in the ground... but compact varieties of summer squash can be grown in large containers') distinguishes ground vs. container growing — it says nothing about indoor vs. outdoor placement, so it does not literally state 'not a houseplant.' The conclusion is very likely correct in reality (squash needs 6+ hours direct sun, per the record's own full_sun citations, which is a far more direct basis for ruling out houseplant status), but the specific quote chosen for this claim only sounds related to the field rather than actually asserting it. The record should have cited the full-sun/outdoor-siting language (e.g. RHS's 'Choose a warm growing site in full sun') rather than the ground-vs-container sentence, which addresses a different axis (location type, not indoor/outdoor).",
-        "mature_height_in and mature_spread_in left null (all four fields): NC State's Dimensions block for Cucurbita pepo lists Climbing Method: Tendrils, with Height: 1 ft. 0 in. - 3 ft. 0 in. and Width: 2 ft. 0 in. - 25 ft. 0 in. — per the climber rule, a vine/tendril climber's extension height/spread field does not distinguish stature from run, so no size figures are recorded for this species even though the page publishes numbers.",
         "attracts_pollinators left null: searched NC State for 'Attracts' (0 hits) and RHS grow-your-own page for 'Pollinator', 'bee', 'butterfl', 'hummingbird', 'Attracts', and 'Wildlife' (only an unrelated nav-menu 'Wildlife gardening' link, 0 species-specific hits) — no page makes any pollinator statement for this species.",
         "is_edible is conditional, not a bare true: NC State's Fruit Description states some Cucurbita pepo fruits have edible flesh while others are 'too hard or insipid to eat,' though the seeds of all are edible; NC State also tags the species #edible fruits, #edible garden, #edible landscaping, #edible flowers, #non-toxic for cats, #non-toxic for dogs, and #non-toxic for horses. Searched NC State for 'Poison', 'Toxic', and 'Problem for' before setting is_edible: 'Poison' and 'Problem for' returned 0 hits, and the only 'Toxic' hits were the non-toxic-to-pets tags above — no poisonous part, severity, toxic principle, preparation requirement, or pets warning was found on the anchor page.",
         "hgic.clemson.edu/factsheet/summer-squash/ and hgic.clemson.edu/factsheet/pumpkins-winter-squash/ both returned http-403 (refused this machine) and could not be searched for any field; skipped rather than guessed.",
-        "RHS grow-your-own page carries no structured 'Max Height'/'Max Spread' (or 'Ultimate height') field for this species — it is a how-to-grow guide, not a plant-database entry — and only gives cultivar-type text ('spread to 90cm (3ft) across' for bush types vs. 'spread for several metres' for trailing types), which would be excluded anyway both as cultivar/type-specific figures (rule 3) and because the species is a climber (rule 4)."
+        "RHS grow-your-own page carries no structured 'Max Height'/'Max Spread' (or 'Ultimate height') field for this species — it is a how-to-grow guide, not a plant-database entry — and only gives cultivar-type text ('spread to 90cm (3ft) across' for bush types vs. 'spread for several metres' for trailing types), which would be excluded anyway both as cultivar/type-specific figures (rule 3) and because the species is a climber (rule 4).",
+        "is_edible: already landed, not researched here, returned null by instruction.",
+        "attracts_pollinators left null: the NC State page has no 'Attracts' field (searched 'Attracts', 0 hits); it carries only the tag '#wildlife friendly', a 'Wildlife Food Source' value and a landscape-use listing 'Pollinator Garden', none of which states that the plant attracts bees or other pollinators; the RHS squash page had 0 hits for 'pollinator'.",
+        "Size: NC State publishes Height 1-3 ft and Width 2-25 ft for the species page; these are recorded as published (12-36 in and 24-300 in). The page also lists Climbing Method: Tendrils, so the height is NC State's own figure and may understate how far a supported vine reaches; no page gave a larger reach figure.",
+        "RHS grow-your-own squash page (https://www.rhs.org.uk/vegetables/squash/grow-your-own) loaded fine but searched for 'Max Height', 'Max Spread', 'Habit', 'climb', 'tendril', 'feet' and found 0 hits; it gives no size, and it is a general squash growing guide not a species data sheet.",
+        "Clemson HGIC summer-squash and pumpkins-winter-squash pages refused this machine (http-403, 0 bytes); not read, no guess made about their content.",
+        "No other registered-authority page for Cucurbita pepo was searched beyond the four starting pages and the NC State page; no UF/IFAS, RHS plant-finder, UMD, PSU or UGA species page was located.",
+        "The NC State page is a species page that also lists common names such as Pumpkin, Zucchini, Acorn Squash and Spaghetti Squash, so its size range spans many forms of the species; the very wide width range (2-25 ft) reflects bush versus vining forms."
       ],
       "citations": [
         {
@@ -1006,9 +1039,32 @@
           "source": "NC State Extension Gardener Plant Toolbox — Cucurbita pepo",
           "url": "https://plants.ces.ncsu.edu/plants/cucurbita-pepo/",
           "quote": "A type of berry called a pepo that has a hard rind. Fruits may be long or round, large or small, smooth or warty– some have edible flesh and some are too hard or insipid to eat, though the seeds of all are edible."
+        },
+        {
+          "claim": "climbs: NC State tags Cucurbita pepo as a herbaceous vine (its Plant Type list also includes Vine and Climbing Method is Tendrils)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cucurbita pepo",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-pepo/",
+          "quote": "#herbaceous vine"
+        },
+        {
+          "claim": "mature_height_in 12-36 (NC State Height 1 ft. 0 in. - 3 ft. 0 in., converted to inches: 1 ft = 12, 3 ft = 36; the plant is a tendril climber and this is the height NC State publishes, recorded as its reach)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cucurbita pepo",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-pepo/",
+          "quote": "Height: 1 ft. 0 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 24-300 (NC State Width 2 ft. 0 in. - 25 ft. 0 in., converted to inches: 2 ft = 24, 25 ft = 300)",
+          "source": "NC State Extension Gardener Plant Toolbox, Cucurbita pepo",
+          "url": "https://plants.ces.ncsu.edu/plants/cucurbita-pepo/",
+          "quote": "Width: 2 ft. 0 in. - 25 ft. 0 in."
         }
       ],
-      "is_edible": true
+      "is_edible": true,
+      "climbs": true,
+      "mature_height_in_min": 12,
+      "mature_height_in_max": 36,
+      "mature_spread_in_min": 24,
+      "mature_spread_in_max": 300
     },
     {
       "common_name": "Turnip",
@@ -1196,6 +1252,7 @@
   "normalizations": [
     "2026-08-21: two loader-found defects fixed before landing, both the same class as b8's Artichoke -- Garden Pea and Turnip each had a citation and name_note that already established a specific accepted name (Lathyrus oleraceus, cited to NC State's synonymy listing; Brassica rapa (Rapifera Group), cited to RHS's own 'Name Status: Accepted' field) but left scientific_name_accepted null despite the prompt explicitly warning against this after b8. Populated from evidence already in each record, not invented. Neither left the record without a usable subject -- claims_from_record falls back to scientific_name_given -- but both are now correctly named.",
     "The batch's more important result is a negative one: the conflict- resolution fix added after b10 (a genuine cross-source disagreement on a harm-capable field must be nulled, not decided by preference) held across the whole batch. Onion's water_regime resolved to null with Missouri Botanical Garden's 'Dry to medium' rating explicitly left in conflict against Clemson and UMD's 'ample moisture during bulb enlargement' -- exactly the shape of the Cucumber defect from b10, this time handled correctly at the source. Potato's toxicity call is solid and correctly separates the edible tuber from the genuinely toxic green parts (solanine).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

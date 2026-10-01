@@ -57,6 +57,24 @@
           "source": "University of Maryland Extension - Growing Cucumbers in a Home Garden",
           "url": "https://extension.umd.edu/resource/growing-cucumbers-home-garden",
           "quote": "pollen must be carried by bees from male flowers, on the same plant or on different plants, to the female flower (the one with the tiny fruit below the flower). It takes 8 to 12 bee visits per flower to ensure pollination and fertilization of the ovule, sufficient to form a straight, full-size fruit."
+        },
+        {
+          "claim": "climbs: RHS describes Cucumis sativus as a vining plant climbing by means of thin tendrils",
+          "source": "RHS Cucumis sativus | cucumber",
+          "url": "https://www.rhs.org.uk/plants/105568/cucumis-sativus-cucumber-gherkin/details",
+          "quote": "climbing by means of thin tendrils at the leaf nodes"
+        },
+        {
+          "claim": "mature_height_in 78.7 max only (RHS 'vining plant to 2m (6½ft) high', 2 m x 39.37 = 78.7 inches; this is the climber's reach given support; no minimum published in prose)",
+          "source": "RHS Cucumis sativus | cucumber",
+          "url": "https://www.rhs.org.uk/plants/105568/cucumis-sativus-cucumber-gherkin/details",
+          "quote": "vining plant to 2m (6½ft) high"
+        },
+        {
+          "claim": "mature_spread_in 59.1-98.4 (RHS Max Spread 1.5-2.5 metres, converted to inches x 39.37)",
+          "source": "RHS Cucumis sativus | cucumber",
+          "url": "https://www.rhs.org.uk/plants/105568/cucumis-sativus-cucumber-gherkin/details",
+          "quote": "Max Spread         1.5-2.5 metres"
         }
       ],
       "common_name": "Cucumber",
@@ -101,14 +119,25 @@
         "toxicity_detail beyond pets/bitterness: no admissible source discussed human toxicity for normal ripe cucumber fruit; RHS's warning is specifically about bitter fruit and is filed under a 'Pets' heading.",
         "direct_sun_hours_max — removed on audit: Verified by fetching the UMD page: the quote 'Full sun requires direct light at least 6 hours/day; prefers 8 - 10 hours/day' is correctly transcribed, but it is not cucumber-specific data — it is UMD Extension's fixed, byte-for-byte-identical definition of the 'Full Sun' exposure category, reused verbatim on UMD's tomato ('Growing Tomatoes in a Home Garden') and pepper ('Growing Peppers in a Home Garden') pages as well. The record presents '10' as though it were a researched fact about cucumbers' particular sun preference, when it is actually just the generic upper bound UMD assigns to any crop it labels 'full sun.' This is exactly the generic-boilerplate failure mode the audit brief warns about (criterion 2) — the outdoor_sun_exposure='full_sun' categorization itself is plausibly a real per-crop editorial choice, but the numeric direct_sun_hours_max=10 riding on the same quote is not evidence of anything cucumber-specific.",
         "toxic_to_pets/toxicity_detail — nulled on landing review, not the field-level audit: two admissible sources give directly opposing answers (RHS: bitter fruit can be toxic; NC State: non-toxic for cats/dogs/horses) and the record picked RHS over NC State rather than nulling. The tranche format has no way to store this as two competing claims for the resolver's own material-disagreement rule to arbitrate -- a single record asserts one value per field -- so a genuine cross-source conflict on a harm-capable field has to be resolved the same way the system-level resolver would resolve it if it could see both: null, not a researcher's preference between sources. Original citations and reasoning preserved above/in citations for whoever revisits this.",
-        "Cucumis sativus is a climbing/vining plant (RHS Habit: Climbing; described by RHS as 'a deciduous, annual, vining plant to 2m (6½ft) high, climbing by means of thin tendrils at the leaf nodes'; RHS grow-your-own guide: 'Cucumbers are tender climbing or scrambling plants'). Per the climber rule, all four mature size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null even though RHS's structured Size block lists 'Max Height 0.1-0.5 metres' and 'Max Spread 1.5-2.5 metres' for this species -- those figures describe the vine's stature/run, not a usable plant-height bound.",
         "is_edible is TRUE, but the RHS species page also carries a toxicity note that must travel with it: 'Pets: Bitter fruit can be TOXIC if eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers.' This is a pets/bitter-fruit warning, not a statement that the normal ripe fruit is unsafe for people, but it is recorded here per the edibility-plus-toxicity rule.",
         "https://hgic.clemson.edu/factsheet/cucumber/ returned an http-403 status to this machine (fetch blocked) and could not be read; no data was drawn from it and none of its content was guessed.",
         "attracts_pollinators is TRUE based on UMD Extension's unconditional description of bee-mediated pollination ('pollen must be carried by bees from male flowers... It takes 8 to 12 bee visits per flower to ensure pollination...'). Neither RHS page carries a structured 'attracts pollinators' tag or wildlife field for this species -- searches for 'Pollinator' and 'attractive to pollinators' on both RHS pages returned 0 hits -- so this value rests solely on the UMD bee-pollination text, not a dedicated attracts/wildlife field.",
-        "No page among the four searched addressed height/spread with a non-climber-caveat framing, so the null size fields reflect the climber rule, not absence of any published figure."
+        "No page among the four searched addressed height/spread with a non-climber-caveat framing, so the null size fields reflect the climber rule, not absence of any published figure.",
+        "is_edible and attracts_pollinators already landed on this record; returned null by instruction, not researched.",
+        "mature_height_in_min left null: the only low figure on the RHS species page is the structured 'Max Height 0.1-0.5 metres', which conflicts with the same page's prose 'vining plant to 2m (6½ft) high' and does not describe a climber's reach, so I used only the prose 2 m as the reach maximum (2 m x 39.37 = 78.7 in) and published no minimum.",
+        "RHS structured field reads 'Max Height 0.1-0.5 metres' (3.9-19.7 in) for this species; not recorded as height because it contradicts the page's own 2 m climbing figure (probably unsupported/ground-level growth). Flagging for review.",
+        "mature_spread: RHS 'Max Spread 1.5-2.5 metres' x 39.37 = 59.1-98.4 in.",
+        "Searched qc.py output for Height, Spread, Max, feet/ft/inches/metres, climb/vine/tendril/trellis, Poison/Toxic/Problem for, Attract/pollinat/bee, Habit on all four seeded pages. UMD and RHS grow-your-own pages carry no size figures. No NC State, UF/IFAS or other registered-host species page was sought beyond these.",
+        "https://hgic.clemson.edu/factsheet/cucumber/ refused this machine (fetch status http-403, 0 bytes); not read, no claim made from it.",
+        "Toxicity note for whoever owns is_edible: the RHS species page says 'Potentially harmful Pets: Bitter fruit can be TOXIC if eaten - see the HTA guide to potentially harmful plants for further information and useful contact numbers'. UMD and RHS grow-your-own pages had no Poison/Toxic/Problem-for hits.",
+        "Size figures are for the species page (RHS Cucumis sativus), not a cultivar."
       ],
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_max": 78.7,
+      "mature_spread_in_min": 59.1,
+      "mature_spread_in_max": 98.4
     },
     {
       "chill_damage_f": null,
@@ -437,11 +466,17 @@
         "toxic_to_pets — removed on audit: Verified via direct fetch that RHS's 'Potentially harmful' section for this page contains no 'Toxic to: Humans/Cats/Dogs/Livestock' category tags — just a general 'TOXIC if eaten; fruit intended for decoration only' warning, which reads as aimed at people mistaking an ornamental gourd for food. The record's own toxicity_detail admits the source 'does not specify whether it is directed at humans, pets, or both,' yet the boolean field still asserts true as a settled pet-toxicity fact. Source silence on animals/pets specifically should not be encoded as a confirmed pets claim.",
         "toxicity_detail — removed on audit: Same underlying defect as toxic_to_pets: the text is honest that the source is ambiguous about the intended audience (human vs. pet), but that honesty doesn't rescue the paired boolean field from overclaiming, and the detail itself never establishes an animal-specific toxicity mechanism or dose — it's a decoration-safety warning, not a veterinary toxicity statement.",
         "water_regime — removed on audit: The UGA quote qualifies the >1 inch/week moisture requirement as occurring 'during peak development' (i.e., fruiting stage), not as a season-long directive. The record's own water_estimate_basis text preserves that qualifier, but the categorical water_regime value 'keep_moist' drops it and generalizes a stage-specific watering note into a blanket regime for the whole crop cycle — a mild overreach beyond what the source actually states.",
-        "mature_height_in and mature_spread_in left null on purpose: this is a vine/scrambling climber, not a self-supporting plant with a stature. RHS: 'An annual which naturally scrambles along the ground and over other low plants, reaching about 3m. It can be trained up a sturdy support'; Habit listed as 'Spreading branched, Trailing'. CAES/UGA corroborates: 'Cucurbita gourds have vines that reach 12-15 feet.' Per the climber rule, all four size fields are left null even though RHS publishes structured Max Height (0.1-0.5 metres) and Max Spread (2.5-4 metres) figures -- those numbers describe a sprawling/trained run, not plant stature, so they were not converted or recorded.",
         "is_edible set to false rather than null: the RHS anchor page states, in its Potentially harmful field, 'TOXIC if eaten; fruit intended for decoration only. Wear gloves and other protective equipment when handling,' and separately describes the fruit in its body text as 'inedible but decorative fruit in different shapes and colours.' The CAES/UGA page corroborates at genus level: 'Gourds of the Cucurbita species all have yellow flowers, and most are inedible.'",
         "RHS also carries a structured 'Fruit Edible' plant-info tag on the same page, which contradicts the page's own explicit toxic/inedible prose. That tag looks like a genus-level default rather than a species-specific claim, so it was not used to set is_edible true -- flagging the contradiction here rather than silently picking one signal.",
         "Toxicity detail found while checking Poison/Toxic/Problem-for text on the anchor page (recorded here for visibility even though is_edible ended up false): 'TOXIC if eaten; fruit intended for decoration only. Wear gloves and other protective equipment when handling.'",
-        "Both target pages (RHS and CAES/UGA fieldreport) fetched successfully via qc.py; no page refused the fetch, so there is nothing to report as blocked."
+        "Both target pages (RHS and CAES/UGA fieldreport) fetched successfully via qc.py; no page refused the fetch, so there is nothing to report as blocked.",
+        "is_edible and attracts_pollinators already landed; returned null by instruction, not researched.",
+        "climbs left null: RHS Habit reads 'Spreading branched, Trailing' and the description says it 'naturally scrambles along the ground' and 'can be trained up a sturdy support'; no species-level page calls it a climber (RHS's 'climbing or trailing' wording is a genus description, not usable). UGA says 'vines' and recommends trellising but does not say it climbs.",
+        "Mature height 0.1-0.5 m is RHS's published Max Height, which is the plant's low scrambling habit and not a climbing reach; it is recorded as published. Spread 2.5-4 m is the sprawl. Height/spread conversions: 0.1 m = 3.9 in, 0.5 m = 19.7 in, 2.5 m = 98.4 in, 4 m = 157.5 in (x 39.37, rounded to 0.1).",
+        "RHS text also says the plant reaches 'about 3m' (scrambling, about 118 in), which is not recorded as height since it conflicts with the Max Height field; flagged for the reviewer.",
+        "UGA gives Cucurbita gourd vine length of 12-15 feet (144-180 in) generically for Cucurbita gourds, not specific to var. ovifera; not used.",
+        "RHS page warns the fruit is toxic: 'TOXIC if eaten; fruit intended for decoration only.' Relevant to the already-landed is_edible value; the RHS page also tags 'Fruit Edible' in its tag list while the description calls the fruit 'inedible but decorative'. Whoever owns is_edible should check this conflict.",
+        "No NC State, UF/IFAS, Clemson, UMD or Penn State species page was searched for or loaded; only the two assigned pages were read via qc.py (both status ok). No page refused this machine."
       ],
       "citations": [
         {
@@ -509,10 +544,26 @@
           "quote": "Plants for pollinators",
           "source": "RHS Plants: Cucurbita pepo var. ovifera details page",
           "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details"
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches x 39.37; low scrambling habit, not a climbing reach)",
+          "source": "RHS Plants: Cucurbita pepo var. ovifera (apple gourd)",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 98.4-157.5 (RHS Max Spread 2.5-4 metres, converted to inches x 39.37)",
+          "source": "RHS Plants: Cucurbita pepo var. ovifera (apple gourd)",
+          "url": "https://www.rhs.org.uk/plants/105584/cucurbita-pepo-var-ovifera/details",
+          "quote": "Max Spread         2.5-4 metres"
         }
       ],
       "is_edible": false,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 98.4,
+      "mature_spread_in_max": 157.5
     },
     {
       "common_name": "Kohlrabi",
@@ -1199,6 +1250,7 @@
   ],
   "normalizations": [
     "2026-08-21: one fix applied after landing review, upstream of the usual loader sweep. Cucumber's record asserted toxic_to_pets=true, picking RHS's 'bitter fruit can be TOXIC if eaten' warning over NC State's blanket 'non-toxic for cats/dogs/horses' tag -- a genuine disagreement between two admissible sources on a harm-capable field, which the record's own unknowns correctly flagged but then resolved by researcher preference rather than nulling. This is exactly the case resolve.py's material-disagreement rule exists to catch, but the tranche format asserts one value per field per record, so a real cross-source conflict discovered during research never reaches the system as two competing claims for that rule to see -- it has to be caught and nulled at landing time instead. Nulled toxic_to_pets and toxicity_detail, removed the now-orphaned citations, and kept the disagreement documented in unknowns. Future batch prompts should tell agents explicitly: a genuine cross-source conflict on a harm-capable field is nulled, not decided by preference.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

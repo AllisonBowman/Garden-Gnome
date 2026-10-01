@@ -728,11 +728,15 @@
         "No admissible source gives numeric day/night temperatures, humidity, foot-candle light levels, a maximum direct-sun figure, or a chill-hour requirement, so those fields are null. NC State's 'Full sun (6 or more hours of direct sunlight a day)' is a minimum, not a maximum.",
         "Source coverage: Clemson HGIC has only a photo Q&A (noting several extremely cold-hardy varieties exist and fruit in SC most years); UF/IFAS Ask IFAS/EDIS has no kiwi-growing publication (only nutrition and pest tables); UMD Extension covers hardy kiwi (Actinidia arguta) and mentions A. deliciosa only as the supermarket fruit. Nothing from those domains was usable for care fields.",
         "toxic_to_pets — verdict pass 2026-09-10: searched every reachable admissible dedicated page for a statement scoped to cats or dogs (https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/, https://www.rhs.org.uk/plants/96689/actinidia-deliciosa/details, https://www.rhs.org.uk/plants/96689/actinidia-deliciosa-1/details, https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=275437, https://hgic.clemson.edu/, https://edis.ifas.ufl.edu/, https://ask.ifas.ufl.edu/, https://extension.psu.edu/programs/master-gardener/counties/adams/news/hardy-kiwi-for-hearty-climes, https://extension.umd.edu/resource/less-common-fruits-home-garden, https://fieldreport.caes.uga.edu/publications/B992/minor-fruits-and-nuts-in-georgia/); none found, so the value stays null. Audited live.",
-        "Kiwifruit is a climbing vine — NC State's own record (for Actinidia chinensis var. deliciosa, the accepted synonym anchor page for this species) gives Plant Type: Vine and Habit/Form: Climbing, and RHS labels it 'Climber'. Per the climber rule, all four size fields (mature_height_in_min/max, mature_spread_in_min/max) are left null even though NC State publishes Height: 15 ft. 0 in. - 30 ft. 0 in. and Width: 6 ft. 0 in. - 10 ft. 0 in., and RHS publishes Max Height 8-12 metres and Max Spread 2.5-4 metres — these figures are the plant's climbing run/spread on a support, not disambiguated stature, so none of them were used.",
         "is_edible is set true from NC State's Edibility field ('Fruit is edible: it is sweet and tart.'). The anchor page was searched for 'Poison' and 'Toxic' (0 hits each), but its Insect Pests/Diseases/Other Problems section states: 'Insect pests and diseases are not a major problem for this plant. Hairs on the fruits may cause throat irritation. The fruits also contain actinidin, an enzyme that can also cause irritation.' This fruit-irritation/actinidin warning is recorded here per the edibility-and-toxicity rule.",
         "attracts_pollinators is set true from NC State's structured Attracts field ('Bees') and its Wildlife Value field ('Bees pollinate the plant.'). The RHS details page was also searched for 'pollinator' and had no matching tag or mention — it neither confirms nor contradicts this.",
         "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=275437 refused this machine's fetch (network/proxy error, sandboxed) and was not read; no content from it is used for any field.",
-        "The remaining listed pages (CAES minor-fruits-and-nuts bulletin, CAES 'did you know you can grow kiwi', RHS grow-your-own guide, Penn State hardy-kiwi extension page) were not queried because the six requested fields were already resolved with citations from the anchor NC State page and cross-checked against RHS; none of them was needed to fill or null a field."
+        "The remaining listed pages (CAES minor-fruits-and-nuts bulletin, CAES 'did you know you can grow kiwi', RHS grow-your-own guide, Penn State hardy-kiwi extension page) were not queried because the six requested fields were already resolved with citations from the anchor NC State page and cross-checked against RHS; none of them was needed to fill or null a field.",
+        "is_edible and attracts_pollinators already landed; returned null by instruction, not researched.",
+        "The NC State page is titled Actinidia chinensis var. deliciosa (the name NC State uses for kiwifruit), not literally Actinidia deliciosa; sizes are taken from it as the species' own NC State page.",
+        "NC State publishes Height 15-30 ft and Width 6-10 ft; converted x12 to inches (180-360 and 72-120). Height is a climber's reach (twining vine given support).",
+        "RHS Max Height / Max Spread were not read in this pass; NC State size is sufficient, so RHS was not used and no RHS figure is claimed.",
+        "Searched NC State page for 'Poison' and 'Toxic': 0 hits. 'Problem for' hit: hairs on the fruits may cause throat irritation; fruits contain actinidin, an enzyme that can cause irritation (relevant to is_edible, already landed)."
       ],
       "citations": [
         {
@@ -1034,10 +1038,33 @@
           "source": "NC State Extension Gardener Plant Toolbox — Actinidia chinensis var. deliciosa",
           "url": "https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/",
           "quote": "Bees pollinate the plant."
+        },
+        {
+          "claim": "mature_height_in 180-360 (NC State Height 15 ft. 0 in. - 30 ft. 0 in., converted to inches at 12 in/ft; this is the plant's reach as a climber given support)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/",
+          "quote": "Height: 15 ft. 0 in. - 30 ft. 0 in."
+        },
+        {
+          "claim": "mature_spread_in 72-120 (NC State Width 6 ft. 0 in. - 10 ft. 0 in., converted to inches at 12 in/ft)",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/",
+          "quote": "Width: 6 ft. 0 in. - 10 ft. 0 in."
+        },
+        {
+          "claim": "climbs: NC State lists Habit/Form as Climbing and Climbing Method as Twining",
+          "source": "NC State Extension Gardener Plant Toolbox",
+          "url": "https://plants.ces.ncsu.edu/plants/actinidia-chinensis-var-deliciosa/",
+          "quote": "Twining"
         }
       ],
       "is_edible": true,
-      "attracts_pollinators": true
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 180,
+      "mature_height_in_max": 360,
+      "mature_spread_in_min": 72,
+      "mature_spread_in_max": 120
     },
     {
       "common_name": "Blackberry",
@@ -1099,7 +1126,14 @@
         "Source availability: UF/IFAS HS104 'The Blackberry' returns HTTP 410 Gone (both edis.ifas.ufl.edu and ask.ifas.ufl.edu), so UF/IFAS coverage here comes from HS1352 'Choosing the Right Blackberry Cultivar in Subtropical Florida'. plants.ces.ncsu.edu/plants/rubus-fruticosus/ returns 404. The older RHS URL /fruit/blackberries/grow-your-own returns 404; the live guide is /fruit/blackberries-and-hybrid-berries/grow-your-own. www.missouribotanicalgarden.org Plant Finder URLs 301-redirect to plantfinder.mobot.org, which is the URL cited.",
         "Cultivar dependence: chill-hour needs span 300-900 hours (UF/IFAS), thornless cultivars are more cold-sensitive (Penn State), and growth habit (trailing, semi-erect, erect) and fruiting type (floricane vs primocane) change pruning and trellis needs; all sources recommend a trellis even for erect types.",
         "Container growing: RHS says a few compact varieties (e.g., 'Little Black Prince') can be grown in a pot at least 45 cm wide and deep in loam-based compost kept slightly moist; this record's soil_base reflects the default in-ground planting every source assumes.",
-        "water_estimate_basis — removed on audit: The clause \"UMD says home gardeners should be able to water several times per week in the establishment year\" (and the matching citation label \"...in the establishment year\") misattributes scope. On the live UMD FS-2023-0660 page the sentence sits under 'Growing site selection' immediately after the full-sun sentence and reads, with its actual context: \"Commercial producers will generally use drip or overhead irrigation systems for their plants. However, for home gardeners this is not a necessary investment as long as you are able to water your plants several times per week.\" It is not scoped to first-year plants; it is a general site-selection note about not needing an irrigation system if you can hand-water several times a week. The factsheet as a whole is framed as first-year planting advice, but the sentence itself carries no establishment-year qualifier. Repair: drop 'in the establishment year' from both the prose and the citation label, and state it as UMD's general note that home gardeners can substitute hand-watering several times per week for an irrigation system - which also honestly records that one source implies a shorter-than-weekly cadence."
+        "water_estimate_basis — removed on audit: The clause \"UMD says home gardeners should be able to water several times per week in the establishment year\" (and the matching citation label \"...in the establishment year\") misattributes scope. On the live UMD FS-2023-0660 page the sentence sits under 'Growing site selection' immediately after the full-sun sentence and reads, with its actual context: \"Commercial producers will generally use drip or overhead irrigation systems for their plants. However, for home gardeners this is not a necessary investment as long as you are able to water your plants several times per week.\" It is not scoped to first-year plants; it is a general site-selection note about not needing an irrigation system if you can hand-water several times a week. The factsheet as a whole is framed as first-year planting advice, but the sentence itself carries no establishment-year qualifier. Repair: drop 'in the establishment year' from both the prose and the citation label, and state it as UMD's general note that home gardeners can substitute hand-watering several times per week for an irrigation system - which also honestly records that one source implies a shorter-than-weekly cadence.",
+        "mature_spread_in_min and mature_spread_in_max left null: the RHS species page gives Max Spread as 'wider than 8 metres', an open-ended value with no usable bound.",
+        "The RHS Rubus fruticosus agg. page lists Habit as 'Trailing' while also tagging the plant 'Climber' and describing it as a 'scrambler'; climbs=true rests on the Climber tag, and the height is recorded as reach (1.5-2.5 m = 59.1-98.4 in).",
+        "Searched the RHS species page for 'Poison', 'Toxic' and 'Problem for' and got zero hits, so no toxic part, severity or pets warning is stated there. No toxicity statement was found, but this is not a safety clearance. The edibility text refers to the fruit; the page does not address other parts.",
+        "The RHS page is for the aggregate Rubus fruticosus agg. (many microspecies), not a single stabilised species; its figures describe the aggregate.",
+        "No NC State Plant Toolbox page for Rubus fruticosus was found: the guessed URL plants.ces.ncsu.edu/plants/rubus-fruticosus/ returned http-404, and a search surfaced only the genus page, which is not a substitute. Not read for size.",
+        "The RHS 'Loch Ness' page is a cultivar (1.5-2.5 m height and spread) and was not used for size.",
+        "plantfinder.mobot.org and ask.ifas.ufl.edu were not fetched in this pass; not guessed at."
       ],
       "citations": [
         {
@@ -1323,8 +1357,37 @@
           "source": "Clemson HGIC 1400 - Blackberry",
           "url": "https://hgic.clemson.edu/factsheet/blackberry/",
           "quote": "Fertilize blackberries in early spring when growth starts and again just after harvest."
+        },
+        {
+          "claim": "mature_height_in 59.1-98.4 (RHS Max Height 1.5-2.5 metres, converted to inches at x39.37). Reach of this climber/scrambler.",
+          "source": "RHS Rubus fruticosus agg.",
+          "url": "https://www.rhs.org.uk/plants/16132/rubus-fruticosus-agg/details",
+          "quote": "Max Height         1.5-2.5 metres"
+        },
+        {
+          "claim": "is_edible true: the plant produces edible, aromatic black fruit (fruit is the named edible part).",
+          "source": "RHS Rubus fruticosus agg.",
+          "url": "https://www.rhs.org.uk/plants/16132/rubus-fruticosus-agg/details",
+          "quote": "followed by edible, aromatic black fruit"
+        },
+        {
+          "claim": "attracts_pollinators true: RHS lists the plant under 'Plants for pollinators'.",
+          "source": "RHS Rubus fruticosus agg.",
+          "url": "https://www.rhs.org.uk/plants/16132/rubus-fruticosus-agg/details",
+          "quote": "Plants for pollinators"
+        },
+        {
+          "claim": "climbs true: RHS categorises the plant as a Climber (also described as a vigorous scrambler); its Habit field says Trailing.",
+          "source": "RHS Rubus fruticosus agg.",
+          "url": "https://www.rhs.org.uk/plants/16132/rubus-fruticosus-agg/details",
+          "quote": "Fruit Edible   Climber Wall Shrub"
         }
-      ]
+      ],
+      "is_edible": true,
+      "attracts_pollinators": true,
+      "climbs": true,
+      "mature_height_in_min": 59.1,
+      "mature_height_in_max": 98.4
     },
     {
       "common_name": "Sweetheart Hoya",
@@ -1376,7 +1439,13 @@
         "fertilize_interval_days / fertilize_active_months / fertilize_strength: RHS says apply a balanced liquid feed monthly while in growth, but no source states a numeric interval, months or dilution, so nothing is encoded. Clemson suggests a liquid fertilizer with an NPK ratio of 2:1:2 or 3:1:2 to support flowering.",
         "Bloom and handling cautions not captured by schema fields: NC State says the long bare twining stems should not be cut back because they precede new leaves and flowers; flowers drip copious reddish-brown nectar that stains fabrics, walls and furnishings; the plant is shy to flower when young and RHS gives 5-10 years to maturity; RHS says hoyas resent repotting and can stay in the same pot for many years; Penn State says not to move or rotate a plant once a flower begins to form.",
         "Content-bleed check against the companion Hoya carnosa record: every field here is drawn from pages that name Hoya kerrii (NC State species page, RHS species page, UGA Table 3 row) or from genus-level extension pages that explicitly include Hoya kerrii in scope (NC State genus page, Penn State, Clemson). UMD's Master Gardener PDFs mention only Hoya carnosa and were not used.",
-        "name_note — removed on audit: Sub-claim check: (a) 'Lucky Heart Plant' -- covered and accurate; genus page quote 'Hoya kerrii (Lucky Heart Plant or Sweetheart Hoya)' verified, and the species page's Common Name(s) list also carries it. (b) 'Wax Hearts' -- covered and accurate, present in the species page's Common Name(s) list. (c) 'Penn State calls the species heart-leaf hoya' -- covered, quote verified verbatim. (d) 'reserves sweetheart hoya for the single leaf ... will not grow into a vine' -- covered, quote verified verbatim: 'Be wary of the well-marketed sweetheart hoya, which is simply a single leaf of H. kerrii. It will stay just as it is and not develop into a vine.' (e) WRONG ATTRIBUTION: the note frames the Penn State clause as 'the single rooted leaf sold as a Valentine's novelty'. The Penn State article contains no 'Valentine', 'novelty', 'gift' or 'rooted' anywhere (checked); 'rooted' is NC State's wording ('sold as a single, rooted leaf') and the Valentine's context is uncited-but-true from NC State ('The heart-shaped leaves of this species make it a popular houseplant, especially around Valentine's Day.') and Clemson ('often available on Valentine's Day'). Repair: reword to e.g. 'Penn State calls the species heart-leaf hoya and reserves \"sweetheart hoya\" for the marketed single leaf, which will stay as it is and not develop into a vine; NC State and Clemson note it is sold around Valentine's Day.' Do not re-cite Penn State for the Valentine's or 'rooted' wording."
+        "name_note — removed on audit: Sub-claim check: (a) 'Lucky Heart Plant' -- covered and accurate; genus page quote 'Hoya kerrii (Lucky Heart Plant or Sweetheart Hoya)' verified, and the species page's Common Name(s) list also carries it. (b) 'Wax Hearts' -- covered and accurate, present in the species page's Common Name(s) list. (c) 'Penn State calls the species heart-leaf hoya' -- covered, quote verified verbatim. (d) 'reserves sweetheart hoya for the single leaf ... will not grow into a vine' -- covered, quote verified verbatim: 'Be wary of the well-marketed sweetheart hoya, which is simply a single leaf of H. kerrii. It will stay just as it is and not develop into a vine.' (e) WRONG ATTRIBUTION: the note frames the Penn State clause as 'the single rooted leaf sold as a Valentine's novelty'. The Penn State article contains no 'Valentine', 'novelty', 'gift' or 'rooted' anywhere (checked); 'rooted' is NC State's wording ('sold as a single, rooted leaf') and the Valentine's context is uncited-but-true from NC State ('The heart-shaped leaves of this species make it a popular houseplant, especially around Valentine's Day.') and Clemson ('often available on Valentine's Day'). Repair: reword to e.g. 'Penn State calls the species heart-leaf hoya and reserves \"sweetheart hoya\" for the marketed single leaf, which will stay as it is and not develop into a vine; NC State and Clemson note it is sold around Valentine's Day.' Do not re-cite Penn State for the Valentine's or 'rooted' wording.",
+        "is_edible left null: searched the NC State Hoya kerrii page for 'Edible', 'Poison', 'Toxic' and 'Problem for'; the page has no edibility statement and only 'non-toxic for cats/dogs/horses' tags, which say nothing about eating by people. The RHS page had no hit for 'Edible', 'Poison' or 'Toxic' either.",
+        "attracts_pollinators left null: searched NC State and RHS pages for 'Attracts', 'Pollinator' and 'butterfl'; no hits on either page.",
+        "Clemson HGIC (hgic.clemson.edu/factsheet/indoor-plants-waxflowers-hoya/) refused this machine (fetch status http-403), so it was not read.",
+        "NC State's Hoya kerrii page has no Dimensions block: searches for 'Dimensions' and 'Height' found nothing (only leaf length and leaf width under 1 inch). Size comes from RHS only.",
+        "RHS Max Height 0.5-1 metres and Max Spread 0.1-0.5 metres are the species page's figures (not a cultivar) and are not labelled indoor or outdoor; both are well under 120 in, so recorded as published. Converted at 39.37 in per metre: 0.5 m = 19.7 in, 1 m = 39.4 in, 0.1 m = 3.9 in.",
+        "Did not search UF/IFAS or the other registered hosts for a separate Hoya kerrii page, since RHS gave a usable size."
       ],
       "citations": [
         {
@@ -1606,8 +1675,37 @@
           "source": "Clemson HGIC — Indoor Plants: Waxflowers (Hoya)",
           "url": "https://hgic.clemson.edu/factsheet/indoor-plants-waxflowers-hoya/",
           "quote": "Sweetheart Hoya (Hoya kerrii) – has extra-large heart-shaped leaves, often available on Valentine’s Day"
+        },
+        {
+          "claim": "climbs: NC State prose calls Hoya kerrii a climbing plant that is trained on a trellis (Habit/Form also lists Climbing)",
+          "source": "NC State Extension Gardener Plant Toolbox, Hoya kerrii",
+          "url": "https://plants.ces.ncsu.edu/plants/hoya-kerrii/",
+          "quote": "Support this climbing plant with florist wire to train it on a trellis"
+        },
+        {
+          "claim": "climbs: RHS Habit for Hoya kerrii is Trailing, Climbing",
+          "source": "RHS, Hoya kerrii",
+          "url": "https://www.rhs.org.uk/plants/83016/hoya-kerrii/details",
+          "quote": "Trailing, Climbing"
+        },
+        {
+          "claim": "mature_height_in 19.7-39.4 (RHS Max Height 0.5-1 metres, converted to inches at 39.37 in/m; for this climber it is the reach)",
+          "source": "RHS, Hoya kerrii",
+          "url": "https://www.rhs.org.uk/plants/83016/hoya-kerrii/details",
+          "quote": "Max Height         0.5-1 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches at 39.37 in/m)",
+          "source": "RHS, Hoya kerrii",
+          "url": "https://www.rhs.org.uk/plants/83016/hoya-kerrii/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
-      ]
+      ],
+      "climbs": true,
+      "mature_height_in_min": 19.7,
+      "mature_height_in_max": 39.4,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Purple Pitcher Plant",
@@ -2095,7 +2193,14 @@
         "Watering interval: no admissible source gives a numeric watering interval; the regime is keep-moist with no dry-down, so water_growing_days_est, water_dormant_days_est, water_estimate_basis and water_check_depth_cm are null.",
         "Pitcher failure and die-back are attributed to low humidity and low light (Clemson; NC State), which is why humidity_need is high with a 60% floor; no source gives an upper humidity bound.",
         "Clemson warns to avoid copper-based fungicides, as they can kill tropical pitcher plants.",
-        "Common-name choice: the task label 'Tropical Pitcher Plant' is the genus-level name; per the naming rule the record uses the name led by the dedicated single-species page (RHS: 'winged tropical pitcher plant'), which NC State's species entry also uses."
+        "Common-name choice: the task label 'Tropical Pitcher Plant' is the genus-level name; per the naming rule the record uses the name led by the dedicated single-species page (RHS: 'winged tropical pitcher plant'), which NC State's species entry also uses.",
+        "is_edible left null: searched the RHS species page for 'edible' (0 hits) and the NC State genus page for 'Edible', 'Poison' and 'Problem for' (0 hits); no page addresses eating.",
+        "attracts_pollinators left null: searched RHS species page for 'pollinat' and 'attractive' (0 hits) and the NC State genus page for 'Attracts' and 'Pollinator' (0 hits); no pollinator statement found.",
+        "climbs left null: the RHS species page gives Habit 'Pendulous weeping', not climbing. NC State's 'Climbing' habit and 'Vine' plant type appear only on its genus page (Nepenthes), which is not this species' own page, so it was not used. Size is therefore recorded as the RHS container/cultivated figure, not as a climber's reach.",
+        "Size is RHS Max Height 0.1-0.5 metres and Max Spread 0.1-0.5 metres, converted x39.37 to 3.9-19.7 inches. This is a cultivated figure and looks small for a plant that is known to grow larger; it is recorded as published and the Time to Maturity is 2-5 years per RHS.",
+        "https://hgic.clemson.edu/factsheet/tropical-pitcher-plants-nepenthes-spp-indoor-care-growing-tips-plant-guide/ refused this machine (http-403); not read.",
+        "NC State has no species page at plants.ces.ncsu.edu/plants/nepenthes-alata/ (http-404); edis.ifas.ufl.edu species page not located (the guessed URL was not fetched successfully, ProxyError); no UF/IFAS data used.",
+        "The RHS carnivorous growing guide had no size, climbing, edible or pollinator text for this species."
       ],
       "citations": [
         {
@@ -2421,8 +2526,24 @@
           "source": "NC State Extension Gardener Plant Toolbox: Nepenthes",
           "url": "https://plants.ces.ncsu.edu/plants/nepenthes/",
           "quote": "native Philippines, strap-shaped leaves, green pitcher with dark red stripes, easy to grow"
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches x39.37)",
+          "source": "RHS Nepenthes alata | winged tropical pitcher plant",
+          "url": "https://www.rhs.org.uk/plants/76432/nepenthes-alata/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches x39.37)",
+          "source": "RHS Nepenthes alata | winged tropical pitcher plant",
+          "url": "https://www.rhs.org.uk/plants/76432/nepenthes-alata/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
-      ]
+      ],
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "common_name": "Cape Sundew",
@@ -2698,6 +2819,7 @@
   "normalizations": [
     "2026-08-24: twenty-seventh batch -- four fruit crops (Pomegranate, Olive, Kiwifruit, Blackberry -- the last a deliberate companion to Red Raspberry already in this catalog, no Rubus-level bleed found), Sweetheart Hoya (a companion to Hoya carnosa), and this catalog's first carnivorous-plant cluster (Purple Pitcher Plant, Winged Tropical Pitcher Plant, Cape Sundew -- researched with explicit cautions against borrowing houseplant defaults; all three correctly carry null fertilize_* fields with the sources' 'do not fertilize' guidance recorded in unknowns). Pomegranate is a model record for the chill_damage_f survival-vs-onset rule: the researcher took UF/IFAS's 12°F dormant-tree damage figure, deliberately declined NC State's and Clemson's 10°F kill-to-ground survival threshold, and disclosed that a non-dormant plant is damaged at 28°F -- exactly the distinction b43 had to be corrected on. Both tools ran clean before and after repair: land_check.py no problems, covered.py no duplicates, verify_quotes.py 216 hit / 0 miss on every reachable citation (128 skips are all plantfinder.mobot.org, ask.ifas.ufl.edu and PDFs, unreachable from the sandbox). Two audit repairs, each using the auditor's own live-verified wording: Blackberry's water_estimate_basis had scoped a UMD hand-watering note to 'the establishment year' when the sentence carries no such qualifier -- restored as UMD's general note, with the 7-day cadence still anchored to Clemson's 1 inch/week and Penn State's 1-2 inches/week; Sweetheart Hoya's name_note had attributed a Valentine's-novelty framing to Penn State, whose article never mentions Valentine's -- restored with the auditor's rewording, and the Valentine's clause now cited to NC State and Clemson, which do say it. toxic_to_pets: Hoya kerrii and Nepenthes both false via explicit NC State '#non-toxic for cats'/'#non-toxic for dogs' tags; the six others null, with no admissible source addressing cat/dog toxicity -- nothing inferred either way.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Kiwifruit -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
