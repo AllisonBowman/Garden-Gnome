@@ -26,7 +26,9 @@ import CareCalendar from '../care/CareCalendar';
 import {
   SURFACE_LABEL, GOALS, dimensionPrompts, uncheckedNotes,
 } from '../growingAreas/realEstate';
+import { CHECK_FAILED } from '../growingAreas/fitFindings';
 import Eyebrow from '../components/Eyebrow';
+import FitFindingRow from '../components/FitFindingRow';
 
 type Route = RouteProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
 
@@ -95,12 +97,20 @@ export default function GrowingAreaDetailScreen() {
   const { tasks: careTasks, isLoading: careLoading } = useCareTasks(growingAreaId);
 
   // What doesn't suit this space, and what would. Two reads of the same
-  // comparison, so they are fetched together and shown together.
-  const { data: misfitRows = [], isLoading: misfitsLoading } = useQuery({
+  // comparison, so they are fetched together and shown together. A failed
+  // read is kept apart from an empty one: an empty misfit list is an
+  // all-clear, and a request that never arrived has cleared nothing.
+  const {
+    data: misfitRows = [], isLoading: misfitsLoading, isError: misfitsFailed,
+    refetch: refetchMisfits,
+  } = useQuery({
     queryKey: ['growingAreaMisfits', growingAreaId],
     queryFn: () => fetchMisfits(growingAreaId),
   });
-  const { data: candidateRows = [], isLoading: candidatesLoading } = useQuery({
+  const {
+    data: candidateRows = [], isLoading: candidatesLoading, isError: candidatesFailed,
+    refetch: refetchCandidates,
+  } = useQuery({
     queryKey: ['growingAreaCandidates', growingAreaId],
     queryFn: () => fetchCandidates(growingAreaId, 12),
   });
@@ -149,7 +159,8 @@ export default function GrowingAreaDetailScreen() {
   // Which axes this space turns on that the catalog simply cannot answer.
   // Shown above the list, because a short list is otherwise read as a verdict
   // on the space rather than as a gap in the evidence.
-  const caveats = candidatesLoading ? [] : uncheckedNotes(env, candidateRows);
+  const caveats = candidatesLoading || candidatesFailed
+    ? [] : uncheckedNotes(env, candidateRows);
 
   const prompts = dimensionPrompts(env.surface ?? null);
   const dims = [
@@ -239,10 +250,20 @@ export default function GrowingAreaDetailScreen() {
         <Card.Content>
           {misfitsLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
+          ) : misfitsFailed ? (
+            <View>
+              <Text style={styles.unavailable}>{CHECK_FAILED}</Text>
+              <Button compact onPress={() => refetchMisfits()} style={styles.retry}>
+                Try again
+              </Button>
+            </View>
           ) : misfitRows.length === 0 ? (
             <Text style={styles.unavailable}>
-              Nothing here contradicts the space. Plants the catalog can’t
-              judge aren’t listed as fine — they’re just not listed.
+              {env.plant_count === 0
+                ? 'No plants here yet. Anything this space has against a plant '
+                  + 'you add here will show up on this card.'
+                : 'Nothing here contradicts the space. Plants the catalog can’t '
+                  + 'judge aren’t listed as fine — they’re just not listed.'}
             </Text>
           ) : (
             misfitRows.map((m) => (
@@ -251,9 +272,9 @@ export default function GrowingAreaDetailScreen() {
                   {m.nickname || m.common_name}
                   {m.nickname ? <Text style={styles.misfitSpecies}>{`  ${m.common_name}`}</Text> : null}
                 </Text>
-                {m.misfits.map((f, i) => (
-                  <Text key={i} style={styles.misfitReason}>• {f.sentence}</Text>
-                ))}
+                {/* The axis and whose word it is, then the server's own
+                    sentence — never re-worded here. */}
+                {m.misfits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
               </View>
             ))
           )}
@@ -274,6 +295,13 @@ export default function GrowingAreaDetailScreen() {
           ))}
           {candidatesLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
+          ) : candidatesFailed ? (
+            <View>
+              <Text style={styles.unavailable}>{CHECK_FAILED}</Text>
+              <Button compact onPress={() => refetchCandidates()} style={styles.retry}>
+                Try again
+              </Button>
+            </View>
           ) : candidateRows.length === 0 ? (
             <Text style={styles.unavailable}>
               Nothing to put forward yet. A species only appears here once a
@@ -285,9 +313,9 @@ export default function GrowingAreaDetailScreen() {
               <View key={c.species_id} style={styles.candidate}>
                 <Text style={styles.candidateName}>{c.common_name}</Text>
                 <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
-                {c.fits.map((f, i) => (
-                  <Text key={i} style={styles.candidateWhy}>• {f.sentence}</Text>
-                ))}
+                {/* Only the axes that were confirmed: an unknown is never a
+                    reason, so it never appears as one. */}
+                {c.fits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
               </View>
             ))
           )}
@@ -418,14 +446,13 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   goalsLabel: { marginTop: 16, marginBottom: 8 },
 
   misfit: { marginBottom: 16 },
-  misfitName: { fontSize: 15, fontWeight: '700', color: p.ink, marginBottom: 5 },
+  misfitName: { fontSize: 15, fontWeight: '700', color: p.ink, marginBottom: 6 },
   misfitSpecies: { fontSize: 13, fontWeight: '400', color: p.faint },
-  misfitReason: { fontSize: 14, lineHeight: 20, color: p.sub, marginBottom: 3 },
   candidate: { marginBottom: 16 },
   candidateName: { fontSize: 15, fontWeight: '700', color: p.ink },
-  candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 5 },
-  candidateWhy: { fontSize: 14, lineHeight: 20, color: p.sub, marginBottom: 3 },
+  candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 6 },
   caveat: { fontSize: 13, lineHeight: 19, color: p.warn, marginBottom: 12 },
+  retry: { alignSelf: 'flex-start', marginTop: 6 },
 
   nowRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   nowMain: {},

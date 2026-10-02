@@ -3,7 +3,8 @@ import { View, StyleSheet, Pressable, Linking, StyleProp, ViewStyle } from 'reac
 import { Text } from 'react-native-paper';
 import { CareSource, Species } from '../types';
 import {
-  CATALOG_LINE, careFactRows, careSourceLabels, careStatusLine, legacyStats,
+  CATALOG_LINE, INFERRED_PILL, careFactRows, careSourceLabels, careStatusLine,
+  legacyStats,
 } from '../care/facts';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -51,7 +52,7 @@ export function CareFactList({ species, compact = false }: {
           <View style={styles.factHead}>
             <Eyebrow>{row.label}</Eyebrow>
             {/* Borrowed from the genus: honest to show, dishonest to hide. */}
-            {row.inferred && <Pill style={styles.inferredPill}>genus-inferred</Pill>}
+            {row.inferred && <Pill style={styles.inferredPill}>{INFERRED_PILL}</Pill>}
           </View>
           <Text variant={compact ? 'bodySmall' : 'bodyMedium'} style={styles.factValue}>
             {row.value}

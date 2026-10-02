@@ -38,6 +38,10 @@ export interface LegacyStat {
 
 /** The status line's phrasing, exported so screens and tests share one copy. */
 export const BORROWED_LINE = 'Care facts borrowed from the genus — not confirmed for this species';
+/** The pill on anything one species borrowed from its genus (ADR 0002). One
+ *  copy, because the same fact is labelled on a care row and on a fit
+ *  finding, and a reader should not have to learn two words for it. */
+export const INFERRED_PILL = 'genus-inferred';
 export const NONE_LINE = 'No care facts cited for this species yet';
 /** The caption over the legacy stats: they are catalog values no claim
  *  backs, and under a "cited to …" line they would read as equally cited. */

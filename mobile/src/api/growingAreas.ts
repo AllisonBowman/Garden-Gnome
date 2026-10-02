@@ -89,11 +89,18 @@ export interface FitFinding {
   verdict: 'fits' | 'misfits' | 'unknown';
   sentence: string;
   borrowed: boolean;
+  /** Whose word it is: the authorities whose pages settled a value this
+   *  finding rests on, for this species itself. Empty for an unknown and
+   *  for a value only the genus answered (`borrowed` says that). Absent from
+   *  a server that predates it. */
+  authorities?: string[];
   /** Which of the area's goals this finding answers. Edible and pollinators
    *  share the `goal` axis, so this is the only way to tell them apart.
    *  Absent from a server that predates it. */
   goal?: GrowingGoal | null;
 }
+
+export type FitAxis = FitFinding['axis'];
 
 /** A species put forward for an area. `fits` holds only confirmed axes —
  *  never the unknown ones, because "no idea how big it gets" is not a reason
