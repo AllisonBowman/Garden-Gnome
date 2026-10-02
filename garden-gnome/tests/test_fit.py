@@ -411,3 +411,113 @@ def test_misfits_returns_only_what_needs_addressing():
         soil_base="cactus_succulent")              # misfits in a bed
     problems = fit.misfits(fit.assess(species, area))
     assert {f.axis for f in problems} == {Axis.sun, Axis.soil}
+
+
+# --- who said so -----------------------------------------------------------
+# A misfit is something a caretaker is asked to act on, so it has to be able
+# to say whose word it is: "NC State Extension records it for part shade",
+# not the app's opinion. Read off the same `care_sources` the care facts
+# credit, and only for a value sourced for this species (ADR 0002).
+
+NCSU = {"authority": "NC State Extension", "url": "https://plants.ces.ncsu.edu/x",
+        "fields": ["outdoor_sun_exposure", "is_houseplant"], "inferred": False}
+RHS = {"authority": "Royal Horticultural Society", "url": "https://rhs.org.uk/y",
+       "fields": ["mature_height_in_max"], "inferred": False}
+
+
+def test_a_sourced_misfit_names_the_authority_that_recorded_it():
+    species = make_species(
+        outdoor_sun_exposure=["part_shade", "full_shade"],
+        care_provenance={"outdoor_sun_exposure": "sourced"},
+        care_sources=[NCSU])
+    sun = next(x for x in fit.assess(species, make_area(**OUTDOOR_BED))
+               if x.axis == Axis.sun)
+    assert sun.verdict == Verdict.misfits
+    assert sun.authorities == ("NC State Extension",)
+
+
+def test_a_genus_borrowed_value_is_not_credited_to_an_authority():
+    """A genus page does not speak for the species; `borrowed` says so instead."""
+    species = make_species(
+        outdoor_sun_exposure=["full_sun"],
+        care_provenance={"outdoor_sun_exposure": "genus_inferred"},
+        care_sources=[{**NCSU, "inferred": True}])
+    sun = next(x for x in fit.assess(species, make_area(**OUTDOOR_BED))
+               if x.axis == Axis.sun)
+    assert sun.borrowed is True
+    assert sun.authorities == ()
+
+
+def test_an_unknown_is_credited_to_nobody():
+    findings = fit.assess(make_species(), make_area(**OUTDOOR_BED))
+    assert all(f.authorities == () for f in findings)
+
+
+def test_a_value_resolved_before_sources_existed_names_nobody_rather_than_guessing():
+    species = make_species(
+        outdoor_sun_exposure=["full_sun"],
+        care_provenance={"outdoor_sun_exposure": "sourced"}, care_sources=None)
+    sun = next(x for x in fit.assess(species, make_area(**OUTDOOR_BED))
+               if x.axis == Axis.sun)
+    assert sun.verdict == Verdict.fits and sun.authorities == ()
+
+
+def test_size_is_credited_and_labelled_by_the_measurement_its_sentence_states():
+    """A height-only misfit is not "from the genus" because the spread was,
+    the rule the care facts keep: a flag on a field the row did not use does
+    not taint it."""
+    area = make_area(surface=GrowingSurface.windowsill, headroom_in=18)  # no footprint
+    species = make_species(
+        mature_height_in_max=48, mature_spread_in_max=30,
+        care_provenance={"mature_height_in_max": "sourced",
+                         "mature_spread_in_max": "genus_inferred"},
+        care_sources=[RHS])
+    size = next(x for x in fit.assess(species, area) if x.axis == Axis.footprint)
+    assert size.verdict == Verdict.misfits
+    assert size.borrowed is False
+    assert "from the genus" not in size.sentence
+    assert size.authorities == ("Royal Horticultural Society",)
+
+
+def test_size_stays_labelled_when_the_borrowed_measurement_is_the_one_stated():
+    area = make_area(**OUTDOOR_BED, area_sqft=4)          # about 2 ft across
+    species = make_species(
+        mature_spread_in_max=96,
+        care_provenance={"mature_spread_in_max": "genus_inferred"})
+    size = next(x for x in fit.assess(species, area) if x.axis == Axis.footprint)
+    assert size.verdict == Verdict.misfits and size.borrowed is True
+    assert "from the genus" in size.sentence
+
+
+# --- which goal a finding answers ------------------------------------------
+
+def test_each_goal_finding_says_which_goal_it_answers():
+    """Edible and pollinators share an axis; a client saying "nothing here
+    was checked for edibility" has to be able to tell them apart."""
+    area = make_area(**OUTDOOR_BED, goals=["edible", "pollinators", "low_upkeep"])
+    findings = fit.assess(
+        make_species(is_edible=True, attracts_pollinators=None,
+                     water_regime="keep_moist"), area)
+    by_goal = {f.goal: f for f in findings if f.goal}
+    assert by_goal["edible"].verdict == Verdict.fits
+    assert by_goal["pollinators"].verdict == Verdict.unknown
+    assert by_goal["low_upkeep"].axis == Axis.upkeep
+    assert by_goal["low_upkeep"].verdict == Verdict.misfits
+
+
+def test_the_space_axes_answer_no_goal():
+    findings = fit.assess(
+        make_species(is_houseplant=False, outdoor_sun_exposure=["full_sun"]),
+        make_area(**OUTDOOR_BED))
+    assert all(f.goal is None for f in findings)
+
+
+# --- the candidate rule, stated once ---------------------------------------
+
+def test_is_candidate_needs_no_misfit_and_one_confirmed_fit():
+    area = make_area(**OUTDOOR_BED)
+    assert fit.is_candidate(fit.assess(make_species(is_houseplant=False), area))
+    assert not fit.is_candidate(fit.assess(make_species(), area)), \
+        "nothing known is not a recommendation"
+    assert not fit.is_candidate(fit.assess(
+        make_species(is_houseplant=False, outdoor_sun_exposure=["full_shade"]), area))

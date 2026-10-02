@@ -133,6 +133,13 @@ class FitFindingRead(SQLModel):
     verdict: str      # fits | misfits | unknown
     sentence: str
     borrowed: bool = False
+    # Who said so: the authorities whose pages settled a value this finding
+    # rests on, for this species itself. Empty for an unknown and for a value
+    # only the genus answered -- `borrowed` carries that.
+    authorities: list[str] = []
+    # Which of the area's goals this finding answers (edible, low_upkeep,
+    # pollinators), or null. Two goals share the `goal` axis.
+    goal: Optional[str] = None
 
 
 class CandidateRead(SQLModel):

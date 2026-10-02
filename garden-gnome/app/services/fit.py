@@ -56,6 +56,7 @@ from app.models.models import (
     TempExposure,
 )
 from app.services.care_facts import token
+from app.services.toxicity import cited_authority
 
 #: Appended to a finding drawn from a value the resolver borrowed from the
 #: genus. Mirrors care_facts.GENUS_LABEL in intent: a reader must never have to
@@ -81,11 +82,23 @@ class Axis(str, Enum):
 
 @dataclass(frozen=True)
 class Finding:
-    """One axis's verdict, and the sentence a person reads for it."""
+    """One axis's verdict, the sentence a person reads for it, and who said so."""
     axis: Axis
     verdict: Verdict
     sentence: str
     borrowed: bool = False
+    #: The authorities whose pages settled, for this species itself, a value
+    #: the finding rests on. It is what lets a misfit read as "NC State
+    #: Extension records it for part shade" rather than as the app's opinion.
+    #: Empty where nothing about this species was cited -- an unknown, or a
+    #: value only the genus answered, since a genus page does not speak for
+    #: the species (ADR 0002, `cited_authority`); `borrowed` says that part.
+    authorities: tuple[str, ...] = ()
+    #: Which of the gardener's goals this finding answers, where it answers
+    #: one. Edible and pollinators share the `goal` axis, and a client that
+    #: says "nothing here was checked for edibility" has to know which is
+    #: which; low upkeep has an axis of its own and is tagged all the same.
+    goal: Optional[str] = None
 
 
 def _borrowed(species: Species, *fields: str) -> bool:
@@ -93,15 +106,27 @@ def _borrowed(species: Species, *fields: str) -> bool:
     return any(provenance.get(f) == "genus_inferred" for f in fields)
 
 
+def _authorities(species: Species, *fields: str) -> tuple[str, ...]:
+    names: list[str] = []
+    for field in fields:
+        name = cited_authority(species.care_provenance, species.care_sources, field)
+        if name and name not in names:
+            names.append(name)
+    return tuple(names)
+
+
 def _finding(axis: Axis, verdict: Verdict, sentence: str,
-             species: Species, *fields: str) -> Finding:
+             species: Species, *fields: str, goal: Optional[str] = None) -> Finding:
+    """A finding resting on `fields` -- only the ones its sentence actually
+    used. A borrowed field the sentence never mentions must not label it,
+    the same rule the care facts keep (mobile `careFactRows`)."""
     borrowed = _borrowed(species, *fields)
     return Finding(axis, verdict, sentence + (BORROWED_LABEL if borrowed else ""),
-                   borrowed)
+                   borrowed, _authorities(species, *fields), goal)
 
 
-def _unknown(axis: Axis, sentence: str) -> Finding:
-    return Finding(axis, Verdict.unknown, sentence, False)
+def _unknown(axis: Axis, sentence: str, goal: Optional[str] = None) -> Finding:
+    return Finding(axis, Verdict.unknown, sentence, False, (), goal)
 
 
 # --- indoor / outdoor ------------------------------------------------------
@@ -289,35 +314,42 @@ def _footprint(species: Species, area: GrowingArea) -> Finding:
             return _unknown(axis, "A climber, but no source says how far it climbs.")
         return _unknown(axis, "No source gives this species a mature size yet.")
 
-    problems = []
-    fits = []
+    # Each clause carries the field it was read from, so the finding is
+    # labelled and credited by the measurements its sentence actually states:
+    # a height-only misfit is not "from the genus" because the spread was.
+    problems: list[tuple[str, str]] = []
+    fits: list[tuple[str, str]] = []
     rises = "climbs to" if climber else "reaches"
     if height is not None and area.headroom_in is not None:
         if height > area.headroom_in:
-            problems.append(
-                f"{rises} {_ft(height)} and there is {_ft(area.headroom_in)} of headroom")
+            problems.append((
+                f"{rises} {_ft(height)} and there is {_ft(area.headroom_in)} of headroom",
+                "mature_height_in_max"))
         else:
-            fits.append(f"{rises} {_ft(height)}, under the {_ft(area.headroom_in)} here")
+            fits.append((f"{rises} {_ft(height)}, under the {_ft(area.headroom_in)} here",
+                         "mature_height_in_max"))
     if spread is not None and area.area_sqft is not None:
         across = _inches_across(area.area_sqft)
         if spread > across:
-            problems.append(
-                f"spreads to {_ft(spread)} across a space about {_ft(across)} wide")
+            problems.append((
+                f"spreads to {_ft(spread)} across a space about {_ft(across)} wide",
+                "mature_spread_in_max"))
         else:
-            fits.append(f"spreads to {_ft(spread)}, inside the space")
+            fits.append((f"spreads to {_ft(spread)}, inside the space",
+                         "mature_spread_in_max"))
 
-    fields = ("mature_height_in_max", "mature_spread_in_max")
-    if climber:
-        fields += ("climbs",)
+    climbing = ("climbs",) if climber else ()
     if problems:
         tail = (" It would need a support and hard cutting back every year to stay."
                 if climber else "")
         return _finding(axis, Verdict.misfits,
-                        "Outgrows this spot: " + "; ".join(problems) + "." + tail,
-                        species, *fields)
+                        "Outgrows this spot: " + "; ".join(t for t, _ in problems)
+                        + "." + tail,
+                        species, *(f for _, f in problems), *climbing)
     if fits:
-        return _finding(axis, Verdict.fits, "Fits the space: " + "; ".join(fits) + ".",
-                        species, *fields)
+        return _finding(axis, Verdict.fits,
+                        "Fits the space: " + "; ".join(t for t, _ in fits) + ".",
+                        species, *(f for _, f in fits), *climbing)
     return _unknown(axis, "This area hasn't been measured, so size isn't checked.")
 
 
@@ -344,20 +376,22 @@ _REGIME_WORDS = {
 
 def _upkeep(species: Species, area: GrowingArea) -> Optional[Finding]:
     axis = Axis.upkeep
-    if GrowingGoal.low_upkeep.value not in _goals(area):
+    goal = GrowingGoal.low_upkeep.value
+    if goal not in _goals(area):
         return None
     regime = species.water_regime
     if regime is None:
-        return _unknown(axis, "No source gives this species a watering regime.")
+        return _unknown(axis, "No source gives this species a watering regime.", goal)
     regime = token(regime)
     words = _REGIME_WORDS.get(regime, regime.replace("_", " "))
     if regime in _TOLERANT:
         return _finding(axis, Verdict.fits, f"Low upkeep: {words}.",
-                        species, "water_regime")
+                        species, "water_regime", goal=goal)
     if regime in _DEMANDING:
         return _finding(axis, Verdict.misfits,
-                        f"Needs regular attention: {words}.", species, "water_regime")
-    return _unknown(axis, "No source gives this species a watering regime.")
+                        f"Needs regular attention: {words}.", species, "water_regime",
+                        goal=goal)
+    return _unknown(axis, "No source gives this species a watering regime.", goal)
 
 
 # --- goals -----------------------------------------------------------------
@@ -375,30 +409,34 @@ def _goal_findings(species: Species, area: GrowingArea) -> list[Finding]:
     out: list[Finding] = []
     goals = _goals(area)
 
-    if GrowingGoal.edible.value in goals:
+    edible = GrowingGoal.edible.value
+    if edible in goals:
         if species.is_edible is None:
-            out.append(_unknown(Axis.goal, "No source says whether this is grown to eat."))
+            out.append(_unknown(
+                Axis.goal, "No source says whether this is grown to eat.", edible))
         elif species.is_edible:
             out.append(_finding(Axis.goal, Verdict.fits, "Grown to eat.",
-                                species, "is_edible"))
+                                species, "is_edible", goal=edible))
         else:
             out.append(_finding(Axis.goal, Verdict.misfits,
                                 "Not grown to eat, and you asked for edibles.",
-                                species, "is_edible"))
+                                species, "is_edible", goal=edible))
 
-    if GrowingGoal.pollinators.value in goals:
+    pollinators = GrowingGoal.pollinators.value
+    if pollinators in goals:
         if species.attracts_pollinators is None:
             out.append(_unknown(
-                Axis.goal, "No source says whether this feeds pollinators."))
+                Axis.goal, "No source says whether this feeds pollinators.",
+                pollinators))
         elif species.attracts_pollinators:
             out.append(_finding(Axis.goal, Verdict.fits,
                                 "Recorded as feeding pollinators.",
-                                species, "attracts_pollinators"))
+                                species, "attracts_pollinators", goal=pollinators))
         else:
             out.append(_finding(
                 Axis.goal, Verdict.misfits,
                 "Not recorded as feeding pollinators, and you asked for those.",
-                species, "attracts_pollinators"))
+                species, "attracts_pollinators", goal=pollinators))
 
     return out
 
@@ -440,6 +478,14 @@ def score(findings: Iterable[Finding]) -> int:
     return sum(1 for f in findings if f.verdict == Verdict.fits)
 
 
+def is_candidate(findings: list[Finding]) -> bool:
+    """Zero misfits AND at least one confirmed fit -- CONTEXT.md's Candidate.
+
+    The second half is what keeps an unexamined row out: nothing against it
+    because nothing is known about it is not a recommendation."""
+    return not misfits(findings) and score(findings) > 0
+
+
 @dataclass(frozen=True)
 class Candidate:
     species: Species
@@ -461,10 +507,7 @@ def candidates(species_list: Iterable[Species], area: GrowingArea) -> list[Candi
     scored = []
     for species in species_list:
         findings = assess(species, area)
-        if any(f.verdict == Verdict.misfits for f in findings):
-            continue
-        if score(findings) == 0:
-            # Nothing is known to fit. Not a candidate -- an unexamined row.
+        if not is_candidate(findings):
             continue
         scored.append(Candidate(species=species, findings=findings))
     scored.sort(key=lambda c: (-c.score, c.species.common_name or ""))

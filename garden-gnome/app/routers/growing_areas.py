@@ -151,7 +151,8 @@ def delete_growing_area(
 
 def _as_findings(findings) -> list[FitFindingRead]:
     return [FitFindingRead(axis=f.axis.value, verdict=f.verdict.value,
-                           sentence=f.sentence, borrowed=f.borrowed)
+                           sentence=f.sentence, borrowed=f.borrowed,
+                           authorities=list(f.authorities), goal=f.goal)
             for f in findings]
 
 
