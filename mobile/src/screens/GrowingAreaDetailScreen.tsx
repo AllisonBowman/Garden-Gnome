@@ -323,7 +323,7 @@ export default function GrowingAreaDetailScreen() {
             // looked like a broken feature rather than an unfinished setup.
             <View>
               <Text style={styles.unavailable}>
-                This growingArea has no place yet, so there’s no forecast to
+                This growing area has no place yet, so there’s no forecast to
                 show. Set where it is and the weather follows.
               </Text>
               <AddressPicker onChange={setPlace} />

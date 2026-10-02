@@ -43,7 +43,7 @@ def _owned_plant(plant_id: int, user: User, session: Session) -> Plant:
 def _owned_growing_area(env_id: int, user: User, session: Session) -> GrowingArea:
     env = session.get(GrowingArea, env_id)
     if env is None or env.user_id != user.id:
-        raise HTTPException(status_code=404, detail="GrowingArea not found")
+        raise HTTPException(status_code=404, detail="Growing area not found")
     return env
 
 
@@ -216,7 +216,7 @@ def delete_plant(
     session.commit()
 
 
-@router.post("/{plant_id}/transfer")
+@router.post("/{plant_id}/transfer", response_model=PlantRead)
 def transfer_plant(
     plant_id: int,
     payload: PlantTransferRequest,

@@ -8,3 +8,9 @@ build_exe.ps1
 GardenGnome.exe
 dist/
 build/
+# A checkout deploy must not ship the 270 MB page cache or the tests; the recursive patterns keep bytecode out of the image.
+scripts/
+tests/
+.pytest_cache/
+**/__pycache__/
+**/*.pyc

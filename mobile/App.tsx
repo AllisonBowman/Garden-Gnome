@@ -109,11 +109,11 @@ function CensusNavigator() {
 function GrowingAreasNavigator() {
   return (
     <GrowingAreasStack.Navigator screenOptions={useHeaderOpts()}>
-      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreasScreen} options={{ title: 'GrowingAreas' }} />
+      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreasScreen} options={{ title: 'Growing areas' }} />
       <GrowingAreasStack.Screen
         name="GrowingAreaDetail"
         component={GrowingAreaDetailScreen}
-        options={({ route }) => ({ title: route.params.name ?? 'GrowingArea' })}
+        options={({ route }) => ({ title: route.params.name ?? 'Growing area' })}
       />
     </GrowingAreasStack.Navigator>
   );
@@ -228,6 +228,9 @@ function AuthGate() {
                 component={GrowingAreasNavigator}
                 options={{
                   headerShown: false,
+                  // The tab label falls back to the route name, which is
+                  // an identifier, not a word anyone should read.
+                  title: 'Growing areas',
                   tabBarIcon: ({ focused }) => <TabIcon emoji="🌍" focused={focused} />,
                 }}
               />

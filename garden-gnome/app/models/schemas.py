@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Optional
 
-from pydantic import field_validator
+from pydantic import AliasChoices, computed_field, field_validator
 from sqlmodel import Field, SQLModel
 
 from app.data.claims.recompute import SERVER_ONLY_FIELDS
@@ -158,6 +158,62 @@ class PlantMisfitRead(SQLModel):
     misfits: list[FitFindingRead]
 
 
+# --- Pre-rename field names, for the TestFlight 1.1.2 client ---
+#
+# PR #20 renamed Environment to GrowingArea, and the build testers have
+# installed predates it. That build sends `environment_id` when it adds a
+# plant and `to_environment_id` when it moves one, and it reads
+# `environment_id` off every plant to sort care lists, weather nudges and
+# reminders into areas. Against the new names alone, a plant added from it
+# lands in the oldest area instead of the one picked, every move is a 422,
+# every per-area care list and weather nudge comes up empty, and the census
+# screen, which counts areas under the old keys, throws.
+#
+# So for one release the old names travel with the new ones. A request may
+# use either, and the new name wins when a client sends both; a response
+# carries both, with the same value. The new name stays canonical: it is the
+# only one the request schemas document, and the old one is marked
+# deprecated wherever a response carries it.
+#
+# This is the field half of the deprecation whose route half is
+# `legacy_router` in app/routers/growing_areas.py, and the two go together.
+# Once the next build is the floor, delete legacy_router and its mount, then
+# this section. Every schema and route still using it then fails at import,
+# which is the list of what else comes out.
+
+def _or_pre_rename(name: str, old: str) -> AliasChoices:
+    """Let a request field arrive under its pre-rename name too. The current
+    name is listed first, so it is the one the schema documents and the one
+    that wins when a client sends both."""
+    return AliasChoices(name, old)
+
+
+def _pre_rename_copy(name: str) -> dict:
+    """`computed_field` arguments for a response field that repeats `name`
+    under its old name. Marked deprecated in the schema through
+    json_schema_extra rather than `deprecated=True`, which would also raise a
+    DeprecationWarning on every serialization -- that is, on every response."""
+    return {
+        "description": (
+            f"Deprecated: the pre-rename name of `{name}`, always the same "
+            "value. Kept for the TestFlight 1.1.2 client, and removed together "
+            "with the /environments route alias."
+        ),
+        "json_schema_extra": {"deprecated": True},
+    }
+
+
+def with_pre_rename_census_keys(summary: dict) -> dict:
+    """The census summary with its pre-rename keys alongside the new ones.
+    It is a plain dict with no schema to carry them, so its route calls this."""
+    return {
+        **summary,
+        "total_environments": summary["total_growing_areas"],
+        "environments_by_type": summary["growing_areas_by_type"],
+        "plants_by_environment_type": summary["plants_by_growing_area_type"],
+    }
+
+
 # --- Plant ---
 
 class PlantCreate(SQLModel):
@@ -168,7 +224,10 @@ class PlantCreate(SQLModel):
     nickname: str = ""
     species_id: int
     quantity: int = Field(default=1, ge=1)
-    growing_area_id: Optional[int] = None  # defaults to the installation's primary growing_area
+    # Defaults to the installation's primary growing_area.
+    growing_area_id: Optional[int] = Field(
+        default=None,
+        validation_alias=_or_pre_rename("growing_area_id", "environment_id"))
     location: str = ""
     maturity_stage: MaturityStage = MaturityStage.juvenile
     acquired_on: Optional[date] = None
@@ -293,6 +352,11 @@ class PlantRead(SQLModel):
     # Embedded so clients don't need a second request per plant
     species: Optional[SpeciesRead] = None
 
+    @computed_field(**_pre_rename_copy("growing_area_id"))
+    @property
+    def environment_id(self) -> Optional[int]:
+        return self.growing_area_id
+
 
 class PlantBulkCreate(SQLModel):
     """Create many plants in one transaction.
@@ -316,7 +380,9 @@ class PlantSplitRequest(SQLModel):
     previously counted under one, so the new row records where it came from and
     the original's count drops by the same amount — the total is conserved."""
     quantity: int = Field(ge=1)
-    to_growing_area_id: Optional[int] = None
+    to_growing_area_id: Optional[int] = Field(
+        default=None,
+        validation_alias=_or_pre_rename("to_growing_area_id", "to_environment_id"))
     location: Optional[str] = None
     notes: str = ""
 
@@ -326,7 +392,8 @@ class PlantTransferRequest(SQLModel):
 
     The plant's plant_uuid is preserved so census aggregators treat it as the
     same physical plant, not a new one."""
-    to_growing_area_id: int
+    to_growing_area_id: int = Field(
+        validation_alias=_or_pre_rename("to_growing_area_id", "to_environment_id"))
     transfer_notes: str = ""
 
 
@@ -357,6 +424,11 @@ class StewardshipRecordRead(SQLModel):
     started_at: datetime
     ended_at: Optional[datetime]
     transfer_notes: str
+
+    @computed_field(**_pre_rename_copy("growing_area_id"))
+    @property
+    def environment_id(self) -> int:
+        return self.growing_area_id
 
 
 # --- Species write schemas ---
