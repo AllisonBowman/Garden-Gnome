@@ -14,7 +14,7 @@ from app.deps import get_current_user
 from app.models.models import GrowingArea, Plant, Species, StewardshipRecord, User
 from app.models.schemas import (
     GrowingAreaCreate, GrowingAreaPatch, GrowingAreaRead,
-    FitFindingRead, CandidateRead, PlantMisfitRead,
+    FitFindingRead, CandidateRead, PlantMisfitRead, SpeciesFitRead,
 )
 from app.services import fit
 from app.services.weather import fetch_weather
@@ -223,6 +223,37 @@ def growing_area_misfits(
     # Worst first: the plant with the most wrong with it is the one to look at.
     out.sort(key=lambda m: (-len(m.misfits), m.nickname or ""))
     return out
+
+
+@_routes.get("/{area_id}/fit/{species_id}", response_model=SpeciesFitRead)
+def growing_area_species_fit(
+    area_id: int,
+    species_id: int,
+    user: User = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    """One species against this area, every axis: what Add Plant asks
+    before the plant is saved.
+
+    Neither endpoint above can answer it. The misfit list speaks only for
+    plants already standing here, and the candidate list only for species
+    that cleared the area -- so "what would this spot have against the plant
+    I'm about to put in it" had no answer until after it was planted, which
+    is when it is worth least. Unknowns come back as unknowns: the client
+    decides what to show, never what the verdict is."""
+    area = _owned(area_id, user, session)
+    species = session.get(Species, species_id)
+    if species is None:
+        raise HTTPException(status_code=404, detail="Species not found")
+    findings = fit.assess(species, area)
+    return SpeciesFitRead(
+        species_id=species.id,
+        common_name=species.common_name,
+        scientific_name=species.scientific_name,
+        score=fit.score(findings),
+        candidate=fit.is_candidate(findings),
+        findings=_as_findings(findings),
+    )
 
 
 router = APIRouter(prefix="/growing-areas", tags=["growing areas"])

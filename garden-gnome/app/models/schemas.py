@@ -165,6 +165,22 @@ class PlantMisfitRead(SQLModel):
     misfits: list[FitFindingRead]
 
 
+class SpeciesFitRead(SQLModel):
+    """One species against one area, every axis -- what Add Plant asks
+    before the plant is saved.
+
+    `findings` holds fits, misfits AND unknowns, in reading order, so the
+    client can show what is against it without being able to mistake
+    silence for a pass. `candidate` is the server's own Candidate rule, so
+    no client re-derives it."""
+    species_id: int
+    common_name: str
+    scientific_name: str
+    score: int
+    candidate: bool
+    findings: list[FitFindingRead]
+
+
 # --- Pre-rename field names, for the TestFlight 1.1.2 client ---
 #
 # PR #20 renamed Environment to GrowingArea, and the build testers have

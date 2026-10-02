@@ -50,6 +50,23 @@ def garden(migrated_db_url):
             "mystery": dict(
                 common_name="Unresearched Thing",
                 scientific_name="Ignotus ignotus"),
+            # Cited for its sun range, borrowed from the genus for its soil:
+            # the two ways a finding says where it came from. Never planted,
+            # and a sun misfit in the bed, so it is on no list by default.
+            "attributed": dict(
+                common_name="Attributed Fern", scientific_name="Umbra testae",
+                outdoor_sun_exposure=["part_shade", "full_shade"],
+                soil_base="garden_bed",
+                care_provenance={"outdoor_sun_exposure": "sourced",
+                                 "soil_base": "genus_inferred"},
+                care_sources=[
+                    {"authority": "NC State Extension",
+                     "url": "https://plants.ces.ncsu.edu/umbra",
+                     "fields": ["outdoor_sun_exposure"], "inferred": False},
+                    {"authority": "Royal Horticultural Society",
+                     "url": "https://www.rhs.org.uk/umbra",
+                     "fields": ["soil_base"], "inferred": True},
+                ]),
         }.items():
             row = s.exec(select(Species).where(
                 Species.scientific_name == kw["scientific_name"])).first()
@@ -162,19 +179,87 @@ def test_a_plant_that_suits_the_space_is_absent_from_the_list(garden):
     assert "Echie" not in [m["nickname"] for m in body]
 
 
-# --- scoping ---------------------------------------------------------------
+# --- one species, before it is planted ------------------------------------
+# What Add Plant asks. The misfit list only speaks for plants already in the
+# area and the candidate list only for species that cleared it, so neither
+# could say what a spot has against the plant someone is about to put in it.
 
-@pytest.mark.parametrize("suffix", ["candidates", "misfits"])
-def test_another_accounts_area_is_a_404_on_both(garden, suffix):
+def _fit(garden, key):
+    return garden.client.get(
+        f"{BASE}/{garden.bed_id}/fit/{garden.species[key]}", headers=garden.headers)
+
+
+def test_the_misfit_is_known_before_the_plant_goes_in(garden):
+    resp = _fit(garden, "hosta")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["common_name"] == "Hosta"
+    assert body["candidate"] is False
+    sun = next(f for f in body["findings"] if f["axis"] == "sun")
+    assert sun["verdict"] == "misfits"
+    assert "6+ hours of direct sun" in sun["sentence"]
+
+
+def test_every_axis_comes_back_unknowns_included(garden):
+    """The client decides what to show, never what the verdict is -- so it
+    gets the unknowns too, labelled as unknowns."""
+    body = _fit(garden, "mystery").json()
+    assert body["candidate"] is False and body["score"] == 0
+    assert body["findings"], "every axis should still report"
+    assert {f["verdict"] for f in body["findings"]} == {"unknown"}
+    axes = [f["axis"] for f in body["findings"]]
+    assert axes[:4] == ["indoor_outdoor", "sun", "soil", "footprint"]
+
+
+def test_the_candidate_flag_agrees_with_the_candidate_list(garden):
+    listed = {c["species_id"] for c in garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000",
+        headers=garden.headers).json()}
+    for key in ("coneflower", "hosta", "mystery", "attributed"):
+        body = _fit(garden, key).json()
+        assert body["candidate"] == (garden.species[key] in listed), key
+
+
+def test_a_finding_says_whose_word_it_is_and_what_was_borrowed(garden):
+    body = _fit(garden, "attributed").json()
+    sun = next(f for f in body["findings"] if f["axis"] == "sun")
+    assert sun["verdict"] == "misfits"
+    assert sun["authorities"] == ["NC State Extension"]
+    assert sun["borrowed"] is False
+    soil = next(f for f in body["findings"] if f["axis"] == "soil")
+    assert soil["borrowed"] is True
+    assert soil["authorities"] == [], "a genus page does not speak for the species"
+    assert "from the genus" in soil["sentence"]
+
+
+def test_a_goal_finding_says_which_goal_it_answers(garden):
+    body = _fit(garden, "coneflower").json()
+    goal = next(f for f in body["findings"] if f["axis"] == "goal")
+    assert goal["goal"] == "pollinators"
+    assert all(f["goal"] is None for f in body["findings"] if f["axis"] != "goal")
+
+
+def test_an_unknown_species_is_a_404(garden):
     assert garden.client.get(
-        f"{BASE}/{garden.their_bed_id}/{suffix}", headers=garden.headers
+        f"{BASE}/{garden.bed_id}/fit/987654321", headers=garden.headers
     ).status_code == 404
 
 
-@pytest.mark.parametrize("suffix", ["candidates", "misfits"])
-def test_both_require_a_token(garden, suffix):
-    assert garden.client.get(
-        f"{BASE}/{garden.bed_id}/{suffix}").status_code == 401
+# --- scoping ---------------------------------------------------------------
+
+def _paths(garden, area_id):
+    return [f"{BASE}/{area_id}/candidates", f"{BASE}/{area_id}/misfits",
+            f"{BASE}/{area_id}/fit/{garden.species['hosta']}"]
+
+
+def test_another_accounts_area_is_a_404_on_every_fit_endpoint(garden):
+    for path in _paths(garden, garden.their_bed_id):
+        assert garden.client.get(path, headers=garden.headers).status_code == 404, path
+
+
+def test_every_fit_endpoint_requires_a_token(garden):
+    for path in _paths(garden, garden.bed_id):
+        assert garden.client.get(path).status_code == 401, path
 
 
 # --- the plants filter the misfit endpoint needed --------------------------
