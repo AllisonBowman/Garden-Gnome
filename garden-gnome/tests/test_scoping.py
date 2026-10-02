@@ -155,6 +155,8 @@ def test_create_plant_into_other_users_env_404(iso):
         headers=iso.a["headers"],
     )
     assert r.status_code == 404
+    # The app shows `detail` to the person verbatim, so it has to read as words.
+    assert r.json()["detail"] == "Growing area not found"
 
 
 # --- Transfers ----------------------------------------------------------------

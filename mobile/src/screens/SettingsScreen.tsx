@@ -79,7 +79,7 @@ export default function SettingsScreen() {
     const sure = await confirmDialog(
       'Delete your account?',
       'This permanently deletes your account, plants, care history, and '
-      + 'growingAreas from PlantAdvocate. This cannot be undone.',
+      + 'growing areas from PlantAdvocate. This cannot be undone.',
       'Delete forever',
     );
     if (!sure) return;

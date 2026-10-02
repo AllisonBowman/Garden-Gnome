@@ -269,8 +269,8 @@ export interface StewardshipRecord {
 
 export interface CensusSummary {
   total_plants: number;
-  total_growingAreas: number;
-  growingAreas_by_type: Record<string, number>;
+  total_growing_areas: number;
+  growing_areas_by_type: Record<string, number>;
   plants_by_growing_area_type: Record<string, number>;
   species_distribution: Array<{ species_id: number; common_name: string; count: number }>;
 }
