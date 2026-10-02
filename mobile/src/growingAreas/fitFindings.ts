@@ -40,6 +40,22 @@ export function findingHeading(finding: FitFinding): string {
     : findingLabel(finding);
 }
 
+/** "a", "a and b", "a, b and c". */
+export function joinAnd(items: string[]): string {
+  if (items.length <= 1) return items.join('');
+  return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
+}
+
+/** What a candidate was confirmed on, as one line under its name in the
+ *  Almanac: "Confirmed here: sun, soil and size." Only `fits` count — an
+ *  unknown is never a reason — so a list with none of them says nothing. */
+export function confirmedLine(findings: FitFinding[]): string | null {
+  const labels = [...new Set(findings
+    .filter((f) => f.verdict === 'fits')
+    .map((f) => findingLabel(f).toLowerCase()))];
+  return labels.length > 0 ? `Confirmed here: ${joinAnd(labels)}.` : null;
+}
+
 /** Shown in place of a fit answer the app could not fetch. A failed request
  *  has checked nothing, so it must never fall through to an empty list's
  *  all-clear wording ("nothing here contradicts the space"). */

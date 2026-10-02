@@ -122,6 +122,13 @@ export interface PlantMisfit {
   misfits: FitFinding[];
 }
 
+/** A limit no catalog this app holds will reach, for a caller that needs
+ *  every candidate rather than the best few. The endpoint ranks and then
+ *  truncates, so a filter built on a truncated list silently drops whatever
+ *  ranked past the cut — and in a "fits this area" filter, a species that
+ *  is missing reads as one that does not fit. */
+export const EVERY_CANDIDATE = 100_000;
+
 export async function fetchCandidates(
   id: number, limit = 20,
 ): Promise<Candidate[]> {

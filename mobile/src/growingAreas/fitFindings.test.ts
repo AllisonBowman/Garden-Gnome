@@ -1,4 +1,6 @@
-import { AXIS_LABEL, CHECK_FAILED, findingHeading, findingLabel } from './fitFindings';
+import {
+  AXIS_LABEL, CHECK_FAILED, confirmedLine, findingHeading, findingLabel, joinAnd,
+} from './fitFindings';
 import type { FitAxis, FitFinding } from '../api/growingAreas';
 
 const finding = (over: Partial<FitFinding> = {}): FitFinding => ({
@@ -51,5 +53,33 @@ describe('a failed check', () => {
   it('is never worded as an all-clear', () => {
     expect(CHECK_FAILED).toMatch(/isn’t an all-clear/);
     expect(CHECK_FAILED).not.toMatch(/nothing here contradicts/i);
+  });
+});
+
+describe('the confirmed line', () => {
+  it('lists the confirmed axes once each, in the order the server gave them', () => {
+    expect(confirmedLine([
+      finding({ axis: 'indoor_outdoor', verdict: 'fits' }),
+      finding({ axis: 'sun', verdict: 'fits' }),
+      finding({ axis: 'goal', verdict: 'fits', goal: 'edible' }),
+      finding({ axis: 'goal', verdict: 'fits', goal: 'pollinators' }),
+    ])).toBe('Confirmed here: indoors or out, sun, something to eat and feeds pollinators.');
+  });
+
+  it('never counts an unknown or a misfit as a reason', () => {
+    expect(confirmedLine([
+      finding({ axis: 'sun', verdict: 'unknown' }),
+      finding({ axis: 'soil', verdict: 'misfits' }),
+      finding({ axis: 'footprint', verdict: 'fits' }),
+    ])).toBe('Confirmed here: size.');
+    expect(confirmedLine([finding({ verdict: 'unknown' })])).toBeNull();
+    expect(confirmedLine([])).toBeNull();
+  });
+
+  it('joins lists the way a sentence does', () => {
+    expect(joinAnd([])).toBe('');
+    expect(joinAnd(['sun'])).toBe('sun');
+    expect(joinAnd(['sun', 'soil'])).toBe('sun and soil');
+    expect(joinAnd(['sun', 'soil', 'size'])).toBe('sun, soil and size');
   });
 });
