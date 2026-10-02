@@ -54,8 +54,14 @@ def list_growing_areas(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
+    # Oldest first, by id: the order a picker shows, and the first entry is
+    # the area a plant saved without one lands in (`plants._resolve_growing_
+    # area_id`). Without an ORDER BY the database may hand an edited row back
+    # last, and "the first one" stops meaning anything.
     areas = session.exec(
-        select(GrowingArea).where(GrowingArea.user_id == user.id)
+        select(GrowingArea)
+        .where(GrowingArea.user_id == user.id)
+        .order_by(GrowingArea.id.asc())
     ).all()
     return [_with_count(a, session) for a in areas]
 
