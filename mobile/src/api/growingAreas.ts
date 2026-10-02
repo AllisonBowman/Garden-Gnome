@@ -89,6 +89,10 @@ export interface FitFinding {
   verdict: 'fits' | 'misfits' | 'unknown';
   sentence: string;
   borrowed: boolean;
+  /** Which of the area's goals this finding answers. Edible and pollinators
+   *  share the `goal` axis, so this is the only way to tell them apart.
+   *  Absent from a server that predates it. */
+  goal?: GrowingGoal | null;
 }
 
 /** A species put forward for an area. `fits` holds only confirmed axes —

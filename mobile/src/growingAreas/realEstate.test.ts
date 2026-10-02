@@ -1,8 +1,10 @@
 import {
   SURFACES, SURFACE_LABEL, IS_BED, GOALS,
   climateForSurface, typeForSurface, dimensionPrompts, uncheckedNotes,
+  goalPhrase, goalsAnswered,
 } from './realEstate';
-import { GrowingSurface } from '../types';
+import { GrowingGoal, GrowingSurface } from '../types';
+import type { FitFinding } from '../api/growingAreas';
 
 describe('surfaces', () => {
   it('labels and classifies every surface — a missing one renders blank', () => {
@@ -68,11 +70,18 @@ describe('goals', () => {
 });
 
 describe('unchecked notes', () => {
+  // An axis name, or `axis:goal` for a finding the server tagged with the
+  // goal it answers ("goal:edible", "upkeep:low_upkeep").
   const candidate = (axes: string[]) => ({
     species_id: 1, common_name: 'X', scientific_name: 'X x', score: axes.length,
-    fits: axes.map((axis) => ({
-      axis: axis as any, verdict: 'fits' as const, sentence: 's', borrowed: false,
-    })),
+    fits: axes.map((spec) => {
+      const [axis, goal] = spec.split(':');
+      return {
+        axis: axis as FitFinding['axis'], verdict: 'fits' as const,
+        sentence: 's', borrowed: false,
+        ...(goal ? { goal: goal as GrowingGoal } : {}),
+      };
+    }),
   });
 
   it('says indoor light is not checked, because it cannot be', () => {
@@ -116,5 +125,76 @@ describe('unchecked notes', () => {
       { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: 32, headroom_in: 84 },
       [candidate(['sun', 'goal', 'footprint'])]);
     expect(notes).toEqual([]);
+  });
+
+  it('counts low upkeep as answered when the list was narrowed by it', () => {
+    // Low upkeep is answered on its own axis. Reading only the `goal` axis
+    // reported it unchecked on every list, including the ones it had shaped.
+    const notes = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: ['low_upkeep'], area_sqft: null, headroom_in: null },
+      [candidate(['sun', 'upkeep:low_upkeep'])]);
+    expect(notes).toEqual([]);
+  });
+
+  it('names the goal nothing answered, not the one something did', () => {
+    const notes = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: ['edible', 'pollinators'], area_sqft: null, headroom_in: null },
+      [candidate(['sun', 'goal:pollinators'])]);
+    const text = notes.join(' ');
+    expect(text).toMatch(/something to eat/);
+    expect(text).not.toMatch(/feeds pollinators/);
+  });
+
+  it('reads an untagged goal fit from an older server the way it always did', () => {
+    const notes = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: ['edible', 'pollinators'], area_sqft: null, headroom_in: null },
+      [candidate(['sun', 'goal'])]);
+    expect(notes).toEqual([]);
+  });
+
+  it('speaks about the list, never about the whole catalog', () => {
+    // The catalog keeps being researched; "no species carries a mature size
+    // yet" stayed on screen after the size backfill made it false.
+    const notes = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: 32, headroom_in: 84 },
+      [candidate(['sun'])]);
+    expect(notes).toHaveLength(2);
+    for (const note of notes) {
+      expect(note).not.toMatch(/in the catalog/);
+      expect(note).toMatch(/on this list/);
+    }
+  });
+
+  it('says only what is true of the space when the list is empty', () => {
+    expect(uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: 32, headroom_in: 84 },
+      [])).toEqual([]);
+    const indoor = uncheckedNotes(
+      { temp_exposure: 'indoor', goals: ['edible'], area_sqft: 32, headroom_in: 84 },
+      []);
+    expect(indoor).toHaveLength(1);
+    expect(indoor[0]).toMatch(/Indoor light isn’t checked/);
+  });
+});
+
+describe('goals a finding answers', () => {
+  const finding = (axis: FitFinding['axis'], goal?: GrowingGoal | null): FitFinding => ({
+    axis, verdict: 'fits', sentence: 's', borrowed: false, goal,
+  });
+
+  it('takes the server’s word when it gives one', () => {
+    expect(goalsAnswered(finding('goal', 'edible'))).toEqual(['edible']);
+    expect(goalsAnswered(finding('upkeep', 'low_upkeep'))).toEqual(['low_upkeep']);
+  });
+
+  it('knows low upkeep by its axis, and the space axes answer none', () => {
+    expect(goalsAnswered(finding('upkeep'))).toEqual(['low_upkeep']);
+    expect(goalsAnswered(finding('sun'))).toEqual([]);
+    expect(goalsAnswered(finding('footprint', null))).toEqual([]);
+  });
+
+  it('phrases every goal for the middle of a sentence', () => {
+    expect(GOALS.map((g) => goalPhrase(g.value))).toEqual(
+      ['something to eat', 'low upkeep', 'feeds pollinators']);
   });
 });

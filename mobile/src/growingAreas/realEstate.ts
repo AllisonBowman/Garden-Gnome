@@ -6,7 +6,7 @@ import {
   GrowingSurface, GrowingGoal, GrowingAreaType, GrowingArea,
   Shelter, TempExposure, SunExposure,
 } from '../types';
-import type { Candidate } from '../api/growingAreas';
+import type { Candidate, FitFinding } from '../api/growingAreas';
 
 export const SURFACES: GrowingSurface[] = [
   'in_ground_bed', 'raised_bed', 'containers', 'windowsill',
@@ -127,26 +127,53 @@ export function dimensionPrompts(surface: GrowingSurface | null): DimensionPromp
 
 // --- what could not be checked -------------------------------------------
 
-/** The axes this area turns on that the catalog cannot answer, in plain words.
+/** A goal as it reads mid-sentence: "something to eat", "low upkeep". */
+export function goalPhrase(goal: GrowingGoal): string {
+  const entry = GOALS.find((g) => g.value === goal);
+  return entry
+    ? entry.label.replace(/^\S+\s/, '').toLowerCase()
+    : goal.replace(/_/g, ' ');
+}
+
+/** Which of the area's goals a finding answers.
+ *
+ * The server says so in `goal`. Low upkeep is also recognisable by its axis;
+ * edible and pollinators share the `goal` axis and are not — so a finding
+ * from a server older than the `goal` field is taken to answer either, the
+ * reading these notes gave before the field existed. */
+export function goalsAnswered(finding: FitFinding): GrowingGoal[] {
+  if (finding.goal) return [finding.goal];
+  if (finding.axis === 'upkeep') return ['low_upkeep'];
+  if (finding.axis === 'goal') return ['edible', 'pollinators'];
+  return [];
+}
+
+/** The axes this area turns on that the list could not answer, in plain words.
  *
  * A recommendation list is read as a verdict on the space, so a list thinned
  * by a gap in the evidence has to say which gap. The alternative is what the
  * first end-to-end run did: the gardener asked for something edible that feeds
- * pollinators, neither field is researched on a single species yet, and the
+ * pollinators, neither field was researched on a single species yet, and the
  * app quietly returned a list narrowed by neither — indistinguishable from a
  * list that had honoured both.
  *
  * Derived from the answers themselves rather than from a separate endpoint:
- * a confirmed fit on an axis appears in a candidate's `fits`, so an axis that
- * appears nowhere across the whole list is an axis nothing could confirm.
+ * a confirmed fit on an axis appears in a candidate's `fits`, so an axis — or
+ * a goal — that appears nowhere across the list is one nothing on it could
+ * confirm. Every note speaks about the list it sits above, never about the
+ * whole catalog: the catalog keeps being researched, and a sentence like "no
+ * species carries a mature size yet" goes on being shown long after it stops
+ * being true. An empty list gets only the note about the space itself, since
+ * "nothing on this list" says nothing about a list with nothing on it.
  */
 export function uncheckedNotes(
   area: Pick<GrowingArea, 'temp_exposure' | 'goals' | 'area_sqft' | 'headroom_in'>,
   candidates: Candidate[],
 ): string[] {
   const notes: string[] = [];
-  const axesConfirmed = new Set(
-    candidates.flatMap((c) => c.fits.map((f) => f.axis)));
+  const confirmed = candidates.flatMap((c) => c.fits);
+  const axesConfirmed = new Set(confirmed.map((f) => f.axis));
+  const goalsConfirmed = new Set(confirmed.flatMap(goalsAnswered));
 
   if (area.temp_exposure === 'indoor') {
     notes.push(
@@ -155,21 +182,26 @@ export function uncheckedNotes(
       + 'one known to be wrong — so what’s here rests on the other axes.');
   }
 
-  if (area.goals && area.goals.length > 0 && !axesConfirmed.has('goal')) {
-    const wanted = GOALS.filter((g) => area.goals!.includes(g.value))
-      .map((g) => g.label.replace(/^\S+\s/, '').toLowerCase());
+  if (candidates.length === 0) return notes;
+
+  // Per goal, not per axis: a list narrowed by low upkeep (its own axis) or
+  // by pollinators has still not been narrowed by edibility.
+  const unanswered = GOALS
+    .filter((g) => (area.goals ?? []).includes(g.value) && !goalsConfirmed.has(g.value))
+    .map((g) => goalPhrase(g.value));
+  if (unanswered.length > 0) {
     notes.push(
-      `Nothing here is filtered by what you asked for (${wanted.join(', ')}). `
-      + 'No species in the catalog has been researched for it yet, so the list '
-      + 'below honours the space but not the wish.');
+      `Nothing here is filtered by what you asked for (${unanswered.join(', ')}). `
+      + 'Nothing on this list has a source that answers it yet, so the list '
+      + 'honours the space but not the wish.');
   }
 
   const measured = area.area_sqft != null || area.headroom_in != null;
   if (measured && !axesConfirmed.has('footprint')) {
     notes.push(
-      'Size isn’t checked against your measurements. No species in the catalog '
-      + 'carries a mature height or spread yet, so nothing here is ruled in or '
-      + 'out on whether it would outgrow the space.');
+      'Size isn’t checked against your measurements. Nothing on this list has '
+      + 'a recorded mature size to set against them, so whether any of it would '
+      + 'outgrow the space is unknown.');
   }
 
   return notes;
