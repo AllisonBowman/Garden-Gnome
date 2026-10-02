@@ -216,7 +216,7 @@ def delete_plant(
     session.commit()
 
 
-@router.post("/{plant_id}/transfer")
+@router.post("/{plant_id}/transfer", response_model=PlantRead)
 def transfer_plant(
     plant_id: int,
     payload: PlantTransferRequest,

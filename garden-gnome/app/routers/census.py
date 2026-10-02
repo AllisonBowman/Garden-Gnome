@@ -26,6 +26,7 @@ from app.deps import get_current_user
 from app.models.models import (
     CareLog, GrowingArea, Plant, Species, StewardshipRecord, User,
 )
+from app.models.schemas import with_pre_rename_census_keys
 
 router = APIRouter(prefix="/census", tags=["census"])
 
@@ -62,7 +63,9 @@ def census_summary(
         plants_by_env_type[env_label] = plants_by_env_type.get(env_label, 0) + qty
         species_counts[p.species_id] = species_counts.get(p.species_id, 0) + qty
 
-    return {
+    # The 1.1.2 app reads the area counts by their pre-rename keys; see the
+    # pre-rename section of app/models/schemas.py.
+    return with_pre_rename_census_keys({
         "total_plants": sum((p.quantity or 1) for p in plants),
         # Rows, which is also how many care schedules the caretaker actually
         # tends — twelve tomatoes watered together are one job, not twelve.
@@ -78,7 +81,7 @@ def census_summary(
             }
             for sid, cnt in sorted(species_counts.items(), key=lambda x: -x[1])
         ],
-    }
+    })
 
 
 def _opted_in_user_ids(session: Session) -> set[str]:
