@@ -65,6 +65,14 @@ describe('dimension prompts', () => {
     expect(p.depth.label).toBeTruthy();
   });
 
+  it('says where a depth is asked that nothing checks a plant against it', () => {
+    // No fit axis reads soil_depth_in; a field that silently does nothing
+    // breaks the form's promise that what's given here shapes the suggestions.
+    for (const s of [null, ...SURFACES]) {
+      expect(dimensionPrompts(s).depth.hint).toMatch(/no plant is checked against it yet/);
+    }
+  });
+
   it('gives every prompt a hint saying what to measure', () => {
     const surfaces: (GrowingSurface | null)[] = [null, ...SURFACES];
     for (const s of surfaces) {
@@ -140,6 +148,28 @@ describe('unchecked notes', () => {
     expect(notes.join(' ')).not.toMatch(/Size isn’t checked/);
   });
 
+  it('says a measured depth narrowed nothing, in the words the form asked it', () => {
+    const bed = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: null, area_sqft: null, headroom_in: null,
+        surface: 'raised_bed', soil_depth_in: 12 },
+      [candidate(['sun'])]);
+    expect(bed).toEqual(
+      ['Soil depth isn’t checked: nothing on this list was compared with the 12 in you measured.']);
+    const pots = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: null, area_sqft: null, headroom_in: null,
+        surface: 'containers', soil_depth_in: 10 },
+      [candidate(['sun'])]);
+    expect(pots[0]).toMatch(/^Pot depth isn’t checked/);
+  });
+
+  it('says nothing about depth when none was measured', () => {
+    const notes = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: null, area_sqft: null, headroom_in: null,
+        surface: 'raised_bed', soil_depth_in: null },
+      [candidate(['sun'])]);
+    expect(notes).toEqual([]);
+  });
+
   it('is silent when every axis the space turns on was answered', () => {
     const notes = uncheckedNotes(
       { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: 32, headroom_in: 84 },
@@ -176,9 +206,10 @@ describe('unchecked notes', () => {
     // The catalog keeps being researched; "no species carries a mature size
     // yet" stayed on screen after the size backfill made it false.
     const notes = uncheckedNotes(
-      { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: 32, headroom_in: 84 },
+      { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: 32, headroom_in: 84,
+        surface: 'raised_bed', soil_depth_in: 12 },
       [candidate(['sun'])]);
-    expect(notes).toHaveLength(2);
+    expect(notes).toHaveLength(3);
     for (const note of notes) {
       expect(note).not.toMatch(/in the catalog/);
       expect(note).toMatch(/on this list/);

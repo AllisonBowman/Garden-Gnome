@@ -110,6 +110,13 @@ export function areaTypeLabel(type: string): string {
 }
 
 export type Prompt = { label: string; hint: string };
+
+/** Said wherever the depth is asked for or counted on. Nothing in the fit
+ *  engine reads it — no axis compares a plant's roots with it — and a field
+ *  that silently does nothing breaks the promise the form makes, that a
+ *  number given here shapes what gets suggested. Drop this when an axis
+ *  reads `soil_depth_in`. */
+const DEPTH_UNCHECKED = 'Kept with the space — no plant is checked against it yet.';
 export type DimensionPrompts = {
   area: Prompt; headroom: Prompt; depth: Prompt;
 };
@@ -140,11 +147,11 @@ export function dimensionPrompts(surface: GrowingSurface | null): DimensionPromp
     },
     depth: {
       label: bed ? 'Soil depth (inches)' : water ? 'Water depth (inches)' : 'Pot depth (inches)',
-      hint: bed
+      hint: `${bed
         ? 'How far roots can run before they hit hardpan, liner or rock.'
         : water
           ? 'Depth at the planting shelf, not the deepest point.'
-          : 'Inside depth of the pots you’ll use here.',
+          : 'Inside depth of the pots you’ll use here.'} ${DEPTH_UNCHECKED}`,
     },
   };
 }
@@ -191,7 +198,10 @@ export function goalsAnswered(finding: FitFinding): GrowingGoal[] {
  * "nothing on this list" says nothing about a list with nothing on it.
  */
 export function uncheckedNotes(
-  area: Pick<GrowingArea, 'temp_exposure' | 'goals' | 'area_sqft' | 'headroom_in'>,
+  area: Pick<
+    GrowingArea,
+    'temp_exposure' | 'goals' | 'area_sqft' | 'headroom_in' | 'soil_depth_in' | 'surface'
+  >,
   candidates: Candidate[],
 ): string[] {
   const notes: string[] = [];
@@ -226,6 +236,15 @@ export function uncheckedNotes(
       'Size isn’t checked against your measurements. Nothing on this list has '
       + 'a recorded mature size to set against them, so whether any of it would '
       + 'outgrow the space is unknown.');
+  }
+
+  // A depth was measured and nothing reads it (DEPTH_UNCHECKED): said, so the
+  // number is not taken to have narrowed the list.
+  if (area.soil_depth_in != null) {
+    const depth = dimensionPrompts(area.surface ?? null).depth.label.replace(/ \(.*\)$/, '');
+    notes.push(
+      `${depth} isn’t checked: nothing on this list was compared with the `
+      + `${area.soil_depth_in} in you measured.`);
   }
 
   return notes;
