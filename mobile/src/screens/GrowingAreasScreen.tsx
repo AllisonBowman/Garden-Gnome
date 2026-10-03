@@ -19,8 +19,8 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import {
-  SURFACES, SURFACE_LABEL, GOALS, AREA_TYPES, areaTypeLabel, dimensionPrompts,
-  climateForSurface, lengthEcho,
+  SURFACES, SURFACE_LABEL, GOALS, AREA_TYPES, INDOOR_OUTDOOR_HINT, SUN_HINT,
+  areaTypeLabel, dimensionPrompts, climateForSurface, lengthEcho, surfaceName,
 } from '../growingAreas/realEstate';
 
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreasList'>;
@@ -270,7 +270,7 @@ export default function GrowingAreasScreen() {
               <>
                 <Text variant="bodySmall" style={styles.hint}>
                   {surface
-                    ? `Set from “${SURFACE_LABEL[surface]}”. Change anything that isn’t right.`
+                    ? `Set from “${surfaceName(surface)}”. Change anything that isn’t right.`
                     : 'Describe how much of the weather actually reaches this spot.'}
                 </Text>
 
@@ -286,18 +286,23 @@ export default function GrowingAreasScreen() {
                   style={styles.segmented}
                 />
 
-                <Eyebrow style={styles.label}>Temperature</Eyebrow>
+                {/* Not "temperature": the choice is whether outside air
+                    reaches the spot, and it is what the fit engine reads to
+                    tell an indoor spot from an outdoor one. */}
+                <Eyebrow style={styles.label}>Indoors or out</Eyebrow>
+                <Text variant="bodySmall" style={styles.hint}>{INDOOR_OUTDOOR_HINT}</Text>
                 <SegmentedButtons
                   value={tempExposure}
                   onValueChange={(v) => setTempExposure(v as TempExposure)}
                   buttons={[
-                    { value: 'indoor',  label: 'Indoor'  },
-                    { value: 'outdoor', label: 'Outdoor' },
+                    { value: 'indoor',  label: 'Indoors'  },
+                    { value: 'outdoor', label: 'Outdoors' },
                   ]}
                   style={styles.segmented}
                 />
 
                 <Eyebrow style={styles.label}>Sun</Eyebrow>
+                <Text variant="bodySmall" style={styles.hint}>{SUN_HINT}</Text>
                 <SegmentedButtons
                   value={sunExposure}
                   onValueChange={(v) => setSunExposure(v as SunExposure)}

@@ -1,7 +1,7 @@
 import {
-  SURFACES, SURFACE_LABEL, IS_BED, GOALS, AREA_TYPES,
+  SURFACES, SURFACE_LABEL, IS_BED, GOALS, AREA_TYPES, SUN_HINT,
   climateForSurface, areaTypeLabel, dimensionPrompts, uncheckedNotes,
-  goalPhrase, goalsAnswered, lengthEcho, measuredLength,
+  goalPhrase, goalsAnswered, lengthEcho, measuredLength, surfaceName,
 } from './realEstate';
 import { GrowingGoal, GrowingSurface } from '../types';
 import type { FitFinding } from '../api/growingAreas';
@@ -23,10 +23,26 @@ describe('surfaces', () => {
     expect(climateForSurface('shelf_or_floor').sun_exposure).toBe('shade');
   });
 
+  it('names a surface in quotes without the icon its chip wears', () => {
+    expect(surfaceName('raised_bed')).toBe('Raised bed');
+    for (const s of SURFACES) {
+      expect(surfaceName(s)).toMatch(/^[A-Z][a-z-]+( [a-z]+)*$/);
+    }
+  });
+
   it('keeps a greenhouse on the outside temperature — glass stops rain, not winter', () => {
     const glass = climateForSurface('greenhouse_bench');
     expect(glass.shelter).toBe('sheltered');
     expect(glass.temp_exposure).toBe('outdoor');
+  });
+});
+
+describe('the sun setting', () => {
+  it('is defined in hours where it is chosen, in the bands the engine reads', () => {
+    // fit._AREA_SUN_WORDS: 6+ / 3-6 / under 3 hours of direct sun.
+    expect(SUN_HINT).toMatch(/full sun is 6 or more/);
+    expect(SUN_HINT).toMatch(/partial 3 to 6/);
+    expect(SUN_HINT).toMatch(/shade under 3/);
   });
 });
 

@@ -25,6 +25,24 @@ export const SURFACE_LABEL: Record<GrowingSurface, string> = {
   pond_or_water:    '💧 Pond or water',
 };
 
+/** A surface as it reads mid-sentence or in quotes: "Raised bed", without the
+ *  icon its chip wears. */
+export function surfaceName(surface: GrowingSurface): string {
+  return SURFACE_LABEL[surface].replace(/^\S+\s/, '');
+}
+
+/** What each sun setting means, said where it is chosen. The fit engine
+ *  reads the setting as exactly these bands (`fit._AREA_SUN_WORDS`) and its
+ *  sentences quote them — "this spot gets 6+ hours of direct sun" — so the
+ *  setup says them first, rather than leaving a finding to define the word
+ *  after the fact. If the bands change there, they change here. */
+export const SUN_HINT =
+  'Hours of direct sun a day: full sun is 6 or more, partial 3 to 6, shade under 3.';
+
+/** What "Indoors or out" decides: whether the spot follows the weather. */
+export const INDOOR_OUTDOOR_HINT =
+  'Outdoors if it follows the outside temperature — a greenhouse does.';
+
 /** Surfaces whose soil is whatever is already there, at whatever depth. */
 export const IS_BED: Record<GrowingSurface, boolean> = {
   in_ground_bed: true, raised_bed: true, containers: false, windowsill: false,

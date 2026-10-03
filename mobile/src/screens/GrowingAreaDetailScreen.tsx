@@ -39,9 +39,10 @@ const SHELTER_LABEL: Record<string, string> = {
   partial: '⛱️ Partial cover',
   exposed: '🌤️ Exposed',
 };
+// The same words the setup asks it in: whether the spot is indoors or out.
 const TEMP_LABEL: Record<string, string> = {
-  indoor: '🌡️ Indoor temp',
-  outdoor: '🍃 Outdoor temp',
+  indoor: '🌡️ Indoors',
+  outdoor: '🍃 Outdoors',
 };
 const SUN_LABEL: Record<string, string> = {
   full_sun: '☀️ Full sun',
