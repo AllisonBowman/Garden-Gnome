@@ -4,7 +4,7 @@ import { Text, Card, ActivityIndicator, Button } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSpeciesFit } from '../api/growingAreas';
 import {
-  CHECK_FAILED, fitsOf, misfitsOf, notKnownLine, speciesFitNote,
+  CHECK_FAILED, confirmedLine, fitsOf, misfitsOf, notKnownLine, speciesFitNote,
 } from '../growingAreas/fitFindings';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -19,8 +19,14 @@ import FitFindingRow from './FitFindingRow';
  *  sorts them. A request that failed is said to have failed, never shown as
  *  an empty answer — an empty answer would read as nothing against it. */
 export default function AreaFitCard({
-  areaId, areaName, speciesId,
-}: { areaId: number; areaName: string; speciesId: number }) {
+  areaId, areaName, speciesId, confirmedInLine = false,
+}: {
+  areaId: number; areaName: string; speciesId: number;
+  /** Say what was confirmed in one line instead of a row each — for a page
+   *  that is about caring for the plant, where only what is against it
+   *  needs reading in full. */
+  confirmedInLine?: boolean;
+}) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const { data: fit, isLoading, isError, refetch } = useQuery({
@@ -54,7 +60,9 @@ export default function AreaFitCard({
                 {against.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
               </View>
             ) : null}
-            {confirmed.length > 0 ? (
+            {confirmed.length > 0 && confirmedInLine ? (
+              <Text style={[styles.quiet, styles.section]}>{confirmedLine(confirmed)}</Text>
+            ) : confirmed.length > 0 ? (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Confirmed here</Text>
                 {confirmed.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
