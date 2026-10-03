@@ -20,7 +20,7 @@ import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import {
   SURFACES, SURFACE_LABEL, GOALS, AREA_TYPES, areaTypeLabel, dimensionPrompts,
-  climateForSurface,
+  climateForSurface, lengthEcho,
 } from '../growingAreas/realEstate';
 
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreasList'>;
@@ -54,9 +54,11 @@ function GrowingAreaCard({ area, onPress }: { area: GrowingArea; onPress: () => 
  * measured. A blank that arrived at the server as 0 would be indistinguishable
  * from "this bed has no room in it", and would quietly rule out every plant. */
 function Measurement({
-  label, hint, value, onChange,
+  label, hint, value, onChange, echo,
 }: {
   label: string; hint: string; value: string; onChange: (v: string) => void;
+  /** The typed length as the reasons will say it ("That’s 7 ft."), if differently. */
+  echo?: string | null;
 }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
@@ -70,6 +72,7 @@ function Measurement({
         mode="outlined"
         dense
       />
+      {echo ? <Text variant="bodySmall" style={styles.measurementEcho}>{echo}</Text> : null}
       <Text variant="bodySmall" style={styles.measurementHint}>{hint}</Text>
     </View>
   );
@@ -246,10 +249,12 @@ export default function GrowingAreasScreen() {
                 <Measurement
                   label={prompts.headroom.label} hint={prompts.headroom.hint}
                   value={headroomIn} onChange={setHeadroomIn}
+                  echo={lengthEcho(headroomIn)}
                 />
                 <Measurement
                   label={prompts.depth.label} hint={prompts.depth.hint}
                   value={soilDepthIn} onChange={setSoilDepthIn}
+                  echo={lengthEcho(soilDepthIn)}
                 />
 
                 <Eyebrow style={styles.label}>Location</Eyebrow>
@@ -407,6 +412,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   goalNote: { color: p.sub, fontStyle: 'italic', lineHeight: 18, marginTop: 4 },
   measurement: { marginBottom: 10 },
   measurementHint: { color: p.faint, marginTop: 3, lineHeight: 16 },
+  measurementEcho: { color: p.sub, marginTop: 3, fontWeight: '600' },
   footer: {
     flexDirection: 'row', justifyContent: 'space-between',
     alignItems: 'center', marginTop: 12,

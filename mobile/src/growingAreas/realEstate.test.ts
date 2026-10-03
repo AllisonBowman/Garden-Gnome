@@ -1,7 +1,7 @@
 import {
   SURFACES, SURFACE_LABEL, IS_BED, GOALS, AREA_TYPES,
   climateForSurface, areaTypeLabel, dimensionPrompts, uncheckedNotes,
-  goalPhrase, goalsAnswered,
+  goalPhrase, goalsAnswered, lengthEcho, measuredLength,
 } from './realEstate';
 import { GrowingGoal, GrowingSurface } from '../types';
 import type { FitFinding } from '../api/growingAreas';
@@ -81,6 +81,27 @@ describe('dimension prompts', () => {
         expect(prompt.hint.length).toBeGreaterThan(10);
       }
     }
+  });
+});
+
+describe('a measured length, shown back', () => {
+  it('is said the way the reasons say it, beside the inches typed', () => {
+    // "there is 7 ft of headroom" in a reason, and 84 in on the card, read as
+    // two different numbers until the card says both.
+    expect(measuredLength(84)).toBe('7 ft (84 in)');
+    expect(measuredLength(87)).toBe('7.3 ft (87 in)');
+  });
+
+  it('stays in inches where the reasons do', () => {
+    expect(measuredLength(12)).toBe('12 in');
+    expect(measuredLength(18.5)).toBe('18.5 in');
+  });
+
+  it('is echoed under the field as it is typed, once it would be said in feet', () => {
+    expect(lengthEcho('84')).toBe('That’s 7 ft.');
+    expect(lengthEcho('12')).toBeNull();
+    expect(lengthEcho('')).toBeNull();
+    expect(lengthEcho('0')).toBeNull();
   });
 });
 

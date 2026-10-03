@@ -15,6 +15,7 @@ from app.models.models import (
     Species, Shelter, SunExposure, TempExposure,
 )
 from app.services import fit
+from app.services.care_facts import length_said
 from app.services.fit import Axis, Verdict
 
 
@@ -265,6 +266,30 @@ def test_a_climber_inside_the_headroom_fits_and_still_says_climbs():
     found = next(x for x in f if x.axis == Axis.footprint)
     assert found.verdict == Verdict.fits
     assert "climbs to" in found.sentence and "reaches" not in found.sentence
+
+
+#: Shared with mobile/src/care/facts.test.ts (`lengthSaid`): the app prints a
+#: gardener's measurement by the same rule the sentences use. If these drift,
+#: an area's card and its findings disagree about the same number.
+LENGTHS_SAID = [
+    (18, "18 in"), (23.5, "23.5 in"), (24, "2 ft"), (84, "7 ft"),
+    (87, "7.3 ft"), (81, "6.8 ft"), (39.4, "3.3 ft"), (59.1, "4.9 ft"),
+    (720, "60 ft"),
+]
+
+
+@pytest.mark.parametrize("inches,said", LENGTHS_SAID)
+def test_a_length_is_said_the_way_the_app_prints_it(inches, said):
+    assert length_said(inches) == said
+
+
+def test_the_headroom_in_a_sentence_is_the_headroom_on_the_card():
+    """87 in typed; the app's card prints "7.3 ft (87 in)". round() would have
+    said 7.2 ft here -- a half to even -- and the two would disagree."""
+    area = make_area(**OUTDOOR_BED, headroom_in=87)
+    size = next(x for x in fit.assess(make_species(mature_height_in_max=120), area)
+                if x.axis == Axis.footprint)
+    assert "there is 7.3 ft of headroom" in size.sentence
 
 
 def test_a_climber_with_no_size_is_unknown_and_says_why():

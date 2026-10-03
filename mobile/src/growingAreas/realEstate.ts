@@ -7,6 +7,7 @@ import {
   Shelter, TempExposure, SunExposure,
 } from '../types';
 import type { Candidate, FitFinding } from '../api/growingAreas';
+import { lengthSaid } from '../care/facts';
 
 export const SURFACES: GrowingSurface[] = [
   'in_ground_bed', 'raised_bed', 'containers', 'windowsill',
@@ -154,6 +155,31 @@ export function dimensionPrompts(surface: GrowingSurface | null): DimensionPromp
           : 'Inside depth of the pots you’ll use here.'} ${DEPTH_UNCHECKED}`,
     },
   };
+}
+
+// --- lengths, as the reasons say them --------------------------------------
+// Headroom and depth are asked in inches, and the fit sentences say anything
+// from two feet up in feet: 84 in typed, "there is 7 ft of headroom" read.
+// One number shown two ways with nothing joining them reads as two numbers,
+// so wherever a measured length is shown back it is said the way the
+// sentences say it (`lengthSaid`, the engine's own rule), with the inches the
+// gardener typed beside it.
+
+/** A measured length on the area's card: "7 ft (84 in)", or "18 in" where
+ *  the sentences would say inches too. */
+export function measuredLength(inches: number): string {
+  const said = lengthSaid(inches);
+  return said === `${inches} in` ? said : `${said} (${inches} in)`;
+}
+
+/** Under a length field as it is typed, once the reasons would say it in
+ *  feet: "That’s 7 ft." Nothing for a blank, a zero or a length kept in
+ *  inches. */
+export function lengthEcho(raw: string): string | null {
+  const inches = parseFloat(raw);
+  if (!Number.isFinite(inches) || inches <= 0) return null;
+  const said = lengthSaid(inches);
+  return said === `${inches} in` ? null : `That’s ${said}.`;
 }
 
 // --- what could not be checked -------------------------------------------

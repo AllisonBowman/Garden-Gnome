@@ -6,7 +6,7 @@
 // as "verified" (CONTEXT.md bans that word for care data).
 import {
   CATALOG_LINE, careFactRows, careSourceLabels, careStatusLine, legacyStats,
-  monthSpan, waterRegimeSentence,
+  lengthSaid, monthSpan, waterRegimeSentence,
 } from './facts';
 import { Species } from '../types';
 
@@ -304,4 +304,18 @@ test('the detail screens show a legacy stat only through the captioned row, belo
     expect(facts).toBeGreaterThan(status);
     expect(legacy).toBeGreaterThan(facts);
   }
+});
+
+// Shared with garden-gnome/tests/test_fit.py (LENGTHS_SAID): the fit engine's
+// sentences and the app's cards say a length by one rule. If these drift, an
+// area's card and its findings disagree about the same number — 87 in is
+// "7.3 ft" on both, where each language's own rounding would split it.
+const LENGTHS_SAID: [number, string][] = [
+  [18, '18 in'], [23.5, '23.5 in'], [24, '2 ft'], [84, '7 ft'],
+  [87, '7.3 ft'], [81, '6.8 ft'], [39.4, '3.3 ft'], [59.1, '4.9 ft'],
+  [720, '60 ft'],
+];
+
+test.each(LENGTHS_SAID)('says %p inches as the fit engine does: %p', (inches, said) => {
+  expect(lengthSaid(inches)).toBe(said);
 });

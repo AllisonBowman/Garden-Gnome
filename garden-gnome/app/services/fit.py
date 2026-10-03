@@ -55,7 +55,7 @@ from app.models.models import (
     GrowingArea, GrowingGoal, GrowingSurface, Species, SunExposure,
     TempExposure,
 )
-from app.services.care_facts import token
+from app.services.care_facts import length_said, token
 from app.services.toxicity import cited_authority
 
 #: Appended to a finding drawn from a value the resolver borrowed from the
@@ -325,21 +325,21 @@ def _footprint(species: Species, area: GrowingArea) -> Finding:
     fits: list[tuple[str, str]] = []
     rises = "climbs to" if climber else "reaches"
     if height is not None and area.headroom_in is not None:
+        tall, above = length_said(height), length_said(area.headroom_in)
         if height > area.headroom_in:
-            problems.append((
-                f"{rises} {_ft(height)} and there is {_ft(area.headroom_in)} of headroom",
-                "mature_height_in_max"))
+            problems.append((f"{rises} {tall} and there is {above} of headroom",
+                             "mature_height_in_max"))
         else:
-            fits.append((f"{rises} {_ft(height)}, under the {_ft(area.headroom_in)} here",
+            fits.append((f"{rises} {tall}, under the {above} here",
                          "mature_height_in_max"))
     if spread is not None and area.area_sqft is not None:
         room = _sqft(area.area_sqft)
         if _ground_sqft(spread) > area.area_sqft:
             problems.append((
-                f"spreads to {_ft(spread)} across and the space is {room}",
+                f"spreads to {length_said(spread)} across and the space is {room}",
                 "mature_spread_in_max"))
         else:
-            fits.append((f"spreads to {_ft(spread)}, within the {room} here",
+            fits.append((f"spreads to {length_said(spread)}, within the {room} here",
                          "mature_spread_in_max"))
 
     climbing = ("climbs",) if climber else ()
@@ -355,12 +355,6 @@ def _footprint(species: Species, area: GrowingArea) -> Finding:
                         "Fits the space: " + "; ".join(t for t, _ in fits) + ".",
                         species, *(f for _, f in fits), *climbing)
     return _unknown(axis, "This area hasn't been measured, so size isn't checked.")
-
-
-def _ft(inches: float) -> str:
-    if inches < 24:
-        return f"{inches:g} in"
-    return f"{round(inches / 12, 1):g} ft"
 
 
 def _sqft(area_sqft: float) -> str:

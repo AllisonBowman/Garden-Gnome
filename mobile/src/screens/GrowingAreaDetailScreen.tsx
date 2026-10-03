@@ -25,7 +25,7 @@ import { Palette, Fonts } from '../theme/tokens';
 import { useCareTasks } from '../care/useCareTasks';
 import CareCalendar from '../care/CareCalendar';
 import {
-  SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, uncheckedNotes,
+  SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, measuredLength, uncheckedNotes,
 } from '../growingAreas/realEstate';
 import { CHECK_FAILED } from '../growingAreas/fitFindings';
 import Eyebrow from '../components/Eyebrow';
@@ -156,14 +156,16 @@ export default function GrowingAreaDetailScreen() {
     ? [] : uncheckedNotes(env, candidateRows);
 
   const prompts = dimensionPrompts(env.surface ?? null);
+  // Lengths are said the way the reasons below say them — "7 ft (84 in)" —
+  // so the 7 ft in "there is 7 ft of headroom" is visibly this number.
   const dims = [
-    { label: prompts.area.label, raw: env.area_sqft, unit: 'sq ft' },
-    { label: prompts.headroom.label, raw: env.headroom_in, unit: 'in' },
-    { label: prompts.depth.label, raw: env.soil_depth_in, unit: 'in' },
+    { label: prompts.area.label, raw: env.area_sqft, say: (n: number) => `${n} sq ft` },
+    { label: prompts.headroom.label, raw: env.headroom_in, say: measuredLength },
+    { label: prompts.depth.label, raw: env.soil_depth_in, say: measuredLength },
   ];
   const measurements = dims
     .filter((d) => d.raw != null)
-    .map((d) => ({ label: d.label.replace(/ \(.*\)$/, ''), value: `${d.raw} ${d.unit}` }));
+    .map((d) => ({ label: d.label.replace(/ \(.*\)$/, ''), value: d.say(d.raw as number) }));
   const unmeasured = dims
     .filter((d) => d.raw == null)
     .map((d) => d.label.replace(/ \(.*\)$/, '').toLowerCase());
