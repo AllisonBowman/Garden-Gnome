@@ -209,11 +209,15 @@ export function uncheckedNotes(
   const axesConfirmed = new Set(confirmed.map((f) => f.axis));
   const goalsConfirmed = new Set(confirmed.flatMap(goalsAnswered));
 
+  // Indoors the engine answers light with `unknown` every time: an area
+  // records hours of direct sun, not how bright a room is, so there is
+  // nothing to set a species' indoor light need against. That is a fact
+  // about the space, true whatever the catalog holds — and it is said in a
+  // gardener's words, not in the database's ("the old light column").
   if (area.temp_exposure === 'indoor') {
     notes.push(
-      'Indoor light isn’t checked. Almost nothing in the catalog records a '
-      + 'species’ light level in footcandles, and the old light column is the '
-      + 'one known to be wrong — so what’s here rests on the other axes.');
+      'Indoor light isn’t checked: nothing records how bright this spot is, '
+      + 'so nothing here was matched on light.');
   }
 
   if (candidates.length === 0) return notes;

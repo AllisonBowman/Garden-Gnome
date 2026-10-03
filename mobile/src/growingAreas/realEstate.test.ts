@@ -119,6 +119,14 @@ describe('unchecked notes', () => {
     expect(notes.join(' ')).toMatch(/Indoor light isn’t checked/);
   });
 
+  it('says it in a gardener’s words, not the database’s', () => {
+    // A new account's first area is indoors, so this is the first note
+    // anyone reads; "the old light column" and "footcandles" were on it.
+    const [note] = uncheckedNotes(
+      { temp_exposure: 'indoor', goals: null, area_sqft: null, headroom_in: null }, []);
+    expect(note).not.toMatch(/column|footcandle|catalog/i);
+  });
+
   it('says so when a goal was asked for and nothing could answer it', () => {
     const notes = uncheckedNotes(
       { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: null, headroom_in: null },
