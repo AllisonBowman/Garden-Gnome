@@ -1,6 +1,6 @@
 import {
   AXIS_LABEL, CHECK_FAILED, confirmedLine, findingHeading, findingLabel, joinAnd,
-  misfitIntro, misfitsOf, speciesFitNote,
+  misfitIntro, misfitsOf, plantTitle, speciesFitNote,
 } from './fitFindings';
 import type { FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
 
@@ -124,5 +124,29 @@ describe('what Add Plant says about the chosen spot', () => {
     expect(note).toMatch(/can’t judge it for Back bed/);
     expect(note).toMatch(/no recommendation either way/);
     expect(note).not.toMatch(/Confirmed/);
+  });
+});
+
+describe('a plant named on the needs-addressing card', () => {
+  it('names the species beside a nickname of the gardener’s own', () => {
+    expect(plantTitle('Big Blue', 'Hosta')).toEqual({ name: 'Big Blue', species: 'Hosta' });
+  });
+
+  it('does not repeat a species the nickname already says', () => {
+    // A plant saved with no nickname is named by the server from its species.
+    expect(plantTitle('Hosta', 'Hosta')).toEqual({ name: 'Hosta', species: null });
+    expect(plantTitle('hosta', 'Hosta')).toEqual({ name: 'hosta', species: null });
+    expect(plantTitle('Hosta — north wall', 'Hosta'))
+      .toEqual({ name: 'Hosta — north wall', species: null });
+  });
+
+  it('falls back to the species when there is no nickname at all', () => {
+    expect(plantTitle('', 'Hosta')).toEqual({ name: 'Hosta', species: null });
+    expect(plantTitle(null, 'Hosta')).toEqual({ name: 'Hosta', species: null });
+  });
+
+  it('still names the species when a nickname merely starts with it', () => {
+    expect(plantTitle('Hostas by the gate', 'Hosta'))
+      .toEqual({ name: 'Hostas by the gate', species: 'Hosta' });
   });
 });

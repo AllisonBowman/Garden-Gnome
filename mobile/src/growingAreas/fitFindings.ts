@@ -90,6 +90,22 @@ export function speciesFitNote(fit: SpeciesFit, areaName: string): string | null
   return unknown.length > 0 ? `${said} Not known: ${joinAnd(unknown)}.` : said;
 }
 
+/** How a plant is named on the "needs addressing" card: its nickname, and
+ *  the species beside it only where the nickname doesn't already say it. A
+ *  plant saved without a nickname is named by the server from its species —
+ *  "Hosta", or "Hosta — south fence" (`plants._default_nickname`) — and the
+ *  card read "Hosta  Hosta". */
+export function plantTitle(
+  nickname: string | null | undefined, commonName: string,
+): { name: string; species: string | null } {
+  const name = (nickname ?? '').trim();
+  if (!name) return { name: commonName, species: null };
+  const said = name.toLowerCase();
+  const common = commonName.trim().toLowerCase();
+  const named = said === common || said.startsWith(`${common} — `);
+  return { name, species: named ? null : commonName };
+}
+
 /** Shown in place of a fit answer the app could not fetch. A failed request
  *  has checked nothing, so it must never fall through to an empty list's
  *  all-clear wording ("nothing here contradicts the space"). */

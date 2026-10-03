@@ -27,7 +27,7 @@ import CareCalendar from '../care/CareCalendar';
 import {
   SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, measuredLength, uncheckedNotes,
 } from '../growingAreas/realEstate';
-import { CHECK_FAILED } from '../growingAreas/fitFindings';
+import { CHECK_FAILED, plantTitle } from '../growingAreas/fitFindings';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
 
@@ -273,17 +273,21 @@ export default function GrowingAreaDetailScreen() {
                   + 'judge aren’t listed as fine — they’re just not listed.'}
             </Text>
           ) : (
-            misfitRows.map((m) => (
-              <View key={m.plant_id} style={styles.misfit}>
-                <Text style={styles.misfitName}>
-                  {m.nickname || m.common_name}
-                  {m.nickname ? <Text style={styles.misfitSpecies}>{`  ${m.common_name}`}</Text> : null}
-                </Text>
-                {/* The axis and whose word it is, then the server's own
-                    sentence — never re-worded here. */}
-                {m.misfits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
-              </View>
-            ))
+            misfitRows.map((m) => {
+              const title = plantTitle(m.nickname, m.common_name);
+              return (
+                <View key={m.plant_id} style={styles.misfit}>
+                  <Text style={styles.misfitName}>
+                    {title.name}
+                    {title.species
+                      ? <Text style={styles.misfitSpecies}>{`  ${title.species}`}</Text> : null}
+                  </Text>
+                  {/* The axis and whose word it is, then the server's own
+                      sentence — never re-worded here. */}
+                  {m.misfits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
+                </View>
+              );
+            })
           )}
         </Card.Content>
       </Card>
