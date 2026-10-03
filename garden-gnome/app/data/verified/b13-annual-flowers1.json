@@ -839,7 +839,13 @@
         "https://hgic.clemson.edu/factsheet/coleus/ returned HTTP 403 -- refused this machine, could not be read.",
         "RHS gives a different size range for this species (Max Height 0.5-1 metres = 19.7-39.4 in; Max Spread 0.1-0.5 metres = 3.9-19.7 in) than NC State's Dimensions block (Height 6-36 in, Width 6-36 in); NC State was used as the anchor/citation source per instructions since it carries the structured species-level Dimensions block.",
         "Not a climber: NC State lists Plant Type as Annual / Ground Cover / Herbaceous Perennial and RHS lists Habit as Bushy, so the size fields were recorded normally rather than left null under the climber rule.",
-        "The recorded figures are the species-level Dimensions/Max Height/Max Spread figures, not a named cultivar's size."
+        "The recorded figures are the species-level Dimensions/Max Height/Max Spread figures, not a named cultivar's size.",
+        "is_edible left null: searched NC State, UF/IFAS, Clemson and RHS pages for 'Edible', 'Poison', 'Toxic', 'Problem for'; no page states the plant is grown or used for food. Not inferred from the genus or family.",
+        "Toxicity text found, recorded here since it is decision-relevant: NC State: 'This plant has low severity poison characteristics.' with Poison Toxic Principle: Diterpene coleonol, coleon O; Causes Contact Dermatitis: Yes; Poison Part: Leaves (allergic dermatitis with red rash after repeated and frequent contact). UF/IFAS: 'Toxicity: this plant displays low toxic characteristics; leaves may cause contact dermatitis in some people'.",
+        "climbs left null: NC State Habit/Form is Erect and Plant Type is Annual, Ground Cover, Herbaceous Perennial, Houseplant; UF/IFAS habit is round; upright; no page calls it a climber or vine (searched 'Climb' on all four pages, 0 hits).",
+        "Size fields not researched: already landed, returned null per instructions.",
+        "plantfinder.mobot.org was not fetched; not needed for these three fields and not guessed at.",
+        "Pollinator evidence is from UF/IFAS and Clemson HGIC only; NC State has no Attracts field on this page and RHS carries no pollinator tag on this page (searched 'Attracts', 'Pollinator', 'butterfl', 'hummingbird'). No specific pollinator species named."
       ],
       "citations": [
         {
@@ -937,12 +943,31 @@
           "source": "North Carolina Extension Gardener Plant Toolbox: Coleus scutellarioides",
           "url": "https://plants.ces.ncsu.edu/plants/coleus-scutellarioides/",
           "quote": "Width: 0 ft. 6 in. - 3 ft. 0 in."
+        },
+        {
+          "claim": "attracts_pollinators true (UF/IFAS Uses list includes 'attracts pollinators')",
+          "source": "UF/IFAS Extension EDIS FP136, Coleus scutellarioides",
+          "url": "https://edis.ifas.ufl.edu/fp136",
+          "quote": "attracts pollinators"
+        },
+        {
+          "claim": "attracts_pollinators true (UF/IFAS: flowers attractive to pollinators)",
+          "source": "UF/IFAS Extension EDIS FP136, Coleus scutellarioides",
+          "url": "https://edis.ifas.ufl.edu/fp136",
+          "quote": "The small blue flowers are clustered on racemes and are attractive to pollinators"
+        },
+        {
+          "claim": "attracts_pollinators true (Clemson HGIC: blooms attract pollinating insects)",
+          "source": "Clemson HGIC Coleus factsheet",
+          "url": "https://hgic.clemson.edu/factsheet/coleus/",
+          "quote": "The insignificant blooms do attract a wide variety of pollinating insects."
         }
       ],
       "mature_height_in_min": 6,
       "mature_height_in_max": 36,
       "mature_spread_in_min": 6,
-      "mature_spread_in_max": 36
+      "mature_spread_in_max": 36,
+      "attracts_pollinators": true
     },
     {
       "common_name": "Cosmos",
@@ -1312,6 +1337,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. The audit caught a subtler variant of the b10 conflict-resolution failure than has shown up before: Joseph's Coat's water_regime was set to keep_moist citing one source's soft prose ('moist, well-drained soils'), while that same source's own structured fields ('Water: Medium', 'Tolerate: Drought') and three other independently-cited sources' dedicated drought-tolerance ratings all pointed the other way -- plus an explicit root-rot-from-overwatering warning the record had already quoted for a different field without letting it inform this one. Correctly recognized as the same structural conflict the rule exists for and nulled, even though the disagreement here was prose-vs-structured-data within and across sources rather than a flat boolean contradiction. Coleus resolved to Coleus scutellarioides (given as Plectranthus scutellarioides), backed independently by NC State and RHS on the same genus reclassification.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Coleus -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

@@ -1,0 +1,1029 @@
+{
+ "landed": [
+  {
+   "batch": "b4-tricky-cases.json",
+   "record": {
+    "common_name": "Bird of Paradise",
+    "scientific_name_accepted": "Strelitzia nicolai",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "is_edible is CONDITIONAL and only the immature seeds are named as edible. The same NC State page says: \"This plant has  low severity  poison characteristics.\" Its Problems list reads: Contact Dermatitis, Poisonous to Humans, Problem for Cats, Problem for Children, Problem for Dogs, Problem for Horses. Poison Severity: Low. Poison Symptoms: \"If the fruits or seeds are ingested, it may cause abdominal cramps, nausea, vomiting, and diarrhea in humans. If pets ingested any part of the plant, nausea, vomiting, and drowsiness can occur. Skin irritation can result from contact with the plant.\" Poison Toxic Principle: unknown. Causes Contact Dermatitis: Yes. Poison Part lists Flowers and Fruits (the list is cut off in the output I read). Prose: \"This plant is toxic to humans, dogs, cats, and horses. Keep tis plant out of the reach of small children or pets. Wear protective gloves when handling this plant due to the chance of skin irritation.\" The page gives no preparation requirement and does not explain how \"immature seeds are edible\" fits with seeds causing illness when ingested, so treat the edibility claim as unreliable.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max left null per the houseplant rule: the only size on the NC State page is the outdoor or native-habitat stature, and the height exceeds 120 in. The page's Dimensions block reads \"Height: 20 ft. 0 in. - 30 ft. 0 in.\" and \"Width: 6 ft. 0 in. - 10 ft. 0 in.\" (240-360 in tall, 72-120 in wide), and its description says \"In its native habitat it can grow 20 to 30 feet tall and 6 to 10 feet wide\". NC State gives no indoor or container figure. The Clemson page was not re-read for size, since an earlier pass found no usable size there.",
+     "No indoor or container size was found. I did not find or load a UF/IFAS, RHS or other registered-authority page for this species. A qc.py attempt on edis.ifas.ufl.edu with a guessed publication URL hit a sandbox ProxyError (host not in allowed_domains) and returned nothing, so I did not retry or guess what it would say.",
+     "attracts_pollinators left null. NC State's Attracts field lists only Frogs and Songbirds. Its Wildlife Value text says \"The flowers provide nectar for birds such as sunbirds in its native habitat.\" That is a native-range statement and does not name bees, butterflies, moths or hummingbirds, so I did not read it as an unconditional pollinator claim. Searches for Pollinator, butterfl and hummingbird returned 0 hits.",
+     "climbs left null. NC State lists Plant Type as Herbaceous Perennial and Perennial, describes an upright habit with clumping stalks, and calls it a tropical evergreen perennial. No page calls it a climber.",
+     "is_edible removed on audit: I re-read the NC State Strelitzia nicolai page. The quote \"The immature seeds are edible.\" is on the page, verbatim and as one rendered run under the Edibility label. But the same page's Poison Part field lists Flowers, Fruits, Leaves and Seeds. The researcher said that list was cut off after Flowers and Fruits; it is not cut off, and Seeds is on it. The Poison Symptoms text says \"If the fruits or seeds are ingested, it may cause abdominal cramps, nausea, vomiting, and diarrhea in humans.\" Problems lists Poisonous to Humans, and the prose says \"This plant is toxic to humans, dogs, cats, and horses.\" So the only part called edible (seeds) is also named as a poison part. The page gives no preparation that resolves this, and the researcher's own unknowns call the claim unreliable. A true value whose only support is directly contradicted on the same page about the same part should not stand, so is_edible goes to null. The Clemson watering page has no Strelitzia or bird of paradise text at all (0 hits). Check F: the unknowns do mention toxicity, but they leave out that Seeds is a listed Poison Part."
+    ],
+    "citations": []
+   },
+   "applied": [
+    "is_edible: true -> null (I re-read the NC State Strelitzia nicolai page. The quote \"The immature seeds are edible.\" is on the page, verbatim and as one rendered run under the Edibility label. But the same page's Poison Part field lists Flowers, Fruits, Leaves and Seeds. The researcher said that list was cut off after Flowers and Fruits; it is not cut off, and Seeds is on it. The Poison Symptoms text says \"If the fruits or seeds are ingested, it may cause abdominal cramps, nausea, vomiting, and diarrhea in humans.\" Problems lists Poisonous to Humans, and the prose says \"This plant is toxic to humans, dogs, cats, and horses.\" So the only part called edible (seeds) is also named as a poison part. The page gives no preparation that resolves this, and the researcher's own unknowns call the claim unreliable. A true value whose only support is directly contradicted on the same page about the same part should not stand, so is_edible goes to null. The Clemson watering page has no Strelitzia or bird of paradise text at all (0 hits). Check F: the unknowns do mention toxicity, but they leave out that Seeds is a listed Poison Part.)"
+   ],
+   "review": [],
+   "summary": "I re-read the NC State Strelitzia nicolai page and the Clemson indoor-plants-watering page with qc.py. I refute is_edible=true. The one edible statement, \"The immature seeds are edible.\", is contradicted on the same page: its Poison Part list includes Seeds, and its symptoms text says eating the fruits or seeds causes cramps, vomiting and diarrhea. The researcher wrongly said the Poison Part list was cut off before Seeds. All the null fields are correct. The sizes are native-habitat figures only (20-30 ft tall, 6-10 ft wide) with no indoor or container figure, so they stay null under the houseplant rule. There is no pollinator evidence beyond sunbirds in the native range, and no climber language. The Clemson page has no content on this species."
+  },
+  {
+   "batch": "b4-tricky-cases.json",
+   "record": {
+    "common_name": "Chinese Money Plant",
+    "scientific_name_accepted": "Pilea peperomioides",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "is_edible left null: searched the NC State Pilea peperomioides page for Poison, Toxic, Problem for and Edible and got 0 hits; the page only says the plant is safe for pets and children, which is not a statement about eating it.",
+     "attracts_pollinators left null: searched the NC State page for Attracts, Pollinator and Edible and got 0 hits; searched the RHS how-to-grow-pilea page for pollinator and got 0 hits. Neither page mentions pollinators.",
+     "climbs left null: NC State lists Habit/Form as Clumping and Erect and Plant Type as Houseplant and Perennial; searched both pages for climb and got 0 hits. RHS how-to-grow-pilea is a genus guide with no Habit field found (searched Habit, climb).",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min and mature_spread_in_max returned null as instructed because they are already landed.",
+     "I did not look for a UF/IFAS, Clemson, Penn State, Maryland or UGA page for this species."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State species page, the RHS genus guide and the Clemson watering factsheet with qc.py, and every page loaded. Every proposed field is null and the record has no citations, so checks A–I have nothing to refute. The researcher's descriptions of the pages are accurate. NC State has 0 hits for Attracts and Edible, and says only that the plant is 'safe for pets and children'. Its Habit/Form field reads Clumping and Erect. RHS describes the plant as an upright, bushy pilea and does not mention pollinators or climbing. The Clemson page does not name Pilea at all. Its one match was a 'Pollinator garden' tag in the site navigation. The landed sizes match NC State's indoor figure of 8 to 12 inches tall and as wide, which is already in inches. I found no new pages to check, no false values, and no quotes to audit."
+  },
+  {
+   "batch": "b4-tricky-cases.json",
+   "record": {
+    "common_name": "Spiderwort / Inch Plant",
+    "scientific_name_accepted": "Tradescantia zebrina",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Wildlife' and 'Pollinator' (no hits) and the RHS page (www.rhs.org.uk/plants/79575/tradescantia-zebrina/details) for 'pollinator', 'bee', 'butterfl' and 'hummingbird' (no hits). No registered page tags this species as attractive to pollinators.",
+     "climbs left null: NC State gives Habit/Form 'Creeping' and Plant Type 'Ground Cover / Herbaceous Perennial / Houseplant', and describes a 'trailing and creeping habit'. RHS gives Habit 'Clump forming, Trailing'. Neither calls it a climber, and a search for 'climb' on both pages had no hits.",
+     "is_edible, mature_height_in_min, mature_height_in_max, mature_spread_in_min and mature_spread_in_max not researched: already landed, returned null so the existing values are kept.",
+     "https://edis.ifas.ufl.edu/fp620 (UF/IFAS, Zebrina pendula Wandering Jew) failed to load through qc.py with a ProxyError, and the sandbox violation named ask.ifas.ufl.edu. It was not read and nothing is claimed from it. Its pollinator and habit content is unchecked.",
+     "Clemson page https://hgic.clemson.edu/factsheet/indoor-plants-watering/ loaded but has no zebrina or Inch plant text and no 'climb' text, so it supports nothing here.",
+     "Decision-relevant, not a field: NC State states 'This plant has low severity poison characteristics.' It lists Poison Part as Leaves and Sap/Juice, says it causes contact dermatitis, and tags it problem for dogs, cats and children and 'poisonous if ingested'. The RHS page lists 'Potentially harmful: Skin allergen. Wear gloves and other protective equipment when handling'."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "Nothing to refute: all seven proposed values are null and none were set to false. I re-read NC State, RHS and Clemson, and every search the unknowns describe gives the claimed result. The one exception is that 'attract' does hit NC State, but only as 'attractively striped' foliage and 'Attractive Flowers', and neither names a pollinator. Null is correct for attracts_pollinators because the pages are silent. Null is correct for climbs because the plant is a trailing, creeping groundcover with no climbing habit on any page. The toxicity notes, from NC State's low-severity poison characteristics and RHS's skin-allergen warning, are recorded correctly in the unknowns. For reference, NC State's dimensions convert to height 6-9 in and width 12-24 in."
+  },
+  {
+   "batch": "b4-tricky-cases.json",
+   "record": {
+    "common_name": "Alocasia 'Polly'",
+    "scientific_name_accepted": "Alocasia × mortfontanensis 'Polly'",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "mature_height_in_max, mature_spread_in_min, mature_spread_in_max and is_edible already landed; returned null and not re-researched.",
+     "mature_height_in_min 12 comes from the NC State species page for Alocasia x mortfontanensis, which lists 'Polly' among its cultivars; the figure is for the species page as a whole, not stated for 'Polly' alone. The same page gives Width 1 ft. 0 in. - 2 ft. 0 in. (12-24 in.), left alone because the spread fields are already landed.",
+     "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Pollinator', 'butterfl' and 'Wildlife' and got 0 hits for each. No page addresses pollinators.",
+     "climbs left null: the NC State page gives Habit/Form: Clumping and Plant Type: Herbaceous Perennial / Houseplant / Perennial / Poisonous, with no climbing or vine wording.",
+     "Clemson HGIC indoor-plants-watering page loaded ok but has 0 hits for 'Alocasia', 'Polly' and 'Height', so it gives no size.",
+     "No other registered-authority page (RHS, UF/IFAS, etc.) was searched or loaded; no host refused this machine.",
+     "mature_height_in_min removed on audit: Scope (C) defect. The 12 comes from the NC State Dimensions field 'Height: 1 ft. 0 in. - 4 ft. 0 in.' (12-48 in). The conversion is right and the quote is one rendered run, but that field covers the whole hybrid Alocasia x mortfontanensis. The same page has its own line for this cultivar, verified with qc.py (2 hits): \"'Polly' compact, up to 2 feet tall\". That is a single upper figure (24 in) with no lower bound. The record's unknowns say the figure is 'not stated for Polly alone' but leave out that the page does give a Polly-specific height. So the record pairs a species-wide minimum with a cultivar whose own published figure has no minimum, which mixes the two scopes. Null this field. The Polly line supports only a max of 24 in, and the max field is already landed."
+    ],
+    "citations": []
+   },
+   "applied": [
+    "mature_height_in_min: 12 -> null (Scope (C) defect. The 12 comes from the NC State Dimensions field 'Height: 1 ft. 0 in. - 4 ft. 0 in.' (12-48 in). The conversion is right and the quote is one rendered run, but that field covers the whole hybrid Alocasia x mortfontanensis. The same page has its own line for this cultivar, verified with qc.py (2 hits): \"'Polly' compact, up to 2 feet tall\". That is a single upper figure (24 in) with no lower bound. The record's unknowns say the figure is 'not stated for Polly alone' but leave out that the page does give a Polly-specific height. So the record pairs a species-wide minimum with a cultivar whose own published figure has no minimum, which mixes the two scopes. Null this field. The Polly line supports only a max of 24 in, and the max field is already landed.)"
+   ],
+   "review": [],
+   "summary": "I re-read both pages with qc.py, and both loaded. The one new value, mature_height_in_min 12, is refuted on scope. It is converted correctly from NC State's species-wide 'Height: 1 ft. 0 in. - 4 ft. 0 in.', but the same page gives a figure for this cultivar alone, \"'Polly' compact, up to 2 feet tall\". That is a single upper figure (24 in) with no minimum, so the species-wide low end of 12 does not belong on 'Polly'. The record's unknowns never mention this Polly line. The Clemson HGIC watering page has no Alocasia content at all. Every other field is null: the size fields and is_edible are already landed and were not re-proposed, and attracts_pollinators and climbs are null because no page addresses them. Each of those nulls matches what the pages say."
+  },
+  {
+   "batch": "b4-tricky-cases.json",
+   "record": {
+    "common_name": "Christmas Cactus",
+    "scientific_name_accepted": "Schlumbergera × buckleyi",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "is_edible left null: the NC State page was searched for 'Edible', 'Poison', 'Toxic' and 'Problem for'; it has no statement about eating the plant. It says only that the plant is non-toxic to pets and children, which is not a statement that it is food.",
+     "attracts_pollinators left null: NC State page searched for 'Attracts', 'Pollinator', 'butterfl' and 'hummingbird' and 'Wildlife'; none of these appear on the page.",
+     "climbs left null: NC State lists Plant Type as Epiphyte, Herbaceous Perennial, Houseplant, Perennial and Succulent, and Habit/Form as Arching, Rounded and Weeping. None of these describes a climber.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min and mature_spread_in_max returned null as instructed because they are already landed. The NC State page does publish 6-12 inches tall and 12-24 inches wide (Dimensions block: Height 0 ft. 6 in. - 1 ft. 0 in.; Width 1 ft. 0 in. - 2 ft. 0 in.), which may be useful for cross-checking the landed values.",
+     "Missouri Botanical Garden page (taxonid=253152) refused this machine: qc.py status error:ProxyError, then error:ConnectError after the hosts were allowed. Not read, and no claim is made about what it says.",
+     "No other registered-authority page (RHS, UF/IFAS, Clemson, UMD, Penn State, UGA) was searched for or read."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing wrong with the proposed Christmas Cactus record. All seven proposed values are null and there are no citations, so no value or quote could fail the checks. I re-read the NC State page with qc.py. It says nothing about edibility, pollinators or wildlife; its only toxicity statement is that the plant is non-toxic to pets and children. Its habit is arching, rounded, weeping and pendulous, with no climbing language, so all three nulls are correct. The four size fields are null because they are already landed. I checked the landed values (6-12 in tall, 12-24 in wide) against NC State's Dimensions block ('Height: 0 ft. 6 in. - 1 ft. 0 in.', 'Width: 1 ft. 0 in. - 2 ft. 0 in.') and its prose ('6 to 12 inches tall and 12 to 24 inches wide'). They are correctly converted from feet, min <= max, from the species' own page, and well under the 120 in houseplant ceiling. The Missouri Botanical Garden page still will not load: ProxyError, then ConnectError once both MBG hosts were allowed. That matches the record's unknowns."
+  },
+  {
+   "batch": "b4-tricky-cases.json",
+   "record": {
+    "common_name": "Croton",
+    "scientific_name_accepted": "Codiaeum variegatum",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State page has no 'Attracts' field; searched for 'Attracts', 'Pollinator' and 'butterfl' and got 0 hits. Did not search RHS/UF-IFAS/other registered pages.",
+     "climbs left null: NC State Habit/Form reads 'Erect' and 'Oval' and Plant Type is Annual, Houseplant, Perennial, Poisonous, Shrub; no page calls it a climber.",
+     "is_edible, mature_height_in_max, mature_spread_in_min and mature_spread_in_max already landed; not researched, returned null. NC State also lists Width: 2 ft. 0 in. - 6 ft. 0 in. and Height up to 8 ft. 0 in., both within 10 ft.",
+     "NC State description gives an indoor figure: 'It is more common to see these plants grown indoors, where they can attain a height of 3 feet.' This is a single figure that would fill only a max end (36 in), which is already landed, so it is not recorded here; the min of 24 comes from the Dimensions block.",
+     "NC State flags the plant as poisonous (low severity, diterpene esters, contact dermatitis, nausea/vomiting/diarrhea if ingested); noted because is_edible is not set true here.",
+     "Other starting pages (plantfinder.mobot.org, hgic.clemson.edu indoor-plants-watering) were not re-read; the earlier pass found no usable size on them.",
+     "mature_height_in_min removed on audit: Check I (houseplant scale) and check B (range integrity). The number itself converts correctly: NC State's Dimensions block reads 'Height: 2 ft. 0 in. - 8 ft. 0 in.' on its own line, and 2 ft is 24 in. The trouble is where it comes from. The same page's Description ties that range's 8 ft top to the native habitat ('reaching heights of 8 feet in the narrow climate range of their native habitat, Malaysia, the Pacific islands, and northern Australia') and then gives a separate indoor figure: 'It is more common to see these plants grown indoors, where they can attain a height of 3 feet.' Check I says that when a page gives an indoor figure, a size taken from the larger outdoor figure is refuted. The 24 is the low end of that refuted outdoor/Dimensions range. This is the same value an earlier audit already removed. size-r4-chunk5-summary.md records that Croton's max was re-landed at 36 from the indoor sentence, 'min null (the 24 in minimum came only from the refuted Dimensions height)'. If 24 were paired with the landed indoor max of 36, one published indoor figure (3 ft) would become a 24-36 range whose low end comes from a different, native-habitat range. No page gives an indoor minimum. The plantfinder.mobot.org page would not load (ProxyError, then ConnectError with the host allowed). Clemson's indoor-plants-watering page has 0 hits for 'Croton', 'Codiaeum' and 'Height'. Neither page supports the value."
+    ],
+    "citations": []
+   },
+   "applied": [
+    "mature_height_in_min: 24 -> null (Check I (houseplant scale) and check B (range integrity). The number itself converts correctly: NC State's Dimensions block reads 'Height: 2 ft. 0 in. - 8 ft. 0 in.' on its own line, and 2 ft is 24 in. The trouble is where it comes from. The same page's Description ties that range's 8 ft top to the native habitat ('reaching heights of 8 feet in the narrow climate range of their native habitat, Malaysia, the Pacific islands, and northern Australia') and then gives a separate indoor figure: 'It is more common to see these plants grown indoors, where they can attain a height of 3 feet.' Check I says that when a page gives an indoor figure, a size taken from the larger outdoor figure is refuted. The 24 is the low end of that refuted outdoor/Dimensions range. This is the same value an earlier audit already removed. size-r4-chunk5-summary.md records that Croton's max was re-landed at 36 from the indoor sentence, 'min null (the 24 in minimum came only from the refuted Dimensions height)'. If 24 were paired with the landed indoor max of 36, one published indoor figure (3 ft) would become a 24-36 range whose low end comes from a different, native-habitat range. No page gives an indoor minimum. The plantfinder.mobot.org page would not load (ProxyError, then ConnectError with the host allowed). Clemson's indoor-plants-watering page has 0 hits for 'Croton', 'Codiaeum' and 'Height'. Neither page supports the value.)"
+   ],
+   "review": [
+    "REFUTED but unmapped field \"citation (mature_height_in, NC State Dimensions)\": Check H: the quote 'Height: 2 ft. 0 in. - 8 ft. 0 in.' is on the NC State page verbatim, as one run on its own line (1 hit with qc.py), and the claim names mature_height_in literally, so provenance and labelling are fine. But the only field it supports, mature_height_in_min = 24, is refuted under check I, so the citation must go with it. Its claim text 'mature_height_in 24-96' also states a 96 in max that conflicts with the landed indoor max of 36."
+   ],
+   "summary": "I re-read the NC State Codiaeum variegatum page with qc.py. The only new value is mature_height_in_min = 24, and I refuted it. The conversion is right (the Dimensions line 'Height: 2 ft. 0 in. - 8 ft. 0 in.' exists verbatim on one line, and 2 ft is 24 in). But the page's Description ties that range's 8 ft top to the native habitat and gives a separate indoor figure, 'It is more common to see these plants grown indoors, where they can attain a height of 3 feet.' Under check I, a size taken from the larger outdoor figure is refuted when the page has an indoor one. An earlier audit already removed this same 24: size-r4-chunk5-summary.md re-landed the max at 36 from the indoor sentence and left the min null because 'the 24 in minimum came only from the refuted Dimensions height'. Re-adding it would also turn the single indoor figure into a 24-36 range with a borrowed low end (check B). Its citation falls with it. attracts_pollinators and climbs are correctly null: there are no Attracts or pollinator hits, and the habit is Erect/Oval shrub. The plantfinder.mobot.org page would not load (ProxyError, then ConnectError with the host allowed). Clemson's indoor-plants-watering page has no Croton content. Net result: this proposal adds nothing to the landed record."
+  },
+  {
+   "batch": "b11-veg-round4.json",
+   "record": {
+    "common_name": "Onion",
+    "scientific_name_accepted": "Allium cepa",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: the NC State Plant Toolbox page for Allium cepa has no 'Attracts' field (qc.py 'Attracts' returned 0 hits). Its only pollinator mention is a landscape-list link to a 'Vegetable, Herb and Mostly Native Pollinator Garden', which is not an unconditional statement that the plant attracts pollinators. UMD returned 0 hits for pollinat, bee, butterfl. The Penn State onion-production page returned hits only in site navigation menus.",
+     "climbs left null: NC State Habit/Form for Allium cepa reads Arching and Erect, with Plant Type Bulb, Cool Season Vegetable, Edible, Vegetable. No page calls it a climber. UMD and Penn State had 0 hits for climb and vine.",
+     "is_edible, mature_height_in_min/max and mature_spread_in_min/max are already landed and were not researched. Returned as null as instructed.",
+     "hgic.clemson.edu refused this machine (fetch status error:ProxyError, sandbox network denial) so the Clemson page was not read. I did not re-run it with allowed_domains.",
+     "No separate RHS, UF/IFAS, UGA or other registered-authority page for Allium cepa was searched or loaded, because the NC State page was the anchor and had no Attracts field.",
+     "Side note for the landed record: the NC State page states 'Dimensions: Height: 1 ft. 0 in. - 1 ft. 6 in.' and 'Width: 0 ft. 6 in. - 1 ft. 0 in.', which is 12-18 in. height and 6-12 in. width. This contradicts the earlier pass's 'no usable size' finding. It is not entered here because those fields are landed and must not be overwritten.",
+     "Side note for the landed is_edible: NC State says 'The bulb and tops are edible raw or cooked.' It also carries poison text, 'This plant has low severity poison characteristics.', tags '#problem for dogs #problem for horses #problem for cats', and the toxicity caveat that depends on age, plant part, amount, sensitivities and raw versus cooked. If is_edible is true on the landed record, that text belongs in its unknowns."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State, UMD, Penn State and Clemson; Clemson loaded once I allowed its domain. I did not open the Missouri Botanical Garden page because it is not a registered authority. Every proposed value is null and each null holds: no page names a pollinator or calls onion a climber. The researcher's NC State size note checks out at 12-18 in. tall and 6-12 in. wide, which means the landed size fields should be revisited. NC State's poison caveat must be in unknowns if the landed is_edible is true. The note that Clemson was unreadable is stale, but the page adds nothing that changes a value."
+  },
+  {
+   "batch": "b11-veg-round4.json",
+   "record": {
+    "common_name": "Garden Pea",
+    "scientific_name_accepted": "Lathyrus oleraceus",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: qc.py searched the NC State Lathyrus oleraceus page for 'Attracts', 'Pollinator', 'butterfl', 'bee(s)', 'hummingbird' and found 0 hits; its only wildlife text is the bare tag '#th-wildlife', which names no pollinator. The Clemson, UMD and UGA pages gave no pollinator statement about the pea plant either. The only hits were site navigation menus ('Pollinator garden' tag, 'Pollinators' topic) and UGA's unrelated 'Beneficial Insects and Pollinators' article link.",
+     "RHS: https://www.rhs.org.uk/plants/pisum-sativum returned http-404. The RHS 'How to grow peas' guide (a crop guide, not a species plant page) loaded OK, and searches for 'pollinator', 'Attract', 'bees', 'butterfl' and 'Max Height' found 0 hits, so it supports nothing.",
+     "UF/IFAS: https://edis.ifas.ufl.edu/publication/MG336 failed to load (ProxyError) and was not a confirmed Lathyrus oleraceus page. ask.ifas.ufl.edu was also denied by the sandbox. Nothing was learned from either.",
+     "is_edible, climbs and all four size fields (mature_height_in_min/max, mature_spread_in_min/max) were already landed and deliberately returned null per instructions; not researched.",
+     "Rule 5 toxicity search on the NC State page for 'Poison' and 'Toxic' returned 0 hits. Only is_edible is affected and it is not being set here."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute: the proposal sets all seven fields to null and cites nothing. I re-read all four pages with qc.py and they confirm the pollinator null. Nothing on them says the pea attracts pollinators. NC State's only related line is 'Flowers can self-pollinate.', which the researcher's 'Pollinator' search missed, and it supports null rather than true. Every other pollinator hit is site navigation or an unrelated article link. No page matched 'poison' or 'toxic'. The rest of the record was already landed, and the NC State species page backs it: climbing habit with tendrils, height 1 ft. 0 in. to 1 ft. 6 in. (12 to 18 in), and width 0 ft. 6 in. to 1 ft. 0 in. (6 to 12 in). The RHS and UF/IFAS pages failed to load and are correctly recorded in unknowns. I did not touch the shared .quote_cache."
+  },
+  {
+   "batch": "b11-veg-round4.json",
+   "record": {
+    "common_name": "Radish",
+    "scientific_name_accepted": "Raphanus raphanistrum subsp. sativus",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Pollinator', 'butterfl', 'Wildlife' (0 hits; no Attracts field on this page), the RHS page for 'pollinator', 'Pollinat', 'attract', 'butterfl' (0 hits; its only wildlife text is 'Wildlife gardens' as a suggested planting location, which does not name a pollinator), and the Clemson factsheet for 'pollinat' and 'bee' (only site-navigation tags such as 'Pollinator garden', and a swallowtail butterfly larva feeding on carrot leaves, neither of which says radish attracts pollinators).",
+     "climbs left null: NC State gives Habit/Form: Erect, RHS gives Habit: Columnar upright, and a search of all three pages for 'climb', 'vine' and 'trellis' found no description of radish as a climber. Per rule 4 this is null, not false.",
+     "is_edible, mature_height_in_min/max and mature_spread_in_min/max are already landed on this record; returned null deliberately and not researched (a backfill never overwrites a landed value).",
+     "No additional registered-authority page was loaded. The three starting pages were all read and all returned status ok, and none refused this machine."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "Nothing to refute. I re-read all three pages with qc.py and all loaded fine. Leaving attracts_pollinators null is right: pollinator words on RHS and Clemson are only planting-location or site-navigation text, and Clemson's only butterfly is a swallowtail larva on carrot leaves. Leaving climbs null rather than false is also right: NC State lists 'Erect', RHS lists 'Columnar upright', and no page mentions climbing, vines or trellises. The other five fields are already landed and correctly returned as null, and with no citations there are no labels or quotes to check. One small slip in the notes: RHS also has a 'Wildlife gardening' navigation link the researcher missed, which changes no value."
+  },
+  {
+   "batch": "b11-veg-round4.json",
+   "record": {
+    "common_name": "Spinach",
+    "scientific_name_accepted": "Spinacia oleracea",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: searched NC State (Spinacia oleracea page) for 'Attracts', 'Pollinator', 'Wildlife', 'bee'; RHS for 'Attracts', 'Pollinator', 'bee', 'Wildlife'; Penn State and UMD for 'ollinat', 'bees', 'butterfl', 'Attract'. None carries an attracts/pollinator statement for spinach (only site navigation menus matched). No mention means null, not false.",
+     "climbs left null: NC State lists Habit/Form: Erect and RHS lists Habit: Clump forming; neither page calls spinach a climber, and no page says it climbs. UMD mentions Malabar spinach as a vine, which is a different species and not used.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, returned null per instructions and not researched.",
+     "Poison note for the already-landed edibility record (NC State): Poisonous to Humans, Poison Severity Low; symptoms: only toxic in large quantities over time or with low calcium intake, can interfere with absorption of iron and calcium and increase the risk of gout and kidney stones; toxic principle oxalic acid; poison parts flowers and leaves; causes contact dermatitis: No.",
+     "https://hgic.clemson.edu/factsheet/spinach/ refused this machine (fetch status http-403); not read.",
+     "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=279157 was not attempted via qc.py; it is a known host that refuses this machine, so it is not read.",
+     "No additional registered-authority page was found or loaded beyond the cited pages."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read NC State, RHS, Penn State and UMD with qc.py. Clemson returned 403 and MOBOT failed with ConnectError, so neither was read. Every proposed field is null, which the pages support, and none is refuted. The unknowns text has three problems: (1) the NC State poison-part list is Flowers, Leaves and Stems, but the note omits Stems; (2) NC State does mention pollination, calling the flowers 'non-showy, pollinated by the wind', which supports leaving the field null rather than true; (3) MOBOT was attempted and failed (ConnectError), not 'not attempted'."
+  },
+  {
+   "batch": "b11-veg-round4.json",
+   "record": {
+    "common_name": "Squash",
+    "scientific_name_accepted": "Cucurbita pepo",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: the NC State Cucurbita pepo page has no 'Attracts' field (searched 'Attracts', 'Pollinat', 'bee', 'butterfl'); its only related text is the tag '#wildlife friendly' and a landscape-use label 'Native Pollinator Garden', neither of which names bees, butterflies or other pollinators as attracted.",
+     "RHS squash grow-your-own page loaded ok; searched 'Attracts', 'Pollinat', 'bee', 'butterfl', 'Wildlife' and found no pollinator statement (only site navigation 'Wildlife gardening').",
+     "hgic.clemson.edu summer-squash and pumpkins-winter-squash both refused this machine (fetch status http-403); not read.",
+     "RHS /plants/cucurbita-pepo, extension.umd.edu and extension.psu.edu guessed URLs returned http-404.",
+     "edis.ifas.ufl.edu IN1311 (Pollination of Cucurbita spp. in Florida) surfaced by search is a genus-level publication, not C. pepo specific, and qc.py failed to load it (ProxyError, ask.ifas.ufl.edu not allowed); not used.",
+     "is_edible, climbs and all four size fields returned null because they are already landed and not researched in this task."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State Cucurbita pepo page and the RHS squash grow-your-own page with qc.py. Both Clemson HGIC factsheets still return http-403. Every proposed value is null and there are no citations, so nothing is refuted. The attracts_pollinators null is correct. NC State has no 'Attracts' field. Its pollinator text is a landscape-garden label ('Vegetable, Herb and Mostly Native Pollinator Garden'), a lone 'Pollinator' photo caption on the zucchini-flower image that the researcher's unknowns missed, and general '#wildlife friendly' tags. None of these says the plant attracts pollinators. RHS has no pollinator, bee or insect text at all. The other six fields were not researched and stay as landed. One observation for whoever owns the landed climbs value: NC State calls the plant 'a sprawling vine', tags it '#herbaceous vine', and shows a 'Tendril' photo. I changed nothing in the shared quote cache."
+  },
+  {
+   "batch": "b11-veg-round4.json",
+   "record": {
+    "common_name": "Turnip",
+    "scientific_name_accepted": "Brassica rapa (Rapifera Group)",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: searched the RHS species page (rhs.org.uk/plants/157219) and RHS turnip grow-your-own page for 'Pollinator', 'Attracts', 'bee', 'butterfl' and found no attractive-to-pollinators tag or wildlife statement for turnip (the only butterfly mention is cabbage caterpillars as a pest). UMD leafy greens page: no hits for Pollinat, Attracts, bee, butterfl. UGA B1181 says only that the flowers of cabbage and leafy greens as a group 'are pollinated by insects', which is a crop-group statement that names no pollinator and is not an attracts claim, so it was not used.",
+     "climbs left null: RHS species page gives Habit as 'Tufted, Columnar upright'; searched 'climb' and 'vine' on RHS, UMD and UGA pages with no hits. No page calls turnip a climber, and climbs is never set false.",
+     "is_edible, mature_height_in_min/max and mature_spread_in_min/max already landed; returned null by instruction and not researched.",
+     "hgic.clemson.edu turnips-rutabagas factsheet refused this machine (ProxyError, then http-403 with the host allowed); not read.",
+     "plants.ces.ncsu.edu: the guessed species URL /plants/brassica-rapa/ returned http-404 and /plants/brassica-rapa-rapifera-group/ failed with a ProxyError; no NC State page for this species was found, and a genus page would not be a valid substitute.",
+     "plantfinder.mobot.org not fetched this run; earlier pass found no usable size and it is not needed for the two researched fields."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing wrong with the Turnip record: all seven proposed values are null, there are no citations, and none of the findings is refuted. I re-read the pages with qc.py, and they back the two researched nulls. On the RHS species page (157219) the Habit field reads \"Tufted, Columnar upright\", and the page has no pollinator tag. The RHS grow-your-own page mentions butterflies only as cabbage caterpillars, a pest. The UMD page had 0 hits for any pollinator or climbing term. UGA B1181 says only that \"the flowers of the crops ... are pollinated by insects\", which covers cabbage and leafy greens as a group and names no pollinator. The Clemson factsheet returned http-403. The Missouri Botanical Garden PlantFinder page failed with a ConnectError, and it is not a registered authority anyway. The is_edible, height and spread fields were already landed and came back null as instructed. I did not touch the shared page cache."
+  },
+  {
+   "batch": "b77-native-wetland-ferns-and-rushes.json",
+   "record": {
+    "common_name": "Royal Fern",
+    "scientific_name_accepted": "Osmunda regalis",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State page (plants.ces.ncsu.edu/plants/osmunda-regalis/) was searched for 'Attracts', 'Pollinator', 'butterfl' and 'bee' with 0 hits; its only wildlife text is 'It provides excellent ground cover for animals and birds' and the tag '#wildlife friendly', neither of which names pollinators. RHS page was searched for 'Attracts', 'Pollinator', 'butterfl', 'bee' with 0 hits (its single 'Wildlife' hit is site navigation).",
+     "climbs left null: NC State lists Habit/Form 'Arching' and Plant Type 'Fern, Herbaceous Perennial'; RHS lists Habit 'Clump forming'; searched 'Climb' on both with 0 hits. No page calls it a climber.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, returned null per instructions and not researched. NC State searched for 'Poison' and 'Toxic' with 0 hits.",
+     "Missouri Botanical Garden page (missouribotanicalgarden.org PlantFinderDetails l320) did not load: first attempt ProxyError (sandbox denied plantfinder.mobot.org), retry with that host allowed gave ConnectError, so it was not read.",
+     "No additional registered-authority page was sought; the NC State and RHS pages for this species were read and carry no pollinator or climbing text."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute. All seven proposed values are null and there are no citations. I re-read NC State and RHS with qc.py: neither page says the plant attracts pollinators or climbs, so null is correct for both. NC State's only wildlife text is about shelter for small animals and birds, and both pages describe a clump-forming fern with an arching habit, not a climber. Edibility and the four size fields were already landed and returned null, so there is no unit or range defect to check. For reference, the pages give 5-6 ft by 2-3 ft (NC State) and 1.5-2.5 m by 0.5-1 m (RHS). One small error: the researcher's unknowns paraphrase the NC State wildlife sentence inaccurately. The page says 'Ferns provide excellent shelter for small animals and birds and are seldom damaged by deer'. The Missouri Botanical Garden page still does not load (ProxyError, then ConnectError with the host allowed)."
+  },
+  {
+   "batch": "b77-native-wetland-ferns-and-rushes.json",
+   "record": {
+    "common_name": "Netted Chain Fern",
+    "scientific_name_accepted": "Woodwardia areolata",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State's structured 'Attracts' field for this species lists only Small Mammals and Songbirds, with no bees, butterflies or other pollinators. Searched the NC State page for 'Pollinator' and 'butterfl' (0 hits). The UGA ferns publication has no pollinator statement for this species (0 'butterfl' hits; the only 'pollinat' hits were site navigation). Ferns reproduce by spores, so no positive claim is supported.",
+     "climbs left null: NC State Habit/Form for this species reads 'Creeping' and Plant Type is Fern, Ground Cover, Herbaceous Perennial, Native Plant. Searched for 'climb' and 'vine' on the NC State page (0 hits). The UGA page mentions climbing only for other genera (Lygodium) and not for this species. Creeping is not climbing, and the rules say never to set false.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed in the existing record, not researched, returned null as instructed.",
+     "plantfinder.mobot.org refused this machine (fetch status error:ProxyError), so it was skipped and nothing was assumed about its content.",
+     "No RHS or other registered-authority page was loaded beyond the three starting pages."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State and UGA pages; MOBOT still fails to load with a ProxyError. All seven proposed values are null with no citations, so there was no unit, range, scope, label or quote problem to refute. On the two fields actually researched, the pages back null. For attracts_pollinators, NC State's Attracts field lists only Small Mammals and Songbirds and neither page names a pollinator. For climbs, NC State's Habit/Form reads 'Creeping' and every UGA 'climb' mention is about Lygodium. Nothing was refuted."
+  },
+  {
+   "batch": "b77-native-wetland-ferns-and-rushes.json",
+   "record": {
+    "common_name": "Marsh Fern",
+    "scientific_name_accepted": "Thelypteris palustris",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "mature_height_in_min/max and mature_spread_in_min/max: already landed in this record; returned null on purpose, not researched or overwritten.",
+     "is_edible left null: searched the RHS page for 'Edible' and the NC State page for 'Edible', 'Poison', 'Toxic' and 'Problem for'; none returned a hit, so neither page addresses eating or toxicity.",
+     "attracts_pollinators left null: the NC State page (subsp. pubescens) lists 'Attracts: Moths, Small Mammals', but its prose and Wildlife Value say the plant is the only known larval host for the Marsh Fern Moth (Fagitana littera) and that small mammals browse the foliage. That is larval feeding and browsing on a spore-bearing fern, not pollination, and no page names bees, butterflies, hummingbirds or other pollinators. The RHS page had 0 hits for 'Attract', 'pollinator', 'butterfl'. A reviewer who wants the literal NC State Attracts field to count under rule 7 could set true citing 'Moths' alone, but I did not.",
+     "climbs left null: NC State lists Habit/Form 'Arching, Erect' and Plant Type 'Fern, Ground Cover, Herbaceous Perennial'; RHS lists Habit 'Clump forming, Spreading branched'. No page calls it a climber.",
+     "No new registered-authority page was loaded. Only the two cited pages were read, and both fetched with status ok. The NC State page is for subsp. pubescens (Eastern Marsh Fern), not the nominate species. For reference, it gives Height 1-3 ft and Width 2-3 ft, and RHS gives Max Height and Max Spread 0.5-1 metres. Those figures were not used because size is already landed."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read both pages with qc.py and none of the seven values is refuted. All seven fields are null, which is correct for this record. Neither page mentions eating or toxicity, so is_edible stays null. The 'Moths' entry in NC State's Attracts field comes from the plant being the larval host for the marsh fern moth, not from pollination, so attracts_pollinators stays null. No page calls the plant a climber (NC State: 'Arching, Erect'; RHS: 'Clump forming, Spreading branched'), and climbs was left null rather than set false. Size was already landed and is not re-proposed. For whoever reviews the landed size: NC State gives 12-36 in tall and 24-36 in wide for subsp. pubescens, and RHS gives 0.5-1 m (about 20-39 in) for both height and spread."
+  },
+  {
+   "batch": "b77-native-wetland-ferns-and-rushes.json",
+   "record": {
+    "common_name": "Crested Woodfern",
+    "scientific_name_accepted": "Dryopteris cristata",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: qc.py on the NC State page for Dryopteris cristata searched 'Attracts', 'Pollinator', 'butterfl', 'Wildlife' and found 0 hits; on the RHS page it searched 'Attracts', 'Pollinator', 'butterfl', 'bee' and found 0 hits (the one 'Wildlife' hit is site navigation text). No pollinator statement, so null, not false.",
+     "climbs left null: NC State lists Plant Type as Fern, Ground Cover, Herbaceous Perennial, Native Plant and Habit/Form as Creeping, Erect; RHS lists Habit as Clump forming. 'Climb' and 'Vine' returned 0 hits on both pages. No page calls it a climber.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, not researched, returned null per instructions.",
+     "No additional registered-authority page (edis.ifas.ufl.edu, hgic.clemson.edu, extension.umd.edu, extension.psu.edu, fieldreport.caes.uga.edu) was searched for; only the two cited pages were read. Both loaded with fetch status ok."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read both cited pages with qc.py and both loaded (fetch status ok). The record holds up: all seven proposed values are null, and every statement in its unknowns list checks out against the page text. The NC State page has no pollinator, wildlife, climb or vine text. Its only 'bee' hit is part of the word 'been', and its habit is Creeping/Erect with type Fern/Ground Cover. The RHS page has no pollinator, climb or vine text either. Its only 'Wildlife' hit is the site menu, and its habit is 'Clump forming'. No field was set false on silence, no size number was proposed, and no new pages are cited, so the unit-conversion, range, scope, citation-label and quote checks have nothing to examine. I refuted nothing. I did not touch the shared page cache."
+  },
+  {
+   "batch": "b77-native-wetland-ferns-and-rushes.json",
+   "record": {
+    "common_name": "Ebony Spleenwort",
+    "scientific_name_accepted": "Asplenium platyneuron",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: searched the NC State page for 'Attracts', 'Pollinator', 'butterfl' and 'Wildlife' (0 hits each) and the RHS page for 'Attracts', 'Pollinator', 'butterfl' (0 hits; the only 'Wildlife' hit was site navigation text), so no page names pollinators.",
+     "climbs left null: NC State lists Plant Type as Fern / Herbaceous Perennial / Native Plant and Habit/Form as Arching, Clumping, Rounded; RHS lists Habit as Clump forming; searched both for 'Climb' (0 hits). No page calls it a climber, so it is null, not false.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, returned as null per instructions and not researched.",
+     "Missouri Botanical Garden page (taxonid=285848) refused this machine: qc.py returned error:ProxyError, then error:ConnectError on retry with the host allowed. Not read, so nothing is claimed from it.",
+     "No additional registered-authority page (UF/IFAS, Clemson, UMD, PSU, UGA) was searched; the two readable cited pages carried no pollinator or climbing information."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute. Every field in the proposed record is null and it has no citations, so none of checks A, B, C, E, F, G or H has a value to act on. I re-read the NC State and RHS pages with qc.py, and both loaded. The researcher's search results are accurate. NC State has 0 hits for attract, pollinat, butterfl, wildlife, climb and vine; its Habit/Form is Arching / Clumping / Rounded. RHS has 0 hits for the same pollinator and climb terms, apart from a 'Wildlife gardening' link in the site navigation; its habit is 'Clump forming'. Leaving attracts_pollinators null on silence is correct, and leaving climbs null rather than false is correct. The Missouri Botanical Garden page (taxonid=285848) did not load for me either. The first attempt was blocked by a ProxyError because the page redirects to plantfinder.mobot.org. With both hosts allowed, the retry failed with error:ConnectError. That matches the unknowns entry, and I claim nothing from that page. I did not touch .quote_cache."
+  },
+  {
+   "batch": "b77-native-wetland-ferns-and-rushes.json",
+   "record": {
+    "common_name": "Common Spike-rush",
+    "scientific_name_accepted": "Eleocharis palustris",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "is_edible left null: the RHS page was searched for 'Poison', 'Toxic', 'Problem for' and 'Edible' and none appear; no page addresses eating.",
+     "attracts_pollinators left null: RHS page searched for 'Attract', 'pollinat', 'butterfl' and 'bee' with 0 hits; it only lists 'Wildlife gardens' as a suggested planting location, which is not a pollinator statement.",
+     "climbs left null: RHS page lists Habit as 'Tufted' (an upright tufted sedge) and no page calls it a climber; searched 'climb' with 0 hits.",
+     "mature_height_in_min/max and mature_spread_in_min/max returned null because they are already landed and must not be overwritten.",
+     "plantfinder.mobot.org refused this machine (fetch status error:ProxyError); skipped and not guessed.",
+     "No NC State Plant Toolbox page for Eleocharis palustris: web search found none and plants.ces.ncsu.edu/plants/eleocharis-palustris/ returned http-404. No other registered-authority page was found."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute in the proposed Common Spike-rush (Eleocharis palustris) record, because every field it proposes is null. is_edible, attracts_pollinators and climbs are all null, not false. I re-read the RHS page and it backs that up: nothing on edibility or toxicity, \"Wildlife gardens\" listed only as a planting location with no pollinator named, and the habit given as \"Tufted\", not a climber. The four size fields are null because they are already landed. The Missouri Botanical Garden Plant Finder page (plantfinder.mobot.org) would not load for me either (ProxyError, then ConnectError), which matches what the record reports. With no non-null values there were no citations, unit conversions or ranges to check."
+  },
+  {
+   "batch": "b77-native-wetland-ferns-and-rushes.json",
+   "record": {
+    "common_name": "Broadleaf Cattail",
+    "scientific_name_accepted": "Typha latifolia",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State's structured 'Attracts' field for this species lists only Small Mammals and Songbirds, and its Wildlife Value text covers bird nesting material and rhizomes as small-mammal food; none of that is pollination. RHS page has no 'Attracts' or 'Pollinator' text (searched Attracts, Pollinator, butterfl, Wildlife; the only Wildlife hits were the 'Wildlife gardens' planting-location tag and site navigation).",
+     "climbs left null: NC State Habit/Form reads Erect and Spreading, Plant Type is Herbaceous Perennial / Water Plant; RHS Habit reads Submerged, Tufted. No page calls it a climber, and climbs is never set false.",
+     "is_edible, mature_height_in_min/max and mature_spread_in_min/max already landed; returned null and not researched, per the task.",
+     "plantfinder.mobot.org refused this machine (fetch status error:ConnectError, 0 bytes); skipped, not guessed.",
+     "No additional registered-authority page was loaded; NC State and RHS carry no pollinator or climbing statement for this species."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "Nothing to refute: all seven proposed fields are null and no citations are added. I re-read NC State and RHS with qc.py and they bear out each note in unknowns. Neither page names a pollinator. NC State's Attracts field lists only Small Mammals and Songbirds, and its one 'pollinat' hit is about pollen-catching hairs, not animals. RHS has no Attracts or pollinator text. Neither page calls it a climber: NC State gives Erect/Spreading, RHS gives Submerged/Tufted. Leaving climbs null rather than false is correct. The Missouri Botanical Garden page (plantfinder.mobot.org) did not load for me either: the fetch returned ProxyError and the sandbox blocked that host. It is not on the registered-authority list anyway."
+  },
+  {
+   "batch": "b78-native-aquatics-and-emergents.json",
+   "record": {
+    "common_name": "Southern Blue Flag Iris",
+    "scientific_name_accepted": "Iris virginica",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: the NC State Plant Toolbox page for Iris virginica lists Habit/Form as Clumping and Plant Type as Herbaceous Perennial, Native Plant, Poisonous, Water Plant, Wildflower; searches for 'Climb' and 'Vine' returned 0 hits. No page calls it a climber, so null rather than false.",
+     "attracts_pollinators, mature_height_in_min/max, mature_spread_in_min/max and is_edible already landed; returned null per instructions and not researched.",
+     "Did not load the Missouri Botanical Garden page (plantfinder.mobot.org) or search other registered hosts, because the NC State page was enough to settle climbs."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "Nothing to refute. All seven fields are null, there are no citations, and the climbs null holds up. I re-read the NC State page: Habit/Form is 'Clumping', the Plant Type list has nothing like a vine, and searches for climb, vine and twining found nothing, so the evidence for null rather than true is solid. A false value would break the never-false rule anyway. The MBG page would not load: the sandbox proxy blocked it, then the retry got a ConnectError. I did not touch the page cache. For whoever owns the landed size values: NC State gives height 1 ft 0 in to 2 ft 6 in (12-30 in) and width 1 ft 0 in to 3 ft 0 in (12-36 in). It also lists the plant as Poisonous."
+  },
+  {
+   "batch": "b78-native-aquatics-and-emergents.json",
+   "record": {
+    "common_name": "American Spatterdock",
+    "scientific_name_accepted": "Nuphar advena",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "mature_height_in_min/max left null: the RHS Nuphar advena page (loaded via qc.py) returned 0 hits for 'Max Height', 'Max Spread', 'Height' and 'Spread'; the PSU water garden guide gives no height for Nuphar advena (its 'Max growth height' figures belong to other species, e.g. Nymphaea odorata 5 ft).",
+     "mature_spread_in_min/max left null: same searches on RHS and PSU found no spread for this species.",
+     "is_edible left null: searched RHS and PSU for 'Edible', 'Poison', 'Toxic'; RHS had no hits and PSU's only 'edible' mention is about water chestnut, not Nuphar advena. No page addresses eating this plant.",
+     "attracts_pollinators left null: RHS had no 'Pollinator' or 'Attracts' hits; PSU's 'attracts bees, butterflies, and birds' lines are for other listed plants (the Nuphar advena mentions there are only in 'Other Native Alternatives' lists), and PSU's only pollinator text is a generic introduction about native plants.",
+     "climbs left null: no page calls the plant a climber (RHS 'Habit' had 0 hits, PSU lists it as a deep-water plant).",
+     "No new registered-authority page found: plants.ces.ncsu.edu/plants/nuphar-advena/ and /nuphar-lutea/ both returned http-404 via qc.py (after allowing the host past the sandbox ProxyError); a WebSearch for an NC State, UF/IFAS or other registered-host Nuphar advena page surfaced none. No host refused this machine other than the initial sandbox proxy denial, which was resolved by allowing the host.",
+     "mature_height_in_max removed on audit: The proposal leaves this null on the grounds that PSU 'gives no height for Nuphar advena (its Max growth height figures belong to other species)'. That is false. The PSU Mid-Atlantic Pocket Guide (extension.psu.edu, a registered authority) has a species block for this plant: 'Native Replacement: Spatterdock, Yellow Pond Lily, Yellow Cow Lily' / 'Nuphar advena' / 'Max growth height (ft): 1'. That is the species' own figure, not a cultivar or genus figure. It is in feet, so it converts to 12 in, not 1. The proposed null is refuted. The field should be mature_height_in_max = 12, cited to PSU with a claim containing 'mature_height_in'. The quote 'Max growth height (ft): 1' appears 6 times on the page, so the citation must carry the Nuphar advena context. Those lines are separate rendered runs and must not be glued into one quote."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [
+    "REFUTED but unmapped field \"unknowns (height/spread rationale)\": The first unknowns entry wrongly says the PSU guide has no height for Nuphar advena. PSU has a 'Native Replacement: Spatterdock, Yellow Pond Lily, Yellow Cow Lily' block for Nuphar advena with 'Max growth height (ft): 1'. The researcher apparently only checked the 'Other Native Alternatives' mentions and missed this block (the 7 spatterdock hits on the page include it). The unknown should be reworded so it covers only the minimum height and the spread."
+   ],
+   "summary": "I re-read both pages with qc.py. RHS (https://www.rhs.org.uk/plants/11600/nuphar-advena/details) loads but has nothing on height, spread, edibility, pollinators or habit, so the researcher was right about RHS. The researcher was wrong about PSU. The PSU Mid-Atlantic Pocket Guide has its own Nuphar advena block ('Native Replacement: Spatterdock, Yellow Pond Lily, Yellow Cow Lily' / 'Nuphar advena' / 'Max growth height (ft): 1'). That supports mature_height_in_max = 12 (1 ft converted to inches), while mature_height_in_min stays null because it is a single figure. The proposed null for mature_height_in_max and the unknowns line saying PSU gives no height are refuted. The spread pair, is_edible, attracts_pollinators and climbs are all correctly null: PSU's pollinator line belongs to pickerelweed, and its edible line is about water chestnut. Nothing in scripts/catalog/.quote_cache was touched."
+  },
+  {
+   "batch": "b78-native-aquatics-and-emergents.json",
+   "record": {
+    "common_name": "Green Arrow-arum",
+    "scientific_name_accepted": "Peltandra virginica",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State's Attracts field for this species lists only Songbirds, and its Wildlife Value text only says the fruit is eaten by wood ducks, muskrats and rails. I searched NC State for 'pollinat', 'butterfl' and 'bee' and found no hits. The RHS page has no 'Attract' or 'pollinat' text. Neither page names a pollinator.",
+     "climbs left null: NC State lists Habit/Form as Clumping, Creeping, Dense and Spreading, with Plant Type Herbaceous Perennial, Native Plant, Water Plant and Wildflower. RHS lists Habit as Clump forming. I searched RHS for 'climb' and found nothing. No page calls this plant a climber.",
+     "is_edible, mature_height_in_min, mature_height_in_max, mature_spread_in_min and mature_spread_in_max were returned null because they are already landed on this record and the task says not to research or overwrite them. This is not a finding about the species.",
+     "Decision-relevant toxicity, for whoever reviews the landed is_edible value: NC State says Poisonous to Humans, Poison Severity Medium. It gives Poison Symptoms as: The plant is toxic if consumed affecting the mouth and digestive tract. However, the toxic element, calcium oxylate, is eliminated by thoroughly cooking or drying the plant. Poison Toxic Principle is Calcium oxylate. Edibility reads: Plant is toxic, but cooking eliminates the toxic element. Any is_edible true on the record needs this condition attached.",
+     "For the landed size: NC State publishes Height 1 ft. 6 in. - 3 ft. 0 in. (18-36 in.) and Width 1 ft. 6 in. - 2 ft. 0 in. (18-24 in.). RHS publishes Max Height 0.5-1 metres and Max Spread 0.1-0.5 metres. I did not return these because the task lists the size fields as already landed. The earlier note that these pages gave no usable size appears to be wrong.",
+     "No extra registered-authority page was searched, because neither assigned field had any support on the two anchor pages. No page refused this machine; both anchor pages loaded with status ok."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read both anchor pages with qc.py; both loaded with status ok and I found no defects. Every proposed field value is null and there are no citations, so the checks for unit conversion, range, scope, citation labels and quote provenance had nothing to apply to. The two researched nulls hold up. For attracts_pollinators, NC State's Attracts field lists only Songbirds and its wildlife text is about ducks, muskrats and rails eating the fruit; neither page mentions pollinators. For climbs, NC State gives a Clumping/Creeping/Spreading habit and RHS gives Clump forming; neither page uses climb or vine. Every claim in unknowns is verbatim on the pages: the toxicity text and the sizes of 18-36 in by 18-24 in (NC State) and 0.5-1 m by 0.1-0.5 m (RHS). One thing is missing from the toxicity note: NC State names Flowers, Leaves and Stems as the poisonous parts, and that should go with any landed is_edible true. Whoever reviews the landed size values should confirm they are in inches (18-36 height, 18-24 spread) and not unconverted feet."
+  },
+  {
+   "batch": "b78-native-aquatics-and-emergents.json",
+   "record": {
+    "common_name": "Golden Club",
+    "scientific_name_accepted": "Orontium aquaticum",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State page has no 'Attracts' field and searches for Attracts, pollinator, bee, butterfl, moth, hummingbird and insect found no pollinator statement (only 'No known diseases or insect pests'); its tags include '#food source soft mast fruit', which is wildlife food, not pollination. RHS page searched for the same terms, zero hits.",
+     "climbs left null: NC State Habit/Form lists Clumping, Creeping, Erect, Spreading and RHS Habit reads 'Clump forming, Submerged'; searches for climb, vine and twin found nothing on either page. No page calls it a climber.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, not researched, returned null per instructions.",
+     "plantfinder.mobot.org refused this machine (fetch status error:ConnectError); skipped, not guessed.",
+     "No additional registered-authority pages for this species were searched beyond the NC State and RHS pages already cited."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read both pages that loaded (NC State and RHS) and nothing in the proposal is wrong: all seven fields are null and the citations list is empty, so no number, unit, range or quote needed checking. Leaving attracts_pollinators and climbs null is right, since no page says anything about pollinators or climbing. The Missouri Botanical Garden page would not load (ConnectError). One thing for whoever owns the already-landed is_edible value: NC State says the roots and seeds are edible only when boiled at length (never raw), and also flags the plant as poisonous (low severity). If that landed value is true, those conditions must appear in its unknowns."
+  },
+  {
+   "batch": "b78-native-aquatics-and-emergents.json",
+   "record": {
+    "common_name": "American Sweet Flag",
+    "scientific_name_accepted": "Acorus americanus",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "is_edible left null: searched the NC State Acorus americanus page and the Acorus calamus page for 'Poison', 'Toxic', 'Problem for' and 'Edible' and got zero hits on both; neither page addresses eating. Edibility was not inferred from the genus or from the search-engine summary, which is not a registered authority page.",
+     "attracts_pollinators left null: searched the NC State Acorus americanus page for 'Attracts', 'Pollinator' and 'butterfl' with zero hits. Its only Wildlife Value entry is 'Preferred host plant for the plateumaris shoemaker beetle', a leaf beetle host record and not pollination.",
+     "climbs left null: NC State lists Habit/Form as Erect and Spreading and Plant Type as Herbaceous Perennial and Ornamental Grasses and Sedges, with no climbing habit. Per the rules it is null, never false.",
+     "Size fields left null because they are already landed and a backfill never overwrites them.",
+     "No own-species page for Acorus americanus found on any other registered host. A WebSearch limited to rhs.org.uk, edis.ifas.ufl.edu, hgic.clemson.edu, extension.umd.edu, extension.psu.edu and fieldreport.caes.uga.edu returned only RHS Acorus calamus and Acorus tatarinowii pages, which are different species. No page was loaded through qc.py beyond the two NC State pages.",
+     "No host refused this machine; both NC State pages loaded with status ok."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read both NC State pages through qc.py and both loaded with status ok. All seven fields are null and none is refuted. Edible, pollinator and climbing terms get zero hits on the americanus page. The only Wildlife Value entry is a leaf-beetle host record, and Habit/Form is Erect and Spreading. One correction to the unknowns: the americanus page does say 'Leaves have been used to flavor beer.' (ethnobotany), so the claim that neither page addresses eating is slightly overstated, though null is still correct. The size fields are left as landed. For reference, the americanus page gives Height 2 ft 0 in to 3 ft 9 in (24-45 in) and Width 1 ft 6 in to 2 ft 0 in (18-24 in). There are no citations, so rules G and H have nothing to check."
+  },
+  {
+   "batch": "b78-native-aquatics-and-emergents.json",
+   "record": {
+    "common_name": "Swamp Loosestrife",
+    "scientific_name_accepted": "Decodon verticillatus",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "Missouri Botanical Garden page (plantfinder.mobot.org taxonid=282503) refused this machine: qc.py reported fetch status error:ConnectError, 0 bytes. Not read; nothing inferred about what it says.",
+     "RHS page (rhs.org.uk/plants/23106/decodon-verticillatus/details) loaded ok but for these patterns: Height, Width|Spread, Max Height, Max Spread, Ultimate, metres, Eventual, Habit, Climb|Vine, Dimension, Attracts|Pollinator|butterfl|bee|hummingbird|Wildlife (only a site-navigation menu 'Wildlife gardening' matched, not a plant attribute), Edible|edible, Poison|Toxic|Problem for|harmful, qc.py's extracted text contained no hit, so no usable size, habit, pollinator or edibility text was available in what the checker reads.",
+     "NC State Plant Toolbox: guessed species URLs plants.ces.ncsu.edu/plants/decodon-verticillatus/ and .../decodon-verticillatus-var-laevigatus/ returned http-404, and the find-a-plant page showed 0 hits for 'Decodon'; no NC State page for this species was found. None of the other registered hosts were found to carry a page for it in the search done.",
+     "WebSearch only surfaced unregistered sites (Go Botany, Minnesota Wildflowers, nurseries, etc.) giving figures like 6-8 ft; these are not registered authorities and were not used.",
+     "is_edible left null: no readable registered-authority page addresses eating or toxicity.",
+     "attracts_pollinators left null: no readable registered-authority page names pollinators; the RHS hit was only a navigation menu label.",
+     "climbs left null: no page read calls it a climber or gives a habit; descriptions elsewhere (arching, sprawling stems) are not climbing.",
+     "mature_height_in_min/max and mature_spread_in_min/max left null: no usable size on any readable registered page."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the pages and found nothing wrong: all seven nulls stand. RHS 23106 loaded (122944 bytes) but has no size, habit, climbing, pollinator or edibility text. Its only 'Wildlife' hit is the site navigation menu. MOBOT 282503 would not load (ConnectError, 0 bytes) and is not a registered authority anyway. The NC State species URL returns 404. The record makes no false claims from silence, takes no figures from unregistered sources, and has an empty citations list, which is correct for an all-null record. Nothing is refuted and no corrected quotes are needed."
+  },
+  {
+   "batch": "b78-native-aquatics-and-emergents.json",
+   "record": {
+    "common_name": "Scarlet Rose Mallow",
+    "scientific_name_accepted": "Hibiscus coccineus",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: NC State Plant Toolbox page for Muenchhusia coccinea lists Habit/Form as Erect and Plant Type as Herbaceous Perennial / Wildflower; searched that page for Climb, vine, twin and found 0 hits. No page calls it a climber, so null rather than false.",
+     "RHS page (plants/8735) loaded ok but searched for Habit, Plant Type, Climb, vine, twin, limb, abit, Max Height, Dimensions, Height: and found 0 hits, so it gives no habit text for climbs.",
+     "hgic.clemson.edu/scarlet-swamp-hibiscus refused this machine (first ProxyError, then http-403 when retried with the host allowed); not read.",
+     "plantfinder.mobot.org and ask.ifas.ufl.edu were not fetched; not read.",
+     "attracts_pollinators, is_edible and all four size fields returned null because they are already landed, per instructions; not researched."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute: all seven proposed fields are null and no citations are claimed. I re-read the pages with qc.py. NC State lists the habit as Erect and UF/IFAS fp253 as upright. Neither page, nor the RHS page, mentions climbing, vines, twining or tendrils, so leaving climbs null (not true, never false) is correct. Two pages could not be read: MOBOT failed with ProxyError and then ConnectError, and Clemson returned 403. One gap in the researcher's unknowns is that ask.ifas.ufl.edu/fp253 does load. That page also gives 4 to 8 ft height and 3 to 4 ft spread, for any future size work."
+  },
+  {
+   "batch": "b80-native-coastal.json",
+   "record": {
+    "common_name": "Sea Oats",
+    "scientific_name_accepted": "Uniola paniculata",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State page (plants.ces.ncsu.edu/plants/uniola-paniculata/) has no 'Attracts' field; its only wildlife entry is 'Dead stems are used by stem-nesting bees', which is nesting habitat, not pollination, so it is not read as support. RHS page (rhs.org.uk/plants/161734) searched for Attracts, Pollinator, butterfl, bee, hummingbird, Wildlife: no pollinator tag found (only site navigation text matched 'Wildlife').",
+     "climbs left null: NC State lists Habit/Form as 'Arching' and 'Clumping' and Plant Type as Native Plant / Ornamental Grasses and Sedges; searched 'climb' on NC State and RHS with 0 hits. No page calls it a climber.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, returned null per instructions and not researched.",
+     "hgic.clemson.edu/factsheet/ornamental-grasses-and-grass-like-plants/ refused this machine (fetch status http-403); not used.",
+     "ask.ifas.ufl.edu/fp594 was not loaded; no additional registered-authority species page was searched beyond NC State and RHS."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute. All seven fields are null and there are no citations, so checks A, B, C, G and H (units, ranges, scope, labels, quotes) have nothing to act on. I re-read NC State, RHS 161734 and UF fp594 with qc.py. None of them mentions pollinators: NC State's 'stem-nesting bees' line is about nesting habitat. None calls the plant a climber: NC State says Arching/Clumping, UF says 'Plant habit: upright', and 'climb' or 'vine' get 0 hits. So null is right for attracts_pollinators and climbs. HGIC still returns http-403. One error is in the notes rather than the values: they say ask.ifas.ufl.edu/fp594 'was not loaded', but it loads (92 KB) and is likewise silent on pollinators, climbing and edibility."
+  },
+  {
+   "batch": "b80-native-coastal.json",
+   "record": {
+    "common_name": "American Beachgrass",
+    "scientific_name_accepted": "Ammophila breviligulata",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "Clemson HGIC salt-tolerant plants factsheet refused this machine (fetch status http-403); a web search snippet attributed 2-3 ft tall and 6-10 ft wide to a search result, but I could not load the page through qc.py, so no quote is verifiable and the figures are not recorded.",
+     "UMD Native Plants for Wildlife Habitat PDF: qc.py returned status pdf with 0 bytes, so no text could be read or quoted. UMD Northern Neck native plant guide PDF also returned status pdf, 0 bytes.",
+     "RHS page (rhs.org.uk/plants/162198) loaded OK but searched for Max Height, Max Spread, Height, Ultimate, Spread, metres, Habit, Soil, bees, Attractive, Poison, Toxic, Edible; none matched (only the title, common name American marram, and site navigation text were found), so no size, habit, pollinator or edibility text was available from it.",
+     "NC State Plant Toolbox: tried plants.ces.ncsu.edu/plants/ammophila-breviligulata/ and the var-breviligulata slug, both http-404; no species page found, and the search returned none.",
+     "PSU Extension cool-season native ornamental grasses page loaded but has no mention of Ammophila or beachgrass.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max left null: no loadable registered-authority page gave a quotable size for this species.",
+     "is_edible left null: no page read addresses eating this plant; Poison, Toxic searches on the readable pages returned nothing relevant.",
+     "attracts_pollinators left null: no readable page names pollinators for this species.",
+     "climbs left null: no page calls this a climber (it is a clumping/rhizomatous dune grass; null means no record)."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read every page with qc.py and nothing in the record needs to be refuted. Clemson HGIC returns http-403. The UMD PDF returns status pdf with 0 bytes. RHS 162198 loads, but it has 0 hits for height, spread, a metre figure, climb, edible, toxic, harm, poll or bee, even with case-insensitive searches. The record cites no new pages and leaves all seven fields null with empty citations, so there is no unit, range, scope, label or quote problem to find. It correctly keeps the unverifiable search-snippet figures (2-3 ft tall, 6-10 ft wide) out of the record and lists them in unknowns. The unknowns accurately describe what the pages showed."
+  },
+  {
+   "batch": "b80-native-coastal.json",
+   "record": {
+    "common_name": "Seaside Goldenrod",
+    "scientific_name_accepted": "Solidago sempervirens",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "mature_spread_in_min left null: the only spread figure found is UF/IFAS SG185 'clumps may spread to widths of 1.6 ft', a single figure that can only fill the max end (already landed), so no minimum is published.",
+     "climbs left null: NC State lists Plant Type 'Herbaceous Perennial / Native Plant / Wildflower' and Habit/Form 'Clumping'; UF/IFAS calls it 'perennial, herbaceous, clump-forming, stoloniferous'; no page calls it a climber, vine or liana.",
+     "NC State page (plants.ces.ncsu.edu/plants/solidago-sempervirens/) searched for 'Dimensions' and 'Height': 0 hits; only leaf, fruit and flower widths present, no plant size block.",
+     "RHS page (rhs.org.uk/plants/86726) searched for 'Dimensions', 'Height', 'Width', 'Spread', 'Habit', 'Climb', 'Plant Type': 0 hits in the extracted text; no Max Height / Max Spread fields were found by those patterns (I did not separately search 'Max Height' or 'metres').",
+     "No additional registered-authority species page was searched for beyond the three assigned pages.",
+     "Fields attracts_pollinators, mature_height_in_min, mature_height_in_max, mature_spread_in_max, is_edible were already landed and not researched; returned null per instructions."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read all three assigned pages with qc.py and all three loaded (UF/IFAS SG185, NC State and RHS 86726). The record proposes no non-null values and no citations, so there is no unit conversion, range, scope, citation label or quote to refute. Both new nulls stand. mature_spread_in_min: the only spread figure anywhere is UF/IFAS's single '1.6 ft', which fills only the max end. climbs: no page says vine or climb; NC State gives Habit/Form 'Clumping' and stems 'erect or arching', and climbs was correctly left null rather than false. The RHS page returned no Height, Spread, Habit, Max or metre text at all, which confirms the researcher's report. One small gap in the unknowns: NC State's Stem Description says 'Rise up to 8 feet from the basel mound', so the claim of no size text on that page is slightly overstated. That figure is outside this round's fields."
+  },
+  {
+   "batch": "b80-native-coastal.json",
+   "record": {
+    "common_name": "Sea Ox-eye",
+    "scientific_name_accepted": "Borrichia frutescens",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "RHS page (rhs.org.uk/plants/157131/borrichia-frutescens/details) loaded OK via qc.py; searched for 'Max Height', 'Max Spread', 'Ultimate height', 'Height', 'Spread', 'Habit', 'ttract', 'ollinator', 'Edible', 'Poison', 'Toxic', 'Problem for', 'butterfl', 'bee' and got 0 hits for all of them; the only hit was 'Wildlife' in site navigation text. No usable size, habit, pollinator, or edibility text in the extracted page.",
+     "Clemson HGIC salt-marsh buffers page refused this machine (fetch status http-403); not read, not guessed.",
+     "NC State Plant Toolbox: plants.ces.ncsu.edu/plants/borrichia-frutescens/ returned http-404 and a registered-host web search found no NC State page for this species.",
+     "UF/IFAS EDIS fp069 (Borrichia frutescens Sea Oxeye) appears in search results but qc.py returned http-410 (gone) even with ask.ifas.ufl.edu allowed; unreadable, so no figures quoted. A search-result summary mentioned heights of roughly 2-4 ft and spread 2-3 ft, but that text was not loaded through qc.py, so it is unusable. fp068 is a Borrichia genus page and is not a substitute.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max left null: no loadable page on a registered host gives size for this species.",
+     "is_edible left null: no loadable page addresses eating; toxicity searches ('Poison', 'Toxic', 'Problem for') returned 0 hits on the RHS page.",
+     "attracts_pollinators left null: no loadable page names pollinators.",
+     "climbs left null: no page calls this plant a climber."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read every page with qc.py and found nothing to refute. RHS 157131 loaded (122,676 bytes) but had 0 hits for Height, Spread, Habit, ttract, ollinator, Edible and Toxic; its only text about the plant is the name and navigation. The Clemson HGIC buffers page returned http-403, EDIS FP069 returned http-410 with the host allowed, and NC State returned http-404. No registered-authority page gives any value, so all seven nulls are correct and match the record's own unknowns. There are no feet-to-inches errors, no false values from silence, and no citations to mislabel. Nothing in .quote_cache was touched."
+  },
+  {
+   "batch": "b80-native-coastal.json",
+   "record": {
+    "common_name": "Smooth Cord Grass",
+    "scientific_name_accepted": "Spartina alterniflora",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "RHS page (rhs.org.uk/plants/161332) loaded via qc.py but I searched it for 'Max Height', 'Max Spread', 'Ultimate height', 'Height:', 'Width:', 'Dimensions', 'Attracts', 'Edible', 'Pollinator', 'Poison', 'Toxic', 'Habit', 'metre' and got no hits, so no size, habit, pollinator or edibility text was found there; the page only gives family, genus description and an invasive-species note.",
+     "hgic.clemson.edu/factsheet/blue-carbon/ refused this machine (http-403); not read.",
+     "hgic.clemson.edu/factsheet/life-along-the-salt-marsh-protecting-tidal-creeks-with-vegetative-buffers/ refused this machine (http-403); not read. The related Clemson troubleshooting-salt-marsh-decline page was also http-403.",
+     "NC State Plant Toolbox: guessed URLs plants.ces.ncsu.edu/plants/spartina-alterniflora/ and /sporobolus-alterniflorus/ returned http-404; a web search surfaced no NC State page for this species (only S. pectinata, a different species, which was not used).",
+     "edis.ifas.ufl.edu AG424 attempt failed with ProxyError (and ask.ifas.ufl.edu was denied); no UF/IFAS species page for this plant was read.",
+     "UMD Native Plants of Maryland PDF fetched as pdf with 0 bytes extracted; unusable.",
+     "A web search snippet gave heights of about 2-5 ft, but it was not read from a qc.py-loaded registered page, so it is not recorded.",
+     "is_edible, attracts_pollinators, climbs, and all four size fields left null: no loadable registered-authority page addressing them. climbs is never set false without a page saying so; no toxicity text was found either way."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute. Every one of the seven proposed values is null and the record has no citations. I re-read the RHS species page (rhs.org.uk/plants/161332) with qc.py. It loads, but its Size section is empty, and it has no text on height, edibility, toxicity, pollinators or climbing. The only relevant text is a genus-level line that Spartina are 'spreading' rhizomatous grasses, which gives no figure and could not support a value anyway. The 'flower' matches on the page are site navigation for RHS flower shows. Both Clemson pages (blue-carbon and life-along-the-salt-marsh) still return http-403. Because every field is null, the checks on unit conversion, ranges, scope, citation labels and quote provenance have nothing to test, and null rather than false is the correct value for is_edible, attracts_pollinators and climbs. The unknowns list matches what the pages actually show."
+  },
+  {
+   "batch": "b80-native-coastal.json",
+   "record": {
+    "common_name": "Eastern Baccharis",
+    "scientific_name_accepted": "Baccharis halimifolia",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: NC State page (plants.ces.ncsu.edu/plants/baccharis-halimifolia/) lists Plant Type as Native Plant, Perennial, Shrub, Weed and describes a multi-trunked, irregular, open habit; searched for 'Climb', 'Vine', 'Habit', 'Plant Type' and found no climbing or vine habit. RHS page loaded OK but searches for 'Habit', 'Climb' and 'Max Height' returned 0 hits. A plant no page calls a climber stays null.",
+     "attracts_pollinators, mature_height_in_min/max, mature_spread_in_min/max, is_edible: already landed; returned null per instructions and not researched.",
+     "plantfinder.mobot.org was not fetched; no new page beyond the cited NC State and RHS pages was needed."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "Nothing to refute. Every field in the proposed Eastern Baccharis record is null and it has no citations, so there is no unit, range, scope, citation-label or quote defect. I re-read the NC State and RHS pages. Both call it a shrub (NC State Plant Type: Native Plant, Perennial, Shrub, Weed; RHS: 'A fast-growing deciduous shrub'), and neither has 'climb' or 'vine' anywhere, so climbs stays null. The plantfinder.mobot.org page would not load (ConnectError), and the record does not rely on it."
+  },
+  {
+   "batch": "b80-native-coastal.json",
+   "record": {
+    "common_name": "Dwarf Palmetto",
+    "scientific_name_accepted": "Sabal minor",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "is_edible left null: NC State page for Sabal minor has no Edible, Poison, Toxic or Problem for text (searched all four, 0 hits); its 'food source' tags (herbage, nectar, pollen, soft mast fruit) describe wildlife food, not human food. RHS page has no Edible, Poison, Toxic, food hits. Search of registered hosts only surfaced edible heart-of-palm text for Sabal palmetto (cabbage palm), a different species, which is not used.",
+     "climbs left null: NC State lists Habit/Form: Erect and Plant Type: Native Plant, Perennial, Shrub; RHS lists Habit: Bushy. No page calls it a climber; never set false.",
+     "attracts_pollinators, mature_height_in_min/max, mature_spread_in_min/max: already landed, deliberately returned null per task.",
+     "plantfinder.mobot.org and ask.ifas.ufl.edu were not fetched (task said earlier pass found no size; edibility/habit not pursued there)."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found no defects in the Dwarf Palmetto (Sabal minor) record and refuted nothing. All seven fields are null and nothing is cited, so the unit, range, scope, label and quote checks have nothing to act on. I re-read the NC State, RHS and IFAS FR357 pages. All three are silent on human edibility and toxicity, and none calls the plant a climber: NC State says Erect, RHS says Bushy. So leaving is_edible and climbs null is correct. The plantfinder.mobot.org page did not load because the sandbox proxy denied network access to it; it is not a registered authority, and the record cites nothing from it. Two things are worth checking against the values already landed. NC State says \"The flowers attract pollinators\" and tags the plant \"#NC Native Pollinator Plant\", so attracts_pollinators should be true. NC State gives height as 2-10 ft (24-120 in) and width as 4-6 ft (48-72 in), so landed sizes should be in those inch values, not left in feet."
+  },
+  {
+   "batch": "b82-perennials.json",
+   "record": {
+    "common_name": "Woodland Sage",
+    "scientific_name_accepted": "Salvia nemorosa",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: NC State Plant Toolbox lists Habit/Form as Clumping, Erect, Multi-stemmed and Plant Type as Perennial; RHS lists Habit as Bushy, Clump forming. I searched both pages for Climb, vine and twin and found no climbing habit text, so no page calls it a climber. Null means no record, not false.",
+     "is_edible, attracts_pollinators, mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max left null: already landed in this record, and a backfill does not overwrite them, so I did not research them.",
+     "plantfinder.mobot.org (Missouri Botanical Garden) was not read in this pass. It is a host known to refuse this machine, and I did not try it because the other two pages already settled the climbs question.",
+     "I did not look for other registered-authority pages. The NC State and RHS pages already cover the climbs question and both show a non-climbing habit."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute in the Woodland Sage proposal. All seven fields are null and it cites nothing, so the only real claim is that climbs stays null, and that holds. NC State lists its habit as Clumping, Erect, Multi-stemmed and RHS as Bushy, Clump forming. Neither page calls the plant a climber. The one 'vine' match on NC State is just the title of a course video, not a description of how the plant grows. The Missouri Botanical Garden page would not load from this machine (blocked by the sandbox, then ConnectError on the retry), which matches what the researcher put in unknowns. A side note on the fields the proposal leaves alone. NC State gives up to 3 ft tall by 2 ft wide, and RHS gives 0.5-1 m tall. NC State also tags the plant as bee, butterfly and hummingbird friendly, so whoever checks the landed sizes and pollinator flag can use those."
+  },
+  {
+   "batch": "b82-perennials.json",
+   "record": {
+    "common_name": "Lamb's Ear",
+    "scientific_name_accepted": "Stachys byzantina",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: NC State page lists Plant Type as Ground Cover and Herbaceous Perennial and Habit/Form as Clumping, Horizontal, Spreading; RHS page lists Habit as Matforming. I searched both pages for 'climb', 'clamb', 'twin' and 'vine' and found no hits, so no page calls this plant a climber.",
+     "attracts_pollinators, mature_height_in_min/max, mature_spread_in_min/max and is_edible were already landed, so I returned them as null and did not research them.",
+     "I did not read the other three start pages (NC State common-name pages and Missouri Botanical Garden) or search for other registered-authority pages. The two I read, NC State and RHS, already settle climbs as null."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "The proposal for Lamb's Ear (Stachys byzantina) survives the audit: I refuted nothing, but the record proposes no new values. Every field is null and there are no citations. On climbs, I re-read the pages and agree with null. The three NC State pages give Plant Type as Ground Cover and Herbaceous Perennial and Habit/Form as Clumping, Horizontal and Spreading. RHS gives Habit as Matforming. None of the pages has a hit for any climbing term. Nothing is set to false, so the silence-is-null and never-false-for-climbs checks pass. With no numbers, the unit, range and scope checks have nothing to test, and with no quotes, neither do the citation and provenance checks. The Missouri Botanical Garden page would not load because the sandbox blocked www.missouribotanicalgarden.org. That does not matter here, since it is not a registered authority."
+  },
+  {
+   "batch": "b82-perennials.json",
+   "record": {
+    "common_name": "Spiked Speedwell",
+    "scientific_name_accepted": "Veronica spicata",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: NC State page for Veronica spicata lists Plant Type 'Herbaceous Perennial' and Habit/Form 'Clumping' and 'Erect'; RHS page lists Habit 'Bushy'. I searched both pages for 'Climb', 'Vine' and 'twin' and got no hits. No page calls it a climber, so null rather than false.",
+     "attracts_pollinators, mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, deliberately returned null and not researched, per task.",
+     "plantfinder.mobot.org was not fetched in this pass; I only read the NC State and RHS pages, so nothing is claimed about what Missouri Botanical Garden says."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I refuted nothing. Every field in the Spiked Speedwell proposal is null and it cites nothing. The only researched decision is leaving climbs null, and both pages that loaded back that. NC State lists Herbaceous Perennial with a Clumping and Erect habit, RHS lists a Bushy habit and calls it a clump-forming perennial, and neither page mentions climbing, vines or twining. The MOBOT page would not load (first a sandbox block, then a ConnectError), and the record already says MOBOT was not read. I did not touch the page cache."
+  },
+  {
+   "batch": "b82-perennials.json",
+   "record": {
+    "common_name": "Oriental Poppy",
+    "scientific_name_accepted": "Papaver orientale",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: the NC State page lists Plant Type 'Herbaceous Perennial' and Habit/Form 'Clumping' and 'Spreading', and the RHS page lists Habit 'Bushy, Clump forming'. I searched both pages for 'Climb' and 'Vine' and got 0 hits on each. No page calls it a climber, so null, not false.",
+     "attracts_pollinators, is_edible and all four mature size fields left null on purpose: they are already landed in this record and a backfill never overwrites a landed value. I did not research them.",
+     "No other registered-authority page for Papaver orientale was searched, because the two cited pages already settled the one field this task covers."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State and RHS pages for Papaver orientale with qc.py, and both loaded fine. Neither page has any climbing language: 0 hits each for climb, vine, twin and tendril. NC State gives Habit/Form 'Clumping' and 'Spreading', and RHS gives Habit 'Bushy, Clump forming'. So leaving climbs null is correct, and false would have been wrong. All seven proposed values are null, and the citations list is empty, which is consistent since no field carries a value. The record cites no new pages, makes no unit, range, scope, false-on-silence or edibility claims, and has no quotes to check. Nothing is refuted. One thing for later: the NC State tags include #bee friendly, #butterfly friendly and #hummingbird friendly, in case the landed attracts_pollinators value ever needs support."
+  },
+  {
+   "batch": "b82-perennials.json",
+   "record": {
+    "common_name": "Balloon Flower",
+    "scientific_name_accepted": "Platycodon grandiflorus",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "attracts_pollinators left null: NC State species page (qc.py patterns searched: Attracts, ollinator, ollin, butterfl, nsect, ummingbird, moth, Bee, Wildlife) and the RHS species page (Attracts, ollinator, ollin, ttractive, bees, butterfl, Wildlife) carry no attracts/pollinator field or statement. A web search summary claimed NC State says it attracts pollinators, but that was not found on the page as loaded, so it is not used.",
+     "climbs left null: NC State Habit/Form reads Clumping and RHS Habit reads Clump forming; no page calls it a climber. Climbs is never set false.",
+     "mature_height_in_min, mature_height_in_max, mature_spread_in_min, mature_spread_in_max, is_edible: already landed, not researched, returned null per instructions.",
+     "missouribotanicalgarden.org (plantfinder.mobot.org) refused this machine: fetch status error:ProxyError, bytes 0. Skipped, not guessed."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I re-read the NC State and RHS species pages. The Missouri page would not load (ProxyError, then ConnectError), which is now listed in unknowns. All seven proposed fields are null, and the pages back that up. Neither the NC State nor the RHS page says anything about pollinators. Both describe the plant as clumping ('Clumping' on NC State, 'Clump forming' on RHS), not climbing. Neither says anything about edibility. There are no citations, no size values and no false values, so nothing gets refuted."
+  },
+  {
+   "batch": "b82-perennials.json",
+   "record": {
+    "common_name": "Spotted Dead Nettle",
+    "scientific_name_accepted": "Lamium maculatum",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: NC State Plant Toolbox (plants.ces.ncsu.edu/plants/lamium-maculatum/) lists Plant Type as Ground Cover / Herbaceous Perennial and Habit/Form as Creeping, Erect, Prostrate, Spreading; RHS lists Habit as Matforming. I searched both pages for 'Climb', 'twin' and 'vine' and got 0 hits. No page calls it a climber, so it is null, not false.",
+     "attracts_pollinators, mature_height_in_min/max, mature_spread_in_min/max and is_edible were already landed; not researched, returned null per instructions.",
+     "Did not load the other start pages (plantfinder.mobot.org, fieldreport.caes.uga.edu, NC State common-name page); the two main pages already answered the climbs question."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found no defects. Every field in the proposal is null and there are no citations. The one researched field, climbs, is correctly null. On re-reading, NC State (species page and common-name page) lists it as a creeping, prostrate, spreading ground cover, and RHS calls it a mat-forming, stoloniferous perennial with prostrate leafy stems. No page that loaded mentions climbing, twining or vines. The MOBOT page did not load (proxy/connect error). It is not a registered authority, so this does not affect the verdict."
+  },
+  {
+   "batch": "b82-perennials.json",
+   "record": {
+    "common_name": "Siberian Bugloss",
+    "scientific_name_accepted": "Brunnera macrophylla",
+    "is_edible": null,
+    "attracts_pollinators": null,
+    "climbs": null,
+    "mature_height_in_min": null,
+    "mature_height_in_max": null,
+    "mature_spread_in_min": null,
+    "mature_spread_in_max": null,
+    "unknowns": [
+     "climbs left null: NC State page (plants.ces.ncsu.edu/plants/brunnera-macrophylla/) lists Plant Type 'Herbaceous Perennial' and Habit/Form 'Clumping' and 'Mounding'; searched for 'Climb' and 'Vine' and got 0 hits. RHS page lists Habit 'Clump forming'; searched for 'Climb' and 'twin' and got 0 hits. No page calls it a climber, so null (never false).",
+     "attracts_pollinators, is_edible, mature_height_in_min/max, mature_spread_in_min/max left null: already landed in this record, not researched in this pass.",
+     "No page refused this machine; NC State and RHS both returned fetch status ok. The Missouri Botanical Garden page was not re-read, since nothing in this pass needed it."
+    ],
+    "citations": []
+   },
+   "applied": [],
+   "review": [],
+   "summary": "I found nothing to refute. Every proposed value is null, there are no citations, and climbs is correctly left null rather than set false. I re-read the NC State and RHS pages with qc.py. NC State lists the plant as a herbaceous perennial with a clumping, mounding habit; RHS lists it as clump forming. Neither page uses any climber term (climb, vine, twining, tendril, scrambling, trailing, liana). The unknowns accurately describe what those pages say. I could not fetch the Missouri Botanical Garden page from this sandbox (ProxyError, then ConnectError via plantfinder.mobot.org), so that page is unverified here, but the proposal does not rely on it. One note for later passes: NC State gives the size in feet (height 1.5 ft, spread up to 2.5 ft) and tags the plant '#pollinator plant'. Any future size values must be converted to 18 in and 30 in, and the spread is a single 'up to' figure, not a range."
+  }
+ ],
+ "unverified": [],
+ "no_research": []
+}
