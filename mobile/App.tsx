@@ -31,6 +31,11 @@ import LoginScreen from './src/auth/LoginScreen';
  *  plant goes, set when it is opened from an area's own screen. */
 export type AddPlantParams = { growingAreaId?: number } | undefined;
 
+/** A species, and — when it was opened from an area's candidates or the
+ *  Almanac's area filter — the area it was being read against, whose full
+ *  findings the page then shows. */
+export type SpeciesDetailParams = { speciesId: number; growingAreaId?: number };
+
 export type PlantsStackParamList = {
   PlantsList:    undefined;
   PlantDetail:   { plantId: number };
@@ -40,7 +45,7 @@ export type PlantsStackParamList = {
 
 export type SpeciesStackParamList = {
   SpeciesList:   undefined;
-  SpeciesDetail: { speciesId: number };
+  SpeciesDetail: SpeciesDetailParams;
 };
 
 export type GrowingAreasStackParamList = {
@@ -49,13 +54,13 @@ export type GrowingAreasStackParamList = {
   // Reached from an area, so "see what suits it, read about it, put one in"
   // stays in this tab and Back returns to the area, which then shows it.
   AddPlant:          AddPlantParams;
-  SpeciesDetail:     { speciesId: number };
+  SpeciesDetail:     SpeciesDetailParams;
 };
 
 export type CensusStackParamList = {
   CensusSummary: undefined;
   Almanac:       undefined;
-  SpeciesDetail: { speciesId: number };
+  SpeciesDetail: SpeciesDetailParams;
 };
 
 type RootTabParamList = {

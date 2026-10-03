@@ -67,6 +67,20 @@ export function misfitsOf(findings: FitFinding[]): FitFinding[] {
   return findings.filter((f) => f.verdict === 'misfits');
 }
 
+/** The confirmed findings, each of which a screen may show with its source. */
+export function fitsOf(findings: FitFinding[]): FitFinding[] {
+  return findings.filter((f) => f.verdict === 'fits');
+}
+
+/** What nobody could judge here, as one line under what was: "Not known
+ *  here: soil and something to eat." An unknown is never shown as a row of
+ *  its own — it has no source to name and is no reason for or against — but
+ *  it is not hidden either. Null when every axis was answered. */
+export function notKnownLine(findings: FitFinding[]): string | null {
+  const unknown = labelsWith(findings, 'unknown');
+  return unknown.length > 0 ? `Not known here: ${joinAnd(unknown)}.` : null;
+}
+
 /** The heading over an Add Plant answer that has misfits in it. */
 export function misfitIntro(areaName: string): string {
   return `Worth knowing before it goes in ${areaName}`;

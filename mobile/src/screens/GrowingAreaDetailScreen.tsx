@@ -27,7 +27,7 @@ import CareCalendar from '../care/CareCalendar';
 import {
   SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, measuredLength, uncheckedNotes,
 } from '../growingAreas/realEstate';
-import { CHECK_FAILED, plantTitle } from '../growingAreas/fitFindings';
+import { CHECK_FAILED, confirmedLine, plantTitle } from '../growingAreas/fitFindings';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
 
@@ -323,9 +323,10 @@ export default function GrowingAreaDetailScreen() {
             candidateRows.map((c) => (
               <TouchableRipple
                 key={c.species_id}
-                onPress={() => navigation.navigate('SpeciesDetail', { speciesId: c.species_id })}
+                onPress={() => navigation.navigate(
+                  'SpeciesDetail', { speciesId: c.species_id, growingAreaId })}
                 accessibilityRole="button"
-                accessibilityHint={`Opens ${c.common_name}`}
+                accessibilityHint={`Opens ${c.common_name}, with how it suits this space`}
                 style={styles.candidate}
               >
                 <View>
@@ -334,9 +335,12 @@ export default function GrowingAreaDetailScreen() {
                     <Text style={styles.candidateMore}>›</Text>
                   </View>
                   <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
-                  {/* Only the axes that were confirmed: an unknown is never a
-                      reason, so it never appears as one. */}
-                  {c.fits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
+                  {/* One line per candidate — which axes were confirmed — and
+                      the findings themselves, each with whose word it is, on
+                      the species page this opens. Six near-identical rows a
+                      candidate made twelve candidates about seventy lines.
+                      Only confirmed axes: an unknown is never a reason. */}
+                  <Text style={styles.candidateWhy}>{confirmedLine(c.fits)}</Text>
                 </View>
               </TouchableRipple>
             ))
@@ -475,7 +479,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   candidateHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
   candidateName: { fontSize: 15, fontWeight: '700', color: p.ink, flexShrink: 1 },
   candidateMore: { fontSize: 20, color: p.faint },
-  candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 6 },
+  candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 4 },
+  candidateWhy: { fontSize: 13, lineHeight: 18, color: p.sub },
   caveat: { fontSize: 13, lineHeight: 19, color: p.warn, marginBottom: 12 },
   retry: { alignSelf: 'flex-start', marginTop: 6 },
 

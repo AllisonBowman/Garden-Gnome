@@ -1,6 +1,6 @@
 import {
   AXIS_LABEL, CHECK_FAILED, confirmedLine, findingHeading, findingLabel, joinAnd,
-  misfitIntro, misfitsOf, plantTitle, speciesFitNote,
+  fitsOf, misfitIntro, misfitsOf, notKnownLine, plantTitle, speciesFitNote,
 } from './fitFindings';
 import type { FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
 
@@ -148,5 +148,25 @@ describe('a plant named on the needs-addressing card', () => {
   it('still names the species when a nickname merely starts with it', () => {
     expect(plantTitle('Hostas by the gate', 'Hosta'))
       .toEqual({ name: 'Hostas by the gate', species: 'Hosta' });
+  });
+});
+
+describe('a species’ full answer for one area', () => {
+  const findings = [
+    finding({ axis: 'indoor_outdoor', verdict: 'fits' }),
+    finding({ axis: 'sun', verdict: 'misfits' }),
+    finding({ axis: 'soil', verdict: 'unknown' }),
+    finding({ axis: 'goal', verdict: 'unknown', goal: 'edible' }),
+    finding({ axis: 'goal', verdict: 'fits', goal: 'pollinators' }),
+  ];
+
+  it('sorts what is against it from what was confirmed', () => {
+    expect(misfitsOf(findings).map((f) => f.axis)).toEqual(['sun']);
+    expect(fitsOf(findings).map(findingLabel)).toEqual(['Indoors or out', 'Feeds pollinators']);
+  });
+
+  it('says in one line what nobody could judge, rather than dropping it', () => {
+    expect(notKnownLine(findings)).toBe('Not known here: soil and something to eat.');
+    expect(notKnownLine(fitsOf(findings))).toBeNull();
   });
 });

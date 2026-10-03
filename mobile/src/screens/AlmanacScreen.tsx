@@ -233,7 +233,11 @@ export default function AlmanacScreen() {
               species={s}
               owned={ownedIds.has(s.id)}
               fits={areaId != null ? fitsById.get(s.id) : undefined}
-              onPress={() => navigation.navigate('SpeciesDetail', { speciesId: s.id })}
+              // Filtered to an area, the species page shows how it suits that
+              // area in full — the detail behind the card's "Confirmed here".
+              onPress={() => navigation.navigate('SpeciesDetail', {
+                speciesId: s.id, growingAreaId: areaId ?? undefined,
+              })}
             />
           ))
         )}
