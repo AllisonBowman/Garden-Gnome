@@ -109,6 +109,9 @@ export default function PlantDetailScreen() {
       queryClient.invalidateQueries({ queryKey: ['plant', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      // Both areas' "needs addressing" lists change when a plant moves.
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       setConfirmation(`🌍 Moved to ${dest?.name ?? 'its new home'} — history came along`);
       void rescheduleAllReminders();
@@ -125,6 +128,8 @@ export default function PlantDetailScreen() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       void rescheduleAllReminders();
       navigation.goBack();

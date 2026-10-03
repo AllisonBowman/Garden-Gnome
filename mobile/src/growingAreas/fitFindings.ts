@@ -7,7 +7,7 @@
 // all: a second copy of the fit rules here would sooner or later disagree
 // with the first, and the gardener would see both.
 
-import type { FitAxis, FitFinding } from '../api/growingAreas';
+import type { FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
 import { goalPhrase } from './realEstate';
 
 export const AXIS_LABEL: Record<FitAxis, string> = {
@@ -46,14 +46,48 @@ export function joinAnd(items: string[]): string {
   return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
 }
 
+/** The labels of the findings with one verdict, once each, lower-cased for
+ *  the middle of a sentence. */
+function labelsWith(findings: FitFinding[], verdict: FitFinding['verdict']): string[] {
+  return [...new Set(findings
+    .filter((f) => f.verdict === verdict)
+    .map((f) => findingLabel(f).toLowerCase()))];
+}
+
 /** What a candidate was confirmed on, as one line under its name in the
  *  Almanac: "Confirmed here: sun, soil and size." Only `fits` count — an
  *  unknown is never a reason — so a list with none of them says nothing. */
 export function confirmedLine(findings: FitFinding[]): string | null {
-  const labels = [...new Set(findings
-    .filter((f) => f.verdict === 'fits')
-    .map((f) => findingLabel(f).toLowerCase()))];
+  const labels = labelsWith(findings, 'fits');
   return labels.length > 0 ? `Confirmed here: ${joinAnd(labels)}.` : null;
+}
+
+/** The findings Add Plant lists one by one: the misfits, and only those. */
+export function misfitsOf(findings: FitFinding[]): FitFinding[] {
+  return findings.filter((f) => f.verdict === 'misfits');
+}
+
+/** The heading over an Add Plant answer that has misfits in it. */
+export function misfitIntro(areaName: string): string {
+  return `Worth knowing before it goes in ${areaName}`;
+}
+
+/** What Add Plant says when the chosen spot has nothing on record against
+ *  the species. Two different situations, never one sentence: something was
+ *  confirmed and nothing contradicts it — or nothing was judged at all,
+ *  which is an absence of evidence and not a recommendation. Whichever it
+ *  is rests on the server's `candidate`, not on a rule re-run here. Null
+ *  when there are misfits: those are listed one by one instead. */
+export function speciesFitNote(fit: SpeciesFit, areaName: string): string | null {
+  if (misfitsOf(fit.findings).length > 0) return null;
+  if (!fit.candidate) {
+    return `The catalog can’t judge it for ${areaName} yet — nothing is on `
+      + 'record for or against it there, so this is no recommendation either way.';
+  }
+  const confirmed = labelsWith(fit.findings, 'fits');
+  const unknown = labelsWith(fit.findings, 'unknown');
+  const said = `Nothing on record against it in ${areaName}. Confirmed: ${joinAnd(confirmed)}.`;
+  return unknown.length > 0 ? `${said} Not known: ${joinAnd(unknown)}.` : said;
 }
 
 /** Shown in place of a fit answer the app could not fetch. A failed request

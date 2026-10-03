@@ -1,7 +1,8 @@
 import {
   AXIS_LABEL, CHECK_FAILED, confirmedLine, findingHeading, findingLabel, joinAnd,
+  misfitIntro, misfitsOf, speciesFitNote,
 } from './fitFindings';
-import type { FitAxis, FitFinding } from '../api/growingAreas';
+import type { FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
 
 const finding = (over: Partial<FitFinding> = {}): FitFinding => ({
   axis: 'sun', verdict: 'misfits',
@@ -81,5 +82,47 @@ describe('the confirmed line', () => {
     expect(joinAnd(['sun'])).toBe('sun');
     expect(joinAnd(['sun', 'soil'])).toBe('sun and soil');
     expect(joinAnd(['sun', 'soil', 'size'])).toBe('sun, soil and size');
+  });
+});
+
+describe('what Add Plant says about the chosen spot', () => {
+  const answer = (findings: FitFinding[], candidate: boolean): SpeciesFit => ({
+    species_id: 7, common_name: 'Hosta', scientific_name: 'Hosta sieboldiana',
+    score: findings.filter((f) => f.verdict === 'fits').length, candidate, findings,
+  });
+
+  it('lists misfits one by one and adds no summary over them', () => {
+    const fit = answer([
+      finding({ axis: 'indoor_outdoor', verdict: 'fits' }),
+      finding({ axis: 'sun', verdict: 'misfits', authorities: ['NC State Extension'] }),
+      finding({ axis: 'footprint', verdict: 'unknown' }),
+    ], false);
+    expect(misfitsOf(fit.findings).map((f) => f.axis)).toEqual(['sun']);
+    expect(speciesFitNote(fit, 'Back bed')).toBeNull();
+    expect(misfitIntro('Back bed')).toBe('Worth knowing before it goes in Back bed');
+  });
+
+  it('says what was confirmed and what is not known when nothing is against it', () => {
+    const fit = answer([
+      finding({ axis: 'indoor_outdoor', verdict: 'fits' }),
+      finding({ axis: 'sun', verdict: 'fits' }),
+      finding({ axis: 'footprint', verdict: 'unknown' }),
+    ], true);
+    expect(speciesFitNote(fit, 'Back bed')).toBe(
+      'Nothing on record against it in Back bed. Confirmed: indoors or out and sun. '
+      + 'Not known: size.');
+  });
+
+  it('never lets "nothing against it" pass for a fit when nothing was judged', () => {
+    // Zero misfits because nothing is known is not a recommendation — the
+    // Candidate rule's second half, as Add Plant says it.
+    const fit = answer([
+      finding({ axis: 'indoor_outdoor', verdict: 'unknown' }),
+      finding({ axis: 'sun', verdict: 'unknown' }),
+    ], false);
+    const note = speciesFitNote(fit, 'Back bed')!;
+    expect(note).toMatch(/can’t judge it for Back bed/);
+    expect(note).toMatch(/no recommendation either way/);
+    expect(note).not.toMatch(/Confirmed/);
   });
 });

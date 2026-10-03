@@ -143,3 +143,24 @@ export async function fetchMisfits(id: number): Promise<PlantMisfit[]> {
   const { data } = await client.get<PlantMisfit[]>(`/growing-areas/${id}/misfits`);
   return data;
 }
+
+/** One species against one area, every axis — what Add Plant asks before
+ *  the plant is saved. `findings` holds fits, misfits and unknowns alike;
+ *  `candidate` is the server's own Candidate verdict, never re-derived. */
+export interface SpeciesFit {
+  species_id: number;
+  common_name: string;
+  scientific_name: string;
+  score: number;
+  candidate: boolean;
+  findings: FitFinding[];
+}
+
+export async function fetchSpeciesFit(
+  areaId: number, speciesId: number,
+): Promise<SpeciesFit> {
+  const client = await apiClient();
+  const { data } = await client.get<SpeciesFit>(
+    `/growing-areas/${areaId}/fit/${speciesId}`);
+  return data;
+}
