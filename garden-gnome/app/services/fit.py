@@ -293,14 +293,18 @@ def _soil(species: Species, area: GrowingArea) -> Finding:
 # against 7 ft of headroom is still a misfit, but the sentence says what that
 # means for a vine: it will need a support and cutting back, every year.
 
-def _inches_across(area_sqft: float) -> float:
-    """The width of a square of that many square feet, in inches.
+def _ground_sqft(spread_in: float) -> float:
+    """The ground a plant of this spread claims, in square feet: a square its
+    own width on a side, the way plants are spaced at their mature spread.
 
-    Deliberately crude, and the crudeness is the point: nobody plants in a
-    perfect square, and a spread that fits this comfortably fits the real bed.
-    Used only to catch the case that matters -- a plant far wider than the
-    space it was offered."""
-    return (area_sqft ** 0.5) * 12
+    Compared with the area's square feet, and nothing else. The area alone
+    cannot tell a 4 x 8 bed from a square one, so this catches the case that
+    matters -- a plant that needs more ground than the space has -- and can
+    still pass a spreader that overhangs a long, narrow bed. That is also why
+    the sentence states only the two numbers somebody gave, the spread and the
+    square feet, and never a width: "a space about 5.7 ft wide" was the square
+    root of 32, a dimension nobody measured."""
+    return (spread_in / 12) ** 2
 
 
 def _footprint(species: Species, area: GrowingArea) -> Finding:
@@ -329,19 +333,19 @@ def _footprint(species: Species, area: GrowingArea) -> Finding:
             fits.append((f"{rises} {_ft(height)}, under the {_ft(area.headroom_in)} here",
                          "mature_height_in_max"))
     if spread is not None and area.area_sqft is not None:
-        across = _inches_across(area.area_sqft)
-        if spread > across:
+        room = _sqft(area.area_sqft)
+        if _ground_sqft(spread) > area.area_sqft:
             problems.append((
-                f"spreads to {_ft(spread)} across a space about {_ft(across)} wide",
+                f"spreads to {_ft(spread)} across and the space is {room}",
                 "mature_spread_in_max"))
         else:
-            fits.append((f"spreads to {_ft(spread)}, inside the space",
+            fits.append((f"spreads to {_ft(spread)}, within the {room} here",
                          "mature_spread_in_max"))
 
     climbing = ("climbs",) if climber else ()
     if problems:
-        tail = (" It would need a support and hard cutting back every year to stay."
-                if climber else "")
+        tail = (" It would need a support, and hard cutting back every year, "
+                "to stay in this space." if climber else "")
         return _finding(axis, Verdict.misfits,
                         "Outgrows this spot: " + "; ".join(t for t, _ in problems)
                         + "." + tail,
@@ -357,6 +361,12 @@ def _ft(inches: float) -> str:
     if inches < 24:
         return f"{inches:g} in"
     return f"{round(inches / 12, 1):g} ft"
+
+
+def _sqft(area_sqft: float) -> str:
+    """Square feet as the gardener gave them: "32 sq ft", "12.5 sq ft"."""
+    text = f"{area_sqft:.1f}"
+    return f"{text[:-2] if text.endswith('.0') else text} sq ft"
 
 
 # --- upkeep ----------------------------------------------------------------

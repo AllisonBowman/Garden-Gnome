@@ -194,6 +194,34 @@ def test_a_plant_wider_than_the_bed_is_a_misfit():
     assert verdict_on(f, Axis.footprint) == Verdict.misfits
 
 
+def test_a_spread_is_set_against_the_square_feet_given_never_an_invented_width():
+    """32 sq ft is a 4 x 8 bed as often as a square one. The old sentence
+    said "a space about 5.7 ft wide" -- the square root of 32, a dimension
+    nobody measured -- so the sentence now states the spread and the square
+    feet, the two numbers somebody actually gave."""
+    area = make_area(**OUTDOOR_BED, area_sqft=32)
+    wide = next(x for x in fit.assess(make_species(mature_spread_in_max=120), area)
+                if x.axis == Axis.footprint)
+    assert wide.verdict == Verdict.misfits
+    assert "spreads to 10 ft across and the space is 32 sq ft" in wide.sentence
+    assert "wide" not in wide.sentence and "5.7" not in wide.sentence
+
+    small = next(x for x in fit.assess(make_species(mature_spread_in_max=36), area)
+                 if x.axis == Axis.footprint)
+    assert small.verdict == Verdict.fits
+    assert "spreads to 3 ft, within the 32 sq ft here" in small.sentence
+
+
+def test_a_spread_needing_more_ground_than_the_space_has_is_a_misfit():
+    """A plant claims a square its own spread on a side: 6 ft across is 36 sq
+    ft of ground, more than 32; 5 ft across is 25, which 32 has room for."""
+    area = make_area(**OUTDOOR_BED, area_sqft=32)
+    assert verdict_on(fit.assess(make_species(mature_spread_in_max=72), area),
+                      Axis.footprint) == Verdict.misfits
+    assert verdict_on(fit.assess(make_species(mature_spread_in_max=60), area),
+                      Axis.footprint) == Verdict.fits
+
+
 def test_size_is_unknown_while_the_catalog_has_none():
     """Today's real case: 0 of 600 records carry a mature size."""
     area = make_area(surface=GrowingSurface.windowsill, headroom_in=18)
@@ -227,6 +255,8 @@ def test_a_climber_over_the_headroom_is_a_misfit_that_says_it_climbs():
     assert found.verdict == Verdict.misfits
     assert "climbs to 40 ft" in found.sentence
     assert "cutting back" in found.sentence
+    # Says what the cutting back is for, rather than trailing off "to stay."
+    assert found.sentence.endswith("to stay in this space.")
 
 
 def test_a_climber_inside_the_headroom_fits_and_still_says_climbs():
