@@ -24,7 +24,7 @@ import { Palette, Fonts } from '../theme/tokens';
 import { useCareTasks } from '../care/useCareTasks';
 import CareCalendar from '../care/CareCalendar';
 import {
-  SURFACE_LABEL, GOALS, dimensionPrompts, uncheckedNotes,
+  SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, uncheckedNotes,
 } from '../growingAreas/realEstate';
 import { CHECK_FAILED } from '../growingAreas/fitFindings';
 import Eyebrow from '../components/Eyebrow';
@@ -32,16 +32,6 @@ import FitFindingRow from '../components/FitFindingRow';
 
 type Route = RouteProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
 
-const AREA_TYPE_LABEL: Record<string, string> = {
-  home: '🏠 Home',
-  nursery: '🌱 Nursery',
-  community_garden: '🌳 Community garden',
-  conservation: '🌿 Conservation',
-  research: '🔬 Research',
-  balcony: '🪴 Balcony',
-  greenhouse: '🏕️ Greenhouse',
-  other: '📍 Other',
-};
 const SHELTER_LABEL: Record<string, string> = {
   sheltered: '🏠 Sheltered',
   partial: '⛱️ Partial cover',
@@ -183,7 +173,7 @@ export default function GrowingAreaDetailScreen() {
           {env.name}
         </Text>
         <Text variant="bodyMedium" style={styles.subtle}>
-          {AREA_TYPE_LABEL[env.type] ?? env.type}
+          {areaTypeLabel(env.type)}
         </Text>
         {location ? <Text variant="bodySmall" style={styles.subtle}>📍 {location}</Text> : null}
       </Surface>

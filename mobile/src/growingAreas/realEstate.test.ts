@@ -1,6 +1,6 @@
 import {
-  SURFACES, SURFACE_LABEL, IS_BED, GOALS,
-  climateForSurface, typeForSurface, dimensionPrompts, uncheckedNotes,
+  SURFACES, SURFACE_LABEL, IS_BED, GOALS, AREA_TYPES,
+  climateForSurface, areaTypeLabel, dimensionPrompts, uncheckedNotes,
   goalPhrase, goalsAnswered,
 } from './realEstate';
 import { GrowingGoal, GrowingSurface } from '../types';
@@ -12,7 +12,6 @@ describe('surfaces', () => {
       expect(SURFACE_LABEL[s]).toBeTruthy();
       expect(typeof IS_BED[s]).toBe('boolean');
       expect(climateForSurface(s)).toBeTruthy();
-      expect(typeForSurface(s)).toBeTruthy();
     }
   });
 
@@ -28,6 +27,27 @@ describe('surfaces', () => {
     const glass = climateForSurface('greenhouse_bench');
     expect(glass.shelter).toBe('sheltered');
     expect(glass.temp_exposure).toBe('outdoor');
+  });
+});
+
+describe('the kind of place', () => {
+  it('names every type the setup offers in words, not a bare icon', () => {
+    for (const t of AREA_TYPES) {
+      // An emoji, then at least one word.
+      expect(areaTypeLabel(t)).toMatch(/^\S+ [A-Z][a-z]+/);
+    }
+    expect(areaTypeLabel('community_garden')).toBe('🌳 Community garden');
+  });
+
+  it('still says a type the server knows and this build does not in words', () => {
+    expect(areaTypeLabel('greenhouse')).toBe('🏕️ Greenhouse');
+    expect(areaTypeLabel('rooftop_farm')).toBe('Rooftop farm');
+  });
+
+  it('is never preset from the surface — a raised bed is not a community plot', () => {
+    // The climate preset is all a surface decides; who keeps the space is asked.
+    expect(Object.keys(climateForSurface('raised_bed')).sort())
+      .toEqual(['shelter', 'sun_exposure', 'temp_exposure']);
   });
 });
 

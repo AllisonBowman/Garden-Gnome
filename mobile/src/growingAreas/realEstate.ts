@@ -75,14 +75,38 @@ export function climateForSurface(surface: GrowingSurface): Climate {
   return SURFACE_CLIMATE[surface];
 }
 
-const SURFACE_TYPE: Record<GrowingSurface, GrowingAreaType> = {
-  in_ground_bed: 'community_garden', raised_bed: 'community_garden',
-  containers: 'home', windowsill: 'home', shelf_or_floor: 'home',
-  hanging: 'home', greenhouse_bench: 'nursery', pond_or_water: 'conservation',
+// --- who keeps the space ----------------------------------------------------
+// An area's type says whose space it is. The census counts areas by it, and
+// nothing that judges fit reads it. It is asked, never inferred: what plants
+// sit in says nothing about who keeps them — most raised beds are someone's
+// back garden, not a community plot — and a guess here once labelled a home
+// bed "Community garden" behind the gardener's back.
+
+/** The types the setup offers, in the order it offers them. */
+export const AREA_TYPES: GrowingAreaType[] = [
+  'home', 'nursery', 'community_garden', 'conservation', 'research',
+];
+
+/** Keyed by string, not by the type: the server knows a few more types than
+ *  the setup offers (balcony, greenhouse, other), and those still need words. */
+const AREA_TYPE_LABEL: Record<string, string> = {
+  home: '🏠 Home',
+  nursery: '🌱 Nursery',
+  community_garden: '🌳 Community garden',
+  conservation: '🌿 Conservation',
+  research: '🔬 Research',
+  balcony: '🪴 Balcony',
+  greenhouse: '🏕️ Greenhouse',
+  other: '📍 Other',
 };
 
-export function typeForSurface(surface: GrowingSurface): GrowingAreaType {
-  return SURFACE_TYPE[surface];
+/** An area type in words — never the raw token, even for one this build
+ *  has not heard of. */
+export function areaTypeLabel(type: string): string {
+  const known = AREA_TYPE_LABEL[type];
+  if (known) return known;
+  const words = type.replace(/_/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
 export type Prompt = { label: string; hint: string };

@@ -19,24 +19,16 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import {
-  SURFACES, SURFACE_LABEL, GOALS, dimensionPrompts, climateForSurface,
-  typeForSurface,
+  SURFACES, SURFACE_LABEL, GOALS, AREA_TYPES, areaTypeLabel, dimensionPrompts,
+  climateForSurface,
 } from '../growingAreas/realEstate';
 
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreasList'>;
 
-const AREA_TYPES: { value: GrowingAreaType; label: string }[] = [
-  { value: 'home',             label: '🏠 Home'        },
-  { value: 'nursery',          label: '🌱 Nursery'     },
-  { value: 'community_garden', label: '🌳 Community'   },
-  { value: 'conservation',     label: '🌿 Conservation'},
-  { value: 'research',         label: '🔬 Research'    },
-];
-
 function GrowingAreaCard({ area, onPress }: { area: GrowingArea; onPress: () => void }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
-  const typeLabel = AREA_TYPES.find((t) => t.value === area.type)?.label ?? area.type;
+  const typeLabel = areaTypeLabel(area.type);
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
       <Card.Content>
@@ -114,14 +106,14 @@ export default function GrowingAreasScreen() {
 
   // Picking a surface presets the conditions, because a windowsill and a raised
   // bed disagree about all three and most people should not have to say so
-  // twice. Every preset stays editable on the next step.
+  // twice. Every preset stays editable on the next step. The kind of place is
+  // not preset: what plants sit in says nothing about whose space it is.
   const applySurface = (s: GrowingSurface) => {
     setSurface(s);
     const climate = climateForSurface(s);
     setShelter(climate.shelter);
     setTempExposure(climate.temp_exposure);
     setSunExposure(climate.sun_exposure);
-    setType(typeForSurface(s));
   };
 
   const reset = () => {
@@ -312,19 +304,28 @@ export default function GrowingAreasScreen() {
                   style={styles.segmented}
                 />
 
-                <Eyebrow style={styles.label}>Type</Eyebrow>
-                <SegmentedButtons
-                  value={type}
-                  onValueChange={(v) => setType(v as GrowingAreaType)}
-                  buttons={[
-                    { value: 'home',    label: '🏠' },
-                    { value: 'nursery', label: '🌱' },
-                    { value: 'community_garden', label: '🌳' },
-                    { value: 'conservation', label: '🌿' },
-                    { value: 'research', label: '🔬' },
-                  ]}
-                  style={styles.segmented}
-                />
+                {/* Words, not bare icons: nobody can tell conservation from
+                    research by a leaf and a microscope. */}
+                <Eyebrow style={styles.label}>Kind of place</Eyebrow>
+                <Text variant="bodySmall" style={styles.hint}>
+                  Only used to group your spaces in the census — it doesn’t
+                  change what gets suggested.
+                </Text>
+                <View style={styles.chipWrap}>
+                  {AREA_TYPES.map((t) => (
+                    <Chip
+                      key={t}
+                      compact
+                      selected={type === t}
+                      showSelectedCheck={false}
+                      onPress={() => setType(t)}
+                      style={[styles.chip, type === t && styles.chipOn]}
+                      textStyle={type === t ? styles.chipOnText : undefined}
+                    >
+                      {areaTypeLabel(t)}
+                    </Chip>
+                  ))}
+                </View>
               </>
             )}
 

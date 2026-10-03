@@ -8,15 +8,11 @@ import { fetchCensusSummary, syncCensus } from '../api/census';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
+import { areaTypeLabel } from '../growingAreas/realEstate';
 import type { CensusStackParamList } from '../../App';
 
 type Nav = NativeStackNavigationProp<CensusStackParamList, 'CensusSummary'>;
 
-const ENV_LABEL: Record<string, string> = {
-  home: '🏠 Home', nursery: '🌱 Nursery',
-  community_garden: '🌳 Community garden',
-  conservation: '🌿 Conservation', research: '🔬 Research',
-};
 
 export default function CensusScreen() {
   const navigation = useNavigation<Nav>();
@@ -80,7 +76,7 @@ export default function CensusScreen() {
           {Object.entries(summary.growing_areas_by_type).map(([type, count]) => (
             <View key={type} style={styles.envRow}>
               <Text variant="bodySmall" style={styles.envLabel}>
-                {ENV_LABEL[type] ?? type}
+                {areaTypeLabel(type)}
               </Text>
               <Text variant="bodySmall" style={styles.envCount}>{count}</Text>
             </View>
