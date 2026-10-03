@@ -16,6 +16,17 @@ export function defaultAreaId(areas: Pick<GrowingArea, 'id'>[]): number | null {
   return Math.min(...areas.map((a) => a.id));
 }
 
+/** The area to show selected once the list has loaded: the one asked for —
+ *  the area Add Plant was opened from, or the one last tapped — while it is
+ *  still in the list, and otherwise the default. An area deleted elsewhere
+ *  must not stay selected, or the save would name a place that is gone. */
+export function placementAreaId(
+  areas: Pick<GrowingArea, 'id'>[], wanted: number | null,
+): number | null {
+  if (wanted != null && areas.some((a) => a.id === wanted)) return wanted;
+  return defaultAreaId(areas);
+}
+
 /** The name the server gives the area it makes for an account with none.
  *  Mirrors `_resolve_growing_area_id`; if that changes, so must this. */
 export const FIRST_AREA_NAME = 'My Home';
@@ -29,7 +40,10 @@ export const NO_AREA_NOTE =
   + 'like it checked against this plant.';
 
 /** Said when the areas could not be loaded: the plant still lands somewhere,
- *  and the screen says where rather than leaving it to be discovered. */
-export const AREAS_FAILED_NOTE =
-  'Couldn’t load your growing areas just now, so this plant will go in your '
-  + 'oldest one. You can move it from the plant’s page afterwards.';
+ *  and the screen says where rather than leaving it to be discovered — the
+ *  area it was added from, when it came from one, or else the oldest. */
+export function areasFailedNote(fromArea: boolean): string {
+  return `Couldn’t load your growing areas just now, so this plant will go in ${
+    fromArea ? 'the one you came from' : 'your oldest one'
+  }. You can move it from the plant’s page afterwards.`;
+}

@@ -7,7 +7,7 @@ import {
   HelperText,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { fetchSpeciesList } from '../api/species';
 import {
@@ -25,7 +25,8 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
-import { AREAS_FAILED_NOTE, NO_AREA_NOTE, defaultAreaId } from '../growingAreas/placement';
+import { NO_AREA_NOTE, areasFailedNote, placementAreaId } from '../growingAreas/placement';
+import type { PlantsStackParamList } from '../../App';
 import {
   CHECK_FAILED, misfitIntro, misfitsOf, speciesFitNote,
 } from '../growingAreas/fitFindings';
@@ -34,6 +35,10 @@ export default function AddPlantScreen() {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const navigation = useNavigation();
+  // Opened from an area's own screen, Add Plant starts on that area: the
+  // gardener was just looking at it, and the oldest area is somewhere else.
+  const route = useRoute<RouteProp<PlantsStackParamList, 'AddPlant'>>();
+  const fromAreaId = route.params?.growingAreaId ?? null;
   const queryClient = useQueryClient();
 
   const [nickname, setNickname]       = useState('');
@@ -42,7 +47,7 @@ export default function AddPlantScreen() {
   // anything below 1 and the caretaker plainly has at least one.
   const quantityValue = Math.max(1, parseInt(quantity, 10) || 1);
   const [speciesId, setSpeciesId]     = useState<number | null>(null);
-  const [envId, setEnvId]             = useState<number | null>(null);
+  const [envId, setEnvId]             = useState<number | null>(fromAreaId);
   const [location, setLocation]       = useState('');
   const [condition, setCondition]     = useState('good');
   const [speciesSearch, setSpeciesSearch] = useState('');
@@ -59,17 +64,18 @@ export default function AddPlantScreen() {
     queryFn: fetchGrowingAreas,
   });
 
-  // Preselect the area the server would have picked on its own — the oldest
-  // (`plants._resolve_growing_area_id`), not whichever came first in the
-  // list. Leaving this blank did not mean "no area": the plant silently
-  // landed in that oldest one, so the only thing the blank achieved was
-  // hiding where the plant went.
+  // Preselect where the plant goes: the area it was added from, while that
+  // still exists, and otherwise the one the server would have picked on its
+  // own — the oldest (`plants._resolve_growing_area_id`), not whichever came
+  // first in the list. Leaving this blank did not mean "no area": the plant
+  // silently landed in that oldest one, so the only thing the blank achieved
+  // was hiding where the plant went. Until the list answers, the area asked
+  // for stands: a failed load still saves to it, and the note says so.
   useEffect(() => {
-    if (envId == null) {
-      const id = defaultAreaId(growingAreas);
-      if (id != null) setEnvId(id);
-    }
-  }, [growingAreas, envId]);
+    if (areasPending || areasFailed) return;
+    const id = placementAreaId(growingAreas, envId);
+    if (id !== envId) setEnvId(id);
+  }, [growingAreas, envId, areasPending, areasFailed]);
   const chosenArea = growingAreas.find((e) => e.id === envId) ?? null;
 
   // What the chosen spot would have against this species, every axis, from
@@ -80,7 +86,8 @@ export default function AddPlantScreen() {
   } = useQuery({
     queryKey: ['speciesFit', envId, speciesId],
     queryFn: () => fetchSpeciesFit(envId as number, speciesId as number),
-    enabled: envId != null && speciesId != null,
+    // Only for an area on screen: the answer is shown under its name.
+    enabled: chosenArea != null && speciesId != null,
   });
   const fitMisfits = speciesFit ? misfitsOf(speciesFit.findings) : [];
 
@@ -326,7 +333,7 @@ export default function AddPlantScreen() {
           <>
             <Eyebrow style={styles.sectionLabel}>Growing area</Eyebrow>
             {areasFailed ? (
-              <Text style={styles.areaNote}>{AREAS_FAILED_NOTE}</Text>
+              <Text style={styles.areaNote}>{areasFailedNote(envId != null)}</Text>
             ) : growingAreas.length === 0 ? (
               <Text style={styles.areaNote}>{NO_AREA_NOTE}</Text>
             ) : (

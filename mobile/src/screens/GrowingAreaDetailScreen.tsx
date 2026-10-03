@@ -3,10 +3,11 @@ import {
   ScrollView, View, StyleSheet, Platform, Alert,
 } from 'react-native';
 import {
-  Text, Card, Chip, ActivityIndicator, Surface, Divider, Button,
+  Text, Card, Chip, ActivityIndicator, Surface, Divider, Button, TouchableRipple,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   fetchGrowingArea, fetchGrowingAreaWeather, updateGrowingArea,
   fetchCandidates, fetchMisfits,
@@ -31,6 +32,7 @@ import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
 
 type Route = RouteProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
+type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
 
 const SHELTER_LABEL: Record<string, string> = {
   sheltered: '🏠 Sheltered',
@@ -67,6 +69,7 @@ function ForecastDay({ day }: { day: WeatherDay }) {
 
 export default function GrowingAreaDetailScreen() {
   const route = useRoute<Route>();
+  const navigation = useNavigation<Nav>();
   const { growingAreaId } = route.params;
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
@@ -176,6 +179,17 @@ export default function GrowingAreaDetailScreen() {
           {areaTypeLabel(env.type)}
         </Text>
         {location ? <Text variant="bodySmall" style={styles.subtle}>📍 {location}</Text> : null}
+        {/* The way on from everything below: what suits this space is only
+            worth reading if a plant can be put in it from here. */}
+        <Button
+          mode="outlined"
+          icon="plus"
+          compact
+          onPress={() => navigation.navigate('AddPlant', { growingAreaId })}
+          style={styles.addHere}
+        >
+          Add a plant here
+        </Button>
       </Surface>
 
       {/* The space itself — what there is to plant into, and what it is for */}
@@ -300,13 +314,24 @@ export default function GrowingAreaDetailScreen() {
             </Text>
           ) : (
             candidateRows.map((c) => (
-              <View key={c.species_id} style={styles.candidate}>
-                <Text style={styles.candidateName}>{c.common_name}</Text>
-                <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
-                {/* Only the axes that were confirmed: an unknown is never a
-                    reason, so it never appears as one. */}
-                {c.fits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
-              </View>
+              <TouchableRipple
+                key={c.species_id}
+                onPress={() => navigation.navigate('SpeciesDetail', { speciesId: c.species_id })}
+                accessibilityRole="button"
+                accessibilityHint={`Opens ${c.common_name}`}
+                style={styles.candidate}
+              >
+                <View>
+                  <View style={styles.candidateHead}>
+                    <Text style={styles.candidateName}>{c.common_name}</Text>
+                    <Text style={styles.candidateMore}>›</Text>
+                  </View>
+                  <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
+                  {/* Only the axes that were confirmed: an unknown is never a
+                      reason, so it never appears as one. */}
+                  {c.fits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
+                </View>
+              </TouchableRipple>
             ))
           )}
         </Card.Content>
@@ -423,6 +448,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   header: { borderRadius: 12, padding: 16, marginBottom: 12, backgroundColor: p.card },
   envName: { color: p.acc, fontFamily: f.display },
   subtle: { color: p.sub, marginTop: 2 },
+  addHere: { alignSelf: 'flex-start', marginTop: 12 },
   card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
   cardTitle: { color: p.ink, fontFamily: f.display },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
@@ -438,8 +464,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   misfit: { marginBottom: 16 },
   misfitName: { fontSize: 15, fontWeight: '700', color: p.ink, marginBottom: 6 },
   misfitSpecies: { fontSize: 13, fontWeight: '400', color: p.faint },
-  candidate: { marginBottom: 16 },
-  candidateName: { fontSize: 15, fontWeight: '700', color: p.ink },
+  candidate: { marginBottom: 16, borderRadius: 8 },
+  candidateHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
+  candidateName: { fontSize: 15, fontWeight: '700', color: p.ink, flexShrink: 1 },
+  candidateMore: { fontSize: 20, color: p.faint },
   candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 6 },
   caveat: { fontSize: 13, lineHeight: 19, color: p.warn, marginBottom: 12 },
   retry: { alignSelf: 'flex-start', marginTop: 6 },
