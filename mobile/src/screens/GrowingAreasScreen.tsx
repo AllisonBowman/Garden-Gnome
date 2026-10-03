@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchGrowingAreas, createGrowingArea } from '../api/growingAreas';
+import { serverMessage } from '../api/errorMessage';
 import {
   GrowingArea, GrowingAreaType, Shelter, TempExposure, SunExposure,
   GrowingSurface, GrowingGoal,
@@ -20,7 +21,8 @@ import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import {
   SURFACES, SURFACE_LABEL, GOALS, AREA_TYPES, INDOOR_OUTDOOR_HINT, SUN_HINT,
-  areaTypeLabel, dimensionPrompts, climateForSurface, lengthEcho, surfaceName,
+  areaTypeLabel, dimensionPrompts, climateForSurface, lengthEcho, setupBlocker,
+  surfaceName,
 } from '../growingAreas/realEstate';
 
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreasList'>;
@@ -159,19 +161,32 @@ export default function GrowingAreasScreen() {
       // is a different answer from never having been asked.
       goals,
     }),
-    onSuccess: () => {
+    // Land on the new area: it is where the gardener sees what suits the
+    // space they just described, and the proof that it was made.
+    onSuccess: (area) => {
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
       setModalVisible(false);
       reset();
+      navigation.navigate('GrowingAreaDetail', { growingAreaId: area.id, name: area.name });
     },
-    onError: () => Alert.alert('Error', 'Could not create growing area.'),
+    // The modal stays open with everything entered, so it can simply be sent
+    // again — which is what the message says.
+    onError: (err) => Alert.alert(
+      'Couldn’t create it',
+      serverMessage(
+        err,
+        'This growing area couldn’t be saved just now. Check your connection and '
+        + 'try again — everything you entered is still here.',
+      ),
+    ),
   });
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
 
   const prompts = dimensionPrompts(surface);
   const isLast = step === STEP_TITLES.length - 1;
-  const canAdvance = step === 0 ? name.trim().length > 0 : true;
+  const blocker = setupBlocker(step, name);
+  const canAdvance = blocker == null;
 
   const toggleGoal = (g: GrowingGoal) => setGoals(
     (cur) => (cur.includes(g) ? cur.filter((x) => x !== g) : [...cur, g]));
@@ -367,6 +382,7 @@ export default function GrowingAreasScreen() {
             )}
           </ScrollView>
 
+          {blocker ? <Text variant="bodySmall" style={styles.blocker}>{blocker}</Text> : null}
           <View style={styles.footer}>
             <Button
               mode="text"
@@ -418,6 +434,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   measurement: { marginBottom: 10 },
   measurementHint: { color: p.faint, marginTop: 3, lineHeight: 16 },
   measurementEcho: { color: p.sub, marginTop: 3, fontWeight: '600' },
+  blocker: { color: p.sub, marginTop: 10, lineHeight: 17 },
   footer: {
     flexDirection: 'row', justifyContent: 'space-between',
     alignItems: 'center', marginTop: 12,

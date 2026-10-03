@@ -128,6 +128,15 @@ export function areaTypeLabel(type: string): string {
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
+/** Why the setup cannot go on from this step, or null when it can. Said
+ *  under the button rather than leaving it greyed out with no reason. */
+export function setupBlocker(step: number, name: string): string | null {
+  if (step === 0 && name.trim().length === 0) {
+    return 'Give it a name to go on — one you’ll know it by among your other spaces.';
+  }
+  return null;
+}
+
 export type Prompt = { label: string; hint: string };
 
 /** Said wherever the depth is asked for or counted on. Nothing in the fit

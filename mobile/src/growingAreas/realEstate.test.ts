@@ -1,7 +1,7 @@
 import {
   SURFACES, SURFACE_LABEL, IS_BED, GOALS, AREA_TYPES, SUN_HINT,
   climateForSurface, areaTypeLabel, dimensionPrompts, uncheckedNotes,
-  goalPhrase, goalsAnswered, lengthEcho, measuredLength, surfaceName,
+  goalPhrase, goalsAnswered, lengthEcho, measuredLength, setupBlocker, surfaceName,
 } from './realEstate';
 import { GrowingGoal, GrowingSurface } from '../types';
 import type { FitFinding } from '../api/growingAreas';
@@ -34,6 +34,19 @@ describe('surfaces', () => {
     const glass = climateForSurface('greenhouse_bench');
     expect(glass.shelter).toBe('sheltered');
     expect(glass.temp_exposure).toBe('outdoor');
+  });
+});
+
+describe('going on from a setup step', () => {
+  it('says why the first step cannot go on without a name', () => {
+    expect(setupBlocker(0, '')).toMatch(/Give it a name to go on/);
+    expect(setupBlocker(0, '   ')).toMatch(/Give it a name to go on/);
+  });
+
+  it('has nothing to say once it can go on', () => {
+    expect(setupBlocker(0, 'Back bed')).toBeNull();
+    expect(setupBlocker(1, '')).toBeNull();
+    expect(setupBlocker(2, '')).toBeNull();
   });
 });
 
