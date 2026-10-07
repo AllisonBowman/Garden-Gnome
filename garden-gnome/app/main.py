@@ -10,6 +10,7 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 from fastapi import FastAPI  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from slowapi import _rate_limit_exceeded_handler  # noqa: E402
@@ -54,6 +55,14 @@ app.add_middleware(
     # needs it as much as the phone does.
     expose_headers=[growing_areas.TOTAL_HEADER],
 )
+
+# The catalog goes to the phone whole -- the Species tab, Add Plant and the
+# Almanac each need every species -- and as JSON that is most of a megabyte,
+# nearly all of it the same field names and sentences over and over; an
+# area's full candidate list is the same story. Compressed, each is a small
+# fraction of that, and the phone's networking unpacks it unasked. Small
+# answers are left alone, and nothing here streams.
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.include_router(ai.router)
 app.include_router(auth.router)

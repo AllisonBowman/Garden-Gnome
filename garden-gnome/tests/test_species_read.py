@@ -280,3 +280,21 @@ def test_detail_schema_tolerates_a_never_recomputed_row():
     out = SpeciesDetail.model_validate(minted("Testus nullus", "Nullus", id=1))
     assert out.care_sources == []
     assert out.toxic_to_pets is None
+
+
+def test_the_catalog_travels_compressed_to_a_client_that_accepts_it(api):
+    """Every species goes to the phone at once, and as plain JSON the list
+    is most of a megabyte. Compressed when the client says it can unpack
+    it, untouched when it can't -- and the same list either way."""
+    client, headers, engine = api
+    with Session(engine) as s:
+        for i in range(40):
+            s.add(minted(f"Compressus testae {i}", f"Compression Test Plant {i}"))
+        s.commit()
+
+    packed = client.get("/species/", headers={**headers, "Accept-Encoding": "gzip"})
+    plain = client.get("/species/", headers={**headers, "Accept-Encoding": "identity"})
+    assert packed.status_code == plain.status_code == 200
+    assert packed.headers.get("content-encoding") == "gzip"
+    assert "content-encoding" not in plain.headers
+    assert packed.json() == plain.json()
