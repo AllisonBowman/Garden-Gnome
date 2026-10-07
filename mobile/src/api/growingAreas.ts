@@ -3,6 +3,7 @@ import {
   GrowingArea, GrowingAreaType, Shelter, TempExposure, SunExposure, Weather,
   GrowingSurface, GrowingGoal,
 } from '../types';
+import { totalCount } from '../growingAreas/ranking';
 
 export interface GrowingAreaClimate {
   shelter?: Shelter;
@@ -136,6 +137,21 @@ export async function fetchCandidates(
   const { data } = await client.get<Candidate[]>(
     `/growing-areas/${id}/candidates`, { params: { limit } });
   return data;
+}
+
+/** The first `limit` of an area's ranked candidates, and how many there are
+ *  in all — counted by the server before it cut the list. `total` is null
+ *  from a server too old to send the count. */
+export interface CandidatePage {
+  rows: Candidate[];
+  total: number | null;
+}
+
+export async function fetchCandidatePage(id: number, limit: number): Promise<CandidatePage> {
+  const client = await apiClient();
+  const resp = await client.get<Candidate[]>(
+    `/growing-areas/${id}/candidates`, { params: { limit } });
+  return { rows: resp.data, total: totalCount(resp.headers) };
 }
 
 export async function fetchMisfits(id: number): Promise<PlantMisfit[]> {

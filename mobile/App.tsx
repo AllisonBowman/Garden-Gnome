@@ -36,6 +36,10 @@ export type AddPlantParams = { growingAreaId?: number } | undefined;
  *  findings the page then shows. */
 export type SpeciesDetailParams = { speciesId: number; growingAreaId?: number };
 
+/** The Almanac, and the growing area to open it narrowed to — set when it
+ *  is opened from that area's screen to see the rest of its candidates. */
+export type AlmanacParams = { growingAreaId?: number } | undefined;
+
 export type PlantsStackParamList = {
   PlantsList:    undefined;
   PlantDetail:   { plantId: number };
@@ -55,11 +59,13 @@ export type GrowingAreasStackParamList = {
   // stays in this tab and Back returns to the area, which then shows it.
   AddPlant:          AddPlantParams;
   SpeciesDetail:     SpeciesDetailParams;
+  // The rest of an area's candidates, past the few its screen shows.
+  Almanac:           AlmanacParams;
 };
 
 export type CensusStackParamList = {
   CensusSummary: undefined;
-  Almanac:       undefined;
+  Almanac:       AlmanacParams;
   SpeciesDetail: SpeciesDetailParams;
 };
 
@@ -130,6 +136,7 @@ function GrowingAreasNavigator() {
       />
       <GrowingAreasStack.Screen name="AddPlant" component={AddPlantScreen} options={{ title: 'Add plant' }} />
       <GrowingAreasStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
+      <GrowingAreasStack.Screen name="Almanac" component={AlmanacScreen} options={{ title: 'Species Almanac' }} />
     </GrowingAreasStack.Navigator>
   );
 }

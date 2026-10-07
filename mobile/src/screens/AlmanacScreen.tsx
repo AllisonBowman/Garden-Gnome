@@ -4,7 +4,7 @@ import {
   Text, Card, Searchbar, ActivityIndicator, Chip, Button,
 } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { fetchPlants } from '../api/plants';
@@ -13,6 +13,7 @@ import {
 } from '../api/growingAreas';
 import { uncheckedNotes } from '../growingAreas/realEstate';
 import { CHECK_FAILED, confirmedLine } from '../growingAreas/fitFindings';
+import { RANK_ORDER, inRankOrder } from '../growingAreas/ranking';
 import { Species } from '../types';
 import { tierOf, fingerprint, matchesQuery, TIER_LABELS, Tier } from '../almanac/tier';
 import { useAppTheme } from '../theme/ThemeProvider';
@@ -21,7 +22,10 @@ import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
 import type { CensusStackParamList } from '../../App';
 
+// Registered in more than one tab's stack, with the same params in each;
+// typed against the Census stack, where it began.
 type Nav = NativeStackNavigationProp<CensusStackParamList, 'Almanac'>;
+type Route = RouteProp<CensusStackParamList, 'Almanac'>;
 type Filter = 'all' | Tier;
 
 const FILTERS: { value: Filter; label: string }[] = [
@@ -75,12 +79,19 @@ function SpeciesCard({
 
 export default function AlmanacScreen() {
   const navigation = useNavigation<Nav>();
+  const route = useRoute<Route>();
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   // Which growing area to narrow the catalog to, or null for the whole thing.
-  const [areaId, setAreaId] = useState<number | null>(null);
+  // Opened from an area's screen, it starts narrowed to that area: the rest
+  // of the candidates that screen showed the first few of.
+  const openedFor = route.params?.growingAreaId ?? null;
+  const [areaId, setAreaId] = useState<number | null>(openedFor);
+  useEffect(() => {
+    if (openedFor != null) setAreaId(openedFor);
+  }, [openedFor]);
 
   const { data: species = [], isLoading } = useQuery({
     queryKey: ['species'],
@@ -133,13 +144,15 @@ export default function AlmanacScreen() {
   const notes = area != null && !fitLoading && !fitFailed
     ? uncheckedNotes(area, candidates) : [];
 
-  const shown = useMemo(
-    () => species.filter((s) =>
+  const shown = useMemo(() => {
+    const matching = species.filter((s) =>
       matchesQuery(s, query)
       && (filter === 'all' || tierOf(s) === filter)
-      && (areaId == null || fitsById.has(s.id))),
-    [species, query, filter, areaId, fitsById],
-  );
+      && (areaId == null || fitsById.has(s.id)));
+    // Narrowed to an area, the species go in the order the area's own screen
+    // ranks them, so "see all" carries on from where that list stopped.
+    return areaId == null ? matching : inRankOrder(matching, candidates);
+  }, [species, query, filter, areaId, fitsById, candidates]);
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
 
@@ -205,7 +218,7 @@ export default function AlmanacScreen() {
             <Text style={styles.fitNote}>
               Showing species with nothing on record against {area.name} and at
               least one thing confirmed. A plant missing from here may simply be
-              one the catalog can’t judge for this spot yet.
+              one the catalog can’t judge for this spot yet. {RANK_ORDER}
             </Text>
             {notes.map((note, i) => (
               <Text key={i} style={styles.caveat}>{note}</Text>

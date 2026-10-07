@@ -10,7 +10,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   fetchGrowingArea, fetchGrowingAreaWeather, updateGrowingArea,
-  fetchCandidates, fetchMisfits,
+  fetchCandidatePage, fetchMisfits,
 } from '../api/growingAreas';
 import { WeatherDay } from '../types';
 import {
@@ -28,6 +28,7 @@ import {
   SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, measuredLength, uncheckedNotes,
 } from '../growingAreas/realEstate';
 import { CHECK_FAILED, confirmedLine, plantTitle } from '../growingAreas/fitFindings';
+import { FIRST_FEW, cutNote, listIntro } from '../growingAreas/ranking';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
 
@@ -101,13 +102,19 @@ export default function GrowingAreaDetailScreen() {
     queryKey: ['growingAreaMisfits', growingAreaId],
     queryFn: () => fetchMisfits(growingAreaId),
   });
+  // The first few candidates, the count of all of them, and one more than is
+  // shown: whether that one is level with the last shown is what says if the
+  // cut fell between equals — an alphabet, not a verdict.
   const {
-    data: candidateRows = [], isLoading: candidatesLoading, isError: candidatesFailed,
+    data: candidatePage, isLoading: candidatesLoading, isError: candidatesFailed,
     refetch: refetchCandidates,
   } = useQuery({
-    queryKey: ['growingAreaCandidates', growingAreaId],
-    queryFn: () => fetchCandidates(growingAreaId, 12),
+    queryKey: ['growingAreaCandidates', growingAreaId, 'first', FIRST_FEW],
+    queryFn: () => fetchCandidatePage(growingAreaId, FIRST_FEW + 1),
   });
+  const candidateRows = candidatePage?.rows.slice(0, FIRST_FEW) ?? [];
+  const pastTheCut = candidatePage?.rows[FIRST_FEW];
+  const candidateTotal = candidatePage?.total ?? null;
 
   // Setting a location on a growing area that has none. GrowingAreas created
   // before the address picker existed have no coordinates, and until now there
@@ -152,9 +159,16 @@ export default function GrowingAreaDetailScreen() {
   // nobody has measured is the honest version, and it is also the prompt.
   // Which axes this space turns on that the catalog simply cannot answer.
   // Shown above the list, because a short list is otherwise read as a verdict
-  // on the space rather than as a gap in the evidence.
-  const caveats = candidatesLoading || candidatesFailed
-    ? [] : uncheckedNotes(env, candidateRows);
+  // on the space rather than as a gap in the evidence. Read off the rows
+  // shown: a confirmed axis adds to a score, so whatever the whole list
+  // confirms surfaces at its top.
+  const candidatesIn = !candidatesLoading && !candidatesFailed;
+  const caveats = candidatesIn ? uncheckedNotes(env, candidateRows) : [];
+  // How many there are and how they are ordered, over the list; where it
+  // stops and why, under it.
+  const intro = candidatesIn && candidateRows.length > 0
+    ? listIntro(candidateTotal, candidateRows.length) : null;
+  const cut = candidatesIn ? cutNote(candidateRows, pastTheCut, candidateTotal) : null;
 
   const prompts = dimensionPrompts(env.surface ?? null);
   // Lengths are said the way the reasons below say them — "7 ft (84 in)" —
@@ -301,6 +315,7 @@ export default function GrowingAreaDetailScreen() {
           titleStyle={styles.cardTitle}
         />
         <Card.Content>
+          {intro ? <Text style={styles.listIntro}>{intro}</Text> : null}
           {caveats.map((note, i) => (
             <Text key={i} style={styles.caveat}>{note}</Text>
           ))}
@@ -345,6 +360,22 @@ export default function GrowingAreaDetailScreen() {
               </TouchableRipple>
             ))
           )}
+          {/* The rest: the Almanac narrowed to this area, in the same order. */}
+          {cut ? (
+            <View style={styles.cut}>
+              <Text style={styles.cutNote}>{cut}</Text>
+              <Button
+                compact
+                icon="book-open-variant"
+                onPress={() => navigation.navigate('Almanac', { growingAreaId })}
+                style={styles.seeAll}
+              >
+                {candidateTotal != null
+                  ? `See all ${candidateTotal} in the Almanac`
+                  : 'See the rest in the Almanac'}
+              </Button>
+            </View>
+          ) : null}
         </Card.Content>
       </Card>
 
@@ -482,6 +513,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 4 },
   candidateWhy: { fontSize: 13, lineHeight: 18, color: p.sub },
   caveat: { fontSize: 13, lineHeight: 19, color: p.warn, marginBottom: 12 },
+  listIntro: { fontSize: 13, lineHeight: 19, color: p.sub, marginBottom: 12 },
+  cut: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: p.line, paddingTop: 12 },
+  cutNote: { fontSize: 13, lineHeight: 19, color: p.sub },
+  seeAll: { alignSelf: 'flex-start', marginTop: 6 },
   retry: { alignSelf: 'flex-start', marginTop: 6 },
 
   nowRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
