@@ -265,7 +265,8 @@ def transfer_plant(
     session.commit()
 
     # Log the transfer event to the care timeline
-    note_parts = [f"Transferred to '{new_env.name}' ({new_env.type.value})"]
+    # The gardener reads this line on the plant's page: the area's name, never its type token.
+    note_parts = [f"Moved to {new_env.name}"]
     if payload.transfer_notes:
         note_parts.append(payload.transfer_notes)
     session.add(CareLog(

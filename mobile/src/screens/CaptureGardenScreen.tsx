@@ -10,6 +10,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchSpeciesList } from '../api/species';
 import { fetchGrowingAreas } from '../api/growingAreas';
+import { defaultAreaId } from '../growingAreas/placement';
 import { createPlantsBulk, PlantDraft } from '../api/plants';
 import { Species } from '../types';
 import { splitUtterance } from '../capture/splitUtterance';
@@ -160,7 +161,9 @@ export default function CaptureGardenScreen() {
   catalogRef.current = catalog;
 
   const [envId, setEnvId] = useState<number | null>(null);
-  const targetEnv = envId ?? growingAreas[0]?.id ?? null;
+  // The area the server would pick on its own — the oldest — so the chip
+  // that shows selected is the one the plants actually go into.
+  const targetEnv = envId ?? defaultAreaId(growingAreas);
 
   const add = useCallback(() => {
     const grounded = groundEntries(splitUtterance(heard), catalog);
@@ -190,6 +193,8 @@ export default function CaptureGardenScreen() {
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       setDrafts([]);
       navigation.goBack();
       void res;

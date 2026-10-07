@@ -6,6 +6,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { fetchSpecies } from '../api/species';
+import { fetchGrowingAreas } from '../api/growingAreas';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -13,6 +14,7 @@ import { careFactRows, legacyStats } from '../care/facts';
 import {
   CareFactList, CareSourceRows, CareStatusLine, LegacyStatRow,
 } from '../components/CareFacts';
+import AreaFitCard from '../components/AreaFitCard';
 
 type Route = RouteProp<SpeciesStackParamList, 'SpeciesDetail'>;
 
@@ -23,7 +25,7 @@ const CARE_ICON: Record<string, string> = {
 
 export default function SpeciesDetailScreen() {
   const route = useRoute<Route>();
-  const { speciesId } = route.params;
+  const { speciesId, growingAreaId } = route.params;
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
@@ -31,6 +33,16 @@ export default function SpeciesDetailScreen() {
     queryKey: ['species', speciesId],
     queryFn: () => fetchSpecies(speciesId),
   });
+
+  // Opened from an area's candidates (or the Almanac filtered to one), the
+  // page answers the question that led here: how does it suit that space?
+  // Only for an area still in the list — the card is headed with its name.
+  const { data: areas = [] } = useQuery({
+    queryKey: ['growingAreas'],
+    queryFn: fetchGrowingAreas,
+    enabled: growingAreaId != null,
+  });
+  const area = growingAreaId != null ? areas.find((a) => a.id === growingAreaId) ?? null : null;
 
   if (isLoading || !species) {
     return <ActivityIndicator style={styles.center} size="large" />;
@@ -68,6 +80,10 @@ export default function SpeciesDetailScreen() {
           </Chip>
         ) : null}
       </View>
+
+      {area ? (
+        <AreaFitCard areaId={area.id} areaName={area.name} speciesId={species.id} />
+      ) : null}
 
       {/* The resolved facts — what the claims settled, labelled where a value
           was borrowed from the genus. */}

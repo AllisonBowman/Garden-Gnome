@@ -133,6 +133,13 @@ class FitFindingRead(SQLModel):
     verdict: str      # fits | misfits | unknown
     sentence: str
     borrowed: bool = False
+    # Who said so: the authorities whose pages settled a value this finding
+    # rests on, for this species itself. Empty for an unknown and for a value
+    # only the genus answered -- `borrowed` carries that.
+    authorities: list[str] = []
+    # Which of the area's goals this finding answers (edible, low_upkeep,
+    # pollinators), or null. Two goals share the `goal` axis.
+    goal: Optional[str] = None
 
 
 class CandidateRead(SQLModel):
@@ -156,6 +163,22 @@ class PlantMisfitRead(SQLModel):
     species_id: int
     common_name: str
     misfits: list[FitFindingRead]
+
+
+class SpeciesFitRead(SQLModel):
+    """One species against one area, every axis -- what Add Plant asks
+    before the plant is saved.
+
+    `findings` holds fits, misfits AND unknowns, in reading order, so the
+    client can show what is against it without being able to mistake
+    silence for a pass. `candidate` is the server's own Candidate rule, so
+    no client re-derives it."""
+    species_id: int
+    common_name: str
+    scientific_name: str
+    score: int
+    candidate: bool
+    findings: list[FitFindingRead]
 
 
 # --- Pre-rename field names, for the TestFlight 1.1.2 client ---

@@ -27,27 +27,40 @@ import { AuthProvider, useAuth } from './src/auth/AuthContext';
 import LoginScreen from './src/auth/LoginScreen';
 
 // ── Param lists (imported by child screens) ───────────────────────────────────
+/** What Add Plant may be opened with: `growingAreaId` preselects where the
+ *  plant goes, set when it is opened from an area's own screen. */
+export type AddPlantParams = { growingAreaId?: number } | undefined;
+
+/** A species, and — when it was opened from an area's candidates or the
+ *  Almanac's area filter — the area it was being read against, whose full
+ *  findings the page then shows. */
+export type SpeciesDetailParams = { speciesId: number; growingAreaId?: number };
+
 export type PlantsStackParamList = {
   PlantsList:    undefined;
   PlantDetail:   { plantId: number };
-  AddPlant:      undefined;
+  AddPlant:      AddPlantParams;
   CaptureGarden: undefined;
 };
 
 export type SpeciesStackParamList = {
   SpeciesList:   undefined;
-  SpeciesDetail: { speciesId: number };
+  SpeciesDetail: SpeciesDetailParams;
 };
 
 export type GrowingAreasStackParamList = {
   GrowingAreasList:  undefined;
   GrowingAreaDetail: { growingAreaId: number; name?: string };
+  // Reached from an area, so "see what suits it, read about it, put one in"
+  // stays in this tab and Back returns to the area, which then shows it.
+  AddPlant:          AddPlantParams;
+  SpeciesDetail:     SpeciesDetailParams;
 };
 
 export type CensusStackParamList = {
   CensusSummary: undefined;
   Almanac:       undefined;
-  SpeciesDetail: { speciesId: number };
+  SpeciesDetail: SpeciesDetailParams;
 };
 
 type RootTabParamList = {
@@ -115,6 +128,8 @@ function GrowingAreasNavigator() {
         component={GrowingAreaDetailScreen}
         options={({ route }) => ({ title: route.params.name ?? 'Growing area' })}
       />
+      <GrowingAreasStack.Screen name="AddPlant" component={AddPlantScreen} options={{ title: 'Add plant' }} />
+      <GrowingAreasStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
     </GrowingAreasStack.Navigator>
   );
 }

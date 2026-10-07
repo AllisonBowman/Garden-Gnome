@@ -15,6 +15,7 @@ from app.models.models import (
     Species, Shelter, SunExposure, TempExposure,
 )
 from app.services import fit
+from app.services.care_facts import length_said
 from app.services.fit import Axis, Verdict
 
 
@@ -194,6 +195,34 @@ def test_a_plant_wider_than_the_bed_is_a_misfit():
     assert verdict_on(f, Axis.footprint) == Verdict.misfits
 
 
+def test_a_spread_is_set_against_the_square_feet_given_never_an_invented_width():
+    """32 sq ft is a 4 x 8 bed as often as a square one. The old sentence
+    said "a space about 5.7 ft wide" -- the square root of 32, a dimension
+    nobody measured -- so the sentence now states the spread and the square
+    feet, the two numbers somebody actually gave."""
+    area = make_area(**OUTDOOR_BED, area_sqft=32)
+    wide = next(x for x in fit.assess(make_species(mature_spread_in_max=120), area)
+                if x.axis == Axis.footprint)
+    assert wide.verdict == Verdict.misfits
+    assert "spreads to 10 ft across and the space is 32 sq ft" in wide.sentence
+    assert "wide" not in wide.sentence and "5.7" not in wide.sentence
+
+    small = next(x for x in fit.assess(make_species(mature_spread_in_max=36), area)
+                 if x.axis == Axis.footprint)
+    assert small.verdict == Verdict.fits
+    assert "spreads to 3 ft, within the 32 sq ft here" in small.sentence
+
+
+def test_a_spread_needing_more_ground_than_the_space_has_is_a_misfit():
+    """A plant claims a square its own spread on a side: 6 ft across is 36 sq
+    ft of ground, more than 32; 5 ft across is 25, which 32 has room for."""
+    area = make_area(**OUTDOOR_BED, area_sqft=32)
+    assert verdict_on(fit.assess(make_species(mature_spread_in_max=72), area),
+                      Axis.footprint) == Verdict.misfits
+    assert verdict_on(fit.assess(make_species(mature_spread_in_max=60), area),
+                      Axis.footprint) == Verdict.fits
+
+
 def test_size_is_unknown_while_the_catalog_has_none():
     """Today's real case: 0 of 600 records carry a mature size."""
     area = make_area(surface=GrowingSurface.windowsill, headroom_in=18)
@@ -227,6 +256,8 @@ def test_a_climber_over_the_headroom_is_a_misfit_that_says_it_climbs():
     assert found.verdict == Verdict.misfits
     assert "climbs to 40 ft" in found.sentence
     assert "cutting back" in found.sentence
+    # Says what the cutting back is for, rather than trailing off "to stay."
+    assert found.sentence.endswith("to stay in this space.")
 
 
 def test_a_climber_inside_the_headroom_fits_and_still_says_climbs():
@@ -235,6 +266,30 @@ def test_a_climber_inside_the_headroom_fits_and_still_says_climbs():
     found = next(x for x in f if x.axis == Axis.footprint)
     assert found.verdict == Verdict.fits
     assert "climbs to" in found.sentence and "reaches" not in found.sentence
+
+
+#: Shared with mobile/src/care/facts.test.ts (`lengthSaid`): the app prints a
+#: gardener's measurement by the same rule the sentences use. If these drift,
+#: an area's card and its findings disagree about the same number.
+LENGTHS_SAID = [
+    (18, "18 in"), (23.5, "23.5 in"), (24, "2 ft"), (84, "7 ft"),
+    (87, "7.3 ft"), (81, "6.8 ft"), (39.4, "3.3 ft"), (59.1, "4.9 ft"),
+    (720, "60 ft"),
+]
+
+
+@pytest.mark.parametrize("inches,said", LENGTHS_SAID)
+def test_a_length_is_said_the_way_the_app_prints_it(inches, said):
+    assert length_said(inches) == said
+
+
+def test_the_headroom_in_a_sentence_is_the_headroom_on_the_card():
+    """87 in typed; the app's card prints "7.3 ft (87 in)". round() would have
+    said 7.2 ft here -- a half to even -- and the two would disagree."""
+    area = make_area(**OUTDOOR_BED, headroom_in=87)
+    size = next(x for x in fit.assess(make_species(mature_height_in_max=120), area)
+                if x.axis == Axis.footprint)
+    assert "there is 7.3 ft of headroom" in size.sentence
 
 
 def test_a_climber_with_no_size_is_unknown_and_says_why():
@@ -411,3 +466,113 @@ def test_misfits_returns_only_what_needs_addressing():
         soil_base="cactus_succulent")              # misfits in a bed
     problems = fit.misfits(fit.assess(species, area))
     assert {f.axis for f in problems} == {Axis.sun, Axis.soil}
+
+
+# --- who said so -----------------------------------------------------------
+# A misfit is something a caretaker is asked to act on, so it has to be able
+# to say whose word it is: "NC State Extension records it for part shade",
+# not the app's opinion. Read off the same `care_sources` the care facts
+# credit, and only for a value sourced for this species (ADR 0002).
+
+NCSU = {"authority": "NC State Extension", "url": "https://plants.ces.ncsu.edu/x",
+        "fields": ["outdoor_sun_exposure", "is_houseplant"], "inferred": False}
+RHS = {"authority": "Royal Horticultural Society", "url": "https://rhs.org.uk/y",
+       "fields": ["mature_height_in_max"], "inferred": False}
+
+
+def test_a_sourced_misfit_names_the_authority_that_recorded_it():
+    species = make_species(
+        outdoor_sun_exposure=["part_shade", "full_shade"],
+        care_provenance={"outdoor_sun_exposure": "sourced"},
+        care_sources=[NCSU])
+    sun = next(x for x in fit.assess(species, make_area(**OUTDOOR_BED))
+               if x.axis == Axis.sun)
+    assert sun.verdict == Verdict.misfits
+    assert sun.authorities == ("NC State Extension",)
+
+
+def test_a_genus_borrowed_value_is_not_credited_to_an_authority():
+    """A genus page does not speak for the species; `borrowed` says so instead."""
+    species = make_species(
+        outdoor_sun_exposure=["full_sun"],
+        care_provenance={"outdoor_sun_exposure": "genus_inferred"},
+        care_sources=[{**NCSU, "inferred": True}])
+    sun = next(x for x in fit.assess(species, make_area(**OUTDOOR_BED))
+               if x.axis == Axis.sun)
+    assert sun.borrowed is True
+    assert sun.authorities == ()
+
+
+def test_an_unknown_is_credited_to_nobody():
+    findings = fit.assess(make_species(), make_area(**OUTDOOR_BED))
+    assert all(f.authorities == () for f in findings)
+
+
+def test_a_value_resolved_before_sources_existed_names_nobody_rather_than_guessing():
+    species = make_species(
+        outdoor_sun_exposure=["full_sun"],
+        care_provenance={"outdoor_sun_exposure": "sourced"}, care_sources=None)
+    sun = next(x for x in fit.assess(species, make_area(**OUTDOOR_BED))
+               if x.axis == Axis.sun)
+    assert sun.verdict == Verdict.fits and sun.authorities == ()
+
+
+def test_size_is_credited_and_labelled_by_the_measurement_its_sentence_states():
+    """A height-only misfit is not "from the genus" because the spread was,
+    the rule the care facts keep: a flag on a field the row did not use does
+    not taint it."""
+    area = make_area(surface=GrowingSurface.windowsill, headroom_in=18)  # no footprint
+    species = make_species(
+        mature_height_in_max=48, mature_spread_in_max=30,
+        care_provenance={"mature_height_in_max": "sourced",
+                         "mature_spread_in_max": "genus_inferred"},
+        care_sources=[RHS])
+    size = next(x for x in fit.assess(species, area) if x.axis == Axis.footprint)
+    assert size.verdict == Verdict.misfits
+    assert size.borrowed is False
+    assert "from the genus" not in size.sentence
+    assert size.authorities == ("Royal Horticultural Society",)
+
+
+def test_size_stays_labelled_when_the_borrowed_measurement_is_the_one_stated():
+    area = make_area(**OUTDOOR_BED, area_sqft=4)          # about 2 ft across
+    species = make_species(
+        mature_spread_in_max=96,
+        care_provenance={"mature_spread_in_max": "genus_inferred"})
+    size = next(x for x in fit.assess(species, area) if x.axis == Axis.footprint)
+    assert size.verdict == Verdict.misfits and size.borrowed is True
+    assert "from the genus" in size.sentence
+
+
+# --- which goal a finding answers ------------------------------------------
+
+def test_each_goal_finding_says_which_goal_it_answers():
+    """Edible and pollinators share an axis; a client saying "nothing here
+    was checked for edibility" has to be able to tell them apart."""
+    area = make_area(**OUTDOOR_BED, goals=["edible", "pollinators", "low_upkeep"])
+    findings = fit.assess(
+        make_species(is_edible=True, attracts_pollinators=None,
+                     water_regime="keep_moist"), area)
+    by_goal = {f.goal: f for f in findings if f.goal}
+    assert by_goal["edible"].verdict == Verdict.fits
+    assert by_goal["pollinators"].verdict == Verdict.unknown
+    assert by_goal["low_upkeep"].axis == Axis.upkeep
+    assert by_goal["low_upkeep"].verdict == Verdict.misfits
+
+
+def test_the_space_axes_answer_no_goal():
+    findings = fit.assess(
+        make_species(is_houseplant=False, outdoor_sun_exposure=["full_sun"]),
+        make_area(**OUTDOOR_BED))
+    assert all(f.goal is None for f in findings)
+
+
+# --- the candidate rule, stated once ---------------------------------------
+
+def test_is_candidate_needs_no_misfit_and_one_confirmed_fit():
+    area = make_area(**OUTDOOR_BED)
+    assert fit.is_candidate(fit.assess(make_species(is_houseplant=False), area))
+    assert not fit.is_candidate(fit.assess(make_species(), area)), \
+        "nothing known is not a recommendation"
+    assert not fit.is_candidate(fit.assess(
+        make_species(is_houseplant=False, outdoor_sun_exposure=["full_shade"]), area))

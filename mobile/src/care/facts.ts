@@ -38,6 +38,10 @@ export interface LegacyStat {
 
 /** The status line's phrasing, exported so screens and tests share one copy. */
 export const BORROWED_LINE = 'Care facts borrowed from the genus — not confirmed for this species';
+/** The pill on anything one species borrowed from its genus (ADR 0002). One
+ *  copy, because the same fact is labelled on a care row and on a fit
+ *  finding, and a reader should not have to learn two words for it. */
+export const INFERRED_PILL = 'genus-inferred';
 export const NONE_LINE = 'No care facts cited for this species yet';
 /** The caption over the legacy stats: they are catalog values no claim
  *  backs, and under a "cited to …" line they would read as equally cited. */
@@ -111,8 +115,14 @@ const has = (s: Species, field: keyof Species) => {
 };
 const hasAny = (s: Species, fields: (keyof Species)[]) => fields.some((f) => has(s, f));
 
-/** Inches said the way a gardener says them: under two feet stays inches. */
-const feet = (v: number) => (v < 24 ? `${num(v)} in` : `${num(Math.round((v / 12) * 10) / 10)} ft`);
+/** A length as a gardener says it: inches under two feet, and from there
+ *  feet to one decimal, a half rounded up. The fit engine's `_ft` to the
+ *  operation — not Math.round on v / 12, since Python's round takes a half
+ *  to even and this must land on the same tenth — so the "7 ft" of headroom
+ *  in a sentence is the "7 ft" printed for the 84 in somebody measured. The
+ *  fixtures in facts.test.ts are shared with the engine's tests. */
+export const lengthSaid = (v: number) => (
+  v < 24 ? `${num(v)} in` : `${num(Math.floor((v * 10) / 12 + 0.5) / 10)} ft`);
 
 /** A mature-size range. Null at both ends means nobody measured it, which is
  *  not the same as a plant with no size — so the row simply does not appear. */
@@ -120,14 +130,14 @@ const feet = (v: number) => (v < 24 ? `${num(v)} in` : `${num(Math.round((v / 12
  *  it climbs rather than how tall it stands. */
 function climb(lo: number | null | undefined, hi: number | null | undefined): string | null {
   if (lo == null && hi == null) return null;
-  if (lo != null && hi != null) return `climbs ${feet(lo)}-${feet(hi)}`;
-  return lo != null ? `climbs from ${feet(lo)}` : `climbs up to ${feet(hi!)}`;
+  if (lo != null && hi != null) return `climbs ${lengthSaid(lo)}-${lengthSaid(hi)}`;
+  return lo != null ? `climbs from ${lengthSaid(lo)}` : `climbs up to ${lengthSaid(hi!)}`;
 }
 
 function span(lo: number | null | undefined, hi: number | null | undefined, word: string): string | null {
   if (lo == null && hi == null) return null;
-  if (lo != null && hi != null) return `${feet(lo)}-${feet(hi)} ${word}`;
-  return lo != null ? `from ${feet(lo)} ${word}` : `up to ${feet(hi!)} ${word}`;
+  if (lo != null && hi != null) return `${lengthSaid(lo)}-${lengthSaid(hi)} ${word}`;
+  return lo != null ? `from ${lengthSaid(lo)} ${word}` : `up to ${lengthSaid(hi!)} ${word}`;
 }
 
 /** 3 -> "3", 2.5 -> "2.5": depths, hours and degrees read as counts. */

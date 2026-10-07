@@ -6,7 +6,8 @@ import {
   GrowingSurface, GrowingGoal, GrowingAreaType, GrowingArea,
   Shelter, TempExposure, SunExposure,
 } from '../types';
-import type { Candidate } from '../api/growingAreas';
+import type { Candidate, FitFinding } from '../api/growingAreas';
+import { lengthSaid } from '../care/facts';
 
 export const SURFACES: GrowingSurface[] = [
   'in_ground_bed', 'raised_bed', 'containers', 'windowsill',
@@ -23,6 +24,24 @@ export const SURFACE_LABEL: Record<GrowingSurface, string> = {
   greenhouse_bench: '🏕️ Greenhouse bench',
   pond_or_water:    '💧 Pond or water',
 };
+
+/** A surface as it reads mid-sentence or in quotes: "Raised bed", without the
+ *  icon its chip wears. */
+export function surfaceName(surface: GrowingSurface): string {
+  return SURFACE_LABEL[surface].replace(/^\S+\s/, '');
+}
+
+/** What each sun setting means, said where it is chosen. The fit engine
+ *  reads the setting as exactly these bands (`fit._AREA_SUN_WORDS`) and its
+ *  sentences quote them — "this spot gets 6+ hours of direct sun" — so the
+ *  setup says them first, rather than leaving a finding to define the word
+ *  after the fact. If the bands change there, they change here. */
+export const SUN_HINT =
+  'Hours of direct sun a day: full sun is 6 or more, partial 3 to 6, shade under 3.';
+
+/** What "Indoors or out" decides: whether the spot follows the weather. */
+export const INDOOR_OUTDOOR_HINT =
+  'Outdoors if it follows the outside temperature — a greenhouse does.';
 
 /** Surfaces whose soil is whatever is already there, at whatever depth. */
 export const IS_BED: Record<GrowingSurface, boolean> = {
@@ -75,17 +94,57 @@ export function climateForSurface(surface: GrowingSurface): Climate {
   return SURFACE_CLIMATE[surface];
 }
 
-const SURFACE_TYPE: Record<GrowingSurface, GrowingAreaType> = {
-  in_ground_bed: 'community_garden', raised_bed: 'community_garden',
-  containers: 'home', windowsill: 'home', shelf_or_floor: 'home',
-  hanging: 'home', greenhouse_bench: 'nursery', pond_or_water: 'conservation',
+// --- who keeps the space ----------------------------------------------------
+// An area's type says whose space it is. The census counts areas by it, and
+// nothing that judges fit reads it. It is asked, never inferred: what plants
+// sit in says nothing about who keeps them — most raised beds are someone's
+// back garden, not a community plot — and a guess here once labelled a home
+// bed "Community garden" behind the gardener's back.
+
+/** The types the setup offers, in the order it offers them. */
+export const AREA_TYPES: GrowingAreaType[] = [
+  'home', 'nursery', 'community_garden', 'conservation', 'research',
+];
+
+/** Keyed by string, not by the type: the server knows a few more types than
+ *  the setup offers (balcony, greenhouse, other), and those still need words. */
+const AREA_TYPE_LABEL: Record<string, string> = {
+  home: '🏠 Home',
+  nursery: '🌱 Nursery',
+  community_garden: '🌳 Community garden',
+  conservation: '🌿 Conservation',
+  research: '🔬 Research',
+  balcony: '🪴 Balcony',
+  greenhouse: '🏕️ Greenhouse',
+  other: '📍 Other',
 };
 
-export function typeForSurface(surface: GrowingSurface): GrowingAreaType {
-  return SURFACE_TYPE[surface];
+/** An area type in words — never the raw token, even for one this build
+ *  has not heard of. */
+export function areaTypeLabel(type: string): string {
+  const known = AREA_TYPE_LABEL[type];
+  if (known) return known;
+  const words = type.replace(/_/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
+/** Why the setup cannot go on from this step, or null when it can. Said
+ *  under the button rather than leaving it greyed out with no reason. */
+export function setupBlocker(step: number, name: string): string | null {
+  if (step === 0 && name.trim().length === 0) {
+    return 'Give it a name to go on — one you’ll know it by among your other spaces.';
+  }
+  return null;
 }
 
 export type Prompt = { label: string; hint: string };
+
+/** Said wherever the depth is asked for or counted on. Nothing in the fit
+ *  engine reads it — no axis compares a plant's roots with it — and a field
+ *  that silently does nothing breaks the promise the form makes, that a
+ *  number given here shapes what gets suggested. Drop this when an axis
+ *  reads `soil_depth_in`. */
+const DEPTH_UNCHECKED = 'Kept with the space — no plant is checked against it yet.';
 export type DimensionPrompts = {
   area: Prompt; headroom: Prompt; depth: Prompt;
 };
@@ -116,60 +175,133 @@ export function dimensionPrompts(surface: GrowingSurface | null): DimensionPromp
     },
     depth: {
       label: bed ? 'Soil depth (inches)' : water ? 'Water depth (inches)' : 'Pot depth (inches)',
-      hint: bed
+      hint: `${bed
         ? 'How far roots can run before they hit hardpan, liner or rock.'
         : water
           ? 'Depth at the planting shelf, not the deepest point.'
-          : 'Inside depth of the pots you’ll use here.',
+          : 'Inside depth of the pots you’ll use here.'} ${DEPTH_UNCHECKED}`,
     },
   };
 }
 
+// --- lengths, as the reasons say them --------------------------------------
+// Headroom and depth are asked in inches, and the fit sentences say anything
+// from two feet up in feet: 84 in typed, "there is 7 ft of headroom" read.
+// One number shown two ways with nothing joining them reads as two numbers,
+// so wherever a measured length is shown back it is said the way the
+// sentences say it (`lengthSaid`, the engine's own rule), with the inches the
+// gardener typed beside it.
+
+/** A measured length on the area's card: "7 ft (84 in)", or "18 in" where
+ *  the sentences would say inches too. */
+export function measuredLength(inches: number): string {
+  const said = lengthSaid(inches);
+  return said === `${inches} in` ? said : `${said} (${inches} in)`;
+}
+
+/** Under a length field as it is typed, once the reasons would say it in
+ *  feet: "That’s 7 ft." Nothing for a blank, a zero or a length kept in
+ *  inches. */
+export function lengthEcho(raw: string): string | null {
+  const inches = parseFloat(raw);
+  if (!Number.isFinite(inches) || inches <= 0) return null;
+  const said = lengthSaid(inches);
+  return said === `${inches} in` ? null : `That’s ${said}.`;
+}
+
 // --- what could not be checked -------------------------------------------
 
-/** The axes this area turns on that the catalog cannot answer, in plain words.
+/** A goal as it reads mid-sentence: "something to eat", "low upkeep". */
+export function goalPhrase(goal: GrowingGoal): string {
+  const entry = GOALS.find((g) => g.value === goal);
+  return entry
+    ? entry.label.replace(/^\S+\s/, '').toLowerCase()
+    : goal.replace(/_/g, ' ');
+}
+
+/** Which of the area's goals a finding answers.
+ *
+ * The server says so in `goal`. Low upkeep is also recognisable by its axis;
+ * edible and pollinators share the `goal` axis and are not — so a finding
+ * from a server older than the `goal` field is taken to answer either, the
+ * reading these notes gave before the field existed. */
+export function goalsAnswered(finding: FitFinding): GrowingGoal[] {
+  if (finding.goal) return [finding.goal];
+  if (finding.axis === 'upkeep') return ['low_upkeep'];
+  if (finding.axis === 'goal') return ['edible', 'pollinators'];
+  return [];
+}
+
+/** The axes this area turns on that the list could not answer, in plain words.
  *
  * A recommendation list is read as a verdict on the space, so a list thinned
  * by a gap in the evidence has to say which gap. The alternative is what the
  * first end-to-end run did: the gardener asked for something edible that feeds
- * pollinators, neither field is researched on a single species yet, and the
+ * pollinators, neither field was researched on a single species yet, and the
  * app quietly returned a list narrowed by neither — indistinguishable from a
  * list that had honoured both.
  *
  * Derived from the answers themselves rather than from a separate endpoint:
- * a confirmed fit on an axis appears in a candidate's `fits`, so an axis that
- * appears nowhere across the whole list is an axis nothing could confirm.
+ * a confirmed fit on an axis appears in a candidate's `fits`, so an axis — or
+ * a goal — that appears nowhere across the list is one nothing on it could
+ * confirm. Every note speaks about the list it sits above, never about the
+ * whole catalog: the catalog keeps being researched, and a sentence like "no
+ * species carries a mature size yet" goes on being shown long after it stops
+ * being true. An empty list gets only the note about the space itself, since
+ * "nothing on this list" says nothing about a list with nothing on it.
  */
 export function uncheckedNotes(
-  area: Pick<GrowingArea, 'temp_exposure' | 'goals' | 'area_sqft' | 'headroom_in'>,
+  area: Pick<
+    GrowingArea,
+    'temp_exposure' | 'goals' | 'area_sqft' | 'headroom_in' | 'soil_depth_in' | 'surface'
+  >,
   candidates: Candidate[],
 ): string[] {
   const notes: string[] = [];
-  const axesConfirmed = new Set(
-    candidates.flatMap((c) => c.fits.map((f) => f.axis)));
+  const confirmed = candidates.flatMap((c) => c.fits);
+  const axesConfirmed = new Set(confirmed.map((f) => f.axis));
+  const goalsConfirmed = new Set(confirmed.flatMap(goalsAnswered));
 
+  // Indoors the engine answers light with `unknown` every time: an area
+  // records hours of direct sun, not how bright a room is, so there is
+  // nothing to set a species' indoor light need against. That is a fact
+  // about the space, true whatever the catalog holds — and it is said in a
+  // gardener's words, not in the database's ("the old light column").
   if (area.temp_exposure === 'indoor') {
     notes.push(
-      'Indoor light isn’t checked. Almost nothing in the catalog records a '
-      + 'species’ light level in footcandles, and the old light column is the '
-      + 'one known to be wrong — so what’s here rests on the other axes.');
+      'Indoor light isn’t checked: nothing records how bright this spot is, '
+      + 'so nothing here was matched on light.');
   }
 
-  if (area.goals && area.goals.length > 0 && !axesConfirmed.has('goal')) {
-    const wanted = GOALS.filter((g) => area.goals!.includes(g.value))
-      .map((g) => g.label.replace(/^\S+\s/, '').toLowerCase());
+  if (candidates.length === 0) return notes;
+
+  // Per goal, not per axis: a list narrowed by low upkeep (its own axis) or
+  // by pollinators has still not been narrowed by edibility.
+  const unanswered = GOALS
+    .filter((g) => (area.goals ?? []).includes(g.value) && !goalsConfirmed.has(g.value))
+    .map((g) => goalPhrase(g.value));
+  if (unanswered.length > 0) {
     notes.push(
-      `Nothing here is filtered by what you asked for (${wanted.join(', ')}). `
-      + 'No species in the catalog has been researched for it yet, so the list '
-      + 'below honours the space but not the wish.');
+      `Nothing here is filtered by what you asked for (${unanswered.join(', ')}). `
+      + 'Nothing on this list has a source that answers it yet, so the list '
+      + 'honours the space but not the wish.');
   }
 
   const measured = area.area_sqft != null || area.headroom_in != null;
   if (measured && !axesConfirmed.has('footprint')) {
     notes.push(
-      'Size isn’t checked against your measurements. No species in the catalog '
-      + 'carries a mature height or spread yet, so nothing here is ruled in or '
-      + 'out on whether it would outgrow the space.');
+      'Size isn’t checked against your measurements. Nothing on this list has '
+      + 'a recorded mature size to set against them, so whether any of it would '
+      + 'outgrow the space is unknown.');
+  }
+
+  // A depth was measured and nothing reads it (DEPTH_UNCHECKED): said, so the
+  // number is not taken to have narrowed the list.
+  if (area.soil_depth_in != null) {
+    const depth = dimensionPrompts(area.surface ?? null).depth.label.replace(/ \(.*\)$/, '');
+    notes.push(
+      `${depth} isn’t checked: nothing on this list was compared with the `
+      + `${area.soil_depth_in} in you measured.`);
   }
 
   return notes;

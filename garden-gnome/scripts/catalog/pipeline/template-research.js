@@ -90,6 +90,8 @@ ${s.note}
 Use ONLY these admissible authority domains -- no other source may be cited, no matter how reputable it seems:
 ${DOMAINS.map(d => `- ${d}`).join('\n')}
 
+The page cache in scripts/catalog/.quote_cache is SHARED by every agent running right now: never delete, move or edit anything in it -- not one entry, never a glob. On 2026-09-27 two agents ran 'rm -f .quote_cache/*.json' and wiped the pages forty other agents were reading. A page that will not load is reported in unknowns, not repaired; a failed fetch is not cached, so simply retrying is safe. If you read a page through Bash (qc.py or curl) and the sandbox denies the host, re-run that same command with the host listed in the Bash tool's allowed_domains.
+
 Produce a single JSON record with EXACTLY these fields and no others: ${FIELD_LIST.join(', ')}. Do not add any extra field, placeholder, or scaffolding key beyond this exact list, even if empty or null. common_name must always be a real, non-null, well-supported name for this exact species -- never invent or guess it, but also never leave it blank; if two admissible sources differ on which name is primary, pick the one led by the source(s) with a dedicated page for this exact taxon (for a hybrid, the hybrid's own page counts; a parent species' page does not) (its actual title/H1/lead name, or the FIRST item of its common-name list), never a name the page assigns to a sibling species, never one that only appears inside a multi-species umbrella term or a secondary "other common names" field. Say so in name_note when sources split.
 
 Rules, all mandatory:
@@ -125,6 +127,8 @@ Return ONLY the JSON record.`
 
 function verifyPrompt(record, s) {
   return `You are an adversarial auditor reviewing a researched plant-care record for "${s.common}" (${s.latin}) before it is landed as cited evidence in a plant-care app. Your job is to find and refute anything wrong -- do not rubber-stamp.
+
+The page cache in scripts/catalog/.quote_cache is SHARED by every agent running right now: never delete, move or edit anything in it -- not one entry, never a glob. On 2026-09-27 two agents ran 'rm -f .quote_cache/*.json' and wiped the pages forty other agents were reading. A page that will not load is reported in unknowns, not repaired; a failed fetch is not cached, so simply retrying is safe. If you read a page through Bash (qc.py or curl) and the sandbox denies the host, re-run that same command with the host listed in the Bash tool's allowed_domains.
 
 Here is the record to audit:
 ${JSON.stringify(record, null, 2)}

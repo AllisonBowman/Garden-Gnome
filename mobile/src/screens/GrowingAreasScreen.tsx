@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchGrowingAreas, createGrowingArea } from '../api/growingAreas';
+import { serverMessage } from '../api/errorMessage';
 import {
   GrowingArea, GrowingAreaType, Shelter, TempExposure, SunExposure,
   GrowingSurface, GrowingGoal,
@@ -19,24 +20,17 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import {
-  SURFACES, SURFACE_LABEL, GOALS, dimensionPrompts, climateForSurface,
-  typeForSurface,
+  SURFACES, SURFACE_LABEL, GOALS, AREA_TYPES, INDOOR_OUTDOOR_HINT, SUN_HINT,
+  areaTypeLabel, dimensionPrompts, climateForSurface, lengthEcho, setupBlocker,
+  surfaceName,
 } from '../growingAreas/realEstate';
 
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreasList'>;
 
-const AREA_TYPES: { value: GrowingAreaType; label: string }[] = [
-  { value: 'home',             label: '🏠 Home'        },
-  { value: 'nursery',          label: '🌱 Nursery'     },
-  { value: 'community_garden', label: '🌳 Community'   },
-  { value: 'conservation',     label: '🌿 Conservation'},
-  { value: 'research',         label: '🔬 Research'    },
-];
-
 function GrowingAreaCard({ area, onPress }: { area: GrowingArea; onPress: () => void }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
-  const typeLabel = AREA_TYPES.find((t) => t.value === area.type)?.label ?? area.type;
+  const typeLabel = areaTypeLabel(area.type);
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
       <Card.Content>
@@ -62,9 +56,11 @@ function GrowingAreaCard({ area, onPress }: { area: GrowingArea; onPress: () => 
  * measured. A blank that arrived at the server as 0 would be indistinguishable
  * from "this bed has no room in it", and would quietly rule out every plant. */
 function Measurement({
-  label, hint, value, onChange,
+  label, hint, value, onChange, echo,
 }: {
   label: string; hint: string; value: string; onChange: (v: string) => void;
+  /** The typed length as the reasons will say it ("That’s 7 ft."), if differently. */
+  echo?: string | null;
 }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
@@ -78,6 +74,7 @@ function Measurement({
         mode="outlined"
         dense
       />
+      {echo ? <Text variant="bodySmall" style={styles.measurementEcho}>{echo}</Text> : null}
       <Text variant="bodySmall" style={styles.measurementHint}>{hint}</Text>
     </View>
   );
@@ -114,14 +111,14 @@ export default function GrowingAreasScreen() {
 
   // Picking a surface presets the conditions, because a windowsill and a raised
   // bed disagree about all three and most people should not have to say so
-  // twice. Every preset stays editable on the next step.
+  // twice. Every preset stays editable on the next step. The kind of place is
+  // not preset: what plants sit in says nothing about whose space it is.
   const applySurface = (s: GrowingSurface) => {
     setSurface(s);
     const climate = climateForSurface(s);
     setShelter(climate.shelter);
     setTempExposure(climate.temp_exposure);
     setSunExposure(climate.sun_exposure);
-    setType(typeForSurface(s));
   };
 
   const reset = () => {
@@ -164,19 +161,32 @@ export default function GrowingAreasScreen() {
       // is a different answer from never having been asked.
       goals,
     }),
-    onSuccess: () => {
+    // Land on the new area: it is where the gardener sees what suits the
+    // space they just described, and the proof that it was made.
+    onSuccess: (area) => {
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
       setModalVisible(false);
       reset();
+      navigation.navigate('GrowingAreaDetail', { growingAreaId: area.id, name: area.name });
     },
-    onError: () => Alert.alert('Error', 'Could not create growing area.'),
+    // The modal stays open with everything entered, so it can simply be sent
+    // again — which is what the message says.
+    onError: (err) => Alert.alert(
+      'Couldn’t create it',
+      serverMessage(
+        err,
+        'This growing area couldn’t be saved just now. Check your connection and '
+        + 'try again — everything you entered is still here.',
+      ),
+    ),
   });
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
 
   const prompts = dimensionPrompts(surface);
   const isLast = step === STEP_TITLES.length - 1;
-  const canAdvance = step === 0 ? name.trim().length > 0 : true;
+  const blocker = setupBlocker(step, name);
+  const canAdvance = blocker == null;
 
   const toggleGoal = (g: GrowingGoal) => setGoals(
     (cur) => (cur.includes(g) ? cur.filter((x) => x !== g) : [...cur, g]));
@@ -254,10 +264,12 @@ export default function GrowingAreasScreen() {
                 <Measurement
                   label={prompts.headroom.label} hint={prompts.headroom.hint}
                   value={headroomIn} onChange={setHeadroomIn}
+                  echo={lengthEcho(headroomIn)}
                 />
                 <Measurement
                   label={prompts.depth.label} hint={prompts.depth.hint}
                   value={soilDepthIn} onChange={setSoilDepthIn}
+                  echo={lengthEcho(soilDepthIn)}
                 />
 
                 <Eyebrow style={styles.label}>Location</Eyebrow>
@@ -273,7 +285,7 @@ export default function GrowingAreasScreen() {
               <>
                 <Text variant="bodySmall" style={styles.hint}>
                   {surface
-                    ? `Set from “${SURFACE_LABEL[surface]}”. Change anything that isn’t right.`
+                    ? `Set from “${surfaceName(surface)}”. Change anything that isn’t right.`
                     : 'Describe how much of the weather actually reaches this spot.'}
                 </Text>
 
@@ -289,18 +301,23 @@ export default function GrowingAreasScreen() {
                   style={styles.segmented}
                 />
 
-                <Eyebrow style={styles.label}>Temperature</Eyebrow>
+                {/* Not "temperature": the choice is whether outside air
+                    reaches the spot, and it is what the fit engine reads to
+                    tell an indoor spot from an outdoor one. */}
+                <Eyebrow style={styles.label}>Indoors or out</Eyebrow>
+                <Text variant="bodySmall" style={styles.hint}>{INDOOR_OUTDOOR_HINT}</Text>
                 <SegmentedButtons
                   value={tempExposure}
                   onValueChange={(v) => setTempExposure(v as TempExposure)}
                   buttons={[
-                    { value: 'indoor',  label: 'Indoor'  },
-                    { value: 'outdoor', label: 'Outdoor' },
+                    { value: 'indoor',  label: 'Indoors'  },
+                    { value: 'outdoor', label: 'Outdoors' },
                   ]}
                   style={styles.segmented}
                 />
 
                 <Eyebrow style={styles.label}>Sun</Eyebrow>
+                <Text variant="bodySmall" style={styles.hint}>{SUN_HINT}</Text>
                 <SegmentedButtons
                   value={sunExposure}
                   onValueChange={(v) => setSunExposure(v as SunExposure)}
@@ -312,19 +329,28 @@ export default function GrowingAreasScreen() {
                   style={styles.segmented}
                 />
 
-                <Eyebrow style={styles.label}>Type</Eyebrow>
-                <SegmentedButtons
-                  value={type}
-                  onValueChange={(v) => setType(v as GrowingAreaType)}
-                  buttons={[
-                    { value: 'home',    label: '🏠' },
-                    { value: 'nursery', label: '🌱' },
-                    { value: 'community_garden', label: '🌳' },
-                    { value: 'conservation', label: '🌿' },
-                    { value: 'research', label: '🔬' },
-                  ]}
-                  style={styles.segmented}
-                />
+                {/* Words, not bare icons: nobody can tell conservation from
+                    research by a leaf and a microscope. */}
+                <Eyebrow style={styles.label}>Kind of place</Eyebrow>
+                <Text variant="bodySmall" style={styles.hint}>
+                  Only used to group your spaces in the census — it doesn’t
+                  change what gets suggested.
+                </Text>
+                <View style={styles.chipWrap}>
+                  {AREA_TYPES.map((t) => (
+                    <Chip
+                      key={t}
+                      compact
+                      selected={type === t}
+                      showSelectedCheck={false}
+                      onPress={() => setType(t)}
+                      style={[styles.chip, type === t && styles.chipOn]}
+                      textStyle={type === t ? styles.chipOnText : undefined}
+                    >
+                      {areaTypeLabel(t)}
+                    </Chip>
+                  ))}
+                </View>
               </>
             )}
 
@@ -356,6 +382,7 @@ export default function GrowingAreasScreen() {
             )}
           </ScrollView>
 
+          {blocker ? <Text variant="bodySmall" style={styles.blocker}>{blocker}</Text> : null}
           <View style={styles.footer}>
             <Button
               mode="text"
@@ -406,6 +433,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   goalNote: { color: p.sub, fontStyle: 'italic', lineHeight: 18, marginTop: 4 },
   measurement: { marginBottom: 10 },
   measurementHint: { color: p.faint, marginTop: 3, lineHeight: 16 },
+  measurementEcho: { color: p.sub, marginTop: 3, fontWeight: '600' },
+  blocker: { color: p.sub, marginTop: 10, lineHeight: 17 },
   footer: {
     flexDirection: 'row', justifyContent: 'space-between',
     alignItems: 'center', marginTop: 12,

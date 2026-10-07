@@ -1,14 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import {
-  Text, Card, Searchbar, ActivityIndicator, Chip,
+  Text, Card, Searchbar, ActivityIndicator, Chip, Button,
 } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { fetchPlants } from '../api/plants';
-import { fetchGrowingAreas, fetchCandidates } from '../api/growingAreas';
+import {
+  fetchGrowingAreas, fetchCandidates, EVERY_CANDIDATE, FitFinding,
+} from '../api/growingAreas';
+import { uncheckedNotes } from '../growingAreas/realEstate';
+import { CHECK_FAILED, confirmedLine } from '../growingAreas/fitFindings';
 import { Species } from '../types';
 import { tierOf, fingerprint, matchesQuery, TIER_LABELS, Tier } from '../almanac/tier';
 import { useAppTheme } from '../theme/ThemeProvider';
@@ -34,14 +38,18 @@ const TIER_TONE: Record<Tier, 'good' | 'accent' | 'warn'> = {
 };
 
 function SpeciesCard({
-  species, owned, onPress,
+  species, owned, fits, onPress,
 }: {
-  species: Species; owned: boolean; onPress: () => void;
+  species: Species; owned: boolean;
+  /** The confirmed findings for the chosen area, when one is chosen. */
+  fits?: FitFinding[];
+  onPress: () => void;
 }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const tier = tierOf(species);
   const fp = fingerprint(species);
+  const confirmed = fits ? confirmedLine(fits) : null;
 
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
@@ -58,6 +66,7 @@ function SpeciesCard({
           <Text style={styles.fpItem}>{fp.humidity}</Text>
         </View>
 
+        {confirmed ? <Text style={styles.confirmed}>{confirmed}</Text> : null}
         {owned ? <Text style={styles.owned}>✿ you keep this one</Text> : null}
       </Card.Content>
     </Card>
@@ -90,27 +99,46 @@ export default function AlmanacScreen() {
     queryFn: fetchGrowingAreas,
   });
 
+  // An area deleted elsewhere stops being a filter rather than becoming one
+  // that matches nothing.
+  const area = areas.find((a) => a.id === areaId) ?? null;
+  useEffect(() => {
+    if (areaId != null && areas.length > 0 && area == null) setAreaId(null);
+  }, [areaId, areas, area]);
+
   // The fit rules live on the server and are asked for, not re-implemented
-  // here. `care/facts.ts` mirrors the backend's *wording*, which can drift
-  // harmlessly; a verdict cannot — two places deciding what suits a space
-  // would eventually disagree about it, and the user would see both. React
-  // Query's cache covers the offline case that a local copy would have.
-  const { data: candidates = [], isFetching: fitLoading } = useQuery({
-    queryKey: ['growingAreaCandidates', areaId, 'almanac'],
-    queryFn: () => fetchCandidates(areaId as number, 500),
+  // here. There is no mirrored TS fit engine, on purpose: `care/facts.ts`
+  // mirrors the backend's *wording*, which can drift harmlessly; a verdict
+  // cannot — two places deciding what suits a space would eventually
+  // disagree about it, and the user would see both. React Query's cache
+  // covers the offline case that a local copy would have. Every candidate,
+  // not the best few: the endpoint truncates after ranking, and a species
+  // cut off the end would vanish from this filter as if it did not fit.
+  const {
+    // First load only: a background refetch keeps the cached list and notes
+    // on screen rather than blanking them.
+    data: candidates = [], isLoading: fitLoading, isError: fitFailed, refetch: refetchFit,
+  } = useQuery({
+    queryKey: ['growingAreaCandidates', areaId, 'every'],
+    queryFn: () => fetchCandidates(areaId as number, EVERY_CANDIDATE),
     enabled: areaId != null,
   });
-  const fitIds = useMemo(
-    () => new Set(candidates.map((c) => c.species_id)),
+  const fitsById = useMemo(
+    () => new Map(candidates.map((c) => [c.species_id, c.fits])),
     [candidates],
   );
+  // Which axes the chosen area turns on that nothing on its list could
+  // confirm — the same notes the area's own screen shows, so a thin list
+  // here is not read as a verdict on the space either.
+  const notes = area != null && !fitLoading && !fitFailed
+    ? uncheckedNotes(area, candidates) : [];
 
   const shown = useMemo(
     () => species.filter((s) =>
       matchesQuery(s, query)
       && (filter === 'all' || tierOf(s) === filter)
-      && (areaId == null || fitIds.has(s.id))),
-    [species, query, filter, areaId, fitIds],
+      && (areaId == null || fitsById.has(s.id))),
+    [species, query, filter, areaId, fitsById],
   );
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
@@ -170,17 +198,29 @@ export default function AlmanacScreen() {
           </ScrollView>
         ) : null}
 
-        <Eyebrow style={styles.eyebrow}>Species · {shown.length} shown</Eyebrow>
+        <Eyebrow style={styles.eyebrow}>Species · {fitFailed ? 0 : shown.length} shown</Eyebrow>
 
-        {areaId != null && !fitLoading ? (
-          <Text style={styles.fitNote}>
-            Showing only species a source confirms suit this spot. A plant the
-            catalog can’t judge isn’t hidden because it’s wrong — it’s absent
-            because nothing is known.
-          </Text>
+        {area != null && !fitLoading && !fitFailed ? (
+          <>
+            <Text style={styles.fitNote}>
+              Showing species with nothing on record against {area.name} and at
+              least one thing confirmed. A plant missing from here may simply be
+              one the catalog can’t judge for this spot yet.
+            </Text>
+            {notes.map((note, i) => (
+              <Text key={i} style={styles.caveat}>{note}</Text>
+            ))}
+          </>
         ) : null}
 
-        {shown.length === 0 ? (
+        {area != null && fitFailed ? (
+          // Not an empty list: an empty list here would read as "nothing
+          // suits this spot", and a request that failed has judged nothing.
+          <View style={styles.failed}>
+            <Text style={styles.empty}>{CHECK_FAILED}</Text>
+            <Button compact onPress={() => refetchFit()}>Try again</Button>
+          </View>
+        ) : shown.length === 0 ? (
           <Text style={styles.empty}>
             {fitLoading
               ? 'Checking what suits that spot…'
@@ -192,7 +232,12 @@ export default function AlmanacScreen() {
               key={s.id}
               species={s}
               owned={ownedIds.has(s.id)}
-              onPress={() => navigation.navigate('SpeciesDetail', { speciesId: s.id })}
+              fits={areaId != null ? fitsById.get(s.id) : undefined}
+              // Filtered to an area, the species page shows how it suits that
+              // area in full — the detail behind the card's "Confirmed here".
+              onPress={() => navigation.navigate('SpeciesDetail', {
+                speciesId: s.id, growingAreaId: areaId ?? undefined,
+              })}
             />
           ))
         )}
@@ -218,6 +263,9 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   fingerprint: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 8 },
   fpItem: { color: p.sub, fontSize: 12 },
   owned: { color: p.good, fontSize: 12, marginTop: 8, fontWeight: '600' },
+  confirmed: { color: p.sub, fontSize: 12, lineHeight: 17, marginTop: 8 },
   empty: { color: p.faint, fontStyle: 'italic', textAlign: 'center', marginTop: 32 },
+  failed: { alignItems: 'center', gap: 8 },
   fitNote: { color: p.faint, fontSize: 12.5, lineHeight: 18, marginBottom: 10 },
+  caveat: { color: p.warn, fontSize: 12.5, lineHeight: 18, marginBottom: 10 },
 });

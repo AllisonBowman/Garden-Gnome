@@ -28,6 +28,7 @@ import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
 import { CareFactList, CareStatusLine, LegacyStatRow } from '../components/CareFacts';
+import AreaFitCard from '../components/AreaFitCard';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
@@ -109,6 +110,9 @@ export default function PlantDetailScreen() {
       queryClient.invalidateQueries({ queryKey: ['plant', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      // Both areas' "needs addressing" lists change when a plant moves.
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       setConfirmation(`🌍 Moved to ${dest?.name ?? 'its new home'} — history came along`);
       void rescheduleAllReminders();
@@ -125,6 +129,8 @@ export default function PlantDetailScreen() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       void rescheduleAllReminders();
       navigation.goBack();
@@ -213,6 +219,8 @@ export default function PlantDetailScreen() {
   }
 
   const { species } = plant;
+  // Where it lives, for the card that says what that spot has against it.
+  const home = growingAreas.find((e) => e.id === plant.growing_area_id) ?? null;
 
   return (
     <View style={styles.container}>
@@ -429,6 +437,19 @@ export default function PlantDetailScreen() {
           </Card.Content>
         </Card>
       )}
+
+      {/* The spot it lives in, judged against it: a 60 ft climber in a bed
+          with 7 ft of headroom is flagged here, on its own page, and not
+          only on the area's. What is against it in full; what was confirmed
+          in a line. */}
+      {home ? (
+        <AreaFitCard
+          areaId={home.id}
+          areaName={home.name}
+          speciesId={plant.species_id}
+          confirmedInLine
+        />
+      ) : null}
 
       {/* Care log */}
       <Card style={styles.card}>

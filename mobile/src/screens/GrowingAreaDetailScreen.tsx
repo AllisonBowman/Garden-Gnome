@@ -3,10 +3,11 @@ import {
   ScrollView, View, StyleSheet, Platform, Alert,
 } from 'react-native';
 import {
-  Text, Card, Chip, ActivityIndicator, Surface, Divider, Button,
+  Text, Card, Chip, ActivityIndicator, Surface, Divider, Button, TouchableRipple,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   fetchGrowingArea, fetchGrowingAreaWeather, updateGrowingArea,
   fetchCandidates, fetchMisfits,
@@ -24,30 +25,24 @@ import { Palette, Fonts } from '../theme/tokens';
 import { useCareTasks } from '../care/useCareTasks';
 import CareCalendar from '../care/CareCalendar';
 import {
-  SURFACE_LABEL, GOALS, dimensionPrompts, uncheckedNotes,
+  SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, measuredLength, uncheckedNotes,
 } from '../growingAreas/realEstate';
+import { CHECK_FAILED, confirmedLine, plantTitle } from '../growingAreas/fitFindings';
 import Eyebrow from '../components/Eyebrow';
+import FitFindingRow from '../components/FitFindingRow';
 
 type Route = RouteProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
+type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
 
-const AREA_TYPE_LABEL: Record<string, string> = {
-  home: '🏠 Home',
-  nursery: '🌱 Nursery',
-  community_garden: '🌳 Community garden',
-  conservation: '🌿 Conservation',
-  research: '🔬 Research',
-  balcony: '🪴 Balcony',
-  greenhouse: '🏕️ Greenhouse',
-  other: '📍 Other',
-};
 const SHELTER_LABEL: Record<string, string> = {
   sheltered: '🏠 Sheltered',
   partial: '⛱️ Partial cover',
   exposed: '🌤️ Exposed',
 };
+// The same words the setup asks it in: whether the spot is indoors or out.
 const TEMP_LABEL: Record<string, string> = {
-  indoor: '🌡️ Indoor temp',
-  outdoor: '🍃 Outdoor temp',
+  indoor: '🌡️ Indoors',
+  outdoor: '🍃 Outdoors',
 };
 const SUN_LABEL: Record<string, string> = {
   full_sun: '☀️ Full sun',
@@ -75,6 +70,7 @@ function ForecastDay({ day }: { day: WeatherDay }) {
 
 export default function GrowingAreaDetailScreen() {
   const route = useRoute<Route>();
+  const navigation = useNavigation<Nav>();
   const { growingAreaId } = route.params;
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
@@ -95,12 +91,20 @@ export default function GrowingAreaDetailScreen() {
   const { tasks: careTasks, isLoading: careLoading } = useCareTasks(growingAreaId);
 
   // What doesn't suit this space, and what would. Two reads of the same
-  // comparison, so they are fetched together and shown together.
-  const { data: misfitRows = [], isLoading: misfitsLoading } = useQuery({
+  // comparison, so they are fetched together and shown together. A failed
+  // read is kept apart from an empty one: an empty misfit list is an
+  // all-clear, and a request that never arrived has cleared nothing.
+  const {
+    data: misfitRows = [], isLoading: misfitsLoading, isError: misfitsFailed,
+    refetch: refetchMisfits,
+  } = useQuery({
     queryKey: ['growingAreaMisfits', growingAreaId],
     queryFn: () => fetchMisfits(growingAreaId),
   });
-  const { data: candidateRows = [], isLoading: candidatesLoading } = useQuery({
+  const {
+    data: candidateRows = [], isLoading: candidatesLoading, isError: candidatesFailed,
+    refetch: refetchCandidates,
+  } = useQuery({
     queryKey: ['growingAreaCandidates', growingAreaId],
     queryFn: () => fetchCandidates(growingAreaId, 12),
   });
@@ -149,17 +153,20 @@ export default function GrowingAreaDetailScreen() {
   // Which axes this space turns on that the catalog simply cannot answer.
   // Shown above the list, because a short list is otherwise read as a verdict
   // on the space rather than as a gap in the evidence.
-  const caveats = candidatesLoading ? [] : uncheckedNotes(env, candidateRows);
+  const caveats = candidatesLoading || candidatesFailed
+    ? [] : uncheckedNotes(env, candidateRows);
 
   const prompts = dimensionPrompts(env.surface ?? null);
+  // Lengths are said the way the reasons below say them — "7 ft (84 in)" —
+  // so the 7 ft in "there is 7 ft of headroom" is visibly this number.
   const dims = [
-    { label: prompts.area.label, raw: env.area_sqft, unit: 'sq ft' },
-    { label: prompts.headroom.label, raw: env.headroom_in, unit: 'in' },
-    { label: prompts.depth.label, raw: env.soil_depth_in, unit: 'in' },
+    { label: prompts.area.label, raw: env.area_sqft, say: (n: number) => `${n} sq ft` },
+    { label: prompts.headroom.label, raw: env.headroom_in, say: measuredLength },
+    { label: prompts.depth.label, raw: env.soil_depth_in, say: measuredLength },
   ];
   const measurements = dims
     .filter((d) => d.raw != null)
-    .map((d) => ({ label: d.label.replace(/ \(.*\)$/, ''), value: `${d.raw} ${d.unit}` }));
+    .map((d) => ({ label: d.label.replace(/ \(.*\)$/, ''), value: d.say(d.raw as number) }));
   const unmeasured = dims
     .filter((d) => d.raw == null)
     .map((d) => d.label.replace(/ \(.*\)$/, '').toLowerCase());
@@ -172,9 +179,20 @@ export default function GrowingAreaDetailScreen() {
           {env.name}
         </Text>
         <Text variant="bodyMedium" style={styles.subtle}>
-          {AREA_TYPE_LABEL[env.type] ?? env.type}
+          {areaTypeLabel(env.type)}
         </Text>
         {location ? <Text variant="bodySmall" style={styles.subtle}>📍 {location}</Text> : null}
+        {/* The way on from everything below: what suits this space is only
+            worth reading if a plant can be put in it from here. */}
+        <Button
+          mode="outlined"
+          icon="plus"
+          compact
+          onPress={() => navigation.navigate('AddPlant', { growingAreaId })}
+          style={styles.addHere}
+        >
+          Add a plant here
+        </Button>
       </Surface>
 
       {/* The space itself — what there is to plant into, and what it is for */}
@@ -239,23 +257,37 @@ export default function GrowingAreaDetailScreen() {
         <Card.Content>
           {misfitsLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
+          ) : misfitsFailed ? (
+            <View>
+              <Text style={styles.unavailable}>{CHECK_FAILED}</Text>
+              <Button compact onPress={() => refetchMisfits()} style={styles.retry}>
+                Try again
+              </Button>
+            </View>
           ) : misfitRows.length === 0 ? (
             <Text style={styles.unavailable}>
-              Nothing here contradicts the space. Plants the catalog can’t
-              judge aren’t listed as fine — they’re just not listed.
+              {env.plant_count === 0
+                ? 'No plants here yet. Anything this space has against a plant '
+                  + 'you add here will show up on this card.'
+                : 'Nothing here contradicts the space. Plants the catalog can’t '
+                  + 'judge aren’t listed as fine — they’re just not listed.'}
             </Text>
           ) : (
-            misfitRows.map((m) => (
-              <View key={m.plant_id} style={styles.misfit}>
-                <Text style={styles.misfitName}>
-                  {m.nickname || m.common_name}
-                  {m.nickname ? <Text style={styles.misfitSpecies}>{`  ${m.common_name}`}</Text> : null}
-                </Text>
-                {m.misfits.map((f, i) => (
-                  <Text key={i} style={styles.misfitReason}>• {f.sentence}</Text>
-                ))}
-              </View>
-            ))
+            misfitRows.map((m) => {
+              const title = plantTitle(m.nickname, m.common_name);
+              return (
+                <View key={m.plant_id} style={styles.misfit}>
+                  <Text style={styles.misfitName}>
+                    {title.name}
+                    {title.species
+                      ? <Text style={styles.misfitSpecies}>{`  ${title.species}`}</Text> : null}
+                  </Text>
+                  {/* The axis and whose word it is, then the server's own
+                      sentence — never re-worded here. */}
+                  {m.misfits.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
+                </View>
+              );
+            })
           )}
         </Card.Content>
       </Card>
@@ -274,6 +306,13 @@ export default function GrowingAreaDetailScreen() {
           ))}
           {candidatesLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
+          ) : candidatesFailed ? (
+            <View>
+              <Text style={styles.unavailable}>{CHECK_FAILED}</Text>
+              <Button compact onPress={() => refetchCandidates()} style={styles.retry}>
+                Try again
+              </Button>
+            </View>
           ) : candidateRows.length === 0 ? (
             <Text style={styles.unavailable}>
               Nothing to put forward yet. A species only appears here once a
@@ -282,13 +321,28 @@ export default function GrowingAreaDetailScreen() {
             </Text>
           ) : (
             candidateRows.map((c) => (
-              <View key={c.species_id} style={styles.candidate}>
-                <Text style={styles.candidateName}>{c.common_name}</Text>
-                <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
-                {c.fits.map((f, i) => (
-                  <Text key={i} style={styles.candidateWhy}>• {f.sentence}</Text>
-                ))}
-              </View>
+              <TouchableRipple
+                key={c.species_id}
+                onPress={() => navigation.navigate(
+                  'SpeciesDetail', { speciesId: c.species_id, growingAreaId })}
+                accessibilityRole="button"
+                accessibilityHint={`Opens ${c.common_name}, with how it suits this space`}
+                style={styles.candidate}
+              >
+                <View>
+                  <View style={styles.candidateHead}>
+                    <Text style={styles.candidateName}>{c.common_name}</Text>
+                    <Text style={styles.candidateMore}>›</Text>
+                  </View>
+                  <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
+                  {/* One line per candidate — which axes were confirmed — and
+                      the findings themselves, each with whose word it is, on
+                      the species page this opens. Six near-identical rows a
+                      candidate made twelve candidates about seventy lines.
+                      Only confirmed axes: an unknown is never a reason. */}
+                  <Text style={styles.candidateWhy}>{confirmedLine(c.fits)}</Text>
+                </View>
+              </TouchableRipple>
             ))
           )}
         </Card.Content>
@@ -405,6 +459,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   header: { borderRadius: 12, padding: 16, marginBottom: 12, backgroundColor: p.card },
   envName: { color: p.acc, fontFamily: f.display },
   subtle: { color: p.sub, marginTop: 2 },
+  addHere: { alignSelf: 'flex-start', marginTop: 12 },
   card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
   cardTitle: { color: p.ink, fontFamily: f.display },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
@@ -418,14 +473,16 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   goalsLabel: { marginTop: 16, marginBottom: 8 },
 
   misfit: { marginBottom: 16 },
-  misfitName: { fontSize: 15, fontWeight: '700', color: p.ink, marginBottom: 5 },
+  misfitName: { fontSize: 15, fontWeight: '700', color: p.ink, marginBottom: 6 },
   misfitSpecies: { fontSize: 13, fontWeight: '400', color: p.faint },
-  misfitReason: { fontSize: 14, lineHeight: 20, color: p.sub, marginBottom: 3 },
-  candidate: { marginBottom: 16 },
-  candidateName: { fontSize: 15, fontWeight: '700', color: p.ink },
-  candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 5 },
-  candidateWhy: { fontSize: 14, lineHeight: 20, color: p.sub, marginBottom: 3 },
+  candidate: { marginBottom: 16, borderRadius: 8 },
+  candidateHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
+  candidateName: { fontSize: 15, fontWeight: '700', color: p.ink, flexShrink: 1 },
+  candidateMore: { fontSize: 20, color: p.faint },
+  candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 4 },
+  candidateWhy: { fontSize: 13, lineHeight: 18, color: p.sub },
   caveat: { fontSize: 13, lineHeight: 19, color: p.warn, marginBottom: 12 },
+  retry: { alignSelf: 'flex-start', marginTop: 6 },
 
   nowRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   nowMain: {},

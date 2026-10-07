@@ -199,6 +199,25 @@ def test_transfer_within_own_account_works(iso):
     assert t.json()["growing_area_id"] == new_env
 
 
+def test_a_move_logs_the_area_by_name_not_its_type_token(iso):
+    r = iso.client.post(
+        "/growing-areas/",
+        json={"name": "Back bed", "type": "community_garden"},
+        headers=iso.a["headers"],
+    )
+    assert r.status_code == 201, r.text
+    t = iso.client.post(
+        f"/plants/{iso.a['plant_id']}/transfer",
+        json={"to_growing_area_id": r.json()["id"]},
+        headers=iso.a["headers"],
+    )
+    assert t.status_code == 200, t.text
+    logs = iso.client.get(f"/plants/{iso.a['plant_id']}/logs", headers=iso.a["headers"]).json()
+    notes = [entry["notes"] for entry in logs if entry.get("notes")]
+    assert "Moved to Back bed" in notes
+    assert not any("community_garden" in n for n in notes)
+
+
 # --- GrowingAreas ---------------------------------------------------------------
 
 

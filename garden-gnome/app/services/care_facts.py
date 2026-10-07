@@ -12,6 +12,7 @@ named -- the name only, never the passage (ADR 0003).
 """
 from __future__ import annotations
 
+import math
 from enum import Enum
 from typing import Any, Callable
 
@@ -273,15 +274,23 @@ def _outdoors(sp: Species, tag: Tag) -> Told:
     return lines, ""
 
 
-def _feet(value: float) -> str:
+def length_said(value: float) -> str:
     """Inches, said the way a gardener says them.
 
     Under two feet nobody converts; above it, feet with the inches dropped is
-    how every source publishes mature size in the first place."""
+    how every source publishes mature size in the first place -- to one
+    decimal, a half rounded up.
+
+    The one rule for a length the app is told: these fact lines, the fit
+    engine's sentences, and the app's own cards (mobile care/facts.ts
+    `lengthSaid`, to the operation), so the "7 ft" of headroom in a reason is
+    the "7 ft" printed for the 84 in somebody measured. Not round(): Python
+    takes a half to even and JavaScript takes it up, which would put 87 in at
+    7.2 ft in the sentence and 7.3 ft on the card. The fixtures in test_fit
+    and facts.test.ts are shared; if they drift, the two disagree."""
     if value < 24:
         return f"{_num(value)} in"
-    feet = value / 12
-    return f"{_num(round(feet, 1))} ft"
+    return f"{_num(math.floor(value * 10 / 12 + 0.5) / 10)} ft"
 
 
 def _size(sp: Species, tag: Tag) -> Told:
@@ -306,11 +315,11 @@ def _size(sp: Species, tag: Tag) -> Told:
         if low is None and high is None:
             continue
         if low is not None and high is not None:
-            span = f"{_feet(low)}-{_feet(high)}"
+            span = f"{length_said(low)}-{length_said(high)}"
         elif low is not None:
-            span = f"from {_feet(low)}"
+            span = f"from {length_said(low)}"
         else:
-            span = f"up to {_feet(high)}"
+            span = f"up to {length_said(high)}"
         lines.append(f"- {label}: {tag(span, *fields)}")
 
     if climber:
