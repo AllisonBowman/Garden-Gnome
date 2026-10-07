@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { View, ScrollView, FlatList, StyleSheet } from 'react-native';
 import {
   Text, Card, Searchbar, ActivityIndicator, Chip, Button,
 } from 'react-native-paper';
@@ -154,107 +154,127 @@ export default function AlmanacScreen() {
     return areaId == null ? matching : inRankOrder(matching, candidates);
   }, [species, query, filter, areaId, fitsById, candidates]);
 
+  const renderItem = useCallback(({ item }: { item: Species }) => (
+    <SpeciesCard
+      species={item}
+      owned={ownedIds.has(item.id)}
+      fits={areaId != null ? fitsById.get(item.id) : undefined}
+      // Filtered to an area, the species page shows how it suits that
+      // area in full — the detail behind the card's "Confirmed here".
+      onPress={() => navigation.navigate('SpeciesDetail', {
+        speciesId: item.id, growingAreaId: areaId ?? undefined,
+      })}
+    />
+  ), [ownedIds, areaId, fitsById, navigation]);
+
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
 
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text variant="bodyMedium" style={styles.intro}>
-          A living count of what growers keep — {species.length} species in the
-          catalog{ownedIds.size > 0 ? `, ${ownedIds.size} of them on your shelf` : ''}.
-          Read any species to learn its ways.
-        </Text>
+  // Not an empty list: an empty list here would read as "nothing suits this
+  // spot", and a request that failed has judged nothing.
+  const fitCheckFailed = area != null && fitFailed;
 
-        <Searchbar
-          placeholder={`Search ${species.length} species…`}
-          value={query}
-          onChangeText={setQuery}
-          style={styles.search}
-          inputStyle={styles.searchInput}
-        />
+  // Everything above the cards, as one element rather than a component, so
+  // the search field keeps its focus and keyboard while the list under it
+  // changes with every letter typed.
+  const header = (
+    <>
+      <Text variant="bodyMedium" style={styles.intro}>
+        A living count of what growers keep — {species.length} species in the
+        catalog{ownedIds.size > 0 ? `, ${ownedIds.size} of them on your shelf` : ''}.
+        Read any species to learn its ways.
+      </Text>
 
+      <Searchbar
+        placeholder={`Search ${species.length} species…`}
+        value={query}
+        onChangeText={setQuery}
+        style={styles.search}
+        inputStyle={styles.searchInput}
+      />
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
+        {FILTERS.map((f) => (
+          <Chip
+            key={f.value}
+            selected={filter === f.value}
+            onPress={() => setFilter(f.value)}
+            style={styles.filterChip}
+            compact
+          >
+            {f.label}
+          </Chip>
+        ))}
+      </ScrollView>
+
+      {areas.length > 0 ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
-          {FILTERS.map((f) => (
+          <Chip
+            selected={areaId === null}
+            onPress={() => setAreaId(null)}
+            style={styles.filterChip}
+            compact
+          >
+            Anywhere
+          </Chip>
+          {areas.map((a) => (
             <Chip
-              key={f.value}
-              selected={filter === f.value}
-              onPress={() => setFilter(f.value)}
+              key={a.id}
+              selected={areaId === a.id}
+              onPress={() => setAreaId(a.id)}
               style={styles.filterChip}
               compact
             >
-              {f.label}
+              {`Fits ${a.name}`}
             </Chip>
           ))}
         </ScrollView>
+      ) : null}
 
-        {areas.length > 0 ? (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
-            <Chip
-              selected={areaId === null}
-              onPress={() => setAreaId(null)}
-              style={styles.filterChip}
-              compact
-            >
-              Anywhere
-            </Chip>
-            {areas.map((a) => (
-              <Chip
-                key={a.id}
-                selected={areaId === a.id}
-                onPress={() => setAreaId(a.id)}
-                style={styles.filterChip}
-                compact
-              >
-                {`Fits ${a.name}`}
-              </Chip>
-            ))}
-          </ScrollView>
-        ) : null}
+      <Eyebrow style={styles.eyebrow}>Species · {fitFailed ? 0 : shown.length} shown</Eyebrow>
 
-        <Eyebrow style={styles.eyebrow}>Species · {fitFailed ? 0 : shown.length} shown</Eyebrow>
-
-        {area != null && !fitLoading && !fitFailed ? (
-          <>
-            <Text style={styles.fitNote}>
-              Showing species with nothing on record against {area.name} and at
-              least one thing confirmed. A plant missing from here may simply be
-              one the catalog can’t judge for this spot yet. {RANK_ORDER}
-            </Text>
-            {notes.map((note, i) => (
-              <Text key={i} style={styles.caveat}>{note}</Text>
-            ))}
-          </>
-        ) : null}
-
-        {area != null && fitFailed ? (
-          // Not an empty list: an empty list here would read as "nothing
-          // suits this spot", and a request that failed has judged nothing.
-          <View style={styles.failed}>
-            <Text style={styles.empty}>{CHECK_FAILED}</Text>
-            <Button compact onPress={() => refetchFit()}>Try again</Button>
-          </View>
-        ) : shown.length === 0 ? (
-          <Text style={styles.empty}>
-            {fitLoading
-              ? 'Checking what suits that spot…'
-              : 'Nothing matches that. Try a different name, or widen the filter.'}
+      {area != null && !fitLoading && !fitFailed ? (
+        <>
+          <Text style={styles.fitNote}>
+            Showing species with nothing on record against {area.name} and at
+            least one thing confirmed. A plant missing from here may simply be
+            one the catalog can’t judge for this spot yet. {RANK_ORDER}
           </Text>
-        ) : (
-          shown.map((s) => (
-            <SpeciesCard
-              key={s.id}
-              species={s}
-              owned={ownedIds.has(s.id)}
-              fits={areaId != null ? fitsById.get(s.id) : undefined}
-              // Filtered to an area, the species page shows how it suits that
-              // area in full — the detail behind the card's "Confirmed here".
-              onPress={() => navigation.navigate('SpeciesDetail', {
-                speciesId: s.id, growingAreaId: areaId ?? undefined,
-              })}
-            />
-          ))
-        )}
-      </ScrollView>
+          {notes.map((note, i) => (
+            <Text key={i} style={styles.caveat}>{note}</Text>
+          ))}
+        </>
+      ) : null}
+    </>
+  );
+
+  const empty = fitCheckFailed ? (
+    <View style={styles.failed}>
+      <Text style={styles.empty}>{CHECK_FAILED}</Text>
+      <Button compact onPress={() => refetchFit()}>Try again</Button>
+    </View>
+  ) : (
+    <Text style={styles.empty}>
+      {fitLoading
+        ? 'Checking what suits that spot…'
+        : 'Nothing matches that. Try a different name, or widen the filter.'}
+    </Text>
+  );
+
+  // A list, not a column: "Anywhere" is the whole catalog, hundreds of cards,
+  // and a column built every one of them before the first could be read —
+  // again on every letter typed and every chip tapped. Only what is on
+  // screen, and a little either side, is built now.
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={fitCheckFailed ? [] : shown}
+        keyExtractor={(s) => String(s.id)}
+        renderItem={renderItem}
+        ListHeaderComponent={header}
+        ListEmptyComponent={empty}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      />
     </View>
   );
 }
