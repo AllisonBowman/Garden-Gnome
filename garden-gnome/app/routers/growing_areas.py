@@ -6,7 +6,7 @@ build in someone's hand still calls the old path, and a rename is not a reason
 to break an app that is already installed. Delete `legacy_router` (and its
 mount in main.py) once the next build is the floor.
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlmodel import Session, select
 
 from app.db.database import get_session
@@ -156,10 +156,17 @@ def _as_findings(findings) -> list[FitFindingRead]:
             for f in findings]
 
 
+#: The header that says how many candidates there were before `limit` cut
+#: the list. Listed in main.py's CORS `expose_headers` so the web preview can
+#: read it too.
+TOTAL_HEADER = "X-Total-Count"
+
+
 @_routes.get("/{area_id}/candidates", response_model=list[CandidateRead])
 def growing_area_candidates(
     area_id: int,
-    limit: int = 20,
+    response: Response,
+    limit: int = Query(20, ge=0),
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
@@ -171,10 +178,18 @@ def growing_area_candidates(
     -- from being put forward as a recommendation (`fit.candidates`).
 
     So a short list here means the catalog is thin on the axes this space
-    turns on, not that nothing will grow in it."""
+    turns on, not that nothing will grow in it.
+
+    The first `limit` are returned and the whole count goes in the
+    X-Total-Count header: a screen showing twelve of 263 has to be able to
+    say so, or twelve reads as the answer. A header rather than a wrapper
+    object, because the body is the list every installed build parses.
+    `limit` is never negative: a slice by -1 would quietly drop the last
+    candidate instead of failing."""
     area = _owned(area_id, user, session)
     all_species = session.exec(select(Species)).all()
     ranked = fit.candidates(all_species, area)
+    response.headers[TOTAL_HEADER] = str(len(ranked))
     return [
         CandidateRead(
             species_id=c.species.id,

@@ -500,13 +500,32 @@ class Candidate:
         return score(self.findings)
 
 
+def tie_order(species: Species) -> tuple[str, str, int]:
+    """Where a species sits among candidates level with it: A to Z.
+
+    A score counts confirmed axes and nothing finer, and the catalog holds no
+    measure that would put one fully confirmed species above another without
+    inventing one -- each settled field credits a single authority, so there
+    is no corroboration to count. Within a tie the order therefore claims
+    nothing, and the screens say what it is: alphabetical. That has to be
+    true as a reader sees it, so case is folded ("aloe" is not filed after
+    "Zinnia"), and two species sharing a common name -- Rubus allegheniensis
+    and Rubus fruticosus are both "Blackberry" -- follow their scientific
+    names, then their ids, instead of whatever order the database returned
+    them in. Without that last part the list could reshuffle between
+    requests, and a recommendation that moves on refresh reads as noise.
+    """
+    return ((species.common_name or "").casefold(),
+            (species.scientific_name or "").casefold(),
+            species.id or 0)
+
+
 def candidates(species_list: Iterable[Species], area: GrowingArea) -> list[Candidate]:
     """Species with nothing against them here, best-evidenced first.
 
     "Nothing against them" is a zero-misfit rule, not a high-score rule: one
-    real contradiction disqualifies, however well the rest reads. Ties break on
-    common name so the list is stable between requests -- a recommendation
-    that reshuffles on refresh reads as noise.
+    real contradiction disqualifies, however well the rest reads. Among equal
+    scores the order is `tie_order`'s, A to Z and stable between requests.
     """
     scored = []
     for species in species_list:
@@ -514,5 +533,5 @@ def candidates(species_list: Iterable[Species], area: GrowingArea) -> list[Candi
         if not is_candidate(findings):
             continue
         scored.append(Candidate(species=species, findings=findings))
-    scored.sort(key=lambda c: (-c.score, c.species.common_name or ""))
+    scored.sort(key=lambda c: (-c.score, *tie_order(c.species)))
     return scored

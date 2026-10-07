@@ -458,6 +458,40 @@ def test_ties_break_on_name_so_the_list_does_not_reshuffle():
         "Achillea", "Betony"]
 
 
+def test_a_tie_is_a_to_z_as_a_reader_sees_it_not_by_character_code():
+    """The screens say level candidates are in A to Z order; a lower-case
+    initial sorted by code point would land after every capital."""
+    area = make_area(**OUTDOOR_BED)
+    zinnia = make_species(common_name="Zinnia", is_houseplant=False)
+    aloe = make_species(common_name="aloe", is_houseplant=False)
+    assert [c.species.common_name for c in fit.candidates([zinnia, aloe], area)] == [
+        "aloe", "Zinnia"]
+
+
+def test_two_species_sharing_a_name_keep_one_order_whatever_order_they_arrive_in():
+    """Two Blackberries: without a key past the common name, their order was
+    whichever the database returned first -- free to change between requests."""
+    area = make_area(**OUTDOOR_BED)
+    fruticosus = make_species(common_name="Blackberry", scientific_name="Rubus fruticosus",
+                              is_houseplant=False)
+    allegheniensis = make_species(common_name="Blackberry",
+                                  scientific_name="Rubus allegheniensis", is_houseplant=False)
+    for arrival in ([fruticosus, allegheniensis], [allegheniensis, fruticosus]):
+        assert [c.species.scientific_name for c in fit.candidates(arrival, area)] == [
+            "Rubus allegheniensis", "Rubus fruticosus"]
+
+
+def test_the_tie_order_never_outranks_the_evidence():
+    """A to Z only ever decides between equals: an 'Aaron's Beard' with less
+    confirmed still sits below a 'Zebra Grass' with more."""
+    area = make_area(**OUTDOOR_BED)
+    thin = make_species(common_name="Aaron's Beard", is_houseplant=False)
+    thick = make_species(common_name="Zebra Grass", is_houseplant=False,
+                         outdoor_sun_exposure=["full_sun"])
+    assert [c.species.common_name for c in fit.candidates([thin, thick], area)] == [
+        "Zebra Grass", "Aaron's Beard"]
+
+
 def test_misfits_returns_only_what_needs_addressing():
     area = make_area(**OUTDOOR_BED)
     species = make_species(

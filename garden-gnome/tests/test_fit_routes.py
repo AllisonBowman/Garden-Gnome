@@ -154,6 +154,38 @@ def test_limit_is_honoured(garden):
     assert len(body) <= 1
 
 
+def test_the_count_before_the_cut_travels_with_the_cut_list(garden):
+    """A screen showing the first twelve has to be able to say "12 of 263".
+    The body stays the bare list every installed build parses; the whole
+    count rides in a header, whatever the limit cut it to."""
+    every = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=100000", headers=garden.headers)
+    cut = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=0", headers=garden.headers)
+    assert cut.status_code == 200, cut.text
+    assert cut.json() == []
+    total = len(every.json())
+    assert total >= 1, "the coneflower belongs in this bed"
+    assert cut.headers["X-Total-Count"] == str(total)
+    assert every.headers["X-Total-Count"] == str(total)
+
+
+def test_a_negative_limit_is_refused_rather_than_dropping_the_last_candidate(garden):
+    resp = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=-1", headers=garden.headers)
+    assert resp.status_code == 422
+
+
+def test_the_web_preview_is_allowed_to_read_the_count(garden):
+    """A browser hides a response header CORS doesn't expose, and the web
+    preview runs in one."""
+    resp = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1",
+        headers={**garden.headers, "Origin": "http://localhost:8081"})
+    exposed = resp.headers.get("access-control-expose-headers", "")
+    assert "x-total-count" in exposed.lower()
+
+
 # --- misfits ---------------------------------------------------------------
 
 def test_the_shade_plant_in_the_sun_is_what_needs_addressing(garden):

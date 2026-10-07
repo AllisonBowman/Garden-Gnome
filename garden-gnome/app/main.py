@@ -49,6 +49,10 @@ app.add_middleware(
     allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
     allow_methods=["*"],
     allow_headers=["*"],
+    # A browser hides response headers it isn't told to show. The candidate
+    # count travels in one (growing_areas.TOTAL_HEADER), and the web preview
+    # needs it as much as the phone does.
+    expose_headers=[growing_areas.TOTAL_HEADER],
 )
 
 app.include_router(ai.router)
