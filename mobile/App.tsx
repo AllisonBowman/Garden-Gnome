@@ -21,6 +21,7 @@ import AlmanacScreen      from './src/screens/AlmanacScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
 import { rescheduleAllReminders } from './src/notifications/reminders';
 import Onboarding from './src/onboarding/Onboarding';
+import { GROWING_AREAS_TAB } from './src/onboarding/slides';
 import { getOnboardingSeen, setOnboardingSeen } from './src/onboarding/storage';
 import { fetchPlants } from './src/api/plants';
 import { AuthProvider, useAuth } from './src/auth/AuthContext';
@@ -131,7 +132,7 @@ function CensusNavigator() {
 function GrowingAreasNavigator() {
   return (
     <GrowingAreasStack.Navigator screenOptions={useHeaderOpts()}>
-      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreasScreen} options={{ title: 'Growing areas' }} />
+      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreasScreen} options={{ title: GROWING_AREAS_TAB }} />
       <GrowingAreasStack.Screen
         name="GrowingAreaDetail"
         component={GrowingAreaDetailScreen}
@@ -254,8 +255,9 @@ function AuthGate() {
                 options={{
                   headerShown: false,
                   // The tab label falls back to the route name, which is
-                  // an identifier, not a word anyone should read.
-                  title: 'Growing areas',
+                  // an identifier, not a word anyone should read. First-run
+                  // onboarding sends people here by this title.
+                  title: GROWING_AREAS_TAB,
                   tabBarIcon: ({ focused }) => <TabIcon emoji="🌍" focused={focused} />,
                 }}
               />
