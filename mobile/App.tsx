@@ -50,6 +50,8 @@ export type PlantsStackParamList = {
 export type SpeciesStackParamList = {
   SpeciesList:   undefined;
   SpeciesDetail: SpeciesDetailParams;
+  // The catalog narrowed to a growing area, which this tab's list can't do.
+  Almanac:       AlmanacParams;
 };
 
 export type GrowingAreasStackParamList = {
@@ -111,6 +113,7 @@ function SpeciesNavigator() {
     <SpeciesStack.Navigator screenOptions={useHeaderOpts()}>
       <SpeciesStack.Screen name="SpeciesList"   component={SpeciesScreen}       options={{ title: 'Species catalog' }} />
       <SpeciesStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
+      <SpeciesStack.Screen name="Almanac" component={AlmanacScreen} options={{ title: 'Species Almanac' }} />
     </SpeciesStack.Navigator>
   );
 }

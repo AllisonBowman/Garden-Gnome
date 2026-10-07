@@ -13,6 +13,7 @@ import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Pill from '../components/Pill';
+import Eyebrow from '../components/Eyebrow';
 
 type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'SpeciesList'>;
 
@@ -115,6 +116,28 @@ export default function SpeciesScreen() {
         keyExtractor={(s) => String(s.id)}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
+        // This list can't be narrowed to a growing area; the Almanac can, and
+        // it was reachable only from the Census tab, where nobody looks for
+        // what suits their bed. Out of the way of a search's results.
+        ListHeaderComponent={search ? null : (
+          <Card
+            style={styles.almanacCard}
+            mode="outlined"
+            onPress={() => navigation.navigate('Almanac')}
+            accessibilityHint="Opens the Species Almanac"
+          >
+            <Card.Content>
+              <Eyebrow>Species Almanac</Eyebrow>
+              <Text variant="titleSmall" style={styles.almanacTitle}>
+                What suits one of your spaces ›
+              </Text>
+              <Text variant="bodySmall" style={styles.almanacSub}>
+                The same catalog, narrowed to one of your growing areas — the
+                species with the most confirmed for it first.
+              </Text>
+            </Card.Content>
+          </Card>
+        )}
         ListEmptyComponent={
           <Text style={styles.empty}>No species match "{search}".</Text>
         }
@@ -128,6 +151,9 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   searchbar: { margin: 12, borderRadius: 10, backgroundColor: p.card },
   list: { paddingHorizontal: 12, paddingBottom: 24 },
   card: { marginBottom: 8, borderRadius: 12, backgroundColor: p.card },
+  almanacCard: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card, borderColor: p.line },
+  almanacTitle: { color: p.acc, fontFamily: f.display, marginTop: 4 },
+  almanacSub: { color: p.sub, marginTop: 4, lineHeight: 18 },
   name: { fontFamily: f.display, color: p.ink },
   scientific: { fontStyle: 'italic', color: p.sub, marginTop: 2 },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6, gap: 4 },

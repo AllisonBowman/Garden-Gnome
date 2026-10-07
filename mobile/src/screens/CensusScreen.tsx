@@ -58,7 +58,7 @@ export default function CensusScreen() {
           </Text>
           <Text variant="bodySmall" style={styles.almanacSub}>
             Every species we hold, with its care fingerprint and how demanding
-            it is to keep.
+            it is to keep — and which of them suit each of your growing areas.
           </Text>
         </Card.Content>
       </Card>
