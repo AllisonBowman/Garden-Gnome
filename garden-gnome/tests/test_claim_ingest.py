@@ -363,7 +363,8 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # + 73 (b100).
     # + 94 (b99).
     # + 85 (b101).
-    assert report.claims_written == 7997
+    # + 83 (b102).
+    assert report.claims_written == 8080
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
