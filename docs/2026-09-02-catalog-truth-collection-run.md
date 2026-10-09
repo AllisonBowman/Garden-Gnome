@@ -11,7 +11,7 @@ Branch `care-advice-honesty`, pushed with this note. The claim graph
 `recompute`, ADRs 0001–0004) is built, tested, and populated from
 `garden-gnome/app/data/verified/b1..b46.json`:
 
-- **112 batches, 8,912 claims, 828 species, 8 authorities** (b47–b113 landed
+- **113 batches, 8,985 claims, 836 species, 8 authorities** (b47–b113 landed
   after this note was first written, at the overnight throttle described
   below; the per-batch breakdown in the test comment is current). The running total
   is asserted in
