@@ -114,21 +114,34 @@ test('nothing is collected for tracking, and no tracking domains exist', () => {
   }
 });
 
-test('the data the app collects is declared, each linked to the account, for the app itself', () => {
-  const expected = [
-    'Name', 'EmailAddress', // Apple or Google sign-in, stored on the account
-    'UserID', // the account id and the Apple/Google subject
-    'PreciseLocation', 'CoarseLocation', // a growing area's place and its city/region
-    'PhotosorVideos', // a photo check-up's photo, when check-ups are offered
-    'OtherUserContent', // plants, care logs, notes, growing areas
-  ].map(type);
-  expect([...collected.keys()].sort()).toEqual([...expected].sort());
-  for (const t of collected.values()) {
+test('the data the app collects is declared, each linked to the account, as App Store Connect says', () => {
+  // Must agree with docs/app-store/app-privacy.md, which cites the code for
+  // each row. Analytics here means only the opt-in community census.
+  const AF = 'NSPrivacyCollectedDataTypePurposeAppFunctionality';
+  const AN = 'NSPrivacyCollectedDataTypePurposeAnalytics';
+  const expected: Record<string, string[]> = {
+    Name: [AF], EmailAddress: [AF], // Apple or Google sign-in, stored on the account
+    UserID: [AF], // the account id and the Apple/Google subject
+    PreciseLocation: [AF], // a growing area's coordinates, for its forecast
+    CoarseLocation: [AF, AN], // its city/region/country, also counted by the census
+    CustomerSupport: [AF], // "Report this result" and support mail reach our inbox
+    OtherUserContent: [AF, AN], // plants, care logs, notes, areas; counted by the census
+  };
+  expect([...collected.keys()].sort()).toEqual(Object.keys(expected).map(type).sort());
+  for (const [name, purposes] of Object.entries(expected)) {
+    const t = collected.get(type(name))!;
     expect(t.NSPrivacyCollectedDataTypeLinked).toBe(true);
-    expect(t.NSPrivacyCollectedDataTypePurposes).toEqual([
-      'NSPrivacyCollectedDataTypePurposeAppFunctionality',
-    ]);
+    expect(t.NSPrivacyCollectedDataTypePurposes).toEqual(purposes);
   }
+});
+
+test('photos are not declared while photo check-ups are not offered', () => {
+  // Identifying a plant runs on the phone and uploads nothing. The photo
+  // check-up is the one upload, and the plant screen shows it only when the
+  // server reports vision ready (care/aiCapabilities.ts). Before that server
+  // setting is ever switched on, add PhotosorVideos here and in App Store
+  // Connect, and ship that build first (docs/app-store/app-privacy.md).
+  expect(collected.has(type('PhotosorVideos'))).toBe(false);
 });
 
 test('audio is not declared, because it never reaches PlantAdvocate', () => {
