@@ -19,6 +19,7 @@ import type { GrowingAreasStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
+import LoadError from '../components/LoadError';
 import {
   SURFACES, SURFACE_LABEL, GOALS, AREA_TYPES, INDOOR_OUTDOOR_HINT, SUN_HINT,
   areaTypeLabel, dimensionPrompts, climateForSurface, lengthEcho, setupBlocker,
@@ -131,10 +132,13 @@ export default function GrowingAreasScreen() {
     setGoals([]);
   };
 
-  const { data: growingAreas = [], isLoading } = useQuery({
+  const {
+    data, isLoading, isError, isFetching, refetch,
+  } = useQuery({
     queryKey: ['growingAreas'],
     queryFn: fetchGrowingAreas,
   });
+  const growingAreas = data ?? [];
 
   // A blank measurement is left off the payload entirely rather than sent as
   // 0 — the server stores null, and the fit engine reads null as "unknown".
@@ -182,6 +186,19 @@ export default function GrowingAreasScreen() {
   });
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
+
+  // A failed load is not "no growing areas yet": read that way, it invites
+  // making a second copy of an area that already exists. So no list and no
+  // New button until the list has actually answered.
+  if (isError && !data) {
+    return (
+      <LoadError
+        message="Couldn't load your growing areas. Check your connection and try again."
+        onRetry={() => refetch()}
+        retrying={isFetching}
+      />
+    );
+  }
 
   const prompts = dimensionPrompts(surface);
   const isLast = step === STEP_TITLES.length - 1;

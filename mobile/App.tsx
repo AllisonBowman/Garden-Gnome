@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { AppState, Platform, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AppThemeProvider, useAppTheme } from './src/theme/ThemeProvider';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, focusManager } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import PlantsScreen        from './src/screens/PlantsScreen';
@@ -24,6 +24,7 @@ import Onboarding from './src/onboarding/Onboarding';
 import { GROWING_AREAS_TAB } from './src/onboarding/slides';
 import { getOnboardingSeen, setOnboardingSeen } from './src/onboarding/storage';
 import { fetchPlants } from './src/api/plants';
+import { retryOnceIfPassing } from './src/api/errorMessage';
 import { AuthProvider, useAuth } from './src/auth/AuthContext';
 import LoginScreen from './src/auth/LoginScreen';
 import ErrorBoundary, { guarded } from './src/components/ErrorBoundary';
@@ -82,8 +83,18 @@ type RootTabParamList = {
 };
 
 // ── React Query ───────────────────────────────────────────────────────────────
+// One automatic retry, and only for a failure that can pass: no signal, a
+// timeout, or a server that scaled to zero and is still waking up (the first
+// request after a quiet spell can take several seconds, and the first boot
+// after a deploy longer). A 404 or a 422 will answer the same again, and
+// retrying it only doubles the wait before the screen can say so.
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
+  defaultOptions: {
+    queries: {
+      retry: retryOnceIfPassing,
+      staleTime: 30_000,
+    },
+  },
 });
 
 // After a crash, drop every cached answer and fetch it fresh: a malformed
@@ -200,16 +211,21 @@ function AuthGate() {
 
   // First-run onboarding: show only if it hasn't been seen AND the account
   // has no plants. Runs only once signed in (the plants call needs a token).
+  // Asked through the query cache, so it gets the same one automatic retry
+  // as every screen (the first request after a quiet spell meets a server
+  // still waking up) and the Plants tab reuses the answer instead of asking
+  // again.
   useEffect(() => {
     if (!signedIn) return;
     (async () => {
       if (await getOnboardingSeen()) return;
       try {
-        const plants = await fetchPlants();
+        const plants = await queryClient.fetchQuery({ queryKey: ['plants'], queryFn: fetchPlants });
         if (plants.length === 0) setShowOnboarding(true);
         else await setOnboardingSeen(); // returning user — remember, don't show
       } catch {
-        // Offline or backend unreachable — defer the decision to next launch
+        // Still unreachable after the retry: decide on the next launch
+        // rather than greet a returning gardener as new.
       }
     })();
   }, [signedIn]);
@@ -307,7 +323,22 @@ function AuthGate() {
   );
 }
 
+// Tell React Query when the app comes back to the foreground, so a screen
+// whose load failed (no signal on the walk out, a server still waking up)
+// asks again on its own instead of staying on its error until it is tapped.
+// The TanStack React Native recipe: AppState stands in for window focus.
+function useRefetchOnForeground() {
+  useEffect(() => {
+    if (Platform.OS === 'web') return undefined;
+    const sub = AppState.addEventListener('change', (state) => {
+      focusManager.setFocused(state === 'active');
+    });
+    return () => sub.remove();
+  }, []);
+}
+
 export default function App() {
+  useRefetchOnForeground();
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>

@@ -43,6 +43,15 @@ export function isRetryableError(err: unknown): boolean {
 }
 
 /**
+ * React Query's retry rule for every query in the app: one automatic retry,
+ * and only for a failure that can pass. `failureCount` is how many attempts
+ * have failed before this one (0 after the first).
+ */
+export function retryOnceIfPassing(failureCount: number, err: unknown): boolean {
+  return failureCount < 1 && isRetryableError(err);
+}
+
+/**
  * Whether the server answered at all. A save that failed with an answer (the
  * server turned it down) must not be reported as "couldn't reach the server".
  */
