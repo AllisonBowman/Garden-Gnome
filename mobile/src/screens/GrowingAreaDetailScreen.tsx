@@ -27,7 +27,9 @@ import CareCalendar from '../care/CareCalendar';
 import {
   SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, measuredLength, uncheckedNotes,
 } from '../growingAreas/realEstate';
-import { CHECK_FAILED, confirmedLine, plantTitle } from '../growingAreas/fitFindings';
+import {
+  CHECK_FAILED, candidateHazard, confirmedLine, plantTitle,
+} from '../growingAreas/fitFindings';
 import { FIRST_FEW, cutNote, listIntro } from '../growingAreas/ranking';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
@@ -335,7 +337,9 @@ export default function GrowingAreaDetailScreen() {
               isn’t a recommendation.
             </Text>
           ) : (
-            candidateRows.map((c) => (
+            candidateRows.map((c) => {
+              const hazard = candidateHazard(c);
+              return (
               <TouchableRipple
                 key={c.species_id}
                 onPress={() => navigation.navigate(
@@ -350,6 +354,10 @@ export default function GrowingAreaDetailScreen() {
                     <Text style={styles.candidateMore}>›</Text>
                   </View>
                   <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
+                  {/* Above the reasons, never below them: a recommendation
+                      that buries its hazard under "confirmed here" reads as
+                      an all-clear. */}
+                  {hazard ? <Text style={styles.candidateHazard}>⚠️ {hazard}</Text> : null}
                   {/* One line per candidate — which axes were confirmed — and
                       the findings themselves, each with whose word it is, on
                       the species page this opens. Six near-identical rows a
@@ -358,7 +366,8 @@ export default function GrowingAreaDetailScreen() {
                   <Text style={styles.candidateWhy}>{confirmedLine(c.fits)}</Text>
                 </View>
               </TouchableRipple>
-            ))
+              );
+            })
           )}
           {/* The rest: the Almanac narrowed to this area, in the same order. */}
           {cut ? (
@@ -512,6 +521,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   candidateMore: { fontSize: 20, color: p.faint },
   candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 4 },
   candidateWhy: { fontSize: 13, lineHeight: 18, color: p.sub },
+  candidateHazard: { fontSize: 13, lineHeight: 18, color: p.warn, fontWeight: '600', marginBottom: 4 },
   caveat: { fontSize: 13, lineHeight: 19, color: p.warn, marginBottom: 12 },
   listIntro: { fontSize: 13, lineHeight: 19, color: p.sub, marginBottom: 12 },
   cut: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: p.line, paddingTop: 12 },

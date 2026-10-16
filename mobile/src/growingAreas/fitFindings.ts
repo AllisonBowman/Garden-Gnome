@@ -7,7 +7,7 @@
 // all: a second copy of the fit rules here would sooner or later disagree
 // with the first, and the gardener would see both.
 
-import type { FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
+import type { Candidate, FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
 import { goalPhrase } from './realEstate';
 
 export const AXIS_LABEL: Record<FitAxis, string> = {
@@ -126,3 +126,13 @@ export function plantTitle(
 export const CHECK_FAILED =
   'Couldn’t reach the catalog to check this just now — that isn’t an all-clear. '
   + 'Try again in a moment.';
+
+/** The caution a candidate carries, or null. The server writes the line
+ *  ("Toxic to pets and people if eaten.") and the screens show it as-is on
+ *  every row that lists the candidate — never dropped for space, because a
+ *  recommendation that leaves out a hazard reads as an all-clear. A blank
+ *  line is no line; a server too old to send one sends nothing. */
+export function candidateHazard(candidate: Pick<Candidate, 'hazard'>): string | null {
+  const line = candidate.hazard?.trim();
+  return line ? line : null;
+}
