@@ -91,6 +91,57 @@ test('permissions the app never asks for ship no string', () => {
   }
 });
 
+// --- the privacy manifest ---------------------------------------------------------
+// ios.privacyManifests is merged into PrivacyInfo.xcprivacy at prebuild
+// (@expo/config-plugins ios/PrivacyInfo.js), and React Native's pod install
+// then adds the required-reason API entries from every pod without touching
+// these. So only the collected data is declared here, and it must agree with
+// the App Privacy answers in App Store Connect.
+
+const manifest = expo.ios.privacyManifests;
+const collected = new Map<string, Record<string, unknown>>(
+  (manifest?.NSPrivacyCollectedDataTypes ?? []).map(
+    (t: Record<string, unknown>) => [t.NSPrivacyCollectedDataType as string, t],
+  ),
+);
+const type = (name: string) => `NSPrivacyCollectedDataType${name}`;
+
+test('nothing is collected for tracking, and no tracking domains exist', () => {
+  expect(manifest.NSPrivacyTracking).toBe(false);
+  expect(manifest.NSPrivacyTrackingDomains ?? []).toEqual([]);
+  for (const t of collected.values()) {
+    expect(t.NSPrivacyCollectedDataTypeTracking).toBe(false);
+  }
+});
+
+test('the data the app collects is declared, each linked to the account, for the app itself', () => {
+  const expected = [
+    'Name', 'EmailAddress', // Apple or Google sign-in, stored on the account
+    'UserID', // the account id and the Apple/Google subject
+    'PreciseLocation', 'CoarseLocation', // a growing area's place and its city/region
+    'PhotosorVideos', // a photo check-up's photo, when check-ups are offered
+    'OtherUserContent', // plants, care logs, notes, growing areas
+  ].map(type);
+  expect([...collected.keys()].sort()).toEqual([...expected].sort());
+  for (const t of collected.values()) {
+    expect(t.NSPrivacyCollectedDataTypeLinked).toBe(true);
+    expect(t.NSPrivacyCollectedDataTypePurposes).toEqual([
+      'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+    ]);
+  }
+});
+
+test('audio is not declared, because it never reaches PlantAdvocate', () => {
+  // Speech is transcribed by the phone, or by Apple where the phone can't;
+  // only the plants the gardener confirms are sent.
+  expect(collected.has(type('AudioData'))).toBe(false);
+});
+
+test('the manifest leaves the required-reason API entries to the build', () => {
+  // Declaring them here by hand would go stale as dependencies change.
+  expect(manifest.NSPrivacyAccessedAPITypes).toBeUndefined();
+});
+
 // --- iPhone only, for now -----------------------------------------------------
 
 test('the iOS build is iPhone-only', () => {
