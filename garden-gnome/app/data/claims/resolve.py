@@ -55,9 +55,23 @@ class Resolution:
     winners: dict[str, Claim] = dc_field(default_factory=dict)
 
 
-# Fields where a wrong value injures an animal or kills a plant. These never
-# resolve through a Material disagreement — see CONTEXT.md and ADR 0002.
-HARM_CAPABLE = frozenset({"toxic_to_pets", "chill_damage_f", "water_regime"})
+# Fields where a wrong value injures a person or an animal, or kills a plant.
+# These never resolve through a Material disagreement — see CONTEXT.md and
+# ADR 0002.
+#
+# ADR 0008 widened the set past the glossary's three examples. `is_edible`
+# is how the app tells someone a plant is food, and a cousin's "edible" on a
+# plant nobody described is how a person eats the wrong thing.
+# `outdoor_temp_min_f` is a survival floor, cold tolerance by another name
+# (ADR 0006). The two day estimates are a watering cadence, which is the
+# watering regime said as a number. `water_check_depth_cm` stays out: it says
+# where to feel the soil, and the feel decides, so a wrong depth misleads a
+# check rather than replacing it.
+HARM_CAPABLE = frozenset({
+    "toxic_to_pets", "chill_damage_f", "water_regime",
+    "is_edible", "outdoor_temp_min_f",
+    "water_growing_days_est", "water_dormant_days_est",
+})
 
 # How far two claims about the same field may sit apart before the difference
 # stops being imprecision and becomes a genuine conflict. Fields absent here
@@ -71,11 +85,12 @@ TOLERANCE: dict[str, float] = {
 # and a genus-inferred "toxic" libels a safe plant; a genus-borrowed watering
 # regime drowns or desiccates a species that wants the other thing; a
 # genus-borrowed cold figure leaves a plant outside on the night that kills
-# it. None of those is something a source said about this species, and
-# labelling the value "genus-inferred" does not make it safer to act on.
-# Coverage on these fields grows only by species-level citation. Derived, not
-# listed twice: a field added to HARM_CAPABLE is barred from inheritance the
-# same moment. See ADR 0002 and ADR 0007.
+# it; a genus-borrowed "edible" puts a plant on someone's plate that no
+# source said was food. None of those is something a source said about this
+# species, and labelling the value "genus-inferred" does not make it safer to
+# act on. Coverage on these fields grows only by species-level citation.
+# Derived, not listed twice: a field added to HARM_CAPABLE is barred from
+# inheritance the same moment. See ADR 0002, ADR 0007 and ADR 0008.
 NEVER_INHERIT = HARM_CAPABLE
 
 

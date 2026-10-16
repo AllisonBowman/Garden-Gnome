@@ -1,6 +1,8 @@
 # Harm-capable fields never inherit from the genus
 
 Status: accepted 2026-09-10. Extends ADR 0002, whose genus bound still holds.
+Extended by ADR 0008 (2026-10-16), which adds edibility, the survival floor
+and the watering day estimates to the harm-capable set.
 
 ## Context
 
