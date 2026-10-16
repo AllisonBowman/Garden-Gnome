@@ -112,6 +112,12 @@ export interface Candidate {
   scientific_name: string;
   score: number;
   fits: FitFinding[];
+  /** One short caution line when the species is recorded toxic to pets or
+   *  people ("Toxic to pets and people if eaten."), null otherwise. Shown as
+   *  a warning on every row or card that lists the candidate, because a
+   *  recommendation is exactly where a hazard must not go unsaid. Absent
+   *  from a server that predates it. */
+  hazard?: string | null;
 }
 
 /** A plant already standing here, and what specifically doesn't suit it. */

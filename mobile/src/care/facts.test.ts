@@ -135,6 +135,51 @@ test('a climber reads its height as reach, not stature', () => {
     .toBe('3 ft-6 ft tall');
 });
 
+// --- edibility (shown with its conditions or not at all) --------------------
+// "Grown to eat" on a plant whose leaves are poisonous, or that must be
+// cooked first, is the kind of half-truth that hurts someone. The server
+// writes one sentence with the conditions; when it does, that sentence
+// replaces the bare phrase rather than sitting beside it.
+
+const CONDITIONAL = 'Some parts are eaten, but only certain parts or after preparation, '
+  + 'and other parts are poisonous. Check the source before eating any of it.';
+
+test('edible with no conditions on record reads "grown to eat"', () => {
+  const by = Object.fromEntries(careFactRows(minted({ is_edible: true })).map((r) => [r.key, r]));
+  expect(by.place.value).toBe('Grown to eat');
+  expect(by.eating).toBeUndefined();
+});
+
+test('an edibility note replaces "grown to eat" and is its own caution row', () => {
+  const rows = careFactRows(minted({
+    is_houseplant: false, is_edible: true, edibility_note: CONDITIONAL,
+  }));
+  const by = Object.fromEntries(rows.map((r) => [r.key, r]));
+  expect(by.place.value).toBe('An outdoor plant');
+  expect(values(minted({ is_edible: true, edibility_note: CONDITIONAL })))
+    .not.toMatch(/grown to eat/i);
+  expect(by.eating).toEqual({
+    key: 'eating', label: 'Eating', value: CONDITIONAL, inferred: false, caution: true,
+  });
+  // Read last: after where it lives, so the caution closes the list.
+  expect(rows[rows.length - 1].key).toBe('eating');
+});
+
+test('the note alone is enough for the row; "grown to eat" never appears with it', () => {
+  const rows = careFactRows(minted({ is_edible: true, edibility_note: CONDITIONAL }));
+  expect(rows.map((r) => r.key)).toEqual(['eating']);
+});
+
+test('a blank note is no note, and not edible is never "grown to eat"', () => {
+  expect(values(minted({ is_edible: true, edibility_note: '  ' }))).toBe('Grown to eat');
+  expect(values(minted({ is_edible: false }))).toBe('');
+  expect(values(minted({ is_edible: null }))).toBe('');
+});
+
+test('no ordinary fact row is a caution row', () => {
+  expect(careFactRows(sourced()).some((r) => r.caution)).toBe(false);
+});
+
 test('a leading unit symbol keeps its case: "pH", never "PH"', () => {
   expect(values(minted({ soil_ph_min: 6, soil_ph_max: 6.5 }))).toBe('pH 6–6.5');
   expect(values(minted({ soil_ph_max: 6 }))).toBe('pH up to 6');

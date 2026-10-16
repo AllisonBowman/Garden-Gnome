@@ -1,8 +1,16 @@
 import {
-  AXIS_LABEL, CHECK_FAILED, confirmedLine, findingHeading, findingLabel, joinAnd,
+  AXIS_LABEL, CHECK_FAILED, candidateHazard, confirmedLine, findingHeading, findingLabel, joinAnd,
   fitsOf, misfitIntro, misfitsOf, notKnownLine, plantTitle, speciesFitNote,
 } from './fitFindings';
 import type { FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
+
+// Read the screens that list candidates. Declared locally rather than pulling
+// in @types/node, which conflicts with React Native's timer typings.
+declare const require: (id: string) => any;
+declare const __dirname: string;
+const fs = require('fs');
+const path = require('path');
+const readSrc = (rel: string): string => fs.readFileSync(path.join(__dirname, rel), 'utf8');
 
 const finding = (over: Partial<FitFinding> = {}): FitFinding => ({
   axis: 'sun', verdict: 'misfits',
@@ -168,5 +176,28 @@ describe('a species’ full answer for one area', () => {
   it('says in one line what nobody could judge, rather than dropping it', () => {
     expect(notKnownLine(findings)).toBe('Not known here: soil and something to eat.');
     expect(notKnownLine(fitsOf(findings))).toBeNull();
+  });
+});
+
+describe('candidate hazard', () => {
+  it("passes the server's caution through as written", () => {
+    expect(candidateHazard({ hazard: 'Toxic to pets and people if eaten.' }))
+      .toBe('Toxic to pets and people if eaten.');
+  });
+
+  it('is nothing when the server sends nothing, null, or a blank line', () => {
+    expect(candidateHazard({})).toBeNull();
+    expect(candidateHazard({ hazard: null })).toBeNull();
+    expect(candidateHazard({ hazard: '   ' })).toBeNull();
+  });
+
+  // A candidate list that forgot the line would put a poisonous plant
+  // forward with no word about it, so every screen that lists candidates
+  // must route them through candidateHazard.
+  it.each([
+    '../screens/GrowingAreaDetailScreen.tsx',
+    '../screens/AlmanacScreen.tsx',
+  ])('is shown by %s', (rel) => {
+    expect(readSrc(rel)).toMatch(/candidateHazard\(/);
   });
 });

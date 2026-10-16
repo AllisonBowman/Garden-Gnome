@@ -9,10 +9,10 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { fetchPlants } from '../api/plants';
 import {
-  fetchGrowingAreas, fetchCandidates, EVERY_CANDIDATE, FitFinding,
+  fetchGrowingAreas, fetchCandidates, EVERY_CANDIDATE, Candidate,
 } from '../api/growingAreas';
 import { uncheckedNotes } from '../growingAreas/realEstate';
-import { CHECK_FAILED, confirmedLine } from '../growingAreas/fitFindings';
+import { CHECK_FAILED, candidateHazard, confirmedLine } from '../growingAreas/fitFindings';
 import { RANK_ORDER, inRankOrder } from '../growingAreas/ranking';
 import { Species } from '../types';
 import { tierOf, fingerprint, matchesQuery, TIER_LABELS, Tier } from '../almanac/tier';
@@ -42,18 +42,22 @@ const TIER_TONE: Record<Tier, 'good' | 'accent' | 'warn'> = {
 };
 
 function SpeciesCard({
-  species, owned, fits, onPress,
+  species, owned, candidate, onPress,
 }: {
   species: Species; owned: boolean;
-  /** The confirmed findings for the chosen area, when one is chosen. */
-  fits?: FitFinding[];
+  /** The species as a candidate for the chosen area, when one is chosen:
+   *  its confirmed findings and its caution line. */
+  candidate?: Candidate;
   onPress: () => void;
 }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const tier = tierOf(species);
   const fp = fingerprint(species);
-  const confirmed = fits ? confirmedLine(fits) : null;
+  const confirmed = candidate ? confirmedLine(candidate.fits) : null;
+  // Put forward for a space, a plant's hazard is said on its card: a
+  // recommendation that leaves it out reads as an all-clear.
+  const hazard = candidate ? candidateHazard(candidate) : null;
 
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
@@ -70,6 +74,7 @@ function SpeciesCard({
           <Text style={styles.fpItem}>{fp.humidity}</Text>
         </View>
 
+        {hazard ? <Text style={styles.hazard}>⚠️ {hazard}</Text> : null}
         {confirmed ? <Text style={styles.confirmed}>{confirmed}</Text> : null}
         {owned ? <Text style={styles.owned}>✿ you keep this one</Text> : null}
       </Card.Content>
@@ -134,8 +139,8 @@ export default function AlmanacScreen() {
     queryFn: () => fetchCandidates(areaId as number, EVERY_CANDIDATE),
     enabled: areaId != null,
   });
-  const fitsById = useMemo(
-    () => new Map(candidates.map((c) => [c.species_id, c.fits])),
+  const candidateById = useMemo(
+    () => new Map(candidates.map((c) => [c.species_id, c])),
     [candidates],
   );
   // Which axes the chosen area turns on that nothing on its list could
@@ -148,24 +153,24 @@ export default function AlmanacScreen() {
     const matching = species.filter((s) =>
       matchesQuery(s, query)
       && (filter === 'all' || tierOf(s) === filter)
-      && (areaId == null || fitsById.has(s.id)));
+      && (areaId == null || candidateById.has(s.id)));
     // Narrowed to an area, the species go in the order the area's own screen
     // ranks them, so "see all" carries on from where that list stopped.
     return areaId == null ? matching : inRankOrder(matching, candidates);
-  }, [species, query, filter, areaId, fitsById, candidates]);
+  }, [species, query, filter, areaId, candidateById, candidates]);
 
   const renderItem = useCallback(({ item }: { item: Species }) => (
     <SpeciesCard
       species={item}
       owned={ownedIds.has(item.id)}
-      fits={areaId != null ? fitsById.get(item.id) : undefined}
+      candidate={areaId != null ? candidateById.get(item.id) : undefined}
       // Filtered to an area, the species page shows how it suits that
       // area in full — the detail behind the card's "Confirmed here".
       onPress={() => navigation.navigate('SpeciesDetail', {
         speciesId: item.id, growingAreaId: areaId ?? undefined,
       })}
     />
-  ), [ownedIds, areaId, fitsById, navigation]);
+  ), [ownedIds, areaId, candidateById, navigation]);
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
 
@@ -297,6 +302,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   fpItem: { color: p.sub, fontSize: 12 },
   owned: { color: p.good, fontSize: 12, marginTop: 8, fontWeight: '600' },
   confirmed: { color: p.sub, fontSize: 12, lineHeight: 17, marginTop: 8 },
+  hazard: { color: p.warn, fontSize: 12.5, lineHeight: 17, marginTop: 8, fontWeight: '600' },
   empty: { color: p.faint, fontStyle: 'italic', textAlign: 'center', marginTop: 32 },
   failed: { alignItems: 'center', gap: 8 },
   fitNote: { color: p.faint, fontSize: 12.5, lineHeight: 18, marginBottom: 10 },

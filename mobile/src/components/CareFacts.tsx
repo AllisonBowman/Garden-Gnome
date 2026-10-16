@@ -54,8 +54,11 @@ export function CareFactList({ species, compact = false }: {
             {/* Borrowed from the genus: honest to show, dishonest to hide. */}
             {row.inferred && <Pill style={styles.inferredPill}>{INFERRED_PILL}</Pill>}
           </View>
-          <Text variant={compact ? 'bodySmall' : 'bodyMedium'} style={styles.factValue}>
-            {row.value}
+          <Text
+            variant={compact ? 'bodySmall' : 'bodyMedium'}
+            style={[styles.factValue, row.caution && styles.factCaution]}
+          >
+            {row.caution ? `⚠️ ${row.value}` : row.value}
           </Text>
         </View>
       ))}
@@ -135,6 +138,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   factHead: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 3 },
   inferredPill: { paddingVertical: 1 },
   factValue: { color: p.ink, lineHeight: 20 },
+  factCaution: { color: p.warn, fontWeight: '600' },
   legacyCaption: { color: p.sub, lineHeight: 18, marginBottom: 8 },
   statRow: { flexDirection: 'row', justifyContent: 'space-between' },
   stat: { alignItems: 'center', flex: 1 },
