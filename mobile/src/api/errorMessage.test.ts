@@ -1,5 +1,7 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { isRetryableError, serverAnswered, serverMessage } from './errorMessage';
+import {
+  isRetryableError, retryOnceIfPassing, serverAnswered, serverMessage,
+} from './errorMessage';
 import { SessionRenewalDeferred } from '../auth/refreshPolicy';
 
 const config = { headers: {} } as InternalAxiosRequestConfig;
@@ -29,6 +31,16 @@ test.each([400, 401, 403, 404, 409, 422])('a %i will answer the same again, so n
 
 test('a session that could not be renewed just now is worth one more try', () => {
   expect(isRetryableError(new SessionRenewalDeferred(timedOut()))).toBe(true);
+});
+
+test('the query retry rule allows exactly one retry, and only for a passing failure', () => {
+  // The first request after a quiet spell meets a machine still waking up.
+  expect(retryOnceIfPassing(0, timedOut())).toBe(true);
+  expect(retryOnceIfPassing(0, answered(502))).toBe(true);
+  // ...but a second failure goes to the screen's error card, not a third try.
+  expect(retryOnceIfPassing(1, timedOut())).toBe(false);
+  // ...and an answer that will repeat goes there straight away.
+  expect(retryOnceIfPassing(0, answered(404))).toBe(false);
 });
 
 test('a bug in our own code is not retried', () => {
