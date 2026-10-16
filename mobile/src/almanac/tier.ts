@@ -15,7 +15,8 @@
 // column. A resolved value is preferred where one exists; a missing value
 // contributes nothing, exactly as a derived one does — never NaN, and never a
 // number nobody stated.
-import { Species } from '../types';
+import { Species, WaterRegime } from '../types';
+import { outdoorSunPhrase } from '../care/facts';
 
 export type Tier = 'beginner' | 'intermediate' | 'fussy';
 
@@ -82,7 +83,27 @@ export function difficultyScore(s: Species): number {
   return score;
 }
 
-export function tierOf(s: Species): Tier {
+/** Whether the record holds anything a difficulty grade could rest on: a
+ *  humidity need or a sourced humidity band, a two-ended temperature band,
+ *  or a light need. The score starts at 0 and only demands add to it, so a
+ *  species with none of these used to score 0 and land in Beginner — three
+ *  quarters of the catalog, poison hemlock and belladonna among them, graded
+ *  easy on no evidence at all. */
+export function isGradable(s: Species): boolean {
+  const legacyHumidity = s.humidity_sourced !== false
+    && s.humidity_pct_min != null && s.humidity_pct_max != null;
+  const [low, high] = s.day_f_min != null || s.day_f_max != null
+    ? [s.day_f_min, s.day_f_max]
+    : [s.temp_f_min, s.temp_f_max];
+  return s.humidity_need != null || legacyHumidity
+    || (low != null && high != null)
+    || s.light_need != null;
+}
+
+/** The difficulty grade, or null when there is nothing to grade on. Null is
+ *  "not graded", never "Beginner": unknown is not a pass. */
+export function tierOf(s: Species): Tier | null {
+  if (!isGradable(s)) return null;
   const score = difficultyScore(s);
   if (score >= 4) return 'fussy';
   if (score >= 2) return 'intermediate';
@@ -102,21 +123,51 @@ const LIGHT_GLYPH: Record<string, string> = {
   direct: '☀☀ direct sun',
 };
 
+/** The watering regime in a glyph's worth of words. */
+const REGIME_GLYPH: Record<WaterRegime, string> = {
+  keep_moist: '💧 evenly moist',
+  keep_barely_moist: '💧 barely moist',
+  dry_surface_between: '💧 top dries between',
+  dry_thoroughly_between: '💧 dries out between',
+};
+
+/** Light from the resolved columns first — hours of direct sun, then the
+ *  footcandle floor, then the outdoor exposure — and the legacy word only
+ *  where none of them exists, as care/facts.ts does. */
+function lightGlyph(s: Species): string {
+  if (s.direct_sun_hours_max != null) {
+    return s.direct_sun_hours_max === 0
+      ? '☀ no direct sun'
+      : `☀ up to ${s.direct_sun_hours_max}h direct sun`;
+  }
+  if (s.light_fc_min != null) return `☀ ${s.light_fc_min}+ footcandles`;
+  const outdoor = outdoorSunPhrase(s.outdoor_sun_exposure);
+  if (outdoor) return `☀ ${outdoor}`;
+  if (s.light_need) return LIGHT_GLYPH[s.light_need] ?? `☀ ${s.light_need.replace(/_/g, ' ')}`;
+  return '☀ —';
+}
+
 /**
  * The three-glyph summary from the design's "CARE FINGERPRINT" — enough to
  * compare two species at a glance without opening either.
+ *
+ * Read from what the list row carries. The list endpoint sends no schedules,
+ * so a fingerprint built on them was a dash on every card while a third of
+ * the catalog has a cited watering regime; the resolved columns come first,
+ * a schedule where a detail record supplies one, and a dash only when the
+ * record truly has nothing.
  */
 export function fingerprint(s: Species): Fingerprint {
   const water = s.care_schedules?.find((c) => c.care_type === 'water');
   const legacyHumidity = s.humidity_sourced !== false
     && s.humidity_pct_min != null && s.humidity_pct_max != null;
   return {
-    water: water
-      ? `💧 every ${water.interval_days_min}–${water.interval_days_max}d`
-      : '💧 —',
-    light: s.light_need
-      ? LIGHT_GLYPH[s.light_need] ?? `☀ ${s.light_need.replace(/_/g, ' ')}`
-      : '☀ —',
+    water: s.water_regime && REGIME_GLYPH[s.water_regime]
+      ? REGIME_GLYPH[s.water_regime]
+      : water
+        ? `💧 every ${water.interval_days_min}–${water.interval_days_max}d`
+        : '💧 —',
+    light: lightGlyph(s),
     // The cited category first; the legacy band only when its numbers came
     // from a source. Derived humidity (imports) shows the same honest dash
     // as missing data — because that's what it is.
@@ -128,13 +179,6 @@ export function fingerprint(s: Species): Fingerprint {
   };
 }
 
-/** Case-insensitive match across both names, so "monstera" and "deliciosa"
- *  both find the same plant. */
-export function matchesQuery(s: Species, query: string): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  return (
-    s.common_name.toLowerCase().includes(q) ||
-    s.scientific_name.toLowerCase().includes(q)
-  );
-}
+/** Search lives with the catalog's other list rules, shared with the Species
+ *  tab; re-exported so the Almanac reads it from one place. */
+export { matchesQuery } from '../care/catalog';

@@ -64,7 +64,9 @@ function SpeciesCard({
       <Card.Content>
         <View style={styles.cardHead}>
           <Text variant="titleMedium" style={styles.common}>{species.common_name}</Text>
-          <Pill tone={TIER_TONE[tier]} filled>{TIER_LABELS[tier]}</Pill>
+          {/* No badge without a grade: a species with nothing on record to
+              grade is not a beginner's plant, it is an ungraded one. */}
+          {tier ? <Pill tone={TIER_TONE[tier]} filled>{TIER_LABELS[tier]}</Pill> : null}
         </View>
         <Text variant="bodySmall" style={styles.latin}>{species.scientific_name}</Text>
 
@@ -158,6 +160,10 @@ export default function AlmanacScreen() {
     // ranks them, so "see all" carries on from where that list stopped.
     return areaId == null ? matching : inRankOrder(matching, candidates);
   }, [species, query, filter, areaId, candidateById, candidates]);
+  const ungraded = useMemo(
+    () => species.filter((s) => tierOf(s) == null).length,
+    [species],
+  );
 
   const renderItem = useCallback(({ item }: { item: Species }) => (
     <SpeciesCard
@@ -233,6 +239,13 @@ export default function AlmanacScreen() {
             </Chip>
           ))}
         </ScrollView>
+      ) : null}
+
+      {filter !== 'all' ? (
+        <Text style={styles.fitNote}>
+          Graded only where the catalog records humidity, temperature or light
+          {ungraded > 0 ? ` — ${ungraded} species have nothing to grade yet and aren’t in any grade` : ''}.
+        </Text>
       ) : null}
 
       <Eyebrow style={styles.eyebrow}>Species · {fitFailed ? 0 : shown.length} shown</Eyebrow>
