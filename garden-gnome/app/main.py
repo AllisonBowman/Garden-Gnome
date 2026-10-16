@@ -1,4 +1,5 @@
-﻿from contextlib import asynccontextmanager
+﻿import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -8,16 +9,18 @@ from dotenv import load_dotenv
 # for the packaged .exe; this covers `uvicorn app.main:app` dev runs.
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
-from fastapi import FastAPI  # noqa: E402
+from fastapi import Depends, FastAPI  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
+from sqlmodel import Session  # noqa: E402
 
 from slowapi import _rate_limit_exceeded_handler  # noqa: E402
 from slowapi.errors import RateLimitExceeded  # noqa: E402
 
 from app.config import get_settings  # noqa: E402
-from app.db.database import engine, run_migrations  # noqa: E402
+from app.db.catalog_state import catalog_status  # noqa: E402
+from app.db.database import engine, get_session, run_migrations  # noqa: E402
 from app.data.seed import seed_default_growing_area  # noqa: E402
 from app.rate_limit import limiter  # noqa: E402
 from app.routers import ai, auth, species, plants, growing_areas, census  # noqa: E402
@@ -83,5 +86,18 @@ app.mount(
 
 
 @app.get("/")
-def root():
-    return {"status": "ok", "service": "garden-gnome", "version": "0.2.0"}
+def root(session: Session = Depends(get_session)):
+    """Liveness, plus whether the catalog this build ships is the one serving.
+
+    The deploy's smoke check reads `catalog.synced`: seed.py lets a failed
+    claim sync pass so the API still boots, which leaves an answering server
+    serving stale care data with nothing to say so. A failure to read the
+    state is reported as not synced, never as an error, so this route keeps
+    answering whatever the catalog's condition."""
+    try:
+        catalog = catalog_status(session)
+    except Exception:  # noqa: BLE001 -- liveness must not depend on it
+        logging.getLogger(__name__).exception("Could not read catalog state")
+        catalog = {"synced": False}
+    return {"status": "ok", "service": "garden-gnome", "version": "0.2.0",
+            "catalog": catalog}
