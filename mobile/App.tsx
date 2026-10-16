@@ -26,6 +26,7 @@ import { getOnboardingSeen, setOnboardingSeen } from './src/onboarding/storage';
 import { fetchPlants } from './src/api/plants';
 import { AuthProvider, useAuth } from './src/auth/AuthContext';
 import LoginScreen from './src/auth/LoginScreen';
+import ErrorBoundary, { guarded } from './src/components/ErrorBoundary';
 
 // ── Param lists (imported by child screens) ───────────────────────────────────
 /** What Add Plant may be opened with: `growingAreaId` preselects where the
@@ -80,6 +81,32 @@ type RootTabParamList = {
   Settings:     undefined;
 };
 
+// ── React Query ───────────────────────────────────────────────────────────────
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
+});
+
+// After a crash, drop every cached answer and fetch it fresh: a malformed
+// server answer is the likeliest cause, and redrawing from the same cache
+// would only crash again.
+const resetData = () => { void queryClient.resetQueries(); };
+
+// ── Screens, each behind its own error boundary ───────────────────────────────
+// A render error costs one screen: the header's back button, the tab bar and
+// every other tab keep working. Wrapped once here, never inside a render, so
+// each wrapper keeps its identity.
+const Plants        = guarded(PlantsScreen, 'My Plants', resetData);
+const PlantDetail   = guarded(PlantDetailScreen, 'Plant', resetData);
+const AddPlant      = guarded(AddPlantScreen, 'Add plant', resetData);
+const CaptureGarden = guarded(CaptureGardenScreen, 'Walk the garden', resetData);
+const Species       = guarded(SpeciesScreen, 'Species catalog', resetData);
+const SpeciesDetail = guarded(SpeciesDetailScreen, 'Species', resetData);
+const Almanac       = guarded(AlmanacScreen, 'Species Almanac', resetData);
+const GrowingAreas  = guarded(GrowingAreasScreen, 'Growing areas', resetData);
+const GrowingAreaDetail = guarded(GrowingAreaDetailScreen, 'Growing area', resetData);
+const Census        = guarded(CensusScreen, 'Census', resetData);
+const Settings      = guarded(SettingsScreen, 'Settings', resetData);
+
 // ── Stack navigators ──────────────────────────────────────────────────────────
 const PlantsStack       = createNativeStackNavigator<PlantsStackParamList>();
 const SpeciesStack      = createNativeStackNavigator<SpeciesStackParamList>();
@@ -101,10 +128,10 @@ function useHeaderOpts() {
 function PlantsNavigator() {
   return (
     <PlantsStack.Navigator screenOptions={useHeaderOpts()}>
-      <PlantsStack.Screen name="PlantsList"  component={PlantsScreen}      options={{ title: 'My Plants' }} />
-      <PlantsStack.Screen name="PlantDetail" component={PlantDetailScreen} options={{ title: 'Plant' }} />
-      <PlantsStack.Screen name="AddPlant"    component={AddPlantScreen}    options={{ title: 'Add plant' }} />
-      <PlantsStack.Screen name="CaptureGarden" component={CaptureGardenScreen} options={{ title: 'Walk the garden' }} />
+      <PlantsStack.Screen name="PlantsList"  component={Plants}      options={{ title: 'My Plants' }} />
+      <PlantsStack.Screen name="PlantDetail" component={PlantDetail} options={{ title: 'Plant' }} />
+      <PlantsStack.Screen name="AddPlant"    component={AddPlant}    options={{ title: 'Add plant' }} />
+      <PlantsStack.Screen name="CaptureGarden" component={CaptureGarden} options={{ title: 'Walk the garden' }} />
     </PlantsStack.Navigator>
   );
 }
@@ -112,9 +139,9 @@ function PlantsNavigator() {
 function SpeciesNavigator() {
   return (
     <SpeciesStack.Navigator screenOptions={useHeaderOpts()}>
-      <SpeciesStack.Screen name="SpeciesList"   component={SpeciesScreen}       options={{ title: 'Species catalog' }} />
-      <SpeciesStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
-      <SpeciesStack.Screen name="Almanac" component={AlmanacScreen} options={{ title: 'Species Almanac' }} />
+      <SpeciesStack.Screen name="SpeciesList"   component={Species}       options={{ title: 'Species catalog' }} />
+      <SpeciesStack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
+      <SpeciesStack.Screen name="Almanac" component={Almanac} options={{ title: 'Species Almanac' }} />
     </SpeciesStack.Navigator>
   );
 }
@@ -122,9 +149,9 @@ function SpeciesNavigator() {
 function CensusNavigator() {
   return (
     <CensusStack.Navigator screenOptions={useHeaderOpts()}>
-      <CensusStack.Screen name="CensusSummary" component={CensusScreen}  options={{ title: 'Census' }} />
-      <CensusStack.Screen name="Almanac"       component={AlmanacScreen} options={{ title: 'Species Almanac' }} />
-      <CensusStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
+      <CensusStack.Screen name="CensusSummary" component={Census}  options={{ title: 'Census' }} />
+      <CensusStack.Screen name="Almanac"       component={Almanac} options={{ title: 'Species Almanac' }} />
+      <CensusStack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
     </CensusStack.Navigator>
   );
 }
@@ -132,23 +159,18 @@ function CensusNavigator() {
 function GrowingAreasNavigator() {
   return (
     <GrowingAreasStack.Navigator screenOptions={useHeaderOpts()}>
-      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreasScreen} options={{ title: GROWING_AREAS_TAB }} />
+      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreas} options={{ title: GROWING_AREAS_TAB }} />
       <GrowingAreasStack.Screen
         name="GrowingAreaDetail"
-        component={GrowingAreaDetailScreen}
+        component={GrowingAreaDetail}
         options={({ route }) => ({ title: route.params.name ?? 'Growing area' })}
       />
-      <GrowingAreasStack.Screen name="AddPlant" component={AddPlantScreen} options={{ title: 'Add plant' }} />
-      <GrowingAreasStack.Screen name="SpeciesDetail" component={SpeciesDetailScreen} options={{ title: 'Species' }} />
-      <GrowingAreasStack.Screen name="Almanac" component={AlmanacScreen} options={{ title: 'Species Almanac' }} />
+      <GrowingAreasStack.Screen name="AddPlant" component={AddPlant} options={{ title: 'Add plant' }} />
+      <GrowingAreasStack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
+      <GrowingAreasStack.Screen name="Almanac" component={Almanac} options={{ title: 'Species Almanac' }} />
     </GrowingAreasStack.Navigator>
   );
 }
-
-// ── React Query ───────────────────────────────────────────────────────────────
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
-});
 
 // ── Tab icon ──────────────────────────────────────────────────────────────────
 function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
@@ -271,7 +293,7 @@ function AuthGate() {
               />
               <Tab.Screen
                 name="Settings"
-                component={SettingsScreen}
+                component={Settings}
                 options={{
                   title: 'Settings',
                   tabBarIcon: ({ focused }) => <TabIcon emoji="⚙️" focused={focused} />,
@@ -290,9 +312,14 @@ export default function App() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <AppThemeProvider>
-          <AuthProvider>
-            <AuthGate />
-          </AuthProvider>
+          {/* The last line of defence: anything the per-screen boundaries
+              don't cover (sign-in, the tab bar, onboarding) shows a card
+              with Try again instead of closing the app. */}
+          <ErrorBoundary where="the app" onReset={resetData}>
+            <AuthProvider>
+              <AuthGate />
+            </AuthProvider>
+          </ErrorBoundary>
         </AppThemeProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
