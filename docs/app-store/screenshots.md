@@ -147,14 +147,14 @@ Words: 8 of 8.
 
 ### 6. Hazards, stated plainly
 
-Screen: Species tab > English Yew, a common garden shrub whose cited
-record names a serious hazard to people as well as pets. Castor Bean is the
-other clear example.
+Screen: Species tab > Dumb Cane (Dieffenbachia), a common houseplant whose
+cited record rates the hazard high for people as well as pets and names the
+parts. Pothos or Peace Lily also work; English Yew and Castor Bean do not,
+because their records name no parts on this build.
 
-Set up: the hazard note in view, naming people, pets and the parts. Shoot
-this only once the plant-hazard change is in the build. At `b083a90` the
-note still speaks only of pets. If it isn't in, use the alternate shot
-below instead.
+Set up: the hazard sentence in view, naming people, pets, the parts and the
+Poison Control line. If the sentence is cut off, scroll it fully into view
+before shooting.
 
 <!-- field limit=8 unit=words exact -->
 ```text
@@ -250,7 +250,8 @@ makes one.
 For each of the 2 simulators:
 
 ```sh
-xcrun simctl boot "iPhone 17 Pro Max"        # then "iPhone 17 Pro" for the second set
+# First set on "iPhone 17 Pro Max"; repeat with "iPhone 17 Pro" for the second set.
+xcrun simctl boot "iPhone 17 Pro Max"
 open -a Simulator
 xcrun simctl install booted "$APP"
 xcrun simctl launch booted com.allisonbowman.plantadvocate

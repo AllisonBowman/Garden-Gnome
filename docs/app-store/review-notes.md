@@ -8,16 +8,13 @@ until it is deployed.
 
 ## Sign-In Information
 
-Leave **Sign-in required** unticked, and leave User name and Password blank.
-If the box is ticked, the form demands a user name and a password, and
-PlantAdvocate has neither: it signs in only with Sign in with Apple or Google
-(`mobile/src/auth/LoginScreen.tsx:55-79`), and the account has no password
-column (`garden-gnome/app/models/models.py:249`). The first paragraph of the
-notes tells the reviewer how to get in.
-
-If App Review still asks for a demo account, answer by pointing back to the
-first paragraph. Sign in with Apple creates a working account for any Apple
-Account in one step. Don't hand over a personal Google login.
+Tick **Sign-in required**. PlantAdvocate signs in only with Sign in with
+Apple or Google (`mobile/src/auth/LoginScreen.tsx`); there is no password
+login and no demo account to give. If the form insists on a user name and a
+password, enter `Sign in with Apple` as the user name and `none needed` as
+the password, and let the Notes below explain: a reviewer taps Sign in with
+Apple and has an account in one tap, with no other step. Google Sign-In
+works too. Deleting the account afterwards is in Settings.
 
 ## Contact Information
 
@@ -44,7 +41,7 @@ EACH FEATURE IN UNDER A MINUTE
 1. Growing areas tab. Tap New growing area. Name it Back fence, pick In-ground bed, and type 84 in Headroom (inches). Under Location, search a town or tap Use my location (location permission is asked only then). Tap Next: Outdoors and Full sun are already set. Tap Next, pick Feeds pollinators, then Create. The new area opens with its good candidates, a care calendar and a local forecast.
 2. On that area, tap Add a plant here. Search Lady Fern and pick it: before you save, the screen says this spot gets more sun than the sources record for it. Then search Basil instead and tap Save plant.
 3. Plants tab, tap Basil. Log care with a tap. Under Ask the Gnome, tap Get care advice. The advice is built from the species' facts and this plant's log, and has a Report this result link. Below: the care guide with its hazard note, how its spot suits it, and Move or remove.
-4. Checks. The To-do today card on the Plants tab lists checks when they come due, counted from the last time that care was logged. Tap Watered on Basil today and its first check appears tomorrow, with Watered and Still damp to tap.
+4. Checks. The Checks for today card on the Plants tab lists checks when they come due, counted from the last time that care was logged. Tap Watered on Basil today and its first check appears tomorrow, with Watered and Still damp to tap.
 5. Walk the garden (button on the Plants tab). Type: 12 tomatoes along the south fence, a rosemary by the gate. Tap Add these, look over the 2 cards, then tap Add 2 to the garden. The microphone icon dictates instead (microphone and speech recognition permission are asked only on tap). The camera is only a backdrop.
 6. Species tab. Search the catalog and open any species for its care facts, its sources (they open in Safari) and its hazard note. The card at the top opens the Species Almanac, which can be narrowed to what fits a growing area.
 7. Census tab. A summary of your own garden, and a way into the Almanac. The community census is a switch in Settings > Privacy & data, off by default. If someone joins, our server can count their plants and care dates with no name, email, notes or coordinates, under identifiers made new for each export.
