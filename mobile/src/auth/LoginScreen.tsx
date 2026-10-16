@@ -6,6 +6,7 @@ import { Palette, Fonts } from '../theme/tokens';
 import { useAuth } from './AuthContext';
 import { signInWithApple, signInWithGoogle } from './signIn';
 import { createSignInGate, Provider } from './signInGate';
+import { SIGN_IN_REASON } from './loginCopy';
 
 // Sign in with Apple renders Apple's own button component (required styling).
 // Loaded lazily so the web bundle never imports the native module.
@@ -58,6 +59,8 @@ export default function LoginScreen() {
       </View>
 
       <View style={styles.buttons}>
+        {/* Why there is a sign-in at all, before anyone is asked for one. */}
+        <Text style={styles.why}>{SIGN_IN_REASON}</Text>
         {/* Apple's button has no disabled or loading state of its own, so
             while any sign-in runs it is dimmed, stops taking touches, and
             shows a spinner when it is the one running. */}
@@ -133,6 +136,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
     maxWidth: 300,
   },
   buttons: { gap: 12, alignItems: 'stretch' },
+  why: {
+    textAlign: 'center', color: p.sub, fontSize: 14, lineHeight: 20,
+    marginBottom: 4, alignSelf: 'center', maxWidth: 320,
+  },
   appleButton: { height: 48 },
   appleBusy: { opacity: 0.6 },
   appleSpinner: {
