@@ -84,7 +84,12 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: superfly/flyctl-actions/setup-flyctl@master
+      # Pinned, action and CLI both, so what deploys is what was last
+      # checked, not whatever landed on master or in flyctl since. The SHA
+      # is the action's 1.6 release; bump both deliberately.
+      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
+        with:
+          version: 0.4.111
       - name: Deploy
         # Run from garden-gnome/, not the repo root. The Dockerfile's
         # `COPY app ./app` is relative to the build context, so a root-level
