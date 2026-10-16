@@ -87,6 +87,16 @@ _TOKEN_TTL_MIN = 30
 _WEATHER_CACHE_TTL = 3600  # seconds — one WeatherKit call per location per hour
 _FORECAST_DAYS = 5
 
+# Coordinates leave this server at two decimal places, about 1 km: enough for
+# a forecast, not enough to find a house. Every provider gets the coarse pair,
+# never the stored one.
+_COORD_DECIMALS = 2
+
+
+def _coarse(lat: float, lng: float) -> tuple[float, float]:
+    return round(lat, _COORD_DECIMALS), round(lng, _COORD_DECIMALS)
+
+
 # Process-local caches (single Fly machine; a cold start just refetches).
 _token_cache: dict = {"jwt": None, "exp": 0.0}
 _weather_cache: dict = {}  # (lat2, lng2, hour_bucket) -> normalized payload
@@ -180,6 +190,7 @@ def normalize(data: dict) -> dict:
 
 async def _fetch_weatherkit(lat: float, lng: float, lang: str) -> dict | None:
     """Normalized Apple Weather, or None when unconfigured / on any error."""
+    lat, lng = _coarse(lat, lng)
     token = _build_token()
     if token is None:
         return None
@@ -238,6 +249,7 @@ def normalize_openmeteo(data: dict) -> dict:
 
 async def _fetch_openmeteo(lat: float, lng: float) -> dict | None:
     """Normalized Open-Meteo forecast, or None on any error. No key needed."""
+    lat, lng = _coarse(lat, lng)
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(10.0)) as client:
             resp = await client.get(OPENMETEO_URL, params={
@@ -336,13 +348,14 @@ async def _nws_latest_obs(client: httpx.AsyncClient, stations_url: str | None) -
 async def _fetch_nws(lat: float, lng: float) -> dict | None:
     """Normalized NWS forecast for a US coordinate, or None (non-US / any error).
     Two-step: /points resolves the grid + station URLs, then the forecast."""
+    lat, lng = _coarse(lat, lng)
     try:
         async with httpx.AsyncClient(
             timeout=httpx.Timeout(10.0), headers=NWS_HEADERS, follow_redirects=True,
         ) as client:
-            # NWS rejects coordinates with more than 4 decimal places (301), so
-            # trim before asking — geocoded env coords carry more precision.
-            presp = await client.get(f"{NWS_BASE}/points/{lat:.4f},{lng:.4f}")
+            # NWS answers 301 to more than 4 decimal places; two is all it
+            # is ever sent (_coarse).
+            presp = await client.get(f"{NWS_BASE}/points/{lat},{lng}")
             presp.raise_for_status()
             props = (presp.json().get("properties") or {})
             forecast_url = props.get("forecast")
@@ -367,8 +380,12 @@ async def fetch_weather(lat: float, lng: float, lang: str = "en") -> dict | None
     Apple Weather credit, when the entitlement works) → the U.S. National Weather
     Service (public-domain, US-only) → keyless Open-Meteo (global fallback). The
     payload's attribution always names whichever source answered, so the on-
-    screen credit is honest. None only when every provider fails."""
-    bucket = (round(lat, 2), round(lng, 2), int(time.time() // _WEATHER_CACHE_TTL))
+    screen credit is honest. None only when every provider fails.
+
+    The coordinate is coarsened to two decimals first, so what the cache keys
+    on and what every provider is asked about are the same ~1 km square."""
+    lat, lng = _coarse(lat, lng)
+    bucket = (lat, lng, int(time.time() // _WEATHER_CACHE_TTL))
     if bucket in _weather_cache:
         return _weather_cache[bucket]
 
