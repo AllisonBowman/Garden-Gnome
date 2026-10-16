@@ -12,6 +12,7 @@ from sqlmodel import Session, select
 from app.db.catalog_state import catalog_key
 from app.db.database import get_session
 from app.deps import get_current_user
+from app.routers.census import require_operator
 from app.models.models import CareSchedule, Species, SpeciesTrait
 from app.models.schemas import (
     SpeciesCreate, SpeciesDetail, SpeciesGenerateRequest, SpeciesRead,
@@ -158,7 +159,8 @@ def list_species(request: Request, session: Session = Depends(get_session)):
     return Response(body.identity, media_type="application/json")
 
 
-@router.post("/", response_model=SpeciesDetail, status_code=201)
+@router.post("/", response_model=SpeciesDetail, status_code=201,
+             dependencies=[Depends(require_operator)], include_in_schema=False)
 def create_species(payload: SpeciesCreate, session: Session = Depends(get_session)):
     """Add a single species with care schedules and traits.
 
@@ -179,7 +181,8 @@ def create_species(payload: SpeciesCreate, session: Session = Depends(get_sessio
     return _detail(_load_with_relations(species.id, session))
 
 
-@router.post("/bulk", status_code=201)
+@router.post("/bulk", status_code=201,
+             dependencies=[Depends(require_operator)], include_in_schema=False)
 def bulk_import_species(payload: list[SpeciesCreate], session: Session = Depends(get_session)):
     """Import multiple species from a JSON array.
 
@@ -205,7 +208,7 @@ def bulk_import_species(payload: list[SpeciesCreate], session: Session = Depends
     }
 
 
-@router.post("/generate")
+@router.post("/generate", dependencies=[Depends(require_operator)], include_in_schema=False)
 def generate_species(
     payload: SpeciesGenerateRequest,
     session: Session = Depends(get_session),

@@ -17,6 +17,7 @@ from sqlmodel import Session, create_engine, select
 from app.models.models import Species, SpeciesSource, SpeciesTrait, SyncState
 from app.models.schemas import SpeciesRead
 from app.routers import species as species_router
+from tests.census_operator import as_operator
 
 
 @pytest.fixture()
@@ -153,10 +154,10 @@ def test_a_new_sync_fingerprint_rebuilds(api, monkeypatch):
             s.commit()
 
 
-def test_a_write_through_the_api_is_seen_on_the_next_request(api):
+def test_a_write_through_the_api_is_seen_on_the_next_request(api, monkeypatch):
     client, headers, engine = api
     client.get("/species/", headers=headers)
-    created = client.post("/species/", headers=headers, json={
+    created = client.post("/species/", headers={**headers, **as_operator(monkeypatch)}, json={
         "common_name": "Cache Created", "scientific_name": "Cachea creata",
         "light_need": "medium", "humidity_pct_min": 40, "humidity_pct_max": 60,
         "temp_f_min": 60, "temp_f_max": 80, "soil_type": "mix",

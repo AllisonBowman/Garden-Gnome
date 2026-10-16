@@ -12,6 +12,7 @@ from sqlmodel import Session, create_engine
 from app.data.claims.recompute import RESOLVED_FIELDS, SERVER_ONLY_FIELDS
 from app.models.models import CareDataStatus, Species, SpeciesSource
 from app.models.schemas import CareSourceRead, SpeciesDetail, SpeciesRead
+from tests.census_operator import as_operator
 
 NCSU = "https://plants.ces.ncsu.edu/plants/fuchsia-magellanica/"
 LEGACY = ("light_need", "humidity_pct_min", "humidity_pct_max",
@@ -227,11 +228,11 @@ def resp_text(payload) -> str:
     return json.dumps(payload)
 
 
-def test_create_route_returns_a_fresh_row_without_sources(api):
+def test_create_route_returns_a_fresh_row_without_sources(api, monkeypatch):
     """POST /species/ answers with SpeciesDetail too; a row that has never
     been recomputed must not 500 on its null care_sources."""
     client, headers, _ = api
-    resp = client.post("/species/", headers=headers, json={
+    resp = client.post("/species/", headers={**headers, **as_operator(monkeypatch)}, json={
         "common_name": "Createtest Fern", "scientific_name": "Testus createus",
         "light_need": "medium", "humidity_pct_min": 40, "humidity_pct_max": 60,
         "temp_f_min": 60, "temp_f_max": 80, "soil_type": "mix"})
