@@ -1,13 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { AI_STATUS_QUERY_KEY, fetchAiStatus } from '../api/aiStatus';
-import { photoDiagnosisOffered, symptomsOffered } from './aiCapabilities';
+import { AiCapabilities, photoDiagnosisOffered, symptomsOffered } from './aiCapabilities';
 
-export interface AiCapabilities {
-  /** Show the photo check-up card. */
-  photoDiagnosis: boolean;
-  /** Show the free-text "anything wrong?" box above care advice. */
-  symptoms: boolean;
-}
+export type { AiCapabilities } from './aiCapabilities';
 
 /**
  * What the care engine can do right now, asked of the server once and shared
