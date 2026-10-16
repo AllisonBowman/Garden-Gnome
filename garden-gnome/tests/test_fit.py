@@ -348,6 +348,53 @@ def test_an_area_asked_and_answered_nothing_gets_no_goal_findings():
     assert not any(x.axis == Axis.goal for x in f)
 
 
+def test_edible_with_a_condition_is_not_a_confirmed_edible():
+    """Mayapple, taro and wisteria were confirmed "Grown to eat." in a bed
+    whose gardener asked for food. Eaten only cooked, or only in part, or
+    also poisonous, is not a confirmed edible: the finding is an unknown
+    and carries the condition instead."""
+    area = make_area(**OUTDOOR_BED, goals=[GrowingGoal.edible.value])
+    toxic_edible = make_species(is_edible=True, toxic_to_pets=True,
+                                is_houseplant=False)
+    goal = next(f for f in fit.assess(toxic_edible, area) if f.axis == Axis.goal)
+    assert goal.verdict == Verdict.unknown
+    assert goal.goal == "edible"
+    assert goal.sentence == toxic_edible.edibility_note
+    assert "Grown to eat" not in goal.sentence
+
+    plain_edible = make_species(is_edible=True, is_houseplant=False)
+    goal = next(f for f in fit.assess(plain_edible, area) if f.axis == Axis.goal)
+    assert (goal.verdict, goal.sentence) == (Verdict.fits, "Grown to eat.")
+
+
+def test_a_high_severity_poison_is_never_a_candidate_however_well_it_fits():
+    """Poison hemlock in a sunny bed: sun, soil and size can all fit. A
+    source rating it high severity for people takes it off the list."""
+    area = make_area(**OUTDOOR_BED)
+    shaped = dict(is_houseplant=False, outdoor_sun_exposure=["full_sun"],
+                  soil_base="garden_bed")
+    hemlock = make_species(
+        common_name="Poison Hemlock", scientific_name="Conium testii",
+        toxic_to_pets=True, **shaped,
+        toxicity_detail="NC State's Poisonous to Humans block: Poison Severity: High.")
+    pothos_like = make_species(
+        common_name="Medium Thing", toxic_to_pets=True, **shaped,
+        toxicity_detail="NC State rates poison severity Medium.")
+    assert fit.is_candidate(fit.assess(hemlock, area)), "it does fit the space"
+    assert fit.never_a_candidate(hemlock)
+    ranked = fit.candidates([hemlock, pothos_like], area)
+    assert [c.species.common_name for c in ranked] == ["Medium Thing"]
+
+
+def test_a_noxious_weed_is_never_a_candidate():
+    area = make_area(**OUTDOOR_BED)
+    weed = make_species(
+        common_name="Weedy", is_houseplant=False, outdoor_sun_exposure=["full_sun"],
+        toxicity_detail="Missouri Botanical Garden: listed as a noxious weed in "
+                        "one or more Midwestern states.")
+    assert fit.candidates([weed], area) == []
+
+
 # --- borrowed values -------------------------------------------------------
 
 def test_a_genus_borrowed_value_is_labelled_wherever_it_is_shown():

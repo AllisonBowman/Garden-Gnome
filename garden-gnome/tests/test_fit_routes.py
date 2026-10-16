@@ -99,7 +99,7 @@ def garden(migrated_db_url):
 
         data = dict(
             bed_id=bed.id, their_bed_id=theirs.id, user_id=user.id,
-            species=made,
+            species=made, db_url=migrated_db_url,
             headers={"Authorization": f"Bearer {tokens.issue_access_token(user.id)}"},
         )
 
@@ -130,6 +130,54 @@ def test_an_unresearched_species_is_never_put_forward(garden):
     body = garden.client.get(
         f"{BASE}/{garden.bed_id}/candidates", headers=garden.headers).json()
     assert "Unresearched Thing" not in [c["common_name"] for c in body]
+
+
+def test_every_candidate_carries_its_hazard_line(garden):
+    """Contract item 3: `hazard` on every candidate, null when nothing is
+    recorded -- the coneflower here has no toxicity record."""
+    body = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000",
+        headers=garden.headers).json()
+    assert body and all("hazard" in c for c in body)
+    echinacea = next(c for c in body if c["common_name"] == "Purple Coneflower")
+    assert echinacea["hazard"] is None
+
+
+def _sunny_bed_species(garden, **kw):
+    """A species shaped to fit the garden's sunny pollinator bed."""
+    with Session(create_engine(garden.db_url)) as s:
+        row = Species(is_houseplant=False, outdoor_sun_exposure=["full_sun"],
+                      soil_base="garden_bed", attracts_pollinators=True, **kw)
+        s.add(row)
+        s.commit()
+        return row.id
+
+
+def test_a_toxic_candidate_says_so_on_its_row(garden):
+    sid = _sunny_bed_species(
+        garden, common_name="Hazardtest Foxglove",
+        scientific_name="Digitalis hazardtestii", toxic_to_pets=True,
+        toxicity_detail="NC State rates poison severity Low; Poisonous to Humans.")
+    body = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000",
+        headers=garden.headers).json()
+    row = next(c for c in body if c["species_id"] == sid)
+    assert row["hazard"] == "Toxic to pets and people."
+
+
+def test_a_high_severity_poison_is_left_off_the_list_and_not_called_a_candidate(garden):
+    sid = _sunny_bed_species(
+        garden, common_name="Excludetest Hemlock",
+        scientific_name="Conium excludetestii", toxic_to_pets=True,
+        toxicity_detail="NC State's Poisonous to Humans block: Poison Severity: High.")
+    every = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000", headers=garden.headers)
+    assert sid not in [c["species_id"] for c in every.json()]
+    assert every.headers["X-Total-Count"] == str(len(every.json()))
+    fit_body = garden.client.get(
+        f"{BASE}/{garden.bed_id}/fit/{sid}", headers=garden.headers).json()
+    assert fit_body["candidate"] is False
+    assert fit_body["score"] > 0, "it fits the space; it is still not suggested"
 
 
 def test_every_candidate_says_why_and_only_confirmed_reasons_count(garden):

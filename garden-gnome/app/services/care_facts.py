@@ -17,6 +17,7 @@ from enum import Enum
 from typing import Any, Callable
 
 from app.models.models import Species
+from app.services.toxicity import cited_authority, safety_of
 
 #: Suffix on any value the resolver borrowed from the genus (ADR 0002).
 GENUS_LABEL = " (genus-inferred)"
@@ -328,19 +329,43 @@ def _size(sp: Species, tag: Tag) -> Told:
         grown = "grown indoors" if sp.is_houseplant else "an outdoor plant"
         lines.append(f"- Where it lives: {tag(grown, 'is_houseplant')}")
     if sp.is_edible:
-        lines.append(f"- Edible: {tag('grown to eat', 'is_edible')}")
+        # The condition, when there is one, in place of "grown to eat": a
+        # model told only that a plant is eaten will happily suggest eating
+        # the poisonous half of it.
+        lines.append(
+            f"- Edible: {tag(sp.edibility_note or 'grown to eat', 'is_edible')}")
     if sp.attracts_pollinators:
         lines.append(
             f"- Pollinators: {tag('recorded as feeding pollinators', 'attracts_pollinators')}")
     return lines, ""
 
 
-def _toxicity_word(flag: bool | None) -> str:
+def _toxicity_word(sp: Species) -> str:
     # Null is "no record", never "no": a default read as safety is the
-    # invented verdict ADR 0002 forbids.
+    # invented verdict ADR 0002 forbids. So is a False nobody cited -- the
+    # legacy catalog's default -- which is no more a finding than a null.
+    flag = sp.toxic_to_pets
     if flag is None:
         return "no record"
-    return "yes" if flag else "no"
+    if flag:
+        return "yes"
+    cited = cited_authority(sp.care_provenance, sp.care_sources)
+    return "no" if cited else "no record"
+
+
+def _toxicity_lines(sp: Species) -> list[str]:
+    """The pet flag, and the hazard to people when a source records one --
+    which the flag alone never carried, so a model was told poison ivy was
+    harmless (toxicity.safety_of)."""
+    lines = [f"- Toxic to pets: {_toxicity_word(sp)}"]
+    tox = safety_of(sp).toxicity
+    if tox.people_at_risk:
+        rated = ""
+        if tox.rating:
+            by = f" by {tox.rated_by}" if tox.rated_by else ""
+            rated = f" (rated {tox.rating} severity{by})"
+        lines.append(f"- Toxic to people: yes{rated}")
+    return lines
 
 
 def _listed(words: list[str]) -> str:
@@ -402,7 +427,7 @@ def species_fact_lines(species: Species) -> list[str]:
         lines.extend(told)
         if from_legacy:
             legacy.append(from_legacy)
-    lines.append(f"- Toxic to pets: {_toxicity_word(species.toxic_to_pets)}")
+    lines.extend(_toxicity_lines(species))
     care_data = _care_data_line(species, legacy)
     if care_data:
         lines.append(care_data)

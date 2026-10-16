@@ -154,6 +154,11 @@ class CandidateRead(SQLModel):
     scientific_name: str
     score: int        # how many axes actually confirmed; unknowns never count
     fits: list[FitFindingRead]
+    # One short caution when the species is recorded toxic to pets or to
+    # people ("Toxic to pets and people."), null otherwise. Null is "no
+    # record", never "safe". A recommendation that fits a space is still a
+    # plant someone's dog or child can eat, and the row has to say so.
+    hazard: Optional[str] = None
 
 
 class PlantMisfitRead(SQLModel):

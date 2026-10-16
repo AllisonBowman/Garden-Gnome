@@ -17,6 +17,7 @@ from app.models.schemas import (
     FitFindingRead, CandidateRead, PlantMisfitRead, SpeciesFitRead,
 )
 from app.services import fit
+from app.services.toxicity import hazard_line, safety_of
 from app.services.weather import fetch_weather
 
 _routes = APIRouter()
@@ -81,7 +82,10 @@ async def get_growing_area_weather(
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    """Current + forecast Apple Weather for this growing area's coordinates.
+    """Current conditions and forecast for this growing area's coordinates,
+    from whichever provider answers first (Apple Weather, then the U.S.
+    National Weather Service, then Open-Meteo); the payload's attribution
+    names the one used.
 
     Weather is an enhancement: when the area has no location, or no weather
     backend is configured, this returns `available: false` with a friendly
@@ -180,6 +184,11 @@ def growing_area_candidates(
     So a short list here means the catalog is thin on the axes this space
     turns on, not that nothing will grow in it.
 
+    A species a source rates a high-severity poison for people, or records
+    as a noxious weed, is never put forward (`fit.never_a_candidate`), and
+    every candidate recorded toxic to pets or people carries a one-line
+    `hazard`.
+
     The first `limit` are returned and the whole count goes in the
     X-Total-Count header: a screen showing twelve of 263 has to be able to
     say so, or twelve reads as the answer. A header rather than a wrapper
@@ -197,6 +206,7 @@ def growing_area_candidates(
             scientific_name=c.species.scientific_name,
             score=c.score,
             fits=_as_findings(fit.confirmed(c.findings)),
+            hazard=hazard_line(safety_of(c.species).toxicity),
         )
         for c in ranked[:limit]
     ]
@@ -266,7 +276,10 @@ def growing_area_species_fit(
         common_name=species.common_name,
         scientific_name=species.scientific_name,
         score=fit.score(findings),
-        candidate=fit.is_candidate(findings),
+        # The same rule the candidate list applies, so a species left off
+        # that list is never called a candidate here.
+        candidate=(fit.is_candidate(findings)
+                   and not fit.never_a_candidate(species)),
         findings=_as_findings(findings),
     )
 

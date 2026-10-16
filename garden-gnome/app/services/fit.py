@@ -8,7 +8,10 @@ same comparison read in opposite directions, which is why they are one module.
 Pure, like `claims.resolve`: it takes a Species row and a GrowingArea row and
 returns findings. No session, no queries, no I/O — the router does the fetching
 and this does the judging, so the rules can be tested against constructed rows
-and read without a database in your head.
+and read without a database in your head. The one exception is safety: what a
+species does to people is read from its cited passages through the row's own
+session (`toxicity.safety_of`), and a row built in code is judged from its
+columns alone.
 
 THE RULE THE WHOLE THING RESTS ON
 ---------------------------------
@@ -56,7 +59,7 @@ from app.models.models import (
     TempExposure,
 )
 from app.services.care_facts import length_said, token
-from app.services.toxicity import cited_authority
+from app.services.toxicity import cited_authority, never_put_forward, safety_of
 
 #: Appended to a finding drawn from a value the resolver borrowed from the
 #: genus. Mirrors care_facts.GENUS_LABEL in intent: a reader must never have to
@@ -418,6 +421,12 @@ def _goal_findings(species: Species, area: GrowingArea) -> list[Finding]:
         if species.is_edible is None:
             out.append(_unknown(
                 Axis.goal, "No source says whether this is grown to eat.", edible))
+        elif species.is_edible and species.edibility_note:
+            # Eaten, but only some of it, or only cooked, or it is also
+            # poisonous. That is not a confirmed "something to eat": a fit
+            # here is what puts Mayapple forward to someone who asked for
+            # food. It stays visible as an unknown, with its condition.
+            out.append(_unknown(Axis.goal, species.edibility_note, edible))
         elif species.is_edible:
             out.append(_finding(Axis.goal, Verdict.fits, "Grown to eat.",
                                 species, "is_edible", goal=edible))
@@ -520,15 +529,31 @@ def tie_order(species: Species) -> tuple[str, str, int]:
             species.id or 0)
 
 
+def never_a_candidate(species: Species) -> bool:
+    """Whether a species is left out of every candidate list, whatever fits.
+
+    A Candidate is a recommendation to plant something. A source rating it
+    a high-severity poison for people, or calling it fatal to them, or one
+    recording it as a noxious weed, rules that out: poison hemlock is not
+    put forward for a sunny bed because its sun and size happen to suit.
+    The plant can still be looked up and added by hand, with its warning --
+    this keeps the app from suggesting it, nothing more."""
+    safety = safety_of(species)
+    return never_put_forward(safety.toxicity, safety.evidence)
+
+
 def candidates(species_list: Iterable[Species], area: GrowingArea) -> list[Candidate]:
     """Species with nothing against them here, best-evidenced first.
 
     "Nothing against them" is a zero-misfit rule, not a high-score rule: one
     real contradiction disqualifies, however well the rest reads. Among equal
     scores the order is `tie_order`'s, A to Z and stable between requests.
+    Species `never_a_candidate` rules out are not considered at all.
     """
     scored = []
     for species in species_list:
+        if never_a_candidate(species):
+            continue
         findings = assess(species, area)
         if not is_candidate(findings):
             continue
