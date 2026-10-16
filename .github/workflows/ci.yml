@@ -16,11 +16,16 @@ on:
   push:
     branches: [master]
 
-# Never let two deploys race. Not cancel-in-progress: interrupting a deploy
-# mid-flight is worse than queueing behind it, because migrations run at boot.
+# One run per branch or pull request at a time. The group is per ref, so a
+# pull request's runs never share a queue with master's and can neither wait
+# behind a deploy nor push one out of the queue (GitHub keeps one pending run
+# per group and cancels the older when a newer arrives). A new push to a pull
+# request cancels its own stale run. A running master run is never cancelled;
+# a waiting one can only be replaced by a newer master push, whose deploy
+# ships everything the replaced one would have.
 concurrency:
-  group: deploy-production
-  cancel-in-progress: false
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   backend:
@@ -66,6 +71,12 @@ jobs:
     needs: [backend, mobile]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    # Never let two deploys race. Not cancel-in-progress: interrupting a
+    # deploy mid-flight is worse than queueing behind it, because migrations
+    # run at boot. On the job, not the workflow, so only deploys wait on it.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
     # Requires a FLY_API_TOKEN repo secret. Create one scoped to this app:
     #   fly tokens create deploy -x 999999h -a garden-gnome-api
     # A deploy token can deploy this app and nothing else — don't use a
