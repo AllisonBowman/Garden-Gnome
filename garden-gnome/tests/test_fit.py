@@ -386,6 +386,28 @@ def test_a_high_severity_poison_is_never_a_candidate_however_well_it_fits():
     assert [c.species.common_name for c in ranked] == ["Medium Thing"]
 
 
+def test_a_food_crop_rated_high_severity_is_still_offered_with_its_hazard():
+    """Potato: NC State rates the foliage a high-severity poison for people,
+    and the tubers are the crop. A bed asked for something to eat is still
+    offered it; the candidate carries the hazard, and the edible goal is
+    answered by the edibility note rather than a bare "Grown to eat"."""
+    area = make_area(**OUTDOOR_BED)
+    potato = make_species(
+        common_name="Potato", scientific_name="Solanum testosum",
+        is_houseplant=False, outdoor_sun_exposure=["full_sun"], soil_base="garden_bed",
+        is_edible=True, toxic_to_pets=True,
+        toxicity_detail="NC State's Poisonous to Humans block: Poison Severity: High. "
+                        "Poison Part: leaves, stems, green or sprouted tubers.")
+    assert not fit.never_a_candidate(potato)
+    ranked = fit.candidates([potato], area)
+    assert [c.species.common_name for c in ranked] == ["Potato"]
+    # The route puts the hazard line on the candidate (growing_areas.py), and
+    # the edible goal is answered by the edibility note, not "Grown to eat".
+    from app.services.toxicity import hazard_line, safety_of
+    assert hazard_line(safety_of(potato).toxicity), "the hazard line travels with it"
+    assert potato.edibility_note, "and the edible goal carries its condition"
+
+
 def test_a_noxious_weed_is_never_a_candidate():
     area = make_area(**OUTDOOR_BED)
     weed = make_species(

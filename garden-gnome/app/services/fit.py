@@ -537,8 +537,19 @@ def never_a_candidate(species: Species) -> bool:
     recording it as a noxious weed, rules that out: poison hemlock is not
     put forward for a sunny bed because its sun and size happen to suit.
     The plant can still be looked up and added by hand, with its warning --
-    this keeps the app from suggesting it, nothing more."""
+    this keeps the app from suggesting it, nothing more.
+
+    A food crop is the exception. NC State rates potato, eggplant and
+    peanut a high-severity poison for people because of their foliage or
+    an allergy, yet a bed asked for "something to eat" should still be
+    offered potatoes. A crop recorded as eaten stays a candidate and
+    carries its hazard line and its edibility note instead. A noxious weed
+    is never put forward, eaten or not."""
     safety = safety_of(species)
+    if safety.evidence.noxious:
+        return True
+    if species.is_edible is True:
+        return False
     return never_put_forward(safety.toxicity, safety.evidence)
 
 
