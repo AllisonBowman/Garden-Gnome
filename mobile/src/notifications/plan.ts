@@ -1,4 +1,5 @@
-import { CareLog, CareType, Plant, Species } from '../types';
+import { CareLog, CareType, Plant, Species, WaterRegime } from '../types';
+import { waterRegimeSentence } from '../care/facts';
 
 // Care types that can have reminders (matches the quick-log actions on
 // PlantDetailScreen; 'clean'/'other' have no species schedules).
@@ -35,13 +36,21 @@ export function isInSeason(careType: CareType, date: Date): boolean {
   return !months || months.includes(date.getMonth() + 1);
 }
 
-// 'check', not 'water': the interval is a prior on when a check will probably
-// come back positive, not an instruction to pour. The finger test decides.
-// 'inspect', not 'repot', for the same reason: the February check-up asks you
-// to look at the roots; repotting is one of three ways the look can end.
+// What a reminder asks for, in a batched day's list: always a check, never
+// the chore. 'check', not 'water': the interval is a prior on when a check
+// will probably come back positive, not an instruction to pour. The same for
+// the rest: a feeding window opening is a reason to look and decide, not a
+// calendar that knows the plant is hungry (CONTEXT.md: the app schedules
+// checks, never actions). 'root check', not 'repot': the February check-up
+// asks you to look at the roots; repotting is one of three ways it can end.
 export const CARE_VERBS: Record<string, string> = {
-  water: 'check', fertilize: 'fertilize',
-  prune: 'prune', repot: 'inspect', rotate: 'rotate',
+  water: 'check', fertilize: 'feeding check',
+  prune: 'pruning check', repot: 'root check', rotate: 'turning check',
+};
+
+/** The window a single non-water reminder says has opened. */
+const WINDOW_WORD: Record<string, string> = {
+  fertilize: 'feeding', prune: 'pruning', rotate: 'turning',
 };
 
 /**
@@ -85,6 +94,10 @@ export interface ReminderItem {
   /** Whole days between the last care of this type (or acquisition) and the
    *  delivery slot — "it's been 7 days" in the check copy. */
   daysSinceCare?: number;
+  /** For a water check: the species' own regime and check depth, so the
+   *  check says what its sources say rather than a depth nobody published. */
+  waterRegime?: WaterRegime | null;
+  checkDepthCm?: number | null;
 }
 
 export interface ReminderBatch {
@@ -218,6 +231,10 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
         careType,
         daysSinceCare: Math.max(
           0, Math.round((slot.getTime() - anchorMs) / 86_400_000)),
+        ...(careType === 'water' ? {
+          waterRegime: species.water_regime ?? null,
+          checkDepthCm: species.water_check_depth_cm ?? null,
+        } : {}),
       });
     }
   }
@@ -243,30 +260,52 @@ function composeMessage(items: ReminderItem[]): { title: string; body: string } 
       };
     }
     if (it.careType === 'water') {
-      // The check copy: elapsed time as context, the finger test as the
-      // instruction, watering only as its consequence. Never "time to water" —
-      // that's the sentence that made people pour on damp soil.
+      // The check copy: elapsed time as context, the soil as the instruction,
+      // watering only as its consequence. Never "time to water" — that's the
+      // sentence that made people pour on damp soil.
       const days = it.daysSinceCare ?? 0;
       const been = days === 1 ? "it's been 1 day" : `it's been ${days} days`;
       return {
         title: `🪴 ${it.nickname} could use a look`,
-        body: `Check ${it.nickname} — ${been}. Push a finger 2 inches in; `
-          + 'water thoroughly only if it\'s dry down there.',
+        body: `Check ${it.nickname} — ${been}. ${waterCheck(it)}`,
       };
     }
+    // The window has opened; whether the plant wants anything is the
+    // caretaker's call, made by looking — never "time to fertilize".
+    const window = WINDOW_WORD[it.careType];
     return {
-      title: `🪴 ${it.nickname} needs some care`,
-      body: `Time to ${CARE_VERBS[it.careType] ?? it.careType} ${it.nickname}.`,
+      title: `🪴 Time to look at ${it.nickname}`,
+      body: window
+        ? `${it.nickname} has reached its ${window} window. `
+          + 'Have a look and decide whether it needs it.'
+        : `${it.nickname} could use a look. Decide whether it needs anything.`,
     };
   }
   const plantCount = new Set(items.map((i) => i.plantId)).size;
   const shown = items.slice(0, 6)
-    .map((i) => `${i.nickname} — ${CARE_VERBS[i.careType] ?? i.careType}`);
+    .map((i) => `${i.nickname} — ${CARE_VERBS[i.careType] ?? 'check'}`);
   const more = items.length > 6 ? ` +${items.length - 6} more` : '';
   return {
     title: plantCount === 1
-      ? `🪴 ${items[0].nickname} needs some care`
-      : `🪴 ${plantCount} plants need care today`,
+      ? `🪴 ${items[0].nickname} could use a look`
+      : `🪴 ${plantCount} plants could use a look today`,
     body: shown.join(' · ') + more,
   };
+}
+
+/** How to check the soil, from the species' own record and nothing else. A
+ *  plant kept evenly moist is watered when the surface dries; one with a
+ *  published check depth is felt at that depth; otherwise the check says to
+ *  feel the soil and stops — no depth the catalog never gave. */
+export function waterCheck(it: Pick<ReminderItem, 'waterRegime' | 'checkDepthCm'>): string {
+  const regime = it.waterRegime
+    ? waterRegimeSentence({ water_regime: it.waterRegime } as Species) : null;
+  if (regime && (it.waterRegime === 'keep_moist' || it.waterRegime === 'keep_barely_moist')) {
+    return `Its sources say ${regime}; water if the surface feels dry.`;
+  }
+  if (it.checkDepthCm != null && it.checkDepthCm > 0) {
+    return `Feel the soil ${it.checkDepthCm} cm down; water only if it's dry there.`;
+  }
+  if (regime) return `Its sources say ${regime}; feel the soil before you water.`;
+  return 'Feel the soil before you water.';
 }

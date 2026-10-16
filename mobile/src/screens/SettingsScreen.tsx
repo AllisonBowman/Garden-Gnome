@@ -28,13 +28,25 @@ import { CareType } from '../types';
 const SHOW_BACKEND_OVERRIDE =
   __DEV__ || process.env.EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE === '1';
 
+// Each switch is for a kind of check: a reminder asks the caretaker to look,
+// never to do the chore, because no schedule knows what a plant needs today.
 const REMINDER_TOGGLES: { type: CareType; icon: string; label: string }[] = [
-  { type: 'water',     icon: '💧', label: 'Watering'    },
-  { type: 'fertilize', icon: '🌿', label: 'Fertilizing' },
-  { type: 'prune',     icon: '✂️', label: 'Pruning'     },
+  { type: 'water',     icon: '💧', label: 'Watering checks' },
+  { type: 'fertilize', icon: '🌿', label: 'Feeding checks'  },
+  { type: 'prune',     icon: '✂️', label: 'Pruning checks'  },
   { type: 'repot',     icon: '🪴', label: 'Spring repot check' },
-  { type: 'rotate',    icon: '🔄', label: 'Rotating'    },
+  { type: 'rotate',    icon: '🔄', label: 'Turning checks'  },
 ];
+
+/** What the reminders promise, and only what the planner keeps: a plan a
+ *  month ahead, rebuilt when the app opens or care is logged, for plants
+ *  whose species has a check schedule (notifications/plan.ts). */
+const REMINDERS_HINT =
+  'Get a nudge to look at a plant when it reaches its usual window, based on its '
+  + 'species’ check schedule and your care log. Plants due the same day share one '
+  + 'notification. A plant whose species has no check schedule on record gets no '
+  + 'reminders. Reminders are planned a month ahead each time you open '
+  + 'PlantAdvocate, so open it at least once a month to keep them coming.';
 
 // Cross-platform confirm: Alert.alert buttons are no-ops on react-native-web
 function confirmDialog(
@@ -286,7 +298,7 @@ export default function SettingsScreen() {
         <Card.Content>
           <Text variant="bodySmall" style={styles.hint}>
             {remindersSupported
-              ? 'Get a notification when plants come due, based on each species’ schedule and your actual care history. Plants due the same day share one notification.'
+              ? REMINDERS_HINT
               : 'Reminders are available in the mobile app (iOS and Android).'}
           </Text>
           {REMINDER_TOGGLES.map((t) => (

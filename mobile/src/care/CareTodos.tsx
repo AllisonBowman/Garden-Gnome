@@ -13,12 +13,13 @@ import { useCareTasks, CARE_TASKS_QUERY_KEY } from './useCareTasks';
 import { careTaskDueLabel, unreadLine, unscheduledLine } from './schedule';
 import { CARE_PRESENTATION } from './labels';
 
-// The "what needs doing right now" list at the top of the Plants tab: every
-// plant × care-type that is overdue or due today, most-overdue first. Checking
-// a row logs that care (which re-anchors its schedule, so the row clears) and
-// deep-links into the plant. Upcoming care is intentionally NOT shown here —
-// that lives on the growing area calendar; this list stays a short, honest
-// "do these today".
+// The "what to look at today" list at the top of the Plants tab: every
+// plant × care-type whose window is open or past, most-overdue first. Each
+// row asks for a check, never the chore; logging what the check ended in
+// re-anchors its schedule, so the row clears, and the row deep-links into
+// the plant. Upcoming checks are intentionally NOT shown here — they live on
+// the growing area calendar; this list stays a short, honest "look at these
+// today", and says which plants it leaves out.
 /** How many to-do rows this header renders before summarising the rest. */
 const MAX_VISIBLE_TODOS = 8;
 
@@ -143,7 +144,7 @@ export default function CareTodos({
     <>
       <Card style={styles.card} mode="elevated">
         <Card.Title
-          title="To-do today"
+          title="Checks for today"
           titleVariant="titleMedium"
           titleStyle={styles.cardTitle}
           right={() => (
@@ -166,7 +167,7 @@ export default function CareTodos({
                 >
                   <Text style={styles.rowEmoji}>{p.icon}</Text>
                   <View style={styles.rowText}>
-                    <Text style={styles.rowTitle}>{p.verb} {t.nickname}</Text>
+                    <Text style={styles.rowTitle}>{p.check(t.nickname)}</Text>
                     <Text style={[
                       styles.rowWhen,
                       t.status === 'overdue' && { color: palette.warn },
@@ -251,7 +252,7 @@ export default function CareTodos({
                     // round-trip at a time — fine for three plants, unusable
                     // for a garden.
                     onPress={() => logMutation.mutate({ plantId: t.plantId, careType: t.careType, key })}
-                    accessibilityLabel={`Mark ${p.verb} ${t.nickname} done`}
+                    accessibilityLabel={`Log ${t.nickname}: ${p.done.toLowerCase()}`}
                   />
                 )}
               </View>
