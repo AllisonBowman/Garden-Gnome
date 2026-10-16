@@ -102,6 +102,53 @@ def test_minted_row_toxicity_is_unknown_not_safe(api):
     assert "treat it as unknown rather than safe" in listed["toxicity_description"]
 
 
+def test_both_routes_name_people_from_the_cited_passages(api):
+    """The hazard to people sits in the claim passages, server-side. The
+    sentence and the edibility note state the fact; neither route carries
+    the passage (ADR 0003)."""
+    import json
+
+    from app.models.models import Authority, Claim
+
+    client, headers, engine = api
+    passage = ("Poisonous to Humans: Poison Severity: High Poison Symptoms: "
+               "HIGHLY TOXIC, MAY BE FATAL IF EATEN!")
+    with Session(engine) as s:
+        authority = Authority(name="Passage Test Extension", tier=2)
+        s.add(authority)
+        s.flush()
+        s.add(Claim(subject="Solanum passagetestii", field="toxicity_detail",
+                    value_json=json.dumps("prose"), authority_id=authority.id,
+                    citation_url="https://example.test/passage", quote=passage))
+        s.commit()
+    (sid,) = store(engine, minted(
+        "Solanum passagetestii", "Passagetest Nightshade",
+        toxic_to_pets=True, is_edible=True))
+
+    detail = client.get(f"/species/{sid}", headers=headers).json()
+    listed = {sp["id"]: sp for sp in
+              client.get("/species/", headers=headers).json()}[sid]
+    for body in (detail, listed):
+        assert body["toxicity_description"].startswith(
+            "⚠️ Seriously toxic to pets and people.")
+        assert "Passage Test Extension rates it high severity." in \
+            body["toxicity_description"]
+        assert body["edibility_note"].startswith("Some parts are eaten")
+        assert "FATAL" not in json.dumps(body)
+
+
+def test_an_edible_plant_with_nothing_against_it_has_no_note_key(api):
+    client, headers, engine = api
+    (sid,) = store(engine, minted("Ocimum notetestii", "Notetest Basil",
+                                  is_edible=True))
+    listed = {sp["id"]: sp for sp in
+              client.get("/species/", headers=headers).json()}[sid]
+    assert listed["is_edible"] is True
+    assert "edibility_note" not in listed  # absent, as every null on the list is
+    assert client.get(f"/species/{sid}", headers=headers).json()[
+        "edibility_note"] is None
+
+
 def test_detail_carries_values_provenance_and_named_sources_only(api):
     client, headers, engine = api
     (sid,) = store(engine, minted(
