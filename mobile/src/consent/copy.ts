@@ -166,8 +166,8 @@ export const DATA_FLOWS: DataFlow[] = [
       + 'when you got it and how it looked then, the dates of your care, and '
       + 'its growing area’s type, city, region and country. There is no name, '
       + 'no email, no nicknames, no notes and no coordinates. Identifiers are '
-      + 'rotated on every export, so two exports can’t be joined back into one '
-      + 'garden. If you don’t join, none of your data is counted at all.',
+      + 'rotated on every export, so separate exports can’t be joined back into '
+      + 'one garden. If you don’t join, none of your data is counted at all.',
   },
 ];
 
@@ -214,7 +214,7 @@ export const CENSUS_CONSENT = {
   on:
     'Your plantings are counted: species, how many, care dates, and your '
     + 'growing area’s type and city. No name, no email, no notes, no '
-    + 'coordinates — and identifiers are rotated on every export, so two '
+    + 'coordinates — and identifiers are rotated on every export, so separate '
     + 'counts can’t be joined back into one garden.',
   off:
     'Your data is not counted. Turning this on helps the care advice get better '
