@@ -29,6 +29,8 @@ import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
 import { CareFactList, CareStatusLine, LegacyStatRow } from '../components/CareFacts';
 import AreaFitCard from '../components/AreaFitCard';
+import EmptyState from '../components/EmptyState';
+import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
 import { NO_SCHEDULE_LINE, hasCheckSchedule } from '../care/schedule';
 import { fetchSpecies } from '../api/species';
@@ -65,7 +67,9 @@ export default function PlantDetailScreen() {
   const queryClient = useQueryClient();
   const [loggingType, setLoggingType] = useState<CareType | null>(null);
 
-  const { data: plant, isLoading } = useQuery({
+  const {
+    data: plant, isLoading, isError, refetch, isFetching,
+  } = useQuery({
     queryKey: ['plant', plantId],
     queryFn: () => fetchPlant(plantId),
   });
@@ -234,8 +238,23 @@ export default function PlantDetailScreen() {
     diagnoseMutation.mutate(res.assets[0]);
   };
 
-  if (isLoading || !plant) {
+  if (isLoading) {
     return <ActivityIndicator style={styles.center} size="large" />;
+  }
+  // Failed, not loading: say so and offer a retry rather than spinning on.
+  if (isError || !plant) {
+    return (
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('this plant')}
+          body={LOAD_FAILED.body}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
+      </View>
+    );
   }
 
   const { species } = plant;

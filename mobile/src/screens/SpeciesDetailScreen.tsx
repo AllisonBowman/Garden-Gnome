@@ -15,6 +15,8 @@ import {
   CareFactList, CareSourceRows, CareStatusLine, LegacyStatRow,
 } from '../components/CareFacts';
 import AreaFitCard from '../components/AreaFitCard';
+import EmptyState from '../components/EmptyState';
+import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
 
 type Route = RouteProp<SpeciesStackParamList, 'SpeciesDetail'>;
 
@@ -29,7 +31,9 @@ export default function SpeciesDetailScreen() {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
-  const { data: species, isLoading } = useQuery({
+  const {
+    data: species, isLoading, isError, refetch, isFetching,
+  } = useQuery({
     queryKey: ['species', speciesId],
     queryFn: () => fetchSpecies(speciesId),
   });
@@ -44,8 +48,23 @@ export default function SpeciesDetailScreen() {
   });
   const area = growingAreaId != null ? areas.find((a) => a.id === growingAreaId) ?? null : null;
 
-  if (isLoading || !species) {
+  if (isLoading) {
     return <ActivityIndicator style={styles.center} size="large" />;
+  }
+  // Failed, not loading: say so and offer a retry rather than spinning on.
+  if (isError || !species) {
+    return (
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('this species')}
+          body={LOAD_FAILED.body}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
+      </View>
+    );
   }
 
   // Which cards have anything to say. A row minted from the claim tranche

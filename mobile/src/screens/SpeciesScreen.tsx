@@ -15,6 +15,8 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Pill from '../components/Pill';
 import Eyebrow from '../components/Eyebrow';
+import EmptyState from '../components/EmptyState';
+import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
 
 type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'SpeciesList'>;
 
@@ -74,7 +76,9 @@ export default function SpeciesScreen() {
   const [search, setSearch] = useState('');
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
-  const { data: speciesList = [], isLoading, isError } = useQuery({
+  const {
+    data: speciesList = [], isLoading, isError, refetch, isFetching,
+  } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
@@ -95,13 +99,20 @@ export default function SpeciesScreen() {
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
 
-  if (isError) {
+  // A failed first load gets a way out: the list (and its pull-to-refresh)
+  // isn't rendered here, so without a button nothing on the tab could ever
+  // fetch again. A failed background refresh keeps the list it already has.
+  if (isError && speciesList.length === 0) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.error}>
-          Could not load species.{' '}
-          {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
-        </Text>
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('the catalog')}
+          body={LOAD_FAILED.body}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
       </View>
     );
   }
@@ -161,6 +172,5 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   scientific: { fontStyle: 'italic', color: p.sub, marginTop: 2 },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6, gap: 4 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  error: { color: p.warn, textAlign: 'center' },
   empty: { textAlign: 'center', color: p.faint, marginTop: 48 },
 });

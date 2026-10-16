@@ -19,6 +19,8 @@ import {
 import { GrowingAreasStackParamList } from '../../App';
 import WeatherCredit from '../components/WeatherCredit';
 import AddressPicker from '../components/AddressPicker';
+import EmptyState from '../components/EmptyState';
+import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
 import { ResolvedPlace } from '../location/geocode';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -80,7 +82,9 @@ export default function GrowingAreaDetailScreen() {
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const queryClient = useQueryClient();
 
-  const { data: env, isLoading } = useQuery({
+  const {
+    data: env, isLoading, isError, refetch, isFetching,
+  } = useQuery({
     queryKey: ['growingArea', growingAreaId],
     queryFn: () => fetchGrowingArea(growingAreaId),
   });
@@ -152,8 +156,23 @@ export default function GrowingAreaDetailScreen() {
     ),
   });
 
-  if (isLoading || !env) {
+  if (isLoading) {
     return <ActivityIndicator style={styles.center} size="large" />;
+  }
+  // Failed, not loading: say so and offer a retry rather than spinning on.
+  if (isError || !env) {
+    return (
+      <View style={styles.scroll}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('this growing area')}
+          body={LOAD_FAILED.body}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
+      </View>
+    );
   }
 
   const weather = weatherResp?.available ? weatherResp.weather : null;
