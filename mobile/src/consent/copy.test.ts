@@ -132,8 +132,9 @@ test('the voice flow is true of the speech module and the capture screen', () =>
   expect(capture).toMatch(/sends audio to Apple/);
 
   // Only the confirmed plants reach the server: the bulk payload is built
-  // from the drafts' species, count and spot, never the transcript.
-  const payload = capture.match(/createPlantsBulk\(ready\.map\([\s\S]*?\}\)\)\)/);
+  // from the drafts' species, count and spot, never the transcript. The save
+  // goes out in batches (capture/bulkSave.ts), each built the same way.
+  const payload = capture.match(/createPlantsBulk\(\s*batch\.map\([\s\S]*?\}\)\)/);
   expect(payload).not.toBeNull();
   expect(payload![0]).not.toMatch(/\bheard\b/);
   const keys = [...payload![0].matchAll(/(\w+):/g)].map((m) => m[1]).sort();
