@@ -30,7 +30,10 @@ export const SLIDES: Slide[] = [
   {
     emoji: '💧',
     title: 'Add plants, log care',
-    body: "Add each plant where it grows, then tap to log watering, feeding, and more. PlantAdvocate keeps track so you don't have to.",
+    // Not "keeps track so you don't have to": most species have no check
+    // schedule on record yet, and for those nothing is tracked at all.
+    body: 'Add each plant where it grows, then tap to log watering, feeding, and more. '
+      + 'Where its species has a check schedule, PlantAdvocate tells you when it’s worth a look.',
   },
   {
     emoji: '🧙',
