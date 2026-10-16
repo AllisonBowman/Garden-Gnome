@@ -263,6 +263,56 @@ async def test_fetch_weather_falls_back_to_openmeteo_when_nws_empty(monkeypatch)
         get_settings.cache_clear()
 
 
+@pytest.mark.asyncio
+async def test_no_provider_is_sent_more_than_two_decimal_places(monkeypatch):
+    """A garden's stored coordinate can be precise enough to find the house.
+    WeatherKit, NWS and Open-Meteo are each asked about the ~1 km square
+    around it, never the point itself. Every provider is made to fail so the
+    chain walks all three, and every outgoing request is read."""
+    import re
+
+    import httpx
+    from app.config import get_settings
+
+    monkeypatch.setenv("APPLE_TEAM_ID", "TEAM123456")
+    monkeypatch.setenv("WEATHERKIT_KEY_ID", "KEY7654321")
+    monkeypatch.setenv("WEATHERKIT_SERVICE_ID", "com.example.plantadvocate.weather")
+    monkeypatch.setenv("WEATHERKIT_PRIVATE_KEY", _ec_private_key_pem().replace("\n", "\\n"))
+    get_settings.cache_clear()
+    weather._token_cache.update(jwt=None, exp=0.0)
+    weather._weather_cache.clear()
+
+    seen: list[httpx.URL] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request.url)
+        return httpx.Response(503)
+
+    real_client = httpx.AsyncClient
+
+    def recording_client(*args, **kwargs):
+        kwargs["transport"] = httpx.MockTransport(handler)
+        return real_client(*args, **kwargs)
+
+    monkeypatch.setattr(weather.httpx, "AsyncClient", recording_client)
+    try:
+        assert await weather.fetch_weather(39.290613, -76.612189) is None
+    finally:
+        get_settings.cache_clear()
+        weather._token_cache.update(jwt=None, exp=0.0)
+
+    hosts = {url.host for url in seen}
+    assert hosts == {"weatherkit.apple.com", "api.weather.gov", "api.open-meteo.com"}
+    for url in seen:
+        text = str(url)
+        assert "39.290613" not in text and "76.612189" not in text
+        assert "39.2906" not in text and "76.6122" not in text
+        numbers = re.findall(r"-?\d+\.\d+", httpx.URL(text).path + "?"
+                             + str(url.query, "ascii"))
+        assert {"39.29", "-76.61"} <= set(numbers), text
+        assert all(len(n.split(".")[1]) <= 2 for n in numbers), text
+
+
 # --- endpoint -------------------------------------------------------------
 
 @pytest.fixture()
