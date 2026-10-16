@@ -74,6 +74,22 @@ test('exposureSummary distinguishes the four exposure combos', () => {
     .toMatch(/temperature swings/i);
 });
 
+test('a partly covered outdoor spot is not described as open to the sky', () => {
+  const porch = exposureSummary(makeEnv({ shelter: 'partial', temp_exposure: 'outdoor' }));
+  expect(porch).toMatch(/^Partly covered and outdoors/);
+  expect(porch).toMatch(/some of the rain/);
+  expect(porch).not.toMatch(/full forecast|open to the sky/i);
+});
+
+test('rain is a reason to check the soil, never to skip watering', () => {
+  const w = makeWeather([day({ precip_chance_pct: 70 })]);
+  const open = translateWeather(makeEnv({ shelter: 'exposed' }), w).join('\n');
+  expect(open).toMatch(/it may water unsheltered plants here; check the soil afterwards/);
+  const porch = translateWeather(makeEnv({ shelter: 'partial' }), w).join('\n');
+  expect(porch).toMatch(/some of it may reach plants here; check the soil afterwards/);
+  for (const lines of [open, porch]) expect(lines).not.toMatch(/skip/i);
+});
+
 // --- translateWeather --------------------------------------------------------
 
 test('exposed/outdoor/full-sun surfaces rain, heat and UV plus day-length', () => {

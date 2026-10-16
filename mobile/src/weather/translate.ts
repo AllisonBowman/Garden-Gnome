@@ -42,6 +42,11 @@ export function exposureSummary(env: GrowingArea): string {
   if (sheltered && indoor) {
     return 'Sheltered and indoors — the forecast barely reaches your plants here. Treat weather as context, not a to-do.';
   }
+  // A covered porch or balcony is not open sky: the server's own reading of
+  // "partial" is some rain and wind, never the full forecast.
+  if (env.shelter === 'partial' && !indoor) {
+    return 'Partly covered and outdoors — plants here feel the temperature and some of the rain.';
+  }
   if (!sheltered && !indoor) {
     return 'Open to the sky and outdoors — plants here feel the full forecast.';
   }
@@ -68,9 +73,15 @@ export function translateWeather(env: GrowingArea, weather: Weather): string[] {
   }
 
   if (unsheltered) {
+    // A chance of rain is not a watering, so it never becomes "skip a round":
+    // the soil after the rain decides. Under partial cover only some of it
+    // arrives at all.
     const wet = days.find((d) => (d.precip_chance_pct ?? 0) >= 60);
     if (wet) {
-      lines.push(`🌧️ Rain likely (${wet.precip_chance_pct}% ${weekday(wet.date)}) — the sky waters unsheltered plants here; you can skip a round.`);
+      const reach = env.shelter === 'partial'
+        ? 'some of it may reach plants here'
+        : 'it may water unsheltered plants here';
+      lines.push(`🌧️ Rain likely (${wet.precip_chance_pct}% ${weekday(wet.date)}) — ${reach}; check the soil afterwards before you water again.`);
     }
   }
   if (outdoor) {
