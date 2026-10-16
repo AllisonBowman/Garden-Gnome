@@ -29,6 +29,20 @@ batch mode rebuilds them to rename their own column. The upgrade checks that
 it worked rather than trusting it -- a dangling reference here would orphan
 every plant.
 
+The link check runs twice, and the first time before any DDL. SQLite DDL is
+not transactional under this Alembic setup ("Will assume non-transactional
+DDL"), so a check that only ran at the end failed *after* the rename had
+landed: the file was left half-renamed with `alembic_version` still at 0016,
+and every later boot died on `no such table: environment`. A plant or
+stewardship record that already pointed at a missing area is now refused up
+front, naming the rows, while the file is still exactly 0016 -- fix the rows
+and boot again. The check covers only the links this migration rewrites (the
+two `environment_id` columns). A dangling reference elsewhere, say a care log
+whose plant is gone, is not something a rename can make worse, and refusing
+to boot over it would take the API down for nothing; production has never
+enforced foreign keys, so such rows are possible. The second check, after the
+DDL, proves the rename itself kept every link.
+
 `ix_environment_user_id` is renamed alongside. An index that outlives the name
 of its table is how the next person reading `PRAGMA index_list` concludes
 something was left half-done.
@@ -70,7 +84,54 @@ def _assert_points_at(table: str, target: str) -> None:
             "migrate no further.")
 
 
+def _dangling_links(target: str) -> list[str]:
+    """Each REFERRERS row whose area link names a `target` row that does not
+    exist, as a sentence an operator can act on. Other foreign keys in those
+    tables are not this migration's business and are not reported."""
+    bind = op.get_bind()
+    found = []
+    for table in REFERRERS:
+        columns = {row[0]: row[3] for row in bind.execute(
+            sa.text(f"PRAGMA foreign_key_list({table})"))}
+        for _, rowid, parent, fkid in bind.execute(
+                sa.text(f"PRAGMA foreign_key_check({table})")):
+            if parent != target:
+                continue
+            column = columns.get(fkid, "?")
+            value = bind.execute(
+                sa.text(f"SELECT {column} FROM {table} WHERE rowid = :r"),
+                {"r": rowid}).scalar() if column != "?" else "?"
+            found.append(f"{table} row {rowid} has {column} = {value}, "
+                         f"but {target} has no row {value}")
+    return found
+
+
+def _refuse_dangling_links(target: str, verdict: str) -> None:
+    """Raise, naming the rows, if any area link points at a missing `target`."""
+    if op.get_bind().dialect.name != "sqlite":
+        return  # Postgres enforces these; nothing can dangle.
+    found = _dangling_links(target)
+    if not found:
+        return
+    shown = "; ".join(found[:20])
+    more = f" (and {len(found) - 20} more)" if len(found) > 20 else ""
+    raise RuntimeError(
+        f"0017: {len(found)} row(s) point at a missing {target}: "
+        f"{shown}{more}. {verdict}")
+
+
+#: What an operator reads when the first check refuses.
+REFUSED_BEFORE_DDL = (
+    "Nothing was changed: the database is still at 0016. Point each row at a "
+    "real area (a plant's link may also be set to NULL, or a stewardship "
+    "record deleted), then boot again.")
+
+
 def upgrade() -> None:
+    # Before any DDL: SQLite won't roll a rename back, so this is the last
+    # moment a refusal leaves the file exactly as 0016 left it.
+    _refuse_dangling_links("environment", REFUSED_BEFORE_DDL)
+
     op.rename_table("environment", "growingarea")
     for table in REFERRERS:
         _assert_points_at(table, "growingarea")
@@ -85,12 +146,13 @@ def upgrade() -> None:
             batch_op.alter_column(
                 "environment_id", new_column_name="growing_area_id")
 
-    if op.get_bind().dialect.name == "sqlite":
-        assert op.get_bind().execute(
-            sa.text("PRAGMA foreign_key_check")).fetchall() == []
+    _refuse_dangling_links(
+        "growingarea", "The rename itself broke these links; migrate no further.")
 
 
 def downgrade() -> None:
+    _refuse_dangling_links(
+        "growingarea", "Nothing was changed: the database is still at 0017.")
     for table in REFERRERS:
         with op.batch_alter_table(table, schema=None) as batch_op:
             batch_op.alter_column(
