@@ -590,7 +590,9 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   },
   adviceText: { lineHeight: 21, color: p.ink },
   gnomeVoiceText: { fontStyle: 'italic', fontSize: 14.5 },
-  adviceWarningText: { color: p.warn, fontWeight: '600' },
+  // After the gnome's italic note, a safety line stays upright: it is the
+  // engine's own words, appended verbatim, not part of the restyle.
+  adviceWarningText: { color: p.warn, fontWeight: '600', fontStyle: 'normal' },
   metaPill: { marginTop: 2 },
   resultMetaRow: {
     flexDirection: 'row',
