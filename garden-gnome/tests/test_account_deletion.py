@@ -190,13 +190,18 @@ def test_census_export_unaffected_by_deleted_users(
     doomed_plant = api.client.post("/plants/", json={
         "nickname": "Gone", "species_id": _species_id(api)}, headers=dh).json()
 
-    before = api.client.get("/census/export", headers=kh).json()
-    uuids_before = {p["plant_uuid"] for p in before["plants"]}
-    assert {keeper_plant["plant_uuid"], doomed_plant["plant_uuid"]} <= uuids_before
+    from tests import census_operator
+    census_operator.pin_salt(monkeypatch)
+    keeper_ref = census_operator.ref(keeper_plant["plant_uuid"])
+    doomed_ref = census_operator.ref(doomed_plant["plant_uuid"])
+
+    before = census_operator.export(api.client, monkeypatch)
+    refs_before = {p["plant_ref"] for p in before["plants"]}
+    assert {keeper_ref, doomed_ref} <= refs_before
 
     assert api.client.delete("/me", headers=dh).status_code == 204
 
-    after = api.client.get("/census/export", headers=kh).json()
-    uuids_after = {p["plant_uuid"] for p in after["plants"]}
-    assert keeper_plant["plant_uuid"] in uuids_after
-    assert doomed_plant["plant_uuid"] not in uuids_after
+    after = census_operator.export(api.client, monkeypatch)
+    refs_after = {p["plant_ref"] for p in after["plants"]}
+    assert keeper_ref in refs_after
+    assert doomed_ref not in refs_after

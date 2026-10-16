@@ -12,6 +12,7 @@ from app.models.models import (
     GrowingArea, GrowingAreaType, Plant, Species, User,
 )
 from app.services import tokens
+from tests import census_operator
 
 
 @pytest.fixture()
@@ -90,7 +91,6 @@ def test_unauthenticated_is_401(iso):
     assert iso.client.get("/plants/").status_code == 401
     assert iso.client.get("/growing-areas/").status_code == 401
     assert iso.client.get("/census/summary").status_code == 401
-    assert iso.client.get("/census/export").status_code == 401
 
 
 def test_plant_list_is_filtered(iso):
@@ -265,36 +265,55 @@ def test_census_summary_is_callers_own(iso):
     assert r.json()["total_plants"] == 1  # only A's plant, not B's
 
 
-def test_export_excludes_non_opted_in_users(iso):
+def test_export_excludes_non_opted_in_users(iso, monkeypatch):
     with iso.db() as s:
-        a_uuid = s.get(Plant, iso.a["plant_id"]).plant_uuid
-        b_uuid = s.get(Plant, iso.b["plant_id"]).plant_uuid
+        a_ref = census_operator.ref(s.get(Plant, iso.a["plant_id"]).plant_uuid)
+        b_ref = census_operator.ref(s.get(Plant, iso.b["plant_id"]).plant_uuid)
+    census_operator.pin_salt(monkeypatch)
 
     # Neither A nor B has opted in -> neither's plants may be exported
     # (assert on OUR plants, not global emptiness — the test DB is shared
     # across modules and other tests may have opted-in users of their own)
-    r = iso.client.get("/census/export", headers=iso.a["headers"])
-    assert r.status_code == 200
-    uuids = {p["plant_uuid"] for p in r.json()["plants"]}
-    assert a_uuid not in uuids
-    assert b_uuid not in uuids
+    refs = {p["plant_ref"]
+            for p in census_operator.export(iso.client, monkeypatch)["plants"]}
+    assert a_ref not in refs
+    assert b_ref not in refs
 
     # A opts in via PATCH /me; B stays out
     p = iso.client.patch(
         "/me", json={"census_opt_in": True}, headers=iso.a["headers"])
     assert p.status_code == 200 and p.json()["census_opt_in"] is True
 
-    uuids = {p["plant_uuid"] for p in iso.client.get(
-        "/census/export", headers=iso.a["headers"]).json()["plants"]}
-    assert a_uuid in uuids
-    assert b_uuid not in uuids  # B never opted in — never exported
+    refs = {p["plant_ref"]
+            for p in census_operator.export(iso.client, monkeypatch)["plants"]}
+    assert a_ref in refs
+    assert b_ref not in refs  # B never opted in — never exported
 
 
-def test_export_has_no_stable_env_ids_and_no_latlng(iso):
+def test_a_signed_in_user_cannot_read_the_export(iso, monkeypatch):
+    """Every participant's records are in it; a login is not enough."""
+    p = iso.client.patch(
+        "/me", json={"census_opt_in": True}, headers=iso.a["headers"])
+    assert p.status_code == 200
+    # Unconfigured, the routes do not exist, sign-in or no sign-in.
+    monkeypatch.delenv("CENSUS_OPERATOR_TOKEN", raising=False)
+    assert iso.client.get(
+        "/census/export", headers=iso.a["headers"]).status_code == 404
+    assert iso.client.post(
+        "/census/sync", headers=iso.a["headers"]).status_code == 404
+    # Configured, a user's bearer token is still not the operator credential.
+    census_operator.as_operator(monkeypatch)
+    assert iso.client.get(
+        "/census/export", headers=iso.a["headers"]).status_code == 401
+    assert iso.client.post(
+        "/census/sync", headers=iso.a["headers"]).status_code == 401
+
+
+def test_export_has_no_stable_env_ids_and_no_latlng(iso, monkeypatch):
     iso.client.patch(
         "/me", json={"census_opt_in": True}, headers=iso.a["headers"])
-    e1 = iso.client.get("/census/export", headers=iso.a["headers"]).json()
-    e2 = iso.client.get("/census/export", headers=iso.a["headers"]).json()
+    e1 = census_operator.export(iso.client, monkeypatch)
+    e2 = census_operator.export(iso.client, monkeypatch)
 
     def env_refs(body):
         return {p["growing_area"]["ref"]

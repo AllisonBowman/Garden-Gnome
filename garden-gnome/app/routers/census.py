@@ -4,21 +4,36 @@ Privacy model (decision 3, 2026-07-15):
 - Participation is per-user consent: only users with census_opt_in=True
   contribute to /census/export and /census/sync. Consent is toggled via
   PATCH /me.
-- No stable pseudonymous identifiers: growing_area UUIDs are rotated fresh on
-  every export (consistent within one export so stewardship chains still
-  read, but never linkable across exports).
+- Operator-only: the export holds every participant's records, so it is not
+  a user route. /census/export and /census/sync answer only a request that
+  carries the operator credential (X-Operator-Token, compared in constant
+  time with CENSUS_OPERATOR_TOKEN). With no credential configured they
+  answer 404, as if they did not exist. A signed-in user is not an
+  operator, and the app offers no way to call either.
+- No stable pseudonymous identifiers: every identifier in an export is minted
+  for that export. Growing areas get fresh UUIDs, and plants get a hash of
+  their UUID under a salt drawn for the export and then discarded. Both are
+  consistent within one payload (stewardship chains and splits still read)
+  but never linkable across exports.
 - No precise location: lat/lng never leave the server; city/region/country
   only, and only for opted-in users.
+- No precise times: care and stewardship events go out as dates, and when a
+  plant was acquired as a month. A microsecond timestamp is unique enough to
+  join two exports on.
 - No human identity: no nicknames, no personal notes, no emails, ever.
 
 /census/summary is the caller's own view of their garden — it requires auth
 and covers only their data.
 """
+import hashlib
+import hmac
 import os
+import secrets
 from datetime import datetime
+from typing import Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from sqlmodel import Session, select
 
 from app.db.database import get_session
@@ -93,20 +108,54 @@ def _opted_in_user_ids(session: Session) -> set[str]:
     return set(rows)
 
 
-@router.get("/export")
-def census_export(
-    user: User = Depends(get_current_user),
-    session: Session = Depends(get_session),
-):
+#: The secret an operator presents to read or push the export. Unset (the
+#: default) switches both routes off.
+OPERATOR_TOKEN_ENV = "CENSUS_OPERATOR_TOKEN"
+
+
+def require_operator(
+    x_operator_token: Optional[str] = Header(default=None),
+) -> None:
+    """Let the request through only with the operator credential.
+
+    No credential configured: 404, the same answer as a route that does not
+    exist, so an unconfigured server does not advertise one. Configured but
+    absent or wrong: 401. Compared with hmac.compare_digest, so the time a
+    wrong guess takes says nothing about how close it was."""
+    expected = os.getenv(OPERATOR_TOKEN_ENV, "")
+    if not expected:
+        raise HTTPException(status_code=404, detail="Not Found")
+    if not x_operator_token or not hmac.compare_digest(
+            x_operator_token.encode(), expected.encode()):
+        raise HTTPException(status_code=401, detail="Operator credential required")
+
+
+def _new_export_salt() -> bytes:
+    """A fresh secret per export, never stored. A seam for tests."""
+    return secrets.token_bytes(32)
+
+
+def plant_ref(salt: bytes, plant_uuid: str) -> str:
+    """A plant's identifier within one export: its UUID hashed under that
+    export's salt. The same plant (and a split's parent) reads the same all
+    through one payload; with the salt gone, no two exports share a ref."""
+    return hmac.new(salt, plant_uuid.encode(), hashlib.sha256).hexdigest()
+
+
+def build_export(session: Session) -> dict:
     """Anonymized export of OPTED-IN users' plant records.
 
-    GrowingArea identifiers are rotated per export: consistent within this
-    payload (stewardship chains stay meaningful) but freshly generated each time,
-    so exports can't be joined into a longitudinal profile of a household.
-    Locations are city/region/country only — lat/lng never leave the server."""
+    Every identifier is minted for this export: growing areas get fresh
+    UUIDs and plants a salted hash (plant_ref), consistent within this
+    payload so stewardship chains and splits stay meaningful, but never the
+    same twice, so exports can't be joined into a longitudinal profile of a
+    household. Locations are city/region/country only -- lat/lng never leave
+    the server -- and times are dates (acquisition, a month)."""
     opted = _opted_in_user_ids(session)
     plants = session.exec(select(Plant)).all()
     plants = [p for p in plants if p.user_id in opted]
+
+    salt = _new_export_salt()
 
     # Per-export rotation map: real env id -> ephemeral UUID
     rotated: dict[int, str] = {}
@@ -125,7 +174,8 @@ def census_export(
         ).all()
         care_by_type: dict[str, list[str]] = {}
         for log in logs:
-            care_by_type.setdefault(log.action.value, []).append(log.logged_at.isoformat())
+            care_by_type.setdefault(log.action.value, []).append(
+                log.logged_at.date().isoformat())
 
         stewardship = session.exec(
             select(StewardshipRecord)
@@ -139,25 +189,27 @@ def census_export(
             stewardship_chain.append({
                 "growing_area_ref": rotated_uuid(rec.growing_area_id) if rec_env else None,
                 "growing_area_type": rec_env.type.value if rec_env else None,
-                "started_at": rec.started_at.isoformat(),
-                "ended_at": rec.ended_at.isoformat() if rec.ended_at else None,
+                "started_on": rec.started_at.date().isoformat(),
+                "ended_on": rec.ended_at.date().isoformat() if rec.ended_at else None,
             })
 
         records.append({
-            "plant_uuid": plant.plant_uuid,
+            # This export's name for the plant, never its real UUID.
+            "plant_ref": plant_ref(salt, plant.plant_uuid),
             # How many physical plants this record stands for. Without it a
             # bed of twelve tomatoes would export as indistinguishable from a
             # single plant on a windowsill.
             "quantity": plant.quantity or 1,
-            # Set when this record was split off another planting. The pair
-            # was once counted under one plant_uuid, so an aggregator needs
-            # this to avoid reading a split as newly appeared plants. Same
-            # class of identifier as plant_uuid, which this export already
-            # carries as its dedup key.
-            "split_from_uuid": plant.split_from_uuid,
+            # Set when this record was split off another planting: the
+            # parent's plant_ref in this same export. The pair was once
+            # counted as one plant, so an aggregator needs this to avoid
+            # reading a split as newly appeared plants.
+            "split_from_ref": plant_ref(salt, plant.split_from_uuid)
+            if plant.split_from_uuid else None,
             "species_id": plant.species_id,
             "maturity_stage": plant.maturity_stage.value,
-            "acquired_on": plant.acquired_on.isoformat() if plant.acquired_on else None,
+            "acquired_month": plant.acquired_on.strftime("%Y-%m")
+            if plant.acquired_on else None,
             # Location dimension: geographic region only — never lat/lng
             "growing_area": {
                 "ref": rotated_uuid(env.id),
@@ -179,17 +231,22 @@ def census_export(
         })
 
     return {
-        # 3.0 renames the location dimension: `environment` is `growing_area`,
-        # and inside the stewardship chain `environment_ref`/`environment_type`
-        # are `growing_area_ref`/`growing_area_type`. A major bump because an
-        # aggregator reading 2.1 keys finds nothing under them rather than
-        # finding something wrong -- there is no compatible reading of this
-        # payload against the old names.
+        # 4.0 stops exporting anything stable enough to link two exports:
+        # `plant_uuid` and `split_from_uuid` are `plant_ref` and
+        # `split_from_ref`, salted per export; care and stewardship times
+        # are dates (`started_at`/`ended_at` are `started_on`/`ended_on`);
+        # `acquired_on` is `acquired_month`. Major, because an aggregator
+        # reading 3.0 keys finds nothing under them.
         #
-        # 2.1 added per-record `quantity` and `split_from_uuid`. Bumped rather
+        # 3.0 renamed the location dimension: `environment` is
+        # `growing_area`, and inside the stewardship chain
+        # `environment_ref`/`environment_type` are
+        # `growing_area_ref`/`growing_area_type`.
+        #
+        # 2.1 added per-record `quantity` and the split link. Bumped rather
         # than added silently because `plant_count` changed meaning with it:
         # it counts plants, as its name always claimed, instead of rows.
-        "export_version": "3.0",
+        "export_version": "4.0",
         "exported_at": datetime.utcnow().isoformat() + "Z",
         "installation_uuid": os.getenv("INSTALLATION_UUID", ""),
         "plant_count": sum(r["quantity"] for r in records),
@@ -198,23 +255,29 @@ def census_export(
     }
 
 
-@router.post("/sync")
-def census_sync(
-    user: User = Depends(get_current_user),
-    session: Session = Depends(get_session),
-):
+@router.get("/export", dependencies=[Depends(require_operator)],
+            include_in_schema=False)
+def census_export(session: Session = Depends(get_session)):
+    """The export, for the operator (see require_operator)."""
+    return build_export(session)
+
+
+@router.post("/sync", dependencies=[Depends(require_operator)],
+             include_in_schema=False)
+def census_sync(session: Session = Depends(get_session)):
     """Push the anonymized, consent-filtered export to CENSUS_API_URL.
 
-    If not configured, returns a 'skipped' status — no data is sent."""
+    An operator job, not a user action. If no URL is configured, returns a
+    'skipped' status and sends nothing."""
     census_url = os.getenv("CENSUS_API_URL", "").rstrip("/")
     if not census_url:
         return {
             "status": "skipped",
-            "reason": "CENSUS_API_URL not configured in .env — set it to opt in to the shared census",
+            "reason": "CENSUS_API_URL is not set, so nothing was sent",
         }
     try:
         import httpx
-        payload = census_export(user, session)
+        payload = build_export(session)
         resp = httpx.post(f"{census_url}/ingest", json=payload, timeout=30.0)
         resp.raise_for_status()
         return {

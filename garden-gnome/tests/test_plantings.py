@@ -265,9 +265,13 @@ def test_summary_counts_plants_not_rows(garden):
     assert body["species_distribution"][0]["count"] == 15
 
 
-def test_export_carries_quantity_and_split_lineage(garden):
+def test_export_carries_quantity_and_split_lineage(garden, monkeypatch):
     """An aggregator has to be able to tell a bed from a windowsill, and to
-    recognise a split as a rearrangement rather than new plants appearing."""
+    recognise a split as a rearrangement rather than new plants appearing.
+    Within one export the offshoot names its parent by the parent's ref."""
+    from tests import census_operator
+
+    census_operator.pin_salt(monkeypatch)
     with garden.db() as s:
         user = s.get(User, garden.user_id)
         user.census_opt_in = True
@@ -283,17 +287,18 @@ def test_export_carries_quantity_and_split_lineage(garden):
         json={"quantity": 3},
     )
 
-    body = garden.client.get("/census/export", headers=garden.headers).json()
+    body = census_operator.export(garden.client, monkeypatch)
+    parent = census_operator.ref(created["plant_uuid"])
     mine = [p for p in body["plants"]
-            if p["plant_uuid"] == created["plant_uuid"]
-            or p["split_from_uuid"] == created["plant_uuid"]]
+            if p["plant_ref"] == parent or p["split_from_ref"] == parent]
     assert len(mine) == 2
 
     # The split conserved the total: 9 + 3, not 12 + 3.
     assert sum(p["quantity"] for p in mine) == 12
-    offshoot = next(p for p in mine if p["split_from_uuid"])
-    assert offshoot["split_from_uuid"] == created["plant_uuid"]
-    assert body["export_version"] == "3.0"
+    offshoot = next(p for p in mine if p["split_from_ref"])
+    assert offshoot["split_from_ref"] == parent
+    assert offshoot["plant_ref"] != parent
+    assert body["export_version"] == "4.0"
 
 
 def test_cannot_split_someone_elses_planting(garden):
