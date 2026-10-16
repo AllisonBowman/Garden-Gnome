@@ -478,12 +478,29 @@ class Species(SQLModel, table=True):
         A property rather than a column: it is derived, so it can improve as the
         nuance table does without a migration, and every endpoint that returns a
         Species picks it up automatically. `toxic_to_pets` stays as the raw flag
-        for filtering; this is what a person should actually read."""
-        from app.services.toxicity import cited_authority, describe_for_species
-        return describe_for_species(
-            self.scientific_name, self.common_name, self.toxic_to_pets,
-            cited_to=cited_authority(self.care_provenance, self.care_sources),
-        )
+        for filtering; this is what a person should actually read.
+
+        It names people whenever a cited passage records a hazard to them, and
+        takes how severe it is from the source (toxicity.safety_of). Those
+        passages are read through the row's own session; a row built in code
+        is described from its columns alone."""
+        from app.services.toxicity import describe, safety_of
+        return describe(safety_of(self).toxicity, self.common_name)
+
+    @property
+    def edibility_note(self) -> Optional[str]:
+        """The condition on "grown to eat", in one caretaker sentence, or None.
+
+        Set when an edible plant is also recorded as poisonous, to pets or to
+        people, or when its cited edibility passage limits the parts or needs
+        preparation. A client shows this in place of "grown to eat" whenever
+        it is set, and "grown to eat" only when `is_edible` is true and this
+        is None."""
+        from app.services.toxicity import edibility_note, safety_of
+        if self.is_edible is not True:
+            return None
+        safety = safety_of(self)
+        return edibility_note(self.is_edible, safety.toxicity, safety.evidence)
 
 
 class CareSchedule(SQLModel, table=True):

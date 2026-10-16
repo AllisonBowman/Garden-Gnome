@@ -338,6 +338,12 @@ class SpeciesRead(SQLModel):
     # Fit fields (0019) -- matched against a growing area's real estate.
     is_houseplant: Optional[bool] = None
     is_edible: Optional[bool] = None
+    # Derived on the model: the condition on eating it, when there is one --
+    # the plant is also recorded as poisonous, or its cited edibility
+    # passage limits the parts or needs preparation. A client shows this in
+    # place of "grown to eat" whenever it is set; the passage itself stays
+    # on the server (ADR 0003).
+    edibility_note: Optional[str] = None
     attracts_pollinators: Optional[bool] = None
     climbs: Optional[bool] = None
     mature_height_in_min: Optional[float] = None
