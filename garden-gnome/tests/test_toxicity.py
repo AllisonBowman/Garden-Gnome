@@ -363,6 +363,28 @@ def test_a_detail_that_says_people_are_not_addressed_is_not_a_hazard():
         assert evidence.rating == "", detail
 
 
+@pytest.mark.parametrize("detail,rating", [
+    # The negation is the cat tag's, closed by the parenthesis.
+    ("NC State's Poisonous to Humans block (human-scoped, not a cat/dog "
+     "rating) gives Poison Severity Medium.", "medium"),
+    ("Its \"Poisonous to Humans\" (human-scoped, not cat/dog-scoped) with "
+     "Poison Severity \"High\".", "high"),
+    # The negation is the scope's, not the hazard's.
+    ("The page-top banner, which states no scope, reads \"This plant has "
+     "medium severity poison characteristics.\"", "medium"),
+])
+def test_a_negation_of_something_else_does_not_cancel_the_rating(detail, rating):
+    evidence = tx.read_evidence(detail)
+    assert evidence.rating == rating
+    assert evidence.people
+
+
+def test_a_tag_list_negates_only_its_own_tag():
+    evidence = tx.read_evidence(
+        "Tags: #non-edible berries #problem for children #problem for dogs")
+    assert evidence.people
+
+
 def test_a_rating_about_a_look_alike_is_not_this_plants():
     """The parsnip record mentions that hemlock is rated high on its own
     page; that is hemlock's rating."""
