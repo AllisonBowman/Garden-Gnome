@@ -20,6 +20,8 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
+import EmptyState from '../components/EmptyState';
+import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
 import type { CensusStackParamList } from '../../App';
 
 // Registered in more than one tab's stack, with the same params in each;
@@ -100,7 +102,10 @@ export default function AlmanacScreen() {
     if (openedFor != null) setAreaId(openedFor);
   }, [openedFor]);
 
-  const { data: species = [], isLoading } = useQuery({
+  const {
+    data: species = [], isLoading, isError: catalogFailed, refetch: refetchCatalog,
+    isFetching: catalogFetching,
+  } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
@@ -179,6 +184,23 @@ export default function AlmanacScreen() {
   ), [ownedIds, areaId, candidateById, navigation]);
 
   if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
+
+  // A catalog that never arrived is not an empty one: the header would read
+  // "0 species in the catalog" and every search would match nothing.
+  if (catalogFailed && species.length === 0) {
+    return (
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('the Almanac')}
+          body={LOAD_FAILED.body}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetchCatalog()}
+          busy={catalogFetching}
+        />
+      </View>
+    );
+  }
 
   // Not an empty list: an empty list here would read as "nothing suits this
   // spot", and a request that failed has judged nothing.
