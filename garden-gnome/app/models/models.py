@@ -404,11 +404,13 @@ class Species(SQLModel, table=True):
         default=None, sa_column=Column(JSON, nullable=True))
 
     # --- Fit fields (0019) -----------------------------------------------
-    # What a growing area is matched against. All nullable, none harm-capable:
-    # a wrong height crowds a border, it does not kill anything, so these
-    # resolve by tier through disagreement and may be borrowed from the genus
-    # (labelled, ADR 0002) -- which for mature size is the right default,
-    # since congeners differ far less in size than in toxicity.
+    # What a growing area is matched against. All nullable, and all but one
+    # harmless: a wrong height crowds a border, it does not kill anything, so
+    # these resolve by tier through disagreement and may be borrowed from the
+    # genus (labelled, ADR 0002) -- which for mature size is the right
+    # default, since congeners differ far less in size than in toxicity. The
+    # one is `is_edible`: telling someone a plant is food can poison them, so
+    # it is harm-capable and never borrowed (ADR 0008).
 
     # Whether sources describe this as a plant grown indoors. The best-covered
     # thing the catalog knows about where a plant can live: researchers have
