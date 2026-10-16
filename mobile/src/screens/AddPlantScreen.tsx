@@ -13,6 +13,8 @@ import { fetchSpeciesList } from '../api/species';
 import {
   identifySpeciesPhoto, IdentifyResponse, photoIdAvailable,
 } from '../photoId/identify';
+import { PHOTO_SUGGESTIONS_LABEL } from '../photoId/copy';
+import LoadError from '../components/LoadError';
 import { fetchGrowingAreas, fetchSpeciesFit } from '../api/growingAreas';
 import { serverMessage } from '../api/errorMessage';
 import { ensureCameraPermission } from '../photoPermissions';
@@ -52,10 +54,17 @@ export default function AddPlantScreen() {
   const [condition, setCondition]     = useState('good');
   const [speciesSearch, setSpeciesSearch] = useState('');
 
-  const { data: speciesList = [] } = useQuery({
+  const {
+    data: speciesData, isError: speciesFailed, isFetching: speciesFetching,
+    refetch: refetchSpecies,
+  } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
+  const speciesList = speciesData ?? [];
+  // Until the catalog has answered there is nothing to search or to match a
+  // photo against. A failed load must say so, not read as "no such plant".
+  const catalogReady = speciesData !== undefined;
 
   const {
     data: growingAreas = [], isPending: areasPending, isError: areasFailed,
@@ -133,14 +142,11 @@ export default function AddPlantScreen() {
   const identifyMutation = useMutation({
     mutationFn: (photo: { uri: string; mimeType?: string; fileName?: string | null }) =>
       identifySpeciesPhoto(photo, speciesList),
-    onSuccess: (result) => {
-      setIdentifyResult(result);
-      // Auto-select the top candidate; the user can still tap another chip
-      if (result.candidates.length > 0) {
-        setSpeciesId(result.candidates[0].id);
-        setSpeciesSearch(result.candidates[0].common_name);
-      }
-    },
+    // Suggestions only: nothing is chosen until the gardener taps one. The
+    // phone names a plant from a handful of coarse labels it reads off the
+    // photo, so its first answer is often wrong, and a wrong species brings
+    // the wrong care and the wrong toxicity with it.
+    onSuccess: (result) => setIdentifyResult(result),
     onError: (err) =>
       Alert.alert(
         'No match just now',
@@ -218,7 +224,16 @@ export default function AddPlantScreen() {
 
         <Eyebrow style={styles.sectionLabel}>Species *</Eyebrow>
 
-        {aiIdAvailable && (
+        {speciesFailed && !catalogReady && (
+          <LoadError
+            inline
+            message="Couldn't load the plant catalog, so there's nothing to pick from yet. Check your connection and try again."
+            onRetry={() => refetchSpecies()}
+            retrying={speciesFetching}
+          />
+        )}
+
+        {aiIdAvailable && catalogReady && (
           <>
             <View style={styles.identifyBtnRow}>
               {Platform.OS !== 'web' && (
@@ -245,8 +260,8 @@ export default function AddPlantScreen() {
               </Button>
             </View>
             <HelperText type="info" style={styles.identifyHint}>
-              Tip: zoom and crop close to a leaf or the flower — identification is
-              much more accurate on the plant's distinctive features than on a
+              Your phone suggests what the plant might be. Crop close to a leaf
+              or the flower: suggestions are much better from those than from a
               wide shot.
             </HelperText>
           </>
@@ -257,7 +272,7 @@ export default function AddPlantScreen() {
             {identifyResult.candidates.length > 0 ? (
               <>
                 <Text variant="bodySmall" style={styles.identifyLabel}>
-                  Best matches — tap to choose:
+                  {PHOTO_SUGGESTIONS_LABEL}
                 </Text>
                 <View style={styles.suggestionBox}>
                   {identifyResult.candidates.map((c) => (
@@ -304,27 +319,49 @@ export default function AddPlantScreen() {
           left={<TextInput.Icon icon="magnify" />}
         />
 
-        {speciesSearch.length > 0 && (
-          <View style={styles.suggestionBox}>
-            {filteredSpecies.slice(0, 6).map((s: Species) => (
-              <Button
-                key={s.id}
-                mode={speciesId === s.id ? 'contained' : 'outlined'}
-                onPress={() => { setSpeciesId(s.id); setSpeciesSearch(s.common_name); }}
-                style={styles.suggestion}
-                compact
-              >
-                {s.common_name}
-              </Button>
-            ))}
-          </View>
+        {!catalogReady && !speciesFailed && (
+          <HelperText type="info">Loading the plant catalog…</HelperText>
         )}
 
+        {speciesSearch.length > 0 && catalogReady && (
+          filteredSpecies.length > 0 ? (
+            <View style={styles.suggestionBox}>
+              {filteredSpecies.slice(0, 6).map((s: Species) => (
+                <Button
+                  key={s.id}
+                  mode={speciesId === s.id ? 'contained' : 'outlined'}
+                  onPress={() => { setSpeciesId(s.id); setSpeciesSearch(s.common_name); }}
+                  style={styles.suggestion}
+                  compact
+                >
+                  {s.common_name}
+                </Button>
+              ))}
+            </View>
+          ) : (
+            <HelperText type="info">
+              Nothing in the catalog by that name. Try its other name, or the
+              Latin one.
+            </HelperText>
+          )
+        )}
+
+        {/* What the record says about harm comes with the choice, in the
+            server's own sentence where it has one (which parts, to whom, how
+            serious; or that nothing is recorded, which is not "safe"), so a
+            plant picked from a photo suggestion can't slip in unread. */}
         {selectedSpecies && (
-          <HelperText type="info">
-            {selectedSpecies.scientific_name}
-            {selectedSpecies.toxic_to_pets ? '  ⚠️ toxic to pets' : ''}
-          </HelperText>
+          <>
+            <HelperText type="info">{selectedSpecies.scientific_name}</HelperText>
+            {selectedSpecies.toxicity_description ? (
+              <Text style={selectedSpecies.toxic_to_pets ? styles.hazard : styles.toxicityNote}>
+                {selectedSpecies.toxic_to_pets ? '⚠️ ' : ''}
+                {selectedSpecies.toxicity_description}
+              </Text>
+            ) : selectedSpecies.toxic_to_pets ? (
+              <Text style={styles.hazard}>⚠️ Toxic to pets.</Text>
+            ) : null}
+          </>
         )}
 
         {/* Always shown once the areas have answered: where the plant goes is
@@ -444,6 +481,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   },
   identifyLabel: { color: p.sub, marginBottom: 8, fontWeight: '600' },
   identifyObservation: { color: p.ink, lineHeight: 19 },
+  hazard: { color: p.warn, fontSize: 13, lineHeight: 19, marginBottom: 4, paddingHorizontal: 12 },
+  toxicityNote: { color: p.sub, fontSize: 13, lineHeight: 19, marginBottom: 4, paddingHorizontal: 12 },
   debugRawText: { fontFamily: 'monospace', fontSize: 11, color: p.faint, marginTop: 4 },
   envGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   envBtn: { marginBottom: 4 },
