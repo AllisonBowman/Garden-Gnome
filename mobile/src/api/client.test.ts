@@ -18,7 +18,7 @@ jest.mock('expo-secure-store', () => {
 
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import { apiClient } from './client';
+import { apiClient, getBaseUrl, DEFAULT_BASE_URL } from './client';
 import { isRetryableError } from './errorMessage';
 import { onForcedSignOut } from '../auth/tokenStorage';
 import { SessionRenewalDeferred } from '../auth/refreshPolicy';
@@ -36,7 +36,7 @@ let refreshCalls = 0;
 let validAccess = 'access-new';
 
 function pathOf(config: InternalAxiosRequestConfig): string {
-  return (config.url ?? '').replace(config.baseURL ?? '', '').replace(/^https?:\/\/[^/]+/, '');
+  return (config.url ?? '').replace(config.baseURL ?? '', '').replace(DEFAULT_BASE_URL, '');
 }
 
 function route(config: InternalAxiosRequestConfig): Reply {
@@ -91,6 +91,7 @@ beforeEach(() => {
   });
   signOuts = 0;
   unsubscribe = onForcedSignOut(() => { signOuts += 1; });
+  delete process.env.EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE;
 });
 
 afterEach(() => unsubscribe());
@@ -199,4 +200,17 @@ test('a fan-out that hits a refusal signs out once', async () => {
   await Promise.all(Array.from({ length: 20 }, () => failureOf(getPlants())));
   expect(refreshCalls).toBe(1);
   expect(signOuts).toBe(1);
+});
+
+// ── which server ─────────────────────────────────────────────────────────────
+
+test('a production build ignores a backend override left in the keychain', async () => {
+  keychain.set('garden_gnome_api_url', 'http://192.168.1.119:8000');
+  await expect(getBaseUrl()).resolves.toBe(DEFAULT_BASE_URL);
+});
+
+test('a preview build honours the stored override', async () => {
+  process.env.EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE = '1';
+  keychain.set('garden_gnome_api_url', 'http://192.168.1.119:8000');
+  await expect(getBaseUrl()).resolves.toBe('http://192.168.1.119:8000');
 });
