@@ -1,4 +1,6 @@
-import { tierOf, difficultyScore, fingerprint, matchesQuery, TIER_LABELS } from './tier';
+import {
+  tierOf, difficultyScore, fingerprint, isGradable, matchesQuery, TIER_LABELS,
+} from './tier';
 import { Species } from '../types';
 
 function sp(over: Partial<Species> = {}): Species {
@@ -123,13 +125,32 @@ test('the fingerprint shows a dash for derived humidity — that is what missing
 // resolved row carries something better. Nothing here may become NaN, and a
 // missing value must score like an unsourced one: it contributes nothing.
 
-test('a minted row with no legacy values still gets a finite tier', () => {
+test('a minted row with nothing to grade gets a finite score and no grade at all', () => {
   const bare = sp({
     light_need: null, humidity_pct_min: null, humidity_pct_max: null,
     temp_f_min: null, temp_f_max: null, soil_type: null,
   });
   expect(Number.isNaN(difficultyScore(bare))).toBe(false);
-  expect(tierOf(bare)).toBe('beginner');
+  // Not "beginner": a score of 0 from no inputs is the absence of evidence,
+  // and three quarters of the catalog — deadly plants included — was badged
+  // easy on it. Unknown is not a pass.
+  expect(isGradable(bare)).toBe(false);
+  expect(tierOf(bare)).toBeNull();
+});
+
+test('any one gradable input is enough for a grade', () => {
+  const bare = {
+    light_need: null, humidity_pct_min: null, humidity_pct_max: null,
+    temp_f_min: null, temp_f_max: null,
+  };
+  expect(tierOf(sp({ ...bare, humidity_need: 'average' }))).toBe('beginner');
+  expect(tierOf(sp({ ...bare, humidity_need: 'high', day_f_min: 68, day_f_max: 78 })))
+    .toBe('fussy');
+  expect(tierOf(sp({ ...bare, light_need: 'direct' }))).toBe('intermediate');
+  // Half a band is not a band, and derived humidity is not a fact.
+  expect(tierOf(sp({ ...bare, day_f_max: 80 }))).toBeNull();
+  expect(tierOf(sp({ ...bare, humidity_pct_min: 40, humidity_pct_max: 60, humidity_sourced: false })))
+    .toBeNull();
 });
 
 test('a missing humidity band scores exactly like a derived one', () => {
@@ -176,6 +197,42 @@ test('the fingerprint shows a dash for every missing stat', () => {
 
 test('the fingerprint shows a resolved humidity need as its word', () => {
   expect(fingerprint(sp({ humidity_need: 'high' })).humidity).toBe('💦 high');
+});
+
+// The list endpoint sends no schedules, so a water glyph read only from them
+// was a dash on every Almanac card while a third of the catalog had a cited
+// regime on the very row being drawn.
+test('the water glyph reads the cited regime the list row carries', () => {
+  expect(fingerprint(sp({ water_regime: 'keep_moist' })).water).toBe('💧 evenly moist');
+  expect(fingerprint(sp({ water_regime: 'dry_thoroughly_between' })).water)
+    .toBe('💧 dries out between');
+  // The regime is the species-level fact; it wins over a schedule's cadence.
+  const both = sp({
+    water_regime: 'dry_surface_between',
+    care_schedules: [{
+      id: 1, species_id: 1, care_type: 'water', interval_days_min: 7, interval_days_max: 10, notes: '',
+    }],
+  });
+  expect(fingerprint(both).water).toBe('💧 top dries between');
+});
+
+test('the light glyph prefers the resolved columns over the legacy word', () => {
+  expect(fingerprint(sp({ direct_sun_hours_max: 0 })).light).toBe('☀ no direct sun');
+  expect(fingerprint(sp({ direct_sun_hours_max: 4 })).light).toBe('☀ up to 4h direct sun');
+  expect(fingerprint(sp({ light_fc_min: 150 })).light).toBe('☀ 150+ footcandles');
+  expect(fingerprint(sp({ outdoor_sun_exposure: ['full_sun', 'part_sun'] })).light)
+    .toBe('☀ full sun, part sun');
+  // Legacy only when nothing resolved exists — "low" is the fixture's word.
+  expect(fingerprint(sp()).light).toBe('◐ low');
+  expect(fingerprint(sp({ light_need: null })).light).toBe('☀ —');
+});
+
+test('no glyph ever shows a column token', () => {
+  const f = fingerprint(sp({
+    water_regime: 'keep_barely_moist', outdoor_sun_exposure: ['part_shade'],
+    humidity_need: 'average',
+  }));
+  expect(`${f.water} ${f.light} ${f.humidity}`).not.toMatch(/[a-z]_[a-z]/);
 });
 
 // --- search -----------------------------------------------------------------

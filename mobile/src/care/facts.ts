@@ -166,6 +166,13 @@ export function isGenusInferred(species: Species, ...fields: string[]): boolean 
   return fields.some((f) => provenance[f] === 'genus_inferred');
 }
 
+/** The outdoor exposure as a caretaker would say it — "part sun, part
+ *  shade" — or null when nothing resolved. */
+export function outdoorSunPhrase(values: OutdoorSunExposure[] | null | undefined): string | null {
+  if (!values?.length) return null;
+  return values.map((v) => SUN_TEXT[v] ?? v.replace(/_/g, ' ')).join(', ');
+}
+
 /** The regime as a caretaker would say it; null when nothing resolved. */
 export function waterRegimeSentence(species: Species): string | null {
   return species.water_regime ? WATER_REGIME_TEXT[species.water_regime] ?? null : null;
@@ -258,9 +265,7 @@ const CONCEPTS: {
     [s.fertilize_strength ? STRENGTH_TEXT[s.fertilize_strength] ?? null : null, ['fertilize_strength']],
   ]) },
   { key: 'outdoor_sun', label: 'Outdoor sun', join: ', ', read: (s) => concept([
-    [s.outdoor_sun_exposure?.length
-      ? s.outdoor_sun_exposure.map((v) => SUN_TEXT[v] ?? v.replace(/_/g, ' ')).join(', ')
-      : null, ['outdoor_sun_exposure']],
+    [outdoorSunPhrase(s.outdoor_sun_exposure), ['outdoor_sun_exposure']],
   ]) },
   // A survival floor from USDA PLANTS — not the temperature row's damage
   // point, which is where harm begins in cultivation. The two can sit tens
