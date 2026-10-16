@@ -323,14 +323,23 @@ _ELSEWHERE_RE = re.compile(
     r"confused with|look-?alikes?|compar\w*|unlike\b|whereas\b|similar to", re.I)
 
 
+#: Where a negation stops reaching. "(human-scoped, not a cat/dog rating)
+#: gives Poison Severity Low" negates the cat tag, not the rating; a tag list
+#: "#non-edible berries #problem for children" negates only its own tag.
+_CLAUSE_EDGES = ".;:()#—"
+#: Negations of scope rather than of harm: "states no scope", "not a pet tag".
+_SCOPE_NEGATION_RE = re.compile(
+    r"\b(?:no|not)\s+(?:a\s+|the\s+|any\s+)?(?:scope|cat|dog|pet)s?\b", re.I)
+
+
 def _negated(text: str, start: int) -> bool:
     """Whether what follows `start` is not this plant's own hazard: the
     clause before it negates it, or the sentence is about another plant."""
     window = text[max(0, start - 60):start]
-    cut = max(window.rfind("."), window.rfind(";"))
+    cut = max(window.rfind(edge) for edge in _CLAUSE_EDGES)
     if cut >= 0:
         window = window[cut + 1:]
-    if _NEGATION_RE.search(window):
+    if _NEGATION_RE.search(_SCOPE_NEGATION_RE.sub(" ", window)):
         return True
     sentence = text[max(0, start - 160):start]
     cut = sentence.rfind(". ")
