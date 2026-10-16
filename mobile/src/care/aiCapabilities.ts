@@ -23,6 +23,22 @@ export interface AiStatus {
   };
 }
 
+/** What the screens may offer, as one object. Every flag is false until the
+ *  server says yes. */
+export interface AiCapabilities {
+  /** Show the photo check-up card. */
+  photoDiagnosis: boolean;
+  /** Show the free-text "anything wrong?" box above care advice. */
+  symptoms: boolean;
+}
+
+/** One capability's name, for anything tied to it — a screen's card, or a
+ *  privacy disclosure that only applies while the feature is offered. */
+export type AiCapability = keyof AiCapabilities;
+
+/** The capabilities before the server has answered, or when it can't: none. */
+export const NO_CAPABILITIES: AiCapabilities = { photoDiagnosis: false, symptoms: false };
+
 /** A photo check-up is offered only when the server says a photo would be
  *  examined. Unknown (not loaded, or the call failed) counts as no: the
  *  feature appears once the answer is yes, never the other way round. */

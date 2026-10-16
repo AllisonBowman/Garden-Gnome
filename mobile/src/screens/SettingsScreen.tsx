@@ -8,8 +8,9 @@ import {
 } from '../support';
 import { updateMe } from '../api/me';
 import {
-  orderedFlows, DESTINATION_LABELS, CENSUS_CONSENT, PRIVACY_INTRO,
+  visibleFlows, DESTINATION_LABELS, CENSUS_CONSENT, PRIVACY_INTRO,
 } from '../consent/copy';
+import { useAiCapabilities } from '../care/useAiCapabilities';
 import {
   getReminderPrefs, setReminderPrefs, ensureNotificationPermission,
   rescheduleAllReminders, getWeatherShiftPref, setWeatherShiftPref,
@@ -52,6 +53,10 @@ function confirmDialog(
 
 export default function SettingsScreen() {
   const { user, signOut, deleteAccount, updateUser } = useAuth();
+  // The privacy list describes what the app does today. Photo check-ups and
+  // free-text questions are offered only while the server can serve them,
+  // and their disclosures appear and disappear with them.
+  const capabilities = useAiCapabilities();
   const { name: themeName, toggle: toggleTheme, palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [url, setUrl]       = useState('');
@@ -348,7 +353,7 @@ export default function SettingsScreen() {
 
           <Divider style={styles.innerDivider} />
 
-          {orderedFlows().map((flow) => {
+          {visibleFlows(capabilities).map((flow) => {
             const open = openFlow === flow.id;
             return (
               <View key={flow.id} style={styles.flowRow}>
