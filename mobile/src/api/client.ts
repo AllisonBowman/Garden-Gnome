@@ -8,19 +8,36 @@ import {
 import {
   refreshVerdict, renewedTokens, SessionRenewalDeferred,
 } from '../auth/refreshPolicy';
-// Hosted backend (Fly.io). iOS release builds block plain http to
-// non-localhost hosts (ATS), so the default must be https. For local dev,
-// point at your machine via Settings (e.g. http://192.168.1.119:8000).
-const DEFAULT_BASE_URL = 'https://garden-gnome-api.fly.dev';
+import { DEFAULT_BASE_URL, resolveBaseUrl } from './baseUrl';
+
+export { DEFAULT_BASE_URL };
+
 const BASE_URL_KEY = 'garden_gnome_api_url';
+
+// The same gate as the Settings backend-override card: on in dev and in the
+// development/preview EAS profiles (eas.json sets the variable), never in an
+// App Store build. Read at call time, and the env var spelled out in full, so
+// Expo's build step can inline it.
+function overrideAllowed(): boolean {
+  const dev = typeof __DEV__ !== 'undefined' && __DEV__;
+  return dev || process.env.EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE === '1';
+}
 
 // expo-secure-store has no web implementation (not a supported platform in
 // SDK 57), so the browser dev preview falls back to localStorage.
 export async function getBaseUrl(): Promise<string> {
-  const stored = Platform.OS === 'web'
-    ? localStorage.getItem(BASE_URL_KEY)
-    : await SecureStore.getItemAsync(BASE_URL_KEY);
-  return stored ?? DEFAULT_BASE_URL;
+  // A production build never reads the stored override: see resolveBaseUrl.
+  // Not reading it also keeps a locked keychain from failing every request.
+  if (!overrideAllowed()) return DEFAULT_BASE_URL;
+  let stored: string | null = null;
+  try {
+    stored = Platform.OS === 'web'
+      ? localStorage.getItem(BASE_URL_KEY)
+      : await SecureStore.getItemAsync(BASE_URL_KEY);
+  } catch {
+    stored = null;
+  }
+  return resolveBaseUrl(stored, true);
 }
 
 export async function setBaseUrl(url: string): Promise<void> {
