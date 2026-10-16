@@ -1,6 +1,17 @@
 # Privacy policy corrections — three statements that don't match the code
 
-> **STATUS: AWAITING YOUR APPROVAL (2026-07-25).** This is a draft of legal
+> **SUPERSEDED 2026-10-16. Do not paste anything from this file.** The
+> current policy is `site/privacy.html` (effective October 16, 2026), written
+> against the code on `care-advice-honesty` after the October App Store audit.
+> Several things below are now wrong: §1's "never written to storage" wording
+> (uploads over 1 MB spool to a temp file), §2's provider list (the weather
+> chain is Apple Weather, then the U.S. National Weather Service, then
+> Open-Meteo, not Apple alone), the "not linked to identity" App Privacy label
+> advice (coordinates sit on a growing area that belongs to a user, so they
+> are linked), and the note that microphone access was removed (Walk the
+> garden asks for it). Kept only as a record of the July pass.
+
+> **STATUS (July, historical): AWAITING YOUR APPROVAL (2026-07-25).** This is a draft of legal
 > copy for a published page. I have **not** edited `site/privacy.html` — that
 > page is the binding document and changing it is publishing, which is your
 > call, not mine. The replacement text below is ready to paste.
