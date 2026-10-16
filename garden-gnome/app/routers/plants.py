@@ -100,6 +100,12 @@ def _stage_plant(payload: PlantCreate, user: User, session: Session) -> Plant:
     data["growing_area_id"] = growing_area_id
     if not (data.get("nickname") or "").strip():
         data["nickname"] = _default_nickname(species, data.get("location", ""))
+    # The day it was added is the first anchor every check schedule has. The
+    # to-do list and the reminder planner anchor on the last care log, then on
+    # acquired_on, then on "now" — and "now" moves with every recalculation,
+    # so a plant with neither never came due until someone logged care on it.
+    if data.get("acquired_on") is None:
+        data["acquired_on"] = date.today()
     # Stamp ownership; keeps plant.user_id == growing area.user_id invariant
     plant = Plant(**data, user_id=user.id)
     session.add(plant)

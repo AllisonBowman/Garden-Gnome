@@ -313,3 +313,43 @@ def test_cannot_split_someone_elses_planting(garden):
         json={"quantity": 2},
     )
     assert r.status_code == 404
+
+
+# --- the first anchor ---------------------------------------------------------
+# The to-do list and the reminder planner anchor a check on the last care log,
+# then on acquired_on, then on "now". "Now" moves with every recalculation, so
+# a plant with neither never came due until someone logged care on it. The day
+# it was added is therefore stamped as acquired_on when the client sends none.
+
+
+def test_a_plant_added_without_a_date_is_acquired_today(garden):
+    from datetime import date
+    r = garden.client.post("/plants/", headers=garden.headers, json={
+        "species_id": garden.species_id, "growing_area_id": garden.env_id,
+    })
+    assert r.status_code == 201
+    assert r.json()["acquired_on"] == date.today().isoformat()
+
+
+def test_a_stated_acquisition_date_is_kept(garden):
+    r = garden.client.post("/plants/", headers=garden.headers, json={
+        "species_id": garden.species_id, "growing_area_id": garden.env_id,
+        "acquired_on": "2026-05-01",
+    })
+    assert r.status_code == 201
+    assert r.json()["acquired_on"] == "2026-05-01"
+
+
+def test_bulk_imported_plants_are_acquired_today_too(garden):
+    from datetime import date
+    r = garden.client.post("/plants/bulk", headers=garden.headers, json={
+        "plants": [
+            {"species_id": garden.species_id, "growing_area_id": garden.env_id,
+             "quantity": 3, "location": "south fence"},
+            {"species_id": garden.species_id, "growing_area_id": garden.env_id,
+             "acquired_on": "2026-04-02"},
+        ],
+    })
+    assert r.status_code == 201
+    dates = [p["acquired_on"] for p in r.json()["plants"]]
+    assert dates == [date.today().isoformat(), "2026-04-02"]
