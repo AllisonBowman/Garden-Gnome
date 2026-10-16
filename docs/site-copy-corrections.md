@@ -1,6 +1,15 @@
 # Site copy corrections — privacy & pricing vs. what the app actually does
 
-> **STATUS: ACTION PENDING (2026-07-25).** The corrections have NOT been applied
+> **SUPERSEDED 2026-10-16. Do not apply anything from this file.** The
+> corrections now live directly in `site/` (privacy policy effective October
+> 16, 2026), and two of the decisions below went the other way: pricing is not
+> a "coming soon" preview of paid tiers, because the app is free with no
+> in-app purchases, and the privacy wording below (free-text questions "may be
+> processed by a third-party AI service", photo diagnosis described as
+> future) has been replaced by an account of what the code does. To publish,
+> follow `site/README-SITE.md`. Kept only as a record of the July pass.
+
+> **STATUS (July, historical): ACTION PENDING (2026-07-25).** The corrections have NOT been applied
 > to the live site. `site/` here is a recovered copy — the real pages come from
 > a `build.py` generator on the desktop machine that deploys to Cloudflare
 > Pages. Until that generator is edited, the live site still overstates things.
