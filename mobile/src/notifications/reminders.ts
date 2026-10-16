@@ -1,10 +1,9 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
-import { fetchPlants, fetchCareLogs } from '../api/plants';
-import { fetchSpecies } from '../api/species';
+import { loadGardenCareData } from '../api/plants';
 import { fetchGrowingAreas, fetchGrowingAreaWeather } from '../api/growingAreas';
-import { CareLog, CareType, GrowingArea, Species } from '../types';
+import { GrowingArea } from '../types';
 import {
   computeReminderPlan, ReminderPrefs, REMINDER_CARE_TYPES, WeatherSignal,
 } from './plan';
@@ -167,20 +166,15 @@ export async function rescheduleAllReminders(): Promise<void> {
       });
     }
 
-    const plants = await fetchPlants();
-
-    const logsByPlant: Record<number, CareLog[]> = {};
-    await Promise.all(plants.map(async (p) => {
-      logsByPlant[p.id] = await fetchCareLogs(p.id);
-    }));
-
-    // Plant lists embed species WITHOUT care_schedules; fetch details once
-    // per unique species
-    const speciesIds = [...new Set(plants.map((p) => p.species_id))];
-    const speciesById: Record<number, Species> = {};
-    await Promise.all(speciesIds.map(async (id) => {
-      speciesById[id] = await fetchSpecies(id);
-    }));
+    // The same load the to-do list and streaks read, joined if it is already
+    // running (at launch it usually is). Plant lists embed species WITHOUT
+    // care_schedules; the load fetches each species' record once.
+    const garden = await loadGardenCareData();
+    // A plant whose log or species couldn't be read would lose its reminders
+    // in the full replace below. Keep the previous schedule instead, exactly
+    // as a failed load does; the next reschedule refreshes it.
+    if (garden.unreadPlantIds.length > 0) return;
+    const { plants, logsByPlant, speciesById } = garden;
 
     // Opt-in: let the forecast nudge watering due-dates (default off).
     const weatherByEnv = (await getWeatherShiftPref())

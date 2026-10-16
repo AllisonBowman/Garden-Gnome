@@ -24,6 +24,7 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { useCareTasks } from '../care/useCareTasks';
 import CareCalendar from '../care/CareCalendar';
+import { unreadLine, unscheduledLine } from '../care/schedule';
 import {
   SURFACE_LABEL, GOALS, areaTypeLabel, dimensionPrompts, measuredLength, uncheckedNotes,
 } from '../growingAreas/realEstate';
@@ -91,7 +92,14 @@ export default function GrowingAreaDetailScreen() {
   });
 
   // Care schedule for the plants living in THIS growing area (scoped by id).
-  const { tasks: careTasks, isLoading: careLoading } = useCareTasks(growingAreaId);
+  const {
+    tasks: careTasks, unscheduled, unreadCount, isLoading: careLoading,
+    isError: careFailed, refetch: refetchCare,
+  } = useCareTasks(growingAreaId);
+  // The plants here the calendar leaves out, and why — said under it, so an
+  // empty or thin calendar is not read as "nothing needed".
+  const careLeftOut = [unscheduledLine(unscheduled), unreadLine(unreadCount)]
+    .filter((l): l is string => l != null);
 
   // What doesn't suit this space, and what would. Two reads of the same
   // comparison, so they are fetched together and shown together. A failed
@@ -394,13 +402,31 @@ export default function GrowingAreaDetailScreen() {
         <Card.Content>
           {careLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
-          ) : careTasks.length === 0 ? (
+          ) : careFailed ? (
+            <View>
+              <Text style={styles.unavailable}>
+                Couldn’t load the care calendar just now — that isn’t an all-clear.
+              </Text>
+              <Button compact onPress={() => refetchCare()} style={styles.retry}>
+                Try again
+              </Button>
+            </View>
+          ) : careTasks.length === 0 && careLeftOut.length === 0 ? (
             <Text style={styles.unavailable}>
-              No care scheduled here yet. Add plants to this growing area and their
-              watering, feeding and grooming schedule fills in the calendar.
+              {env.plant_count === 0
+                ? 'No checks scheduled here yet. Add plants to this growing area and '
+                  + 'their checks fill in the calendar.'
+                : 'Nothing in season to check here right now.'}
             </Text>
           ) : (
-            <CareCalendar tasks={careTasks} />
+            <>
+              {careTasks.length > 0 ? <CareCalendar tasks={careTasks} /> : null}
+              {careLeftOut.map((line, i) => (
+                <Text key={i} style={[styles.unavailable, careTasks.length > 0 && styles.leftOut]}>
+                  {line}
+                </Text>
+              ))}
+            </>
           )}
         </Card.Content>
       </Card>
@@ -528,6 +554,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   cutNote: { fontSize: 13, lineHeight: 19, color: p.sub },
   seeAll: { alignSelf: 'flex-start', marginTop: 6 },
   retry: { alignSelf: 'flex-start', marginTop: 6 },
+  leftOut: { marginTop: 10, fontSize: 13 },
 
   nowRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   nowMain: {},
