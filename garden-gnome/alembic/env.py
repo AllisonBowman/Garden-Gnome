@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 # Import every model module so SQLModel.metadata is fully populated before
 # autogenerate compares it against the database.
 from app.models import models  # noqa: E402,F401
+from app.db import revocations  # noqa: E402,F401
 
 config = context.config
 
