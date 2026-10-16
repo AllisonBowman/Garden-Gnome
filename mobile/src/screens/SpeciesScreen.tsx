@@ -9,6 +9,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { Species } from '../types';
 import { legacyStats, waterRegimeSentence } from '../care/facts';
+import { matchesQuery } from '../care/catalog';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -78,9 +79,11 @@ export default function SpeciesScreen() {
     queryFn: fetchSpeciesList,
   });
 
-  const filtered = speciesList.filter((s: Species) =>
-    s.common_name.toLowerCase().includes(search.toLowerCase()) ||
-    s.scientific_name.toLowerCase().includes(search.toLowerCase()),
+  // The list arrives A to Z (fetchSpeciesList); search folds "x" and "×" and
+  // reads the accepted name too, the same way the Almanac does.
+  const filtered = useMemo(
+    () => speciesList.filter((s: Species) => matchesQuery(s, search)),
+    [speciesList, search],
   );
 
   const renderItem = useCallback(({ item }: { item: Species }) => (
