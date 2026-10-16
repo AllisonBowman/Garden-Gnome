@@ -98,8 +98,11 @@ export default function GrowingAreaDetailScreen() {
   // Care schedule for the plants living in THIS growing area (scoped by id).
   const {
     tasks: careTasks, unscheduled, unreadCount, isLoading: careLoading,
-    isError: careFailed, refetch: refetchCare,
+    isError: careError, loaded: careLoaded, refetch: refetchCare,
   } = useCareTasks(growingAreaId);
+  // Failed only while nothing has arrived: a failed refresh keeps the last
+  // calendar on screen.
+  const careFailed = careError && !careLoaded;
   // The plants here the calendar leaves out, and why — said under it, so an
   // empty or thin calendar is not read as "nothing needed".
   const careLeftOut = [unscheduledLine(unscheduled), unreadLine(unreadCount)]

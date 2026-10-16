@@ -32,7 +32,7 @@ export default function CareTodos({
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const queryClient = useQueryClient();
   const {
-    tasks, unscheduled, unreadCount, isLoading, isError, refetch,
+    tasks, unscheduled, unreadCount, loaded, isLoading, isError, refetch,
   } = useCareTasks();
   const [doneMsg, setDoneMsg] = useState<string | null>(null);
   // A set, not a single key: several rows can be in flight at once now that
@@ -90,8 +90,9 @@ export default function CareTodos({
   if (isLoading) return null;
 
   // A failed load has checked nothing, so it must not fall through to the
-  // empty garden's silence or to "all caught up".
-  if (isError) {
+  // empty garden's silence or to "all caught up". A failed refresh keeps the
+  // list it already has.
+  if (isError && !loaded) {
     return (
       <Card style={styles.caughtUpCard} mode="contained">
         <Card.Content style={styles.caughtUpContent}>

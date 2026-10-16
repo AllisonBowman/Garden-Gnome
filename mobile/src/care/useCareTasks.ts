@@ -29,6 +29,9 @@ export interface UseCareTasksResult {
   unscheduled: UnscheduledPlant[];
   /** Plants left out because their log or species couldn't be read. */
   unreadCount: number;
+  /** True once any load has arrived. A failed refresh keeps the last one,
+   *  so "failed" means something only while this is false. */
+  loaded: boolean;
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
@@ -64,5 +67,5 @@ export function useCareTasks(growingAreaId?: number): UseCareTasksResult {
     };
   }, [data, growingAreaId]);
 
-  return { ...derived, isLoading, isError, refetch, isRefetching };
+  return { ...derived, loaded: data != null, isLoading, isError, refetch, isRefetching };
 }
