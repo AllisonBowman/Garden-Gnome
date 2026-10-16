@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import {
-  Text, Card, IconButton, ActivityIndicator, Snackbar,
+  Text, Card, IconButton, ActivityIndicator, Snackbar, Button,
 } from 'react-native-paper';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { logCare } from '../api/plants';
@@ -10,7 +10,7 @@ import { rescheduleAllReminders } from '../notifications/reminders';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { useCareTasks, CARE_TASKS_QUERY_KEY } from './useCareTasks';
-import { careTaskDueLabel } from './schedule';
+import { careTaskDueLabel, unreadLine, unscheduledLine } from './schedule';
 import { CARE_PRESENTATION } from './labels';
 
 // The "what needs doing right now" list at the top of the Plants tab: every
@@ -30,7 +30,9 @@ export default function CareTodos({
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const queryClient = useQueryClient();
-  const { tasks, isLoading } = useCareTasks();
+  const {
+    tasks, unscheduled, unreadCount, isLoading, isError, refetch,
+  } = useCareTasks();
   const [doneMsg, setDoneMsg] = useState<string | null>(null);
   // A set, not a single key: several rows can be in flight at once now that
   // ticking one no longer freezes the others.
@@ -86,15 +88,52 @@ export default function CareTodos({
   // this and the plant list below, so a spinner here would just jitter layout.
   if (isLoading) return null;
 
-  // Empty garden (no scheduled care at all) → let the screen's own empty state
-  // speak; don't stack an "all caught up" on top of "your garden's empty".
-  if (tasks.length === 0) return null;
-
-  if (todos.length === 0) {
+  // A failed load has checked nothing, so it must not fall through to the
+  // empty garden's silence or to "all caught up".
+  if (isError) {
     return (
       <Card style={styles.caughtUpCard} mode="contained">
         <Card.Content style={styles.caughtUpContent}>
-          <Text style={styles.caughtUpText}>🌿 All caught up — nothing due today.</Text>
+          <Text style={styles.caughtUpText}>
+            Couldn’t check what’s due just now — that isn’t an all-clear.
+          </Text>
+          <Button compact onPress={() => refetch()} style={styles.retry}>Try again</Button>
+        </Card.Content>
+      </Card>
+    );
+  }
+
+  // The plants these checks leave out, said once, wherever the card ends.
+  const leftOut = [unscheduledLine(unscheduled), unreadLine(unreadCount)]
+    .filter((l): l is string => l != null);
+  const leftOutNotes = leftOut.map((line, i) => (
+    <Text key={i} style={styles.leftOut}>{line}</Text>
+  ));
+
+  // Nothing scheduled and nothing left out: an empty garden, or one with
+  // nothing in season. Let the screen's own empty state speak; don't stack
+  // an "all caught up" on top of "your garden's empty".
+  if (tasks.length === 0 && leftOut.length === 0) return null;
+
+  if (todos.length === 0) {
+    // "All caught up" only when every plant has a schedule that was read: a
+    // plant nobody scheduled isn't caught up, it's unscheduled.
+    const caughtUp = tasks.length > 0 && leftOut.length === 0;
+    return (
+      <Card style={styles.caughtUpCard} mode="contained">
+        <Card.Content style={styles.caughtUpContent}>
+          {caughtUp ? (
+            <Text style={styles.caughtUpText}>🌿 All caught up — nothing due today.</Text>
+          ) : (
+            <>
+              {tasks.length > 0 ? (
+                <Text style={styles.caughtUpText}>
+                  🌿 Nothing due today for the plants with a check schedule.
+                </Text>
+              ) : null}
+              {leftOutNotes}
+            </>
+          )}
         </Card.Content>
       </Card>
     );
@@ -225,6 +264,7 @@ export default function CareTodos({
                 : `${hiddenCount} more waiting — tick a few off and they’ll appear.`}
             </Text>
           )}
+          {leftOutNotes}
         </Card.Content>
       </Card>
       <Snackbar
@@ -285,6 +325,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   caughtUpCard: { marginBottom: 12, borderRadius: 12, backgroundColor: p.accSoft },
   caughtUpContent: { paddingVertical: 12 },
   caughtUpText: { color: p.sub, fontSize: 14, textAlign: 'center' },
+  leftOut: { color: p.sub, fontSize: 13, lineHeight: 19, paddingTop: 8 },
+  retry: { alignSelf: 'center', marginTop: 4 },
 
   snackbar: { backgroundColor: p.acc },
   snackbarText: { color: p.btnInk },

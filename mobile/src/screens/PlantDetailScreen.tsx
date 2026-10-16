@@ -30,6 +30,8 @@ import Pill from '../components/Pill';
 import { CareFactList, CareStatusLine, LegacyStatRow } from '../components/CareFacts';
 import AreaFitCard from '../components/AreaFitCard';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
+import { NO_SCHEDULE_LINE, hasCheckSchedule } from '../care/schedule';
+import { fetchSpecies } from '../api/species';
 import { useAiCapabilities } from '../care/useAiCapabilities';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
@@ -71,6 +73,19 @@ export default function PlantDetailScreen() {
     queryKey: ['careLogs', plantId],
     queryFn: () => fetchCareLogs(plantId),
   });
+
+  // The plant read embeds its species without schedules, so whether it has
+  // a check schedule comes from the species' own record — the same one the
+  // species page caches under this key.
+  const speciesId = plant?.species_id;
+  const { data: speciesRecord } = useQuery({
+    queryKey: ['species', speciesId],
+    queryFn: () => fetchSpecies(speciesId as number),
+    enabled: speciesId != null,
+  });
+  // Only a record that was read and has none: a failed read is not "no
+  // schedule", and says nothing.
+  const noCheckSchedule = speciesRecord != null && !hasCheckSchedule(speciesRecord);
 
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const logMutation = useMutation({
@@ -239,6 +254,12 @@ export default function PlantDetailScreen() {
             {species.scientific_name}
           </Text>
         )}
+        {/* Said where it is first seen: a plant with nothing scheduled
+            otherwise just never turns up on the to-do list, and the silence
+            reads as "fine". No interval is invented to fill the gap. */}
+        {noCheckSchedule ? (
+          <Text variant="bodySmall" style={styles.noSchedule}>{NO_SCHEDULE_LINE}</Text>
+        ) : null}
       </Surface>
 
       {/* Quick-log care */}
@@ -557,6 +578,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   header: { borderRadius: 12, padding: 16, marginBottom: 12 },
   plantName: { color: p.acc, fontFamily: f.display },
   scientific: { fontStyle: 'italic', color: p.sub, marginTop: 2, fontFamily: f.display },
+  noSchedule: { color: p.sub, lineHeight: 18, marginTop: 10 },
   card: { marginBottom: 12, borderRadius: 12 },
   cardTitle: { fontFamily: f.display },
   careGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },

@@ -1,10 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, Card, Divider, ActivityIndicator } from 'react-native-paper';
-import { useQuery } from '@tanstack/react-query';
-import { fetchPlants, fetchCareLogs } from '../api/plants';
-import { fetchSpecies } from '../api/species';
-import { CareLog, Species } from '../types';
+import { readablePlants } from '../api/plants';
+import { useGardenCareData } from '../care/useCareTasks';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
@@ -14,42 +12,29 @@ import {
 
 /**
  * Derives the household care streak and badges from existing care-log data
- * (no backend storage). Fetches per-plant logs + species schedules once and
- * lets React Query cache them.
+ * (no backend storage). Reads the same shared load as the to-do list and the
+ * reminder planner (useGardenCareData), so the badges cost no requests of
+ * their own.
  */
 function useStreakBadges() {
-  const { data: plants } = useQuery({ queryKey: ['plants'], queryFn: fetchPlants });
-
-  const ids = (plants ?? []).map((p) => p.id).join(',');
-  const { data, isLoading } = useQuery({
-    queryKey: ['streakData', ids],
-    enabled: !!plants,
-    staleTime: 60_000,
-    queryFn: async () => {
-      const list = plants ?? [];
-      const logsByPlant: Record<number, CareLog[]> = {};
-      await Promise.all(list.map(async (p) => {
-        logsByPlant[p.id] = await fetchCareLogs(p.id);
-      }));
-      const speciesById: Record<number, Species> = {};
-      await Promise.all([...new Set(list.map((p) => p.species_id))].map(async (sid) => {
-        speciesById[sid] = await fetchSpecies(sid);
-      }));
-      return { logsByPlant, speciesById };
-    },
-  });
+  const { data, isLoading } = useGardenCareData();
 
   // Memoized because computeStreak walks up to a year of days against every
   // plant × care type. On a shelf of five that is nothing; on a garden it is
   // millions of operations, and without this it re-ran on every render —
-  // including the pure-UI one that fires when a badge is tapped.
+  // including the pure-UI one that fires when a badge is tapped. A plant whose
+  // log couldn't be read is left out rather than counted as never cared for.
   const derived = useMemo(() => {
-    if (!plants || !data) return null;
-    const streak = computeStreak({ plants, ...data });
+    if (!data) return null;
+    const plants = readablePlants(data);
+    const streak = computeStreak({
+      plants, logsByPlant: data.logsByPlant, speciesById: data.speciesById,
+    });
     const badges = computeBadges(computeMetrics(plants, data.logsByPlant, streak.best));
     return { streak, badges };
-  }, [plants, data]);
+  }, [data]);
 
+  const plants = data?.plants;
   if (!plants || !derived) {
     return { loading: isLoading, hasPlants: !!plants?.length, streak: null, badges: [] as Badge[] };
   }

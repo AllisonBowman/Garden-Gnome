@@ -1,46 +1,41 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchPlants, fetchCareLogs } from '../api/plants';
-import { fetchSpecies } from '../api/species';
-import { CareLog, Species } from '../types';
-import { computeCareTasks, CareTask } from './schedule';
+import { loadGardenCareData, readablePlants } from '../api/plants';
+import {
+  computeCareTasks, CareTask, unscheduledPlants, UnscheduledPlant,
+} from './schedule';
 
 export const CARE_TASKS_QUERY_KEY = ['careTasksData'] as const;
 
-interface CareTasksData {
-  logsByPlant: Record<number, CareLog[]>;
-  speciesById: Record<number, Species>;
-  plants: Awaited<ReturnType<typeof fetchPlants>>;
-}
-
-// One aggregate load feeding both the growing area calendar and the Plants
-// to-do list: plants, each plant's care logs, and full species records (plant
-// lists embed species WITHOUT care_schedules, so the schedules — the whole
-// point — must be fetched per unique species, exactly as reminders.ts does).
-async function fetchCareTasksData(): Promise<CareTasksData> {
-  const plants = await fetchPlants();
-
-  const logsByPlant: Record<number, CareLog[]> = {};
-  await Promise.all(plants.map(async (p) => {
-    logsByPlant[p.id] = await fetchCareLogs(p.id);
-  }));
-
-  const speciesIds = [...new Set(plants.map((p) => p.species_id))];
-  const speciesById: Record<number, Species> = {};
-  await Promise.all(speciesIds.map(async (id) => {
-    speciesById[id] = await fetchSpecies(id);
-  }));
-
-  return { plants, logsByPlant, speciesById };
+/**
+ * Plants, each plant's care log, and full species records (plant lists embed
+ * species WITHOUT care_schedules, so the schedules — the whole point — come
+ * from each species' own record). One query feeds the to-do list, the growing
+ * area calendar and the streak badges, and its load is shared with the
+ * reminder planner (api/plants.ts loadGardenCareData), so a launch costs one
+ * fan-out rather than three.
+ */
+export function useGardenCareData() {
+  return useQuery({
+    queryKey: CARE_TASKS_QUERY_KEY,
+    queryFn: loadGardenCareData,
+  });
 }
 
 export interface UseCareTasksResult {
   tasks: CareTask[];
+  /** Plants whose species has no check schedule on record: nothing is
+   *  scheduled for them, and nothing may claim they're fine. */
+  unscheduled: UnscheduledPlant[];
+  /** Plants left out because their log or species couldn't be read. */
+  unreadCount: number;
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
   isRefetching: boolean;
 }
+
+const NOTHING = { tasks: [] as CareTask[], unscheduled: [] as UnscheduledPlant[], unreadCount: 0 };
 
 /**
  * Next-due care tasks across all of the user's plants, recomputed against the
@@ -49,18 +44,25 @@ export interface UseCareTasksResult {
  * shared under one query key, so both screens hit the cache, not the network.
  */
 export function useCareTasks(growingAreaId?: number): UseCareTasksResult {
-  const { data, isLoading, isError, refetch, isRefetching } = useQuery({
-    queryKey: CARE_TASKS_QUERY_KEY,
-    queryFn: fetchCareTasksData,
-  });
+  const { data, isLoading, isError, refetch, isRefetching } = useGardenCareData();
 
-  const tasks = useMemo(() => {
-    if (!data) return [];
-    const all = computeCareTasks(data);
-    return growingAreaId == null
-      ? all
-      : all.filter((t) => t.growingAreaId === growingAreaId);
+  const derived = useMemo(() => {
+    if (!data) return NOTHING;
+    const input = {
+      plants: readablePlants(data),
+      logsByPlant: data.logsByPlant,
+      speciesById: data.speciesById,
+    };
+    const here = <T extends { growingAreaId?: number }>(rows: T[]) => (
+      growingAreaId == null ? rows : rows.filter((r) => r.growingAreaId === growingAreaId));
+    const unread = new Set(data.unreadPlantIds);
+    return {
+      tasks: here(computeCareTasks(input)),
+      unscheduled: here(unscheduledPlants(input)),
+      unreadCount: data.plants.filter((p) => unread.has(p.id)
+        && (growingAreaId == null || p.growing_area_id === growingAreaId)).length,
+    };
   }, [data, growingAreaId]);
 
-  return { tasks, isLoading, isError, refetch, isRefetching };
+  return { ...derived, isLoading, isError, refetch, isRefetching };
 }

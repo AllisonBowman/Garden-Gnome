@@ -170,6 +170,66 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
   return tasks.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
 }
 
+// ── Plants with no check schedule ────────────────────────────────────────────
+// Most of the catalog has no care schedule on record yet: the claims carry a
+// watering regime but no interval, and an interval nobody published is one
+// the app will not invent. A plant of such a species gets no to-do, no
+// calendar entry and no reminder — and the screens say so, rather than let
+// silence (or "all caught up") read as "nothing needed".
+
+/** Whether the species has a check schedule the app can keep: any interval
+ *  for a care type that becomes a to-do or a reminder. */
+export function hasCheckSchedule(species: Species): boolean {
+  return (species.care_schedules ?? [])
+    .some((s) => REMINDER_CARE_TYPES.includes(s.care_type));
+}
+
+export interface UnscheduledPlant {
+  plantId: number;
+  nickname: string;
+  growingAreaId?: number;
+}
+
+/** The plants whose species was read and has no check schedule. A species
+ *  that failed to load is not one with no schedule, so it is not listed. */
+export function unscheduledPlants(input: CareTasksInput): UnscheduledPlant[] {
+  const out: UnscheduledPlant[] = [];
+  for (const plant of input.plants) {
+    const species = input.speciesById[plant.species_id];
+    if (!species || hasCheckSchedule(species)) continue;
+    out.push({
+      plantId: plant.id, nickname: plant.nickname, growingAreaId: plant.growing_area_id,
+    });
+  }
+  return out;
+}
+
+/** On a plant's own page: why nothing is scheduled for it, and where to look
+ *  instead. */
+export const NO_SCHEDULE_LINE =
+  'No check schedule on record for this species yet; its care guide below has '
+  + 'what its sources say. There are no reminders for it until there is one.';
+
+/** Under a to-do list or a calendar: which plants it leaves out, and why. */
+export function unscheduledLine(plants: UnscheduledPlant[]): string | null {
+  if (plants.length === 0) return null;
+  if (plants.length === 1) {
+    return `No check schedule on record for ${plants[0].nickname}’s species yet, so `
+      + 'nothing is scheduled for it. Its care guide has what its sources say.';
+  }
+  return `${plants.length} plants have no check schedule on record for their species `
+    + 'yet, so nothing is scheduled for them. Each one’s care guide has what its '
+    + 'sources say.';
+}
+
+/** Plants left out because their care log couldn't be read just now. */
+export function unreadLine(count: number): string | null {
+  if (count <= 0) return null;
+  return count === 1
+    ? 'Couldn’t read 1 plant’s care log just now, so it’s left out here.'
+    : `Couldn’t read ${count} plants’ care logs just now, so they’re left out here.`;
+}
+
 /**
  * Human phrasing of a task's timing.
  *

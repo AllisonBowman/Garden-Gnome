@@ -1,5 +1,11 @@
-import { computeCareTasks, careTaskDueLabel, CareTask } from './schedule';
+import {
+  computeCareTasks, careTaskDueLabel, CareTask, hasCheckSchedule, NO_SCHEDULE_LINE,
+  unreadLine, unscheduledLine, unscheduledPlants,
+} from './schedule';
 import { CareLog, Plant, Species } from '../types';
+
+declare const require: (id: string) => any;
+declare const __dirname: string;
 
 const NOW = new Date('2026-07-15T14:00:00'); // mid-afternoon, local
 
@@ -117,5 +123,74 @@ describe('computeCareTasks', () => {
   it('scopes nothing itself — every task carries its growingAreaId for the caller to filter', () => {
     const [task] = run();
     expect(task.growingAreaId).toBe(5);
+  });
+});
+
+// Most of the catalog has no schedule on record. Those plants get no task —
+// no interval is invented for them — and the screens must say so instead of
+// letting the silence, or "all caught up", read as nothing needed.
+describe('plants with no check schedule', () => {
+  const wood = { ...species([]), id: 130, common_name: 'Wood Sage' } as Species;
+  const mistOnly = species([
+    { id: 9, species_id: 100, care_type: 'mist' as const, interval_days_min: 2, interval_days_max: 3, notes: '' },
+  ]);
+
+  it('a species has a check schedule only with an interval the app can keep', () => {
+    expect(hasCheckSchedule(species(waterEvery7))).toBe(true);
+    expect(hasCheckSchedule(wood)).toBe(false);
+    expect(hasCheckSchedule({ ...wood, care_schedules: undefined } as Species)).toBe(false);
+    // Misting is never a reminder, so a misting interval alone schedules nothing.
+    expect(hasCheckSchedule(mistOnly)).toBe(false);
+  });
+
+  it('gets no task and is listed as unscheduled — never given an invented interval', () => {
+    const input = {
+      plants: [plant(), plant({ id: 2, nickname: 'Sage', species_id: 130, growing_area_id: 6 })],
+      logsByPlant: {},
+      speciesById: { 100: species(waterEvery7), 130: wood },
+      now: NOW,
+    };
+    expect(computeCareTasks(input).map((t) => t.plantId)).toEqual([1]);
+    expect(unscheduledPlants(input)).toEqual([
+      { plantId: 2, nickname: 'Sage', growingAreaId: 6 },
+    ]);
+  });
+
+  it('a species that failed to load is not called unscheduled', () => {
+    expect(unscheduledPlants({
+      plants: [plant({ species_id: 999 })], logsByPlant: {}, speciesById: {},
+    })).toEqual([]);
+  });
+
+  it('says plainly what is left out, with the count in digits', () => {
+    expect(unscheduledLine([])).toBeNull();
+    expect(unscheduledLine([{ plantId: 2, nickname: 'Sage' }])).toBe(
+      'No check schedule on record for Sage’s species yet, so nothing is scheduled '
+      + 'for it. Its care guide has what its sources say.');
+    const many = [1, 2, 3].map((id) => ({ plantId: id, nickname: `P${id}` }));
+    expect(unscheduledLine(many)).toMatch(/^3 plants have no check schedule on record/);
+  });
+
+  it('the plant page line points at the care guide and the silent reminders', () => {
+    expect(NO_SCHEDULE_LINE).toMatch(
+      /^No check schedule on record for this species yet; its care guide below has what its sources say\./);
+    expect(NO_SCHEDULE_LINE).toMatch(/no reminders/);
+  });
+
+  it('a log that could not be read is said, not treated as never cared for', () => {
+    expect(unreadLine(0)).toBeNull();
+    expect(unreadLine(1)).toMatch(/1 plant’s care log/);
+    expect(unreadLine(4)).toMatch(/4 plants’ care logs/);
+  });
+});
+
+// The to-do card's rule, read off its source: "all caught up" is claimed only
+// when no plant was left out.
+describe('the to-do card never claims all caught up over unscheduled plants', () => {
+  it('gates the caught-up line on nothing being left out', () => {
+    const src: string = require('fs').readFileSync(
+      require('path').join(__dirname, 'CareTodos.tsx'), 'utf8');
+    expect(src).toMatch(/const caughtUp = tasks\.length > 0 && leftOut\.length === 0;/);
+    expect(src).toMatch(/caughtUp \?/);
   });
 });
