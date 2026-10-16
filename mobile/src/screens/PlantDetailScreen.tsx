@@ -33,6 +33,7 @@ import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
 import { NO_SCHEDULE_LINE, hasCheckSchedule } from '../care/schedule';
 import { fetchSpecies } from '../api/species';
 import { useAiCapabilities } from '../care/useAiCapabilities';
+import { adviceSourceLabel, diagnosisSourceLabel } from '../care/resultLabels';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 
@@ -336,8 +337,7 @@ export default function PlantDetailScreen() {
               <WeatherCredit attribution={advice.weather_attribution} />
               <View style={styles.resultMetaRow}>
                 <Pill tone="neutral" filled style={styles.metaPill}>
-                  {(advice.backend === 'stub' ? 'rule-based' : advice.backend)
-                    + (advice.gnomeStyled ? ' • gnome voice' : '')}
+                  {adviceSourceLabel(advice.backend, advice.gnomeStyled)}
                 </Pill>
                 <ReportResult
                   surfaceLabel="care advice"
@@ -420,7 +420,7 @@ export default function PlantDetailScreen() {
                 ))}
                 <View style={styles.resultMetaRow}>
                   <Pill tone="neutral" filled style={styles.metaPill}>
-                    {diagnosis.backend === 'stub' ? 'diagnosis not enabled yet' : diagnosis.backend}
+                    {diagnosisSourceLabel(diagnosis.backend)}
                   </Pill>
                   <ReportResult
                     surfaceLabel="diagnosis"
