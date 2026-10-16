@@ -408,6 +408,70 @@ def _care_data_line(sp: Species, legacy: list[str]) -> str | None:
     return None
 
 
+#: How a fact line reads to a caretaker in the rule-based advice.
+_CARETAKER_LABELS = (
+    ("- Light:", "☀️ Light:"),
+    ("- Outdoor sun:", "☀️ Outdoor sun:"),
+    ("- Soil:", "🪴 Soil:"),
+    ("- Temperature:", "🌡️ Temperature:"),
+    ("- Cold:", "❄️ Cold:"),
+)
+
+
+def caretaker_fact_lines(species: Species) -> list[str]:
+    """What the catalog's sources say about this species' care, in the
+    caretaker's voice: light, soil, temperature and cold, how deep to feel
+    the soil, and who said so.
+
+    For the rule-based advice on a species with no check schedule, which
+    otherwise had nothing to say beyond "No care schedules defined". Only
+    resolved values, never a legacy column -- this is "what its sources
+    say", and a legacy value has no source. Borrowed values carry the
+    caretaker's label. The watering regime is not here: the advice states
+    it on its own line for every species. Nothing here is a cadence the app
+    worked out: a day count appears only when a source estimated it."""
+    provenance = species.care_provenance or {}
+
+    def tag(text: str, *fields: str) -> str:
+        borrowed = any(provenance.get(f) == "genus_inferred" for f in fields)
+        return text + BORROWED_LABEL if borrowed else text
+
+    found: list[str] = []
+    for concept in (_light, _outdoors, _soil, _temperature):
+        told, from_legacy = concept(species, tag)
+        if not from_legacy:
+            found.extend(told)
+    lines = []
+    for line in found:
+        for fact, said in _CARETAKER_LABELS:
+            if line.startswith(fact):
+                lines.append(said + line[len(fact):] + ".")
+                break
+
+    water = []
+    if species.water_check_depth_cm is not None:
+        water.append(tag(f"feel the soil {_num(species.water_check_depth_cm)} cm "
+                         "down to decide", "water_check_depth_cm"))
+    growing, dormant = species.water_growing_days_est, species.water_dormant_days_est
+    if growing is not None or dormant is not None:
+        spans = ([f"every {_num(growing)} days in growth"] if growing is not None
+                 else []) + ([f"every {_num(dormant)} in dormancy"]
+                             if dormant is not None else [])
+        water.append(tag("its sources estimate roughly " + " and ".join(spans),
+                         "water_growing_days_est", "water_dormant_days_est"))
+    if water:
+        lines.append(f"💧 Water check: {'; '.join(water)}.")
+
+    names = sorted({s.get("authority") for s in species.care_sources or []
+                    if s.get("authority") and not s.get("inferred")})
+    if names and (lines or water_regime_sentence(species)):
+        # Every page that settled something for this species, which can be
+        # more than the lines above name; the species page lists each with
+        # its fields.
+        lines.append(f"📚 Sources: {_listed(names)}.")
+    return lines
+
+
 def species_fact_lines(species: Species) -> list[str]:
     """The care facts, one line per concept the row can actually back.
 
