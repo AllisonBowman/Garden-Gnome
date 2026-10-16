@@ -209,6 +209,12 @@ function AuthGate() {
     if (signedIn) void rescheduleAllReminders();
   }, [signedIn]);
 
+  // What one account had cached must not show to the next one to sign in on
+  // this phone, even for the 30 seconds it would still count as fresh.
+  useEffect(() => {
+    if (status === 'signedOut') queryClient.clear();
+  }, [status]);
+
   // First-run onboarding: show only if it hasn't been seen AND the account
   // has no plants. Runs only once signed in (the plants call needs a token).
   // Asked through the query cache, so it gets the same one automatic retry
