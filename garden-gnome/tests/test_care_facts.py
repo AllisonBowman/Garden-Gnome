@@ -356,8 +356,8 @@ def test_advisor_prompt_and_vision_context_carry_the_shared_block():
 
 def test_stub_adds_a_sources_line_for_the_regime():
     out = _advise_stub(sourced_species(), make_plant(), [], [])
-    assert "💧 From its sources: let the surface dry between waterings." in out
-    assert "(borrowed from the genus)" not in out
+    regime = line_starting(out.splitlines(), "💧 From its sources:")
+    assert regime == "💧 From its sources: let the surface dry between waterings."
     assert "From its sources" not in _advise_stub(
         legacy_species(), make_plant(), [], [])
 
@@ -365,16 +365,63 @@ def test_stub_adds_a_sources_line_for_the_regime():
 def test_a_borrowed_water_detail_is_labelled_but_the_regime_never_is():
     """The check depth may come from the genus and the prompt says so. The
     regime beside it cannot (ADR 0007), so the stub's sources line carries
-    no borrowed label -- there is no case for one."""
+    no borrowed label -- there is no case for one. The check-depth line,
+    which a species with no schedule now gets, is labelled."""
     sp = sourced_species(care_provenance=dict(
         ALL_SOURCED, water_check_depth_cm="genus_inferred"))
     prompt = _build_prompt(sp, make_plant(), [], [])
     assert ("- Water: let the surface dry between waterings; "
             "check 3 cm down (genus-inferred)") in prompt
-    out = _advise_stub(sp, make_plant(), [], [])
-    assert "💧 From its sources: let the surface dry between waterings." in out
-    assert "(borrowed from the genus)" not in out
+    lines = _advise_stub(sp, make_plant(), [], []).splitlines()
+    assert line_starting(lines, "💧 From its sources:") == \
+        "💧 From its sources: let the surface dry between waterings."
+    assert line_starting(lines, "💧 Water check:").startswith(
+        "💧 Water check: feel the soil 3 cm down to decide (borrowed from the genus)")
     assert "water_regime" in HARM_CAPABLE
+
+
+# --- a species with no check schedule still gets what its sources say --------
+
+def test_no_schedule_says_so_and_says_what_the_sources_know():
+    """Most of the catalog has no check schedule. "No care schedules defined
+    for this species yet." was the whole answer; what the sources say about
+    light, soil, cold and watering is still worth reading."""
+    lines = _advise_stub(sourced_species(), make_plant(), [], []).splitlines()
+    assert lines[0] == ("📋 No check schedule is on record for Hardy Fuchsia "
+                        "yet. Here is what its sources say about its care.")
+    assert line_starting(lines, "☀️ Light:").startswith(
+        "☀️ Light: at least 100 footcandles")
+    assert line_starting(lines, "☀️ Outdoor sun:") == "☀️ Outdoor sun: part sun, part shade."
+    assert line_starting(lines, "🪴 Soil:").startswith("🪴 Soil: chunky aroid mix")
+    assert "cold damage below 45 F" in line_starting(lines, "🌡️ Temperature:")
+    assert line_starting(lines, "❄️ Cold:") == "❄️ Cold: survives to -10 F outdoors."
+    assert line_starting(lines, "📚 Sources:") == (
+        "📚 Sources: NC State Extension and Royal Horticultural Society.")
+    assert not any("No care schedules defined" in ln for ln in lines)
+
+
+def test_no_schedule_never_invents_a_cadence():
+    """Only a day count a source estimated may appear; a regime alone never
+    turns into "every N days"."""
+    regime_only = minted_species(
+        water_regime="keep_moist", care_data_status=CareDataStatus.sourced,
+        care_provenance={"water_regime": "sourced"},
+        care_sources=[{"authority": "NC State Extension", "url": NCSU,
+                       "fields": ["water_regime"], "inferred": False}])
+    out = _advise_stub(regime_only, make_plant(), [], [])
+    assert "every" not in out
+    assert "💧 From its sources: keep the medium evenly moist." in out
+    assert "📚 Sources: NC State Extension." in out
+
+
+def test_no_schedule_and_no_sources_says_both_plainly():
+    out = _advise_stub(minted_species(), make_plant(), [], [])
+    assert out.splitlines()[0] == (
+        "📋 No check schedule is on record for Hardy Fuchsia yet, and its "
+        "sources say nothing about its care so far.")
+    # A legacy column is not a source: nothing from it is offered as one.
+    legacy = _advise_stub(legacy_species(), make_plant(), [], [])
+    assert "☀️ Light" not in legacy and "🪴 Soil" not in legacy
 
 
 # --- weather nudges read the resolved thresholds -----------------------------
