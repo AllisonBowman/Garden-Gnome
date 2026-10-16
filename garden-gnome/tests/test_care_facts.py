@@ -109,8 +109,7 @@ def line_starting(lines, prefix):
 def test_legacy_lines_are_unchanged():
     lines = species_fact_lines(legacy_species())
     for pinned in ("- Light need: bright_indirect", "- Humidity: 40-60%",
-                   "- Temperature: 60-85 F", "- Soil: well-draining",
-                   "- Toxic to pets: no"):
+                   "- Temperature: 60-85 F", "- Soil: well-draining"):
         assert pinned in lines
     # A legacy row with values has data; it is not "none cited".
     assert not any(ln.startswith("- Care data:") for ln in lines)
@@ -119,10 +118,45 @@ def test_legacy_lines_are_unchanged():
 def test_toxicity_line_has_three_states():
     assert "- Toxic to pets: yes" in species_fact_lines(
         legacy_species(toxic_to_pets=True))
-    assert "- Toxic to pets: no" in species_fact_lines(
-        legacy_species(toxic_to_pets=False))
+    cited_false = legacy_species(
+        toxic_to_pets=False, care_provenance={"toxic_to_pets": "sourced"},
+        care_sources=[{"authority": "NC State Extension", "url": NCSU,
+                       "fields": ["toxic_to_pets"], "inferred": False}])
+    assert "- Toxic to pets: no" in species_fact_lines(cited_false)
     assert "- Toxic to pets: no record" in species_fact_lines(
         legacy_species(toxic_to_pets=None))
+
+
+def test_a_false_nobody_cited_is_no_record_not_no():
+    """The legacy catalog defaulted the flag to False. Handing a model
+    "Toxic to pets: no" for that is the absence-read-as-safety defect."""
+    lines = species_fact_lines(legacy_species(toxic_to_pets=False))
+    assert "- Toxic to pets: no record" in lines
+    assert "- Toxic to pets: no" not in lines
+
+
+def test_a_hazard_to_people_has_its_own_line():
+    sp = legacy_species(
+        toxic_to_pets=False,
+        toxicity_detail="NC State Extension rates human Poison Severity as \"High\".",
+        care_provenance={"toxic_to_pets": "sourced"},
+        care_sources=[{"authority": "NC State Extension", "url": NCSU,
+                       "fields": ["toxic_to_pets"], "inferred": False}])
+    lines = species_fact_lines(sp)
+    assert "- Toxic to pets: no" in lines
+    assert ("- Toxic to people: yes (rated high severity by NC State Extension)"
+            in lines)
+    assert not any(ln.startswith("- Toxic to people:")
+                   for ln in species_fact_lines(legacy_species()))
+
+
+def test_the_edible_line_carries_the_condition():
+    assert "- Edible: grown to eat" in species_fact_lines(
+        legacy_species(is_edible=True, toxic_to_pets=None))
+    lines = species_fact_lines(legacy_species(is_edible=True, toxic_to_pets=True))
+    assert "- Edible: grown to eat" not in lines
+    assert line_starting(lines, "- Edible:").startswith(
+        "- Edible: Some parts are eaten, but it is also recorded as poisonous")
 
 
 # --- resolved values replace, never sit beside, their legacy line -----------
