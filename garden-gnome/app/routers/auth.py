@@ -8,15 +8,20 @@ Sign-in upsert (shared by both providers):
    growing area so every new account starts usable (decision 5).
 """
 import logging
-from datetime import datetime
+import threading
+from datetime import datetime, timedelta
 from typing import Optional
 
-from cryptography.fernet import Fernet
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from cryptography.fernet import Fernet, InvalidToken
+from fastapi import (
+    APIRouter, BackgroundTasks, Depends, HTTPException, Request, Response,
+)
+from sqlalchemy.engine import Engine
 from sqlmodel import Session, select
 
 from app.config import get_settings
 from app.db.database import get_session
+from app.db.revocations import PendingAppleRevocation
 from app.deps import get_current_user
 from app.rate_limit import SIGNIN_LIMIT, TOKEN_LIMIT, limiter
 from app.models.models import (
@@ -224,30 +229,133 @@ def get_me(user: User = Depends(get_current_user)):
     return UserOut(**user.model_dump())
 
 
+#: Tries a queued Apple revoke gets on its own before it waits for an operator.
+MAX_REVOKE_ATTEMPTS = 10
+#: Wait after the first failure; doubles with each one after (5 min, 10, 20 ...
+#: about 42 hours before the tenth), so a day-long Apple outage and a machine
+#: that cold-starts every few minutes do not burn every attempt in an hour.
+REVOKE_BACKOFF = timedelta(minutes=5)
+
+
+def _revoke_due(row: PendingAppleRevocation, now: datetime) -> bool:
+    if row.attempts >= MAX_REVOKE_ATTEMPTS:
+        return False
+    if row.last_attempt_at is None:
+        return True
+    return now - row.last_attempt_at >= REVOKE_BACKOFF * (2 ** (row.attempts - 1))
+
+
+def revoke_pending_apple_grants(
+    engine: Engine, ids: Optional[list[int]] = None,
+) -> int:
+    """Send Apple each queued revoke that is due; forget the ones it accepts.
+
+    Runs after every account deletion (for that deletion's rows) and once at
+    startup (for every row), so a revoke that failed while Apple was down is
+    tried again on the next cold start, backing off as it keeps failing.
+    Returns how many Apple accepted. Never raises: nothing here may break a
+    deletion that has already happened, or a boot."""
+    revoked = 0
+    try:
+        fernet = Fernet(get_settings().fernet_key.encode())
+        with Session(engine) as session:
+            query = select(PendingAppleRevocation)
+            if ids is not None:
+                query = query.where(PendingAppleRevocation.id.in_(ids))
+            now = datetime.utcnow()
+            for row in session.exec(query).all():
+                if not _revoke_due(row, now):
+                    continue
+                row.attempts += 1
+                row.last_attempt_at = now
+                try:
+                    accepted = bool(revoke_apple_token(
+                        fernet.decrypt(row.token_enc.encode()).decode()))
+                except InvalidToken:
+                    # Encrypted under a key this server no longer has (the
+                    # Fernet key was rotated). No retry can fix that; leave
+                    # it for the operator.
+                    row.attempts = MAX_REVOKE_ATTEMPTS
+                    accepted = False
+                    logger.error(
+                        "Queued Apple revoke %s cannot be decrypted with this "
+                        "server's encryption key; it will not be retried",
+                        row.id)
+                except Exception as e:  # noqa: BLE001 -- try again later
+                    accepted = False
+                    logger.warning(
+                        "Queued Apple revoke %s failed (%s)", row.id, e)
+                if accepted:
+                    session.delete(row)
+                    revoked += 1
+                elif row.attempts >= MAX_REVOKE_ATTEMPTS:
+                    session.add(row)
+                    logger.error(
+                        "Queued Apple revoke %s failed %s times and will not "
+                        "be retried automatically; revoke it by hand or "
+                        "delete the row", row.id, row.attempts)
+                else:
+                    session.add(row)
+                    logger.warning(
+                        "Queued Apple revoke %s failed (attempt %s of %s); "
+                        "it will be retried", row.id, row.attempts,
+                        MAX_REVOKE_ATTEMPTS)
+                # One commit per row, so a crash part-way loses no outcome.
+                session.commit()
+    except Exception:  # noqa: BLE001 -- see docstring
+        logger.exception("Retrying queued Apple revokes failed")
+    return revoked
+
+
+def start_queued_apple_revokes(engine: Engine) -> Optional[threading.Thread]:
+    """At startup, retry every queued revoke that is due, off the boot path.
+
+    A thread, so a slow Apple cannot hold up uvicorn binding its port (each
+    call may wait out a 10 s timeout). Skipped when Sign in with Apple is not
+    configured, where every try would fail and only use up attempts."""
+    s = get_settings()
+    if not (s.apple_team_id and s.apple_key_id and s.apple_bundle_id
+            and s.apple_private_key_pem()):
+        return None
+    thread = threading.Thread(
+        target=revoke_pending_apple_grants, args=(engine,),
+        name="apple-revoke-retry", daemon=True)
+    thread.start()
+    return thread
+
+
 @router.delete("/me", status_code=204)
 def delete_me(
+    background: BackgroundTasks,
     user: User = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     """Delete the account and everything it owns (App Store 5.1.1(v)).
 
-    Order matters: revoke the Apple session first (needs the stored token
-    decrypted before rows die), then wipe data, then hard-delete the user.
-    A failed Apple revoke is logged as retryable and NEVER blocks deletion."""
+    The Apple grant is revoked after the data is gone, not before, and its
+    encrypted token outlives the identity it came from. Each stored token is
+    copied into pending_apple_revocation in the same transaction that deletes
+    the user, then sent to Apple once the response is on its way. A revoke
+    that fails stays queued and is retried (revoke_pending_apple_grants), so
+    a transient Apple error no longer leaves the grant active for good. A
+    failed or slow revoke never blocks or delays the deletion."""
     identities = session.exec(
         select(AuthIdentity).where(AuthIdentity.user_id == user.id)
     ).all()
-    fernet = Fernet(get_settings().fernet_key.encode())
+    queued: list[PendingAppleRevocation] = []
     for ident in identities:
         if ident.apple_refresh_token_enc:
-            try:
-                apple_token = fernet.decrypt(
-                    ident.apple_refresh_token_enc.encode()).decode()
-                revoke_apple_token(apple_token)
-            except Exception as e:  # noqa: BLE001 — never block deletion
-                logger.warning(
-                    "RETRYABLE: could not revoke Apple session during "
-                    "account deletion: %s", e)
+            row = PendingAppleRevocation(token_enc=ident.apple_refresh_token_enc)
+            session.add(row)
+            queued.append(row)
+        elif ident.provider == AuthProvider.apple:
+            # The code exchange failed at sign-in, so Apple never gave this
+            # server a grant to revoke. Said once here so it is not silent.
+            logger.warning(
+                "Deleted an Apple sign-in with no stored Apple grant: the "
+                "sign-in code exchange had failed, so there is nothing to "
+                "revoke; the user can remove the app in their Apple ID "
+                "settings")
 
     tokens.revoke_all_for_user(session, user.id)
 
@@ -270,6 +378,11 @@ def delete_me(
     # Hard delete; ORM cascade removes AuthIdentity and RefreshToken rows.
     session.delete(user)
     session.commit()
+
+    if queued:
+        background.add_task(
+            revoke_pending_apple_grants, session.get_bind(),
+            [row.id for row in queued])
     return Response(status_code=204)
 
 

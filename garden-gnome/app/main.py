@@ -17,7 +17,7 @@ from slowapi import _rate_limit_exceeded_handler  # noqa: E402
 from slowapi.errors import RateLimitExceeded  # noqa: E402
 
 from app.config import get_settings  # noqa: E402
-from app.db.database import run_migrations  # noqa: E402
+from app.db.database import engine, run_migrations  # noqa: E402
 from app.data.seed import seed_default_growing_area  # noqa: E402
 from app.rate_limit import limiter  # noqa: E402
 from app.routers import ai, auth, species, plants, growing_areas, census  # noqa: E402
@@ -29,6 +29,9 @@ async def lifespan(app: FastAPI):
     get_settings()      # fail fast if required secrets are missing
     run_migrations()    # Alembic owns the schema now (replaces init/migrate_db)
     seed_default_growing_area()  # ensure a growing area exists for new plants
+    # A deleted account's Apple revoke that failed is tried again on each
+    # cold start, in the background (auth.revoke_pending_apple_grants).
+    auth.start_queued_apple_revokes(engine)
     vs = await vision_status()  # surface a dead vision config at boot, not first photo
     print(f"[vision] backend={vs['backend']} ready={vs['ready']} "
           f"model={vs['model'] or '-'} — {vs['detail']}")
