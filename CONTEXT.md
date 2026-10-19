@@ -40,9 +40,11 @@ A Resolved value borrowed from the species' genus rather than asserted about
 the species itself. Honest to show, dishonest to hide.
 
 **Harm-capable field**:
-A field where a wrong value can injure an animal or kill a plant — toxicity,
-cold tolerance, watering regime. Harm-capable fields never resolve
-automatically through disagreement and never accept an inferred value.
+A field where a wrong value can injure a person or an animal, or kill a
+plant — toxicity, edibility, cold tolerance (the survival floor), the
+watering regime and its day estimates. Harm-capable fields never resolve
+automatically through disagreement and never accept an inferred value
+(ADR 0007, ADR 0008).
 
 **Care data status**:
 How well-backed a Species' care values are — `sourced`, `inferred`, or `none`.
