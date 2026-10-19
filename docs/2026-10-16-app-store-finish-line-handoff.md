@@ -23,6 +23,19 @@ Mac and will fill in these three lines when it finishes:
 Wherever a step below says "the build number", it means the first of those
 lines.
 
+**Update, 2026-10-17.** The build was never started on the 16th: EAS still
+lists 1.1.2 build 15 (2 August) as the newest iOS build, so the three lines
+above are still blank. Starting a production build from this Mac now needs
+your say-so (the sandbox refused it), and the command is in step 4. Checked
+again today: PR #22's CI is green on `62d3a66` and the PR is mergeable;
+production still has 29 paths and no `/growing-areas`; the live site still
+serves the July pages; the repo still has no secrets; and `npx wrangler
+whoami` on this Mac says its token has expired, so step 3 starts with
+`npx wrangler login`. Decision 6 below is settled for four of its five
+species, which changed the catalog this build ships: the smoke-check numbers
+in step 2 now read 10,681 claims and version `8c520db39b21:6:1`, from a
+scratch boot on this Mac today.
+
 **Checked from this Mac tonight.** The working tree is clean and
 `origin/care-advice-honesty` is `798f905`, 140 commits past `origin/master`
 (`db4f561`, the merge of PR #21). `bash .claude/bin/build-precheck.sh
@@ -44,9 +57,9 @@ folder passes its link check (13 pages, 0 broken).
 
 I also ran the new image's boot command on an empty scratch database. The
 migrations ended with `0020_climbs -> 0021_pending_apple_revocation`, then
-`claim sync: written` with `claims stored 10679`, and `GET /` answered
-`"catalog": {"version": "c30ff050a956:6:1", "synced": true, "species": 997,
-"claims": 10679}`. The new code's `openapi.json` has 36 paths, six of them
+`claim sync: written` with `claims stored 10681`, and `GET /` answered
+`"catalog": {"version": "8c520db39b21:6:1", "synced": true, "species": 997,
+"claims": 10681}`. The new code's `openapi.json` has 36 paths, six of them
 under `/growing-areas`. The orphan check in step 2 printed `[]` on a scratch
 database built at 0009.
 
@@ -143,15 +156,21 @@ submission.
    answer 404. The app never calls them. The catalog-expansion script
    (`garden-gnome/app/data/expansion/run_expansion.py`) does, so it needs the
    token when you next run it. Backend-only: it ships with the deploy.
-6. **Five poisonous species have no cited severity.** They are monkshood,
-   English yew, foxglove, lily of the valley and jimsonweed. Their stored
-   evidence has no cited NC State Poison Severity, so they read "Toxic to
-   pets and people" instead of "Seriously toxic", and they can still appear
-   as growing-area candidates. Foxglove in a sunny bed set to feed
-   pollinators is likely. Recommend a short research pass that cites NC State
-   for those five before you submit. That's a catalog batch and a deploy, no
-   code and no app build. If it can't happen this week, submit anyway: each
-   of them shows its hazard line.
+6. **Settled for four of the five poisonous species; the fifth is yours.**
+   Foxglove, English yew, monkshood and jimsonweed now carry NC State's
+   Poisonous to Humans block (Poison Severity: High), re-read on the live
+   pages on 2026-10-17 and checked quote by quote. Each reads "Seriously
+   toxic to pets and people", names NC State's rating, and is never put
+   forward as a growing-area candidate. Lily of the valley is different: NC
+   State's live page rates it Poison Severity: Low ("toxic only if large
+   quantities eaten"), while Missouri Botanical Garden calls all parts very
+   poisonous. Citing NC State would make the app say "NC State Extension
+   rates it low severity" beside "Seriously toxic" (the server keeps the
+   graver source), and would take it off candidate lists. Recommend leaving
+   it as it is for this submission: "Toxic to pets and people", its hazard
+   line shown, still a possible candidate for a shady bed. If you'd rather
+   it were never put forward, say so; that is a one-record change and a
+   deploy, no app build.
 7. **The "Sign-in required" box in App Review Information.** Tick it;
    `docs/app-store/review-notes.md` now says the same. The app does require
    sign-in before it shows anything, so ticking it is the accurate answer,
@@ -257,10 +276,13 @@ Settled since the lanes reported, so not decisions any more:
 - The retry states on every screen are in.
 
 Engineering leftovers that need nothing from you: Add plant should say a
-species has no check schedule before you add it; `CONTEXT.md`'s glossary
-entry for harm-capable fields needs ADR 0008's wording; health checks in
-`fly.toml`; and the pinned flyctl 0.4.111 and `python:3.12.15-slim-trixie`
-now need deliberate bumps.
+species has no check schedule before you add it (the species list the
+screen reads carries no schedules, so this needs a per-species fetch and
+a new build; left for 1.1.4); health checks in `fly.toml` (not before
+the first deploy, whose boot runs twelve migrations and the claim sync
+before the server answers); and the pinned flyctl 0.4.111 and
+`python:3.12.15-slim-trixie` now need deliberate bumps. The `CONTEXT.md`
+glossary entry for harm-capable fields now has ADR 0008's wording.
 
 ---
 
@@ -486,8 +508,8 @@ Look for `36 True`. It printed `29 False` tonight.
 curl -s https://garden-gnome-api.fly.dev/
 ```
 
-Look for a `catalog` block with `"version": "c30ff050a956:6:1"`, `"synced":
-true` and `"claims": 10679`, the same as the scratch boot. `species` will be
+Look for a `catalog` block with `"version": "8c520db39b21:6:1"`, `"synced":
+true` and `"claims": 10681`, the same as the scratch boot. `species` will be
 much higher than the scratch database's 997, because production keeps its
 older rows. Write the number down.
 
@@ -526,7 +548,7 @@ That prints what's buffered and exits. Look for these, in order:
   by hand in between. That isn't a problem in itself, but tell me.
 - One line per migration after it, ending with `Running upgrade 0020_climbs ->
   0021_pending_apple_revocation`.
-- `claim sync: written`, with `claims stored 10679`, `claims already present
+- `claim sync: written`, with `claims stored 10681`, `claims already present
   0`, `genus subjects skipped 4` and `fields refused 0`. Copy the whole block:
   the `species created`, `species linked` and `common-name collisions` counts
   depend on production's rows, and I can't predict them.

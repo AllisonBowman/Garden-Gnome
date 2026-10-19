@@ -3,6 +3,9 @@
 The cases here are the ones a boolean gets wrong: plants that are both food and
 poison depending on the part, and plants whose risk differs sharply by animal.
 """
+import json
+from pathlib import Path
+
 import pytest
 
 from app.services import toxicity as tx
@@ -610,3 +613,44 @@ def test_new_claims_are_not_hidden_behind_the_cache(session):
     assert sp.edibility_note == ("Some parts are eaten, but only certain parts "
                                  "or after preparation. Check the source before "
                                  "eating any of it.")
+
+
+# --- the named poisons, read from their own records ------------------------
+
+_VERIFIED = Path(__file__).resolve().parents[1] / "app" / "data" / "verified"
+
+
+def _record(batch: str, name: str) -> dict:
+    with open(_VERIFIED / batch, encoding="utf-8") as fh:
+        return next(r for r in json.load(fh)["records"]
+                    if r.get("scientific_name_accepted") == name)
+
+
+@pytest.mark.parametrize("batch, name", [
+    ("b16-perennials2.json", "Digitalis purpurea"),
+    ("b26-toxic-and-more-trees.json", "Taxus baccata"),
+    ("b29-mistletoe-and-more.json", "Aconitum napellus"),
+    ("b31-avocado-and-more.json", "Datura stramonium"),
+])
+def test_the_named_poisons_carry_nc_states_high_rating(batch, name):
+    """Foxglove, English yew, monkshood and jimsonweed each cite NC State's
+    Poisonous to Humans block, and the record reads as a high-severity poison
+    to people that no growing area may put forward. An audit once nulled
+    these details as human-scoped; this pins them so it cannot happen
+    unnoticed again."""
+    from app.data.claims.tranche import claims_from_record
+
+    record = _record(batch, name)
+    claims, unsupported = claims_from_record(record)
+    assert not unsupported
+    passages = [P(c.field, c.value, c.quote, c.authority.name) for c in claims
+                if c.field in ("toxic_to_pets", "toxicity_detail", "is_edible")]
+    evidence = tx.read_evidence(record["toxicity_detail"], passages)
+    assert evidence.people
+    assert (evidence.rating, evidence.rated_by) == ("high", "NC State Extension")
+    tox = tx.from_legacy(record["toxic_to_pets"], name, "NC State Extension", evidence)
+    assert tox.severity == "severe"
+    assert tx.never_put_forward(tox, evidence)
+    block = next(c for c in record["citations"]
+                 if c["claim"].startswith("toxicity_detail") and "ncsu.edu" in c["url"])
+    assert "Poison Severity: High" in block["quote"]
