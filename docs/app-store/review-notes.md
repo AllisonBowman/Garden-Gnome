@@ -48,15 +48,15 @@ EACH FEATURE IN UNDER A MINUTE
 8. Settings. Reminders per care type (notification permission is asked when you turn a reminder on), weather-adjusted watering, light and dark themes, a privacy summary, support links, Sign out and Delete account.
 
 PHOTOS
-In Add plant, Take photo and Choose photo appear only on iPhones where Apple Intelligence is available and turned on. The photo is read on the phone, never uploaded, and only suggests catalog matches to confirm. On other devices those buttons are missing by design; species search works everywhere. Photo check-ups of an ailing plant, and reading typed symptoms, are not offered in this version. The app asks our server what it can do and hides both.
+In Add plant, Take photo and Choose photo appear only on iPhones where Apple Intelligence is available and turned on. The photo is read on the phone, never uploaded, and only suggests catalog matches to confirm. On other devices those buttons are missing by design; species search works everywhere. Photo check-ups of an ailing plant and reading typed symptoms are not offered in this version. The app asks our server what it can do and hides both.
 
 PLANT HAZARDS AND EDIBILITY
-Hazard and edibility notes repeat what the cited sources publish, mostly NC State Extension and other university extension services. Where a source records harm to people or pets, the page says so plainly. A plant shows as edible only with its source's conditions. A missing record reads as unknown, never as safe. These notes are not medical or veterinary advice.
+Hazard and edibility notes repeat what the cited sources publish, mostly NC State Extension and other university extension services. Where a source records harm to people or pets, the page says so plainly, with any severity rating the source gives for people, and the parts it names. A plant shows as edible only with its source's conditions. A missing record reads as unknown, never as safe. These notes are not medical or veterinary advice.
 
 WEATHER
 Forecasts come from Apple Weather when it answers, otherwise from the U.S. National Weather Service or Open-Meteo. The source is credited under the forecast.
 ```
-Characters: 3,895 of 4,000.
+Characters: 3,976 of 4,000.
 
 Two parts of the notes describe 1.1.3 changes being made alongside this
 paperwork rather than code already on `b083a90`. Check both in the build

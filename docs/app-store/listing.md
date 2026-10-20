@@ -82,10 +82,11 @@ Characters: 157 of 170.
 
 ### Description
 
-The **HAZARDS, STATED PLAINLY** paragraph depends on the plant-hazard and
-edibility change for 1.1.3. If that change is not in the build, cut the
-whole paragraph: today's build still words most hazards as pets only, and
-still shows "grown to eat" without its conditions.
+The **HAZARDS, STATED PLAINLY** paragraph describes the plant-hazard and
+edibility change, which is in the build. Most hazard sentences name no
+parts, because most sources don't: on a scratch sync at `798f905`, 30 of the
+378 species with a hazard line named parts. So the paragraph promises parts
+only where the source gives them.
 
 <!-- field limit=4000 -->
 ```text
@@ -101,16 +102,16 @@ MORE THAN 990 SPECIES, WITH SOURCES
 The Species Almanac covers houseplants, herbs, vegetables, perennials, shrubs, trees, bulbs and climbers. Narrow it to what fits a growing area of yours. Each species page shows facts such as light, water, soil, size and cold hardiness, and lists where they came from. A fact borrowed from the plant's genus is labelled as borrowed. Anything not yet cited says so.
 
 HAZARDS, STATED PLAINLY
-If a source records a plant as harmful to people or pets, its page says so and names the parts. A plant is shown as edible only with the conditions its source gives. These notes repeat what the sources publish. They are not medical or veterinary advice.
+If a source records a plant as harmful to people or pets, its page says so, gives the source's severity rating for people where it has one, and names the parts where the source does. A plant is shown as edible only with the conditions its source gives. These notes repeat what the sources publish. They are not medical or veterinary advice.
 
 CHECKS, NOT CHORES
 When a plant comes due, feel the soil, then tap Watered or Still damp. Either keeps your streak. Nothing is called overdue while it is still inside its care window. Repotting is a look at the roots once a year, in February. Feeding reminders rest from November to February. Reminders are optional and set per care type. They follow a species' care window wherever the catalog holds a schedule for it, and can move an outdoor watering reminder by 1 or 2 days around rain and heat.
 
 WALK THE GARDEN
-Add plants by hand, or walk your garden and say what's there: "12 tomatoes along the south fence, a rosemary by the gate." Type it or dictate it, confirm each plant, and add them all at once.
+Add plants by hand, or walk your garden and say what's there: "12 tomatoes along the south fence, a rosemary by the gate." Type it or dictate it, confirm each plant, and add them all at once. On iPhones with Apple Intelligence, Add plant can also suggest likely matches from a photo. The photo is read on your phone and never uploaded, and you confirm the species before you save.
 
 ASK THE GNOME
-On any plant, the Gnome gives care advice built from its species' facts and that plant's own care log. On iPhones with Apple Intelligence, the Gnome can say it in its own voice, worked out on your phone, without changing the facts. You can also photograph a plant there and get likely matches from the catalog. The photo is read on your phone and never uploaded, and you confirm the species before you save.
+On any plant, the Gnome gives care advice built from its species' facts and that plant's own care log. On iPhones with Apple Intelligence, the Gnome can say it in its own voice, worked out on your phone, without changing the facts.
 
 LOCAL WEATHER
 Give a growing area a place and it gets a local forecast, with what the weather means for that spot.
@@ -120,7 +121,7 @@ PlantAdvocate is free, with no ads and no in-app purchases. Sign in with Apple o
 
 PlantAdvocate is independent. The organizations it cites have not reviewed or endorsed it.
 ```
-Characters: 3,582 of 4,000.
+Characters: 3,682 of 4,000.
 
 The description says nothing about photo check-ups of an ailing plant or
 about reading typed symptoms. Production doesn't offer either: the app asks
@@ -248,7 +249,7 @@ Paths are relative to the repository root, at `b083a90`.
 | Only species with a schedule get reminders | `mobile/src/notifications/plan.ts:141-144`; 129 of 997 rows have schedules on a fresh sync |
 | Walk the garden, digits understood | `mobile/src/screens/CaptureGardenScreen.tsx:222-300`; `capture/splitUtterance.ts:121` |
 | Gnome voice on the phone, facts unchanged | `mobile/src/gnomeVoice/restyle.ts:1-10`; `modules/plant-id/ios/PlantIdModule.swift:62-75` |
-| Photo matches on the phone, never uploaded | `mobile/src/photoId/identify.ts:52-120`; `PlantIdModule.swift:39-56` |
+| Photo matches in Add plant, on the phone, never uploaded | `mobile/src/photoId/identify.ts:52-120`; `AddPlantScreen.tsx:221-253`; `modules/plant-id/ios/PlantIdModule.swift:39-56` |
 | Local weather per area | `garden-gnome/app/routers/growing_areas.py:78-96`; `GrowingAreaDetailScreen.tsx:399-481` |
 | Sign in with Apple or Google only | `mobile/src/auth/LoginScreen.tsx:55-79` |
 | Census off by default | `garden-gnome/app/models/models.py:268` |

@@ -37,7 +37,7 @@ raises it.
 
 | Question | Answer | Why |
 |---|---|---|
-| Medical or Treatment Information | None | The app is about plant care. Hazard notes say what a cited source records a plant can do to people or pets, and which parts. For a serious hazard they say to get help quickly (`garden-gnome/app/services/toxicity.py:302-307`). They don't diagnose, triage or give treatment steps. Photo check-ups of a plant are not offered in this version |
+| Medical or Treatment Information | None | The app is about plant care. Hazard notes say what a cited source records a plant can do to people or pets, with the source's severity rating for people and the parts where the source names them. For a serious hazard they say to get help quickly (`garden-gnome/app/services/toxicity.py`, `_action`). They don't diagnose, triage or give treatment steps. Photo check-ups of a plant are not offered in this version |
 | Health or Wellness Topics | No | No diet, exercise or self-care content. "Something to eat" is a growing goal for what to plant (`mobile/src/growingAreas/realEstate.ts:53-58`), not dietary advice |
 
 If App Review disagrees about the hazard notes, the alternative answer is
