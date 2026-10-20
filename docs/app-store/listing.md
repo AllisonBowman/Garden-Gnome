@@ -6,10 +6,9 @@ Apple's limit; newlines count as characters. Read "Before you submit" in
 [README.md](README.md) first. Until those things are true of the build, the
 server and the website, some of this text isn't.
 
-Checked against the code at `b083a90` on `care-advice-honesty`. A few lines
-describe 1.1.3 changes being made alongside this paperwork, not code already
-on that commit. Each is marked where it appears, with what to cut if that
-change misses the build.
+Checked against the code at `307930e` on `care-advice-honesty`, the ship
+branch, with the review fixes made alongside it. Every 1.1.3 change these
+blocks describe is on that branch, so no line is waiting on one.
 
 The species figure is "more than 990". The 134 files in
 `garden-gnome/app/data/verified/` hold 999 records. Four of them are
@@ -99,7 +98,7 @@ SEE WHAT SUITS IT
 Each growing area lists what needs addressing among its plants, with the reason and the source. A shade fern in full sun is flagged. So is a climber that will outgrow a 7 ft fence. Each area also puts forward good candidates: species with nothing on record against that spot and at least 1 thing confirmed for it. You get the same check before you save a new plant, and again on each plant's own page.
 
 MORE THAN 990 SPECIES, WITH SOURCES
-The Species Almanac covers houseplants, herbs, vegetables, perennials, shrubs, trees, bulbs and climbers. Narrow it to what fits a growing area of yours. Each species page shows facts such as light, water, soil, size and cold hardiness, and lists where they came from. A fact borrowed from the plant's genus is labelled as borrowed. Anything not yet cited says so.
+The Species Almanac covers houseplants, herbs, vegetables, perennials, shrubs, trees, bulbs and climbers. Narrow it to what fits a growing area of yours. Each species page shows facts such as light, water, soil, size and cold hardiness, and lists where they came from. A fact borrowed from the plant's genus is labelled as borrowed. Anything not yet cited says so. The check schedules that reminders follow were written by PlantAdvocate for 129 common plants and are not cited.
 
 HAZARDS, STATED PLAINLY
 If a source records a plant as harmful to people or pets, its page says so, gives the source's severity rating for people where it has one, and names the parts where the source does. A plant is shown as edible only with the conditions its source gives. These notes repeat what the sources publish. They are not medical or veterinary advice.
@@ -121,7 +120,7 @@ PlantAdvocate is free, with no ads and no in-app purchases. Sign in with Apple o
 
 PlantAdvocate is independent. The organizations it cites have not reviewed or endorsed it.
 ```
-Characters: 3,682 of 4,000.
+Characters: 3,795 of 4,000.
 
 The description says nothing about photo check-ups of an ailing plant or
 about reading typed symptoms. Production doesn't offer either: the app asks
@@ -153,11 +152,9 @@ to Test** field (same 4,000 limit) and keep it for the store's version
 history. It covers everything since 1.1.2 build 15 (`a5d0d07`, 2 August
 2026).
 
-Three lines depend on other 1.1.3 changes. If a change misses the build,
-cut its line. "Hazards stated plainly" needs the plant-hazard and edibility
-change. The Census sentence in "Fewer dead ends" needs the operator-only
-census change. "iPhone only" needs `ios.supportsTablet` set to false in
-`mobile/app.json`.
+Every line describes a change on `307930e`: the hazard and edibility
+wording, the operator-only census with no sync button, and
+`ios.supportsTablet` false in `mobile/app.json` are all in the build.
 
 <!-- field limit=4000 -->
 ```text
@@ -171,7 +168,7 @@ A cited catalog. More than 990 species now carry care facts from named sources s
 
 Hazards stated plainly. Where a source records a plant as harmful to people or pets, its page says so. A plant is shown as edible only with the conditions its source gives.
 
-Checks, not chores. A watering to-do now asks you to check the soil first, then tap Watered or Still damp. Either keeps your streak. Nothing is called overdue while it is inside its care window.
+Checks, not chores. A watering check on the Checks for today card now asks you to feel the soil first, then tap Watered or Still damp. Either keeps your streak. Nothing is called overdue while it is inside its care window. A plant you add is dated that day, so its first check comes due without a log first.
 
 A February repot check. Repotting is now a look at the roots once a year, in February, with 3 endings: Repotted, Top-dressed or All fine. The setting is now called Spring repot check.
 
@@ -187,7 +184,7 @@ iPhone only. On iPad, PlantAdvocate now runs as an iPhone app.
 
 New icon. A terracotta pot with a seedling.
 ```
-Characters: 2,056 of 4,000.
+Characters: 2,169 of 4,000.
 
 ## URLs
 
@@ -219,7 +216,7 @@ content**, and **Yes, I have the rights**. That content is:
   Open-Meteo, each credited under the forecast
   (`garden-gnome/app/services/weather.py:32-48`);
 - species data that came in part from Perenual, credited in Settings
-  (`mobile/src/screens/SettingsScreen.tsx:400`).
+  (`mobile/src/screens/SettingsScreen.tsx:417`).
 
 Open-Meteo's free tier is for non-commercial use (`weather.py:43-44`). A
 free app with no ads fits that today. Revisit it before PlantAdvocate ever
@@ -227,31 +224,33 @@ charges for anything.
 
 ## Where each claim comes from
 
-Paths are relative to the repository root, at `b083a90`.
+Paths are relative to the repository root, at `307930e`. Files the review
+fixes are still changing are cited by function, not line.
 
 | Claim | Where it is true |
 |---|---|
 | Cited organizations | `garden-gnome/app/data/claims/authorities.py:52-80`; NC State, Missouri Botanical Garden and RHS are the most-cited in `verified/*.json` |
-| Each species page names its sources | `mobile/src/screens/SpeciesDetailScreen.tsx:121`, `mobile/src/components/CareFacts.tsx:103-121` |
-| Missing record never safe | `garden-gnome/app/services/toxicity.py:264-283`; CONTEXT.md "Unknown" |
+| Each species page names its sources | `mobile/src/screens/SpeciesDetailScreen.tsx:140`, `mobile/src/components/CareFacts.tsx:106-124` |
+| Missing record never safe | `garden-gnome/app/services/toxicity.py`, `describe` (the no-verdict branches) and `hazard_line`; CONTEXT.md "Unknown" |
+| Hazard sentence: who, the source's severity for people, parts where the source names them | `toxicity.py`, `describe`. Parts come only from a source's own table; a bare flag names none (`from_legacy`) |
 | Surfaces and goals | `mobile/src/growingAreas/realEstate.ts:12-68` |
-| Blank means unknown | `mobile/src/screens/GrowingAreasScreen.tsx:256-259` |
-| Shade fern in full sun, climber on a 7 ft fence | Fit engine run on a scratch sync: Lady Fern in a full-sun bed gets "This spot gets 6+ hours of direct sun; sources record it for part shade, full shade."; Chinese Wisteria under 84 in of headroom gets "Outgrows this spot: climbs to 25 ft and there is 7 ft of headroom" (`garden-gnome/app/services/fit.py:190-360`) |
-| Candidates need 0 misfits and 1 confirmed fit | `garden-gnome/app/services/fit.py:485`; CONTEXT.md "Candidate" |
-| Check before saving, and on the plant's page | `mobile/src/screens/AddPlantScreen.tsx:355-381`; `PlantDetailScreen.tsx:457` |
-| Almanac narrowed to an area | `mobile/src/screens/AlmanacScreen.tsx:209-231`; `SpeciesScreen.tsx:119-140` |
-| Borrowed and uncited labels | `mobile/src/care/facts.ts:39-50` |
-| Watered / Still damp, streak kept | `mobile/src/care/CareTodos.tsx:178-203`; commit `9bb1fe7` |
+| Blank means unknown | `mobile/src/screens/GrowingAreasScreen.tsx:273-276` |
+| Shade fern in full sun, climber on a 7 ft fence | Fit engine run on a scratch sync: Lady Fern in a full-sun bed gets "This spot gets 6+ hours of direct sun; sources record it for part shade, full shade."; Chinese Wisteria under 84 in of headroom gets "Outgrows this spot: climbs to 25 ft and there is 7 ft of headroom" (`garden-gnome/app/services/fit.py:193-363`) |
+| Candidates need 0 misfits and 1 confirmed fit | `garden-gnome/app/services/fit.py:494`, `is_candidate`; CONTEXT.md "Candidate" |
+| Check before saving, and on the plant's page | `mobile/src/screens/AddPlantScreen.tsx:392-418`; `PlantDetailScreen.tsx:497` |
+| Almanac narrowed to an area | `mobile/src/screens/AlmanacScreen.tsx:242-271`; `SpeciesScreen.tsx:133-154` |
+| Borrowed and uncited labels | `mobile/src/care/facts.ts:43-52` |
+| Watered / Still damp, streak kept | `mobile/src/care/CareTodos.tsx:219-244`; commit `9bb1fe7` |
 | Care window, no early "overdue" | `mobile/src/care/schedule.ts:133-150`; commit `59e9a0d` |
-| February repot inspection | `mobile/src/notifications/plan.ts:43-52`; `SettingsScreen.tsx:34`; commit `b4e2d24` |
-| Feeding March to October | `mobile/src/notifications/plan.ts:28-30` |
-| Weather nudge | `mobile/src/screens/SettingsScreen.tsx:306-318` |
-| Only species with a schedule get reminders | `mobile/src/notifications/plan.ts:141-144`; 129 of 997 rows have schedules on a fresh sync |
-| Walk the garden, digits understood | `mobile/src/screens/CaptureGardenScreen.tsx:222-300`; `capture/splitUtterance.ts:121` |
+| February repot inspection | `mobile/src/notifications/plan.ts:55-60`; `SettingsScreen.tsx:37`; commit `b4e2d24` |
+| Feeding March to October | `mobile/src/notifications/plan.ts:29-31` |
+| Weather nudge | `mobile/src/screens/SettingsScreen.tsx:323-335` |
+| Only species with a schedule get reminders | `mobile/src/notifications/plan.ts:154-157`; 129 of 997 rows have schedules on a fresh sync |
+| Walk the garden, digits understood | `mobile/src/screens/CaptureGardenScreen.tsx:256-346`; `capture/splitUtterance.ts:121` |
 | Gnome voice on the phone, facts unchanged | `mobile/src/gnomeVoice/restyle.ts:1-10`; `modules/plant-id/ios/PlantIdModule.swift:62-75` |
-| Photo matches in Add plant, on the phone, never uploaded | `mobile/src/photoId/identify.ts:52-120`; `AddPlantScreen.tsx:221-253`; `modules/plant-id/ios/PlantIdModule.swift:39-56` |
-| Local weather per area | `garden-gnome/app/routers/growing_areas.py:78-96`; `GrowingAreaDetailScreen.tsx:399-481` |
-| Sign in with Apple or Google only | `mobile/src/auth/LoginScreen.tsx:55-79` |
+| Photo matches in Add plant, on the phone, never uploaded | `mobile/src/photoId/identify.ts:56-117`; `AddPlantScreen.tsx:236-268`; `modules/plant-id/ios/PlantIdModule.swift:39-56` |
+| Local weather per area | `garden-gnome/app/routers/growing_areas.py:79-100`; `GrowingAreaDetailScreen.tsx:456-538` |
+| Sign in with Apple or Google only | `mobile/src/auth/LoginScreen.tsx:67-102` |
 | Census off by default | `garden-gnome/app/models/models.py:268` |
-| Delete account from Settings | `mobile/src/screens/SettingsScreen.tsx:78-97, 194-204`; `garden-gnome/app/routers/auth.py:227-273` |
-| Photo check-ups and symptom box hidden | `mobile/src/care/aiCapabilities.ts:29-39`; `PlantDetailScreen.tsx:271, 339`; commit `2f12456` |
+| Delete account from Settings | `mobile/src/screens/SettingsScreen.tsx:95-114, 211-221`; `garden-gnome/app/routers/auth.py`, `delete_me` |
+| Photo check-ups and symptom box hidden | `mobile/src/care/aiCapabilities.ts:45-55`; `PlantDetailScreen.tsx:312, 379`; commit `2f12456` |

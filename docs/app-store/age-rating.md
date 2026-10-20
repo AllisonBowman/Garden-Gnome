@@ -2,7 +2,7 @@
 
 App Store Connect > App Information > Age Rating. The questions are the
 ones on Apple's "Age ratings values and definitions" page as it read on
-15 October 2026. Answers are checked against the code at `b083a90`.
+15 October 2026. Answers are checked against the code at `307930e`.
 
 The expected result is **4+**. Nothing below is answered in a way that
 raises it.
@@ -18,8 +18,8 @@ raises it.
 
 | Question | Answer | Why |
 |---|---|---|
-| Unrestricted Web Access | No | There is no in-app browser or web view. Source links, the weather credit and support links open in Safari (`mobile/src/components/CareFacts.tsx:115`, `components/WeatherCredit.tsx:39`, `support.ts:17-19`) |
-| User-Generated Content | No | Nicknames, notes, care logs and growing areas are private to the account and are never shown to anyone else. The census, for people who join it, is counted by the operator. No one else ever sees it in the app (`garden-gnome/app/routers/census.py:34-84` serves only the caller's own summary) |
+| Unrestricted Web Access | No | There is no in-app browser or web view. Source links, the weather credit and support links open in Safari (`mobile/src/components/CareFacts.tsx:118`, `components/WeatherCredit.tsx:39`, `support.ts:17-19`) |
+| User-Generated Content | No | Nicknames, notes, care logs and growing areas are private to the account and are never shown to anyone else. The census, for people who join it, is counted by the operator. No one else ever sees it in the app (`garden-gnome/app/routers/census.py`, `census_summary`, serves only the caller's own summary) |
 | Social Media | No | No feed, likes, follows or sharing |
 | Social Media Disabled for Users Under 13 | No | There is no social media to disable |
 | Messaging and Chat | No | People can't contact each other in the app. Support is an email to PlantAdvocate |
@@ -60,7 +60,7 @@ warning people about foxglove would be a strange result.
 | Cartoon or Fantasy Violence | None | |
 | Realistic Violence | None | |
 | Prolonged Graphic or Sadistic Realistic Violence | None | |
-| Guns or Other Weapons | None | The only blade is the scissors icon on the Pruned button (`mobile/src/screens/PlantDetailScreen.tsx:45`) |
+| Guns or Other Weapons | None | The only blade is the scissors icon on the Pruned button (`mobile/src/screens/PlantDetailScreen.tsx:50`) |
 
 ## Chance-Based Activities
 

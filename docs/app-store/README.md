@@ -2,8 +2,9 @@
 
 Everything App Store Connect asks for before PlantAdvocate 1.1.3 can go to
 App Review, ready to paste field by field. Each file was checked against the
-code at `b083a90` on `care-advice-honesty`, and against production and the
-live website on 16 October 2026.
+code at `307930e` on `care-advice-honesty`, the ship branch, with the
+review fixes made alongside it, and against production and the live website
+on 16 and 17 October 2026.
 
 - [listing.md](listing.md): name, subtitle, promotional text,
   description, keywords, What's New, categories, copyright, URLs, price and
@@ -37,14 +38,16 @@ These have to be true first, or some of the text in these files is not.
    precise location. Deploy the corrected `site/` pages, then reload
    `https://plantadvocate.ai/support` and `https://plantadvocate.ai/privacy`
    to check.
-3. **The build has the 1.1.3 changes these files describe.** That means
-   `ios.supportsTablet` set to false, so no iPad screenshots are asked for.
-   Plant hazards to people and pets stated plainly, with edibility shown
-   only with its conditions. The census export and sync made operator-only,
-   with identifiers made fresh for each export and no Sync now button in
-   the app. The in-app privacy summary naming all 3 weather services. A
-   privacy manifest matching app-privacy.md. listing.md and review-notes.md
-   mark which lines to cut if one of these misses the build.
+3. **The build is made from `307930e` or later.** Every 1.1.3 change these
+   files describe is on that branch: `ios.supportsTablet` false, so no iPad
+   screenshots are asked for; plant hazards to people and pets stated
+   plainly, with edibility shown only with its conditions; the census
+   export and sync operator-only, export 4.1 with fresh identifiers and
+   care counted by month, and no Sync now button in the app; the in-app
+   privacy summary naming all 3 weather services; and a privacy manifest
+   matching app-privacy.md. No line in these files is waiting on a change,
+   so none needs cutting. A build from an older commit would make some of
+   them untrue.
 4. **The server is awake when review starts.** It stops when idle
    (`garden-gnome/fly.toml`, `min_machines_running = 0`), and a first
    request after idle took 6.7 s on 15 October. Open the app once just

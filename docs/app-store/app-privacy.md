@@ -1,11 +1,13 @@
 # App Privacy answers for 1.1.3
 
 These are the answers for App Store Connect > App Privacy, checked against
-the code at `b083a90`. They describe the build as it ships, with photo
-check-ups and free-text symptom reading switched off on the server.
+the code at `307930e` on `care-advice-honesty`, with the review fixes made
+alongside it. Files those fixes are still changing are cited by function,
+not line. They describe the build as it ships, with photo check-ups and
+free-text symptom reading switched off on the server.
 Production's `GET /ai/status` answered `advisor_symptoms_backend: "stub"`
 and `vision.ready: false` on 16 October, and the app shows neither feature
-while it says so (`mobile/src/care/aiCapabilities.ts:29-39`).
+while it says so (`mobile/src/care/aiCapabilities.ts:45-55`).
 
 App Privacy belongs to the app, not to a build. It can be changed at any
 time and the change goes live without a review. That matters here, because
@@ -38,13 +40,13 @@ type, and the same data is linked for app functionality.
 
 | Apple category | Data type | Linked | Purposes | Where in the code |
 |---|---|---|---|---|
-| Contact Info | Name | Yes | App Functionality | Apple's full name, sent only at first sign-in, and Google's profile name are stored as `User.display_name` (`mobile/src/auth/signIn.ts:57-67`; `garden-gnome/app/routers/auth.py:139-146, 176-184`; `models.py:256`) |
-| Contact Info | Email Address | Yes | App Functionality | The Apple or Google email, which may be an Apple relay address, is stored in `User.email` and `AuthIdentity.email_at_signup` and used to link a second sign-in method to the same account (`auth.py:74-80, 84`; `models.py:255, 288`) |
+| Contact Info | Name | Yes | App Functionality | Apple's full name, sent only at first sign-in, and Google's profile name are stored as `User.display_name` (`mobile/src/auth/signIn.ts:57-67`; `garden-gnome/app/routers/auth.py`, `sign_in_with_apple` and `sign_in_with_google`; `models.py:256`) |
+| Contact Info | Email Address | Yes | App Functionality | The Apple or Google email, which may be an Apple relay address, is stored in `User.email` and `AuthIdentity.email_at_signup` and used to link a second sign-in method to the same account (`auth.py`, `_sign_in`; `models.py:255, 288`) |
 | Identifiers | User ID | Yes | App Functionality | The account's own ID and the Apple and Google subject IDs (`garden-gnome/app/models/models.py:254, 287`) |
-| Location | Precise Location | Yes | App Functionality | A growing area's latitude and longitude, from "Use my location" or a geocoded address, are stored on the area and sent from the server to fetch its forecast (`mobile/src/location/lookup.ts:12-38`; `models.py:592-593`; `garden-gnome/app/services/weather.py:363-379`) |
-| Location | Coarse Location | Yes | App Functionality, Analytics | A growing area's city, region and country are stored on the area (`models.py:589-591`). For people who join the census, they are the only location in the operator's census export (`garden-gnome/app/routers/census.py:162-168`) |
-| User Content | Customer Support | Yes | App Functionality | "Report this result" and the support address in Settings open a prefilled email to support@plantadvocate.ai, carrying the result text, the plant and species, and the app version. The reply is kept in that mailbox (`mobile/src/support.ts:35-53`; `components/ReportResult.tsx:35`; `SettingsScreen.tsx:418-425`) |
-| User Content | Other User Content | Yes | App Functionality, Analytics | Nicknames, spot notes, intake notes, counts, care logs and their outcomes, moves between areas, and each growing area's name, surface, measurements, conditions and goals (`models.py:574-703`; `mobile/src/api/plants.ts:19-71`; `api/growingAreas.ts:51-80`). For people who join the census, the operator's export counts plants, species, dates and care history, with no nickname, notes or account ID (`census.py:146-179`) |
+| Location | Precise Location | Yes | App Functionality | A growing area's latitude and longitude, from "Use my location" or a geocoded address, are stored on the area and sent from the server to fetch its forecast (`mobile/src/location/lookup.ts:12-38`; `models.py:611-612`; `garden-gnome/app/services/weather.py:376-396`) |
+| Location | Coarse Location | Yes | App Functionality, Analytics | A growing area's city, region and country are stored on the area (`models.py:608-610`). For people who join the census, they are the only location in the operator's census export (`garden-gnome/app/routers/census.py`, `build_export`, the `growing_area` block) |
+| User Content | Customer Support | Yes | App Functionality | "Report this result" and the support address in Settings open a prefilled email to support@plantadvocate.ai, carrying the result text, the plant and species, and the app version. The reply is kept in that mailbox (`mobile/src/support.ts:35-53`; `components/ReportResult.tsx:35`; `SettingsScreen.tsx:435-442`) |
+| User Content | Other User Content | Yes | App Functionality, Analytics | Nicknames, spot notes, intake notes, counts, care logs and their outcomes, moves between areas, and each growing area's name, surface, measurements, conditions and goals (`models.py:593-722`; `mobile/src/api/plants.ts:101-156`; `api/growingAreas.ts:51-80`). For people who join the census, the operator's export 4.1 counts each planting's species, how many, growth stage, starting condition, the month it was acquired, its care as counts per month, the months it moved between growing areas and any split link, with no nickname, notes, day-level date or account ID (`census.py`, `build_export`) |
 
 Analytics, here, means only the community census. It is off unless the
 person turns it on (`models.py:268`). It counts what people grow and how it
@@ -62,12 +64,12 @@ measures how the app is used.
 | Sensitive Info | Sensitive Info | Never asked for |
 | Contacts | Contacts | No contacts access in the app |
 | User Content | Emails or Text Messages | The app never reads the person's mail or messages. Support email is declared above as Customer Support |
-| User Content | Photos or Videos | Not in 1.1.3 as shipped. Identifying a plant from a photo runs on the phone, and the picture is never uploaded (`mobile/src/photoId/identify.ts:52-120`; `modules/plant-id/ios/PlantIdModule.swift:39-56`). The photo check-up, the only upload, is hidden while the server reports vision off (`mobile/src/screens/PlantDetailScreen.tsx:339`) |
-| User Content | Audio Data | Walk the garden turns speech into text through Apple's Speech framework, on the phone where it can and otherwise on Apple's servers (`mobile/modules/plant-speech/ios/PlantSpeechModule.swift:134, 180`). PlantAdvocate never receives the audio or the transcript, only the plants the person confirms (`mobile/src/screens/CaptureGardenScreen.tsx:185-191`; `api/plants.ts:50-54`) |
+| User Content | Photos or Videos | Not in 1.1.3 as shipped. Identifying a plant from a photo runs on the phone, and the picture is never uploaded (`mobile/src/photoId/identify.ts:56-117`; `modules/plant-id/ios/PlantIdModule.swift:39-56`). The photo check-up, the only upload, is hidden while the server reports vision off (`mobile/src/screens/PlantDetailScreen.tsx:379`) |
+| User Content | Audio Data | Walk the garden turns speech into text through Apple's Speech framework, on the phone where it can and otherwise on Apple's servers (`mobile/modules/plant-speech/ios/PlantSpeechModule.swift:134, 180`). PlantAdvocate never receives the audio or the transcript, only the plants the person confirms (`mobile/src/screens/CaptureGardenScreen.tsx:197-204`; `api/plants.ts:135-139`) |
 | User Content | Gameplay Content | No games |
 | Browsing History | Browsing History | No in-app browser. Links open in Safari |
-| Search History | Search History | Species search filters the list already on the phone. Search terms never reach the server (`mobile/src/api/species.ts:4-8`) |
-| Identifiers | Device ID | No advertising ID, no vendor ID, no push token. Reminders are local notifications (`mobile/src/notifications/reminders.ts:197`) |
+| Search History | Search History | Species search filters the list already on the phone. Search terms never reach the server (`mobile/src/api/species.ts:7-11`) |
+| Identifiers | Device ID | No advertising ID, no vendor ID, no push token. Reminders are local notifications (`mobile/src/notifications/reminders.ts:191`) |
 | Purchases | Purchase History | No purchases |
 | Usage Data | Product Interaction, Advertising Data, Other Usage Data | No analytics or ad SDK in `mobile/package.json`, and no event endpoint on the server. Care logs are the person's own records, declared above as Other User Content |
 | Diagnostics | Crash Data, Performance Data, Other Diagnostic Data | No crash or performance SDK. The only logs are the server's own operational logs, which aren't tied to an account or used to study anyone |
@@ -89,12 +91,16 @@ above.
 
 - Sign-in: the phone talks to Apple or Google directly to sign in. The server
   checks the token with them, and on account deletion asks Apple to revoke
-  the Sign in with Apple link (`garden-gnome/app/routers/auth.py:227-273`).
+  the Sign in with Apple link (`garden-gnome/app/routers/auth.py`,
+  `delete_me`). If Apple doesn't accept at once, the encrypted grant, with
+  nothing that says whose it was, waits in `pending_apple_revocation` to be
+  retried and is deleted after 30 days or 10 tries, whichever comes first.
+  The privacy policy's deletion paragraph says so.
 - Weather: a growing area's coordinates go to Apple WeatherKit, then the U.S.
   National Weather Service, then Open-Meteo, until one of them answers
-  (`garden-gnome/app/services/weather.py:363-379`). The in-app privacy
-  summary has to name all three. At `b083a90` it names only Apple Weather
-  (`mobile/src/consent/copy.ts:99-110`), and that has to be fixed before 1.1.3 ships.
+  (`garden-gnome/app/services/weather.py:376-396`). The in-app privacy
+  summary names all three (`mobile/src/consent/copy.ts`, the `location`
+  flow).
 
 The Google Sign-In SDK is the one third-party SDK that handles personal
 data, and it only signs in. Before submitting, open the archived build in
@@ -136,7 +142,7 @@ it asks `GET /ai/status`. Do these first, in this order:
    another company, and update the privacy policy to name that company.
 2. Here, add **User Content > Photos or Videos**: linked, App Functionality,
    not tracking. A photo check-up uploads the photo under the person's
-   account (`mobile/src/api/plants.ts:106-130`), and the model that reads
+   account (`mobile/src/api/plants.ts:191-217`), and the model that reads
    it belongs to another company. Typed symptoms are already covered by
    Other User Content (App Functionality), so symptom reading changes
    nothing here, but the policy has to name the company that reads them.
@@ -146,13 +152,15 @@ it asks `GET /ai/status`. Do these first, in this order:
 ## If the census changes
 
 The census answers assume what 1.1.3 does. Joining is a switch in the app,
-off by default. Exporting is an operator job, with identifiers made fresh
-for each export. The export has no name, email, nickname, notes,
-coordinates or account ID. At `b083a90` 2 of those aren't true yet: any
-signed-in account can call `/census/export`, and each record's
-`plant_uuid` is the same in every export
-(`garden-gnome/app/routers/census.py:96-147`). The operator-only census
-change for 1.1.3 has to land before these answers are true.
+off by default (`models.py:268`). Exporting is an operator job: with no
+`CENSUS_OPERATOR_TOKEN` set, `/census/export` and `/census/sync` answer 404
+(`garden-gnome/app/routers/census.py`, `require_operator`). Export 4.1
+(`build_export`) has no name, email, nickname, notes, coordinates, account
+ID or day-level date. Every identifier in it is made new for that export,
+its records come in a random order, and care is counted per type per
+calendar month. A planting's monthly counts could still resemble it in a
+later export, so the policy promises only that no identifier links 2
+exports, not that they can never be matched.
 
 If the export ever goes to another organization, say who in the privacy
 policy. If it ever carries a stable identifier, change Coarse Location and

@@ -41,9 +41,13 @@ plants live on the server, so the second simulator shows the same garden
 after signing in.
 
 Set this up against production, after the 1.1.3 backend is deployed.
-Due checks need care logged on earlier days: a plant added in the app has
-no acquired date, so its first check is counted from its first log
-(`mobile/src/care/schedule.ts:87-98`).
+Since `7dac70d` the server dates a plant the day it's added, and with
+nothing logged its first check counts from that day
+(`mobile/src/care/schedule.ts`, `computeCareTasks`). The plan below adds
+everything 2 days ahead and logs water on chosen days, so that exactly
+Basil and Boston Fern are due on the day: Rosemary (every 7 to 14 days)
+and Snake Plant (every 14 to 21) aren't due yet, and Lady Fern and Chinese
+Wisteria have no check schedule.
 
 **2 days before the shoot:**
 
@@ -95,9 +99,13 @@ Words: 8 of 8.
 Screen: Back fence bed, scrolled to "Good candidates here".
 
 Set up: the list intro and 3 or more candidates in view, each with its
-confirmed line. Before shooting, read every visible name. None should be a
-plant with a serious hazard to people. If one is, the hazard change isn't
-in the build yet.
+confirmed line. Before shooting, read every visible name. A source's
+serious poison for people is never a candidate unless it is a food crop
+eaten without conditions (potato, eggplant, peanut, tomatillo and butter
+bean can appear, each with its hazard line). If mayapple, taro, wisteria,
+foxglove, English yew, monkshood or jimsonweed shows, the exclusion isn't
+in the build: don't shoot it, and say so. A food crop with a warning line
+is true, but scroll it out of frame if it would lead the shot.
 
 <!-- field limit=8 unit=words exact -->
 ```text
@@ -122,9 +130,11 @@ Words: 8 of 8.
 
 Screen: Plants tab.
 
-Set up: the streak badges and "To-do today" with Check Basil and Check
-Boston Fern, each offering Watered and Still damp, with the plant cards
-below.
+Set up: the streak badges and the "Checks for today" card with Check
+Basil and Check Boston Fern, each offering Watered and Still damp, with
+the plant cards below. The card also says 2 plants have no check schedule
+for their species (Lady Fern and Chinese Wisteria). That line is true; keep
+it in if it fits, or let it fall below the frame.
 
 <!-- field limit=8 unit=words exact -->
 ```text
@@ -137,23 +147,30 @@ Words: 8 of 8.
 Screen: Species tab > Snake Plant.
 
 Set up: the care facts and the Sources card in view together. Snake Plant
-is cited to NC State Extension and others.
+is cited to NC State Extension and others. Its page may also show an older
+value under "From the catalog — not yet cited". That label is the app
+being honest, so it can stay in frame, and it is why the caption says
+"each cited fact" rather than "every fact".
 
 <!-- field limit=8 unit=words exact -->
 ```text
-Every care fact names where it came from.
+Each cited fact names the source behind it.
 ```
 Words: 8 of 8.
 
 ### 6. Hazards, stated plainly
 
 Screen: Species tab > Dumb Cane (Dieffenbachia), a common houseplant whose
-cited record rates the hazard high for people as well as pets and names the
-parts. Pothos or Peace Lily also work; English Yew and Castor Bean do not,
-because their records name no parts on this build.
+cited record names people and pets, carries NC State's high Poison Severity
+rating, which is a rating for people, and names the parts. Pothos or Peace
+Lily also work; English Yew and Castor Bean do not, because their records
+name no parts on this build.
 
-Set up: the hazard sentence in view, naming people, pets, the parts and the
-Poison Control line. If the sentence is cut off, scroll it fully into view
+Set up: the hazard sentence in view, naming people, pets, the parts, the
+rating and the Poison Control line. The severity word ("Seriously") belongs
+to people; pets are named as "toxic to" them unless the record says more.
+If the sentence reads as if NC State rated the hazard to pets, don't shoot
+it, and say so. If the sentence is cut off, scroll it fully into view
 before shooting.
 
 <!-- field limit=8 unit=words exact -->
@@ -192,7 +209,7 @@ Words: 8 of 8.
 
 ### Alternate: Ask the Gnome
 
-Use this in place of shot 6 if the hazard change isn't in the build.
+Use this in place of shot 6 or 7 if you'd rather show the advice.
 
 Screen: Plants tab > Basil > Ask the Gnome > Get care advice.
 
@@ -208,11 +225,7 @@ Words: 8 of 8.
 
 - Settings. It shows the account's name and email. A development or
   preview build also shows the Backend connection card
-  (`mobile/src/screens/SettingsScreen.tsx:235-277`).
-- The Census sync card, if the build still has one.
-- The page of any plant that is both edible and toxic, such as Tomatoes,
-  Lavender, Mint, Parsley or Chinese Wisteria, until the edibility change
-  is in the build.
+  (`mobile/src/screens/SettingsScreen.tsx:252-294`).
 - Photo identification. It needs Apple Intelligence, and the listing
   doesn't lead with it.
 - A photo check-up or symptom box. They are hidden in production anyway.

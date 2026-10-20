@@ -3,7 +3,7 @@
 ## The answer
 
 PlantAdvocate uses no encryption except what iOS itself provides, so it
-needs no export documentation. `mobile/app.json:15` sets
+needs no export documentation. `mobile/app.json:79` sets
 `ITSAppUsesNonExemptEncryption` to `false` in the app's Info.plist. App
 Store Connect reads that key from each uploaded build and doesn't ask the
 encryption questions at all.
@@ -27,7 +27,7 @@ All of the app's cryptography is Apple's operating system, or a standard
 use of it that U.S. export rules exempt:
 
 - **HTTPS.** Every request goes over HTTPS through iOS networking, to
-  `https://garden-gnome-api.fly.dev` (`mobile/src/api/client.ts:12`) and to
+  `https://garden-gnome-api.fly.dev` (`mobile/src/api/baseUrl.ts:11`) and to
   Apple and Google for sign-in.
 - **The Keychain.** Sign-in tokens and a few preferences are stored with
   `expo-secure-store`, which is the iOS Keychain
@@ -39,7 +39,8 @@ use of it that U.S. export rules exempt:
   networking.
 
 The server encrypts Apple's refresh token at rest with Fernet
-(`garden-gnome/app/routers/auth.py:153, 240`). That code runs on the server,
+(`garden-gnome/app/routers/auth.py`, `sign_in_with_apple` and
+`revoke_pending_apple_grants`). That code runs on the server,
 not in the app, so it has no bearing on the app's export classification.
 
 ## When this would change
