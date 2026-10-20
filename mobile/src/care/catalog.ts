@@ -3,10 +3,20 @@
 // list and find species the same way.
 import { Species } from '../types';
 
-// One collator for every comparison: locale-aware, so "Ångel's trumpet"
-// sorts with the A's and "baby's breath" beside "Baby sage"; numeric, so
-// "Fern 2" comes before "Fern 10".
-const collator = new Intl.Collator(undefined, { sensitivity: 'base', numeric: true });
+// One collator for every comparison, in English: accents and case set
+// aside, so "Ångel's trumpet" sorts with the A's and "baby's breath" beside
+// "Baby sage"; numeric, so "Fern 2" comes before "Fern 10". English rather
+// than the phone's own locale because every name in the catalog is written
+// in English, and so the list comes out in one order everywhere: Swedish
+// collation puts Å after Z, and an order that moved with whoever ran the
+// tests left them red on a Nordic laptop for correct code.
+const CATALOG_LOCALE = 'en';
+const collator = new Intl.Collator(CATALOG_LOCALE, { sensitivity: 'base', numeric: true });
+
+/** The locale the catalog is actually sorted in, as the runtime resolved it. */
+export function catalogCollation(): string {
+  return collator.resolvedOptions().locale;
+}
 
 /** A to Z by common name, then scientific name, then id — so two rows that
  *  share a common name always come out in the same order. */

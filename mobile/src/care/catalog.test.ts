@@ -1,4 +1,4 @@
-import { aToZ, byCommonName, foldName, matchesQuery } from './catalog';
+import { aToZ, byCommonName, catalogCollation, foldName, matchesQuery } from './catalog';
 import { Species } from '../types';
 
 const sp = (id: number, common: string, scientific = 'Testus', over: Partial<Species> = {}) => (
@@ -16,6 +16,12 @@ test('the catalog lists A to Z by common name, ignoring case and accents', () =>
   expect(aToZ(list).map((s) => s.common_name)).toEqual([
     'aloe vera', 'Ångel’s trumpet', 'Monstera', 'pothos', 'Snake Plant',
   ]);
+});
+
+test('the order is English collation, whatever locale the phone or runner is in', () => {
+  // Under sv_SE or da_DK the runtime's default puts Å after Z; the catalog
+  // is sorted in English on purpose, so the test above holds everywhere.
+  expect(catalogCollation()).toMatch(/^en\b/);
 });
 
 test('ties break on the scientific name, then the id, so the order never shuffles', () => {
