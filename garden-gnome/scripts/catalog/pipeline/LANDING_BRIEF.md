@@ -17,6 +17,9 @@ with `.venv/bin/python`). Never cd into /Users/allisonbowman/Developer/Garden-Gn
 - The rules the researcher and auditor were given are in the batch script SCRATCH/bNN-catalog-research.js (or bNN-resume.js) (researchPrompt / verifyPrompt).
   Read them: they define the enum tokens, the quote-provenance rules, the naming rules, the sun-list rules.
 
+## The page cache is shared
+The page cache in scripts/catalog/.quote_cache is SHARED by every agent running right now: never delete, move or edit anything in it -- not one entry, never a glob. On 2026-09-27 two agents ran 'rm -f .quote_cache/*.json' and wiped the pages forty other agents were reading. A page that will not load is reported in unknowns, not repaired; a failed fetch is not cached, so simply retrying is safe. If you read a page through Bash (qc.py or curl) and the sandbox denies the host, re-run that same command with the host listed in the Bash tool's allowed_domains.
+
 ## What a landing does
 Write SCRATCH/bNN_repair.py in the shape of b74_repair.py, run it, and iterate until all three checks are clean:
 1. `.venv/bin/python SCRATCH/bNN_repair.py` -- generic_passes asserts must hold (they name the defect and the species).

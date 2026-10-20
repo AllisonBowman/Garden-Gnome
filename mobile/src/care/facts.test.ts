@@ -6,7 +6,7 @@
 // as "verified" (CONTEXT.md bans that word for care data).
 import {
   CATALOG_LINE, careFactRows, careSourceLabels, careStatusLine, legacyStats,
-  monthSpan, waterRegimeSentence,
+  lengthSaid, monthSpan, waterRegimeSentence,
 } from './facts';
 import { Species } from '../types';
 
@@ -133,6 +133,51 @@ test('a climber reads its height as reach, not stature', () => {
   const shrub = minted({ mature_height_in_min: 36, mature_height_in_max: 72 });
   expect(Object.fromEntries(careFactRows(shrub).map((r) => [r.key, r.value])).size)
     .toBe('3 ft-6 ft tall');
+});
+
+// --- edibility (shown with its conditions or not at all) --------------------
+// "Grown to eat" on a plant whose leaves are poisonous, or that must be
+// cooked first, is the kind of half-truth that hurts someone. The server
+// writes one sentence with the conditions; when it does, that sentence
+// replaces the bare phrase rather than sitting beside it.
+
+const CONDITIONAL = 'Some parts are eaten, but only certain parts or after preparation, '
+  + 'and other parts are poisonous. Check the source before eating any of it.';
+
+test('edible with no conditions on record reads "grown to eat"', () => {
+  const by = Object.fromEntries(careFactRows(minted({ is_edible: true })).map((r) => [r.key, r]));
+  expect(by.place.value).toBe('Grown to eat');
+  expect(by.eating).toBeUndefined();
+});
+
+test('an edibility note replaces "grown to eat" and is its own caution row', () => {
+  const rows = careFactRows(minted({
+    is_houseplant: false, is_edible: true, edibility_note: CONDITIONAL,
+  }));
+  const by = Object.fromEntries(rows.map((r) => [r.key, r]));
+  expect(by.place.value).toBe('An outdoor plant');
+  expect(values(minted({ is_edible: true, edibility_note: CONDITIONAL })))
+    .not.toMatch(/grown to eat/i);
+  expect(by.eating).toEqual({
+    key: 'eating', label: 'Eating', value: CONDITIONAL, inferred: false, caution: true,
+  });
+  // Read last: after where it lives, so the caution closes the list.
+  expect(rows[rows.length - 1].key).toBe('eating');
+});
+
+test('the note alone is enough for the row; "grown to eat" never appears with it', () => {
+  const rows = careFactRows(minted({ is_edible: true, edibility_note: CONDITIONAL }));
+  expect(rows.map((r) => r.key)).toEqual(['eating']);
+});
+
+test('a blank note is no note, and not edible is never "grown to eat"', () => {
+  expect(values(minted({ is_edible: true, edibility_note: '  ' }))).toBe('Grown to eat');
+  expect(values(minted({ is_edible: false }))).toBe('');
+  expect(values(minted({ is_edible: null }))).toBe('');
+});
+
+test('no ordinary fact row is a caution row', () => {
+  expect(careFactRows(sourced()).some((r) => r.caution)).toBe(false);
 });
 
 test('a leading unit symbol keeps its case: "pH", never "PH"', () => {
@@ -304,4 +349,18 @@ test('the detail screens show a legacy stat only through the captioned row, belo
     expect(facts).toBeGreaterThan(status);
     expect(legacy).toBeGreaterThan(facts);
   }
+});
+
+// Shared with garden-gnome/tests/test_fit.py (LENGTHS_SAID): the fit engine's
+// sentences and the app's cards say a length by one rule. If these drift, an
+// area's card and its findings disagree about the same number — 87 in is
+// "7.3 ft" on both, where each language's own rounding would split it.
+const LENGTHS_SAID: [number, string][] = [
+  [18, '18 in'], [23.5, '23.5 in'], [24, '2 ft'], [84, '7 ft'],
+  [87, '7.3 ft'], [81, '6.8 ft'], [39.4, '3.3 ft'], [59.1, '4.9 ft'],
+  [720, '60 ft'],
+];
+
+test.each(LENGTHS_SAID)('says %p inches as the fit engine does: %p', (inches, said) => {
+  expect(lengthSaid(inches)).toBe(said);
 });

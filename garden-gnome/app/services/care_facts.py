@@ -12,10 +12,12 @@ named -- the name only, never the passage (ADR 0003).
 """
 from __future__ import annotations
 
+import math
 from enum import Enum
 from typing import Any, Callable
 
 from app.models.models import Species
+from app.services.toxicity import cited_authority, safety_of
 
 #: Suffix on any value the resolver borrowed from the genus (ADR 0002).
 GENUS_LABEL = " (genus-inferred)"
@@ -273,15 +275,23 @@ def _outdoors(sp: Species, tag: Tag) -> Told:
     return lines, ""
 
 
-def _feet(value: float) -> str:
+def length_said(value: float) -> str:
     """Inches, said the way a gardener says them.
 
     Under two feet nobody converts; above it, feet with the inches dropped is
-    how every source publishes mature size in the first place."""
+    how every source publishes mature size in the first place -- to one
+    decimal, a half rounded up.
+
+    The one rule for a length the app is told: these fact lines, the fit
+    engine's sentences, and the app's own cards (mobile care/facts.ts
+    `lengthSaid`, to the operation), so the "7 ft" of headroom in a reason is
+    the "7 ft" printed for the 84 in somebody measured. Not round(): Python
+    takes a half to even and JavaScript takes it up, which would put 87 in at
+    7.2 ft in the sentence and 7.3 ft on the card. The fixtures in test_fit
+    and facts.test.ts are shared; if they drift, the two disagree."""
     if value < 24:
         return f"{_num(value)} in"
-    feet = value / 12
-    return f"{_num(round(feet, 1))} ft"
+    return f"{_num(math.floor(value * 10 / 12 + 0.5) / 10)} ft"
 
 
 def _size(sp: Species, tag: Tag) -> Told:
@@ -306,11 +316,11 @@ def _size(sp: Species, tag: Tag) -> Told:
         if low is None and high is None:
             continue
         if low is not None and high is not None:
-            span = f"{_feet(low)}-{_feet(high)}"
+            span = f"{length_said(low)}-{length_said(high)}"
         elif low is not None:
-            span = f"from {_feet(low)}"
+            span = f"from {length_said(low)}"
         else:
-            span = f"up to {_feet(high)}"
+            span = f"up to {length_said(high)}"
         lines.append(f"- {label}: {tag(span, *fields)}")
 
     if climber:
@@ -319,19 +329,43 @@ def _size(sp: Species, tag: Tag) -> Told:
         grown = "grown indoors" if sp.is_houseplant else "an outdoor plant"
         lines.append(f"- Where it lives: {tag(grown, 'is_houseplant')}")
     if sp.is_edible:
-        lines.append(f"- Edible: {tag('grown to eat', 'is_edible')}")
+        # The condition, when there is one, in place of "grown to eat": a
+        # model told only that a plant is eaten will happily suggest eating
+        # the poisonous half of it.
+        lines.append(
+            f"- Edible: {tag(sp.edibility_note or 'grown to eat', 'is_edible')}")
     if sp.attracts_pollinators:
         lines.append(
             f"- Pollinators: {tag('recorded as feeding pollinators', 'attracts_pollinators')}")
     return lines, ""
 
 
-def _toxicity_word(flag: bool | None) -> str:
+def _toxicity_word(sp: Species) -> str:
     # Null is "no record", never "no": a default read as safety is the
-    # invented verdict ADR 0002 forbids.
+    # invented verdict ADR 0002 forbids. So is a False nobody cited -- the
+    # legacy catalog's default -- which is no more a finding than a null.
+    flag = sp.toxic_to_pets
     if flag is None:
         return "no record"
-    return "yes" if flag else "no"
+    if flag:
+        return "yes"
+    cited = cited_authority(sp.care_provenance, sp.care_sources)
+    return "no" if cited else "no record"
+
+
+def _toxicity_lines(sp: Species) -> list[str]:
+    """The pet flag, and the hazard to people when a source records one --
+    which the flag alone never carried, so a model was told poison ivy was
+    harmless (toxicity.safety_of)."""
+    lines = [f"- Toxic to pets: {_toxicity_word(sp)}"]
+    tox = safety_of(sp).toxicity
+    if tox.people_at_risk:
+        rated = ""
+        if tox.rating:
+            by = f" by {tox.rated_by}" if tox.rated_by else ""
+            rated = f" (rated {tox.rating} severity{by})"
+        lines.append(f"- Toxic to people: yes{rated}")
+    return lines
 
 
 def _listed(words: list[str]) -> str:
@@ -374,6 +408,126 @@ def _care_data_line(sp: Species, legacy: list[str]) -> str | None:
     return None
 
 
+def _said_band(low, high, unit: str) -> str:
+    """A range as the app's cards print it: "65–75°F", "from 55°F",
+    "up to 80°F" -- an en dash, and the unit against the number."""
+    if low is not None and high is not None:
+        return f"{_num(low)}–{_num(high)}{unit}"
+    if low is not None:
+        return f"from {_num(low)}{unit}"
+    return f"up to {_num(high)}{unit}"
+
+
+def _depth_said(cm: float) -> str:
+    """A soil depth to the nearest half centimetre. A source's two inches is
+    5.08 cm, and nobody feeling soil means the .08."""
+    half = math.floor(cm * 2 + 0.5) / 2
+    return _num(half if half > 0 else cm)
+
+
+def caretaker_fact_lines(species: Species) -> list[str]:
+    """What the catalog's sources say about this species' care, in the
+    caretaker's voice: light, outdoor sun and cold, soil, temperature, how
+    deep to feel the soil, and who said so.
+
+    For the rule-based advice on a species with no check schedule, which
+    otherwise had nothing to say beyond "No care schedules defined". Only
+    resolved values, never a legacy column -- this is "what its sources
+    say", and a legacy value has no source. Its own wording, not the model
+    prompt's: degrees as °F and ranges with an en dash, as the app's cards
+    print them, and depths a hand can feel. Borrowed values carry the
+    caretaker's label. The watering regime is not here: the advice states
+    it on its own line for every species. Nothing here is a cadence the app
+    worked out: a day count appears only when a source estimated it."""
+    sp = species
+    provenance = sp.care_provenance or {}
+
+    def tag(text: str, *fields: str) -> str:
+        borrowed = any(provenance.get(f) == "genus_inferred" for f in fields)
+        return text + BORROWED_LABEL if borrowed else text
+
+    lines: list[str] = []
+
+    light = []
+    if sp.light_fc_min is not None:
+        light.append(tag(f"at least {_num(sp.light_fc_min)} footcandles",
+                         "light_fc_min"))
+    if sp.light_fc_good is not None:
+        light.append(tag(f"{_num(sp.light_fc_good)} footcandles is comfortable",
+                         "light_fc_good"))
+    if sp.direct_sun_hours_max is not None:
+        light.append(tag("no direct sun" if sp.direct_sun_hours_max == 0 else
+                         f"up to {_num(sp.direct_sun_hours_max)} hours of direct sun",
+                         "direct_sun_hours_max"))
+    if light:
+        lines.append(f"☀️ Light: {'; '.join(light)}.")
+
+    if sp.outdoor_sun_exposure:
+        words = [_SUN_TEXT.get(token(v), str(token(v)).replace("_", " "))
+                 for v in sp.outdoor_sun_exposure]
+        lines.append(f"☀️ Outdoor sun: "
+                     f"{tag(', '.join(words), 'outdoor_sun_exposure')}.")
+    if sp.outdoor_temp_min_f is not None:
+        floor = f"survives to {_num(sp.outdoor_temp_min_f)}°F outdoors"
+        lines.append(f"❄️ Cold: {tag(floor, 'outdoor_temp_min_f')}.")
+
+    soil = []
+    base = _SOIL_BASE_TEXT.get(token(sp.soil_base))
+    if base:
+        soil.append(tag(base, "soil_base"))
+    drainage = _DRAINAGE_TEXT.get(token(sp.soil_drainage))
+    if drainage:
+        soil.append(tag(drainage, "soil_drainage"))
+    if sp.soil_ph_min is not None or sp.soil_ph_max is not None:
+        soil.append(tag(f"pH {_said_band(sp.soil_ph_min, sp.soil_ph_max, '')}",
+                        "soil_ph_min", "soil_ph_max"))
+    if soil:
+        lines.append(f"🪴 Soil: {'; '.join(soil)}.")
+
+    temperature = []
+    if sp.day_f_min is not None or sp.day_f_max is not None:
+        temperature.append(tag(f"days {_said_band(sp.day_f_min, sp.day_f_max, '°F')}",
+                               "day_f_min", "day_f_max"))
+    if sp.night_f_min is not None or sp.night_f_max is not None:
+        temperature.append(tag(
+            f"nights {_said_band(sp.night_f_min, sp.night_f_max, '°F')}",
+            "night_f_min", "night_f_max"))
+    if sp.chill_damage_f is not None:
+        temperature.append(tag(f"cold damage below {_num(sp.chill_damage_f)}°F",
+                               "chill_damage_f"))
+    if temperature:
+        lines.append(f"🌡️ Temperature: {'; '.join(temperature)}.")
+
+    water = []
+    if sp.water_check_depth_cm is not None:
+        water.append(tag(f"feel the soil {_depth_said(sp.water_check_depth_cm)} "
+                         "cm down to decide", "water_check_depth_cm"))
+    growing, dormant = sp.water_growing_days_est, sp.water_dormant_days_est
+    if growing is not None or dormant is not None:
+        if growing is not None and dormant is not None:
+            spans = (f"every {_num(growing)} days in growth and every "
+                     f"{_num(dormant)} in dormancy")
+        elif growing is not None:
+            spans = f"every {_num(growing)} days in growth"
+        else:
+            # On its own the unit has to be said: "every 105 in dormancy"
+            # was a number with nothing after it.
+            spans = f"every {_num(dormant)} days in dormancy"
+        water.append(tag("its sources estimate roughly " + spans,
+                         "water_growing_days_est", "water_dormant_days_est"))
+    if water:
+        lines.append(f"💧 Water check: {'; '.join(water)}.")
+
+    names = sorted({s.get("authority") for s in sp.care_sources or []
+                    if s.get("authority") and not s.get("inferred")})
+    if names and (lines or water_regime_sentence(sp)):
+        # Every page that settled something for this species, which can be
+        # more than the lines above name; the species page lists each with
+        # its fields.
+        lines.append(f"📚 Sources: {_listed(names)}.")
+    return lines
+
+
 def species_fact_lines(species: Species) -> list[str]:
     """The care facts, one line per concept the row can actually back.
 
@@ -393,7 +547,7 @@ def species_fact_lines(species: Species) -> list[str]:
         lines.extend(told)
         if from_legacy:
             legacy.append(from_legacy)
-    lines.append(f"- Toxic to pets: {_toxicity_word(species.toxic_to_pets)}")
+    lines.extend(_toxicity_lines(species))
     care_data = _care_data_line(species, legacy)
     if care_data:
         lines.append(care_data)

@@ -24,11 +24,12 @@ from app.models.models import (
     Shelter, TempExposure, SunExposure,
 )
 from app.services.care_facts import (
-    BORROWED_LABEL, is_genus_inferred, species_fact_lines,
+    BORROWED_LABEL, caretaker_fact_lines, is_genus_inferred, species_fact_lines,
     water_regime_sentence,
 )
 from app.services.grounding import grounding_failures, log_rejection
 from app.services.persona import PERSONA_PREAMBLE
+from app.services.toxicity import describe, safety_of
 
 logger = logging.getLogger("plantadvocate.advisor")
 
@@ -152,8 +153,12 @@ def _weather_block(weather: dict) -> str:
         parts.append(str(cur["condition"]))
     now_line = ", ".join(parts) if parts else "unavailable"
 
+    # No provider named: the forecast comes from whichever of Apple Weather,
+    # the National Weather Service or Open-Meteo answered, and a model told
+    # "Apple Weather" would credit the wrong one. The client shows the
+    # payload's own attribution beside the advice.
     lines = [
-        "\nLOCAL WEATHER (Apple Weather — authoritative current conditions and forecast):",
+        "\nLOCAL WEATHER (authoritative current conditions and forecast):",
         f"- Now: {now_line}",
     ]
     days = weather.get("daily") or []
@@ -352,6 +357,110 @@ def _threshold(species: Species, resolved: str, legacy: str) -> tuple[int | None
     return getattr(species, legacy), ""
 
 
+#: The care types the rule-based advice speaks to. Misting is left out for
+#: the reason the app's reminders leave it out (mobile notifications/plan.ts):
+#: the humidity it adds lasts minutes (Penn State Extension), and Minnesota
+#: Extension ties it to foliar leaf spot. Advice to mist every 1-2 days is
+#: the app recommending something its own reminders refuse to.
+_STUB_SKIPS = frozenset({CareType.mist})
+
+#: Months feeding is ever prompted in, mirroring the reminders' gate (mobile
+#: CARE_SEASON_MONTHS): NC State says "do not fertilize from November to
+#: February", and Maryland that feeding then "could harm some plants".
+FEEDING_SEASON = (3, 4, 5, 6, 7, 8, 9, 10)
+_MONTH_NAMES = ("January", "February", "March", "April", "May", "June", "July",
+                "August", "September", "October", "November", "December")
+
+
+def _this_month() -> int:
+    """The month the advice is given in. A function so tests can move it."""
+    return datetime.now(timezone.utc).month
+
+
+def _feeding_months(species: Species) -> list[int]:
+    """When this species is fed: its sources' months where they give them,
+    within the season the reminders allow, so the advice never asks for a
+    feed the app's own reminders would refuse."""
+    cited = [int(m) for m in (species.fertilize_active_months or [])]
+    return [m for m in (cited or FEEDING_SEASON) if m in FEEDING_SEASON]
+
+
+def _resting_line(emoji: str, label: str, months: list[int], now: int) -> str:
+    upcoming = sorted(months, key=lambda m: (m - now) % 12)
+    if not upcoming:
+        return f"{emoji} {label}: its sources give no feeding season the reminders allow."
+    return (f"{emoji} {label}: resting season, so hold off feeding until "
+            f"{_MONTH_NAMES[upcoming[0] - 1]}.")
+
+
+def _plural(n: int, word: str) -> str:
+    return f"{n} {word}{'' if n == 1 else 's'}"
+
+
+def _ago(days: int) -> str:
+    """When care was logged, as a person says it: "today", "yesterday",
+    "3 days ago" -- never "0 days ago" or "1 days ago"."""
+    if days <= 0:
+        return "today"
+    if days == 1:
+        return "yesterday"
+    return f"{days} days ago"
+
+
+def _window(cs: CareSchedule) -> str:
+    """The schedule's span in days: "7–10", or "1" when it has one length."""
+    if cs.interval_days_min == cs.interval_days_max:
+        return str(cs.interval_days_min)
+    return f"{cs.interval_days_min}–{cs.interval_days_max}"
+
+
+def _schedule_line(cs: CareSchedule, recent_logs: list[CareLog],
+                   species: Species) -> str | None:
+    """One schedule's line, in the app's voice: a check, never a chore.
+
+    The schedule is a prior on when a check will come back positive, so the
+    line says when to look, and that the plant decides -- not "likely due"
+    or "hold off", which a dry plant or a wet one would contradict."""
+    if cs.care_type in _STUB_SKIPS:
+        return None
+    label = _CARE_TYPE_LABELS.get(cs.care_type, cs.care_type.value)
+    emoji = _CARE_TYPE_EMOJI.get(cs.care_type, "🪴")
+    if cs.care_type == CareType.fertilize:
+        months, now = _feeding_months(species), _this_month()
+        if now not in months:
+            return _resting_line(emoji, label, months, now)
+
+    last_log = next((log for log in recent_logs if log.action == cs.care_type), None)
+    days = _days_since(last_log.logged_at) if last_log else None
+    window = _window(cs)
+
+    if days is None:
+        every = "every day" if window == "1" else f"every {window} days"
+        return (f"{emoji} {label}: no log yet — its schedule puts this "
+                f"{every}; check before you do anything.")
+    if days < cs.interval_days_min:
+        wait = cs.interval_days_min - days
+        return (f"{emoji} {label}: logged {_ago(days)}. Next check in "
+                f"{_plural(wait, 'day')}; act sooner only if the plant shows "
+                f"it needs it.")
+    if days <= cs.interval_days_max:
+        return (f"{emoji} {label}: logged {_ago(days)}, inside the {window} "
+                f"day window. Check, and act only if it's needed.")
+    return (f"{emoji} {label}: logged {_ago(days)} — past the "
+            f"{cs.interval_days_max} day mark, worth a check today.")
+
+
+def _toxicity_line(species: Species) -> str | None:
+    """The species' toxicity sentence, when a hazard is recorded -- to pets
+    or to people, with the cited severity (toxicity.safety_of). Always
+    marked, so a restyle can keep it word for word."""
+    tox = safety_of(species).toxicity
+    if not (tox.animals_at_risk or tox.people_at_risk):
+        return None
+    sentence = describe(tox, species.common_name)
+    return sentence if sentence.startswith("⚠️") else f"⚠️ {sentence}"
+
+
 def _advise_stub(
     species: Species,
     plant: Plant,
@@ -362,41 +471,8 @@ def _advise_stub(
     weather: dict | None = None,
 ) -> str:
     # One line per care type; the client renders each line as its own row.
-    lines = []
-    for cs in care_schedules:
-        label = _CARE_TYPE_LABELS.get(cs.care_type, cs.care_type.value)
-        emoji = _CARE_TYPE_EMOJI.get(cs.care_type, "🪴")
-        last_log = next(
-            (log for log in recent_logs if log.action == cs.care_type),
-            None,
-        )
-        days = _days_since(last_log.logged_at) if last_log else None
-
-        if days is None:
-            lines.append(
-                f"{emoji} {label}: no log yet — recommended every "
-                f"{cs.interval_days_min}–{cs.interval_days_max} days."
-            )
-        elif days < cs.interval_days_min:
-            lines.append(
-                f"{emoji} {label}: done {days} day{'s' if days != 1 else ''} ago. "
-                f"Next window opens in {cs.interval_days_min - days} "
-                f"day{'s' if cs.interval_days_min - days != 1 else ''} — hold off."
-            )
-        elif days <= cs.interval_days_max:
-            lines.append(
-                f"{emoji} {label}: done {days} days ago, inside the "
-                f"{cs.interval_days_min}–{cs.interval_days_max} day window. "
-                f"Check and do if needed."
-            )
-        else:
-            lines.append(
-                f"{emoji} {label}: done {days} days ago — past the "
-                f"{cs.interval_days_max} day mark. Likely due."
-            )
-
-    if not lines:
-        lines.append("No care schedules defined for this species yet.")
+    lines = [line for line in (_schedule_line(cs, recent_logs, species)
+                               for cs in care_schedules) if line]
 
     # What the sources say about watering, beside the schedule line and never
     # in place of it: the regime is the species-level fact, the schedule is
@@ -404,14 +480,33 @@ def _advise_stub(
     # harm-capable, the resolver refuses to inherit one (ADR 0007), so a
     # regime on the row was cited to this species.
     regime = water_regime_sentence(species)
-    if regime:
+
+    if not care_schedules:
+        # Most of the catalog was minted from the claim tranche and has no
+        # check schedule. Saying only that was a non-answer; what the
+        # sources do say is still worth reading. No cadence is made up to
+        # fill the gap -- a day count appears only where a source gave one.
+        known = caretaker_fact_lines(species)
+        if known or regime:
+            lines.append(f"📋 No check schedule is on record for "
+                         f"{species.common_name} yet. Here is what its sources "
+                         f"say about its care.")
+        else:
+            lines.append(f"📋 No check schedule is on record for "
+                         f"{species.common_name} yet, and its sources say "
+                         f"nothing about its care so far.")
+        if regime:
+            lines.append(f"💧 From its sources: {regime}.")
+        lines.extend(known)
+    elif regime:
         lines.append(f"💧 From its sources: {regime}.")
 
     # Weather-driven nudges for plants the forecast actually reaches.
     lines.extend(_weather_nudges(species, growing_area, weather))
 
-    if species.toxic_to_pets:
-        lines.append(f"⚠️ {species.common_name} is toxic to pets.")
+    toxicity = _toxicity_line(species)
+    if toxicity:
+        lines.append(toxicity)
 
     if symptoms.strip():
         # "AI advisor" violates the handoff rebrand rule ("care engine", never

@@ -164,8 +164,38 @@ def generic_passes(records):
     assert not dupes, ('common_name collision inside batch', dupes)
 
 
+def _name_key(name):
+    return re.sub(r'[\s\-]+', '', name.lower())
+
+
+def corpus_collisions(records, out_path):
+    """Landed records elsewhere in the corpus that already use one of these common names.
+
+    The audit catches these only sometimes (b108 caught Zebra Plant, b114's audit missed the same
+    name), so the gate checks mechanically. The batch's own output file is skipped, so a re-run
+    of the same landing does not collide with itself.
+    """
+    verified = Path(__file__).resolve().parents[3] / 'app' / 'data' / 'verified'
+    own = Path(out_path).resolve()
+    taken = {}
+    for f in sorted(verified.glob('*.json')):
+        if f.resolve() == own:
+            continue
+        for r in json.load(open(f))['records']:
+            taken.setdefault(_name_key(r['common_name']), (f.name, r['scientific_name_given']))
+    hits = []
+    for r in records:
+        prior = taken.get(_name_key(r['common_name']))
+        if prior and names.key(prior[1]) != names.key(r['scientific_name_given']):
+            hits.append((r['common_name'], r['scientific_name_given'], prior[0], prior[1]))
+    return hits
+
+
 def finish(res, out_path, normalization, scratch_path=None):
     generic_passes(res['records'])
+    clash = corpus_collisions(res['records'], out_path)
+    assert not clash, ('common_name already landed for a different species -- land under the next '
+                       'dedicated-page lead and say so in name_note', clash)
     landed = {'batch': res['batch'], 'records': res['records'],
               'audit_summary': res['audit_summary'], 'normalizations': [normalization]}
     json.dump(landed, open(out_path, 'w'), indent=2, ensure_ascii=False)

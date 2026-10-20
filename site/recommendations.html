@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Find Your Plant — PlantAdvocate</title>
-<meta name="description" content="Get plant recommendations matched to your light, time, and experience level.">
+<meta name="description" content="A starter list of houseplants by light level, and how the app matches plants to your own growing area.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -244,8 +244,8 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
 <section class="page-head">
   <div class="wrap">
     <div class="eyebrow">Find your plant</div>
-    <h1>Tell us your space. <em>We'll tell you what will actually survive in it.</em></h1>
-    <p class="page-sub">A quick match against the curated species database &mdash; no more guessing whether that fiddle leaf fig stood a chance in your bathroom.</p>
+    <h1>Tell us your light. <em>We'll name a few plants that suit it.</em></h1>
+    <p class="page-sub">A starter list by light level. In the app, PlantAdvocate checks the full catalog against your own growing area &mdash; no more guessing whether that fiddle leaf fig stood a chance in your bathroom.</p>
   </div>
 </section>
 
@@ -259,28 +259,12 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
         <option value="high">High &mdash; direct sun several hours/day</option>
       </select>
     </div>
-    <div class="field">
-      <label for="r-time">Time you want to spend on care</label>
-      <select id="r-time">
-        <option value="low">Minimal &mdash; water it and forget it</option>
-        <option value="medium" selected>Some &mdash; weekly check-ins are fine</option>
-        <option value="high">A lot &mdash; I want a project</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="r-exp">Experience level</label>
-      <select id="r-exp">
-        <option value="new" selected>New to plants</option>
-        <option value="some">Kept a few alive before</option>
-        <option value="expert">Confident plant person</option>
-      </select>
-    </div>
-    <button class="btn-primary" onclick="showRecs()">Show me matches</button>
+    <button class="btn-primary" onclick="showRecs()">Show me a starter list</button>
 
     <div id="rec-results" style="display:none; margin-top:40px;">
-      <div class="section-tag">Suggested for your space</div>
+      <div class="section-tag">A starter list for that light</div>
       <div id="rec-cards" style="display:flex; flex-direction:column; gap:16px; margin-top:20px;"></div>
-      <div class="form-note" style="margin-top:20px;">This is a lightweight preview &mdash; the live version matches against your full curated species database and your actual saved space profile.</div>
+      <div class="form-note" style="margin-top:20px;">This is a short, fixed list. In the app, PlantAdvocate checks the whole catalog against the light, shelter and space of your own growing area.</div>
     </div>
   </div>
 </section>
@@ -290,7 +274,7 @@ const RECS = {
   low: [
     {name:"Pothos", note:"Tolerates low light and irregular watering better than almost anything else."},
     {name:"ZZ Plant", note:"Thrives on neglect &mdash; low light, infrequent watering, still glossy."},
-    {name:"Snake Plant", note:"Nearly indestructible in dim corners, waters every 2&ndash;3 weeks."},
+    {name:"Snake Plant", note:"Nearly indestructible in dim corners. Let the soil dry through before you water."},
   ],
   medium: [
     {name:"Monstera Deliciosa", note:"The classic bright-indirect plant &mdash; forgiving and fast-growing."},
@@ -300,7 +284,7 @@ const RECS = {
   high: [
     {name:"Succulents (assorted)", note:"Direct sun is exactly what they're built for."},
     {name:"Fiddle Leaf Fig", note:"Needs the bright light most homes can't give it &mdash; yours can."},
-    {name:"Aloe Vera", note:"Loves a sunny sill, minimal water, bonus: useful sap."},
+    {name:"Aloe Vera", note:"Loves a sunny sill and little water."},
   ],
 };
 function showRecs(){
@@ -310,7 +294,7 @@ function showRecs(){
   container.innerHTML = list.map(p => `
     <div class="specimen" style="transform:none;">
       <div class="specimen-header">
-        <div class="specimen-label">Match</div>
+        <div class="specimen-label">Starter pick</div>
         <div class="specimen-name">${p.name}</div>
       </div>
       <div class="specimen-body">
@@ -346,7 +330,6 @@ function showRecs(){
       <div class="foot-col">
         <h4>Community</h4>
         <a href="community-garden.html">Community garden</a>
-        <a href="testimonials.html">Beta experiences</a>
         <a href="resources.html">Plant resources</a>
         <a href="conservation.html">Conservation</a>
       </div>
@@ -358,7 +341,7 @@ function showRecs(){
     </div>
     <div class="foot-bottom">
       <span>PLANTADVOCATE &mdash; built for growers who want the truth, translated.</span>
-      <span>&copy; 2026 PlantAdvocate</span>
+      <span>&copy; 2026 PlantAdvocate &middot; <a href="https://ocean-dweller.human-memory.ai/" style="color:inherit; text-decoration:underline; text-underline-offset:3px;">An Ocean Dweller Media project</a></span>
     </div>
   </div>
 </footer>

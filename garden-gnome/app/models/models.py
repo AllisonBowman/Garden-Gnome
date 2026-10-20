@@ -404,11 +404,13 @@ class Species(SQLModel, table=True):
         default=None, sa_column=Column(JSON, nullable=True))
 
     # --- Fit fields (0019) -----------------------------------------------
-    # What a growing area is matched against. All nullable, none harm-capable:
-    # a wrong height crowds a border, it does not kill anything, so these
-    # resolve by tier through disagreement and may be borrowed from the genus
-    # (labelled, ADR 0002) -- which for mature size is the right default,
-    # since congeners differ far less in size than in toxicity.
+    # What a growing area is matched against. All nullable, and all but one
+    # harmless: a wrong height crowds a border, it does not kill anything, so
+    # these resolve by tier through disagreement and may be borrowed from the
+    # genus (labelled, ADR 0002) -- which for mature size is the right
+    # default, since congeners differ far less in size than in toxicity. The
+    # one is `is_edible`: telling someone a plant is food can poison them, so
+    # it is harm-capable and never borrowed (ADR 0008).
 
     # Whether sources describe this as a plant grown indoors. The best-covered
     # thing the catalog knows about where a plant can live: researchers have
@@ -476,12 +478,29 @@ class Species(SQLModel, table=True):
         A property rather than a column: it is derived, so it can improve as the
         nuance table does without a migration, and every endpoint that returns a
         Species picks it up automatically. `toxic_to_pets` stays as the raw flag
-        for filtering; this is what a person should actually read."""
-        from app.services.toxicity import cited_authority, describe_for_species
-        return describe_for_species(
-            self.scientific_name, self.common_name, self.toxic_to_pets,
-            cited_to=cited_authority(self.care_provenance, self.care_sources),
-        )
+        for filtering; this is what a person should actually read.
+
+        It names people whenever a cited passage records a hazard to them, and
+        takes how severe it is from the source (toxicity.safety_of). Those
+        passages are read through the row's own session; a row built in code
+        is described from its columns alone."""
+        from app.services.toxicity import describe, safety_of
+        return describe(safety_of(self).toxicity, self.common_name)
+
+    @property
+    def edibility_note(self) -> Optional[str]:
+        """The condition on "grown to eat", in one caretaker sentence, or None.
+
+        Set when an edible plant is also recorded as poisonous, to pets or to
+        people, or when its cited edibility passage limits the parts or needs
+        preparation. A client shows this in place of "grown to eat" whenever
+        it is set, and "grown to eat" only when `is_edible` is true and this
+        is None."""
+        from app.services.toxicity import edibility_note, safety_of
+        if self.is_edible is not True:
+            return None
+        safety = safety_of(self)
+        return edibility_note(self.is_edible, safety.toxicity, safety.evidence)
 
 
 class CareSchedule(SQLModel, table=True):
@@ -560,11 +579,14 @@ class Claim(SQLModel, table=True):
 
 
 class SyncState(SQLModel, table=True):
-    """A key/value row for idempotence gates.
+    """A key/value row for idempotence gates and catalog bookkeeping.
 
-    One key today: `tranche_fingerprint`, written by the claim sync after a
-    successful run so the next cold start can tell an unchanged tranche from
-    one that needs re-syncing without walking it (sync.py).
+    `tranche_fingerprint`, written by the claim sync after a successful run so
+    the next cold start can tell an unchanged tranche from one that needs
+    re-syncing without walking it (sync.py). `synced_through_species_id`,
+    the highest species row that sync reached (catalog_state.catalog_status).
+    `catalog_generation`, a fresh token on every write to the catalog's
+    tables (`stamp_catalog_generation` below).
     """
     __tablename__ = "sync_state"
     key: str = Field(primary_key=True)
@@ -701,3 +723,52 @@ class StewardshipRecord(SQLModel, table=True):
     transfer_notes: str = ""
 
     plant: Optional[Plant] = Relationship(back_populates="stewardship_records")
+
+
+# --- the catalog's generation ------------------------------------------------
+#
+# Two caches are built from the catalog once and reused across requests: the
+# species list body (routers/species.py) and the parsed safety passages
+# (claims/store.py). Counts and highest ids notice rows added, but not rows
+# rewritten in place -- a seed or sync run by hand against a live database,
+# an authority's claims withdrawn -- and those changes are exactly the ones
+# that change what a sentence says. So any flush that writes a catalog row
+# stamps a fresh random token in sync_state, in the same transaction, and
+# both caches key on it. Random rather than a counter, so a write that is
+# rolled back can never be mistaken for a later one that lands. A write made
+# with raw SQL bypasses this, and still needs a restart to show.
+
+CATALOG_GENERATION_KEY = "catalog_generation"
+
+
+#: The tables whose rows decide what the catalog says.
+CATALOG_ROWS = (Species, SpeciesTrait, CareSchedule, Claim, Authority)
+
+
+def stamp_catalog_generation(session, flush_context=None, instances=None) -> None:
+    """before_flush: a fresh generation when this flush changes a catalog row."""
+    catalog = CATALOG_ROWS
+    changed = any(isinstance(obj, catalog) for obj in session.new) \
+        or any(isinstance(obj, catalog) for obj in session.deleted) \
+        or any(isinstance(obj, catalog) and session.is_modified(obj)
+               for obj in session.dirty)
+    if not changed:
+        return
+    with session.no_autoflush:
+        state = session.get(SyncState, CATALOG_GENERATION_KEY)
+        token = uuid4().hex
+        if state is None:
+            session.add(SyncState(key=CATALOG_GENERATION_KEY, value=token))
+        else:
+            state.value = token
+
+
+def _listen() -> None:
+    from sqlalchemy import event
+    from sqlalchemy.orm import Session as OrmSession
+
+    if not event.contains(OrmSession, "before_flush", stamp_catalog_generation):
+        event.listen(OrmSession, "before_flush", stamp_catalog_generation)
+
+
+_listen()

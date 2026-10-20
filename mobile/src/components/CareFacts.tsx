@@ -3,7 +3,8 @@ import { View, StyleSheet, Pressable, Linking, StyleProp, ViewStyle } from 'reac
 import { Text } from 'react-native-paper';
 import { CareSource, Species } from '../types';
 import {
-  CATALOG_LINE, careFactRows, careSourceLabels, careStatusLine, legacyStats,
+  CATALOG_LINE, INFERRED_PILL, careFactRows, careSourceLabels, careStatusLine,
+  legacyStats,
 } from '../care/facts';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -51,10 +52,13 @@ export function CareFactList({ species, compact = false }: {
           <View style={styles.factHead}>
             <Eyebrow>{row.label}</Eyebrow>
             {/* Borrowed from the genus: honest to show, dishonest to hide. */}
-            {row.inferred && <Pill style={styles.inferredPill}>genus-inferred</Pill>}
+            {row.inferred && <Pill style={styles.inferredPill}>{INFERRED_PILL}</Pill>}
           </View>
-          <Text variant={compact ? 'bodySmall' : 'bodyMedium'} style={styles.factValue}>
-            {row.value}
+          <Text
+            variant={compact ? 'bodySmall' : 'bodyMedium'}
+            style={[styles.factValue, row.caution && styles.factCaution]}
+          >
+            {row.caution ? `⚠️ ${row.value}` : row.value}
           </Text>
         </View>
       ))}
@@ -134,6 +138,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   factHead: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 3 },
   inferredPill: { paddingVertical: 1 },
   factValue: { color: p.ink, lineHeight: 20 },
+  factCaution: { color: p.warn, fontWeight: '600' },
   legacyCaption: { color: p.sub, lineHeight: 18, marginBottom: 8 },
   statRow: { flexDirection: 'row', justifyContent: 'space-between' },
   stat: { alignItems: 'center', flex: 1 },

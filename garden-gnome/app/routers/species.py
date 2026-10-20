@@ -1,9 +1,18 @@
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+import gzip
+import json
+import threading
+from dataclasses import dataclass
+
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
+from fastapi.responses import Response
+from pydantic import TypeAdapter
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
+from app.db.catalog_state import catalog_key
 from app.db.database import get_session
 from app.deps import get_current_user
+from app.routers.census import require_operator
 from app.models.models import CareSchedule, Species, SpeciesTrait
 from app.models.schemas import (
     SpeciesCreate, SpeciesDetail, SpeciesGenerateRequest, SpeciesRead,
@@ -51,9 +60,80 @@ def _create_one(entry: SpeciesCreate, session: Session) -> Species:
     return species
 
 
+_CATALOG_ADAPTER = TypeAdapter(list[SpeciesRead])
+
+
+@dataclass(frozen=True)
+class _CatalogBody:
+    key: tuple
+    identity: bytes
+    gzipped: bytes
+
+
+# One built body per process, for the catalog version it was built from.
+_catalog: _CatalogBody | None = None
+_catalog_lock = threading.Lock()
+# Bumped by every write route here, so this process never serves a body from
+# before its own write even if catalog_key could not show it. The catalog
+# generation in that key already moves with any ORM write; this is the
+# belt to its braces, and test_this_process_sees_its_own_write pins it.
+_catalog_writes = 0
+
+
+def _catalog_changed() -> None:
+    global _catalog_writes
+    with _catalog_lock:
+        _catalog_writes += 1
+
+
+def _build_catalog(session: Session) -> bytes:
+    """The list exactly as the response model would serialize it.
+
+    humidity_sourced is computed with one trait query rather than via the
+    model property -- the property walks `species.traits`, which would
+    lazy-load per row across the whole catalog. The bytes are what FastAPI's
+    JSONResponse would render for the same content."""
+    derived_ids = set(session.exec(
+        select(SpeciesTrait.species_id)
+        .where(SpeciesTrait.trait == "humidity_source")
+    ).all())
+    rows = [
+        SpeciesRead.model_validate(
+            sp, update={"humidity_sourced": sp.id not in derived_ids})
+        for sp in session.exec(select(Species)).all()
+    ]
+    content = _CATALOG_ADAPTER.dump_python(rows, mode="json", exclude_none=True)
+    return json.dumps(content, ensure_ascii=False, allow_nan=False,
+                      indent=None, separators=(",", ":")).encode("utf-8")
+
+
+def _catalog_body(session: Session) -> _CatalogBody:
+    """The current catalog's body, built at most once per version.
+
+    The lock makes ten phones opening the app at once after a cold start
+    cost one build, not ten: the first builds, the rest wait and reuse it."""
+    global _catalog
+    # The database's URL too: production has one, but a process that talks
+    # to two (the test suite) must never serve one's catalog for the other.
+    key = (str(session.get_bind().url), *catalog_key(session), _catalog_writes)
+    cached = _catalog
+    if cached is not None and cached.key == key:
+        return cached
+    with _catalog_lock:
+        cached = _catalog
+        if cached is not None and cached.key == key:
+            return cached
+        identity = _build_catalog(session)
+        cached = _CatalogBody(
+            key=key, identity=identity,
+            gzipped=gzip.compress(identity, compresslevel=9, mtime=0))
+        _catalog = cached
+        return cached
+
+
 @router.get("/", response_model=list[SpeciesRead],
             response_model_exclude_none=True)
-def list_species(session: Session = Depends(get_session)):
+def list_species(request: Request, session: Session = Depends(get_session)):
     """The catalog as clients should see it.
 
     Deliberately SpeciesRead, not the table model: the raw model leaks the
@@ -66,21 +146,24 @@ def list_species(session: Session = Depends(get_session)):
     columns and a claims-minted row carries no legacy ones, so nulls would
     be most of the payload. The mobile type declares every one optional.
 
-    humidity_sourced is computed here with one trait query rather than via
-    the model property — the property walks `species.traits`, which would
-    lazy-load per row across the whole catalog."""
-    derived_ids = set(session.exec(
-        select(SpeciesTrait.species_id)
-        .where(SpeciesTrait.trait == "humidity_source")
-    ).all())
-    return [
-        SpeciesRead.model_validate(
-            sp, update={"humidity_sourced": sp.id not in derived_ids})
-        for sp in session.exec(select(Species)).all()
-    ]
+    Built once per catalog version and served as cached bytes (gzip when the
+    client takes it, which the phone does). Validating every row on every
+    request took a 256 MB machine past 220 MB at ten requests at once.
+    catalog_key notices a change from anywhere: the boot's sync, the write
+    routes below, or a script run against the live database in another
+    process, through the catalog generation every ORM write stamps."""
+    body = _catalog_body(session)
+    # The same test GZipMiddleware uses, so the two never disagree; a body
+    # that already carries Content-Encoding passes the middleware untouched.
+    if "gzip" in request.headers.get("accept-encoding", ""):
+        return Response(
+            body.gzipped, media_type="application/json",
+            headers={"Content-Encoding": "gzip", "Vary": "Accept-Encoding"})
+    return Response(body.identity, media_type="application/json")
 
 
-@router.post("/", response_model=SpeciesDetail, status_code=201)
+@router.post("/", response_model=SpeciesDetail, status_code=201,
+             dependencies=[Depends(require_operator)], include_in_schema=False)
 def create_species(payload: SpeciesCreate, session: Session = Depends(get_session)):
     """Add a single species with care schedules and traits.
 
@@ -97,10 +180,12 @@ def create_species(payload: SpeciesCreate, session: Session = Depends(get_sessio
         )
     species = _create_one(payload, session)
     session.commit()
+    _catalog_changed()
     return _detail(_load_with_relations(species.id, session))
 
 
-@router.post("/bulk", status_code=201)
+@router.post("/bulk", status_code=201,
+             dependencies=[Depends(require_operator)], include_in_schema=False)
 def bulk_import_species(payload: list[SpeciesCreate], session: Session = Depends(get_session)):
     """Import multiple species from a JSON array.
 
@@ -117,6 +202,7 @@ def bulk_import_species(payload: list[SpeciesCreate], session: Session = Depends
         s = _create_one(entry, session)
         added.append(s)
     session.commit()
+    _catalog_changed()
     return {
         "added": len(added),
         "skipped": len(skipped),
@@ -125,7 +211,7 @@ def bulk_import_species(payload: list[SpeciesCreate], session: Session = Depends
     }
 
 
-@router.post("/generate")
+@router.post("/generate", dependencies=[Depends(require_operator)], include_in_schema=False)
 def generate_species(
     payload: SpeciesGenerateRequest,
     session: Session = Depends(get_session),

@@ -4,12 +4,16 @@ Verifies: the deleted user's access and refresh tokens are rejected; every
 row they owned is gone (plants, care logs, stewardship, growing_areas,
 identities, refresh tokens, the user itself); Apple revoke is called exactly
 once with the decrypted stored token; a Google-only account deletes with no
-revoke call; a failed revoke never blocks deletion; and the census export is
+revoke call; a failed revoke never blocks deletion, and is kept (encrypted,
+unattributed) and retried until Apple accepts it; and the census export is
 unaffected by deleted users.
 """
+from datetime import datetime, timedelta
+
 import pytest
 from sqlmodel import Session, create_engine, select
 
+from app.db.revocations import PendingAppleRevocation
 from app.models.models import (
     AuthIdentity, CareLog, GrowingArea, Plant, RefreshToken,
     StewardshipRecord, User,
@@ -176,6 +180,275 @@ def test_failed_apple_revoke_never_blocks_deletion(api, monkeypatch):
         assert s.get(User, signin["user"]["id"]) is None
 
 
+# --- A failed revoke is kept, and tried again --------------------------------
+#
+# Deleting the identity used to delete the only copy of the Apple token in the
+# same transaction, so "retry the revoke out of band" had nothing to retry
+# with. The token now waits in pending_apple_revocation, encrypted and with
+# nothing beside it that says whose it was, until Apple accepts the revoke.
+
+
+def _queued(api) -> dict[str, PendingAppleRevocation]:
+    """Every waiting revoke, by its decrypted token."""
+    from cryptography.fernet import Fernet
+
+    from app.config import get_settings
+    fernet = Fernet(get_settings().fernet_key.encode())
+    with api.db() as s:
+        rows = s.exec(select(PendingAppleRevocation)).all()
+        return {fernet.decrypt(r.token_enc.encode()).decode(): r for r in rows}
+
+
+def _queue(api, token: str, **fields) -> int:
+    from cryptography.fernet import Fernet
+
+    from app.config import get_settings
+    fernet = Fernet(get_settings().fernet_key.encode())
+    with api.db() as s:
+        row = PendingAppleRevocation(
+            token_enc=fernet.encrypt(token.encode()).decode(), **fields)
+        s.add(row)
+        s.commit()
+        return row.id
+
+
+@pytest.mark.parametrize("apple_says", ["raises", "refuses"])
+def test_a_failed_revoke_is_queued_with_nothing_that_names_the_user(
+        api, monkeypatch, apple_says):
+    token = f"apple-rt-{apple_says}"
+    signin = _apple_user(api, monkeypatch, f"q-{apple_says}",
+                         f"q-{apple_says}@example.com", exchange=token)
+    h = {"Authorization": f"Bearer {signin['access_token']}"}
+
+    from app.routers import auth as auth_router
+
+    def down(_token):
+        if apple_says == "raises":
+            raise RuntimeError("apple is down")
+        return False  # what revoke_apple_token returns on a non-200
+
+    monkeypatch.setattr(auth_router, "revoke_apple_token", down)
+    assert api.client.delete("/me", headers=h).status_code == 204
+
+    # Deletion still happened in full...
+    with api.db() as s:
+        assert s.get(User, signin["user"]["id"]) is None
+        assert s.exec(select(AuthIdentity).where(
+            AuthIdentity.user_id == signin["user"]["id"])).all() == []
+    # ...and the token survived it, tried once, holding no user id or email.
+    row = _queued(api)[token]
+    assert row.attempts == 1 and row.last_attempt_at is not None
+    assert set(PendingAppleRevocation.model_fields) == {
+        "id", "token_enc", "created_at", "attempts", "last_attempt_at"}
+
+    # Apple comes back. Once the backoff has passed, the revoke goes through
+    # and the queued copy is gone.
+    sent = []
+    monkeypatch.setattr(auth_router, "revoke_apple_token",
+                        lambda t: sent.append(t) or True)
+    with api.db() as s:
+        stored = s.get(PendingAppleRevocation, row.id)
+        stored.last_attempt_at = datetime.utcnow() - timedelta(hours=1)
+        s.add(stored)
+        s.commit()
+    assert auth_router.revoke_pending_apple_grants(api.engine, [row.id]) == 1
+    assert sent == [token]
+    assert token not in _queued(api)
+
+
+def test_a_successful_revoke_leaves_nothing_queued(api, monkeypatch, revoke_spy):
+    signin = _apple_user(api, monkeypatch, "q-ok", "q-ok@example.com",
+                         exchange="apple-rt-accepted")
+    h = {"Authorization": f"Bearer {signin['access_token']}"}
+    assert api.client.delete("/me", headers=h).status_code == 204
+    assert revoke_spy == ["apple-rt-accepted"]
+    assert "apple-rt-accepted" not in _queued(api)
+
+
+def _forget(api, *row_ids) -> None:
+    """Leave the shared database as we found it."""
+    with api.db() as s:
+        for row_id in row_ids:
+            row = s.get(PendingAppleRevocation, row_id)
+            if row is not None:
+                s.delete(row)
+        s.commit()
+
+
+def test_retries_back_off_and_give_up_after_the_tenth(api, monkeypatch, caplog):
+    from app.routers import auth as auth_router
+
+    sent = []
+    monkeypatch.setattr(auth_router, "revoke_apple_token",
+                        lambda t: sent.append(t) or False)
+    now = datetime.utcnow()
+    max_tries = auth_router.MAX_REVOKE_ATTEMPTS
+    just_failed = _queue(api, "rt-just-failed", attempts=1, last_attempt_at=now)
+    waited = _queue(api, "rt-waited", attempts=1,
+                    last_attempt_at=now - auth_router.REVOKE_BACKOFF)
+    second_wait = _queue(api, "rt-second-wait", attempts=2,
+                         last_attempt_at=now - auth_router.REVOKE_BACKOFF)
+    last_try = _queue(api, "rt-last-try", attempts=max_tries - 1,
+                      last_attempt_at=now - timedelta(days=5))
+    spent = _queue(api, "rt-spent", attempts=max_tries,
+                   last_attempt_at=now - timedelta(days=2))
+    ids = [just_failed, waited, second_wait, last_try, spent]
+    try:
+        with caplog.at_level("ERROR", logger="app.routers.auth"):
+            auth_router.revoke_pending_apple_grants(api.engine, ids)
+
+        # Due: one backoff after the first failure, and the last try. Not
+        # yet: one backoff after the second (it doubles), or straight after
+        # a failure. Out of tries: not sent again, and not kept.
+        assert sent == ["rt-waited", "rt-last-try"]
+        queued = _queued(api)
+        assert queued["rt-waited"].attempts == 2
+        assert "rt-last-try" not in queued, "its tenth failure drops it"
+        assert "rt-spent" not in queued, "a row out of tries is not kept"
+        said = " ".join(r.getMessage() for r in caplog.records)
+        assert f"failed {max_tries} times; dropped it" in said
+        assert "rt-last-try" not in said and "rt-spent" not in said, \
+            "never the token in the log"
+    finally:
+        _forget(api, *ids)
+
+
+def test_a_grant_is_kept_at_most_thirty_days(api, monkeypatch):
+    """The privacy policy's promise: an encrypted Apple grant outlives the
+    account by 30 days at most, only to retry the revoke. A server with no
+    Apple key never retries, so the boot drops them whether or not Apple is
+    configured."""
+    from app.routers import auth as auth_router
+
+    now = datetime.utcnow()
+    stale = _queue(api, "rt-31-days", attempts=3,
+                   created_at=now - timedelta(days=31),
+                   last_attempt_at=now - timedelta(days=1))
+    fresh = _queue(api, "rt-29-days", attempts=3,
+                   created_at=now - timedelta(days=29),
+                   last_attempt_at=now - timedelta(days=1))
+    try:
+        assert auth_router.purge_expired_apple_revocations(api.engine) == 1
+        queued = _queued(api)
+        assert "rt-31-days" not in queued and "rt-29-days" in queued
+
+        # A retry pass drops one that has aged out since, before sending.
+        with api.db() as s:
+            row = s.get(PendingAppleRevocation, fresh)
+            row.created_at = now - timedelta(days=30, minutes=1)
+            s.add(row)
+            s.commit()
+        sent = []
+        monkeypatch.setattr(auth_router, "revoke_apple_token",
+                            lambda t: sent.append(t) or True)
+        assert auth_router.revoke_pending_apple_grants(api.engine, [fresh]) == 0
+        assert sent == [] and "rt-29-days" not in _queued(api)
+    finally:
+        _forget(api, stale, fresh)
+
+
+def test_a_grant_encrypted_under_another_key_is_dropped_with_a_log_line(
+        api, monkeypatch, caplog):
+    """FERNET_KEY rotated with a revoke still queued: nothing can decrypt it,
+    so no retry can send it and nobody can revoke it by hand. It goes, and
+    the log says which row and why."""
+    from cryptography.fernet import Fernet
+
+    from app.routers import auth as auth_router
+
+    with api.db() as s:
+        row = PendingAppleRevocation(token_enc=Fernet(
+            Fernet.generate_key()).encrypt(b"rt-old-key").decode())
+        s.add(row)
+        s.commit()
+        row_id = row.id
+    good = _queue(api, "rt-current-key")
+    sent = []
+    monkeypatch.setattr(auth_router, "revoke_apple_token",
+                        lambda t: sent.append(t) or True)
+    try:
+        with caplog.at_level("ERROR", logger="app.routers.auth"):
+            revoked = auth_router.revoke_pending_apple_grants(
+                api.engine, [row_id, good])
+        assert revoked == 1 and sent == ["rt-current-key"], \
+            "the bad row stops nothing else in the pass"
+        with api.db() as s:
+            assert s.get(PendingAppleRevocation, row_id) is None
+        said = [r.getMessage() for r in caplog.records]
+        assert any(f"revoke {row_id} cannot be decrypted" in m for m in said)
+    finally:
+        _forget(api, row_id, good)
+
+
+def test_every_boot_drops_expired_grants_before_it_retries(monkeypatch):
+    import asyncio
+
+    from app import main
+
+    calls = []
+    monkeypatch.setattr(main, "run_migrations", lambda: None)
+    monkeypatch.setattr(main, "seed_default_growing_area", lambda: None)
+    monkeypatch.setattr(main.auth, "purge_expired_apple_revocations",
+                        lambda engine: calls.append("drop expired"))
+    monkeypatch.setattr(main.auth, "start_queued_apple_revokes",
+                        lambda engine: calls.append("retry"))
+
+    async def vision_status():
+        return {"backend": "stub", "ready": True, "model": "", "detail": ""}
+
+    monkeypatch.setattr(main, "vision_status", vision_status)
+
+    async def boot():
+        async with main.lifespan(main.app):
+            pass
+
+    asyncio.run(boot())
+    assert calls == ["drop expired", "retry"]
+
+
+def test_an_apple_sign_in_with_no_stored_grant_is_logged(
+        api, monkeypatch, revoke_spy, caplog):
+    signin = _apple_user(api, monkeypatch, "q-none", "q-none@example.com",
+                         exchange=None)
+    h = {"Authorization": f"Bearer {signin['access_token']}"}
+    with caplog.at_level("WARNING", logger="app.routers.auth"):
+        assert api.client.delete("/me", headers=h).status_code == 204
+    assert revoke_spy == []
+    assert any("no stored Apple grant" in r.getMessage() for r in caplog.records)
+
+
+def test_startup_retries_the_queue_only_when_apple_is_configured(
+        api, monkeypatch):
+    from app.config import get_settings
+    from app.routers import auth as auth_router
+
+    with api.db() as s:  # this test retries the whole queue
+        for row in s.exec(select(PendingAppleRevocation)).all():
+            s.delete(row)
+        s.commit()
+    _queue(api, "rt-at-boot")
+    sent = []
+    monkeypatch.setattr(auth_router, "revoke_apple_token",
+                        lambda t: sent.append(t) or True)
+
+    monkeypatch.delenv("APPLE_PRIVATE_KEY", raising=False)
+    monkeypatch.delenv("APPLE_PRIVATE_KEY_PATH", raising=False)
+    get_settings.cache_clear()
+    try:
+        assert auth_router.start_queued_apple_revokes(api.engine) is None
+        assert sent == []
+
+        monkeypatch.setenv("APPLE_PRIVATE_KEY", "-----BEGIN PRIVATE KEY-----")
+        get_settings.cache_clear()
+        thread = auth_router.start_queued_apple_revokes(api.engine)
+        assert thread is not None and thread.daemon
+        thread.join(timeout=10)
+    finally:
+        get_settings.cache_clear()
+    assert sent == ["rt-at-boot"]
+    assert _queued(api) == {}
+
+
 def test_census_export_unaffected_by_deleted_users(
         api, monkeypatch, revoke_spy):
     keeper = _google_user(api, monkeypatch, "keep-sub", "keep@example.com")
@@ -190,13 +463,18 @@ def test_census_export_unaffected_by_deleted_users(
     doomed_plant = api.client.post("/plants/", json={
         "nickname": "Gone", "species_id": _species_id(api)}, headers=dh).json()
 
-    before = api.client.get("/census/export", headers=kh).json()
-    uuids_before = {p["plant_uuid"] for p in before["plants"]}
-    assert {keeper_plant["plant_uuid"], doomed_plant["plant_uuid"]} <= uuids_before
+    from tests import census_operator
+    census_operator.pin_salt(monkeypatch)
+    keeper_ref = census_operator.ref(keeper_plant["plant_uuid"])
+    doomed_ref = census_operator.ref(doomed_plant["plant_uuid"])
+
+    before = census_operator.export(api.client, monkeypatch)
+    refs_before = {p["plant_ref"] for p in before["plants"]}
+    assert {keeper_ref, doomed_ref} <= refs_before
 
     assert api.client.delete("/me", headers=dh).status_code == 204
 
-    after = api.client.get("/census/export", headers=kh).json()
-    uuids_after = {p["plant_uuid"] for p in after["plants"]}
-    assert keeper_plant["plant_uuid"] in uuids_after
-    assert doomed_plant["plant_uuid"] not in uuids_after
+    after = census_operator.export(api.client, monkeypatch)
+    refs_after = {p["plant_ref"] for p in after["plants"]}
+    assert keeper_ref in refs_after
+    assert doomed_ref not in refs_after

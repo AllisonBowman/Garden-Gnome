@@ -180,6 +180,44 @@ def test_never_inherit_is_exactly_the_harm_capable_set():
     assert {"toxic_to_pets", "chill_damage_f", "water_regime"} <= HARM_CAPABLE
 
 
+def test_edibility_the_survival_floor_and_the_cadence_never_inherit():
+    # ADR 0008. The Nymphaea genus page says its leaves and flowers are eaten
+    # "in moderation" somewhere in the world, and that once reached Nymphaea
+    # odorata as "grown to eat". A cousin's edibility is not this plant's,
+    # and neither is a cousin's survival floor or watering cadence.
+    for field, value in (("is_edible", True),
+                         ("outdoor_temp_min_f", -20),
+                         ("water_growing_days_est", 7),
+                         ("water_dormant_days_est", 21)):
+        result = resolve("Nymphaea odorata", [
+            claim(field, value, subject="Nymphaea", authority=NC_STATE)])
+
+        assert field in HARM_CAPABLE, field
+        assert field not in result.values, field
+        assert field not in result.winners, field
+
+
+def test_a_check_depth_still_inherits_because_the_check_decides():
+    # Where to feel the soil is not an instruction to water; a borrowed depth
+    # is labelled and shown, as ADR 0008 decided.
+    result = resolve("Dracaena trifasciata", [
+        claim("water_check_depth_cm", 5, subject="Dracaena")])
+    assert result.values["water_check_depth_cm"] == 5
+    assert result.provenance["water_check_depth_cm"] == "genus_inferred"
+
+
+def test_two_sources_that_disagree_on_edibility_settle_nothing():
+    # Harm-capable means a disagreement is refused, not settled by tier: one
+    # page calling a plant food and another calling it not food is exactly
+    # the case where picking a winner is how someone gets poisoned.
+    result = resolve("Dracaena trifasciata", [
+        claim("is_edible", True, authority=WIKIPEDIA),
+        claim("is_edible", False, authority=WFO),
+    ])
+    assert "is_edible" not in result.values
+    assert [r.field for r in result.refusals] == ["is_edible"]
+
+
 def test_a_species_level_claim_on_a_harm_capable_field_still_resolves():
     # The bar is on borrowing, not on the field. A source that looked at this
     # species is still believed, and still outranks the genus.

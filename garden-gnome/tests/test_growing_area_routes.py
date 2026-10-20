@@ -104,3 +104,20 @@ def test_the_old_prefix_is_marked_deprecated_and_the_new_one_is_not(iso):  # noq
     paths = iso.client.get("/openapi.json").json()["paths"]
     assert paths[f"{OLD}/"]["get"]["deprecated"] is True
     assert paths[f"{NEW}/"]["get"].get("deprecated") is not True
+
+
+def test_areas_list_oldest_first_even_after_an_edit(iso):  # noqa: F811
+    """The first area listed is the one a plant saved without one lands in
+    (`plants._resolve_growing_area_id`, oldest by id), so the list has to be
+    in that order on purpose -- not in whatever order the database returns
+    rows, which after an UPDATE need not be insertion order."""
+    for name in ("Second", "Third"):
+        assert iso.client.post(
+            f"{NEW}/", headers=iso.a["headers"], json={"name": name}
+        ).status_code == 201
+    iso.client.patch(f"{NEW}/{iso.a['env_id']}", headers=iso.a["headers"],
+                     json={"name": "Renamed first"})
+    ids = [a["id"] for a in iso.client.get(
+        f"{NEW}/", headers=iso.a["headers"]).json()]
+    assert ids == sorted(ids)
+    assert ids[0] == iso.a["env_id"]

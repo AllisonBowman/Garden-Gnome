@@ -9,10 +9,17 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { Species } from '../types';
 import { legacyStats, waterRegimeSentence } from '../care/facts';
+import { matchesQuery } from '../care/catalog';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Pill from '../components/Pill';
+import Eyebrow from '../components/Eyebrow';
+import EmptyState from '../components/EmptyState';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 
 type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'SpeciesList'>;
 
@@ -72,14 +79,19 @@ export default function SpeciesScreen() {
   const [search, setSearch] = useState('');
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
-  const { data: speciesList = [], isLoading, isError } = useQuery({
+  const {
+    data: speciesData, isError, error, refetch, isFetching,
+  } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
+  const speciesList = useMemo(() => speciesData ?? [], [speciesData]);
 
-  const filtered = speciesList.filter((s: Species) =>
-    s.common_name.toLowerCase().includes(search.toLowerCase()) ||
-    s.scientific_name.toLowerCase().includes(search.toLowerCase()),
+  // The list arrives A to Z (fetchSpeciesList); search folds "x" and "×" and
+  // reads the accepted name too, the same way the Almanac does.
+  const filtered = useMemo(
+    () => speciesList.filter((s: Species) => matchesQuery(s, search)),
+    [speciesList, search],
   );
 
   const renderItem = useCallback(({ item }: { item: Species }) => (
@@ -89,21 +101,37 @@ export default function SpeciesScreen() {
     />
   ), [navigation]);
 
-  if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
+  // A failed first load gets a way out: the list (and its pull-to-refresh)
+  // isn't rendered here, so without a button nothing on the tab could ever
+  // fetch again. A failed background refresh keeps the list it already has,
+  // with a line saying so.
+  const view = loadView(speciesData !== undefined, isError);
+  if (view === 'loading') return <ActivityIndicator style={styles.center} size="large" />;
 
-  if (isError) {
+  if (view === 'failed') {
     return (
-      <View style={styles.center}>
-        <Text style={styles.error}>
-          Could not load species.{' '}
-          {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
-        </Text>
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('the catalog')}
+          body={loadFailedBody(error, 'list')}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
+      {isError ? (
+        <RefreshFailed
+          onRetry={() => refetch()}
+          retrying={isFetching}
+          style={styles.refreshFailed}
+        />
+      ) : null}
       <Searchbar
         placeholder="Search species…"
         value={search}
@@ -115,6 +143,28 @@ export default function SpeciesScreen() {
         keyExtractor={(s) => String(s.id)}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
+        // This list can't be narrowed to a growing area; the Almanac can, and
+        // it was reachable only from the Census tab, where nobody looks for
+        // what suits their bed. Out of the way of a search's results.
+        ListHeaderComponent={search ? null : (
+          <Card
+            style={styles.almanacCard}
+            mode="outlined"
+            onPress={() => navigation.navigate('Almanac')}
+            accessibilityHint="Opens the Species Almanac"
+          >
+            <Card.Content>
+              <Eyebrow>Species Almanac</Eyebrow>
+              <Text variant="titleSmall" style={styles.almanacTitle}>
+                What suits one of your spaces ›
+              </Text>
+              <Text variant="bodySmall" style={styles.almanacSub}>
+                The same catalog, narrowed to one of your growing areas — the
+                species with the most confirmed for it first.
+              </Text>
+            </Card.Content>
+          </Card>
+        )}
         ListEmptyComponent={
           <Text style={styles.empty}>No species match "{search}".</Text>
         }
@@ -126,12 +176,15 @@ export default function SpeciesScreen() {
 const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   container: { flex: 1, backgroundColor: p.bg },
   searchbar: { margin: 12, borderRadius: 10, backgroundColor: p.card },
+  refreshFailed: { marginHorizontal: 12, marginTop: 8, marginBottom: 0 },
   list: { paddingHorizontal: 12, paddingBottom: 24 },
   card: { marginBottom: 8, borderRadius: 12, backgroundColor: p.card },
+  almanacCard: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card, borderColor: p.line },
+  almanacTitle: { color: p.acc, fontFamily: f.display, marginTop: 4 },
+  almanacSub: { color: p.sub, marginTop: 4, lineHeight: 18 },
   name: { fontFamily: f.display, color: p.ink },
   scientific: { fontStyle: 'italic', color: p.sub, marginTop: 2 },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6, gap: 4 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  error: { color: p.warn, textAlign: 'center' },
   empty: { textAlign: 'center', color: p.faint, marginTop: 48 },
 });

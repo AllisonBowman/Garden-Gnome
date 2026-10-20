@@ -3,6 +3,7 @@ import {
   REMINDER_CARE_TYPES, REPOT_INSPECTION_MONTH, isInSeason,
 } from '../notifications/plan';
 import { GRACE_DAYS } from '../streaks/streaks';
+import { parseServerDate } from '../api/serverDate';
 
 // One "next due" per plant × scheduled care-type, surfaced for the calendar and
 // the Plants to-do list. This is the same anchor math the reminder planner uses
@@ -92,9 +93,8 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
       }
       const lastCareDate = anchorMs ? new Date(anchorMs) : null;
       if (!anchorMs) {
-        anchorMs = plant.acquired_on
-          ? new Date(plant.acquired_on).getTime()
-          : now.getTime();
+        // acquired_on is a date-only string: the caretaker's day, not UTC's.
+        anchorMs = parseServerDate(plant.acquired_on)?.getTime() ?? now.getTime();
       }
 
       // Repotting is a February inspection, not an interval (plan 1.3). The
@@ -168,6 +168,74 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
   }
 
   return tasks.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
+}
+
+// ── Plants with no check schedule ────────────────────────────────────────────
+// Most of the catalog has no care schedule on record yet: the claims carry a
+// watering regime but no interval, and an interval nobody published is one
+// the app will not invent. A plant of such a species gets no to-do, no
+// calendar entry and no reminder — and the screens say so, rather than let
+// silence (or "all caught up") read as "nothing needed".
+
+/** Whether the species has a check schedule the app can keep: any interval
+ *  for a care type that becomes a to-do or a reminder. */
+export function hasCheckSchedule(species: Species): boolean {
+  return (species.care_schedules ?? [])
+    .some((s) => REMINDER_CARE_TYPES.includes(s.care_type));
+}
+
+export interface UnscheduledPlant {
+  plantId: number;
+  nickname: string;
+  growingAreaId?: number;
+}
+
+/** The plants whose species was read and has no check schedule. A species
+ *  that failed to load is not one with no schedule, so it is not listed. */
+export function unscheduledPlants(input: CareTasksInput): UnscheduledPlant[] {
+  const out: UnscheduledPlant[] = [];
+  for (const plant of input.plants) {
+    const species = input.speciesById[plant.species_id];
+    if (!species || hasCheckSchedule(species)) continue;
+    out.push({
+      plantId: plant.id, nickname: plant.nickname, growingAreaId: plant.growing_area_id,
+    });
+  }
+  return out;
+}
+
+/** On a plant's own page: why nothing is scheduled for it, and where to look
+ *  instead. */
+export const NO_SCHEDULE_LINE =
+  'No check schedule on record for this species yet; its care guide below has '
+  + 'what its sources say. There are no reminders for it until there is one.';
+
+/** Under a to-do list or a calendar: which plants it leaves out, and why. */
+export function unscheduledLine(plants: UnscheduledPlant[]): string | null {
+  if (plants.length === 0) return null;
+  if (plants.length === 1) {
+    return `No check schedule on record for ${plants[0].nickname}’s species yet, so `
+      + 'nothing is scheduled for it. Its care guide has what its sources say.';
+  }
+  return `${plants.length} plants have no check schedule on record for their species `
+    + 'yet, so nothing is scheduled for them. Each one’s care guide has what its '
+    + 'sources say.';
+}
+
+/** Whether the to-do card may say "All caught up": only when there are
+ *  checks to be caught up on and no plant was left out of them. A plant
+ *  nobody scheduled isn't caught up, it's unscheduled; one whose log
+ *  couldn't be read isn't known to be. */
+export function allCaughtUp(taskCount: number, leftOutCount: number): boolean {
+  return taskCount > 0 && leftOutCount === 0;
+}
+
+/** Plants left out because their care log couldn't be read just now. */
+export function unreadLine(count: number): string | null {
+  if (count <= 0) return null;
+  return count === 1
+    ? 'Couldn’t read 1 plant’s care log just now, so it’s left out here.'
+    : `Couldn’t read ${count} plants’ care logs just now, so they’re left out here.`;
 }
 
 /**

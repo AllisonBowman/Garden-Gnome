@@ -18,7 +18,7 @@ import {
 
 export type CareFactKey =
   | 'water' | 'light' | 'humidity' | 'temperature' | 'soil'
-  | 'fertilize' | 'outdoor_sun' | 'cold' | 'size' | 'place';
+  | 'fertilize' | 'outdoor_sun' | 'cold' | 'size' | 'place' | 'eating';
 
 export interface CareFactRow {
   key: CareFactKey;
@@ -26,6 +26,10 @@ export interface CareFactRow {
   value: string;
   /** True when any field this row drew on was borrowed from the genus. */
   inferred: boolean;
+  /** A row that warns rather than describes — shown in the warning colour.
+   *  Only the edibility note today: "some parts are eaten, others are
+   *  poisonous" is read as a caution or it is read wrong. */
+  caution?: boolean;
 }
 
 export type LegacyStatKey = 'light' | 'humidity' | 'temperature' | 'soil';
@@ -38,6 +42,10 @@ export interface LegacyStat {
 
 /** The status line's phrasing, exported so screens and tests share one copy. */
 export const BORROWED_LINE = 'Care facts borrowed from the genus — not confirmed for this species';
+/** The pill on anything one species borrowed from its genus (ADR 0002). One
+ *  copy, because the same fact is labelled on a care row and on a fit
+ *  finding, and a reader should not have to learn two words for it. */
+export const INFERRED_PILL = 'genus-inferred';
 export const NONE_LINE = 'No care facts cited for this species yet';
 /** The caption over the legacy stats: they are catalog values no claim
  *  backs, and under a "cited to …" line they would read as equally cited. */
@@ -111,8 +119,14 @@ const has = (s: Species, field: keyof Species) => {
 };
 const hasAny = (s: Species, fields: (keyof Species)[]) => fields.some((f) => has(s, f));
 
-/** Inches said the way a gardener says them: under two feet stays inches. */
-const feet = (v: number) => (v < 24 ? `${num(v)} in` : `${num(Math.round((v / 12) * 10) / 10)} ft`);
+/** A length as a gardener says it: inches under two feet, and from there
+ *  feet to one decimal, a half rounded up. The fit engine's `_ft` to the
+ *  operation — not Math.round on v / 12, since Python's round takes a half
+ *  to even and this must land on the same tenth — so the "7 ft" of headroom
+ *  in a sentence is the "7 ft" printed for the 84 in somebody measured. The
+ *  fixtures in facts.test.ts are shared with the engine's tests. */
+export const lengthSaid = (v: number) => (
+  v < 24 ? `${num(v)} in` : `${num(Math.floor((v * 10) / 12 + 0.5) / 10)} ft`);
 
 /** A mature-size range. Null at both ends means nobody measured it, which is
  *  not the same as a plant with no size — so the row simply does not appear. */
@@ -120,14 +134,14 @@ const feet = (v: number) => (v < 24 ? `${num(v)} in` : `${num(Math.round((v / 12
  *  it climbs rather than how tall it stands. */
 function climb(lo: number | null | undefined, hi: number | null | undefined): string | null {
   if (lo == null && hi == null) return null;
-  if (lo != null && hi != null) return `climbs ${feet(lo)}-${feet(hi)}`;
-  return lo != null ? `climbs from ${feet(lo)}` : `climbs up to ${feet(hi!)}`;
+  if (lo != null && hi != null) return `climbs ${lengthSaid(lo)}-${lengthSaid(hi)}`;
+  return lo != null ? `climbs from ${lengthSaid(lo)}` : `climbs up to ${lengthSaid(hi!)}`;
 }
 
 function span(lo: number | null | undefined, hi: number | null | undefined, word: string): string | null {
   if (lo == null && hi == null) return null;
-  if (lo != null && hi != null) return `${feet(lo)}-${feet(hi)} ${word}`;
-  return lo != null ? `from ${feet(lo)} ${word}` : `up to ${feet(hi!)} ${word}`;
+  if (lo != null && hi != null) return `${lengthSaid(lo)}-${lengthSaid(hi)} ${word}`;
+  return lo != null ? `from ${lengthSaid(lo)} ${word}` : `up to ${lengthSaid(hi!)} ${word}`;
 }
 
 /** 3 -> "3", 2.5 -> "2.5": depths, hours and degrees read as counts. */
@@ -150,6 +164,13 @@ function band(low: number | null | undefined, high: number | null | undefined, u
 export function isGenusInferred(species: Species, ...fields: string[]): boolean {
   const provenance = species.care_provenance ?? {};
   return fields.some((f) => provenance[f] === 'genus_inferred');
+}
+
+/** The outdoor exposure as a caretaker would say it — "part sun, part
+ *  shade" — or null when nothing resolved. */
+export function outdoorSunPhrase(values: OutdoorSunExposure[] | null | undefined): string | null {
+  if (!values?.length) return null;
+  return values.map((v) => SUN_TEXT[v] ?? v.replace(/_/g, ' ')).join(', ');
 }
 
 /** The regime as a caretaker would say it; null when nothing resolved. */
@@ -188,7 +209,24 @@ function concept(pairs: [string | null, string[]][]): Concept {
   return { parts, used };
 }
 
-const CONCEPTS: { key: CareFactKey; label: string; join: string; read: (s: Species) => Concept }[] = [
+/** The server's edibility sentence, when there is one. Non-null means the
+ *  species is eaten only with conditions, and the bare "grown to eat" would
+ *  leave those conditions out — so the note replaces it. */
+export function edibilityNote(species: Species): string | null {
+  const note = species.edibility_note?.trim();
+  return note ? note : null;
+}
+
+/** Whether "grown to eat" may stand on its own: edible, with no conditions
+ *  on record. Edibility is shown with its conditions or not at all. */
+export function plainlyEdible(species: Species): boolean {
+  return species.is_edible === true && edibilityNote(species) == null;
+}
+
+const CONCEPTS: {
+  key: CareFactKey; label: string; join: string; caution?: boolean;
+  read: (s: Species) => Concept;
+}[] = [
   // The regime and the check depth — never the dry-down target, which is a
   // verbatim passage and stays on the server (ADR 0003).
   { key: 'water', label: 'Watering', join: '; ', read: (s) => concept([
@@ -227,9 +265,7 @@ const CONCEPTS: { key: CareFactKey; label: string; join: string; read: (s: Speci
     [s.fertilize_strength ? STRENGTH_TEXT[s.fertilize_strength] ?? null : null, ['fertilize_strength']],
   ]) },
   { key: 'outdoor_sun', label: 'Outdoor sun', join: ', ', read: (s) => concept([
-    [s.outdoor_sun_exposure?.length
-      ? s.outdoor_sun_exposure.map((v) => SUN_TEXT[v] ?? v.replace(/_/g, ' ')).join(', ')
-      : null, ['outdoor_sun_exposure']],
+    [outdoorSunPhrase(s.outdoor_sun_exposure), ['outdoor_sun_exposure']],
   ]) },
   // A survival floor from USDA PLANTS — not the temperature row's damage
   // point, which is where harm begins in cultivation. The two can sit tens
@@ -253,8 +289,15 @@ const CONCEPTS: { key: CareFactKey; label: string; join: string; read: (s: Speci
     [s.is_houseplant == null ? null : (s.is_houseplant ? 'grown indoors' : 'an outdoor plant'),
       ['is_houseplant']],
     [s.climbs ? 'a climber that needs a support' : null, ['climbs']],
-    [s.is_edible ? 'grown to eat' : null, ['is_edible']],
+    [plainlyEdible(s) ? 'grown to eat' : null, ['is_edible']],
     [s.attracts_pollinators ? 'feeds pollinators' : null, ['attracts_pollinators']],
+  ]) },
+  // Its own row, in the warning colour, never folded into "Where it lives":
+  // the note is a whole sentence about which parts are safe to eat, and
+  // squeezed between "grown indoors" and "feeds pollinators" it would read
+  // as one more pleasant trait.
+  { key: 'eating', label: 'Eating', join: '', caution: true, read: (s) => concept([
+    [edibilityNote(s), ['is_edible']],
   ]) },
 ];
 
@@ -263,13 +306,14 @@ const CONCEPTS: { key: CareFactKey; label: string; join: string; read: (s: Speci
  *  genus; a flag on a field the row did not use does not taint it. */
 export function careFactRows(species: Species): CareFactRow[] {
   const rows: CareFactRow[] = [];
-  for (const { key, label, join, read } of CONCEPTS) {
+  for (const { key, label, join, caution, read } of CONCEPTS) {
     const { parts, used } = read(species);
     if (parts.length === 0) continue;
     rows.push({
       key, label,
       value: capitalize(parts.join(join)),
       inferred: isGenusInferred(species, ...used),
+      ...(caution ? { caution: true } : {}),
     });
   }
   return rows;

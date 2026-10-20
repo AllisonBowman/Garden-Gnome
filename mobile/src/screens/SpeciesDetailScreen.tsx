@@ -6,6 +6,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { fetchSpecies } from '../api/species';
+import { fetchGrowingAreas } from '../api/growingAreas';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -13,6 +14,12 @@ import { careFactRows, legacyStats } from '../care/facts';
 import {
   CareFactList, CareSourceRows, CareStatusLine, LegacyStatRow,
 } from '../components/CareFacts';
+import AreaFitCard from '../components/AreaFitCard';
+import EmptyState from '../components/EmptyState';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 
 type Route = RouteProp<SpeciesStackParamList, 'SpeciesDetail'>;
 
@@ -23,17 +30,46 @@ const CARE_ICON: Record<string, string> = {
 
 export default function SpeciesDetailScreen() {
   const route = useRoute<Route>();
-  const { speciesId } = route.params;
+  const { speciesId, growingAreaId } = route.params;
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
-  const { data: species, isLoading } = useQuery({
+  const {
+    data: species, isError, error, refetch, isFetching,
+  } = useQuery({
     queryKey: ['species', speciesId],
     queryFn: () => fetchSpecies(speciesId),
   });
 
-  if (isLoading || !species) {
+  // Opened from an area's candidates (or the Almanac filtered to one), the
+  // page answers the question that led here: how does it suit that space?
+  // Only for an area still in the list — the card is headed with its name.
+  const { data: areas = [] } = useQuery({
+    queryKey: ['growingAreas'],
+    queryFn: fetchGrowingAreas,
+    enabled: growingAreaId != null,
+  });
+  const area = growingAreaId != null ? areas.find((a) => a.id === growingAreaId) ?? null : null;
+
+  // The record stays on screen when a later refresh fails (with a line
+  // saying so); the card is for a record that never loaded, and says why.
+  const view = loadView(species !== undefined, isError);
+  if (view === 'loading') {
     return <ActivityIndicator style={styles.center} size="large" />;
+  }
+  if (view === 'failed' || !species) {
+    return (
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('this species')}
+          body={loadFailedBody(error)}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
+      </View>
+    );
   }
 
   // Which cards have anything to say. A row minted from the claim tranche
@@ -46,6 +82,8 @@ export default function SpeciesDetailScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Drawn from what loaded before: an error now is a failed refresh. */}
+      {isError ? <RefreshFailed onRetry={() => refetch()} retrying={isFetching} /> : null}
       {/* Header */}
       <View style={styles.header}>
         <Text variant="headlineSmall" style={styles.title}>
@@ -68,6 +106,10 @@ export default function SpeciesDetailScreen() {
           </Chip>
         ) : null}
       </View>
+
+      {area ? (
+        <AreaFitCard areaId={area.id} areaName={area.name} speciesId={species.id} />
+      ) : null}
 
       {/* The resolved facts — what the claims settled, labelled where a value
           was borrowed from the genus. */}

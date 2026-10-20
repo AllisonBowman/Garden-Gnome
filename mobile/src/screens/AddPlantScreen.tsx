@@ -7,27 +7,41 @@ import {
   HelperText,
 } from 'react-native-paper';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { fetchSpeciesList } from '../api/species';
 import {
   identifySpeciesPhoto, IdentifyResponse, photoIdAvailable,
 } from '../photoId/identify';
-import { fetchGrowingAreas, fetchCandidates } from '../api/growingAreas';
+import { PHOTO_SUGGESTIONS_LABEL } from '../photoId/copy';
+import LoadError from '../components/LoadError';
+import { fetchGrowingAreas, fetchSpeciesFit } from '../api/growingAreas';
 import { serverMessage } from '../api/errorMessage';
 import { ensureCameraPermission } from '../photoPermissions';
 import { createPlant } from '../api/plants';
 import ReportResult from '../components/ReportResult';
 import { rescheduleAllReminders } from '../notifications/reminders';
+import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
+import { toxicityLine } from '../care/toxicityLine';
 import { Species, GrowingArea } from '../types';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
+import FitFindingRow from '../components/FitFindingRow';
+import { NO_AREA_NOTE, areasFailedNote, placementAreaId } from '../growingAreas/placement';
+import type { PlantsStackParamList } from '../../App';
+import {
+  CHECK_FAILED, misfitIntro, misfitsOf, speciesFitNote,
+} from '../growingAreas/fitFindings';
 
 export default function AddPlantScreen() {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const navigation = useNavigation();
+  // Opened from an area's own screen, Add Plant starts on that area: the
+  // gardener was just looking at it, and the oldest area is somewhere else.
+  const route = useRoute<RouteProp<PlantsStackParamList, 'AddPlant'>>();
+  const fromAreaId = route.params?.growingAreaId ?? null;
   const queryClient = useQueryClient();
 
   const [nickname, setNickname]       = useState('');
@@ -36,40 +50,56 @@ export default function AddPlantScreen() {
   // anything below 1 and the caretaker plainly has at least one.
   const quantityValue = Math.max(1, parseInt(quantity, 10) || 1);
   const [speciesId, setSpeciesId]     = useState<number | null>(null);
-  const [envId, setEnvId]             = useState<number | null>(null);
+  const [envId, setEnvId]             = useState<number | null>(fromAreaId);
   const [location, setLocation]       = useState('');
   const [condition, setCondition]     = useState('good');
   const [speciesSearch, setSpeciesSearch] = useState('');
 
-  const { data: speciesList = [] } = useQuery({
+  const {
+    data: speciesData, isError: speciesFailed, error: speciesError,
+    isFetching: speciesFetching, refetch: refetchSpecies,
+  } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
+  const speciesList = speciesData ?? [];
+  // Until the catalog has answered there is nothing to search or to match a
+  // photo against. A failed load must say so, not read as "no such plant".
+  const catalogReady = speciesData !== undefined;
 
-  const { data: growingAreas = [] } = useQuery({
+  const {
+    data: growingAreas = [], isPending: areasPending, isError: areasFailed,
+  } = useQuery({
     queryKey: ['growingAreas'],
     queryFn: fetchGrowingAreas,
   });
 
-  // Preselect the area the server would have picked on its own. Leaving this
-  // blank did not mean "no area": the plant silently landed in the caller's
-  // oldest one (`plants._resolve_growing_area_id`), so the only thing the
-  // blank achieved was hiding where the plant went.
+  // Preselect where the plant goes: the area it was added from, while that
+  // still exists, and otherwise the one the server would have picked on its
+  // own — the oldest (`plants._resolve_growing_area_id`), not whichever came
+  // first in the list. Leaving this blank did not mean "no area": the plant
+  // silently landed in that oldest one, so the only thing the blank achieved
+  // was hiding where the plant went. Until the list answers, the area asked
+  // for stands: a failed load still saves to it, and the note says so.
   useEffect(() => {
-    if (envId == null && growingAreas.length > 0) setEnvId(growingAreas[0].id);
-  }, [growingAreas, envId]);
+    if (areasPending || areasFailed) return;
+    const id = placementAreaId(growingAreas, envId);
+    if (id !== envId) setEnvId(id);
+  }, [growingAreas, envId, areasPending, areasFailed]);
+  const chosenArea = growingAreas.find((e) => e.id === envId) ?? null;
 
-  // What the chosen spot would have against this species. Asked before the
-  // plant is saved, because "your Hosta is in the wrong place" is worth far
-  // more before it is planted than after.
-  const { data: areaMisfits = [] } = useQuery({
-    queryKey: ['growingAreaCandidates', envId, 'addPlantCheck'],
-    queryFn: () => fetchCandidates(envId as number, 500),
-    enabled: envId != null && speciesId != null,
+  // What the chosen spot would have against this species, every axis, from
+  // the server. Asked before the plant is saved, because "your Hosta is in
+  // the wrong place" is worth far more before it is planted than after.
+  const {
+    data: speciesFit, isLoading: fitLoading, isError: fitFailed, refetch: refetchFit,
+  } = useQuery({
+    queryKey: ['speciesFit', envId, speciesId],
+    queryFn: () => fetchSpeciesFit(envId as number, speciesId as number),
+    // Only for an area on screen: the answer is shown under its name.
+    enabled: chosenArea != null && speciesId != null,
   });
-  const speciesUnsuited = envId != null && speciesId != null
-    && areaMisfits.length > 0
-    && !areaMisfits.some((c) => c.species_id === speciesId);
+  const fitMisfits = speciesFit ? misfitsOf(speciesFit.findings) : [];
 
   const mutation = useMutation({
     mutationFn: () => createPlant({
@@ -84,6 +114,12 @@ export default function AddPlantScreen() {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plants'] });
+      // The area it went into now has one more plant, maybe one more thing
+      // needing addressing, and more care on its calendar.
+      queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
+      queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       // New plant may introduce new due dates (anchored to acquisition)
       void rescheduleAllReminders();
       navigation.goBack();
@@ -107,14 +143,11 @@ export default function AddPlantScreen() {
   const identifyMutation = useMutation({
     mutationFn: (photo: { uri: string; mimeType?: string; fileName?: string | null }) =>
       identifySpeciesPhoto(photo, speciesList),
-    onSuccess: (result) => {
-      setIdentifyResult(result);
-      // Auto-select the top candidate; the user can still tap another chip
-      if (result.candidates.length > 0) {
-        setSpeciesId(result.candidates[0].id);
-        setSpeciesSearch(result.candidates[0].common_name);
-      }
-    },
+    // Suggestions only: nothing is chosen until the gardener taps one. The
+    // phone names a plant from a handful of coarse labels it reads off the
+    // photo, so its first answer is often wrong, and a wrong species brings
+    // the wrong care and the wrong toxicity with it.
+    onSuccess: (result) => setIdentifyResult(result),
     onError: (err) =>
       Alert.alert(
         'No match just now',
@@ -146,11 +179,14 @@ export default function AddPlantScreen() {
   );
 
   const selectedSpecies = speciesList.find((s: Species) => s.id === speciesId);
+  const selectedToxicity = selectedSpecies ? toxicityLine(selectedSpecies) : null;
 
   // Nickname is no longer required: a planting has no name of its own, and the
   // server fills in one from the species and place ("Tomatoes — south fence")
   // so every surface that addresses a plant by name still has something to say.
-  const canSubmit = speciesId !== null;
+  // Not before the areas have answered, either: a save sent while they load
+  // carries no area, and the plant lands in one the screen never showed.
+  const canSubmit = speciesId !== null && !areasPending;
 
   return (
     <KeyboardAvoidingView
@@ -190,7 +226,17 @@ export default function AddPlantScreen() {
 
         <Eyebrow style={styles.sectionLabel}>Species *</Eyebrow>
 
-        {aiIdAvailable && (
+        {speciesFailed && !catalogReady && (
+          <LoadError
+            inline
+            message="Couldn’t load the plant catalog, so there’s nothing to pick from yet."
+            error={speciesError}
+            onRetry={() => refetchSpecies()}
+            retrying={speciesFetching}
+          />
+        )}
+
+        {aiIdAvailable && catalogReady && (
           <>
             <View style={styles.identifyBtnRow}>
               {Platform.OS !== 'web' && (
@@ -217,8 +263,8 @@ export default function AddPlantScreen() {
               </Button>
             </View>
             <HelperText type="info" style={styles.identifyHint}>
-              Tip: zoom and crop close to a leaf or the flower — identification is
-              much more accurate on the plant's distinctive features than on a
+              Your phone suggests what the plant might be. Crop close to a leaf
+              or the flower: suggestions are much better from those than from a
               wide shot.
             </HelperText>
           </>
@@ -229,7 +275,7 @@ export default function AddPlantScreen() {
             {identifyResult.candidates.length > 0 ? (
               <>
                 <Text variant="bodySmall" style={styles.identifyLabel}>
-                  Best matches — tap to choose:
+                  {PHOTO_SUGGESTIONS_LABEL}
                 </Text>
                 <View style={styles.suggestionBox}>
                   {identifyResult.candidates.map((c) => (
@@ -276,51 +322,101 @@ export default function AddPlantScreen() {
           left={<TextInput.Icon icon="magnify" />}
         />
 
-        {speciesSearch.length > 0 && (
-          <View style={styles.suggestionBox}>
-            {filteredSpecies.slice(0, 6).map((s: Species) => (
-              <Button
-                key={s.id}
-                mode={speciesId === s.id ? 'contained' : 'outlined'}
-                onPress={() => { setSpeciesId(s.id); setSpeciesSearch(s.common_name); }}
-                style={styles.suggestion}
-                compact
-              >
-                {s.common_name}
-              </Button>
-            ))}
-          </View>
+        {!catalogReady && !speciesFailed && (
+          <HelperText type="info">Loading the plant catalog…</HelperText>
         )}
 
-        {selectedSpecies && (
-          <HelperText type="info">
-            {selectedSpecies.scientific_name}
-            {selectedSpecies.toxic_to_pets ? '  ⚠️ toxic to pets' : ''}
-          </HelperText>
-        )}
-
-        {growingAreas.length > 0 && (
-          <>
-            <Eyebrow style={styles.sectionLabel}>Growing area</Eyebrow>
-            <View style={styles.envGrid}>
-              {growingAreas.map((e: GrowingArea) => (
+        {speciesSearch.length > 0 && catalogReady && (
+          filteredSpecies.length > 0 ? (
+            <View style={styles.suggestionBox}>
+              {filteredSpecies.slice(0, 6).map((s: Species) => (
                 <Button
-                  key={e.id}
-                  mode={envId === e.id ? 'contained' : 'outlined'}
-                  onPress={() => setEnvId(e.id)}
-                  style={styles.envBtn}
+                  key={s.id}
+                  mode={speciesId === s.id ? 'contained' : 'outlined'}
+                  onPress={() => { setSpeciesId(s.id); setSpeciesSearch(s.common_name); }}
+                  style={styles.suggestion}
                   compact
                 >
-                  {e.name}
+                  {s.common_name}
                 </Button>
               ))}
             </View>
-            {speciesUnsuited ? (
-              <HelperText type="error" style={styles.fitWarning}>
-                Nothing confirms this species suits that spot. Open the growing
-                area after saving to see what it has against it — or pick a
-                different place for it.
-              </HelperText>
+          ) : (
+            <HelperText type="info">
+              Nothing in the catalog by that name. Try its other name, or the
+              Latin one.
+            </HelperText>
+          )
+        )}
+
+        {/* What the record says about harm comes with the choice, in the
+            server's own sentence where it has one (which parts, to whom, how
+            serious; or that nothing is recorded, which is not "safe"), so a
+            plant picked from a photo suggestion can't slip in unread. A
+            hazard to anyone, people included, gets the warning colour and
+            one warning sign (care/toxicityLine.ts). */}
+        {selectedSpecies && (
+          <>
+            <HelperText type="info">{selectedSpecies.scientific_name}</HelperText>
+            {selectedToxicity ? (
+              <Text style={selectedToxicity.hazard ? styles.hazard : styles.toxicityNote}>
+                {selectedToxicity.text}
+              </Text>
+            ) : null}
+          </>
+        )}
+
+        {/* Always shown once the areas have answered: where the plant goes is
+            never left for the server to decide out of sight. */}
+        {!areasPending && (
+          <>
+            <Eyebrow style={styles.sectionLabel}>Growing area</Eyebrow>
+            {areasFailed ? (
+              <Text style={styles.areaNote}>{areasFailedNote(envId != null)}</Text>
+            ) : growingAreas.length === 0 ? (
+              <Text style={styles.areaNote}>{NO_AREA_NOTE}</Text>
+            ) : (
+              <View style={styles.envGrid}>
+                {growingAreas.map((e: GrowingArea) => (
+                  <Button
+                    key={e.id}
+                    mode={envId === e.id ? 'contained' : 'outlined'}
+                    onPress={() => setEnvId(e.id)}
+                    style={styles.envBtn}
+                    compact
+                  >
+                    {e.name}
+                  </Button>
+                ))}
+              </View>
+            )}
+
+            {/* The spot's answer for this species, before anything is saved.
+                Misfits one by one, in the server's words; otherwise one line
+                that keeps "confirmed" and "nothing known" apart. */}
+            {chosenArea && speciesId != null ? (
+              fitLoading ? (
+                <Text style={styles.fitQuiet}>{`Checking ${chosenArea.name}…`}</Text>
+              ) : fitFailed ? (
+                <View>
+                  <Text style={styles.fitQuiet}>{CHECK_FAILED}</Text>
+                  <Button compact onPress={() => refetchFit()} style={styles.retry}>
+                    Try again
+                  </Button>
+                </View>
+              ) : speciesFit && fitMisfits.length > 0 ? (
+                <View style={styles.fitBox}>
+                  <Text style={styles.fitTitle}>{misfitIntro(chosenArea.name)}</Text>
+                  {fitMisfits.map((f, i) => (
+                    <FitFindingRow key={`${f.axis}-${i}`} finding={f} />
+                  ))}
+                  <Text style={styles.fitFoot}>
+                    You can still save it here, or pick another spot.
+                  </Text>
+                </View>
+              ) : speciesFit ? (
+                <Text style={styles.fitQuiet}>{speciesFitNote(speciesFit, chosenArea.name)}</Text>
+              ) : null
             ) : null}
           </>
         )}
@@ -387,10 +483,22 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   },
   identifyLabel: { color: p.sub, marginBottom: 8, fontWeight: '600' },
   identifyObservation: { color: p.ink, lineHeight: 19 },
+  hazard: { color: p.warn, fontSize: 13, lineHeight: 19, marginBottom: 4, paddingHorizontal: 12 },
+  toxicityNote: { color: p.sub, fontSize: 13, lineHeight: 19, marginBottom: 4, paddingHorizontal: 12 },
   debugRawText: { fontFamily: 'monospace', fontSize: 11, color: p.faint, marginTop: 4 },
   envGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   envBtn: { marginBottom: 4 },
-  fitWarning: { lineHeight: 18 },
+  areaNote: { color: p.sub, fontSize: 13, lineHeight: 19, marginBottom: 4 },
+  fitQuiet: { color: p.sub, fontSize: 13, lineHeight: 19, marginTop: 6 },
+  fitBox: {
+    backgroundColor: p.warnSoft,
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 8,
+  },
+  fitTitle: { color: p.warn, fontWeight: '700', fontSize: 14, marginBottom: 8 },
+  fitFoot: { color: p.sub, fontSize: 12.5, lineHeight: 18, marginTop: 2 },
+  retry: { alignSelf: 'flex-start', marginTop: 4 },
   segmented: { marginBottom: 8 },
   saveBtn: { marginTop: 24, borderRadius: 8 },
   saveBtnContent: { paddingVertical: 6 },

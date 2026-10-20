@@ -133,6 +133,13 @@ class FitFindingRead(SQLModel):
     verdict: str      # fits | misfits | unknown
     sentence: str
     borrowed: bool = False
+    # Who said so: the authorities whose pages settled a value this finding
+    # rests on, for this species itself. Empty for an unknown and for a value
+    # only the genus answered -- `borrowed` carries that.
+    authorities: list[str] = []
+    # Which of the area's goals this finding answers (edible, low_upkeep,
+    # pollinators), or null. Two goals share the `goal` axis.
+    goal: Optional[str] = None
 
 
 class CandidateRead(SQLModel):
@@ -147,6 +154,11 @@ class CandidateRead(SQLModel):
     scientific_name: str
     score: int        # how many axes actually confirmed; unknowns never count
     fits: list[FitFindingRead]
+    # One short caution when the species is recorded toxic to pets or to
+    # people ("Toxic to pets and people."), null otherwise. Null is "no
+    # record", never "safe". A recommendation that fits a space is still a
+    # plant someone's dog or child can eat, and the row has to say so.
+    hazard: Optional[str] = None
 
 
 class PlantMisfitRead(SQLModel):
@@ -156,6 +168,22 @@ class PlantMisfitRead(SQLModel):
     species_id: int
     common_name: str
     misfits: list[FitFindingRead]
+
+
+class SpeciesFitRead(SQLModel):
+    """One species against one area, every axis -- what Add Plant asks
+    before the plant is saved.
+
+    `findings` holds fits, misfits AND unknowns, in reading order, so the
+    client can show what is against it without being able to mistake
+    silence for a pass. `candidate` is the server's own Candidate rule, so
+    no client re-derives it."""
+    species_id: int
+    common_name: str
+    scientific_name: str
+    score: int
+    candidate: bool
+    findings: list[FitFindingRead]
 
 
 # --- Pre-rename field names, for the TestFlight 1.1.2 client ---
@@ -315,6 +343,12 @@ class SpeciesRead(SQLModel):
     # Fit fields (0019) -- matched against a growing area's real estate.
     is_houseplant: Optional[bool] = None
     is_edible: Optional[bool] = None
+    # Derived on the model: the condition on eating it, when there is one --
+    # the plant is also recorded as poisonous, or its cited edibility
+    # passage limits the parts or needs preparation. A client shows this in
+    # place of "grown to eat" whenever it is set; the passage itself stays
+    # on the server (ADR 0003).
+    edibility_note: Optional[str] = None
     attracts_pollinators: Optional[bool] = None
     climbs: Optional[bool] = None
     mature_height_in_min: Optional[float] = None

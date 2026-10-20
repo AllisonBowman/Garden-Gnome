@@ -1,4 +1,5 @@
 import { CareLog, CareType, Plant, Species } from '../types';
+import { parseServerDate } from '../api/serverDate';
 
 // All derived from existing care-log data — no storage, no backend. Because
 // care logs are append-only, earned milestones stay earned.
@@ -52,14 +53,6 @@ function startOfDay(ms: number): number {
   return d.getTime();
 }
 
-// acquired_on is a date-only string (YYYY-MM-DD). `new Date('2026-07-10')`
-// parses as UTC midnight, which lands on the previous day in any timezone
-// behind UTC — so parse the components as a LOCAL date instead.
-function dayFromDateOnly(s: string): number {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
-  if (m) return new Date(+m[1], +m[2] - 1, +m[3]).getTime();
-  return startOfDay(new Date(s).getTime());
-}
 
 /**
  * A household "care streak": consecutive days in which every care task that
@@ -97,8 +90,12 @@ export function computeStreak(input: StreakInput): StreakResult {
     }
     for (const arr of Object.values(logDaysByType)) arr.sort((a, b) => a - b);
 
-    const acquired = plant.acquired_on
-      ? dayFromDateOnly(plant.acquired_on)
+    // acquired_on is a date-only string, read as a LOCAL date
+    // (api/serverDate.ts): `new Date('2026-07-10')` is UTC midnight, the
+    // previous day anywhere behind UTC.
+    const acquiredOn = parseServerDate(plant.acquired_on);
+    const acquired = acquiredOn
+      ? startOfDay(acquiredOn.getTime())
       : (firstLog !== Infinity ? firstLog : today);
     const start = Math.min(acquired, firstLog === Infinity ? acquired : firstLog);
 
