@@ -72,10 +72,10 @@ lines of the README's check block that I ran came back FAIL. The `site/`
 folder passes its link check (13 pages, 0 broken).
 
 I also ran the new image's boot command on an empty scratch database. The
-migrations ended with `0020_climbs -> 0021_pending_apple_revocation`, then
+migrations ended with `0021_pending_apple_revocation -> 0022_backfill_acquired_on`, then
 `claim sync: written` with `claims stored 10681`, and `GET /` answered
 `"catalog": {"version": "8c520db39b21:6:1", "synced": true, "species": 997,
-"claims": 10681}`. The new code's `openapi.json` has 36 paths, six of them
+"claims": 10681}`. The new code's `openapi.json` has 34 paths, six of them
 under `/growing-areas`. The orphan check in step 2 printed `[]` on a scratch
 database built at 0009.
 
@@ -314,6 +314,19 @@ Settled since the lanes reported, so not decisions any more:
   (`2e07c6f`).
 - The retry states on every screen are in.
 
+- **Taro on candidate lists.** No source rates taro high, so the poison rule
+  leaves it in, and it is offered as "something to eat" with the note that it
+  is eaten only after preparation. The only rule that would remove it would
+  also remove tomato. Recommend leaving it: the note says what matters.
+- **The "Invasive Species" exclusion.** NC State's invasive tag now keeps a
+  species off candidate lists the way a noxious weed does (ADR 0009). It
+  removes 5: Japanese and Chinese wisteria, beefsteak plant, leatherleaf
+  mahonia and English ivy. They can still be looked up and added by hand.
+  Recommend keeping it; reverting is one line in `toxicity.never_put_forward`.
+- **If you ever set `CENSUS_OPERATOR_TOKEN`,** make it at least 32
+  characters. A shorter one now counts as unset, with a warning at boot, and
+  the export, sync and species-write routes stay at 404.
+
 Engineering leftovers that need nothing from you: Add plant should say a
 species has no check schedule before you add it (the species list the
 screen reads carries no schedules, so this needs a per-species fetch and
@@ -543,7 +556,7 @@ the `/ai/status` JSON, and a green job. A high N is normal.
 curl -s https://garden-gnome-api.fly.dev/openapi.json | python3 -c "import json,sys; p=json.load(sys.stdin)['paths']; print(len(p), any(k.startswith('/growing-areas') for k in p))"
 ```
 
-Look for `36 True`. It printed `29 False` tonight.
+Look for `34 True` (the three species write routes are hidden now, so 34, not 36). It printed `29 False` tonight.
 
 ```bash
 curl -s https://garden-gnome-api.fly.dev/
@@ -587,13 +600,18 @@ That prints what's buffered and exits. Look for these, in order:
 - A first upgrade line reading `Running upgrade 0009_aloe_vera -> 0010_claims,
   claims and authorities`. If it starts anywhere else, something was deployed
   by hand in between. That isn't a problem in itself, but tell me.
-- One line per migration after it, ending with `Running upgrade 0020_climbs ->
-  0021_pending_apple_revocation`.
+- One line per migration after it, ending with `Running upgrade
+  0021_pending_apple_revocation -> 0022_backfill_acquired_on`. 0022 dates
+  every plant that has no acquisition date from the day it was added, so
+  plants from 1.1.2 start coming due for their first check.
 - `claim sync: written`, with `claims stored 10681`, `claims already present
   0`, `genus subjects skipped 4` and `fields refused 0`. Copy the whole block:
   the `species created`, `species linked` and `common-name collisions` counts
   depend on production's rows, and I can't predict them.
 - No traceback, no line starting `0017:`, and no `claim sync skipped`.
+- The first catalog write also stores two new `sync_state` keys,
+  `catalog_generation` and `synced_through_species_id`; nothing to do, just
+  don't be surprised to see them.
 
 If the boot happened too long ago for the buffer, the smoke check's output in
 the run log has the root JSON, which is the part that matters most. On every
