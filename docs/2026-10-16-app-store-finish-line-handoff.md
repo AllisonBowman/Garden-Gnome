@@ -17,8 +17,9 @@ Mac and will fill in these three lines when it finishes:
 
 - Build number: `____` (expect 16 or higher, since 1.1.2 was build 15)
 - EAS build ID: `____`
-- Commit EAS reports: `____` (should be `798f905`, or a later tip of PR #22 if
-  one is added before the build)
+- Commit EAS reports: `____` (should be the tip of PR #22 once the review
+  fixes below are on it, which is later than `307930e`; `798f905` alone
+  lacks them)
 
 Wherever a step below says "the build number", it means the first of those
 lines.
@@ -35,6 +36,21 @@ whoami` on this Mac says its token has expired, so step 3 starts with
 species, which changed the catalog this build ships: the smoke-check numbers
 in step 2 now read 10,681 claims and version `8c520db39b21:6:1`, from a
 scratch boot on this Mac today.
+
+**Update, 2026-10-20.** A review of the ship branch at `798f905` found
+problems that three lanes fixed on top of `307930e`, so build from the tip
+that carries them, not from `798f905`. In short: the census export is
+version 4.1 (records shuffled, care counted per type per month, moves and
+acquisition dated by month); a deleted account's queued Apple revoke is
+deleted after 30 days or 10 tries, whichever comes first; a severity word in
+a hazard sentence belongs to people only, and a food crop's sentence leads
+with the part that's eaten; a species a source rates as a serious or fatal
+poison for people is never a candidate unless it is a food crop eaten
+without conditions; and the app reads a server date like `2026-10-20` as
+that local day, not as midnight UTC. The site, privacy policy and
+`docs/app-store/` now say the same. Where that settles something below, it
+says so. Nothing was re-checked against production, EAS or the live site
+today, and the claim and catalog numbers above weren't re-run.
 
 **Checked from this Mac tonight.** The working tree is clean and
 `origin/care-advice-honesty` is `798f905`, 140 commits past `origin/master`
@@ -140,7 +156,8 @@ submission.
 3. **`CENSUS_OPERATOR_TOKEN` as a Fly secret.** Recommend no. While it's
    unset, `/census/export` and `/census/sync` answer 404 to everyone. That's
    the safe state, and it's what the privacy answers and review notes assume.
-   Nothing in 1.1.3 calls either route.
+   Nothing in 1.1.3 calls either route. If you ever set it, an export reads
+   `"export_version": "4.1"`.
 4. **Rehearse the boot on a copy of production's database first.** Recommend
    yes if you have the time. It's the only way to see 0017 and the claim sync
    run against the real rows before they run live. Step 2 shows how to make
@@ -159,17 +176,19 @@ submission.
 6. **Settled for four of the five poisonous species; the fifth is yours.**
    Foxglove, English yew, monkshood and jimsonweed now carry NC State's
    Poisonous to Humans block (Poison Severity: High), re-read on the live
-   pages on 2026-10-17 and checked quote by quote. Each reads "Seriously
-   toxic to pets and people", names NC State's rating, and is never put
-   forward as a growing-area candidate. Lily of the valley is different: NC
-   State's live page rates it Poison Severity: Low ("toxic only if large
-   quantities eaten"), while Missouri Botanical Garden calls all parts very
-   poisonous. Citing NC State would make the app say "NC State Extension
-   rates it low severity" beside "Seriously toxic" (the server keeps the
-   graver source), and would take it off candidate lists. Recommend leaving
-   it as it is for this submission: "Toxic to pets and people", its hazard
-   line shown, still a possible candidate for a shady bed. If you'd rather
-   it were never put forward, say so; that is a one-record change and a
+   pages on 2026-10-17 and checked quote by quote. Since the 2026-10-20 fixes,
+   "Seriously" in their sentences is about people, because NC State's Poison
+   Severity rates harm to people; pets are named as toxic, and as seriously so
+   only where a source's own animal wording is grave. Each names NC State's
+   rating and is never put forward as a growing-area candidate. Lily of the
+   valley is different: NC State's live page rates it Poison Severity: Low
+   ("toxic only if large quantities eaten"), while Missouri Botanical Garden
+   calls all parts very poisonous. Citing NC State would make the app say "NC
+   State Extension rates it low severity" beside "Seriously toxic" (the server
+   keeps the graver source), and would take it off candidate lists. Recommend
+   leaving it as it is for this submission: "Toxic to pets and people", its
+   hazard line shown, still a possible candidate for a shady bed. If you'd
+   rather it were never put forward, say so; that is a one-record change and a
    deploy, no app build.
 7. **The "Sign-in required" box in App Review Information.** Tick it;
    `docs/app-store/review-notes.md` now says the same. The app does require
@@ -200,10 +219,12 @@ These can wait until after submission:
   true either way, because it counts researched species.
 - **Who receives census syncs (`CENSUS_API_URL`).** Recommend nobody for now.
   The policy says PlantAdvocate keeps census data and will name any other
-  organization before data goes to it. Before anyone does receive it: the
-  export still carries each plant's dated care history, which a determined
-  recipient could use to match one export to the next. Full unlinkability
-  would need intervals or aggregation.
+  organization before data goes to it. The dated care history that let one
+  export be matched to the next is gone (export 4.1, settled below), but a
+  planting's monthly care counts can still resemble it from one export to
+  the next. That's why the policy promises only that no identifier links
+  exports. True totals would need aggregation before anyone outside
+  receives it.
 - **Water-regime mapping.** Recommend the stricter rule, "a bare MBG or RHS
   rating never sets a regime". One mapping table would invent a
   correspondence the sources don't make: MBG's "Dry to medium" resolves two
@@ -237,9 +258,6 @@ These can wait until after submission:
   company in the in-app consent (the site policy already names Anthropic).
   Keep `ADVISOR_BACKEND` at `stub`, because the policy says everyday advice
   is rule-based.
-- **Deleted accounts' Apple revokes that fail 10 times** stay queued in
-  `pending_apple_revocation` for the operator. Recommend deleting them after
-  30 days and saying so in the policy's deletion paragraph.
 - **Two species are both named "Blackberry".** Recommend renaming *Rubus
   fruticosus* to "European Blackberry".
 - **288 catalog values rest only on Missouri Botanical Garden citations**
@@ -264,9 +282,30 @@ These can wait until after submission:
 
 Settled since the lanes reported, so not decisions any more:
 
-- Food crops stay on candidate lists, with their hazard line and edibility
-  note (`798f905`). Poison hemlock, belladonna and castor bean are still
-  never put forward.
+- Which poisons can be candidates. A species a source rates as a serious
+  or fatal poison for people is never put forward unless it is a food crop
+  whose cited edibility has no conditions, whatever the bed's goals. So
+  potato, eggplant, peanut, tomatillo and butter bean can appear, with their
+  hazard line and edibility note; mayapple, taro and wisteria never do, and
+  neither do poison hemlock, belladonna or castor bean (2026-10-20 fixes).
+- How hazard sentences read. A severity word ("Seriously", "Mildly") comes
+  from a rating of harm to people, so it qualifies people only. Animals are
+  "toxic to pets", or to cats or dogs, unless a plant's own table or grave
+  animal wording says more. A food crop's sentence leads with the part
+  that's eaten: "The tubers are the crop; the leaves, stems and sprouts are
+  seriously toxic to people and pets." (2026-10-20 fixes.)
+- The census export is version 4.1. Its records come in a random order, care
+  is counted per type per calendar month, stewardship moves and acquisition
+  are dated by month, and every identifier is new for each export. The
+  in-app consent and `site/privacy.html` list exactly those fields
+  (2026-10-20 fixes).
+- A deleted account's queued Apple revoke is deleted after 30 days or 10
+  tries, whichever comes first, and the policy's deletion paragraph says the
+  encrypted grant can be kept up to 30 days only to retry the revoke
+  (2026-10-20 fixes).
+- A date-only value from the server, such as a plant's acquired date, is
+  read by the app as that local day, so a new plant west of Greenwich no
+  longer comes due a day early (2026-10-20 fixes).
 - A new plant is dated from the day it's added, so its first check comes due
   (`7dac70d`).
 - The manifest and `app-privacy.md` list the same seven types: no Photos,
@@ -309,8 +348,10 @@ finish. If either says `fail`, stop and bring me the output. Don't merge.
 gh pr view 22 --repo AllisonBowman/Garden-Gnome --json headRefOid,mergeable,mergeStateStatus
 ```
 
-Look for `headRefOid` starting `798f905` (or the newer commit, if I added the
-`fly.toml` line from decision 1), `MERGEABLE`, and `CLEAN`.
+Look for `headRefOid` matching the tip that carries the 2026-10-20 review
+fixes (later than `307930e`; or the newer commit, if I added the `fly.toml`
+line from decision 1), `MERGEABLE`, and `CLEAN`. If it still starts
+`798f905` or `62d3a66`, the fixes aren't on the PR yet: stop and tell me.
 
 ```bash
 gh pr merge 22 --repo AllisonBowman/Garden-Gnome --merge
@@ -664,7 +705,10 @@ check https://plantadvocate.ai/support.html 'Restore Purchases' absent
 check https://plantadvocate.ai/support.html 'billing' absent
 check https://plantadvocate.ai/pricing.html '[$]6\|[$]12' absent
 check https://plantadvocate.ai/faq.html "isn't currently on the roadmap" absent
-check https://plantadvocate.ai/index.html 'EVERY FACT CITED' present
+check https://plantadvocate.ai/privacy.html 'no identifier links one export to another' present
+check https://plantadvocate.ai/privacy.html 'up to 30 days after the deletion' present
+check https://plantadvocate.ai/index.html 'SOURCES NAMED' present
+check https://plantadvocate.ai/index.html 'EVERY FACT CITED' absent
 ```
 
 ```bash
@@ -724,12 +768,12 @@ paste the "What's New" block from `docs/app-store/listing.md` into its What
 to Test. Pick builds by build number, never by the version string.
 
 **Then the paperwork.** Everything is in `docs/app-store/`, ready to paste
-field by field, in the order its `README.md` gives. Everywhere those files
-say a 1.1.3 change "has to land" or a line must be cut "if it misses the
-build", that change has landed. The lines all stay, as long as step 5 agrees.
-The changes that matter are the hazard and edibility wording, the
-operator-only census with no Sync now button, iPhone only, the three named
-weather services and the manifest.
+field by field, in the order its `README.md` gives. They were brought up
+to `307930e` and the 2026-10-20 fixes, so nothing in them asks you to cut a
+line any more: every change they describe is in the build, as long as step
+5 agrees. The changes that matter are the hazard and edibility wording, the
+operator-only census (export 4.1) with no Sync now button, iPhone only, the
+three named weather services and the manifest.
 
 1. **App Information** (`listing.md`, `age-rating.md`): name
    `PlantAdvocate: Garden Care`, or `PlantAdvocate` if that name is taken;
@@ -768,7 +812,8 @@ weather services and the manifest.
      during review with its country code, and an email you read daily, such
      as support@plantadvocate.ai.
    - Paste the Notes block as it is (it names the "Checks for today" card
-     and is under 4,000 characters).
+     and is 3,987 of 4,000 characters, so paste it exactly, with nothing
+     added at either end).
    - Under Version Release, recommend **Manually release this version**, so
      you can update the site's "in beta" copy before the app appears.
 5. **Export compliance:** only if asked (`export-compliance.md`).
@@ -780,13 +825,13 @@ Dumb Cane (Dieffenbachia), whose sentence names the parts and NC State's
 high rating; English Yew and Castor Bean name no parts on this build. Two
 notes from tonight:
 
-- On shot 2 (Good candidates), read every visible name. If monkshood,
-  English yew, foxglove, lily of the valley or jimsonweed is in frame
-  (decision 6), scroll so it isn't, and tell me.
-- `screenshots.md` says a plant added in the app has no acquired date. Since
-  `7dac70d` the server dates it the day it's added, so plants now come due
-  without a log. The two-day plan still gives the same two checks, so follow
-  it as written.
+- On shot 2 (Good candidates), read every visible name. Lily of the valley
+  can appear (decision 6); scroll it out of frame. If monkshood, English
+  yew, foxglove, jimsonweed, mayapple, taro or wisteria is in frame, the
+  candidate rule isn't in the build: don't shoot it, and tell me.
+- `screenshots.md`'s two-day plan already counts on a new plant being dated
+  the day it's added (`7dac70d`), and gives the same two checks. Follow it
+  as written.
 
 A phone works instead of the simulator if it has a Dynamic Island. An iPhone
 15 Pro saves 1179 x 2556, which is accepted for the required medium size;
@@ -831,34 +876,44 @@ Go through these and note what you see for each:
    - There should be no Face ID prompt anywhere.
 3. **Census tab.** It opens against production and shows your summary, or
    plain empty states. There's no Sync now card and no error.
-4. **A plant comes due without logged care.** Add Basil (water every 1 to 2
-   days) to any area and log nothing. By tomorrow, the Plants tab's "Checks
+4. **A plant comes due without logged care.** During the day, add Basil (water
+   every 1 to 2 days) to any area and log nothing. (The server dates a new
+   plant by the UTC calendar, so one added late on a US evening can be dated
+   tomorrow and come due a day later.) By tomorrow, the Plants tab's "Checks
    for today" card should list it, with Watered and Still damp. Before
-   `7dac70d` it never came due. A plant whose species has no check schedule
-   should be named on that card as left out, and "All caught up" shouldn't
-   appear while one is.
-5. **Hazard sentences.** In the Species tab, search each of these and compare
-   with what a scratch database built from this commit says. Nothing anywhere
-   should say "You can eat".
-   - Pothos: "Toxic to cats, dogs and people: all parts (calcium oxalate
-     crystals) — mouth irritation, drooling and swelling if chewed. NC State
-     Extension rates it medium severity. Keep it out of reach of pets and
-     children. If you suspect poisoning, call Poison Control (US
-     1-800-222-1222) or a vet right away."
-   - Dumb Cane: a warning sign, then "Seriously toxic to cats, dogs and
-     people: all parts (calcium oxalate crystals) ... NC State Extension
-     rates it high severity," with the Poison Control line.
-   - Potatoes: a warning sign, then "The tubers are eaten, but the leaves and
-     stems, the sprouts, the berries and any green skin on the tubers are
-     seriously toxic to cats, dogs and people (solanine). NC State Extension
-     rates it high severity." There's also a warning-coloured **Eating** row:
-     "Some parts are eaten, but only certain parts or after preparation, and
-     other parts are poisonous. Check the source before eating any of it."
-   - Tomatoes: "The ripe fruit is eaten, but the leaves and stems are toxic
-     to cats and dogs (tomatine) ... It is also poisonous to people, rated
-     medium severity by NC State Extension." Its Eating row reads "Some parts
-     are eaten, but it is also recorded as poisonous to pets and people.
-     Check the source before eating any of it."
+   `7dac70d` it never came due. It must not be listed the same day you add it:
+   west of Greenwich it used to be, because the app read the date as midnight
+   UTC. A plant whose species has no check schedule should be named on that
+   card as left out, and "All caught up" shouldn't appear while one is.
+5. **Hazard sentences.** In the Species tab, search each of these. Nothing
+   anywhere should say "You can eat". Three rules hold on every hazard
+   sentence since the 2026-10-20 fixes: a severity word ("Seriously",
+   "Mildly") comes from NC State's rating of harm to people, so it belongs to
+   people only; animals are "toxic to pets", or to cats or dogs, unless the
+   plant's own table or a source's grave wording about animals says more; and
+   a food crop leads with the part that's eaten. I'll give you the exact
+   sentences from a scratch database built from the commit EAS reports, to
+   compare word for word.
+   - Pothos: toxic to cats, dogs and people, all parts (calcium oxalate
+     crystals), "NC State Extension rates it medium severity", keep it out of
+     reach, and the Poison Control line (US 1-800-222-1222). No severity
+     word: medium has none.
+   - Foxglove: a warning sign, seriously toxic to people, NC State's high
+     rating and the Poison Control line. Pets are named as toxic; "seriously"
+     reaches them only if a source's animal wording is grave.
+   - Dumb Cane: a warning sign, "Seriously" for people, all parts (calcium
+     oxalate crystals), "NC State Extension rates it high severity", and the
+     Poison Control line. Cats and dogs get "seriously" only if the record's
+     own animal wording is grave.
+   - Potatoes: a warning sign, then a sentence that leads with the crop,
+     like "The tubers are the crop; the leaves, stems and sprouts are
+     seriously toxic to people and pets." (the potato's own table is what
+     lets "seriously" cover pets), NC State's high rating, and a
+     warning-coloured **Eating** row that sends you to the source before
+     eating any of it.
+   - Tomatoes: leads with the ripe fruit as the crop, then the leaves and
+     stems. Nothing should read as if the fruit were poisonous. Its Eating
+     row sends you to the source before eating any of it.
 
    If a search shows two rows with the same name, the one with a Sources
    card is the researched one. Tell me about the duplicate.
@@ -870,9 +925,12 @@ Go through these and note what you see for each:
 7. **Candidates carry hazard lines.** Make an outdoor, full-sun area and look
    at Good candidates here. Any candidate with a recorded hazard shows a
    warning line, such as "Toxic to pets." or "Toxic to cats, dogs and
-   people." Poison hemlock, belladonna, castor bean and poison ivy should
-   never appear. Potatoes or tomatillo may appear with their line, which is
-   expected since `798f905`. Note any of decision 6's five that you see.
+   people." Poison hemlock, belladonna, castor bean, poison ivy, mayapple,
+   taro, wisteria, foxglove, English yew, monkshood and jimsonweed should
+   never appear, whatever the area's goals. Potato, eggplant, peanut,
+   tomatillo or butter bean may appear with their line: a food crop eaten
+   without conditions stays a candidate. Lily of the valley may appear too
+   (decision 6). Note any of the never-list you see.
 8. **Hidden features stay hidden.** A plant's page has no photo check-up card
    and no box for typing symptoms. Ask the Gnome offers Get care advice.
    Settings > Privacy & data has no entry about photos or advice going to an
@@ -939,7 +997,8 @@ link; and release the version, if you chose a manual release.
 | 4 | Still "Processing" after two hours | Usually an Info.plist or asset check on Apple's side | Check your email, then developer.apple.com/system-status, before assuming it's ours |
 | 5 | No Take photo button on a phone older than the 15 Pro, or with Apple Intelligence off | Correct. Photo identification needs Apple Intelligence | Note the phone. Search still works |
 | 5 | Census tab shows an error card | Production isn't on the new backend, or it was asleep | Try again once. If it persists, re-run step 2's openapi check |
-| 5 | One of decision 6's five appears as a candidate | Expected until their severity is cited | Note which. Keep it out of screenshots |
+| 5 | Lily of the valley appears as a candidate | Expected (decision 6) | Keep it out of screenshots |
+| 5 | Foxglove, English yew, monkshood, jimsonweed, mayapple, taro or wisteria appears as a candidate | The candidate rule from the 2026-10-20 fixes isn't in this build | Note which and the build number, keep it out of screenshots, and tell me |
 
 ## What to report back
 
