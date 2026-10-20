@@ -21,7 +21,10 @@ import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
 import EmptyState from '../components/EmptyState';
-import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 import type { CensusStackParamList } from '../../App';
 
 // Registered in more than one tab's stack, with the same params in each;
@@ -103,12 +106,13 @@ export default function AlmanacScreen() {
   }, [openedFor]);
 
   const {
-    data: species = [], isLoading, isError: catalogFailed, refetch: refetchCatalog,
-    isFetching: catalogFetching,
+    data: catalogData, isError: catalogFailed, error: catalogError,
+    refetch: refetchCatalog, isFetching: catalogFetching,
   } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
+  const species = useMemo(() => catalogData ?? [], [catalogData]);
   // Which species the caretaker already keeps — the almanac reads differently
   // when it can point at your own shelf.
   const { data: plants = [] } = useQuery({ queryKey: ['plants'], queryFn: fetchPlants });
@@ -183,17 +187,19 @@ export default function AlmanacScreen() {
     />
   ), [ownedIds, areaId, candidateById, navigation]);
 
-  if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
-
   // A catalog that never arrived is not an empty one: the header would read
-  // "0 species in the catalog" and every search would match nothing.
-  if (catalogFailed && species.length === 0) {
+  // "0 species in the catalog" and every search would match nothing. One
+  // that arrived and then failed to refresh stays, with a line saying so.
+  const view = loadView(catalogData !== undefined, catalogFailed);
+  if (view === 'loading') return <ActivityIndicator style={styles.center} size="large" />;
+
+  if (view === 'failed') {
     return (
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
           title={loadFailedTitle('the Almanac')}
-          body={LOAD_FAILED.body}
+          body={loadFailedBody(catalogError, 'list')}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetchCatalog()}
           busy={catalogFetching}
@@ -211,6 +217,9 @@ export default function AlmanacScreen() {
   // changes with every letter typed.
   const header = (
     <>
+      {catalogFailed ? (
+        <RefreshFailed onRetry={() => refetchCatalog()} retrying={catalogFetching} />
+      ) : null}
       <Text variant="bodyMedium" style={styles.intro}>
         A living count of what growers keep — {species.length} species in the
         catalog{ownedIds.size > 0 ? `, ${ownedIds.size} of them on your shelf` : ''}.

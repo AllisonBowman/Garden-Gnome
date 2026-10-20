@@ -55,8 +55,8 @@ export default function AddPlantScreen() {
   const [speciesSearch, setSpeciesSearch] = useState('');
 
   const {
-    data: speciesData, isError: speciesFailed, isFetching: speciesFetching,
-    refetch: refetchSpecies,
+    data: speciesData, isError: speciesFailed, error: speciesError,
+    isFetching: speciesFetching, refetch: refetchSpecies,
   } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
@@ -227,7 +227,8 @@ export default function AddPlantScreen() {
         {speciesFailed && !catalogReady && (
           <LoadError
             inline
-            message="Couldn't load the plant catalog, so there's nothing to pick from yet. Check your connection and try again."
+            message="Couldn’t load the plant catalog, so there’s nothing to pick from yet."
+            error={speciesError}
             onRetry={() => refetchSpecies()}
             retrying={speciesFetching}
           />

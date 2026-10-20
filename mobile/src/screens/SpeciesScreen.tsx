@@ -16,7 +16,10 @@ import { Palette, Fonts } from '../theme/tokens';
 import Pill from '../components/Pill';
 import Eyebrow from '../components/Eyebrow';
 import EmptyState from '../components/EmptyState';
-import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 
 type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'SpeciesList'>;
 
@@ -77,11 +80,12 @@ export default function SpeciesScreen() {
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
   const {
-    data: speciesList = [], isLoading, isError, refetch, isFetching,
+    data: speciesData, isError, error, refetch, isFetching,
   } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
+  const speciesList = useMemo(() => speciesData ?? [], [speciesData]);
 
   // The list arrives A to Z (fetchSpeciesList); search folds "x" and "×" and
   // reads the accepted name too, the same way the Almanac does.
@@ -97,18 +101,20 @@ export default function SpeciesScreen() {
     />
   ), [navigation]);
 
-  if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
-
   // A failed first load gets a way out: the list (and its pull-to-refresh)
   // isn't rendered here, so without a button nothing on the tab could ever
-  // fetch again. A failed background refresh keeps the list it already has.
-  if (isError && speciesList.length === 0) {
+  // fetch again. A failed background refresh keeps the list it already has,
+  // with a line saying so.
+  const view = loadView(speciesData !== undefined, isError);
+  if (view === 'loading') return <ActivityIndicator style={styles.center} size="large" />;
+
+  if (view === 'failed') {
     return (
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
           title={loadFailedTitle('the catalog')}
-          body={LOAD_FAILED.body}
+          body={loadFailedBody(error, 'list')}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
           busy={isFetching}
@@ -119,6 +125,13 @@ export default function SpeciesScreen() {
 
   return (
     <View style={styles.container}>
+      {isError ? (
+        <RefreshFailed
+          onRetry={() => refetch()}
+          retrying={isFetching}
+          style={styles.refreshFailed}
+        />
+      ) : null}
       <Searchbar
         placeholder="Search species…"
         value={search}
@@ -163,6 +176,7 @@ export default function SpeciesScreen() {
 const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   container: { flex: 1, backgroundColor: p.bg },
   searchbar: { margin: 12, borderRadius: 10, backgroundColor: p.card },
+  refreshFailed: { marginHorizontal: 12, marginTop: 8, marginBottom: 0 },
   list: { paddingHorizontal: 12, paddingBottom: 24 },
   card: { marginBottom: 8, borderRadius: 12, backgroundColor: p.card },
   almanacCard: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card, borderColor: p.line },

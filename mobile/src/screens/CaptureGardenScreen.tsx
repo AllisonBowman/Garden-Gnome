@@ -151,7 +151,7 @@ export default function CaptureGardenScreen() {
 
   const {
     data: catalogData, isLoading: catalogLoading, isError: catalogFailed,
-    isFetching: catalogFetching, refetch: refetchCatalog,
+    error: catalogError, isFetching: catalogFetching, refetch: refetchCatalog,
   } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
@@ -301,7 +301,8 @@ export default function CaptureGardenScreen() {
             <Card.Content>
               <LoadError
                 inline
-                message="Couldn't load the plant catalog, so nothing you say can be matched yet. What you've typed stays here. Check your connection and try again."
+                message="Couldn’t load the plant catalog, so nothing you say can be matched yet. What you’ve typed stays here."
+                error={catalogError}
                 onRetry={() => refetchCatalog()}
                 retrying={catalogFetching}
               />

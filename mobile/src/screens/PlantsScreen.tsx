@@ -80,7 +80,9 @@ export default function PlantsScreen() {
   const navigation = useNavigation<Nav>();
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
-  const { data: plants, isLoading, isError, refetch, isRefetching } = useQuery({
+  const {
+    data: plants, isLoading, isError, error, refetch, isRefetching,
+  } = useQuery({
     queryKey: ['plants'],
     queryFn: fetchPlants,
   });
@@ -102,7 +104,8 @@ export default function PlantsScreen() {
   if (isError && !plants) {
     return (
       <LoadError
-        message="Couldn't load your plants. Check your connection and try again."
+        message="Couldn’t load your plants."
+        error={error}
         onRetry={() => refetch()}
         retrying={isRefetching}
       />

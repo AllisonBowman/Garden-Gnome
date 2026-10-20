@@ -30,7 +30,10 @@ import Pill from '../components/Pill';
 import { CareFactList, CareStatusLine, LegacyStatRow } from '../components/CareFacts';
 import AreaFitCard from '../components/AreaFitCard';
 import EmptyState from '../components/EmptyState';
-import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
 import { NO_SCHEDULE_LINE, hasCheckSchedule } from '../care/schedule';
 import { fetchSpecies } from '../api/species';
@@ -68,7 +71,7 @@ export default function PlantDetailScreen() {
   const [loggingType, setLoggingType] = useState<CareType | null>(null);
 
   const {
-    data: plant, isLoading, isError, refetch, isFetching,
+    data: plant, isError, error, refetch, isFetching,
   } = useQuery({
     queryKey: ['plant', plantId],
     queryFn: () => fetchPlant(plantId),
@@ -238,17 +241,19 @@ export default function PlantDetailScreen() {
     diagnoseMutation.mutate(res.assets[0]);
   };
 
-  if (isLoading) {
+  // The plant stays on screen when a later refresh fails (with a line saying
+  // so); the card is for a plant that never loaded, and says why.
+  const view = loadView(plant !== undefined, isError);
+  if (view === 'loading') {
     return <ActivityIndicator style={styles.center} size="large" />;
   }
-  // Failed, not loading: say so and offer a retry rather than spinning on.
-  if (isError || !plant) {
+  if (view === 'failed' || !plant) {
     return (
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
           title={loadFailedTitle('this plant')}
-          body={LOAD_FAILED.body}
+          body={loadFailedBody(error)}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
           busy={isFetching}
@@ -264,6 +269,8 @@ export default function PlantDetailScreen() {
   return (
     <View style={styles.container}>
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+      {/* Drawn from what loaded before: an error now is a failed refresh. */}
+      {isError ? <RefreshFailed onRetry={() => refetch()} retrying={isFetching} /> : null}
       {/* Header */}
       <Surface style={styles.header} elevation={1}>
         <Text variant="headlineSmall" style={styles.plantName}>

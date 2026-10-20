@@ -9,6 +9,8 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
+import RefreshFailed from '../components/RefreshFailed';
+import { loadView } from '../care/loadFailed';
 import { areaTypeLabel } from '../growingAreas/realEstate';
 import type { CensusStackParamList } from '../../App';
 
@@ -22,17 +24,23 @@ export default function CensusScreen() {
 
   // The summary arrives already shaped (api/census.ts): a field the server
   // left out or renamed is null there, never undefined here.
-  const { data: summary, isLoading, isError, isFetching, refetch } = useQuery({
+  const {
+    data: summary, isError, error, isFetching, refetch,
+  } = useQuery({
     queryKey: ['census'],
     queryFn: fetchCensusSummary,
   });
 
-  if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
+  // A refresh that fails keeps the counts on screen, with a line saying so;
+  // the error takes the screen only when there is nothing to show.
+  const view = loadView(summary !== undefined, isError);
+  if (view === 'loading') return <ActivityIndicator style={styles.center} size="large" />;
 
-  if (isError || !summary) {
+  if (view === 'failed' || !summary) {
     return (
       <LoadError
-        message="Couldn't load the census. Check your connection and try again."
+        message="Couldn’t load the census."
+        error={error}
         onRetry={() => refetch()}
         retrying={isFetching}
       />
@@ -49,6 +57,8 @@ export default function CensusScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Drawn from what loaded before: an error now is a failed refresh. */}
+      {isError ? <RefreshFailed onRetry={() => refetch()} retrying={isFetching} /> : null}
       {/* The almanac: the catalog as something to read, not just count */}
       <Card style={styles.almanacCard} mode="elevated" onPress={() => navigation.navigate('Almanac')}>
         <Card.Content>

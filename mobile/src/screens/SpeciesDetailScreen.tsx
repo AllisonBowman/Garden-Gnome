@@ -16,7 +16,10 @@ import {
 } from '../components/CareFacts';
 import AreaFitCard from '../components/AreaFitCard';
 import EmptyState from '../components/EmptyState';
-import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 
 type Route = RouteProp<SpeciesStackParamList, 'SpeciesDetail'>;
 
@@ -32,7 +35,7 @@ export default function SpeciesDetailScreen() {
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
   const {
-    data: species, isLoading, isError, refetch, isFetching,
+    data: species, isError, error, refetch, isFetching,
   } = useQuery({
     queryKey: ['species', speciesId],
     queryFn: () => fetchSpecies(speciesId),
@@ -48,17 +51,19 @@ export default function SpeciesDetailScreen() {
   });
   const area = growingAreaId != null ? areas.find((a) => a.id === growingAreaId) ?? null : null;
 
-  if (isLoading) {
+  // The record stays on screen when a later refresh fails (with a line
+  // saying so); the card is for a record that never loaded, and says why.
+  const view = loadView(species !== undefined, isError);
+  if (view === 'loading') {
     return <ActivityIndicator style={styles.center} size="large" />;
   }
-  // Failed, not loading: say so and offer a retry rather than spinning on.
-  if (isError || !species) {
+  if (view === 'failed' || !species) {
     return (
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
           title={loadFailedTitle('this species')}
-          body={LOAD_FAILED.body}
+          body={loadFailedBody(error)}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
           busy={isFetching}
@@ -77,6 +82,8 @@ export default function SpeciesDetailScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Drawn from what loaded before: an error now is a failed refresh. */}
+      {isError ? <RefreshFailed onRetry={() => refetch()} retrying={isFetching} /> : null}
       {/* Header */}
       <View style={styles.header}>
         <Text variant="headlineSmall" style={styles.title}>

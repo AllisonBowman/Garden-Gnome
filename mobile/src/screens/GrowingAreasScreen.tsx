@@ -133,7 +133,7 @@ export default function GrowingAreasScreen() {
   };
 
   const {
-    data, isLoading, isError, isFetching, refetch,
+    data, isLoading, isError, error, isFetching, refetch,
   } = useQuery({
     queryKey: ['growingAreas'],
     queryFn: fetchGrowingAreas,
@@ -193,7 +193,8 @@ export default function GrowingAreasScreen() {
   if (isError && !data) {
     return (
       <LoadError
-        message="Couldn't load your growing areas. Check your connection and try again."
+        message="Couldn’t load your growing areas."
+        error={error}
         onRetry={() => refetch()}
         retrying={isFetching}
       />

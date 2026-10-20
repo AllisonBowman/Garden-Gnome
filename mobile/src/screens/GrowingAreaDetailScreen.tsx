@@ -20,7 +20,10 @@ import { GrowingAreasStackParamList } from '../../App';
 import WeatherCredit from '../components/WeatherCredit';
 import AddressPicker from '../components/AddressPicker';
 import EmptyState from '../components/EmptyState';
-import { LOAD_FAILED, loadFailedTitle } from '../care/loadFailed';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 import { ResolvedPlace } from '../location/geocode';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -83,7 +86,7 @@ export default function GrowingAreaDetailScreen() {
   const queryClient = useQueryClient();
 
   const {
-    data: env, isLoading, isError, refetch, isFetching,
+    data: env, isError, error, refetch, isFetching,
   } = useQuery({
     queryKey: ['growingArea', growingAreaId],
     queryFn: () => fetchGrowingArea(growingAreaId),
@@ -159,17 +162,19 @@ export default function GrowingAreaDetailScreen() {
     ),
   });
 
-  if (isLoading) {
+  // The area stays on screen when a later refresh fails (with a line saying
+  // so); the card is for an area that never loaded, and says why.
+  const view = loadView(env !== undefined, isError);
+  if (view === 'loading') {
     return <ActivityIndicator style={styles.center} size="large" />;
   }
-  // Failed, not loading: say so and offer a retry rather than spinning on.
-  if (isError || !env) {
+  if (view === 'failed' || !env) {
     return (
       <View style={styles.scroll}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
           title={loadFailedTitle('this growing area')}
-          body={LOAD_FAILED.body}
+          body={loadFailedBody(error)}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
           busy={isFetching}
@@ -219,6 +224,8 @@ export default function GrowingAreaDetailScreen() {
 
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+      {/* Drawn from what loaded before: an error now is a failed refresh. */}
+      {isError ? <RefreshFailed onRetry={() => refetch()} retrying={isFetching} /> : null}
       {/* Header */}
       <Surface style={styles.header} elevation={1}>
         <Text variant="headlineSmall" style={styles.envName}>

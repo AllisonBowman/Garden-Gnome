@@ -3,11 +3,16 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { loadFailedAdvice } from '../care/loadFailed';
 
 interface Props {
-  /** What failed, in the caretaker's words, and what to do about it:
-   *  "Couldn't load your plants. Check your connection and try again." */
+  /** What failed, in the caretaker's words: "Couldn’t load your plants."
+   *  What to do about it follows on its own, from `error`. */
   message: string;
+  /** The query's error. "Check your connection" is said only when the
+   *  server was never reached; a server that answered with a problem gets
+   *  told apart (care/loadFailed.ts). */
+  error: unknown;
   onRetry: () => void;
   /** True while the retry is running, so a second tap can't stack another. */
   retrying?: boolean;
@@ -24,12 +29,16 @@ interface Props {
  * so each screen that loads something shows this instead, with a button that
  * asks again.
  */
-export default function LoadError({ message, onRetry, retrying = false, inline = false }: Props) {
+export default function LoadError({
+  message, error, onRetry, retrying = false, inline = false,
+}: Props) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   return (
     <View style={inline ? styles.inline : styles.screen}>
-      <Text style={[styles.message, inline && styles.messageInline]}>{message}</Text>
+      <Text style={[styles.message, inline && styles.messageInline]}>
+        {`${message} ${loadFailedAdvice(error)}`}
+      </Text>
       <Button
         mode="outlined"
         icon="refresh"
