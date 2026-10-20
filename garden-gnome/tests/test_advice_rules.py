@@ -127,6 +127,37 @@ def test_one_day_is_singular(month):
     assert "Next check in 1 day;" in out
 
 
+def test_care_logged_today_or_yesterday_is_said_that_way(month):
+    """Basil waters every 1–2 days, the schedule the review notes send a
+    reviewer to: "logged 0 days ago" on the day, "logged 1 days ago" the
+    next."""
+    basil = [schedule(CareType.water, 1, 2)]
+    today = _advise_stub(make_species(), make_plant(),
+                         [logged(CareType.water, 0)], basil)
+    assert today == ("💧 Watering: logged today. Next check in 1 day; act "
+                     "sooner only if the plant shows it needs it.")
+    yesterday = _advise_stub(make_species(), make_plant(),
+                             [logged(CareType.water, 1)], basil)
+    assert yesterday == ("💧 Watering: logged yesterday, inside the 1–2 day "
+                         "window. Check, and act only if it's needed.")
+    for out in (today, yesterday):
+        assert "0 days" not in out and "1 days" not in out
+
+
+def test_a_one_length_schedule_reads_as_one(month):
+    """Microgreens water every 1–1 days, which read as "the 1–1 day window"."""
+    daily = [schedule(CareType.water, 1, 1)]
+    assert _advise_stub(make_species(), make_plant(), [], daily) == (
+        "💧 Watering: no log yet — its schedule puts this every day; check "
+        "before you do anything.")
+    out = _advise_stub(make_species(), make_plant(),
+                       [logged(CareType.water, 1)], daily)
+    assert "inside the 1 day window" in out and "1–1" not in out
+    late = _advise_stub(make_species(), make_plant(),
+                        [logged(CareType.water, 3)], daily)
+    assert late.startswith("💧 Watering: logged 3 days ago — past the 1 day mark")
+
+
 # --- toxicity -------------------------------------------------------------------------
 
 def test_the_toxicity_line_names_people_when_a_source_does(month):

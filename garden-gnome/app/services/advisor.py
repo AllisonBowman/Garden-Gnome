@@ -397,6 +397,23 @@ def _plural(n: int, word: str) -> str:
     return f"{n} {word}{'' if n == 1 else 's'}"
 
 
+def _ago(days: int) -> str:
+    """When care was logged, as a person says it: "today", "yesterday",
+    "3 days ago" -- never "0 days ago" or "1 days ago"."""
+    if days <= 0:
+        return "today"
+    if days == 1:
+        return "yesterday"
+    return f"{days} days ago"
+
+
+def _window(cs: CareSchedule) -> str:
+    """The schedule's span in days: "7–10", or "1" when it has one length."""
+    if cs.interval_days_min == cs.interval_days_max:
+        return str(cs.interval_days_min)
+    return f"{cs.interval_days_min}–{cs.interval_days_max}"
+
+
 def _schedule_line(cs: CareSchedule, recent_logs: list[CareLog],
                    species: Species) -> str | None:
     """One schedule's line, in the app's voice: a check, never a chore.
@@ -415,20 +432,21 @@ def _schedule_line(cs: CareSchedule, recent_logs: list[CareLog],
 
     last_log = next((log for log in recent_logs if log.action == cs.care_type), None)
     days = _days_since(last_log.logged_at) if last_log else None
-    window = f"{cs.interval_days_min}–{cs.interval_days_max}"
+    window = _window(cs)
 
     if days is None:
-        return (f"{emoji} {label}: no log yet — its schedule puts this every "
-                f"{window} days; check before you do anything.")
+        every = "every day" if window == "1" else f"every {window} days"
+        return (f"{emoji} {label}: no log yet — its schedule puts this "
+                f"{every}; check before you do anything.")
     if days < cs.interval_days_min:
         wait = cs.interval_days_min - days
-        return (f"{emoji} {label}: logged {_plural(days, 'day')} ago. Next check "
-                f"in {_plural(wait, 'day')}; act sooner only if the plant shows "
+        return (f"{emoji} {label}: logged {_ago(days)}. Next check in "
+                f"{_plural(wait, 'day')}; act sooner only if the plant shows "
                 f"it needs it.")
     if days <= cs.interval_days_max:
-        return (f"{emoji} {label}: logged {days} days ago, inside the {window} "
+        return (f"{emoji} {label}: logged {_ago(days)}, inside the {window} "
                 f"day window. Check, and act only if it's needed.")
-    return (f"{emoji} {label}: logged {days} days ago — past the "
+    return (f"{emoji} {label}: logged {_ago(days)} — past the "
             f"{cs.interval_days_max} day mark, worth a check today.")
 
 

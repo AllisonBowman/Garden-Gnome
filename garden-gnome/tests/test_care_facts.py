@@ -395,8 +395,12 @@ def test_no_schedule_says_so_and_says_what_the_sources_know():
         "☀️ Light: at least 100 footcandles")
     assert line_starting(lines, "☀️ Outdoor sun:") == "☀️ Outdoor sun: part sun, part shade."
     assert line_starting(lines, "🪴 Soil:").startswith("🪴 Soil: chunky aroid mix")
-    assert "cold damage below 45 F" in line_starting(lines, "🌡️ Temperature:")
-    assert line_starting(lines, "❄️ Cold:") == "❄️ Cold: survives to -10 F outdoors."
+    assert line_starting(lines, "🌡️ Temperature:") == (
+        "🌡️ Temperature: days 65–80°F; nights from 55°F (borrowed from the "
+        "genus); cold damage below 45°F.")
+    assert line_starting(lines, "❄️ Cold:") == "❄️ Cold: survives to -10°F outdoors."
+    assert line_starting(lines, "🪴 Soil:") == (
+        "🪴 Soil: chunky aroid mix; fast-draining; pH 5.5–6.5.")
     assert line_starting(lines, "📚 Sources:") == (
         "📚 Sources: NC State Extension and Royal Horticultural Society.")
     assert not any("No care schedules defined" in ln for ln in lines)
@@ -465,3 +469,32 @@ def test_nudges_keep_their_guards_on_a_bare_row():
                              forecast(high=110, low=10, rain=90))
     assert not any("Heat ahead" in n or "Cold night" in n for n in nudges)
     assert any("Rain likely" in n for n in nudges)
+
+
+# --- the caretaker's own words, not the prompt's -----------------------------
+
+def test_no_prompt_style_line_reaches_a_caretaker():
+    """The model prompt writes "65-80 F" and "5.08 cm"; the app's cards write
+    "65–80°F". The advice a person reads uses the cards' words."""
+    import re
+
+    lines = _advise_stub(sourced_species(water_check_depth_cm=5.08),
+                         make_plant(), [], []).splitlines()
+    text = "\n".join(lines)
+    assert not re.search(r"\d F\b", text), "a bare F"
+    assert not re.search(r"\d-\d", text), "a hyphen for a range"
+    assert not any(ln.startswith("- ") for ln in lines), "a prompt fact line"
+    assert line_starting(lines, "💧 Water check:").startswith(
+        "💧 Water check: feel the soil 5 cm down to decide")
+
+
+def test_a_dormancy_only_estimate_keeps_its_unit():
+    """Desert rose: a dormant estimate and no growing one. "Every 105 in
+    dormancy" was a number with nothing after it."""
+    sp = sourced_species(water_growing_days_est=None, water_dormant_days_est=105)
+    lines = _advise_stub(sp, make_plant(), [], []).splitlines()
+    assert "its sources estimate roughly every 105 days in dormancy" in \
+        line_starting(lines, "💧 Water check:")
+    both = _advise_stub(sourced_species(), make_plant(), [], []).splitlines()
+    assert ("its sources estimate roughly every 7 days in growth and every 14 "
+            "in dormancy") in line_starting(both, "💧 Water check:")

@@ -408,63 +408,119 @@ def _care_data_line(sp: Species, legacy: list[str]) -> str | None:
     return None
 
 
-#: How a fact line reads to a caretaker in the rule-based advice.
-_CARETAKER_LABELS = (
-    ("- Light:", "☀️ Light:"),
-    ("- Outdoor sun:", "☀️ Outdoor sun:"),
-    ("- Soil:", "🪴 Soil:"),
-    ("- Temperature:", "🌡️ Temperature:"),
-    ("- Cold:", "❄️ Cold:"),
-)
+def _said_band(low, high, unit: str) -> str:
+    """A range as the app's cards print it: "65–75°F", "from 55°F",
+    "up to 80°F" -- an en dash, and the unit against the number."""
+    if low is not None and high is not None:
+        return f"{_num(low)}–{_num(high)}{unit}"
+    if low is not None:
+        return f"from {_num(low)}{unit}"
+    return f"up to {_num(high)}{unit}"
+
+
+def _depth_said(cm: float) -> str:
+    """A soil depth to the nearest half centimetre. A source's two inches is
+    5.08 cm, and nobody feeling soil means the .08."""
+    half = math.floor(cm * 2 + 0.5) / 2
+    return _num(half if half > 0 else cm)
 
 
 def caretaker_fact_lines(species: Species) -> list[str]:
     """What the catalog's sources say about this species' care, in the
-    caretaker's voice: light, soil, temperature and cold, how deep to feel
-    the soil, and who said so.
+    caretaker's voice: light, outdoor sun and cold, soil, temperature, how
+    deep to feel the soil, and who said so.
 
     For the rule-based advice on a species with no check schedule, which
     otherwise had nothing to say beyond "No care schedules defined". Only
     resolved values, never a legacy column -- this is "what its sources
-    say", and a legacy value has no source. Borrowed values carry the
+    say", and a legacy value has no source. Its own wording, not the model
+    prompt's: degrees as °F and ranges with an en dash, as the app's cards
+    print them, and depths a hand can feel. Borrowed values carry the
     caretaker's label. The watering regime is not here: the advice states
     it on its own line for every species. Nothing here is a cadence the app
     worked out: a day count appears only when a source estimated it."""
-    provenance = species.care_provenance or {}
+    sp = species
+    provenance = sp.care_provenance or {}
 
     def tag(text: str, *fields: str) -> str:
         borrowed = any(provenance.get(f) == "genus_inferred" for f in fields)
         return text + BORROWED_LABEL if borrowed else text
 
-    found: list[str] = []
-    for concept in (_light, _outdoors, _soil, _temperature):
-        told, from_legacy = concept(species, tag)
-        if not from_legacy:
-            found.extend(told)
-    lines = []
-    for line in found:
-        for fact, said in _CARETAKER_LABELS:
-            if line.startswith(fact):
-                lines.append(said + line[len(fact):] + ".")
-                break
+    lines: list[str] = []
+
+    light = []
+    if sp.light_fc_min is not None:
+        light.append(tag(f"at least {_num(sp.light_fc_min)} footcandles",
+                         "light_fc_min"))
+    if sp.light_fc_good is not None:
+        light.append(tag(f"{_num(sp.light_fc_good)} footcandles is comfortable",
+                         "light_fc_good"))
+    if sp.direct_sun_hours_max is not None:
+        light.append(tag("no direct sun" if sp.direct_sun_hours_max == 0 else
+                         f"up to {_num(sp.direct_sun_hours_max)} hours of direct sun",
+                         "direct_sun_hours_max"))
+    if light:
+        lines.append(f"☀️ Light: {'; '.join(light)}.")
+
+    if sp.outdoor_sun_exposure:
+        words = [_SUN_TEXT.get(token(v), str(token(v)).replace("_", " "))
+                 for v in sp.outdoor_sun_exposure]
+        lines.append(f"☀️ Outdoor sun: "
+                     f"{tag(', '.join(words), 'outdoor_sun_exposure')}.")
+    if sp.outdoor_temp_min_f is not None:
+        floor = f"survives to {_num(sp.outdoor_temp_min_f)}°F outdoors"
+        lines.append(f"❄️ Cold: {tag(floor, 'outdoor_temp_min_f')}.")
+
+    soil = []
+    base = _SOIL_BASE_TEXT.get(token(sp.soil_base))
+    if base:
+        soil.append(tag(base, "soil_base"))
+    drainage = _DRAINAGE_TEXT.get(token(sp.soil_drainage))
+    if drainage:
+        soil.append(tag(drainage, "soil_drainage"))
+    if sp.soil_ph_min is not None or sp.soil_ph_max is not None:
+        soil.append(tag(f"pH {_said_band(sp.soil_ph_min, sp.soil_ph_max, '')}",
+                        "soil_ph_min", "soil_ph_max"))
+    if soil:
+        lines.append(f"🪴 Soil: {'; '.join(soil)}.")
+
+    temperature = []
+    if sp.day_f_min is not None or sp.day_f_max is not None:
+        temperature.append(tag(f"days {_said_band(sp.day_f_min, sp.day_f_max, '°F')}",
+                               "day_f_min", "day_f_max"))
+    if sp.night_f_min is not None or sp.night_f_max is not None:
+        temperature.append(tag(
+            f"nights {_said_band(sp.night_f_min, sp.night_f_max, '°F')}",
+            "night_f_min", "night_f_max"))
+    if sp.chill_damage_f is not None:
+        temperature.append(tag(f"cold damage below {_num(sp.chill_damage_f)}°F",
+                               "chill_damage_f"))
+    if temperature:
+        lines.append(f"🌡️ Temperature: {'; '.join(temperature)}.")
 
     water = []
-    if species.water_check_depth_cm is not None:
-        water.append(tag(f"feel the soil {_num(species.water_check_depth_cm)} cm "
-                         "down to decide", "water_check_depth_cm"))
-    growing, dormant = species.water_growing_days_est, species.water_dormant_days_est
+    if sp.water_check_depth_cm is not None:
+        water.append(tag(f"feel the soil {_depth_said(sp.water_check_depth_cm)} "
+                         "cm down to decide", "water_check_depth_cm"))
+    growing, dormant = sp.water_growing_days_est, sp.water_dormant_days_est
     if growing is not None or dormant is not None:
-        spans = ([f"every {_num(growing)} days in growth"] if growing is not None
-                 else []) + ([f"every {_num(dormant)} in dormancy"]
-                             if dormant is not None else [])
-        water.append(tag("its sources estimate roughly " + " and ".join(spans),
+        if growing is not None and dormant is not None:
+            spans = (f"every {_num(growing)} days in growth and every "
+                     f"{_num(dormant)} in dormancy")
+        elif growing is not None:
+            spans = f"every {_num(growing)} days in growth"
+        else:
+            # On its own the unit has to be said: "every 105 in dormancy"
+            # was a number with nothing after it.
+            spans = f"every {_num(dormant)} days in dormancy"
+        water.append(tag("its sources estimate roughly " + spans,
                          "water_growing_days_est", "water_dormant_days_est"))
     if water:
         lines.append(f"💧 Water check: {'; '.join(water)}.")
 
-    names = sorted({s.get("authority") for s in species.care_sources or []
+    names = sorted({s.get("authority") for s in sp.care_sources or []
                     if s.get("authority") and not s.get("inferred")})
-    if names and (lines or water_regime_sentence(species)):
+    if names and (lines or water_regime_sentence(sp)):
         # Every page that settled something for this species, which can be
         # more than the lines above name; the species page lists each with
         # its fields.
