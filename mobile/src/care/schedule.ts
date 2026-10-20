@@ -222,6 +222,14 @@ export function unscheduledLine(plants: UnscheduledPlant[]): string | null {
     + 'sources say.';
 }
 
+/** Whether the to-do card may say "All caught up": only when there are
+ *  checks to be caught up on and no plant was left out of them. A plant
+ *  nobody scheduled isn't caught up, it's unscheduled; one whose log
+ *  couldn't be read isn't known to be. */
+export function allCaughtUp(taskCount: number, leftOutCount: number): boolean {
+  return taskCount > 0 && leftOutCount === 0;
+}
+
 /** Plants left out because their care log couldn't be read just now. */
 export function unreadLine(count: number): string | null {
   if (count <= 0) return null;

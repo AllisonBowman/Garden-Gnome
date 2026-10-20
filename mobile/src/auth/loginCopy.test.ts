@@ -23,5 +23,14 @@ test('the sentence is on the screen, above the sign-in buttons', () => {
   const screen = readSrc('./LoginScreen.tsx');
   const shown = screen.indexOf('{SIGN_IN_REASON}');
   expect(shown).toBeGreaterThan(-1);
-  expect(shown).toBeLessThan(screen.indexOf('AppleAuthenticationButton\n'));
+  // Above every control that starts a sign-in: the Apple button, and each
+  // press that runs one.
+  const controls = [
+    screen.search(/<AppleAuthentication\.AppleAuthenticationButton\b/),
+    screen.search(/run\(\s*['"](apple|google)['"]\s*\)/),
+  ];
+  for (const at of controls) {
+    expect(at).toBeGreaterThan(-1);
+    expect(shown).toBeLessThan(at);
+  }
 });

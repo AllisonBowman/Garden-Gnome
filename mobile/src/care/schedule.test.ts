@@ -1,6 +1,6 @@
 import {
-  computeCareTasks, careTaskDueLabel, CareTask, hasCheckSchedule, NO_SCHEDULE_LINE,
-  unreadLine, unscheduledLine, unscheduledPlants,
+  allCaughtUp, computeCareTasks, careTaskDueLabel, CareTask, hasCheckSchedule,
+  NO_SCHEDULE_LINE, unreadLine, unscheduledLine, unscheduledPlants,
 } from './schedule';
 import { CareLog, Plant, Species } from '../types';
 
@@ -199,13 +199,21 @@ describe('plants with no check schedule', () => {
   });
 });
 
-// The to-do card's rule, read off its source: "all caught up" is claimed only
-// when no plant was left out.
+// The to-do card's rule: "all caught up" is claimed only when no plant was
+// left out.
 describe('the to-do card never claims all caught up over unscheduled plants', () => {
-  it('gates the caught-up line on nothing being left out', () => {
+  it('is caught up only with checks on record and nothing left out', () => {
+    expect(allCaughtUp(3, 0)).toBe(true);
+    // A plant with no schedule, or a log that couldn't be read, is left out.
+    expect(allCaughtUp(3, 1)).toBe(false);
+    // Nothing scheduled at all is not "caught up" either.
+    expect(allCaughtUp(0, 0)).toBe(false);
+    expect(allCaughtUp(0, 2)).toBe(false);
+  });
+
+  it('is the rule the card uses', () => {
     const src: string = require('fs').readFileSync(
       require('path').join(__dirname, 'CareTodos.tsx'), 'utf8');
-    expect(src).toMatch(/const caughtUp = tasks\.length > 0 && leftOut\.length === 0;/);
-    expect(src).toMatch(/caughtUp \?/);
+    expect(src).toMatch(/allCaughtUp\(/);
   });
 });

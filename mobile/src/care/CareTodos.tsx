@@ -10,7 +10,7 @@ import { rescheduleAllReminders } from '../notifications/reminders';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { useCareTasks, CARE_TASKS_QUERY_KEY } from './useCareTasks';
-import { careTaskDueLabel, unreadLine, unscheduledLine } from './schedule';
+import { allCaughtUp, careTaskDueLabel, unreadLine, unscheduledLine } from './schedule';
 import { CARE_PRESENTATION } from './labels';
 
 // The "what to look at today" list at the top of the Plants tab: every
@@ -120,7 +120,7 @@ export default function CareTodos({
   if (todos.length === 0) {
     // "All caught up" only when every plant has a schedule that was read: a
     // plant nobody scheduled isn't caught up, it's unscheduled.
-    const caughtUp = tasks.length > 0 && leftOut.length === 0;
+    const caughtUp = allCaughtUp(tasks.length, leftOut.length);
     return (
       <Card style={styles.caughtUpCard} mode="contained">
         <Card.Content style={styles.caughtUpContent}>

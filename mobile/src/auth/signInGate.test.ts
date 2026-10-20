@@ -37,5 +37,13 @@ test('the login screen checks the gate before starting a sign-in', () => {
 
 test('the Apple button is covered while a sign-in runs', () => {
   const screen = readSrc('./LoginScreen.tsx');
-  expect(screen).toMatch(/pointerEvents=\{busy !== null \? 'none' : 'auto'\}/);
+  // The view around the Apple button stops taking touches according to
+  // `busy`, however that expression happens to be written.
+  const button = screen.search(/<AppleAuthentication\.AppleAuthenticationButton\b/);
+  expect(button).toBeGreaterThan(-1);
+  const wrapper = screen.slice(screen.lastIndexOf('<View', button), button);
+  const pointerEvents = wrapper.match(/pointerEvents=\{([^}]*)\}/);
+  expect(pointerEvents).not.toBeNull();
+  expect(pointerEvents![1]).toMatch(/\bbusy\b/);
+  expect(pointerEvents![1]).toMatch(/['"]none['"]/);
 });
