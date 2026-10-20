@@ -6,7 +6,7 @@ catalog is built once per version instead of once per request. GET / reports
 ran from one whose sync was skipped -- seed.py swallows a sync failure on
 purpose, so the API still answering 200 says nothing about the catalog.
 
-Both read only counts, maxima, one indexed probe and one sync_state row.
+Both read only counts, maxima, one indexed probe and a few sync_state rows.
 Nothing here walks the catalog or exposes anything a client could not
 already infer: how many species and claims there are, and a digest of
 catalog files that ship in every build.
@@ -16,7 +16,9 @@ from functools import lru_cache
 from sqlalchemy import func
 from sqlmodel import Session, col, or_, select
 
-from app.models.models import Claim, Species, SpeciesTrait, SyncState
+from app.models.models import (
+    CATALOG_GENERATION_KEY, Claim, Species, SpeciesTrait, SyncState,
+)
 
 
 @lru_cache(maxsize=1)
@@ -36,6 +38,13 @@ def stored_fingerprint(session: Session) -> str | None:
     return state.value if state is not None else None
 
 
+def generation(session: Session) -> str | None:
+    """The catalog's generation: a fresh token on every flush that writes a
+    catalog row, in any process (models.stamp_catalog_generation)."""
+    state = session.get(SyncState, CATALOG_GENERATION_KEY)
+    return state.value if state is not None else None
+
+
 def _rows_out_of_step(session: Session) -> bool:
     """Whether any species row was not resolved under the current rules (the
     same test the claim sync uses to decide it cannot skip)."""
@@ -49,15 +58,17 @@ def _rows_out_of_step(session: Session) -> bool:
 def catalog_key(session: Session) -> tuple:
     """Changes whenever what GET /species/ would return can have changed.
 
-    The claim sync rewrites rows only at boot, and records its fingerprint
-    when it does. The seed and the species write routes add rows, and every
-    row arrives with its traits, so the row count and the highest row and
-    trait ids move with them. An in-place edit that does none of these (a
-    hand-run script against a live database) needs a restart to show."""
+    The generation moves with every write to a catalog row through the ORM,
+    in this process or another: a sync's in-place rewrite, an operator's
+    POST /species/, an authority's claims withdrawn. The fingerprint, the
+    row count and the highest row and trait ids stay in the key for writes
+    that bypass it; an edit made with raw SQL that moves none of these still
+    needs a restart to show."""
     species_count, species_max = session.exec(
         select(func.count(Species.id), func.max(Species.id))).one()
     trait_max = session.exec(select(func.max(SpeciesTrait.id))).one()
-    return (stored_fingerprint(session), species_count, species_max, trait_max)
+    return (stored_fingerprint(session), generation(session),
+            species_count, species_max, trait_max)
 
 
 def catalog_status(session: Session) -> dict:

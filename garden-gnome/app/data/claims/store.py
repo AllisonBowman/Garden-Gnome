@@ -5,9 +5,11 @@ claims across and nothing else — every decision about what may be asserted
 lives in resolve.py, so this module has no opinions to drift out of step.
 """
 import json
+import threading
 from dataclasses import dataclass
 from typing import Any
 
+from sqlalchemy import func
 from sqlmodel import Session, select
 
 from app.models.models import Authority as AuthorityRow
@@ -37,6 +39,61 @@ class Passage:
     authority: str
 
 
+def _load_safety_passages(session: Session) -> dict[str, list[Passage]]:
+    cache: dict[str, list[Passage]] = {}
+    rows = session.exec(
+        select(ClaimRow, AuthorityRow)
+        .join(AuthorityRow, ClaimRow.authority_id == AuthorityRow.id)  # type: ignore[arg-type]
+        .where(ClaimRow.field.in_(SAFETY_FIELDS))  # type: ignore[attr-defined]
+    ).all()
+    for claim_row, authority in rows:
+        if (authority.allowed_fields is not None
+                and claim_row.field not in authority.allowed_fields):
+            continue
+        cache.setdefault(claim_row.subject, []).append(Passage(
+            field=claim_row.field,
+            value=json.loads(claim_row.value_json),
+            quote=claim_row.quote or "",
+            authority=authority.name,
+        ))
+    return cache
+
+
+def _claims_key(session: Session) -> tuple:
+    """Changes whenever the safety passages can have: the catalog generation
+    (a fresh token on every ORM write to a claim or an authority, in any
+    process), and the claim and authority counts and highest ids for a write
+    that bypassed it. Four cheap reads."""
+    from app.db.catalog_state import generation
+
+    claims = session.exec(select(func.count(ClaimRow.id), func.max(ClaimRow.id))).one()
+    authorities = session.exec(
+        select(func.count(AuthorityRow.id), func.max(AuthorityRow.id))).one()
+    return (str(session.get_bind().url), generation(session), *claims, *authorities)
+
+
+#: The parsed passages for one catalog version, shared by every request in
+#: this process. A request used to parse the whole table for itself -- 1,453
+#: claims, 4 MB of Passage objects -- for a single species.
+_shared: tuple[tuple, dict[str, list[Passage]]] | None = None
+_shared_lock = threading.Lock()
+
+
+def _shared_passages(session: Session) -> dict[str, list[Passage]]:
+    global _shared
+    key = _claims_key(session)
+    held = _shared
+    if held is not None and held[0] == key:
+        return held[1]
+    with _shared_lock:
+        held = _shared
+        if held is not None and held[0] == key:
+            return held[1]
+        passages = _load_safety_passages(session)
+        _shared = (key, passages)
+        return passages
+
+
 def safety_passages(session: Session, subject: str) -> list[Passage]:
     """Every cited passage on a safety field about `subject` itself.
 
@@ -44,28 +101,16 @@ def safety_passages(session: Session, subject: str) -> list[Passage]:
     (ADR 0002), so a congener's warning is not this plant's either way. The
     scope rule `load_claims` applies holds here too.
 
-    Read once per session for the whole catalog and kept in `session.info`,
-    because the species list asks for every row's toxicity sentence and one
-    query per row would be a thousand. `forget_safety_passages` drops it
-    whenever claims are written or withdrawn."""
+    Parsed once per catalog version for the whole process (`_claims_key`),
+    because every species a response carries asks for its toxicity sentence
+    and every request used to pay for the whole table. Each session then
+    holds its copy in `session.info`, so a request reads one consistent
+    version; `forget_safety_passages` drops that copy whenever claims are
+    written or withdrawn, and the next read keys on the new generation. The
+    dict is shared: callers must not change it."""
     cache = session.info.get(_SAFETY_CACHE_KEY)
     if cache is None:
-        cache = {}
-        rows = session.exec(
-            select(ClaimRow, AuthorityRow)
-            .join(AuthorityRow, ClaimRow.authority_id == AuthorityRow.id)  # type: ignore[arg-type]
-            .where(ClaimRow.field.in_(SAFETY_FIELDS))  # type: ignore[attr-defined]
-        ).all()
-        for claim_row, authority in rows:
-            if (authority.allowed_fields is not None
-                    and claim_row.field not in authority.allowed_fields):
-                continue
-            cache.setdefault(claim_row.subject, []).append(Passage(
-                field=claim_row.field,
-                value=json.loads(claim_row.value_json),
-                quote=claim_row.quote or "",
-                authority=authority.name,
-            ))
+        cache = _shared_passages(session)
         session.info[_SAFETY_CACHE_KEY] = cache
     return cache.get(subject, [])
 

@@ -74,7 +74,9 @@ class _CatalogBody:
 _catalog: _CatalogBody | None = None
 _catalog_lock = threading.Lock()
 # Bumped by every write route here, so this process never serves a body from
-# before its own write even if the row count and ids could not show it.
+# before its own write even if catalog_key could not show it. The catalog
+# generation in that key already moves with any ORM write; this is the
+# belt to its braces, and test_this_process_sees_its_own_write pins it.
 _catalog_writes = 0
 
 
@@ -146,9 +148,10 @@ def list_species(request: Request, session: Session = Depends(get_session)):
 
     Built once per catalog version and served as cached bytes (gzip when the
     client takes it, which the phone does). Validating every row on every
-    request took a 256 MB machine past 220 MB at ten requests at once; the
-    catalog only changes at boot or through the write routes below, and
-    catalog_key notices both."""
+    request took a 256 MB machine past 220 MB at ten requests at once.
+    catalog_key notices a change from anywhere: the boot's sync, the write
+    routes below, or a script run against the live database in another
+    process, through the catalog generation every ORM write stamps."""
     body = _catalog_body(session)
     # The same test GZipMiddleware uses, so the two never disagree; a body
     # that already carries Content-Encoding passes the middleware untouched.
