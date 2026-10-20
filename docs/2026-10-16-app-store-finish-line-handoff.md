@@ -12,22 +12,42 @@ migration range (0010 to 0020), VM size (256 MB), smoke check (12 tries in
 Where its restore advice still holds, it's repeated here, so you don't need it
 open.
 
-**The build.** The orchestrator is running the EAS production build from this
-Mac and will fill in these three lines when it finishes:
+**The build (updated 2026-10-20).** Not started yet, and it needs you. From
+this Mac, `eas build --profile production --platform ios --non-interactive`
+gets as far as "Using remote iOS credentials", then stops with "Distribution
+Certificate is not validated for non-interactive builds": EAS wants to check
+the certificate with Apple, and that takes your Apple sign-in. Run it
+yourself, without the non-interactive flag, from the repo root:
 
-- Build number: `____` (expect 16 or higher, since 1.1.2 was build 15)
+```bash
+cd mobile && npx --yes eas-cli@latest build --profile production --platform ios
+```
+
+Say yes when it asks to validate the certificate and sign in to your Apple
+account; let EAS manage credentials if it asks. The attempt on the 20th
+already incremented the remote build number from 15 to 16 without building,
+so expect the build to come out as 17 (or higher). The build runs on Expo's
+machines for 15 to 30 minutes. When it finishes, fill in these three lines
+from `npx --yes eas-cli@latest build:list --platform ios --limit 1`:
+
+- Build number: `____` (expect 17 or higher; 1.1.2 was build 15)
 - EAS build ID: `____`
-- Commit EAS reports: `____` (should be the tip of PR #22 once the review
-  fixes below are on it, which is later than `307930e`; `798f905` alone
-  lacks them)
+- Commit EAS reports: `____` (should be `b98c2b7`, or a later tip of PR #22 if
+  one is added before the build)
 
 Wherever a step below says "the build number", it means the first of those
 lines.
 
-**Update, 2026-10-17.** The build was never started on the 16th: EAS still
-lists 1.1.2 build 15 (2 August) as the newest iOS build, so the three lines
-above are still blank. Starting a production build from this Mac now needs
-your say-so (the sandbox refused it), and the command is in step 4. Checked
+**Update, 2026-10-17 and 2026-10-20.** The build was never started on the
+16th, and on the 20th the attempt from this Mac stopped at the certificate
+check described above, so the three lines are still blank and the command
+is yours to run. On the 20th the 41 findings of the adversarial review of the
+ship diff were fixed in 28 more commits (toxicity sentences scoped to people
+and pets separately, census export 4.1 that no identifier links across
+exports, cached data kept on a failed refresh, local dates for acquisition,
+and the rest); the tip is `b98c2b7`, every gate is green (backend 6,884,
+mobile 541, typecheck and leak scan clean), and CI on it was pending as this
+was written. Checked
 again today: PR #22's CI is green on `62d3a66` and the PR is mergeable;
 production still has 29 paths and no `/growing-areas`; the live site still
 serves the July pages; the repo still has no secrets; and `npx wrangler
