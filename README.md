@@ -22,11 +22,13 @@ plausible-sounding ones.
 
 ## Why it's interesting
 
-**The AI never reasons from scratch.** Every species' care values are claims,
-each cited to a horticultural authority (an extension service or botanical
-garden) and resolved into one catalog record — light needs, how dry the soil
-should get, humidity/temperature ranges, soil type, toxicity — with values
-borrowed from the genus labelled as borrowed. When
+**The AI never reasons from scratch.** A researched species' care values are
+claims, each cited to a horticultural authority (an extension service or
+botanical garden) and resolved into one catalog record — light needs, how dry
+the soil should get, humidity/temperature ranges, soil type, toxicity — with
+values borrowed from the genus labelled as borrowed. Older values no claim
+backs yet are labelled as not yet cited, and the check schedules written by
+hand for the original 129 species are not cited. When
 the app generates advice, identifies a plant, or diagnoses a photo, the model is
 handed those facts plus the plant's actual care log and instructed — explicitly
 in the system prompt — to answer *only* from what it's given, never inventing
@@ -122,11 +124,17 @@ scoped to the signed-in user.
 - **Per-user data isolation** — every plant, growing area, and care log belongs
   to its owner; other users' resources return 404, not 403.
 - **In-app account deletion** (`DELETE /me`) — wipes all user data and revokes
-  the user's Apple session (App Store Guideline 5.1.1(v)).
-- **Opt-in community census** — off by default. An export is one record per
-  planting (species, quantity, care history, growing-area type, city/region/
-  country), with no names, emails, nicknames, notes or coordinates, and fresh
-  identifiers on every export. Export and sync are operator-only.
+  the user's Apple session (App Store Guideline 5.1.1(v)). A revoke Apple
+  doesn't accept at once is retried from a queue holding only the encrypted
+  grant, which is dropped after 30 days or 10 tries.
+- **Opt-in community census** — off by default. Export 4.1 is one record per
+  planting (species, quantity, growth stage, acquisition month, starting
+  condition, care counted per type per calendar month, moves between growing
+  areas by month, growing-area type and city/region/country), with no names,
+  emails, nicknames, notes, coordinates or day-level dates. Identifiers are
+  fresh on every export and records come in a random order, so no identifier
+  links two exports, though a planting's monthly counts could still resemble
+  it. Export and sync are operator-only.
 - **Privacy policy** — `site/privacy.html` is the binding copy; it names every
   recipient (Fly.io, Apple, Google, the weather services, and Anthropic once
   the AI features are switched on). Change it in the same change as the code
@@ -134,9 +142,9 @@ scoped to the signed-in user.
 
 **Care**
 - **Species catalog** — about 1,000 species (houseplants, edibles, perennials,
-  shrubs, trees, bulbs), every care value quoted from a named extension
-  service or botanical garden page (`garden-gnome/app/data/verified/`), with
-  genus-borrowed values labelled; an extensible key-value traits table;
+  shrubs, trees, bulbs), every researched care value quoted from a named
+  extension service or botanical garden page
+  (`garden-gnome/app/data/verified/`), with genus-borrowed values labelled; an extensible key-value traits table;
   provenance + review status for entries sourced beyond the original
   hand-written set.
 - **Plant inventory & growing areas** — plants live in per-user growing areas
