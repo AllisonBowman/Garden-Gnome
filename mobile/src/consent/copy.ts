@@ -39,7 +39,9 @@
 //                 app/routers/census.py exports city/region/country only.
 //   * census    → User.census_opt_in defaults to False (app/models/models.py);
 //                 app/routers/census.py exports opted-in users only, to the
-//                 operator only, with every identifier made fresh per export.
+//                 operator only, with every identifier made fresh per export
+//                 and the records shuffled (export version 4.1; the fields
+//                 are listed above CENSUS_FIELDS below).
 
 import type { AiCapabilities, AiCapability } from '../care/aiCapabilities';
 
@@ -74,6 +76,44 @@ export const DESTINATION_LABELS: Record<Destination, string> = {
   server: 'Sent to our server',
   partner: 'Shared with another service',
 };
+
+// ── What the census counts ────────────────────────────────────────────────────
+// One list, read in both places the census is described (the Settings entry
+// and the text under the switch), so the two can't drift apart. It is every
+// field of a census record (app/routers/census.py build_export, export
+// version 4.1), in the caretaker's words:
+//   species_id, quantity, maturity_stage   → its species, how many, its stage
+//   acquired_month, initial_condition      → the month you got it, how it looked
+//   care_history (counts per type a month) → how many times each kind of care…
+//   stewardship_count, stewardship_chain   → how many areas, the months it moved
+//     (started_month / ended_month only)
+//   split_from_ref                         → which planting it was split from
+//   growing_area {type, city, region, country}
+//   plant_ref, growing_area.ref            → labels made fresh for every export
+// Records are shuffled, so a record's place in the file says nothing either.
+
+/** Every field a census record carries, as one clause. */
+export const CENSUS_FIELDS =
+  'its species, how many there are, its growth stage, the month you got it and '
+  + 'how it looked then (soil, leaves, any pests), how many times each kind of '
+  + 'care was logged in each month, how many growing areas it has been in and '
+  + 'the months it moved between them, which planting it was split from if it '
+  + 'was, and its growing area’s type, city, region and country';
+
+/** What a census record never carries. */
+export const CENSUS_LEFT_OUT =
+  'There is no name, no email, no nicknames, no notes, no exact dates and no '
+  + 'coordinates.';
+
+/** How far the census promises exports can't be put together, and no
+ *  further: the identifiers are new every time, but a planting's monthly
+ *  care counts are its own and could look alike from one export to the
+ *  next. */
+export const CENSUS_LINKING =
+  'Each planting and growing area gets a new label in every export, and the '
+  + 'records are shuffled, so no identifier links one export to another. That '
+  + 'is the promise, and no more: a planting’s monthly care counts could still '
+  + 'look alike from one export to the next.';
 
 export const DATA_FLOWS: DataFlow[] = [
   {
@@ -152,9 +192,10 @@ export const DATA_FLOWS: DataFlow[] = [
       + 'server asks weather services in turn and stops at the first that '
       + 'answers: Apple Weather, then the U.S. National Weather Service, then '
       + 'Open-Meteo, which also covers places outside the U.S. Each one asked '
-      + 'gets the coordinates and nothing else about you, and the forecast card '
-      + 'names whichever one answered. Coordinates are left out of the community '
-      + 'census by construction, not by policy.',
+      + 'gets the coordinates rounded to about a kilometer, and nothing else '
+      + 'about you, and the forecast card names whichever one answered. '
+      + 'Coordinates are left out of the community census by construction, not '
+      + 'by policy.',
   },
   {
     id: 'census',
@@ -165,12 +206,8 @@ export const DATA_FLOWS: DataFlow[] = [
     detail:
       'The census asks what the whole community is growing and how it is '
       + 'faring, so care advice can improve for everyone. If you join, each of '
-      + 'your plantings is counted: its species, how many, its growth stage, '
-      + 'when you got it and how it looked then, the dates of your care, and '
-      + 'its growing area’s type, city, region and country. There is no name, '
-      + 'no email, no nicknames, no notes and no coordinates. Identifiers are '
-      + 'rotated on every export, so separate exports can’t be joined back into '
-      + 'one garden. If you don’t join, none of your data is counted at all.',
+      + `your plantings is counted: ${CENSUS_FIELDS}. ${CENSUS_LEFT_OUT} `
+      + `${CENSUS_LINKING} If you don’t join, none of your data is counted at all.`,
   },
 ];
 
@@ -229,12 +266,12 @@ export const QUESTION_NOTICE = {
 export const CENSUS_CONSENT = {
   label: 'Join the community census',
   on:
-    'Your plantings are counted: species, how many, care dates, and your '
-    + 'growing area’s type and city. No name, no email, no notes, no '
-    + 'coordinates — and identifiers are rotated on every export, so separate '
-    + 'counts can’t be joined back into one garden.',
+    `Each of your plantings is counted: ${CENSUS_FIELDS}. ${CENSUS_LEFT_OUT} `
+    + CENSUS_LINKING,
   off:
-    'Your data is not counted. Turning this on helps the care advice get better '
+    'Your data is not counted. If you turn this on, each of your plantings is '
+    + 'counted as “The community census” below lists it, with no name, email, '
+    + 'notes, exact dates or coordinates. It helps the care advice get better '
     + 'for plants like yours; turning it back off stops it immediately. Counts '
     + 'already taken aren’t recalled.',
 } as const;

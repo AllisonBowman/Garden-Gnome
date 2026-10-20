@@ -1,6 +1,6 @@
 import {
   DATA_FLOWS, SETTINGS_FLOW_ORDER, orderedFlows, visibleFlows, leavingDevice,
-  DESTINATION_LABELS, PHOTO_DIAGNOSIS_NOTICE, CENSUS_CONSENT,
+  DESTINATION_LABELS, PHOTO_DIAGNOSIS_NOTICE, CENSUS_CONSENT, CENSUS_FIELDS,
 } from './copy';
 import { AiCapabilities, NO_CAPABILITIES } from '../care/aiCapabilities';
 
@@ -115,10 +115,29 @@ test('the location flow names every weather service the server asks', () => {
   expect(flow('location').destination).toBe('partner');
 });
 
+test('weather services get the coordinates rounded, as the location flow says', () => {
+  const weather = readSrc('../../../garden-gnome/app/services/weather.py');
+  // Two decimal places is about a kilometer of latitude.
+  expect(weather).toMatch(/^_COORD_DECIMALS = 2$/m);
+  expect(text('location')).toMatch(/coordinates rounded to about a kilometer/);
+});
+
 test('the census export carries no coordinates, as the location flow says', () => {
   const census = readSrc('../../../garden-gnome/app/routers/census.py');
-  const exportFn = census.slice(census.indexOf('def census_export'));
-  expect(exportFn).not.toMatch(/\.lat\b|\.lng\b/);
+  // Read the function that builds the export, from its def to the next
+  // top-level statement: census_export is only the route around it.
+  const start = census.indexOf('def build_export(');
+  expect(start).toBeGreaterThan(-1);
+  const rest = census.slice(start + 1);
+  const next = rest.search(/^(?:def |async def |@|class )/m);
+  const builder = next === -1 ? rest : rest.slice(0, next);
+  // The slice is the export body itself, not a stub left behind by a move.
+  expect(builder).toMatch(/growing_area/);
+  expect(builder).toMatch(/records/);
+  expect(census).toMatch(/def census_export\([\s\S]*?return build_export\(/);
+  // No coordinate is read, by attribute, by key or by getattr.
+  const coordinate = /\.(lat|lng)\b|\[\s*['"](lat|lng)['"]\s*\]|getattr\([^)]*['"](lat|lng)['"]/;
+  expect(builder).not.toMatch(coordinate);
   expect(text('census')).toMatch(/no coordinates/);
 });
 
@@ -151,9 +170,42 @@ test('the census is opt-in, defaults off, and is the only flow that is opt-in', 
   expect(models).toMatch(/census_opt_in: bool = Field\(default=False\)/);
 });
 
-test('the census copy promises fresh identifiers in both places it is read', () => {
-  expect(flow('census').detail).toMatch(/rotated on every export/);
-  expect(CENSUS_CONSENT.on).toMatch(/rotated on every export/);
+// The census is described twice: the Settings entry, and the text under the
+// switch once joined. Both carry the same list of what a record holds.
+const censusTexts = () => [flow('census').detail, CENSUS_CONSENT.on];
+
+test('the census copy names every field a record carries, in both places', () => {
+  // Export 4.1's record, field by field, in the words the copy uses.
+  const fields: [string, RegExp][] = [
+    ['species_id', /its species/],
+    ['quantity', /how many there are/],
+    ['maturity_stage', /growth stage/],
+    ['acquired_month', /the month you got it/],
+    ['initial_condition', /how it looked then \(soil, leaves, any pests\)/],
+    ['care_history', /how many times each kind of care was logged in each month/],
+    ['stewardship_count', /how many growing areas it has been in/],
+    ['stewardship_chain', /the months it moved between them/],
+    ['split_from_ref', /which planting it was split from/],
+    ['growing_area', /growing area’s type, city, region and country/],
+  ];
+  for (const t of censusTexts()) {
+    expect(t).toContain(CENSUS_FIELDS);
+    for (const [, words] of fields) expect(t).toMatch(words);
+  }
+});
+
+test('the census promises only what holds: no identifier links exports', () => {
+  for (const t of censusTexts()) {
+    expect(t).toMatch(/no identifier links one export to another/);
+    expect(t).toMatch(/records are shuffled/);
+    // Monthly care counts are the planting's own; the copy says they could
+    // still look alike, instead of promising exports can never be matched.
+    expect(t).toMatch(/monthly care counts could still look alike/);
+    expect(t).not.toMatch(/can’t be joined|can't be joined|cannot be (linked|joined)|can’t be linked/i);
+    expect(t).toMatch(/no exact dates/);
+  }
+  // Before joining, the switch points at the full list.
+  expect(CENSUS_CONSENT.off).toMatch(/“The community census” below/);
 });
 
 test('nothing claims to stay on the phone while describing a transfer', () => {
