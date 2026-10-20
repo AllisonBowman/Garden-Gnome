@@ -10,14 +10,18 @@ interface Props {
   /** Which part of the app this guards, for the report email. */
   where: string;
   /** Runs before the guarded screen is shown again, e.g. to drop cached
-   *  server data that may be what broke it and fetch it fresh. */
-  onReset?: () => void;
+   *  server data that may be what broke it and fetch it fresh. When it
+   *  returns a promise, the screen is redrawn once that settles, with the
+   *  button showing it is busy meanwhile. */
+  onReset?: () => void | Promise<unknown>;
   children: React.ReactNode;
 }
 
 interface State {
   error: unknown;
   failed: boolean;
+  /** "Try again" was tapped and the data is still being refreshed. */
+  retrying: boolean;
 }
 
 /**
@@ -33,10 +37,10 @@ interface State {
  * detail in it.
  */
 export default class ErrorBoundary extends React.Component<Props, State> {
-  state: State = { error: null, failed: false };
+  state: State = { error: null, failed: false, retrying: false };
 
-  static getDerivedStateFromError(error: unknown): State {
-    return { error, failed: true };
+  static getDerivedStateFromError(error: unknown): Partial<State> {
+    return { error, failed: true, retrying: false };
   }
 
   componentDidCatch(error: unknown, info: React.ErrorInfo): void {
@@ -45,20 +49,29 @@ export default class ErrorBoundary extends React.Component<Props, State> {
     }
   }
 
-  private retry = () => {
+  private retry = async (): Promise<void> => {
+    if (this.state.retrying) return;  // a second tap while the first runs
+    this.setState({ retrying: true });
     try {
-      this.props.onReset?.();
+      await this.props.onReset?.();
     } catch {
       // A failed refresh is no reason to stay stuck: the screen fetches on
       // its own when it mounts again. Rethrowing from a button handler would
       // be the very crash this exists to prevent.
     }
-    this.setState({ error: null, failed: false });
+    this.setState({ error: null, failed: false, retrying: false });
   };
 
   render() {
     if (this.state.failed) {
-      return <ErrorCard where={this.props.where} error={this.state.error} onRetry={this.retry} />;
+      return (
+        <ErrorCard
+          where={this.props.where}
+          error={this.state.error}
+          onRetry={this.retry}
+          retrying={this.state.retrying}
+        />
+      );
     }
     return this.props.children;
   }
@@ -72,7 +85,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 export function guarded<P extends object>(
   Screen: React.ComponentType<P>,
   where: string,
-  onReset?: () => void,
+  onReset?: Props['onReset'],
 ): React.ComponentType<P> {
   function Guarded(props: P) {
     return (
@@ -95,7 +108,9 @@ function usePaletteOrDefault(): Palette {
   }
 }
 
-function ErrorCard({ where, error, onRetry }: { where: string; error: unknown; onRetry: () => void }) {
+function ErrorCard({ where, error, onRetry, retrying }: {
+  where: string; error: unknown; onRetry: () => void; retrying: boolean;
+}) {
   const palette = usePaletteOrDefault();
   const styles = useMemo(() => makeStyles(palette), [palette]);
   const report = () => openExternal(buildProblemMailto({
@@ -116,6 +131,8 @@ function ErrorCard({ where, error, onRetry }: { where: string; error: unknown; o
         <Button
           mode="contained"
           onPress={onRetry}
+          loading={retrying}
+          disabled={retrying}
           style={styles.button}
           buttonColor={palette.acc}
           textColor={palette.btnInk}

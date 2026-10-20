@@ -29,6 +29,7 @@ import { retryOnceIfPassing } from './src/api/errorMessage';
 import { AuthProvider, useAuth } from './src/auth/AuthContext';
 import LoginScreen from './src/auth/LoginScreen';
 import ErrorBoundary, { guarded } from './src/components/ErrorBoundary';
+import { refreshAfterCrash } from './src/components/crashRefresh';
 
 // ── Param lists (imported by child screens) ───────────────────────────────────
 /** What Add Plant may be opened with: `growingAreaId` preselects where the
@@ -98,10 +99,11 @@ const queryClient = new QueryClient({
   },
 });
 
-// After a crash, drop every cached answer and fetch it fresh: a malformed
-// server answer is the likeliest cause, and redrawing from the same cache
-// would only crash again.
-const resetData = () => { void queryClient.resetQueries(); };
+// After a crash, fetch fresh what the crashed screen was reading: a
+// malformed server answer is the likeliest cause, and redrawing from the same
+// cache would only crash again. Every other screen keeps what it is showing
+// while that happens (components/crashRefresh.ts).
+const resetData = () => refreshAfterCrash(queryClient);
 
 // ── Screens, each behind its own error boundary ───────────────────────────────
 // A render error costs one screen: the header's back button, the tab bar and

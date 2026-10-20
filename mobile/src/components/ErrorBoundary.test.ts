@@ -28,7 +28,7 @@ function boundary(props: Partial<React.ComponentProps<typeof ErrorBoundary>> = {
 
 test('a render error flips the boundary to its card', () => {
   const err = new TypeError('Cannot convert undefined or null to object');
-  expect(ErrorBoundary.getDerivedStateFromError(err)).toEqual({ error: err, failed: true });
+  expect(ErrorBoundary.getDerivedStateFromError(err)).toEqual({ error: err, failed: true, retrying: false });
 });
 
 test('until something fails, the boundary renders the screen untouched', () => {
@@ -39,33 +39,65 @@ test('until something fails, the boundary renders the screen untouched', () => {
 test('once failed, it renders the card in the screen\'s place, naming where', () => {
   const { instance } = boundary();
   const err = new Error('boom');
-  instance.state = ErrorBoundary.getDerivedStateFromError(err);
+  instance.state = { ...instance.state, ...ErrorBoundary.getDerivedStateFromError(err) };
   const card = instance.render() as Element;
   expect((card.type as { name?: string }).name).toBe('ErrorCard');
   expect(card.props.where).toBe('Census');
   expect(card.props.error).toBe(err);
   expect(typeof card.props.onRetry).toBe('function');
+  expect(card.props.retrying).toBe(false);
 });
 
-test('Try again refreshes the data first, then shows the screen again', () => {
-  const calls: string[] = [];
-  const onReset = jest.fn(() => { calls.push('reset'); });
+/** A failed boundary whose setState really updates its state, recording each
+ *  update in order alongside whatever else the test logs. */
+function failedBoundary(onReset: () => void | Promise<unknown>) {
+  const log: unknown[] = [];
   const { instance } = boundary({ onReset });
-  (instance.setState as unknown as jest.Mock).mockImplementation(() => { calls.push('redraw'); });
-  instance.state = ErrorBoundary.getDerivedStateFromError(new Error('boom'));
+  instance.state = { ...instance.state, ...ErrorBoundary.getDerivedStateFromError(new Error('boom')) };
+  (instance.setState as unknown as jest.Mock).mockImplementation((patch: object) => {
+    log.push(patch);
+    instance.state = { ...instance.state, ...patch };
+  });
+  return { instance, log };
+}
 
-  instance['retry']();
-
-  expect(calls).toEqual(['reset', 'redraw']);
-  expect(instance.setState).toHaveBeenCalledWith({ error: null, failed: false });
+test('Try again refreshes the data first, then shows the screen again', async () => {
+  const { instance, log } = failedBoundary(() => { log.push('refresh'); });
+  await instance['retry']();
+  expect(log).toEqual([
+    { retrying: true },
+    'refresh',
+    { error: null, failed: false, retrying: false },
+  ]);
 });
 
-test('Try again still redraws, and never throws, when refreshing the data fails', () => {
+test('the screen is redrawn only once the refresh has come back, busy meanwhile', async () => {
+  let done!: () => void;
+  const refreshed = new Promise<void>((resolve) => { done = resolve; });
+  const { instance } = failedBoundary(() => refreshed);
+
+  const retry = instance['retry']();
+  expect(instance.state).toMatchObject({ failed: true, retrying: true });
+  expect((instance.render() as Element).props.retrying).toBe(true);
+  // A second tap while it runs starts nothing new.
+  await instance['retry']();
+  expect(instance.state.failed).toBe(true);
+
+  done();
+  await retry;
+  expect(instance.state).toMatchObject({ failed: false, retrying: false });
+});
+
+test('Try again still redraws, and never throws, when refreshing the data fails', async () => {
   // A throw out of a button handler is an uncaught error: fatal in a
   // release build, which is the crash the boundary exists to prevent.
-  const { instance } = boundary({ onReset: () => { throw new Error('cache gone'); } });
-  expect(() => instance['retry']()).not.toThrow();
-  expect(instance.setState).toHaveBeenCalledWith({ error: null, failed: false });
+  const thrown = failedBoundary(() => { throw new Error('cache gone'); });
+  await expect(thrown.instance['retry']()).resolves.toBeUndefined();
+  expect(thrown.instance.state.failed).toBe(false);
+
+  const rejected = failedBoundary(() => Promise.reject(new Error('offline')));
+  await expect(rejected.instance['retry']()).resolves.toBeUndefined();
+  expect(rejected.instance.state.failed).toBe(false);
 });
 
 test('logging a caught error never throws, in dev or out of it', () => {
