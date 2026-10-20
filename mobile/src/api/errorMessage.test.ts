@@ -55,8 +55,22 @@ test('a user-presentable server detail is shown as is', () => {
     .toBe('Photo check-ups are resting.');
 });
 
+test('only a 503\'s detail is written for a caretaker; any other gets the caller\'s words', () => {
+  // The server's own words for these, written for whoever reads its code.
+  expect(serverMessage(answered(400, { detail: 'species_id does not exist' }), 'fallback'))
+    .toBe('fallback');
+  expect(serverMessage(answered(404, { detail: 'Growing area not found' }), 'fallback'))
+    .toBe('fallback');
+  expect(serverMessage(answered(500, { detail: "Plant's species missing" }), 'fallback'))
+    .toBe('fallback');
+  expect(serverMessage(answered(401, { detail: 'Not authenticated' }), 'fallback'))
+    .toBe('fallback');
+});
+
 test('anything else gets the caller\'s own words', () => {
   expect(serverMessage(offline(), 'fallback')).toBe('fallback');
+  expect(serverMessage(answered(503, {}), 'fallback')).toBe('fallback');
+  expect(serverMessage(answered(503, { detail: '  ' }), 'fallback')).toBe('fallback');
   // Pydantic's 422 detail is a list of field errors, not a sentence.
   expect(serverMessage(answered(422, { detail: [{ loc: ['body'], msg: 'too long' }] }), 'fallback'))
     .toBe('fallback');

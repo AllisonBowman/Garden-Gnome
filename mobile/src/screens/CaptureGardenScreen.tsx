@@ -12,8 +12,7 @@ import { fetchSpeciesList } from '../api/species';
 import { fetchGrowingAreas } from '../api/growingAreas';
 import { defaultAreaId } from '../growingAreas/placement';
 import { createPlantsBulk, PlantDraft } from '../api/plants';
-import { serverAnswered, serverMessage } from '../api/errorMessage';
-import { saveInChunks } from '../capture/bulkSave';
+import { saveFailureAlert, saveInChunks } from '../capture/bulkSave';
 import LoadError from '../components/LoadError';
 import { Species } from '../types';
 import { splitUtterance } from '../capture/splitUtterance';
@@ -219,17 +218,9 @@ export default function CaptureGardenScreen() {
       }
       const savedIds = new Set(saved.map((d) => d.id));
       setDrafts((prev) => prev.filter((d) => !savedIds.has(d.id)));
-      const why = serverAnswered(error)
-        ? serverMessage(error, 'The server didn’t accept them this time.')
-        : 'PlantAdvocate couldn’t reach the server.';
-      if (saved.length === 0) {
-        Alert.alert('Nothing was saved', `${why} Your list is still here. Try again in a moment.`);
-      } else {
-        Alert.alert(
-          `Saved ${saved.length} of ${saved.length + unsaved.length}`,
-          `${why} The other ${unsaved.length} are still here. Try again in a moment.`,
-        );
-      }
+      // Caretaker words for why, and advice that can work (bulkSave.ts).
+      const { title, body } = saveFailureAlert(error, saved.length, unsaved.length);
+      Alert.alert(title, body);
     },
     // saveInChunks reports a failed batch rather than throwing; this is for
     // anything else, so a tap never ends in silence.

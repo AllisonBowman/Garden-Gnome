@@ -12,6 +12,8 @@
 // on stays on screen to try again. Nothing is half-saved and nothing is lost.
 //
 // Pure on purpose (no React Native imports) so jest can pin it.
+import axios from 'axios';
+import { isRetryableError, serverMessage } from '../api/errorMessage';
 
 /** The most plants one POST /plants/bulk accepts. */
 export const BULK_LIMIT = 200;
@@ -48,4 +50,63 @@ export async function saveInChunks<T>(
     saved.push(...batches[i]);
   }
   return { saved, unsaved: [], error: null };
+}
+
+// ── What the caretaker is told when a batch didn't land ─────────────────────
+// The reason, in the caretaker's words, and advice that can work. The
+// server's own `detail` is shown only for a 503, the one status whose detail
+// is written for an end user (api/errorMessage.ts): a 400's "species_id
+// does not exist" is a field name, and "try again in a moment" can't fix it.
+
+function sentence(text: string): string {
+  return /[.!?…]$/.test(text) ? text : `${text}.`;
+}
+
+export interface SaveFailureAlert {
+  title: string;
+  body: string;
+}
+
+export function saveFailureAlert(
+  error: unknown,
+  savedCount: number,
+  unsavedCount: number,
+): SaveFailureAlert {
+  const title = savedCount === 0
+    ? 'Nothing was saved'
+    : `Saved ${savedCount} of ${savedCount + unsavedCount}`;
+  const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+
+  // The session ended under the save: the app is signing out, so the list
+  // won't be here to try again from.
+  if (status === 401) {
+    return {
+      title,
+      body: 'You’ve been signed out, so the rest weren’t saved. Sign in again to add them.',
+    };
+  }
+
+  const left = savedCount === 0
+    ? 'Your list is still here.'
+    : `The other ${unsavedCount} ${unsavedCount === 1 ? 'is' : 'are'} still here.`;
+
+  let why: string;
+  let advice = 'Try again in a moment.';
+  if (status === undefined) {
+    why = axios.isAxiosError(error) || isRetryableError(error)
+      ? 'PlantAdvocate couldn’t reach the server.'
+      : 'Something went wrong while saving them.';
+  } else if (status === 503) {
+    why = sentence(serverMessage(error, 'The server couldn’t take them just now.'));
+  } else if (isRetryableError(error)) {
+    why = 'The server couldn’t take them just now.';
+  } else {
+    // A refusal that will be the same next time: something in the list no
+    // longer matches the server (a species or growing area changed since
+    // the walk began).
+    why = 'The server didn’t accept them as they are. A species or growing area in the list '
+      + 'may have changed since you started.';
+    advice = 'Check the list, then try again.';
+  }
+  return { title, body: `${why} ${left} ${advice}` };
 }

@@ -6,18 +6,20 @@ import axios from 'axios';
  * The server's 503 `detail` is user-presentable by construction: advisor and
  * vision failures raise AdvisorUnavailable / VisionUnavailable, whose message
  * is written for an end user while the technical cause (connection refused,
- * model not pulled, missing key) goes to the server log. So when a `detail`
- * is present we show it verbatim.
+ * model not pulled, missing key) goes to the server log. So a 503's `detail`
+ * is shown verbatim, and only a 503's.
  *
- * Anything else — a network drop, a 500, a timeout — gets the caller's
- * fallback. We never synthesize setup instructions or name a backend: a
- * caretaker cannot act on "check the backend connection", and App Review
- * reads it as unfinished software.
+ * Every other answer's detail is written for whoever reads the server's
+ * code: a 400 "species_id does not exist", a 404 "Growing area not found", a
+ * 500 "Plant's species missing". Those, and a network drop or a timeout, get
+ * the caller's fallback. We never synthesize setup instructions or name a
+ * backend: a caretaker cannot act on "check the backend connection", and App
+ * Review reads it as unfinished software.
  */
 export function serverMessage(err: unknown, fallback: string): string {
-  if (!axios.isAxiosError(err)) return fallback;
-  const detail = err.response?.data?.detail;
-  return typeof detail === 'string' && detail.trim() ? detail : fallback;
+  if (!axios.isAxiosError(err) || err.response?.status !== 503) return fallback;
+  const detail = err.response.data?.detail;
+  return typeof detail === 'string' && detail.trim() ? detail.trim() : fallback;
 }
 
 /** Statuses that say "not right now" rather than "no": asking again a moment

@@ -1,4 +1,5 @@
-import { BULK_LIMIT, chunk, saveInChunks } from './bulkSave';
+import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { BULK_LIMIT, chunk, saveFailureAlert, saveInChunks } from './bulkSave';
 
 declare const require: (id: string) => any;
 declare const __dirname: string;
@@ -70,4 +71,65 @@ test('a first batch that fails saves nothing and keeps everything', async () => 
   const res = await saveInChunks(range(3), async () => { throw new Error('503'); });
   expect(res.saved).toEqual([]);
   expect(res.unsaved).toEqual(range(3));
+});
+
+// --- what the caretaker is told ---------------------------------------------------
+
+const config = { headers: {} } as InternalAxiosRequestConfig;
+const answered = (status: number, data: unknown = {}) => new AxiosError(
+  `Request failed with status code ${status}`, 'ERR_BAD_RESPONSE', config, null,
+  { status, data, statusText: '', headers: {}, config } as AxiosResponse,
+);
+const unreachable = () => new AxiosError('Network Error', AxiosError.ERR_NETWORK, config);
+
+test('a refusal never shows the server’s field names, and doesn’t promise a retry will work', () => {
+  // POST /plants/bulk's own words for a stale species and a removed area.
+  for (const err of [
+    answered(400, { detail: 'species_id does not exist' }),
+    answered(404, { detail: 'Growing area not found' }),
+  ]) {
+    const { title, body } = saveFailureAlert(err, 0, 3);
+    expect(title).toBe('Nothing was saved');
+    expect(body).not.toMatch(/species_id|not found|does not exist/i);
+    expect(body).toMatch(/may have changed since you started/);
+    expect(body).not.toMatch(/Try again in a moment/);
+    expect(body).toMatch(/Your list is still here\./);
+  }
+});
+
+test('no signal says so, and that the list is waiting', () => {
+  expect(saveFailureAlert(unreachable(), 0, 4)).toEqual({
+    title: 'Nothing was saved',
+    body: 'PlantAdvocate couldn’t reach the server. Your list is still here. Try again in a moment.',
+  });
+});
+
+test('a server that is busy or waking up is worth trying again', () => {
+  expect(saveFailureAlert(answered(502), 0, 4).body)
+    .toBe('The server couldn’t take them just now. Your list is still here. Try again in a moment.');
+});
+
+test('a 503’s own detail is the one server sentence shown, as a sentence', () => {
+  const { body } = saveFailureAlert(answered(503, { detail: 'Saving is resting for a moment' }), 0, 2);
+  expect(body).toBe('Saving is resting for a moment. Your list is still here. Try again in a moment.');
+});
+
+test('a signed-out session doesn’t claim the list is still here', () => {
+  const { body } = saveFailureAlert(answered(401, { detail: 'Not authenticated' }), 0, 5);
+  expect(body).not.toMatch(/still here|Not authenticated/);
+  expect(body).toMatch(/signed out/);
+});
+
+test('a partial save counts what landed and agrees in number with what didn’t', () => {
+  expect(saveFailureAlert(unreachable(), 200, 1)).toEqual({
+    title: 'Saved 200 of 201',
+    body: 'PlantAdvocate couldn’t reach the server. The other 1 is still here. Try again in a moment.',
+  });
+  expect(saveFailureAlert(unreachable(), 200, 50).body).toMatch(/The other 50 are still here\./);
+});
+
+test('a failure that isn’t the network isn’t blamed on it', () => {
+  const { body } = saveFailureAlert(new TypeError('x is undefined'), 0, 1);
+  expect(body).not.toMatch(/reach the server/);
+  expect(body).toMatch(/Something went wrong/);
 });
