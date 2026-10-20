@@ -13,13 +13,19 @@ Privacy model (decision 3, 2026-07-15):
 - No stable pseudonymous identifiers: every identifier in an export is minted
   for that export. Growing areas get fresh UUIDs, and plants get a hash of
   their UUID under a salt drawn for the export and then discarded. Both are
-  consistent within one payload (stewardship chains and splits still read)
-  but never linkable across exports.
+  consistent within one payload (splits still read) and no identifier is
+  shared by two exports.
+- No position: records go out in a fresh random order (secrets.SystemRandom),
+  so the nth record of one export is not the nth of the next.
+- No precise times: care goes out as how many of each kind were logged in
+  each calendar month, and acquisition and stewardship as months. A list of
+  care dates is a fingerprint on its own -- a dozen watering days match one
+  plant in a thousand -- so no day is exported.
+- What is still possible, said plainly: a plant's monthly counts, species and
+  city can resemble the same plant's in another export. The promise is that
+  no identifier links two exports, not that nothing in them could.
 - No precise location: lat/lng never leave the server; city/region/country
   only, and only for opted-in users.
-- No precise times: care and stewardship events go out as dates, and when a
-  plant was acquired as a month. A microsecond timestamp is unique enough to
-  join two exports on.
 - No human identity: no nicknames, no personal notes, no emails, ever.
 
 /census/summary is the caller's own view of their garden — it requires auth
@@ -135,6 +141,19 @@ def _new_export_salt() -> bytes:
     return secrets.token_bytes(32)
 
 
+def _shuffle(records: list) -> None:
+    """Put the records in a fresh random order, in place. A seam for tests.
+
+    SystemRandom, not random: the order must not be reproducible by anyone
+    who can guess a seed, or position would carry the database's row order
+    across exports."""
+    secrets.SystemRandom().shuffle(records)
+
+
+def _month(moment) -> str:
+    return moment.strftime("%Y-%m")
+
+
 def plant_ref(salt: bytes, plant_uuid: str) -> str:
     """A plant's identifier within one export: its UUID hashed under that
     export's salt. The same plant (and a split's parent) reads the same all
@@ -147,10 +166,11 @@ def build_export(session: Session) -> dict:
 
     Every identifier is minted for this export: growing areas get fresh
     UUIDs and plants a salted hash (plant_ref), consistent within this
-    payload so stewardship chains and splits stay meaningful, but never the
-    same twice, so exports can't be joined into a longitudinal profile of a
-    household. Locations are city/region/country only -- lat/lng never leave
-    the server -- and times are dates (acquisition, a month)."""
+    payload so splits stay meaningful, but never the same twice. Records
+    are shuffled, care is counted per month, and every time is a month, so
+    neither position nor a run of care dates identifies a plant across
+    exports. Locations are city/region/country only -- lat/lng never leave
+    the server."""
     opted = _opted_in_user_ids(session)
     plants = session.exec(select(Plant)).all()
     plants = [p for p in plants if p.user_id in opted]
@@ -172,10 +192,15 @@ def build_export(session: Session) -> dict:
         logs = session.exec(
             select(CareLog).where(CareLog.plant_id == plant.id)
         ).all()
-        care_by_type: dict[str, list[str]] = {}
+        # How many of each kind in each calendar month: enough to study
+        # care patterns, and no day that would single the plant out.
+        care_by_type: dict[str, dict[str, int]] = {}
         for log in logs:
-            care_by_type.setdefault(log.action.value, []).append(
-                log.logged_at.date().isoformat())
+            months = care_by_type.setdefault(log.action.value, {})
+            month = _month(log.logged_at)
+            months[month] = months.get(month, 0) + 1
+        care_history = {action: dict(sorted(months.items()))
+                        for action, months in sorted(care_by_type.items())}
 
         stewardship = session.exec(
             select(StewardshipRecord)
@@ -183,15 +208,14 @@ def build_export(session: Session) -> dict:
             .order_by(StewardshipRecord.started_at.asc())
         ).all()
 
-        stewardship_chain = []
-        for rec in stewardship:
-            rec_env = session.get(GrowingArea, rec.growing_area_id)
-            stewardship_chain.append({
-                "growing_area_ref": rotated_uuid(rec.growing_area_id) if rec_env else None,
-                "growing_area_type": rec_env.type.value if rec_env else None,
-                "started_on": rec.started_at.date().isoformat(),
-                "ended_on": rec.ended_at.date().isoformat() if rec.ended_at else None,
-            })
+        # When each stewardship began and ended, as months, and nothing
+        # else: the day a plant was added is near-unique, and the area it
+        # was in is the record's own growing_area.
+        stewardship_chain = [
+            {"started_month": _month(rec.started_at),
+             "ended_month": _month(rec.ended_at) if rec.ended_at else None}
+            for rec in stewardship
+        ]
 
         records.append({
             # This export's name for the plant, never its real UUID.
@@ -208,7 +232,7 @@ def build_export(session: Session) -> dict:
             if plant.split_from_uuid else None,
             "species_id": plant.species_id,
             "maturity_stage": plant.maturity_stage.value,
-            "acquired_month": plant.acquired_on.strftime("%Y-%m")
+            "acquired_month": _month(plant.acquired_on)
             if plant.acquired_on else None,
             # Location dimension: geographic region only — never lat/lng
             "growing_area": {
@@ -220,7 +244,7 @@ def build_export(session: Session) -> dict:
             } if env else None,
             "stewardship_chain": stewardship_chain,
             "stewardship_count": len(stewardship),
-            "care_history": care_by_type,
+            "care_history": care_history,
             "initial_condition": {
                 "soil_moisture": plant.soil_moisture_at_acquisition.value
                     if plant.soil_moisture_at_acquisition else None,
@@ -230,7 +254,18 @@ def build_export(session: Session) -> dict:
             },
         })
 
+    # Position would otherwise be the database's row order, the same in
+    # every export: record n of one would be record n of the next.
+    _shuffle(records)
+
     return {
+        # 4.1 takes out what still matched a plant across exports when no
+        # identifier did: records are shuffled; `care_history` is counts per
+        # care type per calendar month ({"water": {"2026-05": 4}}) instead
+        # of a list of dates; the stewardship chain is `started_month` and
+        # `ended_month` only, without its area ref and type. Minor, because
+        # the keys an aggregator reads for everything else are unchanged.
+        #
         # 4.0 stops exporting anything stable enough to link two exports:
         # `plant_uuid` and `split_from_uuid` are `plant_ref` and
         # `split_from_ref`, salted per export; care and stewardship times
@@ -246,7 +281,7 @@ def build_export(session: Session) -> dict:
         # 2.1 added per-record `quantity` and the split link. Bumped rather
         # than added silently because `plant_count` changed meaning with it:
         # it counts plants, as its name always claimed, instead of rows.
-        "export_version": "4.0",
+        "export_version": "4.1",
         "exported_at": datetime.utcnow().isoformat() + "Z",
         "installation_uuid": os.getenv("INSTALLATION_UUID", ""),
         "plant_count": sum(r["quantity"] for r in records),

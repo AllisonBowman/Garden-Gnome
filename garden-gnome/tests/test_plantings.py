@@ -298,7 +298,7 @@ def test_export_carries_quantity_and_split_lineage(garden, monkeypatch):
     offshoot = next(p for p in mine if p["split_from_ref"])
     assert offshoot["split_from_ref"] == parent
     assert offshoot["plant_ref"] != parent
-    assert body["export_version"] == "4.0"
+    assert body["export_version"] == "4.1"
 
 
 def test_cannot_split_someone_elses_planting(garden):

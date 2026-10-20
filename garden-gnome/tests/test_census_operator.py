@@ -4,8 +4,10 @@ It holds every opted-in household's plants, city and care history, so it is
 not a user route: GET /census/export and POST /census/sync answer only the
 operator credential (X-Operator-Token against CENSUS_OPERATOR_TOKEN), and
 with none configured they answer 404. And because the consent copy promises
-that the identifiers are rotated on every export, no record carries a plant's
-real UUID: it carries a hash under a salt drawn for that export alone.
+that no identifier links two exports, no record carries a plant's real UUID:
+it carries a hash under a salt drawn for that export alone. Nor does its
+position or its care dates link it: records are shuffled, and care is a
+count per month (test_the_census_content_does_not_link_two_exports).
 """
 import json
 import re
@@ -142,7 +144,7 @@ def test_no_record_carries_a_real_plant_uuid(census, monkeypatch):
         assert "plant_uuid" not in record
         assert "split_from_uuid" not in record
         assert re.fullmatch(r"[0-9a-f]{64}", record["plant_ref"])
-    assert body["export_version"] == "4.0"
+    assert body["export_version"] == "4.1"
 
 
 def test_the_refs_differ_between_two_exports(census, monkeypatch):
@@ -168,17 +170,20 @@ def test_a_split_still_names_its_parent_within_one_export(census, monkeypatch):
     assert by_ref[parent_ref]["quantity"] + by_ref[offshoot_ref]["quantity"] == 12
 
 
-def test_times_are_dates_and_acquisition_a_month(census, monkeypatch):
-    """A microsecond timestamp repeated in every export is as good as an id."""
+def test_care_is_counted_by_month_and_every_time_is_a_month(census, monkeypatch):
+    """A microsecond timestamp repeated in every export is as good as an id,
+    and so is a list of care dates."""
     census_operator.pin_salt(monkeypatch)
     body = census_operator.export(census.client, monkeypatch)
     [parent] = census.mine(body, {census_operator.ref(census.parent_uuid)})
-    assert parent["care_history"] == {"water": ["2026-05-02"]}
+    assert parent["care_history"] == {"water": {"2026-05": 1}}
     assert parent["acquired_month"] == "2026-04"
     assert "acquired_on" not in parent
     for link in parent["stewardship_chain"]:
-        assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", link["started_on"])
-        assert "started_at" not in link
+        assert set(link) == {"started_month", "ended_month"}
+        assert re.fullmatch(r"\d{4}-\d{2}", link["started_month"])
+    assert not re.search(r"\d{4}-\d{2}-\d{2}", json.dumps(body["plants"])), \
+        "no day reaches the export"
     area = parent["growing_area"]
     assert {"lat", "lng", "uuid"}.isdisjoint(area)
     assert area["city"] == "Baltimore"
