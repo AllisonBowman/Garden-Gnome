@@ -94,11 +94,26 @@ describe('computeCareTasks', () => {
   });
 
   it('falls back to acquired_on when there is no care history', () => {
-    const [task] = run({ plants: [plant({ acquired_on: '2026-07-01T00:00:00' })] });
+    // The server's own shape: a date with no time (YYYY-MM-DD).
+    const [task] = run({ plants: [plant({ acquired_on: '2026-07-01' })] });
     // acquired Jul 1; window Jul 8–11; today Jul 15 is 4 days past → overdue
     expect(task.status).toBe('overdue');
     expect(task.daysUntilDue).toBe(-7);
     expect(task.lastCareDate).toBeNull();
+  });
+
+  it('reads the server’s date-only acquired_on as that local day, not UTC midnight', () => {
+    // Added on the afternoon of Jul 8 in New York (where this suite runs);
+    // the server dates it 2026-07-08. Read as UTC midnight that is the
+    // evening of Jul 7 here, and the first check came due on day 6.
+    const [task] = computeCareTasks({
+      plants: [plant({ acquired_on: '2026-07-08' })],
+      logsByPlant: {},
+      speciesById: { 100: species(waterEvery7) },
+      now: new Date(2026, 6, 8, 14, 0),
+    });
+    expect(task.daysUntilDue).toBe(7);
+    expect([task.dueDate.getMonth(), task.dueDate.getDate()]).toEqual([6, 15]);
   });
 
   it('falls back to now (never immediately overdue) when there is no history and no acquired date', () => {

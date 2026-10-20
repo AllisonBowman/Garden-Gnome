@@ -136,3 +136,23 @@ describe('the water reminder asks for a check, not a pour', () => {
     expect(batches.some((b) => /plants could use a look today/.test(b.title))).toBe(true);
   });
 });
+
+// The server dates a new plant 'YYYY-MM-DD'. Read as UTC midnight, that is
+// the evening before anywhere behind UTC (this suite runs in New York), and
+// the first check fired on day 6 of a 7-day schedule, saying "it's been 7
+// days".
+describe('a new plant’s first check counts from the day it was added here', () => {
+  it('reads the date-only acquired_on as a local date', () => {
+    const batches = computeReminderPlan({
+      plants: [{ ...plant(1, 'Ferny'), acquired_on: '2026-07-05' }],
+      logsByPlant: {},
+      speciesById: { 100: species(WATER) },
+      prefs: { water: true },
+      now: NOW, // Jul 5, 8am
+    });
+    expect(batches).toHaveLength(1);
+    const { date } = batches[0];
+    expect([date.getMonth(), date.getDate(), date.getHours()]).toEqual([6, 12, 9]);
+    expect(batches[0].items[0].daysSinceCare).toBe(7);
+  });
+});

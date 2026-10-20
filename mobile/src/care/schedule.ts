@@ -3,6 +3,7 @@ import {
   REMINDER_CARE_TYPES, REPOT_INSPECTION_MONTH, isInSeason,
 } from '../notifications/plan';
 import { GRACE_DAYS } from '../streaks/streaks';
+import { parseServerDate } from '../api/serverDate';
 
 // One "next due" per plant × scheduled care-type, surfaced for the calendar and
 // the Plants to-do list. This is the same anchor math the reminder planner uses
@@ -92,9 +93,8 @@ export function computeCareTasks(input: CareTasksInput): CareTask[] {
       }
       const lastCareDate = anchorMs ? new Date(anchorMs) : null;
       if (!anchorMs) {
-        anchorMs = plant.acquired_on
-          ? new Date(plant.acquired_on).getTime()
-          : now.getTime();
+        // acquired_on is a date-only string: the caretaker's day, not UTC's.
+        anchorMs = parseServerDate(plant.acquired_on)?.getTime() ?? now.getTime();
       }
 
       // Repotting is a February inspection, not an interval (plan 1.3). The

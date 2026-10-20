@@ -6,6 +6,8 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
+  // One time zone for every run, west of UTC (see the file).
+  globalSetup: '<rootDir>/jest.globalSetup.js',
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.jest.json' }],
   },

@@ -3,6 +3,7 @@
 // backend advisor's weather nudges — kept deliberately conservative and
 // display-only; the precise, species-aware timing lives in each plant's advice).
 import { GrowingArea, Weather } from '../types';
+import { parseServerDate } from '../api/serverDate';
 
 // WeatherKit reports camelCase condition codes (e.g. "MostlyCloudy"). Friendly
 // text for the common ones; fall back to spacing the camelCase.
@@ -28,9 +29,9 @@ export function conditionText(code: string | null): string {
 }
 
 export function weekday(dateStr: string): string {
-  // dateStr is a plain YYYY-MM-DD; parse as local noon to avoid TZ drift.
-  const d = new Date(`${dateStr}T12:00:00`);
-  if (Number.isNaN(d.getTime())) return dateStr;
+  // dateStr is a plain YYYY-MM-DD: a day on the caretaker's calendar.
+  const d = parseServerDate(dateStr);
+  if (!d) return dateStr;
   return d.toLocaleDateString(undefined, { weekday: 'short' });
 }
 

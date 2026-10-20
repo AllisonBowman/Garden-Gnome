@@ -1,5 +1,6 @@
 import { CareLog, CareType, Plant, Species, WaterRegime } from '../types';
 import { waterRegimeSentence } from '../care/facts';
+import { parseServerDate } from '../api/serverDate';
 
 // Care types that can have reminders (matches the quick-log actions on
 // PlantDetailScreen; 'clean'/'other' have no species schedules).
@@ -166,9 +167,8 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
       }
       const lastLogMs = anchorMs;
       if (!anchorMs) {
-        anchorMs = plant.acquired_on
-          ? new Date(plant.acquired_on).getTime()
-          : now.getTime();
+        // acquired_on is a date-only string: the caretaker's day, not UTC's.
+        anchorMs = parseServerDate(plant.acquired_on)?.getTime() ?? now.getTime();
       }
 
       // Repotting left the interval model (plan 1.3). Every source gives

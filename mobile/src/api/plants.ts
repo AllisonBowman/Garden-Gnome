@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { apiClient } from './client';
 import { fetchSpecies } from './species';
+import { localDateString } from './serverDate';
 import {
   Plant, CareLog, CareOutcome, CareType, Species, StewardshipRecord, WeatherAttribution,
 } from '../types';
@@ -109,12 +110,22 @@ export interface PlantDraft {
   growing_area_id?: number;
   location?: string;
   intake_notes?: string;
+  /** 'YYYY-MM-DD'. Left out, it is today on this phone's calendar. */
   acquired_on?: string;
+}
+
+/** The day a new plant was added is the first anchor every check schedule
+ *  has. The server stamps its own date when none is sent, and its clock runs
+ *  on UTC: a plant added on a Tokyo morning would be dated yesterday, and one
+ *  added on a California evening tomorrow. So the phone says which day it is
+ *  here. */
+function datedToday(draft: PlantDraft, today: string): PlantDraft {
+  return draft.acquired_on ? draft : { ...draft, acquired_on: today };
 }
 
 export async function createPlant(payload: PlantDraft): Promise<Plant> {
   const client = await apiClient();
-  const { data } = await client.post<Plant>('/plants/', payload);
+  const { data } = await client.post<Plant>('/plants/', datedToday(payload, localDateString()));
   gardenChanged();
   return data;
 }
@@ -134,7 +145,10 @@ export interface BulkCreateResult {
  */
 export async function createPlantsBulk(plants: PlantDraft[]): Promise<BulkCreateResult> {
   const client = await apiClient();
-  const { data } = await client.post<BulkCreateResult>('/plants/bulk', { plants });
+  const today = localDateString();
+  const { data } = await client.post<BulkCreateResult>('/plants/bulk', {
+    plants: plants.map((p) => datedToday(p, today)),
+  });
   gardenChanged();
   return data;
 }
