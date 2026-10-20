@@ -42,6 +42,16 @@ History:
   the ones the catalog's citations actually point to. Every form that sent
   nothing is now a `mailto:` link. The placeholder testimonials page is gone.
   The community garden demo no longer sets a cookie.
+- 2026-10-20: the privacy policy's census paragraph lists exactly what
+  census export 4.1 carries (monthly care counts, months for moves, no
+  days) and promises only that no identifier links 2 exports. Its
+  deletion paragraph says the encrypted Apple sign-in grant can be kept
+  up to 30 days, only to retry the revoke. The effective date stays
+  October 16, since that version was never published. The site no
+  longer says every care fact is cited: researched facts are, older ones
+  are labelled, and the check schedules PlantAdvocate wrote for 129
+  common plants are not cited. The homepage specimen shows the advice
+  line the app really gives, not a symptom note it can't take.
 
 ## Deploying
 
@@ -131,7 +141,10 @@ check https://plantadvocate.ai/support.html 'Restore Purchases' absent
 check https://plantadvocate.ai/support.html 'billing' absent
 check https://plantadvocate.ai/pricing.html '[$]6\|[$]12' absent
 check https://plantadvocate.ai/faq.html "isn't currently on the roadmap" absent
-check https://plantadvocate.ai/index.html 'EVERY FACT CITED' present
+check https://plantadvocate.ai/privacy.html 'no identifier links one export to another' present
+check https://plantadvocate.ai/privacy.html 'up to 30 days after the deletion' present
+check https://plantadvocate.ai/index.html 'SOURCES NAMED' present
+check https://plantadvocate.ai/index.html 'EVERY FACT CITED' absent
 ```
 
 Then confirm the two URLs the app opens still resolve:
