@@ -24,6 +24,7 @@ import Onboarding from './src/onboarding/Onboarding';
 import { GROWING_AREAS_TAB } from './src/onboarding/slides';
 import { getOnboardingSeen, setOnboardingSeen } from './src/onboarding/storage';
 import { fetchPlants } from './src/api/plants';
+import { dropSessionData } from './src/api/sessionData';
 import { retryOnceIfPassing } from './src/api/errorMessage';
 import { AuthProvider, useAuth } from './src/auth/AuthContext';
 import LoginScreen from './src/auth/LoginScreen';
@@ -210,9 +211,10 @@ function AuthGate() {
   }, [signedIn]);
 
   // What one account had cached must not show to the next one to sign in on
-  // this phone, even for the 30 seconds it would still count as fresh.
+  // this phone: the query cache and the garden load still in flight both go
+  // (api/sessionData.ts). Every way a session ends lands on 'signedOut'.
   useEffect(() => {
-    if (status === 'signedOut') queryClient.clear();
+    if (status === 'signedOut') dropSessionData(queryClient);
   }, [status]);
 
   // First-run onboarding: show only if it hasn't been seen AND the account

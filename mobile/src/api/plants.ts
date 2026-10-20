@@ -26,12 +26,38 @@ export interface GardenCareData {
 
 let gardenGeneration = 0;
 let gardenLoad: { generation: number; promise: Promise<GardenCareData> } | null = null;
+/** Counts sessions that have ended on this phone. A load belongs to the
+ *  session it started in. */
+let sessionEpoch = 0;
 
 /** Anything loaded before now is out of date, so the next ask starts a fresh
  *  load instead of joining one that began before the change. Every write in
  *  this module calls it once the server has accepted the write. */
 export function gardenChanged(): void {
   gardenGeneration += 1;
+}
+
+/** What a load still running when its session ended settles with, instead of
+ *  the garden it read: that garden belongs to whoever signed out. */
+export class GardenLoadAbandoned extends Error {
+  constructor() {
+    super('The garden load belonged to a session that has ended.');
+    this.name = 'GardenLoadAbandoned';
+  }
+}
+
+/**
+ * The session ended (sign-out, a deleted account, a refused session): the
+ * load in flight, if any, is the last account's. Drop it, so the next account
+ * to sign in on this phone starts its own load rather than joining that one,
+ * and so whoever was still waiting on it (a reminder reschedule) gets nothing
+ * from it to act on. React Query's clear() can't reach this: it lives here,
+ * outside the query cache.
+ */
+export function forgetGardenLoad(): void {
+  sessionEpoch += 1;
+  gardenGeneration += 1;
+  gardenLoad = null;
 }
 
 async function fetchGardenCareData(): Promise<GardenCareData> {
@@ -72,7 +98,12 @@ async function fetchGardenCareData(): Promise<GardenCareData> {
  *  can't be read. */
 export function loadGardenCareData(): Promise<GardenCareData> {
   if (gardenLoad && gardenLoad.generation === gardenGeneration) return gardenLoad.promise;
-  const load = { generation: gardenGeneration, promise: fetchGardenCareData() };
+  const epoch = sessionEpoch;
+  const promise = fetchGardenCareData().then((data) => {
+    if (epoch !== sessionEpoch) throw new GardenLoadAbandoned();
+    return data;
+  });
+  const load = { generation: gardenGeneration, promise };
   gardenLoad = load;
   const settle = () => {
     if (gardenLoad === load) gardenLoad = null;

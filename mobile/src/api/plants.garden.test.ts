@@ -21,7 +21,11 @@ jest.mock('./client', () => ({
   }),
 }));
 
-import { gardenChanged, loadGardenCareData, logCare, readablePlants } from './plants';
+import {
+  GardenLoadAbandoned, forgetGardenLoad, gardenChanged, loadGardenCareData, logCare,
+  readablePlants,
+} from './plants';
+import { dropSessionData } from './sessionData';
 
 const PLANTS = [
   { id: 1, species_id: 10, nickname: 'Ferny' },
@@ -86,6 +90,67 @@ test('one unreadable log or species leaves those plants out, not the whole garde
   // Plant 2's log failed; plants 1 and 3 share the species that failed.
   expect(data.unreadPlantIds).toEqual([1, 2, 3]);
   expect(readablePlants(data)).toEqual([]);
+});
+
+// --- a session that ends takes its load with it -------------------------------
+// One phone, two accounts: A signs out while A's garden is still loading
+// (a large garden, a server waking up) and B signs in. B must not join A's
+// load, and nothing still waiting on A's load may act on A's garden.
+
+function slowPlantList(): { release: (plants: unknown) => void } {
+  let release!: (plants: unknown) => void;
+  const pending = new Promise((resolve) => { release = resolve; });
+  handler = (url) => (url === '/plants/' ? pending : healthy(url));
+  return { release };
+}
+
+test('after a session ends, the next ask starts its own load instead of joining the last one', async () => {
+  const a = slowPlantList();
+  const accountA = loadGardenCareData();
+
+  forgetGardenLoad(); // A signs out
+  handler = (url) => (url === '/plants/'
+    ? Promise.resolve([{ id: 9, species_id: 10, nickname: 'B’s basil' }])
+    : healthy(url));
+  const accountB = loadGardenCareData();
+
+  expect(accountB).not.toBe(accountA);
+  expect((await accountB).plants.map((p) => p.nickname)).toEqual(['B’s basil']);
+  a.release(PLANTS);
+  await expect(accountA).rejects.toBeInstanceOf(GardenLoadAbandoned);
+});
+
+test('whoever was still waiting on the ended session’s load gets nothing to act on', async () => {
+  const a = slowPlantList();
+  const waiting = loadGardenCareData(); // say, a reminder reschedule
+  forgetGardenLoad();
+  a.release(PLANTS);
+  await expect(waiting).rejects.toBeInstanceOf(GardenLoadAbandoned);
+});
+
+test('a load that finished before the session ended was already let go', async () => {
+  await loadGardenCareData();
+  forgetGardenLoad();
+  await expect(loadGardenCareData()).resolves.toMatchObject({ unreadPlantIds: [] });
+  expect(calls.filter((x) => x === '/plants/')).toHaveLength(2);
+});
+
+test('ending a session clears the query cache and the garden load together', async () => {
+  const { QueryClient } = jest.requireActual('@tanstack/query-core');
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(['plants'], PLANTS);
+  const a = slowPlantList();
+  const accountA = loadGardenCareData();
+
+  dropSessionData(queryClient);
+
+  expect(queryClient.getQueryData(['plants'])).toBeUndefined();
+  handler = healthy;
+  const next = loadGardenCareData();
+  expect(next).not.toBe(accountA);
+  a.release(PLANTS);
+  await expect(accountA).rejects.toBeInstanceOf(GardenLoadAbandoned);
+  await next;
 });
 
 test('only an unreadable plant list fails the load', async () => {
