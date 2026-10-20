@@ -24,9 +24,22 @@ from tests import census_operator
 
 
 @pytest.fixture()
-def census(migrated_db_url):
-    """One opted-in user with a planting, a split-off and a care log."""
+def census(migrated_db_url, monkeypatch):
+    """One opted-in user with a planting, a split-off and a care log.
+
+    Hermetic about where a sync would go: app.main loads garden-gnome/.env,
+    and a CENSUS_API_URL there or in the shell would have these tests post
+    the test database's export to it. Unset here, and any send that a test
+    has not stubbed itself fails loudly instead of leaving the machine."""
     from fastapi.testclient import TestClient
+    import httpx
+
+    monkeypatch.delenv("CENSUS_API_URL", raising=False)
+
+    def no_sending(*args, **kwargs):
+        raise AssertionError("a census test tried to send an export")
+
+    monkeypatch.setattr(httpx, "post", no_sending)
 
     from app.db.database import get_session
     from app.main import app
@@ -117,7 +130,48 @@ def test_configured_they_want_the_operator_credential(census, monkeypatch):
             "/census/sync", headers=wrong).status_code == 401
 
     assert census.client.get("/census/export", headers=headers).status_code == 200
-    assert census.client.post("/census/sync", headers=headers).status_code == 200
+    synced = census.client.post("/census/sync", headers=headers)
+    assert synced.status_code == 200
+    assert synced.json()["status"] == "skipped", "nothing configured, nothing sent"
+
+
+@pytest.mark.parametrize("secret", [
+    "x" * 31,                 # a character short
+    "  short-but-padded   ",  # whitespace does not count toward it
+    "   ",
+])
+def test_a_secret_too_short_to_honour_leaves_the_routes_off(
+        census, monkeypatch, caplog, secret):
+    """`openssl rand -hex 32` gives 64 characters. A short or mistyped
+    secret could be guessed against the route that hands out every
+    opted-in household, so it counts as unset -- 404, even with the secret
+    itself in the header -- and the log says why."""
+    from app.routers import census as census_router
+
+    monkeypatch.setattr(census_router, "_short_token_logged", set())
+    monkeypatch.setenv("CENSUS_OPERATOR_TOKEN", secret)
+    caplog.set_level("WARNING", logger="app.routers.census")
+    for _ in range(2):
+        assert census.client.get(
+            "/census/export", headers={"X-Operator-Token": secret.strip() or "x"}
+        ).status_code == 404
+        assert census.client.post(
+            "/census/sync", headers={"X-Operator-Token": secret.strip() or "x"}
+        ).status_code == 404
+    said = [r for r in caplog.records if "CENSUS_OPERATOR_TOKEN" in r.getMessage()]
+    if secret.strip():
+        assert len(said) == 1, "said once, not on every request"
+        assert "at least 32" in said[0].getMessage()
+        assert secret.strip() not in said[0].getMessage(), "never the secret itself"
+
+
+def test_a_secret_of_32_characters_is_honoured(census, monkeypatch):
+    secret = "k" * 32
+    monkeypatch.setenv("CENSUS_OPERATOR_TOKEN", secret)
+    assert census.client.get(
+        "/census/export", headers={"X-Operator-Token": secret}).status_code == 200
+    assert census.client.get(
+        "/census/export", headers={"X-Operator-Token": "k" * 31}).status_code == 401
 
 
 def test_the_routes_are_not_advertised(census):

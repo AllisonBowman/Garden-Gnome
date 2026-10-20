@@ -35,6 +35,7 @@ async def lifespan(app: FastAPI):
     # A deleted account's Apple revoke that failed is tried again on each
     # cold start, in the background (auth.revoke_pending_apple_grants).
     auth.start_queued_apple_revokes(engine)
+    census.operator_token()  # a too-short operator secret is said at boot
     vs = await vision_status()  # surface a dead vision config at boot, not first photo
     print(f"[vision] backend={vs['backend']} ready={vs['ready']} "
           f"model={vs['model'] or '-'} — {vs['detail']}")

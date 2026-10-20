@@ -7,7 +7,7 @@ computes the plant's ref the way the router does.
 """
 from app.routers import census
 
-OPERATOR_TOKEN = "test-operator-token-0123456789"
+OPERATOR_TOKEN = "test-operator-token-0123456789abcdef"  # >= 32 characters
 OPERATOR_HEADERS = {"X-Operator-Token": OPERATOR_TOKEN}
 PINNED_SALT = b"pinned-salt-for-tests-only-32byt"
 

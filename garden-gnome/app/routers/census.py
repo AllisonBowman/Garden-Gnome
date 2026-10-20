@@ -33,6 +33,7 @@ and covers only their data.
 """
 import hashlib
 import hmac
+import logging
 import os
 import secrets
 from datetime import datetime
@@ -50,6 +51,7 @@ from app.models.models import (
 from app.models.schemas import with_pre_rename_census_keys
 
 router = APIRouter(prefix="/census", tags=["census"])
+logger = logging.getLogger(__name__)
 
 
 @router.get("/summary")
@@ -117,6 +119,31 @@ def _opted_in_user_ids(session: Session) -> set[str]:
 #: The secret an operator presents to read or push the export. Unset (the
 #: default) switches both routes off.
 OPERATOR_TOKEN_ENV = "CENSUS_OPERATOR_TOKEN"
+#: The shortest secret honoured. The documented recipe, `openssl rand -hex
+#: 32`, gives 64 characters; a short or mistyped one could be guessed against
+#: the route that hands out every opted-in household's records.
+MIN_OPERATOR_TOKEN = 32
+_short_token_logged: set[int] = set()
+
+
+def operator_token() -> str:
+    """The operator secret this server honours, or "" when it has none.
+
+    One shorter than MIN_OPERATOR_TOKEN (surrounding whitespace aside) is
+    treated as unset, and said once in the log, so a weak value leaves the
+    routes switched off rather than open to guessing. Called at startup too,
+    so the log line appears at boot and not only on the first request."""
+    value = os.getenv(OPERATOR_TOKEN_ENV, "").strip()
+    if value and len(value) < MIN_OPERATOR_TOKEN:
+        if len(value) not in _short_token_logged:
+            _short_token_logged.add(len(value))
+            logger.warning(
+                "%s is set but only %d characters long (at least %d are "
+                "needed); the census operator routes stay off. Generate one "
+                "with: openssl rand -hex 32",
+                OPERATOR_TOKEN_ENV, len(value), MIN_OPERATOR_TOKEN)
+        return ""
+    return value
 
 
 def require_operator(
@@ -124,11 +151,12 @@ def require_operator(
 ) -> None:
     """Let the request through only with the operator credential.
 
-    No credential configured: 404, the same answer as a route that does not
-    exist, so an unconfigured server does not advertise one. Configured but
-    absent or wrong: 401. Compared with hmac.compare_digest, so the time a
-    wrong guess takes says nothing about how close it was."""
-    expected = os.getenv(OPERATOR_TOKEN_ENV, "")
+    No credential configured, or one too short to honour (operator_token):
+    404, the same answer as a route that does not exist, so an unconfigured
+    server does not advertise one. Configured but absent or wrong: 401.
+    Compared with hmac.compare_digest, so the time a wrong guess takes says
+    nothing about how close it was."""
+    expected = operator_token()
     if not expected:
         raise HTTPException(status_code=404, detail="Not Found")
     if not x_operator_token or not hmac.compare_digest(
