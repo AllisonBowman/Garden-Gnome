@@ -185,9 +185,10 @@ def growing_area_candidates(
     turns on, not that nothing will grow in it.
 
     A species a source rates a high-severity poison for people, or records
-    as a noxious weed, is never put forward (`fit.never_a_candidate`), and
-    every candidate recorded toxic to pets or people carries a one-line
-    `hazard`.
+    as a noxious weed or an invasive species, is never put forward
+    (`fit.never_a_candidate`) -- unless it is a food crop whose eaten part a
+    table names, such as potato -- and every candidate recorded toxic to
+    pets or people carries a one-line `hazard`.
 
     The first `limit` are returned and the whole count goes in the
     X-Total-Count header: a screen showing twelve of 263 has to be able to

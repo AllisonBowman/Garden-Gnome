@@ -59,7 +59,9 @@ from app.models.models import (
     TempExposure,
 )
 from app.services.care_facts import length_said, token
-from app.services.toxicity import cited_authority, never_put_forward, safety_of
+from app.services.toxicity import (
+    cited_authority, is_food_crop, never_put_forward, safety_of,
+)
 
 #: Appended to a finding drawn from a value the resolver borrowed from the
 #: genus. Mirrors care_facts.GENUS_LABEL in intent: a reader must never have to
@@ -534,23 +536,29 @@ def never_a_candidate(species: Species) -> bool:
 
     A Candidate is a recommendation to plant something. A source rating it
     a high-severity poison for people, or calling it fatal to them, or one
-    recording it as a noxious weed, rules that out: poison hemlock is not
-    put forward for a sunny bed because its sun and size happen to suit.
-    The plant can still be looked up and added by hand, with its warning --
-    this keeps the app from suggesting it, nothing more.
+    recording it as a noxious weed or an invasive species, rules that out:
+    poison hemlock is not put forward for a sunny bed because its sun and
+    size happen to suit. The plant can still be looked up and added by hand,
+    with its warning -- this keeps the app from suggesting it, nothing more.
 
-    A food crop is the exception. NC State rates potato, eggplant and
-    peanut a high-severity poison for people because of their foliage or
-    an allergy, yet a bed asked for "something to eat" should still be
-    offered potatoes. A crop recorded as eaten stays a candidate and
-    carries its hazard line and its edibility note instead. A noxious weed
-    is never put forward, eaten or not."""
+    A food crop is the exception, and only a crop: a species recorded as
+    eaten whose eaten part a table names (toxicity.is_food_crop). NC State
+    rates potato, eggplant, peanut, tomatillo and butter beans a
+    high-severity poison for people because of their foliage, their raw
+    beans or an allergy, yet they are what a vegetable bed is for; they stay
+    candidates and carry their hazard line and edibility note. Being
+    recorded as eaten is not enough on its own -- Mayapple's ripe fruit is
+    eaten, and every other part of it is highly poisonous. The exception
+    holds whatever the bed's goals are, so the list does not change shape
+    when a goal is ticked. A noxious weed or an invasive species is never
+    put forward, eaten or not."""
     safety = safety_of(species)
-    if safety.evidence.noxious:
+    if safety.evidence.noxious or safety.evidence.invasive:
         return True
-    if species.is_edible is True:
+    if not never_put_forward(safety.toxicity, safety.evidence):
         return False
-    return never_put_forward(safety.toxicity, safety.evidence)
+    return not (species.is_edible is True
+                and is_food_crop(species.scientific_name))
 
 
 def candidates(species_list: Iterable[Species], area: GrowingArea) -> list[Candidate]:

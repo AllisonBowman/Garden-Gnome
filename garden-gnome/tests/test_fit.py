@@ -388,24 +388,47 @@ def test_a_high_severity_poison_is_never_a_candidate_however_well_it_fits():
 
 def test_a_food_crop_rated_high_severity_is_still_offered_with_its_hazard():
     """Potato: NC State rates the foliage a high-severity poison for people,
-    and the tubers are the crop. A bed asked for something to eat is still
-    offered it; the candidate carries the hazard, and the edible goal is
-    answered by the edibility note rather than a bare "Grown to eat"."""
-    area = make_area(**OUTDOOR_BED)
+    and the tubers are the crop. A bed is still offered it; the candidate
+    carries the hazard, and the edible goal is answered by the edibility
+    note rather than a bare "Grown to eat"."""
     potato = make_species(
-        common_name="Potato", scientific_name="Solanum testosum",
+        common_name="Potato", scientific_name="Solanum tuberosum",
         is_houseplant=False, outdoor_sun_exposure=["full_sun"], soil_base="garden_bed",
         is_edible=True, toxic_to_pets=True,
         toxicity_detail="NC State's Poisonous to Humans block: Poison Severity: High. "
                         "Poison Part: leaves, stems, green or sprouted tubers.")
     assert not fit.never_a_candidate(potato)
-    ranked = fit.candidates([potato], area)
-    assert [c.species.common_name for c in ranked] == ["Potato"]
+    for goals in (None, [], [GrowingGoal.edible.value]):
+        ranked = fit.candidates([potato], make_area(**OUTDOOR_BED, goals=goals))
+        assert [c.species.common_name for c in ranked] == ["Potato"], goals
     # The route puts the hazard line on the candidate (growing_areas.py), and
     # the edible goal is answered by the edibility note, not "Grown to eat".
     from app.services.toxicity import hazard_line, safety_of
     assert hazard_line(safety_of(potato).toxicity), "the hazard line travels with it"
-    assert potato.edibility_note, "and the edible goal carries its condition"
+    assert potato.edibility_note.startswith("The tubers are eaten;")
+
+
+MAYAPPLE = dict(
+    common_name="Mayapple", scientific_name="Podophyllum peltatum",
+    is_houseplant=False, outdoor_sun_exposure=["part_shade", "full_shade"],
+    soil_base="garden_bed", is_edible=True, toxic_to_pets=True,
+    toxicity_detail=(
+        "NC State's human-scoped Poisonous to Humans block: Poison Severity "
+        "High; NC State's description: 'All parts of this plant are highly "
+        "poisonous except for its ripened fruit'."))
+
+
+@pytest.mark.parametrize("goals", [None, [], [GrowingGoal.edible.value]])
+def test_recorded_as_eaten_is_not_a_crop_mayapple_stays_off_every_list(goals):
+    """798f905 exempted anything recorded as eaten, and Mayapple -- its ripe
+    fruit eaten, the rest highly poisonous -- came back on a shady bed with
+    no goals at all. Only a crop whose eaten part a table names is exempt."""
+    mayapple = make_species(**MAYAPPLE)
+    area = make_area(**{**OUTDOOR_BED, "sun_exposure": SunExposure.shade},
+                     goals=goals)
+    assert fit.is_candidate(fit.assess(mayapple, area)), "it does fit the space"
+    assert fit.never_a_candidate(mayapple)
+    assert fit.candidates([mayapple], area) == []
 
 
 def test_a_noxious_weed_is_never_a_candidate():
