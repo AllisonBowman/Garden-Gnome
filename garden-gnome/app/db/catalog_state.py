@@ -20,6 +20,9 @@ from app.models.models import (
     CATALOG_GENERATION_KEY, Claim, Species, SpeciesTrait, SyncState,
 )
 
+#: The highest species id the last claim sync reached (sync.py writes it).
+SYNCED_THROUGH_KEY = "synced_through_species_id"
+
 
 @lru_cache(maxsize=1)
 def shipped_fingerprint() -> str:
@@ -45,14 +48,25 @@ def generation(session: Session) -> str | None:
     return state.value if state is not None else None
 
 
-def _rows_out_of_step(session: Session) -> bool:
+def _synced_through(session: Session) -> int | None:
+    state = session.get(SyncState, SYNCED_THROUGH_KEY)
+    try:
+        return int(state.value) if state is not None else None
+    except ValueError:
+        return None
+
+
+def _rows_out_of_step(session: Session, through: int | None = None) -> bool:
     """Whether any species row was not resolved under the current rules (the
-    same test the claim sync uses to decide it cannot skip)."""
+    same test the claim sync uses to decide it cannot skip) -- among rows up
+    to `through`, when given."""
     from app.data.claims.recompute import RESOLVER_VERSION
-    stale = session.exec(select(Species.id).where(or_(
+    query = select(Species.id).where(or_(
         col(Species.resolver_version).is_(None),
-        col(Species.resolver_version) != RESOLVER_VERSION)).limit(1)).first()
-    return stale is not None
+        col(Species.resolver_version) != RESOLVER_VERSION))
+    if through is not None:
+        query = query.where(col(Species.id) <= through)
+    return session.exec(query.limit(1)).first() is not None
 
 
 def catalog_key(session: Session) -> tuple:
@@ -75,9 +89,13 @@ def catalog_status(session: Session) -> dict:
     """The catalog as the public root reports it.
 
     `synced` is true when the last claim sync recorded the fingerprint of the
-    files this build ships and reached every row: the catalog serving is the
-    catalog this build carries. False means the boot's sync was skipped or
-    failed, or has not run, and production is serving older care data."""
+    files this build ships and reached every row it found: the catalog
+    serving is the catalog this build carries. False means the boot's sync
+    was skipped or failed, or has not run, and production is serving older
+    care data. A row added after that sync -- an operator's POST /species/ --
+    is not counted against it: nothing older is being served, and the next
+    boot's sync resolves it. (Before any sync has recorded how far it
+    reached, every row counts, as it always did.)"""
     stored = stored_fingerprint(session)
     shipped = shipped_fingerprint()
     species = session.exec(select(func.count(Species.id))).one()
@@ -86,7 +104,8 @@ def catalog_status(session: Session) -> dict:
         # The digest's first 12 hex characters and the rule versions: enough
         # to tell two builds' catalogs apart, short enough to read in a log.
         "version": _short(shipped),
-        "synced": stored == shipped and not _rows_out_of_step(session),
+        "synced": stored == shipped and not _rows_out_of_step(
+            session, _synced_through(session)),
         "species": species,
         "claims": claims,
     }

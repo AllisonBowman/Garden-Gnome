@@ -125,3 +125,59 @@ def test_the_shipped_fingerprint_is_the_claim_syncs_own():
         assert catalog_state.shipped_fingerprint() == tranche_fingerprint()
     finally:
         catalog_state.shipped_fingerprint.cache_clear()
+
+
+def _reach(engine, species_id: int) -> None:
+    with Session(engine) as s:
+        state = s.get(SyncState, catalog_state.SYNCED_THROUGH_KEY)
+        if state is None:
+            s.add(SyncState(key=catalog_state.SYNCED_THROUGH_KEY,
+                            value=str(species_id)))
+        else:
+            state.value = str(species_id)
+            s.add(state)
+        s.commit()
+
+
+def test_a_species_added_after_the_sync_is_not_the_sync_falling_short(
+        root, monkeypatch):
+    """An operator's POST /species/ arrives unresolved until the next boot.
+    That is not "production is serving older care data", and the deploy's
+    smoke check must not go red over it."""
+    from app.models.models import User
+    from app.services import tokens
+    from tests.census_operator import as_operator
+
+    catalog, engine = root
+    _species(engine, RESOLVER_VERSION)
+    _record(engine, SHIPPED)
+    _reach(engine, 1)
+    with Session(engine) as s:
+        user = User(email="status-operator@example.com")
+        s.add(user)
+        s.commit()
+        token = tokens.issue_access_token(user.id)
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+    created = TestClient(app).post(
+        "/species/", headers={"Authorization": f"Bearer {token}",
+                              **as_operator(monkeypatch)},
+        json={"common_name": "Posted Fern", "scientific_name": "Postia testus",
+              "light_need": "medium", "humidity_pct_min": 40,
+              "humidity_pct_max": 60, "temp_f_min": 60, "temp_f_max": 80,
+              "soil_type": "mix", "toxic_to_pets": False, "care_notes": "",
+              "schedules": [], "traits": []})
+    assert created.status_code == 201, created.text
+    status = catalog()
+    assert status["species"] == 2
+    assert status["synced"] is True
+
+
+def test_a_row_within_the_syncs_reach_left_unresolved_is_still_not_synced(root):
+    catalog, engine = root
+    _species(engine, RESOLVER_VERSION)
+    _species(engine, None)
+    _record(engine, SHIPPED)
+    _reach(engine, 2)
+    assert catalog()["synced"] is False
