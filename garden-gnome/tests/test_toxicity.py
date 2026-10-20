@@ -19,7 +19,8 @@ def test_tomato_leads_with_what_is_edible():
     t = tx.lookup("Solanum lycopersicum")
     assert t.is_contradictory
     text = tx.describe(t, "Tomato")
-    assert text.index("eat") < text.index("toxic"), "safe part must come first"
+    assert text.startswith("The ripe fruit is the crop;")
+    assert text.index("crop") < text.index("toxic"), "safe part must come first"
     assert "leaves and stems" in text
     assert "tomatine" in text
 
@@ -147,7 +148,7 @@ def test_legacy_true_without_nuance_stays_conservative():
 
 def test_entry_point_renders_for_a_catalog_row():
     text = tx.describe_for_species("Solanum lycopersicum", "Tomato", True)
-    assert text.startswith("The ripe fruit is eaten, but the leaves and stems "
+    assert text.startswith("The ripe fruit is the crop; the leaves and stems "
                            "are toxic to cats and dogs (tomatine)")
     assert "You can eat" not in text
 
@@ -170,7 +171,7 @@ def test_species_model_exposes_the_generated_sentence():
                  light_need="direct", humidity_pct_min=40, humidity_pct_max=70,
                  temp_f_min=55, temp_f_max=90, soil_type="loam",
                  toxic_to_pets=True)
-    assert "The ripe fruit is eaten" in sp.toxicity_description
+    assert "The ripe fruit is the crop" in sp.toxicity_description
 
 
 def test_derived_field_survives_serialization_to_the_api_schema():
@@ -267,8 +268,11 @@ def test_a_cited_high_rating_beats_the_aroid_table():
     text = tx.describe_for_species("Dieffenbachia seguine", "Dumb Cane", True,
                                    cited_to="NC State Extension",
                                    detail=DIEFFENBACHIA_DETAIL)
-    assert text.startswith("⚠️ Seriously toxic to cats, dogs and people")
-    assert "NC State Extension rates it high severity." in text
+    # NC State's rating is the people's: they are seriously at risk, and the
+    # animals are what the pet tags say, toxic.
+    assert text.startswith("⚠️ Seriously toxic to people, and toxic to cats "
+                           "and dogs: all parts")
+    assert "NC State Extension rates its poison severity for people high." in text
     assert "Poison Control (US 1-800-222-1222)" in text
     assert "ildly" not in text and "rather than dangerous" not in text
 
@@ -279,15 +283,73 @@ def test_a_cited_medium_or_high_hazard_is_never_called_mild(rating):
     text = tx.describe_for_species("Epipremnum aureum", "Pothos", True,
                                    cited_to="NC State Extension", detail=detail)
     assert "ildly" not in text
-    assert f"rates it {rating.lower()} severity" in text
+    assert f"rates its poison severity for people {rating.lower()}" in text
 
 
 def test_a_cited_low_rating_is_the_only_way_to_read_mild():
+    """And it reads mild for people only. NC State's Poison Severity sits
+    under its Poisonous to Humans heading; the cat tag carries no severity,
+    and "mildly toxic to cats" would put words in its mouth -- on garlic,
+    azaleas and daffodils among others."""
     detail = "NC State rates poison severity Low and flags the plant as a problem for cats."
     text = tx.describe_for_species("Monstera deliciosa", "Monstera", True,
                                    cited_to="NC State Extension", detail=detail)
-    assert text.startswith("Mildly toxic to cats, dogs and people")
-    assert "NC State Extension rates it low severity." in text
+    assert text.startswith("Toxic to cats and dogs, and mildly toxic to people:")
+    assert "NC State Extension rates its poison severity for people low." in text
+    assert "ildly toxic to cats" not in text
+
+
+def test_a_low_rating_on_a_bare_pet_flag_is_not_read_as_mild_for_pets():
+    """Garlic: NC State tags cats, dogs and horses, and its Poisonous to
+    Humans block says Low. The old sentence was "Mildly toxic to pets and
+    people"."""
+    passages = [P("toxic_to_pets", True,
+                  "Problem for Cats Problem for Dogs Problem for Horses "
+                  "Poisonous to Humans: Poison Severity: Low")]
+    text = tx.describe_for_species("Allium testivum", "Garlic", True,
+                                   cited_to="NC State Extension", passages=passages)
+    assert text.startswith("Toxic to pets, and mildly toxic to people.")
+    assert "ildly toxic to pets" not in text
+    tox = tx.from_legacy(True, "Allium testivum", "NC State Extension",
+                         tx.read_evidence(None, passages))
+    assert (tox.animal_severity, tox.people_severity) == ("unknown", "mild")
+    assert tx.hazard_line(tox) == "Toxic to pets and people."
+
+
+def test_a_high_rating_is_serious_for_people_and_not_said_of_pets():
+    detail = "NC State's Poisonous to Humans block: Poison Severity: High."
+    tox = tx.from_legacy(True, "Testus highii", "NC State Extension",
+                         tx.read_evidence(detail))
+    text = tx.describe(tox, "Test Plant")
+    assert text.startswith("⚠️ Seriously toxic to people, and toxic to pets.")
+    assert tx.hazard_line(tox) == "Seriously toxic to people, and toxic to pets."
+
+
+def test_a_source_calling_it_fatal_to_pets_is_what_makes_pets_serious():
+    """The grave animal wording the rating cannot supply: NC State's own
+    "Ingestion of this plant by pets can be fatal" (Kalanchoe)."""
+    passages = [P("toxicity_detail", "prose",
+                  "Ingestion of this plant by pets can be fatal and causing "
+                  "abnormal heart rate, seizures, and death.")]
+    evidence = tx.read_evidence(None, passages)
+    assert evidence.animals_grave and not evidence.people
+    tox = tx.from_legacy(True, "Kalanchoe testii", "NC State Extension", evidence)
+    assert tox.animal_severity == "severe"
+    assert tx.describe(tox, "Kalanchoe").startswith("⚠️ Seriously toxic to pets.")
+
+
+@pytest.mark.parametrize("detail", [
+    # A pet tag carries no severity, so a grave word beside one is not the pets'.
+    "Every part except the aril is toxic, ingestion may be fatal, and the "
+    "species is separately tagged a problem for cats, dogs and horses.",
+    # Mentioning pets to say the statement does not name them.
+    "MBG adds an unscoped statement, \"All parts of this plant are highly toxic "
+    "if ingested\", which does not itself name cats or dogs.",
+    # Grave words about horses and livestock are not about pets.
+    "May be fatal to horses and livestock.",
+])
+def test_grave_words_near_a_pet_tag_are_not_grave_words_about_pets(detail):
+    assert not tx.read_evidence(detail).animals_grave
 
 
 def test_potato_takes_its_severity_from_nc_state():
@@ -296,11 +358,13 @@ def test_potato_takes_its_severity_from_nc_state():
     text = tx.describe_for_species("Solanum tuberosum", "Potatoes", True,
                                    cited_to="NC State Extension",
                                    detail=POTATO_DETAIL)
-    assert text.startswith("⚠️ The tubers are eaten, but the leaves and stems, "
+    # The tubers are the crop, and the rating is the people's: the pets get
+    # the table's own word.
+    assert text.startswith("⚠️ The tubers are the crop; the leaves and stems, "
                            "the sprouts, the berries and any green skin on the "
-                           "tubers are seriously toxic to cats, dogs and people "
-                           "(solanine).")
-    assert "NC State Extension rates it high severity." in text
+                           "tubers are seriously toxic to people, and toxic to "
+                           "cats and dogs (solanine).")
+    assert "NC State Extension rates its poison severity for people high." in text
     assert "stomach upset" not in text
 
 
@@ -314,8 +378,8 @@ def test_a_table_severity_is_never_talked_down_by_a_lower_rating():
     text = tx.describe_for_species("Lilium regale", "Regal Lily", True,
                                    cited_to="NC State Extension", detail=detail)
     assert text.startswith("⚠️ Seriously toxic to cats: all parts")
-    assert ("It is also poisonous to people, rated medium severity by NC State "
-            "Extension.") in text
+    assert ("It is also toxic to people: NC State Extension rates its poison "
+            "severity medium.") in text
 
 
 def test_a_cited_false_beats_the_tables():
@@ -335,7 +399,7 @@ def test_poison_ivy_names_people_and_its_rating():
                                    cited_to="NC State Extension",
                                    detail=POISON_IVY_DETAIL)
     assert text.startswith("⚠️ Seriously toxic to people.")
-    assert "NC State Extension rates it high severity." in text
+    assert "NC State Extension rates its poison severity for people high." in text
     assert "NC State Extension records no toxicity to pets" in text
     assert "not a guarantee of safety" in text
     assert "Poison Control" in text
@@ -418,7 +482,8 @@ def test_an_edibility_passage_calling_it_fatal_is_grave():
     assert evidence.people and evidence.grave
     text = tx.describe(tx.from_legacy(True, "Colchicum autumnale",
                                       evidence=evidence), "Autumn Crocus")
-    assert text.startswith("⚠️ Seriously toxic to pets and people.")
+    # Grave for people; the pets' half is what their flag says.
+    assert text.startswith("⚠️ Seriously toxic to people, and toxic to pets.")
 
 
 def test_harm_to_an_animal_in_an_edibility_passage_is_not_harm_to_people():
@@ -468,13 +533,145 @@ def test_never_put_forward_a_high_severity_poison_or_a_noxious_weed():
         tx.from_legacy(True, "Epipremnum aureum", evidence=medium), medium)
 
 
+# --- food crops: the eaten part first ----------------------------------------
+#
+# NC State rates these five a high-severity poison for people. The sentence
+# leads with what is eaten, so the warning about the foliage is never read as
+# a warning about dinner, and the edibility note names the same parts.
+
+EGGPLANT_PASSAGES = [
+    P("is_edible", True, "The fruits and seeds are edible; however, the "
+      "remainder of the plant is poisonous . The fruits should not be consumed raw."),
+    P("toxic_to_pets", True, "Problems: Problem for Cats, Problem for Children, "
+      "Problem for Dogs, Problem for Horses. Poisonous to Humans: Poison "
+      "Severity: High. Poison Symptoms: If the leaves, flowers, stems, or roots "
+      "are ingested, throat burning, nausea, vomiting, and irregular heart "
+      "rhythm can occur which may be fatal."),
+]
+
+
+def _crop(name, flag, passages, detail=None):
+    evidence = tx.read_evidence(detail, passages)
+    return tx.from_legacy(flag, name, "NC State Extension", evidence), evidence
+
+
+@pytest.mark.parametrize("name", [
+    "Solanum tuberosum", "Solanum melongena", "Arachis hypogaea",
+    "Physalis philadelphica", "Phaseolus lunatus",
+    "Solanum lycopersicum", "Rheum rhabarbarum",
+])
+def test_the_crop_table_names_the_eaten_part(name):
+    assert tx.is_food_crop(name)
+    assert tx.lookup(name).edible_parts
+
+
+@pytest.mark.parametrize("name", ["Podophyllum peltatum", "Colocasia esculenta",
+                                  "Wisteria floribunda", "Ficus lyrata", ""])
+def test_a_plant_merely_recorded_as_eaten_is_not_a_crop(name):
+    assert not tx.is_food_crop(name)
+
+
+def test_eggplant_leads_with_the_fruit():
+    tox, evidence = _crop("Solanum melongena", True, EGGPLANT_PASSAGES)
+    text = tx.describe(tox, "Eggplant")
+    assert text.startswith(
+        "⚠️ The fruit is the crop; the leaves and stems, the flowers and the "
+        "roots are seriously toxic to people, and toxic to cats and dogs (solanine).")
+    assert tx.edibility_note(True, tox, evidence) == (
+        "The fruit is eaten; the leaves and stems, the flowers and the roots "
+        "are not. Check the source for how it is prepared.")
+
+
+def test_tomatos_people_sentence_is_about_the_foliage_not_the_fruit():
+    """"It is also poisonous to people", right after "the ripe fruit is
+    eaten", read as if the fruit were the poison."""
+    tox, evidence = _crop("Solanum lycopersicum", True, [
+        P("is_edible", True, "The fruits or berries of the tomato are edible. "
+          "They may be eaten raw, cooked, dried, or processed.")],
+        detail="NC State lists the poison parts as leaves and stems, severity Medium.")
+    text = tx.describe(tox, "Tomatoes")
+    assert "It is also" not in text
+    assert ("The leaves and stems are also toxic to people: NC State Extension "
+            "rates the plant's poison severity medium.") in text
+    note = tx.edibility_note(True, tox, evidence)
+    assert note == "The ripe fruit is eaten; the leaves and stems are not."
+    assert "pets" not in note and "Check the source" not in note
+
+
+def test_peanut_is_the_allergy_its_rating_is_about():
+    detail = ("Poisonous to Humans block: Poison Severity: High; Poison "
+              "Symptoms: Peanut-allergic reactions; Poison Part: Seeds.")
+    tox, evidence = _crop("Arachis hypogaea", None, [
+        P("is_edible", True, "The peanut is the most common edible plant part.")],
+        detail=detail)
+    text = tx.describe(tox, "Peanut")
+    assert text.startswith("⚠️ The peanuts are the crop, and they are seriously "
+                           "toxic to people with a peanut allergy")
+    assert "No verdict on pets is recorded yet" in text
+    assert "trimmings" not in text
+    assert tx.hazard_line(tox) == "Seriously toxic to people with a peanut allergy."
+    assert tx.edibility_note(True, tox, evidence) == \
+        "The peanuts are eaten, but not by people with a peanut allergy."
+
+
+def test_butter_beans_are_eaten_cooked():
+    detail = ("Poisonous to Humans block rates Poison Severity High. Toxic, may "
+              "be fatal if eaten raw. The raw mature seed is poisonous.")
+    tox, evidence = _crop("Phaseolus lunatus", None,
+                          [P("is_edible", True, "producing edible beans")], detail)
+    assert tx.describe(tox, "Butter Beans").startswith(
+        "⚠️ The cooked beans are the crop; the raw mature beans and the roots "
+        "are seriously toxic to people (hydrocyanic acid).")
+    assert tx.edibility_note(True, tox, evidence) == \
+        "The cooked beans are eaten; the raw mature beans and the roots are not."
+
+
+def test_a_cited_non_toxic_for_pets_leaves_a_crop_a_crop():
+    """If a source someday says peanuts are not toxic to pets, the eaten part
+    and the people's hazard are still the crop's."""
+    detail = "Poisonous to Humans: Poison Severity: High."
+    tox = tx.from_legacy(False, "Arachis hypogaea", "Some Extension",
+                         tx.read_evidence(detail))
+    assert tox.toxic is False and tox.is_crop
+    text = tx.describe(tox, "Peanut")
+    assert text.startswith("⚠️ The peanuts are the crop")
+    assert "Some Extension records no toxicity to pets" in text
+
+
+def test_a_condition_on_the_eaten_part_is_told_from_one_on_the_rest():
+    """Potato's passage says the green parts are inedible: a limit on the
+    parts, no condition on the tubers. Eggplant's says not to eat the fruit
+    raw: a condition on what is eaten."""
+    potato = tx.read_evidence(None, [P("is_edible", True,
+        "The plant produces stolon's that bear edible underground tubers. All "
+        "green parts of the potato plant are inedible because they contain a "
+        "toxin known as solanine.")])
+    assert potato.edibility_limited and not potato.edibility_conditional
+    eggplant = tx.read_evidence(None, EGGPLANT_PASSAGES)
+    assert eggplant.edibility_limited and eggplant.edibility_conditional
+
+
+def test_an_invasive_species_tag_is_never_put_forward():
+    """NC State's Problems field for Chinese wisteria: a cited reason not to
+    recommend planting it, the same as a noxious weed."""
+    evidence = tx.read_evidence(None, [P(
+        "toxic_to_pets", True, "Problems: Invasive Species Problem for Cats "
+        "Problem for Dogs Problem for Horses Weedy")])
+    assert evidence.invasive
+    assert tx.never_put_forward(tx.from_legacy(True, "Wisteria testensis",
+                                               evidence=evidence), evidence)
+    assert not tx.read_evidence("It is not an invasive species here.").invasive
+
+
 # --- edibility ---------------------------------------------------------------
 
 def test_edible_and_poisonous_gets_a_note():
     tox = tx.from_legacy(True, "Sambucus nigra")
     note = tx.edibility_note(True, tox, tx.Evidence())
-    assert note == ("Some parts are eaten, but it is also recorded as "
-                    "poisonous to pets. Check the source before eating any of it.")
+    # Toxic to pets alone is a reason to keep scraps from the dog, not to
+    # tell a person to doubt the fruit.
+    assert note == ("Some parts are eaten, and it is recorded as poisonous to "
+                    "pets, so keep scraps and trimmings away from them.")
 
 
 @pytest.mark.parametrize("quote", [
@@ -545,7 +742,7 @@ def test_the_read_model_carries_the_edibility_note():
     for schema in (SpeciesRead, SpeciesDetail):
         assert "edibility_note" in schema.model_fields
         assert schema.model_validate(elder).edibility_note.startswith(
-            "Some parts are eaten, but it is also recorded as poisonous to pets.")
+            "Some parts are eaten, and it is recorded as poisonous to pets")
         assert schema.model_validate(basil).edibility_note is None
 
 

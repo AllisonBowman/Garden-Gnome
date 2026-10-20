@@ -135,7 +135,7 @@ def test_the_toxicity_line_names_people_when_a_source_does(month):
     out = _advise_stub(sp, make_plant(), [], [schedule(CareType.water, 7, 10)])
     line = out.splitlines()[-1]
     assert line.startswith("⚠️ Toxic to pets and people.")
-    assert "NC State Extension rates it medium severity." in line
+    assert "NC State Extension rates its poison severity for people medium." in line
 
 
 def test_no_toxicity_line_without_a_recorded_hazard(month):

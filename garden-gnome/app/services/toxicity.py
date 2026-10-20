@@ -35,6 +35,24 @@ and they never overrule a source: a cited "non-toxic" beats them, and a cited
 severity is never talked down by them. They hold no "mild" of their own,
 because calling something mild is a judgement only a source gets to make.
 
+WHOSE SEVERITY IT IS
+
+NC State's Poison Severity sits under its "Poisonous to Humans" heading, apart
+from the Problem for Cats and Problem for Dogs tags, which carry no severity
+at all. So a rating is a fact about people, and the word it gives --
+"seriously", "mildly" -- goes on the people half of a sentence only. The
+animals are "toxic to pets" (or to cats, or dogs) unless a table or a source's
+own grave words about them say more. "Mildly toxic to pets" from a rating
+nobody gave for pets would understate garlic, azaleas and daffodils.
+
+FOOD CROPS
+
+A crop is named by what is eaten. Where a table knows the eaten part, the
+sentence leads with it ("The tubers are the crop; ...") so that a warning
+about the foliage is never read as a warning about dinner, and the eaten part
+is what keeps a crop NC State rates highly on a growing area's candidate list
+(fit.never_a_candidate).
+
 This module is descriptive, not veterinary or medical advice: serious cases
 say to call Poison Control or a vet rather than implying the app can triage.
 """
@@ -73,6 +91,12 @@ PART_LABELS = {
     "sprout": "the sprouts",
     "flower": "the flowers",
     "pollen": "the pollen",
+    "unripe_fruit": "the unripe fruit",
+    # Crop-specific parts: the eaten part named the way a grower names it,
+    # and the condition its source puts on it when that is part of the name.
+    "peanut": "the peanuts",
+    "cooked_bean": "the cooked beans",
+    "raw_bean": "the raw mature beans",
 }
 
 
@@ -95,12 +119,28 @@ class Toxicity:
     # flag -- NC State's "Poisonous to Humans" block, RHS's "TOXIC if eaten".
     people: bool = False
     # NC State's Poison Severity for this species ("high", "medium", "low"),
-    # and who published it. Empty when no source rates it.
+    # and who published it. Empty when no source rates it. A fact about
+    # people: see "Whose severity it is" above.
     rating: str = ""
     rated_by: str = ""
+    # `severity` split by who it is about. `severity` is the higher of the
+    # two, and decides how urgent the advice is; each half decides only its
+    # own words. An animal's comes from a table or a source's grave words
+    # about animals; a person's from a table that names people, the rating,
+    # or a source calling it fatal to them.
+    animal_severity: str = "unknown"
+    people_severity: str = "unknown"
+    # Who "people" are, when a source narrows it: NC State's peanut rating is
+    # an allergy, and saying "people" alone would warn everyone off peanuts.
+    people_label: str = "people"
 
     def to_dict(self) -> dict:
         return asdict(self)
+
+    @property
+    def is_crop(self) -> bool:
+        """Whether a table names the part of this plant that is eaten."""
+        return bool(self.edible_parts)
 
     @property
     def is_contradictory(self) -> bool:
@@ -127,6 +167,12 @@ class Toxicity:
 # encode the PATTERN (toxicity is part-specific) rather than to be exhaustive.
 # Severity here is a floor the tables were written with, never a ceiling: a
 # cited rating above it wins.
+#
+# Every entry with `edible_parts` is a food crop, and the parts on both sides
+# are the ones its cited passages name. Those entries are also the only
+# edible plants a high-severity rating for people does not take off a
+# candidate list (`is_food_crop`), so a new one is a deliberate decision:
+# test_candidates_on_the_real_catalog pins the set.
 KNOWN_NUANCE: dict[str, Toxicity] = {
     "solanum lycopersicum": Toxicity(
         toxic=True, parts=["foliage"], edible_parts=["ripe_fruit"],
@@ -146,6 +192,36 @@ KNOWN_NUANCE: dict[str, Toxicity] = {
         at_risk=["cats", "dogs", "humans"], severity="severe",
         effect="oxalate poisoning", agent="oxalic acid",
         source="well-established",
+    ),
+    # NC State: "The fruits and seeds are edible; however, the remainder of
+    # the plant is poisonous"; flowers, leaves, roots and stems carry
+    # solanine; a problem for cats and dogs. No severity of the table's own.
+    "solanum melongena": Toxicity(
+        toxic=True, parts=["foliage", "flower", "root"], edible_parts=["fruit"],
+        at_risk=["cats", "dogs", "humans"], agent="solanine",
+        source="NC State Extension",
+    ),
+    # NC State: "All parts are toxic except the ripe fruits." Human-scoped;
+    # the page tags no pet, so the table says nothing about pets either.
+    "physalis philadelphica": Toxicity(
+        toxic=None, parts=["foliage", "flower", "unripe_fruit"],
+        edible_parts=["ripe_fruit"], at_risk=["humans"],
+        agent="solanine", source="NC State Extension",
+    ),
+    # NC State: "The raw mature seed is poisonous ... destroyed by thoroughly
+    # cooking the seed"; Poison Part: Roots, Seeds.
+    "phaseolus lunatus": Toxicity(
+        toxic=None, parts=["raw_bean", "root"], edible_parts=["cooked_bean"],
+        at_risk=["humans"], agent="hydrocyanic acid",
+        source="NC State Extension",
+    ),
+    # NC State's high rating is the allergy: "Peanut-allergic reactions";
+    # the eaten part is the hazard, to the people allergic to it.
+    "arachis hypogaea": Toxicity(
+        toxic=None, parts=["peanut"], edible_parts=["peanut"],
+        at_risk=["humans"], agent="seed storage proteins",
+        people_label="people with a peanut allergy",
+        source="NC State Extension",
     ),
 }
 
@@ -193,6 +269,15 @@ def lookup(scientific_name: str) -> Toxicity | None:
     if genus in AROID_GENERA:
         return AROID_TOXICITY
     return None
+
+
+def is_food_crop(scientific_name: str) -> bool:
+    """Whether a table names the eaten part of this species (KNOWN_NUANCE).
+
+    By name, not through a Toxicity record, so a pet verdict that replaces
+    the table's (a cited "non-toxic to pets") does not stop a crop being one."""
+    known = lookup(scientific_name)
+    return bool(known and known.edible_parts)
 
 
 # --- reading toxicity out of prose ------------------------------------------
@@ -289,14 +374,19 @@ _ANIMAL_RE = re.compile(
     r"|birds?|rabbits?|tortoises?)\b",
     re.I)
 _PERSON_RE = re.compile(r"\b(?:humans?|people|children|child|persons?|kids)\b", re.I)
+#: Pets as the app names them. Horses and livestock are not, and a source's
+#: "fatal to horses" does not make a plant seriously toxic to a cat.
+_PET_RE = re.compile(r"\b(?:cats?|kittens?|dogs?|pupp(?:y|ies)|pets?)\b", re.I)
 _NOXIOUS_RE = re.compile(r"\bnoxious weed", re.I)
+#: NC State's Problems field lists "Invasive Species" beside the pet tags.
+_INVASIVE_RE = re.compile(r"\binvasive species\b", re.I)
 _CLAUSES_RE = re.compile(r"[.!?;\n]+")
 
-#: An edibility passage that limits what is eaten or how: "edible when
-#: cooked", "only the ripe fruit", "in small amounts", "the remainder of the
-#: plant is poisonous". A passage that names a part ("leaves are edible") is
-#: not a limit by itself; one that adds a condition to it is.
-_EDIBLE_LIMIT_RE = re.compile(
+#: A condition an edibility passage puts on eating what is eaten: "edible
+#: when cooked", "only the ripe fruit", "in small amounts", "should not be
+#: eaten raw". A passage that names a part ("leaves are edible") is not a
+#: condition by itself; one that adds a condition to it is.
+_EDIBLE_CONDITION_RE = re.compile(
     r"\bonly\b"
     r"|\b(?:edible|eaten|eat|consumed|safe)\b[^.]{0,25}?"
     r"\b(?:once|when|after|until|if|unless)\s+(?:\w+\s+){0,2}?"
@@ -307,12 +397,19 @@ _EDIBLE_LIMIT_RE = re.compile(
     r"|\bin (?:small|limited|moderate) (?:amounts?|quantit(?:y|ies))"
     r"|\bin moderation\b|\blarge (?:amounts?|quantit(?:y|ies))|\bsparingly\b"
     r"|\blimited quantit"
-    r"|\bpoison\w*|\btoxi\w*|\bcaution\b|\bwarning\b|\bharmful\b|\bdangerous\b"
-    r"|\bnot (?:be )?eaten\b|\bshould not\b|\bdo not (?:eat|consume)\b"
-    r"|\bnever (?:eat|consume)\b|\binedible\b|\bnot edible\b|\bnon-edible\b"
+    r"|\bcaution\b|\bwarning\b"
+    r"|\bshould not\b|\bdo not (?:eat|consume)\b|\bnever (?:eat|consume)\b"
     r"|\b(?:un)?ripe\b"
     r"|\bremove (?:the )?(?:bristles|spines|glochids|seeds|skin|peel|pits?|stones?)\b"
     r"|\bpoisonous until\b",
+    re.I)
+#: An edibility passage that says some other part is not eaten: "the
+#: remainder of the plant is poisonous", "all green parts ... are inedible".
+#: That limits the parts, and is a hazard statement, but sets no condition on
+#: the part that is eaten.
+_EDIBLE_HAZARD_RE = re.compile(
+    r"\bpoison\w*|\btoxi\w*|\bharmful\b|\bdangerous\b"
+    r"|\bnot (?:be )?eaten\b|\binedible\b|\bnot edible\b|\bnon-edible\b",
     re.I)
 
 
@@ -362,6 +459,15 @@ class Evidence:
     noxious: bool = False
     #: An edibility passage limits the parts eaten or needs preparation.
     edibility_limited: bool = False
+    #: A source calls it fatal or highly toxic to pets in words of its own --
+    #: the only thing besides a table that makes a pet's half "serious".
+    animals_grave: bool = False
+    #: A source records it as an invasive species.
+    invasive: bool = False
+    #: Narrower than `edibility_limited`: the passage puts a condition on the
+    #: eaten part itself (cooked, ripe, in small amounts), rather than only
+    #: saying the rest of the plant is not eaten.
+    edibility_conditional: bool = False
 
 
 _RATING_RANK = {"low": 1, "medium": 2, "moderate": 2, "high": 3}
@@ -407,8 +513,44 @@ def _eating_harm(text: str) -> tuple[bool, bool]:
     return people, grave
 
 
+def _names_pets_gravely(text: str) -> bool:
+    """Whether a passage calls the plant fatal or highly toxic to pets.
+
+    A clause that names a pet and no person, with a grave word in it: "toxic
+    to cats and can be fatal", "ingestion by livestock or pets may cause
+    death". Not a bare "possible death" in a pet flag's citation: NC State
+    quotes its human-scoped symptom list there too ("difficulty speaking"),
+    and a grave word that names nobody is not the pets' to take. Nor a
+    clause that mentions pets only to say it does not name them."""
+    for clause in _CLAUSES_RE.split(text or ""):
+        if _PERSON_RE.search(clause) or _PEOPLE_RE.search(clause):
+            continue
+        if not any(not _negated(clause, m.start()) and not _a_tag(clause, m)
+                   for m in _PET_RE.finditer(clause)):
+            continue
+        if any(not _negated(clause, m.start()) for m in _GRAVE_RE.finditer(clause)):
+            return True
+    return False
+
+
+#: NC State's pet tags -- "Problem for Cats", "the cat/dog tags" -- carry no
+#: severity of their own, so a grave word beside one ("ingestion may be
+#: fatal, and it is separately tagged a problem for cats") is not about pets.
+_TAG_BEFORE_RE = re.compile(r"problem for\W+(?:\w+\W+){0,3}$", re.I)
+_TAG_AFTER_RE = re.compile(r"^\W*(?:\w+\W+){0,1}tags?\b", re.I)
+
+
+def _a_tag(text: str, match: re.Match) -> bool:
+    return bool(_TAG_BEFORE_RE.search(text[max(0, match.start() - 40):match.start()])
+                or _TAG_AFTER_RE.search(text[match.end():match.end() + 20]))
+
+
 def _noxious(text: str) -> bool:
     return any(not _negated(text, m.start()) for m in _NOXIOUS_RE.finditer(text or ""))
+
+
+def _invasive(text: str) -> bool:
+    return any(not _negated(text, m.start()) for m in _INVASIVE_RE.finditer(text or ""))
 
 
 def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
@@ -418,6 +560,7 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
     passages on the safety fields (`claims.store.Passage`, or anything with
     `field`, `value`, `quote` and `authority`)."""
     people = grave = noxious = limited = False
+    pets_grave = invasive = conditional = False
     best_rank, best, best_by = 0, "", ""
 
     def rate(levels: list[str], by: str) -> None:
@@ -435,6 +578,8 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
         people = people or named or bool(levels)
         grave = grave or gravely
         noxious = noxious or _noxious(detail)
+        invasive = invasive or _invasive(detail)
+        pets_grave = pets_grave or _names_pets_gravely(detail)
 
     for p in passages:
         quote = getattr(p, "quote", "") or ""
@@ -448,32 +593,35 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
             named, gravely = _names_people(quote)
             people = people or named or bool(levels)
             grave = grave or gravely
+            pets_grave = pets_grave or _names_pets_gravely(quote)
         elif kind == "is_edible":
             named, gravely = _eating_harm(quote)
             people = people or named
             grave = grave or gravely
-            if getattr(p, "value", None) is True and _EDIBLE_LIMIT_RE.search(quote):
-                limited = True
+            if getattr(p, "value", None) is True:
+                if _EDIBLE_CONDITION_RE.search(quote):
+                    limited = conditional = True
+                elif _EDIBLE_HAZARD_RE.search(quote):
+                    limited = True
         noxious = noxious or _noxious(quote)
+        invasive = invasive or _invasive(quote)
 
     return Evidence(people=people, rating=best, rated_by=best_by, grave=grave,
-                    noxious=noxious, edibility_limited=limited)
+                    noxious=noxious, edibility_limited=limited,
+                    animals_grave=pets_grave, invasive=invasive,
+                    edibility_conditional=conditional)
 
 
 # --- putting a record together ----------------------------------------------
 
-def _severity(table: str, evidence: Evidence) -> str:
-    """The table's own severity, raised -- never lowered -- by the sources.
-
-    A table's "severe" stands: it is the cautious direction. Anything a
-    table says below that gives way to a cited rating, and a source calling
-    it fatal to people makes it severe whatever the rating."""
-    levels = [table] if table in ("moderate", "severe") else []
-    if evidence.rating:
-        levels.append(RATING_SEVERITY[evidence.rating])
-    if evidence.grave:
-        levels.append("severe")
+def _highest(levels: list[str]) -> str:
     return max(levels, key=SEVERITY_ORDER.__getitem__) if levels else "unknown"
+
+
+def _floor(table: str) -> list[str]:
+    """A table's severity, as a floor: "moderate" and "severe" stand, and
+    anything below gives way to the sources."""
+    return [table] if table in ("moderate", "severe") else []
 
 
 def from_legacy(toxic_to_pets: bool | None, scientific_name: str = "",
@@ -484,15 +632,34 @@ def from_legacy(toxic_to_pets: bool | None, scientific_name: str = "",
     believed over a pattern typed into code. A stored `False` nobody cited
     is a catalog default and means 'nothing recorded' -- weaker than 'safe',
     and reported as such. `cited_to` names the authority whose claim settled
-    the flag, when one did."""
+    the flag, when one did.
+
+    Severity is worked out for each half. A table's "severe" stands -- it is
+    the cautious direction -- for whoever the table names; a rating, or a
+    source calling it fatal to people, raises the people's half only; a
+    source's grave words about pets raise theirs."""
     evidence = evidence or Evidence()
     known = lookup(scientific_name)
+    table = known
     if toxic_to_pets is False and cited_to:
         base = Toxicity(toxic=False, source="cited", cited_to=cited_to)
+        if known is not None and known.edible_parts:
+            # A crop stays a crop: what is eaten, and what harms the people
+            # eating it, are not the pet verdict's to erase.
+            table = replace(known, toxic=False,
+                            at_risk=[a for a in known.at_risk if a == "humans"])
+            base = replace(table, parts=list(known.parts),
+                           edible_parts=list(known.edible_parts),
+                           effect="", source="cited", cited_to=cited_to)
+        else:
+            table = None
     elif known:
         base = replace(known, parts=list(known.parts),
                        edible_parts=list(known.edible_parts),
                        at_risk=list(known.at_risk), cited_to=cited_to)
+        if toxic_to_pets is True and base.toxic is not True:
+            # The table speaks for people only; the flag still speaks for pets.
+            base = replace(base, toxic=True, at_risk=base.at_risk + ["pets"])
     elif toxic_to_pets is True:
         # No parts: a bare flag says the plant is toxic, not which of it is.
         base = Toxicity(toxic=True, at_risk=["pets"],
@@ -501,7 +668,27 @@ def from_legacy(toxic_to_pets: bool | None, scientific_name: str = "",
         base = Toxicity(toxic=False, source="catalog (legacy flag)")
     else:
         base = Toxicity(toxic=None)
-    return replace(base, severity=_severity(base.severity, evidence),
+
+    animal_levels: list[str] = []
+    if base.toxic is True:
+        if (table is not None and table.toxic is True
+                and any(a != "humans" for a in table.at_risk)):
+            animal_levels += _floor(table.severity)
+        if evidence.animals_grave:
+            animal_levels.append("severe")
+    people_levels: list[str] = []
+    if evidence.people or "humans" in base.at_risk:
+        if table is not None and "humans" in table.at_risk:
+            people_levels += _floor(table.severity)
+        if evidence.rating:
+            people_levels.append(RATING_SEVERITY[evidence.rating])
+        if evidence.grave:
+            people_levels.append("severe")
+    animal_severity = _highest(animal_levels)
+    people_severity = _highest(people_levels)
+    return replace(base, severity=_highest(animal_levels + people_levels),
+                   animal_severity=animal_severity,
+                   people_severity=people_severity,
                    people=evidence.people, rating=evidence.rating,
                    rated_by=evidence.rated_by)
 
@@ -536,28 +723,72 @@ def _join(items: list[str]) -> str:
 # Labels that take a singular verb. Everything else in PART_LABELS is plural,
 # so agreement is decided by the label rather than assumed — "stems is edible"
 # reads as broken English and undermines the trust this nuance exists to build.
-_SINGULAR_LABELS = {"the sap", "the fruit", "the ripe fruit", "the pollen",
-                    "any green skin on the tubers"}
+_SINGULAR_LABELS = {"the sap", "the fruit", "the ripe fruit", "the unripe fruit",
+                    "the pollen", "any green skin on the tubers"}
 
 
 def _verb(label: str) -> str:
     return "is" if label in _SINGULAR_LABELS else "are"
 
 
+def _pronoun(label: str) -> str:
+    return "it" if label in _SINGULAR_LABELS else "they"
+
+
 def _capital(text: str) -> str:
     return text[:1].upper() + text[1:]
 
 
+def _labels(parts: list[str]) -> str:
+    return _join([PART_LABELS.get(p, p) for p in parts])
+
+
 def _rating_sentence(tox: Toxicity) -> str:
+    """The rating on its own, saying whose it is: NC State rates people."""
     if not tox.rating:
         return ""
     if tox.rated_by:
-        return f"{tox.rated_by} rates it {tox.rating} severity."
-    return f"Its poison severity is rated {tox.rating}."
+        return f"{tox.rated_by} rates its poison severity for people {tox.rating}."
+    return f"Its poison severity for people is rated {tox.rating}."
+
+
+def _rating_tail(tox: Toxicity, whose: str = "its") -> str:
+    """The rating after a clause that already names people."""
+    if not tox.rating:
+        return ""
+    if tox.rated_by:
+        return f": {tox.rated_by} rates {whose} poison severity {tox.rating}"
+    return f": {whose} poison severity is rated {tox.rating}"
 
 
 def _toxic_words(severity: str) -> str:
     return {"severe": "seriously toxic", "mild": "mildly toxic"}.get(severity, "toxic")
+
+
+def _short_words(severity: str) -> str:
+    """A list row's words: serious or not, never "mildly", which a row too
+    short to say whose rating it is would let a reader take as all-clear."""
+    return "seriously toxic" if severity == "severe" else "toxic"
+
+
+def _who(tox: Toxicity, animals: list[str], people: bool,
+         words=_toxic_words) -> str:
+    """'toxic to cats and dogs', 'toxic to pets and people', or, when the
+    two halves differ, each with its own words: 'seriously toxic to people,
+    and toxic to pets'. The worse half leads when it is the people's."""
+    animal_words = words(tox.animal_severity)
+    people_words = words(tox.people_severity)
+    if animals and people:
+        if animal_words == people_words:
+            return f"{animal_words} to {_join(animals + [tox.people_label])}"
+        animal_part = f"{animal_words} to {_join(animals)}"
+        people_part = f"{people_words} to {tox.people_label}"
+        if tox.people_severity == "severe" and tox.animal_severity != "severe":
+            return f"{people_part}, and {animal_part}"
+        return f"{animal_part}, and {people_part}"
+    if animals:
+        return f"{animal_words} to {_join(animals)}"
+    return f"{people_words} to {tox.people_label}"
 
 
 def _action(tox: Toxicity, *, animals: bool, people: bool,
@@ -577,17 +808,32 @@ def _action(tox: Toxicity, *, animals: bool, people: bool,
     return keep
 
 
+def _pets_unrecorded(tox: Toxicity) -> str:
+    """What is on record for pets when nothing says they are at risk."""
+    if tox.toxic is None:
+        return ("No verdict on pets is recorded yet, so treat it as unknown "
+                "for them, not safe.")
+    if tox.cited_to:
+        return (f"{tox.cited_to} records no toxicity to pets, which is not a "
+                "guarantee of safety.")
+    return ("No toxicity to pets is recorded in our sources yet, which is not "
+            "a guarantee of safety.")
+
+
 def describe(tox: Toxicity, common_name: str = "This plant") -> str:
     """Two to four plain sentences a caretaker can act on.
 
-    Leads with the distinction when a plant is both edible and toxic, because
-    that is the case a flat label gets wrong and the reason people stop
-    trusting warnings. Names people whenever a source records a hazard to
-    them, and takes how bad it is from the source."""
+    Leads with what is eaten when a table knows a food crop's eaten part,
+    because that is the case a flat label gets wrong and the reason people
+    stop trusting warnings. Names people whenever a source records a hazard
+    to them, and takes how bad it is from the source -- for people. Pets get
+    a severity word only from a table or a source's own grave words about
+    them."""
     name = common_name.lower()
     people = tox.people_at_risk
+    animals = tox.animals_at_risk
 
-    if tox.toxic is not True and not people:
+    if not animals and not people:
         if tox.toxic is None:
             # "No information" would be untrue of a row whose cited
             # description of harm sits server-side with no verdict yet
@@ -613,84 +859,80 @@ def describe(tox: Toxicity, common_name: str = "This plant") -> str:
         )
 
     warn = "⚠️ " if tox.severity == "severe" else ""
-    words = _toxic_words(tox.severity)
-
-    if tox.toxic is not True:
-        # A hazard to people, and none recorded (or none known) to pets.
-        sentences = [f"{warn}{_capital(words)} to people."]
-        rating = _rating_sentence(tox)
-        if rating:
-            sentences.append(rating)
-        if tox.toxic is None:
-            sentences.append("No verdict on pets is recorded yet, so treat it "
-                             "as unknown for them, not safe.")
-        elif tox.cited_to:
-            sentences.append(f"{tox.cited_to} records no toxicity to pets, "
-                             "which is not a guarantee of safety.")
-        else:
-            sentences.append("No toxicity to pets is recorded in our sources "
-                             "yet, which is not a guarantee of safety.")
-        sentences.append(_action(tox, animals=False, people=True))
-        return " ".join(sentences)
-
-    animals = tox.animals_at_risk
-    # People join the list when the table names them, or when nothing more
-    # specific is said: "toxic to pets and people". When the table carries
-    # an animal-specific effect -- a cat's kidneys -- people get their own
-    # sentence, so the effect is not read as theirs.
-    people_in_clause = "humans" in tox.at_risk or (people and not tox.effect)
-    who = _join(animals + (["people"] if people_in_clause else []))
-    toxic_parts = _join([PART_LABELS.get(p, p) for p in tox.parts])
+    # People join the animals' clause when the table names them, or when
+    # nothing more specific is said: "toxic to pets and people". When the
+    # table carries an animal-specific effect -- a cat's kidneys -- people
+    # get their own sentence, so the effect is not read as theirs.
+    people_in_clause = people and (
+        not animals or "humans" in tox.at_risk or not tox.effect)
+    who = _who(tox, animals, people_in_clause)
+    toxic_parts = _labels(tox.parts)
     agent = f" ({tox.agent})" if tox.agent else ""
     effect = f" — {tox.effect}" if tox.effect else ""
+    # The peanut case: the part eaten is itself the hazard, to some people.
+    eaten_is_hazard = tox.is_contradictory and set(tox.parts) == set(tox.edible_parts)
 
     if tox.is_contradictory:
-        # The contradictory case first: say what is eaten before what is not,
-        # so the reader's own experience ("I eat tomatoes") is confirmed, not
+        # The crop first: say what is eaten before what is not, so the
+        # reader's own experience ("I eat tomatoes") is confirmed, not
         # contradicted.
-        eaten = _join([PART_LABELS.get(p, p) for p in tox.edible_parts])
-        lead = (f"{warn}{_capital(eaten)} {_verb(eaten)} eaten, but "
-                f"{toxic_parts} {_verb(toxic_parts)} {words} to "
-                f"{who}{agent}{effect}.")
+        eaten = _labels(tox.edible_parts)
+        if eaten_is_hazard:
+            lead = (f"{warn}{_capital(eaten)} {_verb(eaten)} the crop, and "
+                    f"{_pronoun(eaten)} {_verb(eaten)} {who}{agent}{effect}.")
+        else:
+            lead = (f"{warn}{_capital(eaten)} {_verb(eaten)} the crop; "
+                    f"{toxic_parts} {_verb(toxic_parts)} {who}{agent}{effect}.")
     else:
         parts = f": {toxic_parts}" if toxic_parts else ""
-        lead = f"{warn}{_capital(words)} to {who}{parts}{agent}{effect}."
+        lead = f"{warn}{_capital(who)}{parts}{agent}{effect}."
 
     sentences = [lead]
     if people and not people_in_clause:
         # Its own sentence, with the rating inside it: NC State's rating is
         # for people, and beside a cat's kidney failure it must not read as
-        # the cat's.
-        by = f" by {tox.rated_by}" if tox.rated_by else ""
+        # the cat's. On a crop the subject is the parts, never "it", which
+        # would read as the fruit just called food.
+        if tox.is_contradictory:
+            subject = f"{_capital(toxic_parts)} {_verb(toxic_parts)}"
+            whose = "the plant's"
+        else:
+            subject, whose = "It is", "its"
         sentences.append(
-            f"It is also poisonous to people, rated {tox.rating} severity{by}."
-            if tox.rating else "It is also poisonous to people.")
-    elif tox.rating:
+            f"{subject} also {_toxic_words(tox.people_severity)} to "
+            f"{tox.people_label}{_rating_tail(tox, whose)}.")
+    elif people and tox.rating:
         sentences.append(_rating_sentence(tox))
-    sentences.append(_action(tox, animals=True, people=people,
-                             trimmings=tox.is_contradictory))
+    if not animals:
+        sentences.append(_pets_unrecorded(tox))
+    sentences.append(_action(
+        tox, animals=bool(animals), people=people,
+        trimmings=tox.is_contradictory and not eaten_is_hazard))
     return " ".join(sentences)
 
 
 def hazard_line(tox: Toxicity) -> str | None:
     """One short caution for a list row: who it is toxic to. None when no
     hazard is recorded -- which is "no record", never "safe", and the list
-    row is not the place to say so at length."""
-    who = tox.animals_at_risk + (["people"] if tox.people_at_risk else [])
-    if not who:
+    row is not the place to say so at length. A rating's "serious" is the
+    people's, as in the sentence."""
+    animals, people = tox.animals_at_risk, tox.people_at_risk
+    if not animals and not people:
         return None
-    words = "Seriously toxic" if tox.severity == "severe" else "Toxic"
-    return f"{words} to {_join(who)}."
+    return f"{_capital(_who(tox, animals, people, words=_short_words))}."
 
 
 def never_put_forward(tox: Toxicity, evidence: Evidence) -> bool:
     """Whether a growing area should never suggest planting this.
 
     A source rating it a high-severity poison for people, or calling it
-    fatal to them, or a source recording it as a noxious weed. A Candidate
-    is a recommendation, and nobody should be recommended poison hemlock
-    for a sunny bed because its size and sun happen to fit."""
-    if evidence.noxious:
+    fatal to them, or a source recording it as a noxious weed or an invasive
+    species. A Candidate is a recommendation, and nobody should be
+    recommended poison hemlock for a sunny bed because its size and sun
+    happen to fit, or Chinese wisteria for a fence because NC State's own
+    page says it escapes. fit.never_a_candidate keeps food crops whose eaten
+    part a table names."""
+    if evidence.noxious or evidence.invasive:
         return True
     return tox.people_at_risk and (tox.rating == "high" or evidence.grave)
 
@@ -699,27 +941,47 @@ def edibility_note(is_edible: bool | None, tox: Toxicity,
                    evidence: Evidence) -> str | None:
     """The condition on "grown to eat", or None when there is none.
 
-    Set when a plant recorded as eaten is also recorded as poisonous -- to
-    pets or to people -- or when the cited edibility passage limits the
+    A food crop's note names the part eaten and the parts that are not, the
+    same parts its toxicity sentence names, so the two never disagree. Any
+    other plant recorded as eaten gets one when it is also recorded as
+    poisonous to people, or when the cited edibility passage limits the
     parts or needs preparation ("edible when cooked", "only the ripe
-    fruit"). The passage stays on the server (ADR 0003); the note says that
-    there is a condition and sends the reader to the source for it."""
+    fruit") -- and then it sends the reader to the source, since the passage
+    stays on the server (ADR 0003). A hazard to pets alone is a reason to
+    keep scraps from the dog, not to doubt the orange."""
     if is_edible is not True:
         return None
     pets = tox.toxic is True
     people = tox.people_at_risk
+    if tox.is_crop:
+        eaten = _labels(tox.edible_parts)
+        if set(tox.parts) == set(tox.edible_parts):
+            note = (f"{_capital(eaten)} {_verb(eaten)} eaten, but not by "
+                    f"{tox.people_label}.")
+        else:
+            harmful = _labels(tox.parts)
+            note = (f"{_capital(eaten)} {_verb(eaten)} eaten; {harmful} "
+                    f"{_verb(harmful)} not.")
+        if evidence.edibility_conditional:
+            note += (f" Check the source for how {_pronoun(eaten)} "
+                     f"{_verb(eaten)} prepared.")
+        return note
     limited = evidence.edibility_limited
     check = "Check the source before eating any of it."
-    if (pets or people) and limited:
+    pet_scraps = ("it is recorded as poisonous to pets, so keep scraps and "
+                  "trimmings away from them.")
+    if people and limited:
         return ("Some parts are eaten, but only certain parts or after "
                 f"preparation, and other parts are poisonous. {check}")
-    if pets or people:
-        who = _join((["pets"] if pets else []) + (["people"] if people else []))
-        return (f"Some parts are eaten, but it is also recorded as poisonous "
-                f"to {who}. {check}")
+    if people:
+        return ("Some parts are eaten, but it is also recorded as poisonous "
+                f"to people. {check}")
     if limited:
-        return ("Some parts are eaten, but only certain parts or after "
+        note = ("Some parts are eaten, but only certain parts or after "
                 f"preparation. {check}")
+        return f"{note} {_capital(pet_scraps)}" if pets else note
+    if pets:
+        return f"Some parts are eaten, and {pet_scraps}"
     return None
 
 

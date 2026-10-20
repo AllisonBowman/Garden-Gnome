@@ -130,10 +130,12 @@ def test_both_routes_name_people_from_the_cited_passages(api):
     listed = {sp["id"]: sp for sp in
               client.get("/species/", headers=headers).json()}[sid]
     for body in (detail, listed):
+        # The rating's "seriously" is the people's; the pet flag carries
+        # no severity of its own.
         assert body["toxicity_description"].startswith(
-            "⚠️ Seriously toxic to pets and people.")
-        assert "Passage Test Extension rates it high severity." in \
-            body["toxicity_description"]
+            "⚠️ Seriously toxic to people, and toxic to pets.")
+        assert ("Passage Test Extension rates its poison severity for people "
+                "high.") in body["toxicity_description"]
         assert body["edibility_note"].startswith("Some parts are eaten")
         assert "FATAL" not in json.dumps(body)
 

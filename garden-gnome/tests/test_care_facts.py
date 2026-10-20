@@ -155,8 +155,10 @@ def test_the_edible_line_carries_the_condition():
         legacy_species(is_edible=True, toxic_to_pets=None))
     lines = species_fact_lines(legacy_species(is_edible=True, toxic_to_pets=True))
     assert "- Edible: grown to eat" not in lines
+    # Toxic to pets alone: a reason to keep scraps from the dog, not to
+    # doubt the food.
     assert line_starting(lines, "- Edible:").startswith(
-        "- Edible: Some parts are eaten, but it is also recorded as poisonous")
+        "- Edible: Some parts are eaten, and it is recorded as poisonous to pets")
 
 
 # --- resolved values replace, never sit beside, their legacy line -----------
