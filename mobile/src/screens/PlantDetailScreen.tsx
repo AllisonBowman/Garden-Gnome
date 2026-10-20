@@ -19,6 +19,7 @@ import { gnomeVoice } from '../gnomeVoice/restyle';
 import { serverMessage } from '../api/errorMessage';
 import { ensureCameraPermission } from '../photoPermissions';
 import { ensurePhotoUploadConsent } from '../consent/photoUpload';
+import { mayAskWith, questionToSend } from '../consent/questionUpload';
 import WeatherCredit from '../components/WeatherCredit';
 import ReportResult from '../components/ReportResult';
 import { CareOutcome, CareType } from '../types';
@@ -180,11 +181,12 @@ export default function PlantDetailScreen() {
   const [symptoms, setSymptoms] = useState('');
   const [advice, setAdvice] = useState<(AdviceResponse & { gnomeStyled: boolean }) | null>(null);
   const adviceMutation = useMutation({
-    mutationFn: async () => {
+    // `question` has been through askTheGnome: empty, or agreed to be sent.
+    mutationFn: async (question: string) => {
       // The rule engine determines WHAT to say; the on-device gnome only
       // restyles HOW it's said (and falls back to the flat text everywhere
       // the model can't run or drifts from the given facts).
-      const result = await getAdvice(plantId, capabilities.symptoms ? symptoms : '');
+      const result = await getAdvice(plantId, question);
       const voiced = await gnomeVoice(result.advice, plant?.nickname);
       return { ...result, advice: voiced.text, gnomeStyled: voiced.styled };
     },
@@ -198,6 +200,14 @@ export default function PlantDetailScreen() {
         ),
       ),
   });
+  // A question in the caretaker's own words goes to an outside AI service,
+  // so the first one waits for a yes (consent/questionUpload.ts). Advice
+  // without a question doesn't ask.
+  const askTheGnome = async () => {
+    const question = questionToSend(capabilities.symptoms, symptoms);
+    if (!(await mayAskWith(question))) return;
+    adviceMutation.mutate(question);
+  };
 
   const [diagnosisNotes, setDiagnosisNotes] = useState('');
   const [diagnosis, setDiagnosis] = useState<DiagnosisResponse | null>(null);
@@ -330,7 +340,7 @@ export default function PlantDetailScreen() {
           )}
           <Button
             mode="contained"
-            onPress={() => adviceMutation.mutate()}
+            onPress={() => { void askTheGnome(); }}
             loading={adviceMutation.isPending}
             disabled={adviceMutation.isPending}
             style={styles.adviceBtn}

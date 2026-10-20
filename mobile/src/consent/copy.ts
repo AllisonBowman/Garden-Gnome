@@ -26,6 +26,8 @@
 //                 symptoms backend with the plant's nickname, species facts,
 //                 recent logs, growing area conditions and forecast. Offered
 //                 and listed only while that backend is not the rule engine.
+//                 src/consent/questionUpload.ts asks before the first
+//                 question is sent (PlantDetailScreen, mayAskWith).
 //   * voice     → modules/plant-speech sets requiresOnDeviceRecognition
 //                 whenever the device supports it; otherwise iOS sends audio
 //                 to Apple. The transcript is split on the phone
@@ -121,7 +123,8 @@ export const DATA_FLOWS: DataFlow[] = [
       + 'question in your own words, our server sends it to an outside AI '
       + 'service to be answered. The plant’s nickname, species facts and recent '
       + 'care log go with it, and so do its growing area’s name, conditions and '
-      + 'forecast. Your name, email and coordinates are not included.',
+      + 'forecast. Your name, email and coordinates are not included. The app '
+      + 'asks before the first question is sent.',
   },
   {
     id: 'voice',
@@ -206,6 +209,20 @@ export const PHOTO_DIAGNOSIS_NOTICE = {
     + 'anything. Only the reading is kept, on your plant’s timeline.\n\n'
     + 'Identifying a plant is different — that happens entirely on your phone.',
   confirmLabel: 'Send the photo',
+  cancelLabel: 'Not now',
+} as const;
+
+/** Before the first question in the caretaker's own words is sent
+ *  (consent/questionUpload.ts). Shown only while the box is offered. */
+export const QUESTION_NOTICE = {
+  title: 'This sends your question off your phone',
+  body:
+    'A question in your own words goes to our server and on to an outside AI '
+    + 'service to be answered. Your plant’s nickname, species facts and recent '
+    + 'care log go with it, and so do its growing area’s name, conditions and '
+    + 'forecast. Your name, email and coordinates are not included.\n\n'
+    + '“Not now” sends nothing, and your question stays in the box.',
+  confirmLabel: 'Send my question',
   cancelLabel: 'Not now',
 } as const;
 
