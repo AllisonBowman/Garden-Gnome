@@ -17,7 +17,7 @@ from fastapi import (
     APIRouter, BackgroundTasks, Depends, HTTPException, Request, Response,
 )
 from sqlalchemy.engine import Engine
-from sqlmodel import Session, select
+from sqlmodel import Session, or_, select
 
 from app.config import get_settings
 from app.db.database import get_session
@@ -229,12 +229,16 @@ def get_me(user: User = Depends(get_current_user)):
     return UserOut(**user.model_dump())
 
 
-#: Tries a queued Apple revoke gets on its own before it waits for an operator.
+#: Tries a queued Apple revoke gets before it is dropped.
 MAX_REVOKE_ATTEMPTS = 10
 #: Wait after the first failure; doubles with each one after (5 min, 10, 20 ...
 #: about 42 hours before the tenth), so a day-long Apple outage and a machine
 #: that cold-starts every few minutes do not burn every attempt in an hour.
 REVOKE_BACKOFF = timedelta(minutes=5)
+#: The longest a deleted account's encrypted Apple grant is kept, waiting for
+#: its revoke: 30 days or MAX_REVOKE_ATTEMPTS tries, whichever comes first.
+#: The privacy policy says the same.
+REVOKE_RETENTION = timedelta(days=30)
 
 
 def _revoke_due(row: PendingAppleRevocation, now: datetime) -> bool:
@@ -245,6 +249,49 @@ def _revoke_due(row: PendingAppleRevocation, now: datetime) -> bool:
     return now - row.last_attempt_at >= REVOKE_BACKOFF * (2 ** (row.attempts - 1))
 
 
+def _give_up(session: Session, row: PendingAppleRevocation, why: str) -> None:
+    """Forget a revoke that will not be sent, and say so -- with its row id
+    and nothing else, never the token. The grant stays active at Apple until
+    the person removes the app in their Apple ID settings."""
+    logger.error(
+        "Queued Apple revoke %s %s; dropped it, unsent. The grant stays active "
+        "until the person removes PlantAdvocate in their Apple ID settings",
+        row.id, why)
+    session.delete(row)
+
+
+def _purge(session: Session, now: datetime) -> int:
+    """Drop every queued revoke past its keeping (REVOKE_RETENTION, or out of
+    tries). The caller commits."""
+    expired = session.exec(select(PendingAppleRevocation).where(or_(
+        PendingAppleRevocation.created_at < now - REVOKE_RETENTION,
+        PendingAppleRevocation.attempts >= MAX_REVOKE_ATTEMPTS))).all()
+    for row in expired:
+        if row.attempts >= MAX_REVOKE_ATTEMPTS:
+            _give_up(session, row, f"failed {row.attempts} times")
+        else:
+            _give_up(session, row, f"waited more than "
+                                   f"{REVOKE_RETENTION.days} days")
+    return len(expired)
+
+
+def purge_expired_apple_revocations(engine: Engine) -> int:
+    """Drop the queued revokes past their keeping; how many went.
+
+    Runs at every boot, whether or not Sign in with Apple is configured --
+    a server with no Apple key never retries, and its queue must still not
+    keep a grant longer than 30 days -- and at the start of every retry pass.
+    Never raises: a boot must not fail over bookkeeping."""
+    try:
+        with Session(engine) as session:
+            dropped = _purge(session, datetime.utcnow())
+            session.commit()
+            return dropped
+    except Exception:  # noqa: BLE001 -- see docstring
+        logger.exception("Dropping expired Apple revokes failed")
+        return 0
+
+
 def revoke_pending_apple_grants(
     engine: Engine, ids: Optional[list[int]] = None,
 ) -> int:
@@ -253,16 +300,20 @@ def revoke_pending_apple_grants(
     Runs after every account deletion (for that deletion's rows) and once at
     startup (for every row), so a revoke that failed while Apple was down is
     tried again on the next cold start, backing off as it keeps failing.
-    Returns how many Apple accepted. Never raises: nothing here may break a
-    deletion that has already happened, or a boot."""
+    Each pass first drops whatever is past its keeping (`_purge`), and a
+    revoke that fails its last try, or can no longer be decrypted, is
+    dropped there and then. Returns how many Apple accepted. Never raises:
+    nothing here may break a deletion that has already happened, or a boot."""
     revoked = 0
     try:
         fernet = Fernet(get_settings().fernet_key.encode())
         with Session(engine) as session:
+            now = datetime.utcnow()
+            _purge(session, now)
+            session.commit()
             query = select(PendingAppleRevocation)
             if ids is not None:
                 query = query.where(PendingAppleRevocation.id.in_(ids))
-            now = datetime.utcnow()
             for row in session.exec(query).all():
                 if not _revoke_due(row, now):
                     continue
@@ -273,14 +324,12 @@ def revoke_pending_apple_grants(
                         fernet.decrypt(row.token_enc.encode()).decode()))
                 except InvalidToken:
                     # Encrypted under a key this server no longer has (the
-                    # Fernet key was rotated). No retry can fix that; leave
-                    # it for the operator.
-                    row.attempts = MAX_REVOKE_ATTEMPTS
-                    accepted = False
-                    logger.error(
-                        "Queued Apple revoke %s cannot be decrypted with this "
-                        "server's encryption key; it will not be retried",
-                        row.id)
+                    # Fernet key was rotated). No retry can fix that, and
+                    # nobody can read it to revoke it by hand either.
+                    _give_up(session, row, "cannot be decrypted with this "
+                                           "server's encryption key")
+                    session.commit()
+                    continue
                 except Exception as e:  # noqa: BLE001 -- try again later
                     accepted = False
                     logger.warning(
@@ -289,11 +338,7 @@ def revoke_pending_apple_grants(
                     session.delete(row)
                     revoked += 1
                 elif row.attempts >= MAX_REVOKE_ATTEMPTS:
-                    session.add(row)
-                    logger.error(
-                        "Queued Apple revoke %s failed %s times and will not "
-                        "be retried automatically; revoke it by hand or "
-                        "delete the row", row.id, row.attempts)
+                    _give_up(session, row, f"failed {row.attempts} times")
                 else:
                     session.add(row)
                     logger.warning(

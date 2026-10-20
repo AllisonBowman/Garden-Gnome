@@ -33,7 +33,9 @@ async def lifespan(app: FastAPI):
     run_migrations()    # Alembic owns the schema now (replaces init/migrate_db)
     seed_default_growing_area()  # ensure a growing area exists for new plants
     # A deleted account's Apple revoke that failed is tried again on each
-    # cold start, in the background (auth.revoke_pending_apple_grants).
+    # cold start, in the background (auth.revoke_pending_apple_grants), and
+    # one past its 30 days or 10 tries is dropped first, Apple or no Apple.
+    auth.purge_expired_apple_revocations(engine)
     auth.start_queued_apple_revokes(engine)
     census.operator_token()  # a too-short operator secret is said at boot
     vs = await vision_status()  # surface a dead vision config at boot, not first photo

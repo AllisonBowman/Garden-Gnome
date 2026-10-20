@@ -9,7 +9,11 @@ removes in the same transaction. So a failed revoke could never be retried.
 A row here is that token, copied off the identity before the identity is
 deleted: still Fernet-encrypted, with no user id, email or anything else that
 says whose it was. It is removed as soon as Apple accepts the revoke
-(app/routers/auth.py, revoke_pending_apple_grants).
+(app/routers/auth.py, revoke_pending_apple_grants), and kept no longer than
+30 days or 10 tries in any case, whichever comes first -- a row past that is
+dropped at the next boot or retry pass, with a log line and without the
+token. The privacy policy says an encrypted Apple sign-in grant may be kept
+up to 30 days after deletion, only to retry the revoke.
 
 Defined here rather than in app/models: it is bookkeeping for one route, not
 part of the domain, and nothing reads it but that route and its retry.
