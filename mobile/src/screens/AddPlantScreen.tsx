@@ -22,6 +22,7 @@ import { createPlant } from '../api/plants';
 import ReportResult from '../components/ReportResult';
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
+import { toxicityLine } from '../care/toxicityLine';
 import { Species, GrowingArea } from '../types';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -178,6 +179,7 @@ export default function AddPlantScreen() {
   );
 
   const selectedSpecies = speciesList.find((s: Species) => s.id === speciesId);
+  const selectedToxicity = selectedSpecies ? toxicityLine(selectedSpecies) : null;
 
   // Nickname is no longer required: a planting has no name of its own, and the
   // server fills in one from the species and place ("Tomatoes — south fence")
@@ -350,17 +352,16 @@ export default function AddPlantScreen() {
         {/* What the record says about harm comes with the choice, in the
             server's own sentence where it has one (which parts, to whom, how
             serious; or that nothing is recorded, which is not "safe"), so a
-            plant picked from a photo suggestion can't slip in unread. */}
+            plant picked from a photo suggestion can't slip in unread. A
+            hazard to anyone, people included, gets the warning colour and
+            one warning sign (care/toxicityLine.ts). */}
         {selectedSpecies && (
           <>
             <HelperText type="info">{selectedSpecies.scientific_name}</HelperText>
-            {selectedSpecies.toxicity_description ? (
-              <Text style={selectedSpecies.toxic_to_pets ? styles.hazard : styles.toxicityNote}>
-                {selectedSpecies.toxic_to_pets ? '⚠️ ' : ''}
-                {selectedSpecies.toxicity_description}
+            {selectedToxicity ? (
+              <Text style={selectedToxicity.hazard ? styles.hazard : styles.toxicityNote}>
+                {selectedToxicity.text}
               </Text>
-            ) : selectedSpecies.toxic_to_pets ? (
-              <Text style={styles.hazard}>⚠️ Toxic to pets.</Text>
             ) : null}
           </>
         )}
