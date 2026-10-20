@@ -694,7 +694,7 @@ printed FAIL:
 
 ```bash
 check() { n=$(curl -sL "$1" | grep -c -- "$2"); if [ "$3" = present ]; then [ "$n" -gt 0 ]; else [ "$n" = 0 ]; fi && echo "ok   $1  $2" || echo "FAIL $1  $2 (on $n lines)"; }
-check https://plantadvocate.ai/privacy.html 'Effective Date: October 16, 2026' present
+check https://plantadvocate.ai/privacy.html 'Effective Date: October 20, 2026' present
 check https://plantadvocate.ai/privacy.html 'Apple Weather' present
 check https://plantadvocate.ai/privacy.html 'Walk the garden' present
 check https://plantadvocate.ai/privacy.html "don't collect your precise location" absent

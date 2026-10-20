@@ -146,6 +146,19 @@ let inFlight = false;
  * adding a plant, and when reminder settings change. Safe to fire-and-forget:
  * failures (e.g. offline) leave the previous schedule in place.
  */
+/**
+ * Forget every scheduled reminder. Called when a session ends, so the next
+ * account on this phone is never nudged about the last one's plants.
+ */
+export async function cancelAllReminders(): Promise<void> {
+  if (!isSupported) return;
+  try {
+    await Notifications.cancelAllScheduledNotificationsAsync();
+  } catch {
+    // Nothing scheduled, or no permission: nothing to cancel.
+  }
+}
+
 export async function rescheduleAllReminders(): Promise<void> {
   if (!isSupported || inFlight) return;
   inFlight = true;

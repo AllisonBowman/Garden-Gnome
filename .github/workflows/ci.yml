@@ -77,7 +77,8 @@ jobs:
     concurrency:
       group: deploy-production
       cancel-in-progress: false
-    # Requires a FLY_API_TOKEN repo secret. Create one scoped to this app:
+    # Requires a FLY_API_TOKEN secret on the production environment (a repo
+    # secret works too). Create one scoped to this app:
     #   fly tokens create deploy -x 999999h -a garden-gnome-api
     # A deploy token can deploy this app and nothing else — don't use a
     # personal auth token here.

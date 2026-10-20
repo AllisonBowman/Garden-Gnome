@@ -36,7 +36,7 @@ History:
   both back when it serves the pages, so `curl` shows `[email protected]`
   where the files say `support@plantadvocate.ai`. That is expected.
 - 2026-10-16: rewritten against the code on `care-advice-honesty` for the App
-  Store submission. The privacy policy is new (effective October 16, 2026).
+  Store submission. The privacy policy is new (effective October 20, 2026).
   Support points at in-app deletion. Pricing says the app is free. The FAQ
   covers outdoor gardens. "Verified" became "cited", and the sources named are
   the ones the catalog's citations actually point to. Every form that sent
@@ -130,7 +130,7 @@ Run from anywhere. Every line must print `ok`:
 
 ```bash
 check() { n=$(curl -sL "$1" | grep -c -- "$2"); if [ "$3" = present ]; then [ "$n" -gt 0 ]; else [ "$n" = 0 ]; fi && echo "ok   $1  $2" || echo "FAIL $1  $2 (on $n lines)"; }
-check https://plantadvocate.ai/privacy.html 'Effective Date: October 16, 2026' present
+check https://plantadvocate.ai/privacy.html 'Effective Date: October 20, 2026' present
 check https://plantadvocate.ai/privacy.html 'Apple Weather' present
 check https://plantadvocate.ai/privacy.html 'Walk the garden' present
 check https://plantadvocate.ai/privacy.html "don't collect your precise location" absent
