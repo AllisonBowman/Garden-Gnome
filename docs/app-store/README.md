@@ -12,7 +12,11 @@ on 16 and 17 October 2026.
 - [app-privacy.md](app-privacy.md): the App Privacy questionnaire, type by
   type, and the privacy manifest entries that have to match it.
 - [review-notes.md](review-notes.md): App Review Information: sign-in,
-  contact, and the notes for the reviewer.
+  contact, and the notes for the reviewer, rewritten on 24 October against
+  `3f6d7da` from what `docs/go-to-market/research/review-risk.md` found.
+- [review-replies.md](review-replies.md): replies to paste into App Store
+  Connect if App Review raises 2.1(a), 5.1.1(v), 4.8, 2.3 or a server
+  error, with what to check before each one.
 - [age-rating.md](age-rating.md): every age-rating question. The result
   is 4+.
 - [screenshots.md](screenshots.md): the shot list, the sizes Apple
