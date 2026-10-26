@@ -143,7 +143,9 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   statRow: { flexDirection: 'row', justifyContent: 'space-between' },
   stat: { alignItems: 'center', flex: 1 },
   statLabel: { marginBottom: 2 },
-  statValue: { fontFamily: f.numeric, fontWeight: '600', color: p.ink, textTransform: 'capitalize' },
+  // No textTransform: the values arrive in the case they are shown in
+  // (legacyStats), and iOS's 'capitalize' turned "60–85°F" into "60–85°f".
+  statValue: { fontFamily: f.numeric, fontWeight: '600', color: p.ink },
   soil: { marginTop: 12 },
   soilValue: { color: p.ink },
   // 44px min target: a source is a link, and a link is a tappable row like

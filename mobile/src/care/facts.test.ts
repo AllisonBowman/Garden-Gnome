@@ -284,11 +284,21 @@ test('a second page from one authority is numbered so it does not read as a dupl
 
 test('a legacy row shows its four stats in plain words', () => {
   expect(legacyStats(minted(LEGACY))).toEqual([
-    { key: 'light', label: 'Light', value: 'bright indirect' },
+    { key: 'light', label: 'Light', value: 'Bright indirect' },
     { key: 'humidity', label: 'Humidity', value: '40–60%' },
     { key: 'temperature', label: 'Temp', value: '60–85°F' },
     { key: 'soil', label: 'Soil', value: 'well-draining' },
   ]);
+});
+
+// The stat row shows these values as they come, so the case is settled
+// here. A style's textTransform once did it, and iOS's 'capitalize' put
+// "60–85°f" in the App Store screenshots.
+test('a stat arrives in the case it is shown in: the light word capitalized, °F kept', () => {
+  const by = Object.fromEntries(legacyStats(minted(LEGACY)).map((s) => [s.key, s.value]));
+  expect(by.temperature).toBe('60–85°F');
+  expect(by.light).toBe('Bright indirect');
+  expect(legacyStats(minted({ ...LEGACY, light_need: 'low' }))[0].value).toBe('Low');
 });
 
 test('derived humidity is not a stat — nobody measured it', () => {
@@ -336,6 +346,34 @@ test('the legacy stats are captioned as catalog values, never as cited ones', ()
   const start = component.indexOf('export function LegacyStatRow');
   const end = component.indexOf('export function', start + 1);
   expect(component.slice(start, end)).toContain('{CATALOG_LINE}');
+});
+
+/** Every .tsx under src, as [path relative to src, text]. */
+function tsxSources(dir = path.join(__dirname, '..')): [string, string][] {
+  const found: [string, string][] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...tsxSources(full));
+    else if (entry.name.endsWith('.tsx')) {
+      found.push([path.relative(path.join(__dirname, '..'), full), fs.readFileSync(full, 'utf8')]);
+    }
+  }
+  return found;
+}
+
+// A text transform changes a value nobody re-reads: iOS's 'capitalize'
+// lowercases the rest of every word ("°F" to "°f", "NC State" to "Nc
+// State"), and 'lowercase' takes "°F", "pH" and a species name down with
+// it. Case is settled in code, where a test can see it. Uppercase is left to
+// the eyebrow, whose labels are the app's own words and source names, which
+// it changes only in case.
+test('no screen changes the case of what it shows with a text transform', () => {
+  const offenders = tsxSources()
+    .filter(([file, text]) => (
+      /textTransform:\s*['"](capitalize|lowercase)['"]/.test(text)
+      || (/textTransform:\s*['"]uppercase['"]/.test(text) && file !== path.join('components', 'Eyebrow.tsx'))))
+    .map(([file]) => file);
+  expect(offenders).toEqual([]);
 });
 
 test('the detail screens show a legacy stat only through the captioned row, below the resolved facts', () => {
