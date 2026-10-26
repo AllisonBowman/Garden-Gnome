@@ -10,7 +10,7 @@ import { fetchGrowingAreas } from '../api/growingAreas';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
-import { careFactRows, legacyStats } from '../care/facts';
+import { capitalize, careFactRows, legacyStats } from '../care/facts';
 import {
   CareFactList, CareSourceRows, CareStatusLine, LegacyStatRow,
 } from '../components/CareFacts';
@@ -182,7 +182,7 @@ export default function SpeciesDetailScreen() {
             {traits.map((t) => (
               <View key={t.id} style={styles.traitRow}>
                 <Text variant="labelMedium" style={styles.traitKey}>
-                  {t.trait.replace(/_/g, ' ')}
+                  {capitalize(t.trait.replace(/_/g, ' '))}
                 </Text>
                 <Text variant="bodySmall">
                   {t.value}{t.unit ? ` ${t.unit}` : ''}
@@ -212,5 +212,5 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   notes: { lineHeight: 22, color: p.ink },
   listItem: { paddingVertical: 4 },
   traitRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line2 },
-  traitKey: { color: p.sub, textTransform: 'capitalize', flex: 1 },
+  traitKey: { color: p.sub, flex: 1 },
 });

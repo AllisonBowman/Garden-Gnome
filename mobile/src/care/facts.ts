@@ -148,8 +148,11 @@ function span(lo: number | null | undefined, hi: number | null | undefined, word
 const num = (v: number) => String(v);
 
 /** Sentence case for a row, leaving a leading unit symbol alone: "pH 6–6.5"
- *  is a symbol, and "PH" reads as a typo. */
-const capitalize = (text: string) => (
+ *  is a symbol, and "PH" reads as a typo. Exported so a screen capitalizes
+ *  in code: a `textTransform: 'capitalize'` lowercases the rest of every
+ *  word on iOS, and "60–85°F" reached the App Store screenshots as
+ *  "60–85°f". */
+export const capitalize = (text: string) => (
   text.startsWith('pH') ? text : text.charAt(0).toUpperCase() + text.slice(1)
 );
 
@@ -359,7 +362,7 @@ export function legacyStats(species: Species): LegacyStat[] {
   const stats: LegacyStat[] = [];
   const s = species;
   if (s.light_need && !hasAny(s, RESOLVED_FOR.light)) {
-    stats.push({ key: 'light', label: 'Light', value: s.light_need.replace(/_/g, ' ') });
+    stats.push({ key: 'light', label: 'Light', value: capitalize(s.light_need.replace(/_/g, ' ')) });
   }
   // Derived humidity (imported rows) is not a fact: nobody measured it.
   if (s.humidity_pct_min != null && s.humidity_pct_max != null
