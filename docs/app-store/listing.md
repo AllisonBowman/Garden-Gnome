@@ -7,8 +7,12 @@ Apple's limit; newlines count as characters. Read "Before you submit" in
 server and the website, some of this text isn't.
 
 Checked against the code at `307930e` on `care-advice-honesty`, the ship
-branch, with the review fixes made alongside it. Every 1.1.3 change these
-blocks describe is on that branch, so no line is waiting on one.
+branch, with the review fixes made alongside it. Brought up to the
+2026-10-30 changes on the same branch: the line the app now shows under
+each hazard note, and the description's "temperature" in place of "cold
+hardiness", which no page shows. Every 1.1.3 change these blocks describe
+is on that branch once the 2026-10-30 changes land, so build from a tip
+that carries them; no line is waiting on anything later.
 
 The species figure is "more than 990". The 134 files in
 `garden-gnome/app/data/verified/` hold 999 records. Four of them are
@@ -85,7 +89,10 @@ The **HAZARDS, STATED PLAINLY** paragraph describes the plant-hazard and
 edibility change, which is in the build. Most hazard sentences name no
 parts, because most sources don't: on a scratch sync at `798f905`, 30 of the
 378 species with a hazard line named parts. So the paragraph promises parts
-only where the source gives them.
+only where the source gives them. Its last two sentences are, word for word,
+the line the app shows under each hazard note from 1.1.3
+(`mobile/src/care/notAdvice.ts`), so change them only together with the app
+and with `review-notes.md`.
 
 <!-- field limit=4000 -->
 ```text
@@ -101,7 +108,7 @@ MORE THAN 990 SPECIES, WITH SOURCES
 The Species Almanac covers houseplants, herbs, vegetables, perennials, shrubs, trees, bulbs and climbers. Narrow it to what fits a growing area of yours. Each species page shows facts such as light, water, soil, temperature and size, and lists where they came from. A fact borrowed from the plant's genus is labelled as borrowed. Anything not yet cited says so. The check schedules that reminders follow were written by PlantAdvocate for 129 common plants and are not cited.
 
 HAZARDS, STATED PLAINLY
-If a source records a plant as harmful to people or pets, its page says so, gives the source's severity rating for people where it has one, and names the parts where the source does. A plant is shown as edible only with the conditions its source gives. These notes repeat what the sources publish. They are not medical or veterinary advice.
+If a source records a plant as harmful to people or pets, its page says so, gives the source's severity rating for people where it has one, and names the parts where the source does. A plant is shown as edible only with the conditions its source gives. Under each hazard note, the app says: These notes repeat what the sources publish. They are not medical or veterinary advice.
 
 CHECKS, NOT CHORES
 When a plant comes due, feel the soil, then tap Watered or Still damp. Either keeps your streak. Nothing is called overdue while it is still inside its care window. Repotting is a look at the roots once a year, in February. Feeding reminders rest from November to February. Reminders are optional and set per care type. They follow a species' care window wherever the catalog holds a schedule for it, and can move an outdoor watering reminder by 1 or 2 days around rain and heat.
@@ -120,7 +127,7 @@ PlantAdvocate is free, with no ads and no in-app purchases. Sign in with Apple o
 
 PlantAdvocate is independent. The organizations it cites have not reviewed or endorsed it.
 ```
-Characters: 3,792 of 4,000.
+Characters: 3,830 of 4,000.
 
 The description says nothing about photo check-ups of an ailing plant or
 about reading typed symptoms. Production doesn't offer either: the app asks
@@ -154,7 +161,9 @@ history. It covers everything since 1.1.2 build 15 (`a5d0d07`, 2 August
 
 Every line describes a change on `307930e`: the hazard and edibility
 wording, the operator-only census with no sync button, and
-`ios.supportsTablet` false in `mobile/app.json` are all in the build.
+`ios.supportsTablet` false in `mobile/app.json` are all in the build. The
+one exception is the not-advice line under each hazard note, which came
+with the 2026-10-30 changes.
 
 <!-- field limit=4000 -->
 ```text
@@ -166,7 +175,7 @@ The Species Almanac. Open it from the Species tab or from a growing area, and na
 
 A cited catalog. More than 990 species now carry care facts from named sources such as NC State Extension and the Royal Horticultural Society. Each species page lists its sources and labels anything borrowed from the genus.
 
-Hazards stated plainly. Where a source records a plant as harmful to people or pets, its page says so. A plant is shown as edible only with the conditions its source gives.
+Hazards stated plainly. Where a source records a plant as harmful to people or pets, its page says so. A plant is shown as edible only with the conditions its source gives. Under each hazard note, a line says these notes repeat what the sources publish and are not medical or veterinary advice.
 
 Checks, not chores. A watering check on the Checks for today card now asks you to feel the soil first, then tap Watered or Still damp. Either keeps your streak. Nothing is called overdue while it is inside its care window. A plant you add is dated that day, so its first check comes due without a log first.
 
@@ -184,7 +193,7 @@ iPhone only. On iPad, PlantAdvocate now runs as an iPhone app.
 
 New icon. A terracotta pot with a seedling.
 ```
-Characters: 2,169 of 4,000.
+Characters: 2,291 of 4,000.
 
 ## URLs
 
@@ -233,6 +242,7 @@ fixes are still changing are cited by function, not line.
 | Each species page names its sources | `mobile/src/screens/SpeciesDetailScreen.tsx:140`, `mobile/src/components/CareFacts.tsx:106-124` |
 | Missing record never safe | `garden-gnome/app/services/toxicity.py`, `describe` (the no-verdict branches) and `hazard_line`; CONTEXT.md "Unknown" |
 | Hazard sentence: who, the source's severity for people, parts where the source names them | `toxicity.py`, `describe`. Parts come only from a source's own table; a bare flag names none (`from_legacy`) |
+| The not-advice line under each hazard note | `mobile/src/care/notAdvice.ts` holds the two sentences once, and `mobile/src/components/NotAdviceNote.tsx` shows them under the hazard note on species pages, plant pages and Add plant (the 2026-10-30 changes) |
 | Surfaces and goals | `mobile/src/growingAreas/realEstate.ts:12-68` |
 | Blank means unknown | `mobile/src/screens/GrowingAreasScreen.tsx:273-276` |
 | Shade fern in full sun, climber on a 7 ft fence | Fit engine run on a scratch sync: Lady Fern in a full-sun bed gets "This spot gets 6+ hours of direct sun; sources record it for part shade, full shade."; Chinese Wisteria under 84 in of headroom gets "Outgrows this spot: climbs to 25 ft and there is 7 ft of headroom" (`garden-gnome/app/services/fit.py:193-363`) |

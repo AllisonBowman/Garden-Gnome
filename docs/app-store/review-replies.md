@@ -8,7 +8,9 @@ and for account deletion, 2.3 with 2.5.19 inside it, 1.4.1 for the hazard
 notes, and 4.8, which review-risk.md rates least likely but costs nothing to
 have ready. Minimum functionality (4.2 and 4.3(b)) has no prepared reply.
 Each one is true of 1.1.3 at `3f6d7da`, checked on 24 October 2026 against
-the code and `docs/go-to-market/product-truth.md`. Each section says what to
+the code and `docs/go-to-market/product-truth.md`, except that the 1.4.1
+reply and the 2.3 quote were brought up to the 2026-10-30 changes (the
+not-advice line in the app, and "temperature" in the description). Each section says what to
 check first, because a reply that says something works has to be true when
 the reviewer reads it.
 
@@ -231,17 +233,21 @@ Guideline 1.4.1 is written for medical apps that could give inaccurate data
 or be used to diagnose or treat, and asks them to remind users to check with
 a doctor. PlantAdvocate isn't one, but a species page says what a source
 records a plant can do to people or pets, so a reviewer could ask about it.
-Know one thing first: the listing and the Notes say the hazard notes are not
-medical or veterinary advice, but no screen in the app says so (review-risk.md,
-"Health-adjacent claims"; nothing in `mobile/src` carries that line). So the
-reply below says where that sentence is, and never says the app shows it. If
-App Review asks for the line on the app's own screens, that is a code change
-and a new build, and no reply settles it; bring the message to Claude.
+Know one thing first. When review-risk.md was written, the listing and the
+Notes said the hazard notes are not medical or veterinary advice, but no
+screen in the app did. Since the 2026-10-30 changes, 1.1.3 shows "These
+notes repeat what the sources publish. They are not medical or veterinary
+advice." under each hazard note, on species pages, plant pages and Add plant
+(`mobile/src/care/notAdvice.ts`). Before you send the reply below, open
+Pothos in the build under review and check that the line is there. If it
+isn't, the build predates those changes: cut ", and the app shows that same
+line under each hazard note" from the reply, and bring the message to
+Claude.
 
 ```text
 Hello, and thank you for reviewing PlantAdvocate.
 
-PlantAdvocate is a plant-care app, not a medical one. It doesn't diagnose, triage or suggest treatment for people or animals. Where a published source records a plant as harmful to people or pets, the species page repeats what that source says, and the page lists its sources. Where people are at risk, the note ends by telling the reader to call Poison Control (US 1-800-222-1222) right away if they suspect poisoning, or a vet where the source names animals. Where no source has a record, the page says so and says that is not a guarantee of safety; it never calls a plant safe. The App Store description says these notes repeat what the sources publish and are not medical or veterinary advice.
+PlantAdvocate is a plant-care app, not a medical one. It doesn't diagnose, triage or suggest treatment for people or animals. Where a published source records a plant as harmful to people or pets, the species page repeats what that source says, and the page lists its sources. Where people are at risk, the note ends by telling the reader to call Poison Control (US 1-800-222-1222) right away if they suspect poisoning, or a vet where the source names animals. Where no source has a record, the page says so and says that is not a guarantee of safety; it never calls a plant safe. The App Store description says these notes repeat what the sources publish and are not medical or veterinary advice, and the app shows that same line under each hazard note.
 
 Thank you,
 Allison Bowman
@@ -249,7 +255,9 @@ Allison Bowman
 
 The wording is in `garden-gnome/app/services/toxicity.py`: the Poison
 Control line at `:73` and `:800-803`, the no-record sentences at
-`:843-860`. The description's sentence is in `docs/app-store/listing.md:104`.
+`:843-860`. The app's line is `NOT_ADVICE_LINE` in
+`mobile/src/care/notAdvice.ts`, and the description's sentence is in the
+HAZARDS, STATED PLAINLY paragraph of `docs/app-store/listing.md`.
 If the question is the 4+ rating instead, compare App Store Connect with
 `docs/app-store/age-rating.md`, which answers Medical or Treatment
 Information with None, and reply with what you changed, if anything.

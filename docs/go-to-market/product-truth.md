@@ -160,12 +160,19 @@ source does record no toxicity to pets, "{Source} records no toxicity to
 pets for {plant}. That is not a guarantee of safety"
 (`toxicity.py:843-860`).
 
+Under each hazard note, on species pages, plant pages and Add plant, the app
+says "These notes repeat what the sources publish. They are not medical or
+veterinary advice." That line was added on 2026-10-30
+(`mobile/src/care/notAdvice.ts`); before then it was in the listing and the
+review notes but on no app screen.
+
 The listing's heading is **HAZARDS, STATED PLAINLY**: "If a source records a
 plant as harmful to people or pets, its page says so, gives the source's
 severity rating for people where it has one, and names the parts where the
 source does. A plant is shown as edible only with the conditions its source
-gives. These notes repeat what the sources publish. They are not medical or
-veterinary advice." (`listing.md:104`). The opening paragraph ends "Where
+gives. Under each hazard note, the app says: These notes repeat what the
+sources publish. They are not medical or veterinary advice." (`listing.md`,
+HAZARDS, STATED PLAINLY). The opening paragraph ends "Where
 there is no record, PlantAdvocate says so. A missing record is never treated
 as safe." (`listing.md:92`). The FAQ says "no record never means safe" and
 "The app is not a substitute for a vet, a doctor or poison control."
