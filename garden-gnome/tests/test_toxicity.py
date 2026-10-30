@@ -83,6 +83,64 @@ def test_aroid_genera_are_recognized(name):
     assert tx.lookup(name).agent == "calcium oxalate crystals"
 
 
+@pytest.mark.parametrize("name, common, words", [
+    ("Lilium longiflorum", "Easter Lily",
+     "acute kidney failure — a few petals or even pollen can be fatal"),
+    ("Hemerocallis fulva", "Daylily", "acute kidney failure"),
+    ("Epipremnum aureum", "Pothos",
+     "calcium oxalate crystals — mouth irritation, drooling and swelling if chewed"),
+    ("Rheum rhabarbarum", "Rhubarb", "oxalate poisoning"),
+    ("Solanum lycopersicum", "Tomato", "drooling and stomach upset"),
+])
+def test_a_tables_own_words_are_labelled_as_plantadvocates(name, common, words):
+    """The listing says hazard notes repeat what the sources publish. These
+    words come from a table with no cited passage behind it, so the sentence
+    says whose they are, and they never sit in the lead as if a source had
+    said them."""
+    text = tx.describe_for_species(name, common, True, cited_to="NC State Extension")
+    assert f"PlantAdvocate's own summary: {words}." in text
+    assert words not in text.split(". ")[0]
+
+
+@pytest.mark.parametrize("name, common, flag, agent", [
+    ("Solanum tuberosum", "Potatoes", True, "(solanine)"),
+    ("Solanum melongena", "Eggplant", True, "(solanine)"),
+    ("Solanum lycopersicum", "Tomato", True, "(tomatine)"),
+    ("Rheum rhabarbarum", "Rhubarb", True, "(oxalic acid)"),
+    ("Phaseolus lunatus", "Butter Beans", None, "(hydrocyanic acid)"),
+    ("Arachis hypogaea", "Peanut", None, "(seed storage proteins)"),
+])
+def test_an_agent_a_cited_passage_names_stays_in_the_lead(name, common, flag, agent):
+    """Their sources name these toxic principles (NC State's pages, and the
+    RHS for rhubarb's oxalic acid), so they need no label."""
+    text = tx.describe_for_species(name, common, flag, cited_to="NC State Extension")
+    assert agent in text.split(". ")[0]
+    assert f"summary: {agent.strip('()')}" not in text
+
+
+def test_pothos_reads_in_full():
+    """Screenshot 06's plant, from its tranche record: the verdict, the
+    table's words labelled as ours, whose verdict the pets' is, the people's
+    rating in the words the listing quotes, and who to call."""
+    detail = ("All parts contain calcium oxalate crystals. NC State rates poison "
+              "severity Medium and flags the plant as a problem for cats, dogs and "
+              "horses; reported signs are oral irritation, pain and swelling of "
+              "mouth, tongue and lips, drooling, vomiting (not horses), difficulty "
+              "swallowing, skin irritation and diarrhea. Also causes contact "
+              "dermatitis.")
+    text = tx.describe_for_species("Epipremnum aureum", "Pothos", True,
+                                   cited_to="NC State Extension", detail=detail)
+    assert text == (
+        "Toxic to cats, dogs and people: all parts. "
+        "PlantAdvocate's own summary: calcium oxalate crystals — mouth "
+        "irritation, drooling and swelling if chewed. "
+        "For pets, the source is NC State Extension. "
+        "NC State Extension rates its poison severity for people medium. "
+        "Keep it out of reach of pets and children. "
+        "If you suspect poisoning, call Poison Control (US 1-800-222-1222), "
+        "your local poison centre or a vet right away.")
+
+
 def test_unknown_species_has_no_special_case():
     assert tx.lookup("Ficus lyrata") is None
     assert tx.lookup("") is None

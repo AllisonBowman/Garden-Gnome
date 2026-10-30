@@ -34,6 +34,10 @@ animal-specific patterns a flag cannot carry (tomato fruit, lily and cats),
 and they never overrule a source: a cited "non-toxic" beats them, and a cited
 severity is never talked down by them. They hold no "mild" of their own,
 because calling something mild is a judgement only a source gets to make.
+Where a table's own words -- the arum family's crystals and what they do, a
+lily's harm to a cat's kidneys -- have no cited passage behind them, the
+sentence gives them under "PlantAdvocate's own summary", so they are never
+read as a source's.
 
 WHOSE SEVERITY IT IS
 
@@ -115,6 +119,10 @@ class Toxicity:
     effect: str = ""                          # "mouth irritation", "kidney failure"
     agent: str = ""                           # "calcium oxalate", "tomatine"
     source: str = ""
+    # Which of `agent` and `effect` are a table's own words, with no cited
+    # passage behind them. The sentence labels those as PlantAdvocate's
+    # summary instead of letting them pass as what a source published.
+    summary: list[str] = field(default_factory=list)
     # The authority whose claim settled the flag, when one did. A False an
     # extension service stated is a different fact from a False the legacy
     # catalog defaulted to, and the sentence has to say which.
@@ -178,11 +186,14 @@ class Toxicity:
 # candidate list (`is_food_crop`), so a new one is a deliberate decision:
 # test_candidates_on_the_real_catalog pins the set.
 KNOWN_NUANCE: dict[str, Toxicity] = {
+    # NC State names tomatine among the toxic principles. No cited passage
+    # gives the effect, so that is PlantAdvocate's own summary.
     "solanum lycopersicum": Toxicity(
         toxic=True, parts=["foliage"], edible_parts=["ripe_fruit"],
         at_risk=["cats", "dogs"], severity="moderate",
         effect="drooling and stomach upset", agent="tomatine",
-        source="well-established Solanaceae chemistry",
+        summary=["effect"],
+        source="NC State Extension (agent); PlantAdvocate's own summary (effect)",
     ),
     "solanum tuberosum": Toxicity(
         toxic=True, parts=["foliage", "sprout", "berry", "green_tuber"],
@@ -191,11 +202,14 @@ KNOWN_NUANCE: dict[str, Toxicity] = {
         agent="solanine",
         source="well-established Solanaceae chemistry",
     ),
+    # Its sources name the agent: the RHS, oxalic acid in the leaves; NC
+    # State, soluble oxalates. The effect is PlantAdvocate's own summary.
     "rheum rhabarbarum": Toxicity(
         toxic=True, parts=["leaf"], edible_parts=["stalk"],
         at_risk=["cats", "dogs", "humans"], severity="severe",
         effect="oxalate poisoning", agent="oxalic acid",
-        source="well-established",
+        summary=["effect"],
+        source="RHS and NC State Extension (agent); PlantAdvocate's own summary (effect)",
     ),
     # NC State: "The fruits and seeds are edible; however, the remainder of
     # the plant is poisonous"; flowers, leaves, roots and stems carry
@@ -230,16 +244,20 @@ KNOWN_NUANCE: dict[str, Toxicity] = {
 }
 
 # Genera where the risk differs sharply by animal — the case a boolean is
-# least able to express, and the one with the worst downside.
+# least able to express, and the one with the worst downside. The effects
+# are PlantAdvocate's own summary of feline lily toxicosis, written into the
+# table rather than read from a cited passage, and the sentence says so.
 SPECIES_SPECIFIC_RISK: dict[str, Toxicity] = {
     "lilium": Toxicity(
         toxic=True, parts=["all", "pollen"], at_risk=["cats"], severity="severe",
         effect="acute kidney failure — a few petals or even pollen can be fatal",
-        source="widely documented feline lily toxicosis",
+        summary=["effect"],
+        source="PlantAdvocate's own summary; no cited passage",
     ),
     "hemerocallis": Toxicity(
         toxic=True, parts=["all"], at_risk=["cats"], severity="severe",
-        effect="acute kidney failure", source="widely documented",
+        effect="acute kidney failure", summary=["effect"],
+        source="PlantAdvocate's own summary; no cited passage",
     ),
 }
 
@@ -247,7 +265,9 @@ SPECIES_SPECIFIC_RISK: dict[str, Toxicity] = {
 # oxalate in every part, to every animal that chews -- is the family's; how
 # bad it is varies by species, and NC State rates them anywhere from low
 # (Monstera) to high (Dieffenbachia, airway swelling). So the table states
-# the pattern and leaves severity to the source.
+# the pattern and leaves severity to the source. Its words are
+# PlantAdvocate's own summary of the family, not any one page's, and the
+# sentence says so -- even for Pothos, whose NC State page says much the same.
 AROID_GENERA = {
     "anthurium", "philodendron", "epipremnum", "monstera", "dieffenbachia",
     "spathiphyllum", "aglaonema", "alocasia", "colocasia", "caladium",
@@ -256,7 +276,8 @@ AROID_GENERA = {
 AROID_TOXICITY = Toxicity(
     toxic=True, parts=["all"], at_risk=["cats", "dogs", "humans"],
     effect="mouth irritation, drooling and swelling if chewed",
-    agent="calcium oxalate crystals", source="characteristic of Araceae",
+    agent="calcium oxalate crystals", summary=["agent", "effect"],
+    source="PlantAdvocate's own summary; no cited passage",
 )
 
 
@@ -814,6 +835,18 @@ def _action(tox: Toxicity, *, animals: bool, people: bool,
     return keep
 
 
+def _summary_sentence(tox: Toxicity) -> str:
+    """A table's own words, labelled as PlantAdvocate's.
+
+    The listing says hazard notes repeat what the sources publish, and these
+    words no cited passage states. They stay, because what calcium oxalate
+    does to a mouth, or a lily to a cat, is what a caretaker needs to
+    recognise, and they say whose they are."""
+    said = " — ".join(getattr(tox, part) for part in ("agent", "effect")
+                      if part in tox.summary and getattr(tox, part))
+    return f"PlantAdvocate's own summary: {said}." if said else ""
+
+
 def _pets_source(tox: Toxicity) -> str:
     """Whose verdict the pets' half is, when an authority's claim settled it.
 
@@ -888,8 +921,10 @@ def describe(tox: Toxicity, common_name: str = "This plant") -> str:
         not animals or "humans" in tox.at_risk or not tox.effect)
     who = _who(tox, animals, people_in_clause)
     toxic_parts = _labels(tox.parts)
-    agent = f" ({tox.agent})" if tox.agent else ""
-    effect = f" — {tox.effect}" if tox.effect else ""
+    # A cited agent or effect stays in the lead; a table's own words go in
+    # their own labelled sentence after it (_summary_sentence).
+    agent = f" ({tox.agent})" if tox.agent and "agent" not in tox.summary else ""
+    effect = f" — {tox.effect}" if tox.effect and "effect" not in tox.summary else ""
     # The peanut case: the part eaten is itself the hazard, to some people.
     eaten_is_hazard = tox.is_contradictory and set(tox.parts) == set(tox.edible_parts)
 
@@ -909,6 +944,8 @@ def describe(tox: Toxicity, common_name: str = "This plant") -> str:
         lead = f"{warn}{_capital(who)}{parts}{agent}{effect}."
 
     sentences = [lead]
+    if _summary_sentence(tox):
+        sentences.append(_summary_sentence(tox))
     if animals and _pets_source(tox):
         sentences.append(_pets_source(tox))
     if people and not people_in_clause:
