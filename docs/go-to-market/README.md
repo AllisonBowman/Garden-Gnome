@@ -14,6 +14,6 @@ Start with [strategy.md](strategy.md), which opens with the plan in brief: what 
 
 [targets.md](targets.md) lists the specific outlets, communities and programs worth contacting, with each one's own public contact or submission page and the rule that governs it.
 
-[launch-day-runbook.md](launch-day-runbook.md) is the step-by-step checklist for release day and the two days after it.
+[launch-day-runbook.md](launch-day-runbook.md) is the step-by-step checklist for release day and the week after it, with the pre-launch checklist and the check-ins for the first 30 days and the winter.
 
-[launch-day-site.md](launch-day-site.md) sets out the edits to `site/` that go live once the App Store page loads: the badge, the Smart App Banner, the credit line and the privacy policy clauses.
+`launch-day-site.md` doesn't exist yet. It will set out the edits to `site/` that go live once the App Store page loads: the badge, the Smart App Banner, the credit line and the privacy policy clauses. It is written when branch `claude/launch-day-site` is reviewed. That branch holds one unreviewed draft, `fa4076b`, and until the review its diff is the only record of those edits. Nothing on it goes out before launch day.
