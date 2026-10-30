@@ -203,8 +203,8 @@ The Checks for today card on the Plants tab lists a plant when its care window c
 ```
 
 If the question is about the claim that facts are cited. The description
-says "Each species page shows facts such as light, water, soil, size and cold
-hardiness, and lists where they came from" and "Anything not yet cited says
+says "Each species page shows facts such as light, water, soil, temperature
+and size, and lists where they came from" and "Anything not yet cited says
 so" (`listing.md:101`).
 
 ```text
