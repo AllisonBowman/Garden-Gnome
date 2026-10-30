@@ -1,7 +1,7 @@
 // The line that goes under every hazard sentence.
 //
-// The App Store listing and the review notes promise it, and App Review
-// reads a hazard note with no such line on screen as health advice
+// The App Store listing and the review notes say it, and a reviewer reading
+// guideline 1.4.1 strictly could ask to see it on screen too
 // (docs/go-to-market/research/review-risk.md). It is said word for word
 // wherever it appears, so the app holds it once, here, and every screen
 // shows it through components/NotAdviceNote.tsx. Change it only together
