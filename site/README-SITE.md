@@ -1,9 +1,12 @@
 # PlantAdvocate marketing site
 
 **This folder is the built site, and right now it is the only correct copy.**
-The live site at https://plantadvocate.ai is *not* this folder. It was
-generated on July 17, 2026 by the static-site generator on the desktop machine
-(`build.py` and its templates), which has never been brought into this repo.
+The live site at https://plantadvocate.ai is behind it. Read on 2026-10-30,
+it still carried this folder's October 16 rewrite: a privacy policy dated
+October 16, and a homepage that says "EVERY FACT CITED". The July 17 build
+from the static-site generator on the desktop machine (`build.py` and its
+templates, which have never been brought into this repo) is no longer live,
+but the generator can still put it back.
 
 > **Do not run the desktop generator again until it has been reconciled with
 > this folder** (see "Reconciling the generator" below). Running it and
@@ -46,12 +49,26 @@ History:
   census export 4.1 carries (monthly care counts, months for moves, no
   days) and promises only that no identifier links 2 exports. Its
   deletion paragraph says the encrypted Apple sign-in grant can be kept
-  up to 30 days, only to retry the revoke. The effective date stays
-  October 16, since that version was never published. The site no
+  up to 30 days, only to retry the revoke. The effective date moved to
+  October 20, the day the text was last revised. The site no
   longer says every care fact is cited: researched facts are, older ones
   are labelled, and the check schedules PlantAdvocate wrote for 129
   common plants are not cited. The homepage specimen shows the advice
   line the app really gives, not a symptom note it can't take.
+- 2026-10-30: the home page, About, the FAQ and Plant resources carry the
+  independence line, "PlantAdvocate is independent. The organizations it
+  cites have not reviewed or endorsed it." The hero strip reads SOURCES
+  NAMED · AN UNKNOWN IS NEVER A PASS · CHECKS, NOT CHORES, and no page
+  compares PlantAdvocate with other apps on claims nobody checked. No page
+  says all data or advice traces to a cited source, or that the app judges
+  indoor light. Pothos is no longer "a safe bet", and the FAQ carries the
+  app's line "These notes repeat what the sources publish. They are not
+  medical or veterinary advice." Support says which plants get reminders.
+  The privacy policy says news about PlantAdvocate goes only to people who
+  asked for it, and what a removed early-access address leaves behind. Its
+  effective date stays October 20, since that version still hasn't been
+  published, and its "What changed" line now names everything since the
+  October 16 version that is live.
 
 ## Deploying
 
@@ -145,6 +162,16 @@ check https://plantadvocate.ai/privacy.html 'no identifier links one export to a
 check https://plantadvocate.ai/privacy.html 'up to 30 days after the deletion' present
 check https://plantadvocate.ai/index.html 'SOURCES NAMED' present
 check https://plantadvocate.ai/index.html 'EVERY FACT CITED' absent
+check https://plantadvocate.ai/index.html 'NO GUESSWORK' absent
+check https://plantadvocate.ai/index.html 'Most plant apps' absent
+check https://plantadvocate.ai/how-it-works.html 'Most plant apps' absent
+for p in index faq about resources; do check "https://plantadvocate.ai/$p.html" 'have not reviewed or endorsed it' present; done
+check https://plantadvocate.ai/about.html 'vetted' absent
+check https://plantadvocate.ai/recommendations.html 'safe bet' absent
+check https://plantadvocate.ai/recommendations.html 'stood a chance' absent
+check https://plantadvocate.ai/faq.html 'They are not medical or veterinary advice' present
+check https://plantadvocate.ai/privacy.html 'never add the address you sign in with' present
+check https://plantadvocate.ai/privacy.html 'one-way fingerprint' present
 ```
 
 Then confirm the two URLs the app opens still resolve:
