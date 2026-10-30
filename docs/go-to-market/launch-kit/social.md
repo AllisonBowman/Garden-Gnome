@@ -81,7 +81,7 @@ Visual: `01-needs-addressing.png`, the frame where Lady Fern's sun misfit names 
 
 | Week | Example dates | On the strategy's surfaces | Community venues | Optional posts |
 |---|---|---|---|---|
-| 2 | Thu 26 Nov to Wed 2 Dec | Switch the default promotional text to the feeding-rest line ("Feeding reminders rest from November to February...", 164). Put up the pets custom product page and its holiday line once its gates are met. The L+14 check on Wed 2 Dec: crash rate, support themes, and whether a December build is worth it | Keep earning r/iosapps karma by taking part in its threads | P3 on Mon 30 Nov |
+| 2 | Thu 26 Nov to Wed 2 Dec | Switch the default promotional text to the feeding-rest line ("Feeding reminders rest from November to February...", 168). Put up the pets custom product page and its holiday line once its gates are met. The L+14 check on Wed 2 Dec: crash rate, support themes, and whether a December build is worth it | Keep earning r/iosapps karma by taking part in its threads | P3 on Mon 30 Nov |
 | 3 | Thu 3 Dec to Wed 9 Dec | Monday read. Decide the December build by about 7 Dec | Product Hunt, if at all, Sat 5 or Sun 6 Dec at 12:01 am Pacific (between L+14 and L+21). No cross-post about it, so nothing reads as a vote ask | P4 on Thu 3 Dec; P5 on Tue 8 Dec |
 | 4 | Thu 10 Dec to Wed 16 Dec | A December build, if any, is submitted by Fri 11 Dec | The r/iosapps megathread comment, if the karma is earned and it's still within 30 days of L | P6 on Thu 10 Dec; P7 on Mon 14 Dec |
 | 5 | Thu 17 Dec to Wed 23 Dec | Hands off from about 20 Dec. Apple's last holiday notice said reviews may take longer from 20 to 26 December | None | P8 on Thu 17 Dec, then nothing |
@@ -183,7 +183,7 @@ The promotional text rotation is the strategy's, in its "promotional text calend
 | January | Default: "Feeding reminders rest from November to February..." to the end of January. Pets page: "Before a plant comes home, look it up..." from January to mid-March | W1, mid-January | Product Hunt's fallback weekend, 9 and 10 Jan. The spring nomination by Fri 15 Jan. The optional AHS proposal. The 31 January check |
 | February | Default: "February is repot-check month..." | W2 in the first week; W3 only if a correction has been logged | Hazard-sentence changes shipped by the end of February. Confirm Poison Prevention Week's 2027 dates. Decide on Apple Ads and on spring hours |
 | March | Default: "Planting this spring? Describe the bed once..." to mid-April. Pets page: the Poison Prevention Week line, probably 21 to 27 March, once G5 is met | S1 early in March; S2 mid-March; S3 during Poison Prevention Week | The Apple Ads test, mid-March to early April, if its conditions hold |
-| April | Default: "Each growing area lists what needs addressing..." from mid-April into May | S4 mid-April; S5 only once the write-up is published | The lily of the valley write-up and its Hacker News submission, if AHS declined the proposal or Allison withdrew it after hearing nothing |
+| April | Default: "Looking for something for a bare bed?..." from mid-April into May | S4 mid-April; S5 only once the write-up is published | The lily of the valley write-up and its Hacker News submission, if AHS declined the proposal or Allison withdrew it after hearing nothing |
 | May | Unchanged | S6; S7 | World Bee Day, 20 May, has no post planned |
 | June | Default: "Give a bed the goal Feeds pollinators..." around Pollinator Week, 21 to 27 June | S8 during Pollinator Week | The 30 June read of the season |
 

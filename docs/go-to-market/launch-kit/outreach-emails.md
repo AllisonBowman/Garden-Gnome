@@ -2,7 +2,7 @@
 
 These are the drafts for the notes in [targets.md](../targets.md), which says who gets which one and when. Every one is a draft that Allison sends personally, one at a time, after reading it through and putting it in their own words where it doesn't yet sound like them. Nothing here has been sent, submitted or posted. Written 2026-10-24 against the ship tip `3f6d7da`; every product sentence comes from `docs/app-store/listing.md` or [product-truth.md](../product-truth.md), and where they and this file disagree, they win.
 
-There are four templates, one for each audience the strategy reaches by note. A is for houseplant podcasts, which reach the indoor keepers the strategy puts first. B is for garden podcasts, which reach the spring bed growers. C is the article proposal to American Gardener, the American Horticultural Society's magazine. D is an information-only note to an organization, which the strategy allows but doesn't plan. There is no template for pet owners, because the strategy reaches them through the store's pets page and pitches no safety organization, and none for makers, whose Product Hunt post is drafted in [community-posts.md](community-posts.md). The waitlist email and the individual replies owed to people who emailed for early access are in [waitlist-email.md](waitlist-email.md); neither is outreach, so neither is here. The Apple featuring nominations aren't emails; their drafts are in [research/aso.md](../research/aso.md).
+There are four templates, one for each audience the strategy reaches by note. A is for houseplant podcasts, which reach the indoor keepers the strategy puts first. B is for garden podcasts, which reach the spring bed growers. C is the article proposal to The American Gardener, the American Horticultural Society's magazine. D is an information-only note to an organization, which the strategy allows but doesn't plan. There is no template for pet owners, because the strategy reaches them through the store's pets page and pitches no safety organization, and none for makers, whose Product Hunt post is drafted in [community-posts.md](community-posts.md). The waitlist email and the individual replies owed to people who emailed for early access are in [waitlist-email.md](waitlist-email.md); neither is outreach, so neither is here. The Apple featuring nominations aren't emails; their drafts are in [research/aso.md](../research/aso.md).
 
 ## Before any note goes out
 
@@ -151,9 +151,9 @@ If you'd rather not hear from me again, write "no thanks" to support@plantadvoca
 
 Follow-up. One note per show, no chaser, as with A. The joe gardener contact page says it can't reply to each message, so silence is expected and is not a no. Just Grow Something has a sponsors-and-partners page; if a reply points there, sponsorship is paid and outside the $0 baseline, so thank them and leave it. If either show writes back with a question, answer as in A, with the same reply draft and the same rule about giving hosts nothing. If a host asks about planting dates or frost, say plainly that the app doesn't answer those, which is better than a one-star review from someone who wanted a planner ([strategy.md](../strategy.md)).
 
-## C. American Gardener article proposal
+## C. The American Gardener article proposal
 
-For the American Horticultural Society's magazine (targets.md row 3). Winter, in January. It goes by email to the editorial address on the [writer's guidelines page](https://ahsgardening.org/writers-guidelines/).
+For the American Horticultural Society's magazine (targets.md row 3). Winter, in January. It goes by email to the editorial address on the [writer's guidelines page](https://ahsgardening.org/writers-guidelines/). These files call it The American Gardener, as strategy.md and channels.md do. targets.md found the magazine's own pages calling it American Gardener on 2026-10-24, so before sending, use whichever name its current issue prints, in the proposal and the follow-up alike.
 
 This one isn't about the app. It offers the magazine's readers an article: what a gardener can do when two respected references disagree about how poisonous a plant is, with lily of the valley as the case. The guidelines ask for a description of the topic, why it would interest a national audience of knowledgeable gardeners, an outline, and, from a first-time writer, writing samples and a brief account of the writer's own experience with the subject, plus where photographs might come from. The draft below has each of those, and it is longer than the podcast notes for that reason.
 
@@ -172,7 +172,7 @@ Article proposal: lily of the valley and its two poison ratings
 ```text
 Dear editors,
 
-I'd like to propose an article for American Gardener, either as a feature of about 1,500 words or as a column of 900 to 1,000 words, whichever suits you better.
+I'd like to propose an article for The American Gardener, either as a feature of about 1,500 words or as a column of 900 to 1,000 words, whichever suits you better.
 
 The topic is what a gardener can do when two respected references disagree about how poisonous a plant is. Lily of the valley is the case. NC State Extension's Plant Toolbox lists it as poisonous but rates the severity for people as low, with harm only if a large amount is eaten, while Missouri Botanical Garden's Plant Finder says every part of the plant is very poisonous. A gardener who reads both gets answers that sit a long way apart.
 
@@ -196,7 +196,7 @@ Photographs: [YOUR OWN, IF YOU HAVE THEM, OR "I would need to arrange licensed i
 
 One disclosure. I build PlantAdvocate, a free app for iPhone that cites both of these sources. The article would not be about the app, and I'd want my connection to it disclosed in whatever way you prefer. PlantAdvocate is independent. The organizations it cites have not reviewed or endorsed it.
 
-This proposal is with American Gardener only.
+This proposal is with The American Gardener only.
 
 With thanks,
 Allison Bowman
@@ -213,7 +213,7 @@ Follow-up. The guidelines publish no response time. My suggestion is to wait six
 ```text
 Dear editors,
 
-I wrote on [DATE OF THE PROPOSAL] to propose an article on lily of the valley and its two poison ratings. If it's still under consideration, I'm glad to wait. If I haven't heard by [A DATE TWO WEEKS AWAY], I'll take it that it isn't a fit for American Gardener and will withdraw the proposal, with thanks.
+I wrote on [DATE OF THE PROPOSAL] to propose an article on lily of the valley and its two poison ratings. If it's still under consideration, I'm glad to wait. If I haven't heard by [A DATE TWO WEEKS AWAY], I'll take it that it isn't a fit for The American Gardener and will withdraw the proposal, with thanks.
 
 With thanks,
 Allison Bowman
@@ -285,4 +285,4 @@ Never overclaim the features. Leave photo matching out of outreach; if it must c
 
 Never claim popularity or credentials that don't exist. No user counts, download figures, ratings, reviews, testimonials, press quotes or awards, until the store shows them and then only as it shows them. Never add to what the About page and the privacy policy say about Allison.
 
-Never ask for, or trade for, coverage. Don't ask for a mention, a review, a rating, a link or upvotes, don't give money, a gift, early access or anything else, in return or otherwise, and don't tie anything to a favorable word. Don't send the American Gardener proposal anywhere else while it waits, don't use the lily of the valley story in any note but that proposal, and don't send the same note to two outlets in a way that reads as a mass mailing. Never write to the addresses of people who signed in to the app, and never add anyone who replies to a note to a list.
+Never ask for, or trade for, coverage. Don't ask for a mention, a review, a rating, a link or upvotes, don't give money, a gift, early access or anything else, in return or otherwise, and don't tie anything to a favorable word. Don't send the proposal to The American Gardener anywhere else while it waits, don't use the lily of the valley story in any note but that proposal, and don't send the same note to two outlets in a way that reads as a mass mailing. Never write to the addresses of people who signed in to the app, and never add anyone who replies to a note to a list.

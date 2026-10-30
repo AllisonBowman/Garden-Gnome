@@ -168,14 +168,16 @@ The bolder subtitle would pair with `plant,watering,reminder,raised,herb,vegetab
 The launch text (157 of 170) is accurate and plain. Apple says promotional text sits above the description and [can change at any time without a new version](https://developer.apple.com/app-store/product-page/), and that it [does not affect search ranking](https://developer.apple.com/app-store/search/). That makes it a free, safe place for seasonal lines. Two drafts that use only facts in `listing.md`:
 
 ```text
-Feeding reminders rest from November to February. Describe each windowsill, see what suits it and what doesn't, and read pet and people hazards, with sources named.
+Feeding reminders rest from November to February. Describe each windowsill, see what suits it and what doesn't, and read the pet and people hazards that sources record.
 ```
-Characters: 164 of 170.
+Characters: 168 of 170.
 
 ```text
 February is repot-check month. Look at a plant's roots, then tap Repotted, Top-dressed or All fine. Each growing area shows what suits it and what doesn't, and why.
 ```
 Characters: 164 of 170.
+
+The first line is as `docs/go-to-market/launch-kit/listing-proposals.md` reworded it. This file's first draft ended "read pet and people hazards, with sources named", which read as if every plant has hazards and as if each hazard sentence names its source, when the pet verdict's source wasn't named inside the sentence.
 
 ### Description: leave it
 

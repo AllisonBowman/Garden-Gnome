@@ -42,7 +42,7 @@ Feeding reminders rest from November to February. Describe each windowsill, see 
 ```
 Characters: 168 of 170.
 
-The strategy's line for late November to the end of January, drafted in aso.md, reworded here. That version ended "read pet and people hazards, with sources named", which reads as if every plant has hazards and as if each hazard sentence names its source, and the pet verdict's source isn't yet named inside the hazard sentence (strategy, "The hazard sentences"). This one claims only the hazards that sources record, as listing.md's HAZARDS paragraph does ("If a source records a plant as harmful to people or pets, its page says so"). strategy.md's calendar and aso.md still carry the earlier wording. The feeding rest comes from the reminder plan (`mobile/src/notifications/plan.ts`, feeding in months 3 to 10).
+The strategy's line for late November to the end of January, drafted in aso.md, reworded here. That version ended "read pet and people hazards, with sources named", which reads as if every plant has hazards and as if each hazard sentence names its source, and the pet verdict's source isn't yet named inside the hazard sentence (strategy, "The hazard sentences"). This one claims only the hazards that sources record, as listing.md's HAZARDS paragraph does ("If a source records a plant as harmful to people or pets, its page says so"). Since 2026-10-30, strategy.md's calendar and aso.md carry this wording too. The feeding rest comes from the reminder plan (`mobile/src/notifications/plan.ts`, feeding in months 3 to 10).
 
 ```text
 Checks, not chores: when a plant comes due, feel the soil, then tap Watered or Still damp. Either keeps your streak. Feeding reminders rest from November to February.
@@ -86,7 +86,7 @@ Looking for something for a bare bed? Each growing area puts forward candidates:
 ```
 Characters: 167 of 170.
 
-The strategy's line for mid-April to May, reworded here. That version, "Each growing area lists what needs addressing among its plants, and puts forward good candidates: nothing on record against the spot, at least 1 thing confirmed for it.", opened with plants already in an area, which a bare bed being filled in May doesn't have, and gave the candidate rule as a fragment. This one starts from the reader's question and gives the rule as listing.md does, in the truth sheet's exact numbers. It describes candidates by their rule and never as safe or guaranteed, which matters because candidates can carry hazard lines. strategy.md's calendar still carries the earlier wording.
+The strategy's line for mid-April to May, reworded here. That version, "Each growing area lists what needs addressing among its plants, and puts forward good candidates: nothing on record against the spot, at least 1 thing confirmed for it.", opened with plants already in an area, which a bare bed being filled in May doesn't have, and gave the candidate rule as a fragment. This one starts from the reader's question and gives the rule as listing.md does, in the truth sheet's exact numbers. It describes candidates by their rule and never as safe or guaranteed, which matters because candidates can carry hazard lines. Since 2026-10-30, strategy.md's calendar carries this wording too.
 
 ```text
 Walk the garden and say what's there: "12 tomatoes along the south fence, a rosemary by the gate." Confirm each plant, then add them all at once.
