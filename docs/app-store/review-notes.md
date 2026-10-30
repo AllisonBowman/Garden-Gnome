@@ -23,6 +23,15 @@ gathered into one sentence, and the weather paragraph is part of SERVICES.
 Step 1 now says to tap the place suggestion after typing a town, because a
 typed town isn't set until it is tapped.
 
+On 30 October the HAZARDS block changed to say that the app shows the
+not-advice line under each hazard note, which 1.1.3 now does
+(`mobile/src/care/notAdvice.ts`), in the same words as the listing's
+HAZARDS, STATED PLAINLY paragraph. The block grew from 3,750 to 3,822 bytes.
+Sign-In Information below and decision 7 of
+`docs/2026-10-16-app-store-finish-line-handoff.md` say the same thing: tick
+Sign-in required, and if the form insists, `Sign in with Apple` and `none
+needed`.
+
 Before you paste, know one thing about iOS 27. The screenshots were taken on
 iOS 26.5 simulators because the iOS 27.0 simulator crashed a local 1.1.3
 build at launch (`docs/screenshots/1.1.3/README.md`).
@@ -123,18 +132,18 @@ PHOTOS
 Take photo and Choose photo in Add plant appear only on iPhones with Apple Intelligence turned on. The photo is read on the phone, never uploaded, and only suggests catalog matches to confirm. Photo check-ups and typed symptom reading are built but switched off, and the app hides both.
 
 HAZARDS
-Hazard and edibility notes repeat what their sources publish, mostly NC State Extension. A missing record reads as unknown, never as safe. They are not medical or veterinary advice.
+Hazard and edibility notes come from their sources, mostly NC State Extension. A missing record reads as unknown, never as safe. Under each hazard note the app says: These notes repeat what the sources publish. They are not medical or veterinary advice.
 
 CONTACT
 Allison Bowman, +1 [FILL IN phone], support@plantadvocate.ai
 ```
-Bytes: 3,750 of Apple's 4,000, counted with the brackets in place, from the
-first letter to the last, with nothing at either end. Every character is
-ASCII, so bytes and characters are the same number. The block has 33 line
-breaks; a browser form can send each one as two bytes, which makes 3,783.
-Both counts are under 3,800, and stay under it as long as each bracket is
-replaced with text no longer than itself. A stray space or blank line at
-either end adds to the count, so paste the block exactly.
+Bytes: 3,822 of Apple's 4,000, counted on 30 October with the brackets in
+place, from the first letter to the last, with nothing at either end. Every
+character is ASCII, so bytes and characters are the same number. The block
+has 33 line breaks; a browser form can send each one as two bytes, which
+makes 3,855. Both counts are under 3,900, and stay under it as long as each
+bracket is replaced with text no longer than itself. A stray space or blank
+line at either end adds to the count, so paste the block exactly.
 
 ## Where each part comes from
 
@@ -158,4 +167,4 @@ either end adds to the count, so paste the block exactly.
 | Permissions | Location on Use my location `AddressPicker.tsx:62`; microphone and speech on the mic `CaptureGardenScreen.tsx:135`; camera on Turn the camera on `CaptureGardenScreen.tsx:312-315` and on Take photo `AddPlantScreen.tsx:251`; notifications on a reminder switch `SettingsScreen.tsx:153`, `notifications/reminders.ts:129-137`. Nothing asks at launch |
 | Photo matching only with Apple Intelligence | `AddPlantScreen.tsx:140-141, 239-268`; `modules/plant-id/ios/PlantIdModule.swift:78-89` |
 | Photo check-ups and symptoms hidden | `mobile/src/care/aiCapabilities.ts:45-55`; `PlantDetailScreen.tsx:329, 396`; production `/ai/status` on 23 October: every backend `stub`, vision `ready: false` |
-| Hazards | `toxicity.py`, `describe`; no record never reads as safe `toxicity.py:843-860`. Of the 534 researched records with a `toxicity_detail` in `garden-gnome/app/data/verified/*.json`, 516 name NC State, counted on 24 October |
+| Hazards | `toxicity.py`, `describe`; no record never reads as safe `toxicity.py:843-860`. Of the 534 researched records with a `toxicity_detail` in `garden-gnome/app/data/verified/*.json`, 516 name NC State, counted on 24 October. The line under each hazard note is `NOT_ADVICE_LINE` in `mobile/src/care/notAdvice.ts`, shown by `components/NotAdviceNote.tsx` on species pages, plant pages and Add plant (the 2026-10-30 changes) |
