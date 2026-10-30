@@ -58,7 +58,7 @@ is what keeps a crop NC State rates highly on a growing area's candidate list
 (fit.never_a_candidate).
 
 This module is descriptive, not veterinary or medical advice: serious cases
-say to call Poison Control, a local poison centre or a vet rather than
+say to call Poison Control, a local poison center or a vet rather than
 implying the app can triage.
 """
 from __future__ import annotations
@@ -78,7 +78,7 @@ RATING_SEVERITY = {"low": "mild", "medium": "moderate", "high": "severe"}
 POISON_CONTROL = "Poison Control (US 1-800-222-1222)"
 #: And everyone else. No one number serves every country, so the sentence
 #: names the service, after the US number, for a reader who is not in the US.
-LOCAL_POISON_CENTRE = "your local poison centre"
+LOCAL_POISON_CENTRE = "your local poison center"
 
 PART_LABELS = {
     "all": "all parts",
