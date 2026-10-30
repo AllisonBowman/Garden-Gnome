@@ -24,9 +24,15 @@ curated care notes stop making safety claims of their own, the 33 "Pet-safe"
 notes and the 6 that contradicted their cited records among them. Every boot
 now brings the curated prose in line with the catalog file, which replaces
 the production one-off the go-to-market handoff described (step 2 says what
-to look for in the logs). The app shows "These notes repeat what the sources
-publish. They are not medical or veterinary advice." under each hazard note.
-And the site copy fixes ride with step 3. Build from the tip of
+to look for in the logs). The hazard sentences change in three ways, all on
+the server: readers outside the US are pointed to their local poison
+centre, a cited pet verdict names its source, and the words that come from
+the code's own tables, the lily, daylily and arum ones among them, are
+labelled "PlantAdvocate's own summary". The app shows "These notes repeat
+what the sources publish. They are not medical or veterinary advice." under
+each hazard note, and a "Report a fact" link at the foot of each species
+page's sources. And the site copy fixes ride with step 3, the privacy
+policy's narrower marketing-email line among them. Build from the tip of
 `care-advice-honesty` that carries all of it, later than `b6fee6b`. Those
 changes touch app code, so PR #22's CI runs again on that tip; wait for
 green as before.
@@ -43,10 +49,12 @@ October 20) and today's fixes. Export the July waitlist before it, in the new
 section between steps 2 and 3.
 
 What else moved: decision 7 points at the Notes' SIGN-IN paragraph;
-decisions 10 and 11 are new; step 4 has the Notes block's real size, the
+decisions 10 to 12 are new, 12 being whether to retake three screenshots
+that predate today's changes; step 4 has the Notes block's real size, the
 plus-sign phone format, the screenshots that already exist and their upload
-order, and the iOS 27 note; step 5 checks the new line and the rewritten
-notes; and "Settled since the lanes reported" lists what today settled. If
+order, and the iOS 27 note; step 5 checks the new line, the link, the new
+hazard wording and the rewritten notes; and "Settled since the lanes
+reported" lists what today settled. If
 you haven't filed the App Launch featuring nomination yet, it waits on
 nothing here (`docs/go-to-market/strategy.md`, "Featuring Nominations").
 
@@ -193,7 +201,7 @@ and 3, so you can upload first to keep that window short.
 
 ## Decide these first
 
-Each one comes with my recommendation. The first eleven change what happens
+Each one comes with my recommendation. The first twelve change what happens
 in the steps. The rest can wait until after you submit; none of them blocks
 this submission.
 
@@ -286,10 +294,24 @@ this submission.
    moment.
 11. **Where 1.1.3 is available.** Recommend the United States only, with a
    manual release and no pre-order (`docs/go-to-market/strategy.md`, step
-   zero). The app is in English, in feet, inches and Fahrenheit, and its
-   hazard sentences print only the US Poison Control number. listing.md
-   still says Free in every territory; you choose in Pricing and
-   Availability in step 4.
+   zero). The app is in English, in feet, inches and Fahrenheit, and the
+   few early ratings should land on the one store page the keyword research
+   was done for. The hazard sentences no longer argue for it: since 2026-10-30 they
+   add "or your local poison centre" after the US number. listing.md still
+   says Free in every territory; you choose in Pricing and Availability in
+   step 4.
+12. **Retake screenshots 03, 05 and 06?** They were shot from `3f6d7da`,
+   before the 2026-10-30 changes. Shot 06's Pothos sentence lacks "or your
+   local poison centre", the pets' source line and the "PlantAdvocate's own
+   summary" label, and no frame shows the not-advice line, which the build
+   now puts under the sentence in 06 and under Lady Fern's note in 03. Shot
+   05's Sources card may or may not reach down to the new "Report a fact"
+   link. Recommend asking Claude to retake those three at both sizes from
+   the build's commit, on the iOS 26.5 simulators, the way the 2026-10-24
+   retakes were made (`docs/screenshots/1.1.3/README.md`), and to run the
+   `CHECK.md` checks again before step 4. Uploading the
+   set as it is would show older wording on the frame that carries the
+   hazard sentence.
 
 These can wait until after submission:
 
@@ -323,24 +345,16 @@ These can wait until after submission:
   water lettuce, princess flower, small-leaf spiderwort). It lives only in
   research notes, so the exclusion rule fires on nothing. Recommend promoting
   it to a claim field after review. That's a schema and migration decision.
-- **US-only Poison Control.** Hazard sentences say "call Poison Control (US
-  1-800-222-1222) or a vet right away". Recommend keeping that for this
-  submission, since it labels the number as US, and making the app
-  available in the US only (decision 11).
-- **The three hazard-sentence changes** from the go-to-market handoff's
-  item 4, all backend-only, so each ships with a deploy and no build: "or
-  your local poison centre" after the US number; the pet verdict's source
-  named in the sentence, as the people rating already is; and the lily,
-  daylily and arum effect clauses in `garden-gnome/app/services/toxicity.py`,
-  which come from code tables rather than a cited page, either cited or
-  labelled as PlantAdvocate's summary. Recommend all three by the end of
-  February, before any spring line leads with hazards and before
-  availability widens beyond the US (`docs/go-to-market/strategy.md`, "The
-  hazard sentences"). Until the third lands, store copy names no lily,
-  daylily or aroid, and the not-advice line's "These notes repeat what the
-  sources publish" has the same gap as the listing's.
-- **A "Report a fact" link on species pages,** built like the "Report this
-  result" link. Recommend it for 1.1.4, with the ratings prompt.
+- **US-only Poison Control.** Settled on 2026-10-30, with the hazard
+  sentences below: a sentence that names people now says "call Poison
+  Control (US 1-800-222-1222) or your local poison centre right away", and
+  "Poison Control (US 1-800-222-1222), your local poison centre or a vet"
+  where pets are named too. Widening availability past the US is still
+  decision 11's question, for after launch.
+- **Citing the hazard tables' own words.** Since 2026-10-30 they are
+  labelled "PlantAdvocate's own summary" in the sentence (below). Finding a
+  cited passage for each, species by species, would let the label go; that
+  is research-loop work, after review.
 - **A grace window for a just-rotated refresh token** on the server, so a
   refresh whose response got lost doesn't sign someone out. Recommend doing
   it after review, backend only.
@@ -397,16 +411,39 @@ Settled since the lanes reported, so not decisions any more:
   `curated text refreshed N`. This replaces the production one-off in
   `docs/2026-10-26-go-to-market-handoff.md`, item 3, which nobody needs to
   run now.
+- The three hazard-sentence changes from the go-to-market handoff's item 4
+  (2026-10-30, backend only, so they ship with step 2's deploy). Readers
+  outside the US are pointed to their local poison centre, after the US
+  number. A pet verdict a source settled names it: "For pets, the source is
+  NC State Extension." And words that come from the code's own tables
+  rather than a cited passage, the lily and daylily kidney wording, the
+  arum family's calcium oxalate wording, tomato's and rhubarb's, now follow
+  the lead as "PlantAdvocate's own summary: ...". The catalog lane counted
+  365 sentences changed: 305 gain the local poison centre, 278 name the pet
+  verdict's source and 29 carry the label. That closes the gap the
+  go-to-market files flagged in "These notes repeat what the sources
+  publish", once the deploy is live.
 - The not-advice line is in 1.1.3 (2026-10-30): "These notes repeat what
   the sources publish. They are not medical or veterinary advice." under
-  each hazard note, on species pages, plant pages and Add plant
-  (`mobile/src/care/notAdvice.ts`). The listing, the review notes and the
-  1.4.1 reply now say the app shows it.
+  the hazard sentence on species pages, in a plant page's Care guide card
+  and under a species picked in Add plant (`mobile/src/care/notAdvice.ts`).
+  The listing, the review notes and the 1.4.1 reply now say the app shows
+  it.
+- A "Report a fact" link is in 1.1.3 too (2026-10-30), at the foot of each
+  species page's Sources card, or in the same spot when a species has no
+  sources yet. It opens a prefilled email to support naming the species and
+  the facts the page shows, like "Report this result".
 - The site copy fixes ride with step 3 (2026-10-30): the five in
   `docs/go-to-market/strategy.md`, "The site, riding along with step 3",
   and the sixth the go-to-market handoff added, `recommendations.html`'s
   promise about a fiddle leaf fig in a bathroom, which the fit engine can't
-  judge indoors.
+  judge indoors. The same pass narrowed the privacy policy's account
+  paragraph, which said flatly "we don't send marketing email", to say the
+  address you sign in with never goes on a mailing list and news goes only
+  to people who asked for it; it says what a removed early-access address
+  leaves behind; and the FAQ carries the not-advice line. The effective date
+  stays October 20, and `site/README-SITE.md`'s check block tests all of
+  it.
 - The go-to-market branch is on `care-advice-honesty`, folded in at
   `b6fee6b` and pushed (2026-10-30).
 - Which poisons can be candidates. A species a source rates as a serious
@@ -1027,8 +1064,8 @@ button, iPhone only, the three named weather services and the manifest.
      support@plantadvocate.ai.
    - Paste the Notes block as it is. Fill in its two brackets first: the
      phone you ran the TestFlight build on in step 5, or delete that
-     bracket, and the phone number. It is 3,822 of Apple's 4,000 bytes,
-     3,855 if the form sends each line break as two bytes, counted on
+     bracket, and the phone number. It is 3,881 of Apple's 4,000 bytes,
+     3,914 if the form sends each line break as two bytes, counted on
      2026-10-30 with the brackets in place, so paste it exactly, with
      nothing added at either end.
    - Under Version Release, recommend **Manually release this version**, so
@@ -1046,8 +1083,10 @@ first three are what a searcher sees in the results list: what doesn't suit
 a spot, checks not chores, and hazards on Pothos
 (`docs/go-to-market/strategy.md`, step zero). Shot 6 is Pothos, not Dumb
 Cane: Dumb Cane's care notes still showed garbled dashes on the shoot's
-backend, and the shot list allows Pothos. If CHECK.md says otherwise on the
-day you upload, follow CHECK.md.
+backend, and the shot list allows Pothos. Three of them, 03, 05 and 06,
+predate the 2026-10-30 changes to the hazard wording, the not-advice line
+and the Report a fact link; decision 12 recommends retaking them first. If
+CHECK.md says otherwise on the day you upload, follow CHECK.md.
 
 `docs/app-store/screenshots.md` still has the demo garden, the shots' set-ups
 and the simulator commands, for any retake. Two notes if you retake one:
@@ -1120,7 +1159,13 @@ Go through these and note what you see for each:
    "Mildly") comes from NC State's rating of harm to people, so it belongs to
    people only; animals are "toxic to pets", or to cats or dogs, unless the
    plant's own table or a source's grave wording about animals says more; and
-   a food crop leads with the part that's eaten. I'll give you the exact
+   a food crop leads with the part that's eaten. Since 2026-10-30 three more
+   hold: where people are named, the Poison Control line adds "or your local
+   poison centre" (", your local poison centre or a vet" when pets are named
+   too); a pet verdict a source settled says whose it is, such as "For
+   pets, the source is NC State Extension."; and words from the code's own
+   tables follow as "PlantAdvocate's own summary: ...", which on Pothos is
+   the calcium oxalate wording. I'll give you the exact
    sentences from a scratch database built from the commit EAS reports, to
    compare word for word.
    - Pothos: toxic to cats, dogs and people, all parts (calcium oxalate
@@ -1149,9 +1194,12 @@ Go through these and note what you see for each:
 
    Under each of those sentences there should be one line, word for word: "These notes repeat what the sources publish. They are
    not medical or veterinary advice." (2026-10-30). Look for it on Pothos's
-   species page, on a plant's own page, and in Add plant once you pick a
-   species. If it's missing, the build predates that day's changes: tell me
-   before step 6, because the listing and the Notes now say it's there.
+   species page, in a plant's Care guide card, and in Add plant once you
+   pick a species. At the foot of Pothos's Sources card, tap Report a fact:
+   Mail should open a message to support@plantadvocate.ai naming Pothos and
+   listing what the page shows. Don't send it. If the line or the link is
+   missing, the build predates that day's changes: tell me before step 6,
+   because the listing and the Notes now say the line is there.
 
    While you're in the Species tab, read the care notes too, which come
    from the server since step 2's deploy. Catnip, Parsley, Nasturtium,
@@ -1260,7 +1308,7 @@ it.
 
 Roughly in the order that changes what happens next:
 
-1. Your answers to the eleven decisions at the top. A one-word "yes" or
+1. Your answers to the twelve decisions at the top. A one-word "yes" or
    "no" per item is plenty; for decision 10, which subtitle.
 2. Whether PR #22 merged, and the RUN_ID.
 3. The `fly secrets list` names, the orphan check's output, the snapshot ID,

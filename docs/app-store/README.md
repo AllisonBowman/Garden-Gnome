@@ -51,14 +51,18 @@ These have to be true first, or some of the text in these files is not.
    once they land: `ios.supportsTablet` false, so no iPad screenshots are
    asked for; plant hazards to people and pets stated plainly, with
    edibility shown only with its conditions, and the not-advice line under
-   each hazard note (2026-10-30); the census export and sync operator-only,
+   each hazard note and the Report a fact link (2026-10-30); the census
+   export and sync operator-only,
    export 4.1 with fresh identifiers and care counted by month, and no Sync
    now button in the app; the in-app privacy summary naming all 3 weather
    services; and a privacy manifest matching app-privacy.md. No line in
    these files is waiting on a later change, so none needs cutting. A build
    from an older commit would make some of them untrue: one from `307930e`
    to `b6fee6b` lacks the not-advice line that the description, the Notes
-   and the 1.4.1 reply now say the app shows.
+   and the 1.4.1 reply now say the app shows. The hazard sentences' 2026-10-30
+   wording (the local poison centre, the pets' source, the summary label)
+   comes from the server, so it reaches every build once the backend
+   deploy (item 1) is live.
 4. **The server is awake when review starts.** It stops when idle
    (`garden-gnome/fly.toml`, `min_machines_running = 0`), and a first
    request after idle took 6.7 s on 15 October. Open the app once just

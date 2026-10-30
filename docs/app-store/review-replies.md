@@ -247,15 +247,16 @@ Claude.
 ```text
 Hello, and thank you for reviewing PlantAdvocate.
 
-PlantAdvocate is a plant-care app, not a medical one. It doesn't diagnose, triage or suggest treatment for people or animals. Where a published source records a plant as harmful to people or pets, the species page repeats what that source says, and the page lists its sources. Where people are at risk, the note ends by telling the reader to call Poison Control (US 1-800-222-1222) right away if they suspect poisoning, or a vet where the source names animals. Where no source has a record, the page says so and says that is not a guarantee of safety; it never calls a plant safe. The App Store description says these notes repeat what the sources publish and are not medical or veterinary advice, and the app shows that same line under each hazard note.
+PlantAdvocate is a plant-care app, not a medical one. It doesn't diagnose, triage or suggest treatment for people or animals. Where a published source records a plant as harmful to people or pets, the species page repeats what that source says, and the page lists its sources. Where a few words are PlantAdvocate's own summary rather than a source's, the note labels them so. Where people are at risk, the note ends by telling the reader to call Poison Control (US 1-800-222-1222) or their local poison centre right away if they suspect poisoning, or a vet where the source names animals. Where no source has a record, the page says so and says that is not a guarantee of safety; it never calls a plant safe. The App Store description says these notes repeat what the sources publish and are not medical or veterinary advice, and the app shows that same line under each hazard note.
 
 Thank you,
 Allison Bowman
 ```
 
 The wording is in `garden-gnome/app/services/toxicity.py`: the Poison
-Control line at `:73` and `:800-803`, the no-record sentences at
-`:843-860`. The app's line is `NOT_ADVICE_LINE` in
+Control line (`POISON_CONTROL`, with `LOCAL_POISON_CENTRE` since
+2026-10-30), the summary label (`_summary_sentence`), and the no-record
+sentences in `describe`. The app's line is `NOT_ADVICE_LINE` in
 `mobile/src/care/notAdvice.ts`, and the description's sentence is in the
 HAZARDS, STATED PLAINLY paragraph of `docs/app-store/listing.md`.
 If the question is the 4+ rating instead, compare App Store Connect with

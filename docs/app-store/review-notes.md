@@ -26,7 +26,9 @@ typed town isn't set until it is tapped.
 On 30 October the HAZARDS block changed to say that the app shows the
 not-advice line under each hazard note, which 1.1.3 now does
 (`mobile/src/care/notAdvice.ts`), in the same words as the listing's
-HAZARDS, STATED PLAINLY paragraph. The block grew from 3,750 to 3,822 bytes.
+HAZARDS, STATED PLAINLY paragraph. It also says that words of
+PlantAdvocate's own are labelled as its summary, as the hazard sentences
+have done since the same day. The block grew from 3,750 to 3,881 bytes.
 Sign-In Information below and decision 7 of
 `docs/2026-10-16-app-store-finish-line-handoff.md` say the same thing: tick
 Sign-in required, and if the form insists, `Sign in with Apple` and `none
@@ -132,16 +134,16 @@ PHOTOS
 Take photo and Choose photo in Add plant appear only on iPhones with Apple Intelligence turned on. The photo is read on the phone, never uploaded, and only suggests catalog matches to confirm. Photo check-ups and typed symptom reading are built but switched off, and the app hides both.
 
 HAZARDS
-Hazard and edibility notes come from their sources, mostly NC State Extension. A missing record reads as unknown, never as safe. Under each hazard note the app says: These notes repeat what the sources publish. They are not medical or veterinary advice.
+Hazard and edibility notes come from their sources, mostly NC State Extension, and label any words of PlantAdvocate's own as its summary. A missing record reads as unknown, never as safe. Under each hazard note the app says: These notes repeat what the sources publish. They are not medical or veterinary advice.
 
 CONTACT
 Allison Bowman, +1 [FILL IN phone], support@plantadvocate.ai
 ```
-Bytes: 3,822 of Apple's 4,000, counted on 30 October with the brackets in
+Bytes: 3,881 of Apple's 4,000, counted on 30 October with the brackets in
 place, from the first letter to the last, with nothing at either end. Every
 character is ASCII, so bytes and characters are the same number. The block
 has 33 line breaks; a browser form can send each one as two bytes, which
-makes 3,855. Both counts are under 3,900, and stay under it as long as each
+makes 3,914. Both counts are under 4,000, by 119 and 86 bytes, and stay under as long as each
 bracket is replaced with text no longer than itself. A stray space or blank
 line at either end adds to the count, so paste the block exactly.
 
@@ -151,7 +153,7 @@ line at either end adds to the count, so paste the block exactly.
 |---|---|
 | About the app, and free | `docs/app-store/listing.md:119`; no purchase, ad or analytics library in `mobile/package.json` (`docs/go-to-market/product-truth.md`, sections 1 and 5) |
 | Tested on | `docs/screenshots/1.1.3/README.md`, "How they were made": a Release simulator build of `3f6d7da` on two iOS 26.5 simulators, 23 October, against a local copy of the backend. Nothing on the ship branch has run on a phone yet (handoff, "What this build has NOT proven") |
-| Region | Square feet and inches `mobile/src/growingAreas/realEstate.ts:163, 171`; Fahrenheit `mobile/src/care/facts.ts:159`; `POISON_CONTROL` `garden-gnome/app/services/toxicity.py:73`; no localization in `mobile/src`; the National Weather Service is US-only (`weather.py`, `fetch_weather`), and Apple Weather and Open-Meteo come before and after it in the chain; photo matching is offered only when `SystemLanguageModel.default.availability` is `.available`, which Apple withholds where Apple Intelligence is restricted by region, hardware or Settings (`modules/plant-id/ios/PlantIdModule.swift:78-89`). Price is free in every territory (`listing.md:205`) |
+| Region | Square feet and inches `mobile/src/growingAreas/realEstate.ts:163, 171`; Fahrenheit `mobile/src/care/facts.ts:159`; `POISON_CONTROL` in `garden-gnome/app/services/toxicity.py`, with "or your local poison centre" after it since 2026-10-30 (`LOCAL_POISON_CENTRE`); no localization in `mobile/src`; the National Weather Service is US-only (`weather.py`, `fetch_weather`), and Apple Weather and Open-Meteo come before and after it in the chain; photo matching is offered only when `SystemLanguageModel.default.availability` is `.available`, which Apple withholds where Apple Intelligence is restricted by region, hardware or Settings (`modules/plant-id/ios/PlantIdModule.swift:78-89`). Price is free in every territory (`listing.md:205`) |
 | Account and My Home at first sign-in | `garden-gnome/app/routers/auth.py`, `_sign_in`, with `DEFAULT_ENV_NAME` at `auth.py:44`; a deleted account's leftover identity signs up fresh. My Home is indoor, sheltered, partial sun by the model defaults (`models.py:617-619`) |
 | Welcome cards | Shown once, to an account with no plants (`mobile/App.tsx:222-241`); 4 cards (`mobile/src/onboarding/slides.ts`); Skip, Next, Add your first plant and Maybe later (`onboarding/Onboarding.tsx:24-25, 41-54`) |
 | Deletion, with the Apple revoke | `mobile/src/screens/SettingsScreen.tsx:94-101, 220`; `garden-gnome/app/routers/auth.py`, `delete_me`, a hard delete of the plants, care logs, growing areas and user. A failed revoke never blocks deletion: the encrypted grant waits in `pending_apple_revocation` to be retried, and is deleted after 30 days or 10 tries, whichever comes first |
@@ -167,4 +169,4 @@ line at either end adds to the count, so paste the block exactly.
 | Permissions | Location on Use my location `AddressPicker.tsx:62`; microphone and speech on the mic `CaptureGardenScreen.tsx:135`; camera on Turn the camera on `CaptureGardenScreen.tsx:312-315` and on Take photo `AddPlantScreen.tsx:251`; notifications on a reminder switch `SettingsScreen.tsx:153`, `notifications/reminders.ts:129-137`. Nothing asks at launch |
 | Photo matching only with Apple Intelligence | `AddPlantScreen.tsx:140-141, 239-268`; `modules/plant-id/ios/PlantIdModule.swift:78-89` |
 | Photo check-ups and symptoms hidden | `mobile/src/care/aiCapabilities.ts:45-55`; `PlantDetailScreen.tsx:329, 396`; production `/ai/status` on 23 October: every backend `stub`, vision `ready: false` |
-| Hazards | `toxicity.py`, `describe`; no record never reads as safe `toxicity.py:843-860`. Of the 534 researched records with a `toxicity_detail` in `garden-gnome/app/data/verified/*.json`, 516 name NC State, counted on 24 October. The line under each hazard note is `NOT_ADVICE_LINE` in `mobile/src/care/notAdvice.ts`, shown by `components/NotAdviceNote.tsx` on species pages, plant pages and Add plant (the 2026-10-30 changes) |
+| Hazards | `toxicity.py`, `describe`; no record never reads as safe (the no-record branches of `describe`); the summary label is `_summary_sentence` (2026-10-30). Of the 534 researched records with a `toxicity_detail` in `garden-gnome/app/data/verified/*.json`, 516 name NC State, counted on 24 October. The line under each hazard note is `NOT_ADVICE_LINE` in `mobile/src/care/notAdvice.ts`, shown by `components/NotAdviceNote.tsx` on species pages, plant pages and Add plant (the 2026-10-30 changes) |

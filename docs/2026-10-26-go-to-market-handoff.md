@@ -16,13 +16,17 @@ A docs lane finished the document work under "What's unfinished" the same
 day: the completeness critic's leftovers and a read of `docs/go-to-market/`
 for contradictions between files, and the refresh of the finish-line
 handoff, which now carries every stale spot listed below and replaces the
-next steps here. Of "Found and not yet fixed", items 1, 2 and 3 were settled
-that day: the curated care notes were rewritten without safety claims, and
-a boot-time refresh of curated prose replaces the one-off in item 3, which
-nobody needs to run. Item 5's line went into 1.1.3 rather than 1.1.4; its
-"Report a fact" link stays for 1.1.4. Item 4, the three hazard-sentence
-changes, is still a decision, recommended for February. The launch-day site
-review, and `docs/go-to-market/launch-day-site.md` with it, is still to do.
+next steps here. Every item of "Found and not yet fixed" was settled that
+day on the ship branch. Items 1 and 2: the curated care notes were
+rewritten without safety claims. Item 3: a boot-time refresh of curated
+prose replaces the one-off, which nobody needs to run. Item 4: all three
+hazard-sentence changes landed, backend only, so they ship with the deploy;
+the table clauses are labelled "PlantAdvocate's own summary" rather than
+cited. Item 5: the not-advice line and the "Report a fact" link both went
+into 1.1.3 rather than 1.1.4. The six site copy fixes ride with step 3, and
+the two privacy changes the outreach lane asked for went with them. What is
+still to do is the launch-day site review, and
+`docs/go-to-market/launch-day-site.md` with it.
 
 Written 2026-10-26 on the Mac about branch `claude/go-to-market-strategy-cd07f3`
 (worktree `.claude/worktrees/go-to-market-strategy-cd07f3`). The branch starts
