@@ -16,6 +16,7 @@ import {
 } from '../components/CareFacts';
 import AreaFitCard from '../components/AreaFitCard';
 import EmptyState from '../components/EmptyState';
+import NotAdviceNote from '../components/NotAdviceNote';
 import {
   LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
 } from '../care/loadFailed';
@@ -104,6 +105,10 @@ export default function SpeciesDetailScreen() {
           <Chip icon="alert" style={styles.toxicChip} textStyle={styles.toxicChipText}>
             ⚠️ Toxic to pets
           </Chip>
+        ) : null}
+        {/* Under whatever was said about harm, the line the listing promises. */}
+        {species.toxicity_description || species.toxic_to_pets ? (
+          <NotAdviceNote style={styles.notAdvice} />
         ) : null}
       </View>
 
@@ -207,6 +212,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   toxicChip: { backgroundColor: p.warnSoft, alignSelf: 'flex-start' },
   toxicChipText: { color: p.warn },
   toxicityNote: { color: p.warn, marginTop: 4, lineHeight: 19 },
+  notAdvice: { marginTop: 6 },
   card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
   cardTitle: { color: p.ink, fontFamily: f.display },
   notes: { lineHeight: 22, color: p.ink },

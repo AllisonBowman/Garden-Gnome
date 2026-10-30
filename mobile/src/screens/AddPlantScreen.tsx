@@ -28,6 +28,7 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
+import NotAdviceNote from '../components/NotAdviceNote';
 import { NO_AREA_NOTE, areasFailedNote, placementAreaId } from '../growingAreas/placement';
 import type { PlantsStackParamList } from '../../App';
 import {
@@ -359,9 +360,12 @@ export default function AddPlantScreen() {
           <>
             <HelperText type="info">{selectedSpecies.scientific_name}</HelperText>
             {selectedToxicity ? (
-              <Text style={selectedToxicity.hazard ? styles.hazard : styles.toxicityNote}>
-                {selectedToxicity.text}
-              </Text>
+              <>
+                <Text style={selectedToxicity.hazard ? styles.hazard : styles.toxicityNote}>
+                  {selectedToxicity.text}
+                </Text>
+                <NotAdviceNote style={styles.notAdvice} />
+              </>
             ) : null}
           </>
         )}
@@ -485,6 +489,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   identifyObservation: { color: p.ink, lineHeight: 19 },
   hazard: { color: p.warn, fontSize: 13, lineHeight: 19, marginBottom: 4, paddingHorizontal: 12 },
   toxicityNote: { color: p.sub, fontSize: 13, lineHeight: 19, marginBottom: 4, paddingHorizontal: 12 },
+  notAdvice: { marginBottom: 4, paddingHorizontal: 12 },
   debugRawText: { fontFamily: 'monospace', fontSize: 11, color: p.faint, marginTop: 4 },
   envGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 4 },
   envBtn: { marginBottom: 4 },

@@ -31,6 +31,7 @@ import Pill from '../components/Pill';
 import { CareFactList, CareStatusLine, LegacyStatRow } from '../components/CareFacts';
 import AreaFitCard from '../components/AreaFitCard';
 import EmptyState from '../components/EmptyState';
+import NotAdviceNote from '../components/NotAdviceNote';
 import {
   LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
 } from '../care/loadFailed';
@@ -502,6 +503,13 @@ export default function PlantDetailScreen() {
                 ⚠️ Caution: toxic to pets
               </Chip>
             ) : null}
+            {/* Under whatever was said about harm, the line the listing
+                promises. Not under the advice above: its schedule lines are
+                PlantAdvocate's own, so "repeat what the sources publish"
+                would claim too much there. */}
+            {species.toxicity_description || species.toxic_to_pets ? (
+              <NotAdviceNote style={styles.notAdvice} />
+            ) : null}
           </Card.Content>
         </Card>
       )}
@@ -628,6 +636,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
     color: p.warn, backgroundColor: p.warnSoft, borderRadius: 8,
     padding: 10, lineHeight: 19,
   },
+  // Lined up with the sentence's text inside its tinted box.
+  notAdvice: { marginTop: 6, paddingHorizontal: 10 },
   logItem: { paddingVertical: 2 },
   moveHint: { color: p.sub, lineHeight: 20, marginBottom: 10 },
   moveRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
