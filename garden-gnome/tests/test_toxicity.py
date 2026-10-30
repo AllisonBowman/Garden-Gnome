@@ -405,6 +405,27 @@ def test_poison_ivy_names_people_and_its_rating():
     assert "Poison Control" in text
 
 
+def test_the_call_names_a_local_poison_centre_after_the_us_number():
+    """The US number is the one a US grower needs. Anyone else is pointed at
+    their own poison centre, after it rather than instead of it, and a vet
+    still comes last where pets are named."""
+    people_only = tx.describe_for_species("Toxicodendron radicans", "Poison Ivy", False,
+                                          cited_to="NC State Extension",
+                                          detail=POISON_IVY_DETAIL)
+    assert people_only.endswith(
+        "If you suspect poisoning, call Poison Control (US 1-800-222-1222) or "
+        "your local poison centre right away.")
+    with_pets = tx.describe_for_species("Dieffenbachia seguine", "Dumb Cane", True,
+                                        cited_to="NC State Extension",
+                                        detail=DIEFFENBACHIA_DETAIL)
+    assert with_pets.endswith(
+        "If you suspect poisoning, call Poison Control (US 1-800-222-1222), "
+        "your local poison centre or a vet right away.")
+    # Pets alone: a vet, and no poison line for people.
+    cats_only = tx.describe_for_species("Lilium longiflorum", "Easter Lily", True)
+    assert "poison centre" not in cats_only and "contact a vet" in cats_only
+
+
 def test_a_hazard_to_people_with_no_pet_verdict():
     """Carolina jessamine: NC State rates it high, and no source speaks for
     pets. Both halves are said."""
