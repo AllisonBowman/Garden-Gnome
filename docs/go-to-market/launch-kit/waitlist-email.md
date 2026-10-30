@@ -70,7 +70,7 @@ If the project has no KV or D1 binding at all, the July Function may never have 
 
 ### Read what the July form promised
 
-The form's wording decides what the list may be used for ([launch-playbook.md](../research/launch-playbook.md)). launch-playbook.md couldn't find it, but the best copy there is sits in git. Commit `25f370f`, "site: recovered from production", made on 19 July 2026, holds the homepage as Cloudflare served it then, and the same wording stayed on this branch until `ae95970` on 16 October. This prints the early-access section, lines 391 to 402:
+The form's wording decides what the list may be used for ([launch-playbook.md](../research/launch-playbook.md)). launch-playbook.md couldn't find it at first, but the best copy there is sits in git. Commit `25f370f`, "site: recovered from production", made on 19 July 2026, holds the homepage as Cloudflare served it then, and the same wording stayed on this branch until `3c1d4fe` on 16 October, which replaced the form. This prints the early-access section, lines 391 to 402:
 
 ```bash
 git -C "$HOME/Developer/Garden-Gnome" show 25f370f:site/index.html | sed -n '391,402p'
