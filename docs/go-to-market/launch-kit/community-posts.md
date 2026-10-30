@@ -199,7 +199,7 @@ Signing in creates your account, so your plants, care log and growing areas foll
 
 Does it tell me when to plant, or whether a plant survives my winter?
 
-No. It checks sun, soil, space and headroom, indoors or out, upkeep and your goals for the spot. It deliberately doesn't judge cold, so it won't say whether a plant survives a winter where you live. Each species page shows the cold hardiness its sources give, where they give it.
+No. It checks sun, soil, space and headroom, indoors or out, upkeep and your goals for the spot. It deliberately doesn't judge cold, so it won't say whether a plant survives a winter where you live. Species pages show the temperatures a source gives, including where cold damage begins, where the source says.
 
 What if my plant isn't in it?
 

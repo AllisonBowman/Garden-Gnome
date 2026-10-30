@@ -98,7 +98,7 @@ SEE WHAT SUITS IT
 Each growing area lists what needs addressing among its plants, with the reason and the source. A shade fern in full sun is flagged. So is a climber that will outgrow a 7 ft fence. Each area also puts forward good candidates: species with nothing on record against that spot and at least 1 thing confirmed for it. You get the same check before you save a new plant, and again on each plant's own page.
 
 MORE THAN 990 SPECIES, WITH SOURCES
-The Species Almanac covers houseplants, herbs, vegetables, perennials, shrubs, trees, bulbs and climbers. Narrow it to what fits a growing area of yours. Each species page shows facts such as light, water, soil, size and cold hardiness, and lists where they came from. A fact borrowed from the plant's genus is labelled as borrowed. Anything not yet cited says so. The check schedules that reminders follow were written by PlantAdvocate for 129 common plants and are not cited.
+The Species Almanac covers houseplants, herbs, vegetables, perennials, shrubs, trees, bulbs and climbers. Narrow it to what fits a growing area of yours. Each species page shows facts such as light, water, soil, temperature and size, and lists where they came from. A fact borrowed from the plant's genus is labelled as borrowed. Anything not yet cited says so. The check schedules that reminders follow were written by PlantAdvocate for 129 common plants and are not cited.
 
 HAZARDS, STATED PLAINLY
 If a source records a plant as harmful to people or pets, its page says so, gives the source's severity rating for people where it has one, and names the parts where the source does. A plant is shown as edible only with the conditions its source gives. These notes repeat what the sources publish. They are not medical or veterinary advice.
@@ -120,7 +120,7 @@ PlantAdvocate is free, with no ads and no in-app purchases. Sign in with Apple o
 
 PlantAdvocate is independent. The organizations it cites have not reviewed or endorsed it.
 ```
-Characters: 3,795 of 4,000.
+Characters: 3,792 of 4,000.
 
 The description says nothing about photo check-ups of an ailing plant or
 about reading typed symptoms. Production doesn't offer either: the app asks
@@ -240,6 +240,7 @@ fixes are still changing are cited by function, not line.
 | Check before saving, and on the plant's page | `mobile/src/screens/AddPlantScreen.tsx:392-418`; `PlantDetailScreen.tsx:497` |
 | Almanac narrowed to an area | `mobile/src/screens/AlmanacScreen.tsx:242-271`; `SpeciesScreen.tsx:133-154` |
 | Borrowed and uncited labels | `mobile/src/care/facts.ts:43-52` |
+| Temperature, not cold hardiness | `mobile/src/care/facts.ts`, the Temperature row (days, nights, and "cold damage below" for 75 of the 999 researched records). The Cold row reads `outdoor_temp_min_f`, which no researched record holds (`garden-gnome/app/services/fit.py:41-49`, ADR 0006), so no page shows a survival floor |
 | Watered / Still damp, streak kept | `mobile/src/care/CareTodos.tsx:219-244`; commit `9bb1fe7` |
 | Care window, no early "overdue" | `mobile/src/care/schedule.ts:133-150`; commit `59e9a0d` |
 | February repot inspection | `mobile/src/notifications/plan.ts:55-60`; `SettingsScreen.tsx:37`; commit `b4e2d24` |

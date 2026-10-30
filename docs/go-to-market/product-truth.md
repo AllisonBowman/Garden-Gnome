@@ -112,9 +112,14 @@ each species' care facts. No source assigns them (`mobile/src/almanac/tier.ts:1-
 Species with nothing to grade are counted and left out of every grade
 (`AlmanacScreen.tsx:278`).
 
-Each species page shows facts such as light, water, soil, size and cold
-hardiness, and a **Sources** card whose rows open the source's own page in
+Each species page shows facts such as light, water, soil, temperature and
+size, and a **Sources** card whose rows open the source's own page in
 Safari (`SpeciesDetailScreen.tsx:147`, `components/CareFacts.tsx:106-124`).
+It shows no cold hardiness: the Temperature row gives where cold damage
+begins for 75 of the 999 researched records, which ADR 0006 says is not a
+survival floor, and the Cold row reads a field no researched record holds
+(`mobile/src/care/facts.ts`; `fit.py:41-49`). This sheet and the listing
+said "cold hardiness" until 2026-10-30.
 The status line reads like "Care facts cited to NC State Extension and 2
 more" (`mobile/src/care/facts.ts:331-335`). A value borrowed from the genus
 wears a "genus-inferred" pill, and older values no claim backs sit under
@@ -123,8 +128,8 @@ wears a "genus-inferred" pill, and older values no claim backs sit under
 The listing's heading is **MORE THAN 990 SPECIES, WITH SOURCES**: "The
 Species Almanac covers houseplants, herbs, vegetables, perennials, shrubs,
 trees, bulbs and climbers. Narrow it to what fits a growing area of yours.
-Each species page shows facts such as light, water, soil, size and cold
-hardiness, and lists where they came from. A fact borrowed from the plant's
+Each species page shows facts such as light, water, soil, temperature and
+size, and lists where they came from. A fact borrowed from the plant's
 genus is labelled as borrowed. Anything not yet cited says so. The check
 schedules that reminders follow were written by PlantAdvocate for 129 common
 plants and are not cited." (`listing.md:101`). The screenshot caption is
@@ -340,7 +345,7 @@ true only with a condition the claim drops.
 | "Works offline" | Sign-in is required, the catalog and advice come from the server, and a screen can say it couldn't reach the server (`review-notes.md:39`) | Say nothing about offline |
 | "Reminders for every plant", "smart watering schedule for 990 species" | Reminders exist only for species with a check schedule: 129 of them, written by PlantAdvocate, not cited (`plan.ts:154-157`; `listing.md:101`) | "They follow a species' care window wherever the catalog holds a schedule for it" |
 | "Tells you when to water" | It schedules checks: feel the soil, then Watered or Still damp (`site/faq.html:257`) | "it tells you when to look at a plant, not when to water it" |
-| "Matched to your hardiness zone", "will it survive your winter" | The fit engine deliberately doesn't judge cold (`fit.py:41-49`) | "Each species page shows facts such as ... cold hardiness" |
+| "Matched to your hardiness zone", "will it survive your winter", "shows cold hardiness" | The fit engine deliberately doesn't judge cold (`fit.py:41-49`), and no species page shows a survival floor: the Temperature row gives where cold damage begins, for some species | "Each species page shows facts such as light, water, soil, temperature and size" |
 | "Only recommends safe plants", "guaranteed to thrive", "the perfect plant for any spot" | Candidates can carry hazard lines (potato, tomatillo, lily of the valley can appear), and a candidate needs only one confirmed fit (`handoff:196-212, 305-310`) | "good candidates: species with nothing on record against that spot and at least 1 thing confirmed for it" |
 | "Expert difficulty ratings" | Beginner, Intermediate and Fussy are PlantAdvocate's own calculation (`almanac/tier.ts:1-26`) | "an Almanac you can narrow to what fits a growing area" |
 | "Powered by Apple Weather" | WeatherKit has refused requests since July; NWS or Open-Meteo answer (`docs/2026-07-30-weatherkit-401-closed.md`) | "a local forecast", with the credit the app shows |
