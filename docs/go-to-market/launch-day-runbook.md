@@ -414,7 +414,7 @@ Everything in this table has to be true before you press Release. Most of it com
 
 | What must be true | How you can tell | Where it is set out |
 |---|---|---|
-| The nine decisions at the top of the handoff are answered | You've told Claude yes or no to each | [Handoff, "Decide these first"](../2026-10-16-app-store-finish-line-handoff.md#decide-these-first) |
+| The eleven decisions at the top of the handoff are answered | You've told Claude yes or no to each | [Handoff, "Decide these first"](../2026-10-16-app-store-finish-line-handoff.md#decide-these-first) |
 | The waitlist is exported, before the step 3 deploy | The export, `send-list.txt`, `set-aside.txt`, `check-by-eye.txt` and the two empty files `removed-hashes.txt` and `later-releases.txt` sit in `$HOME/PlantAdvocate-private`, outside the repository, and the export check has run | [launch-kit/waitlist-email.md](launch-kit/waitlist-email.md); [strategy.md](strategy.md#before-the-site-deploy) |
 | The July form's wording is checked | You've read the git copy in commit `25f370f` ("Just an update when the beta opens") and compared it with a July deployment if one could be opened, and it supports one update | [launch-kit/waitlist-email.md](launch-kit/waitlist-email.md) |
 | PR #22 merged, and the backend deployed to Fly | Step 2's checks pass, among them `34 True` and a catalog block with `"synced": true` | Handoff, steps 1 and 2 |

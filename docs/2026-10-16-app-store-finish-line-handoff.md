@@ -12,6 +12,44 @@ migration range (0010 to 0020), VM size (256 MB), smoke check (12 tries in
 Where its restore advice still holds, it's repeated here, so you don't need it
 open.
 
+**Update, 2026-10-30.** Read this first. The steps below were brought up to
+date in place, and `docs/2026-10-26-go-to-market-handoff.md` is folded into
+them.
+
+The go-to-market branch, `claude/go-to-market-strategy-cd07f3`, was folded
+into `care-advice-honesty` at `b6fee6b` and pushed. So the °F fix and the 25
+mended dashes reach 1.1.3, along with the screenshots, the rewritten review
+notes and the go-to-market documents. More lands on that tip today. The
+curated care notes stop making safety claims of their own, the 33 "Pet-safe"
+notes and the 6 that contradicted their cited records among them. Every boot
+now brings the curated prose in line with the catalog file, which replaces
+the production one-off the go-to-market handoff described (step 2 says what
+to look for in the logs). The app shows "These notes repeat what the sources
+publish. They are not medical or veterinary advice." under each hazard note.
+And the site copy fixes ride with step 3. Build from the tip of
+`care-advice-honesty` that carries all of it, later than `b6fee6b`. Those
+changes touch app code, so PR #22's CI runs again on that tip; wait for
+green as before.
+
+The build is still yours to start with your Apple sign-in, exactly as the
+next block says. Build it on EAS with the image `mobile/eas.json` pins, never
+on this Mac (the iOS 27 note in step 4 says why).
+
+The live site isn't the July build any more. By 23 October someone had
+deployed the October 16 rewrite, and on 30 October plantadvocate.ai still
+served a privacy policy dated October 16 and a homepage that says "EVERY
+FACT CITED". So step 3 is a redeploy, for the newer privacy text (effective
+October 20) and today's fixes. Export the July waitlist before it, in the new
+section between steps 2 and 3.
+
+What else moved: decision 7 points at the Notes' SIGN-IN paragraph;
+decisions 10 and 11 are new; step 4 has the Notes block's real size, the
+plus-sign phone format, the screenshots that already exist and their upload
+order, and the iOS 27 note; step 5 checks the new line and the rewritten
+notes; and "Settled since the lanes reported" lists what today settled. If
+you haven't filed the App Launch featuring nomination yet, it waits on
+nothing here (`docs/go-to-market/strategy.md`, "Featuring Nominations").
+
 **The build (updated 2026-10-20).** Not started yet, and it needs you. From
 this Mac, `eas build --profile production --platform ios --non-interactive`
 gets as far as "Using remote iOS credentials", then stops with "Distribution
@@ -32,11 +70,13 @@ from `npx --yes eas-cli@latest build:list --platform ios --limit 1`:
 
 - Build number: `____` (expect 17 or higher; 1.1.2 was build 15)
 - EAS build ID: `____`
-- Commit EAS reports: `____` (should be `b98c2b7`, or a later tip of PR #22 if
-  one is added before the build)
+- Commit EAS reports: `____` (since 2026-10-30, the tip of
+  `care-advice-honesty` that carries that day's changes, later than
+  `b6fee6b`)
 
 Wherever a step below says "the build number", it means the first of those
-lines.
+lines. While you're on the build's page, check that it names the image
+`macos-tahoe-26.5-xcode-26.6`, the one `mobile/eas.json` pins.
 
 **Update, 2026-10-17 and 2026-10-20.** The build was never started on the
 16th, and on the 20th the attempt from this Mac stopped at the certificate
@@ -153,9 +193,9 @@ and 3, so you can upload first to keep that window short.
 
 ## Decide these first
 
-Each one comes with my recommendation. The first nine change what happens in
-the steps. The rest can wait until after you submit; none of them blocks this
-submission.
+Each one comes with my recommendation. The first eleven change what happens
+in the steps. The rest can wait until after you submit; none of them blocks
+this submission.
 
 1. **Keep the server awake during review.** Recommend yes, then revert after
    approval. The machine sleeps when idle (`min_machines_running = 0`), and a
@@ -179,8 +219,9 @@ submission.
    Nothing in 1.1.3 calls either route. If you ever set it, an export reads
    `"export_version": "4.1"`.
 4. **Rehearse the boot on a copy of production's database first.** Recommend
-   yes if you have the time. It's the only way to see 0017 and the claim sync
-   run against the real rows before they run live. Step 2 shows how to make
+   yes if you have the time. It's the only way to see 0017, the claim sync
+   and, since 2026-10-30, the curated-text refresh run against the real rows
+   before they run live. Step 2 shows how to make
    the copy. I'd run the migrations and the sync against it on this Mac and
    tell you what production will see. If you skip it, the orphan check and
    the snapshot are the safety net.
@@ -211,23 +252,44 @@ submission.
    rather it were never put forward, say so; that is a one-record change and a
    deploy, no app build.
 7. **The "Sign-in required" box in App Review Information.** Tick it;
-   `docs/app-store/review-notes.md` now says the same. The app does require
-   sign-in before it shows anything, so ticking it is the accurate answer,
-   and the first paragraph of the notes tells the reviewer how to get in. If the form then
-   insists on credentials, put `Sign in with Apple` in User name and
-   `none needed` in Password. Never hand over a personal Google login.
+   `docs/app-store/review-notes.md` says the same, under Sign-In
+   Information. The app does require sign-in before it shows anything, so
+   ticking it is the accurate answer, and the Notes' SIGN-IN paragraph tells
+   the reviewer how to get in: tap Sign in with Apple and use their own
+   Apple ID. If the form then insists on credentials, put `Sign in with
+   Apple` in User name and `none needed` in Password. Never hand over a
+   personal Google login.
 8. **Does the opt-in census count as Analytics?** It's already declared that
    way, in the manifest and in `app-privacy.md`: Coarse Location and Other
    User Content each list App Functionality plus Analytics. Recommend keeping
    it and confirming it in App Store Connect in step 4. Support email is
    declared as collected Customer Support data, which is also right.
-9. **The waitlist addresses.** The live site has a `/api/waitlist` Pages
-   Function that the July homepage posted early-access emails to. Step 3's
-   deploy drops the endpoint, though the data stays in Cloudflare. If you
-   want the addresses, export them from the function's KV or D1 store in the
-   Cloudflare dashboard. Recommend leaving the function retired: the new
-   pages use a mailto link. The policy promises those addresses are used only
-   to tell people about PlantAdvocate.
+9. **The waitlist addresses.** The July site had a `/api/waitlist` Pages
+   Function that its homepage posted early-access emails to. Step 3's
+   deploy drops the endpoint, though the data stays in Cloudflare.
+   Recommend exporting the addresses before step 3, in the section between
+   steps 2 and 3, and leaving the function retired: the new pages use a
+   mailto link. The policy promises those addresses are used only to tell
+   people about PlantAdvocate. Whether to email them, and how, is in
+   `docs/go-to-market/launch-kit/waitlist-email.md`.
+10. **The subtitle and keywords you paste in step 4.** Recommend the
+   strategy's pair: subtitle `Plants that suit each spot` and the 97-character
+   field A in `docs/go-to-market/launch-kit/listing-proposals.md`, which
+   adds "cat", "dog", "poison", "indoor" and "gardening". It reaches the two
+   thin searches, pet hazards and watering reminders. Those pet words are
+   honest only because today's care-note rewrite reaches production with
+   step 2's deploy, before you press Release. listing-proposals.md also
+   weighs the cost (in pet searches, "plants that suit" can read as "plants
+   that are safe") and offers `Plants checked for each spot` with the same
+   field. Keeping listing.md's subtitle and keywords is the other choice.
+   Name and subtitle change only with a new version, so this is the cheapest
+   moment.
+11. **Where 1.1.3 is available.** Recommend the United States only, with a
+   manual release and no pre-order (`docs/go-to-market/strategy.md`, step
+   zero). The app is in English, in feet, inches and Fahrenheit, and its
+   hazard sentences print only the US Poison Control number. listing.md
+   still says Free in every territory; you choose in Pricing and
+   Availability in step 4.
 
 These can wait until after submission:
 
@@ -263,9 +325,22 @@ These can wait until after submission:
   it to a claim field after review. That's a schema and migration decision.
 - **US-only Poison Control.** Hazard sentences say "call Poison Control (US
   1-800-222-1222) or a vet right away". Recommend keeping that for this
-  submission, since it labels the number as US, then adding "or your local
-  poison centre" in a backend-only change. The alternative is to make the
-  app available only in the US at launch.
+  submission, since it labels the number as US, and making the app
+  available in the US only (decision 11).
+- **The three hazard-sentence changes** from the go-to-market handoff's
+  item 4, all backend-only, so each ships with a deploy and no build: "or
+  your local poison centre" after the US number; the pet verdict's source
+  named in the sentence, as the people rating already is; and the lily,
+  daylily and arum effect clauses in `garden-gnome/app/services/toxicity.py`,
+  which come from code tables rather than a cited page, either cited or
+  labelled as PlantAdvocate's summary. Recommend all three by the end of
+  February, before any spring line leads with hazards and before
+  availability widens beyond the US (`docs/go-to-market/strategy.md`, "The
+  hazard sentences"). Until the third lands, store copy names no lily,
+  daylily or aroid, and the not-advice line's "These notes repeat what the
+  sources publish" has the same gap as the listing's.
+- **A "Report a fact" link on species pages,** built like the "Report this
+  result" link. Recommend it for 1.1.4, with the ratings prompt.
 - **A grace window for a just-rotated refresh token** on the server, so a
   refresh whose response got lost doesn't sign someone out. Recommend doing
   it after review, backend only.
@@ -294,7 +369,10 @@ These can wait until after submission:
   puts the July pages back.
 - **At launch**, replace the site's "in beta on iPhone", "Email us for early
   access" and the "Get early access" nav button with the App Store link.
-  That's why step 4 recommends releasing manually.
+  That's why step 4 recommends releasing manually. The edits wait on branch
+  `claude/launch-day-site`, whose draft `fa4076b` is unreviewed; don't merge
+  or deploy it before launch day, and follow
+  `docs/go-to-market/launch-day-runbook.md` when the day comes.
 - **Two policy statements to confirm.** First, that Fly keeps volume
   snapshots for 5 days (step 2 shows the retention). Second, that Anthropic's
   commercial terms bar training on API content: read the current terms, since
@@ -302,6 +380,35 @@ These can wait until after submission:
 
 Settled since the lanes reported, so not decisions any more:
 
+- The curated care notes (2026-10-30). The 33 that called a plant
+  "Pet-safe", "harmless" or "safe for most pets", and the 6 that
+  contradicted their cited records (Sage, Thyme, Baby's Breath, Hollyhock,
+  China Aster, Moonflower), were rewritten without a safety claim, keeping
+  the care advice. Toxicity is stated in one place, the hazard sentence, so
+  a care note makes no safety claim of its own.
+- Curated prose follows the file on every boot (2026-10-30). `seed()` used
+  to skip a species it already had, so production would have kept the
+  garbled dashes and the old notes for good. Now, on every boot, it sets
+  `care_notes` and `soil_type` on the 129 curated species, and the notes on
+  their check schedules, to what `garden-gnome/app/data/species_catalog.json`
+  says wherever the two differ. It touches no resolved or claim-backed
+  field. The write stamps a new catalog generation the way every catalog
+  write does, so phones get the new text on their next fetch. It logs
+  `curated text refreshed N`. This replaces the production one-off in
+  `docs/2026-10-26-go-to-market-handoff.md`, item 3, which nobody needs to
+  run now.
+- The not-advice line is in 1.1.3 (2026-10-30): "These notes repeat what
+  the sources publish. They are not medical or veterinary advice." under
+  each hazard note, on species pages, plant pages and Add plant
+  (`mobile/src/care/notAdvice.ts`). The listing, the review notes and the
+  1.4.1 reply now say the app shows it.
+- The site copy fixes ride with step 3 (2026-10-30): the five in
+  `docs/go-to-market/strategy.md`, "The site, riding along with step 3",
+  and the sixth the go-to-market handoff added, `recommendations.html`'s
+  promise about a fiddle leaf fig in a bathroom, which the fit engine can't
+  judge indoors.
+- The go-to-market branch is on `care-advice-honesty`, folded in at
+  `b6fee6b` and pushed (2026-10-30).
 - Which poisons can be candidates. A species a source rates as a serious
   or fatal poison for people is never put forward unless it is a food crop
   whose cited edibility has no conditions, whatever the bed's goals. So
@@ -381,10 +488,12 @@ finish. If either says `fail`, stop and bring me the output. Don't merge.
 gh pr view 22 --repo AllisonBowman/Garden-Gnome --json headRefOid,mergeable,mergeStateStatus
 ```
 
-Look for `headRefOid` matching the tip that carries the 2026-10-20 review
-fixes (later than `307930e`; or the newer commit, if I added the `fly.toml`
-line from decision 1), `MERGEABLE`, and `CLEAN`. If it still starts
-`798f905` or `62d3a66`, the fixes aren't on the PR yet: stop and tell me.
+Look for `headRefOid` matching the tip that carries the 2026-10-30 changes
+(later than `b6fee6b`; or the newer commit, if I added the `fly.toml` line
+from decision 1), `MERGEABLE`, and `CLEAN`. Apart from that `fly.toml`
+commit, it should be the commit EAS reports at the top of this file. If it
+starts `b6fee6b`, `3f6d7da` or anything older, that day's changes aren't on
+the PR yet: stop and tell me.
 
 ```bash
 gh pr merge 22 --repo AllisonBowman/Garden-Gnome --merge
@@ -624,6 +733,17 @@ That prints what's buffered and exits. Look for these, in order:
   0021_pending_apple_revocation -> 0022_backfill_acquired_on`. 0022 dates
   every plant that has no acquisition date from the day it was added, so
   plants from 1.1.2 start coming due for their first check.
+- `Species catalog already up to date.` (or `Seeded N new species from
+  catalog.`, if production lacks a curated species the file has), then
+  `curated text refreshed N`. That line is the boot bringing the curated
+  care notes, soil types and schedule notes in line with the catalog file:
+  the 25 mended dashes, the rewritten safety claims, and any other curated
+  text that changed since production was seeded. Expect N above 0 on this
+  first boot. I can't predict it, because it depends on how old production's
+  rows are, so write it down. It replaces the go-to-market handoff's
+  one-off: there is nothing to run by hand. If you see `curated text
+  refresh skipped` instead, the boot carried on without it; copy the
+  traceback above it for me.
 - `claim sync: written`, with `claims stored 10681`, `claims already present
   0`, `genus subjects skipped 4` and `fields refused 0`. Copy the whole block:
   the `species created`, `species linked` and `common-name collisions` counts
@@ -635,8 +755,12 @@ That prints what's buffered and exits. Look for these, in order:
 
 If the boot happened too long ago for the buffer, the smoke check's output in
 the run log has the root JSON, which is the part that matters most. On every
-later cold start you'll see `Species catalog already up to date.` and `claim
-sync: tranche unchanged, nothing to do`. Both are normal.
+later cold start you'll see `Species catalog already up to date.`, `curated
+text refreshed 0` and `claim sync: tranche unchanged, nothing to do`. All
+three are normal. A later deploy that edits a curated note shows a small N
+once, then 0 again. The new text reaches phones on their next catalog fetch,
+with no restart, because the refresh stamps a new catalog generation; step 5
+has you read it on a phone.
 
 **If the logs show a migration failing, the snapshot is the way back.** It's
 not the usual rollback. Redeploying the previous image is safe only for
@@ -647,18 +771,53 @@ to be moved onto it. That sequence is untested and destructive, so it isn't
 scripted here: stop, keep the log, and bring it to me with the snapshot ID.
 Restoring costs everything written since the snapshot.
 
-**Start the screenshot garden now** if you'll shoot on the simulator or a
-phone (step 4). It needs care logged one and two days before the shoot, and
-it has to be built against this new backend.
+**The screenshot garden** is needed only if you retake a screenshot (step 4
+says they already exist). If you do, start it now: it needs care logged one
+and two days before the shoot, and it has to be built against this new
+backend.
+
+## Between steps 2 and 3: export the July waitlist
+
+Step 3's deploy drops the `/api/waitlist` endpoint. The addresses stay in
+Cloudflare's KV or D1 store, but get them out first, so the count is known
+before anything leans on it (decision 9). It takes about half an hour.
+`docs/go-to-market/launch-kit/waitlist-email.md`, "Before step 3: get the
+list out of Cloudflare", has every command, one per block, in this order:
+
+1. Make a private folder outside the repository,
+   `$HOME/PlantAdvocate-private`, not in a folder that syncs to iCloud.
+2. Sign in with `npx wrangler login` (the same sign-in step 3 starts with),
+   find the project whose domains include plantadvocate.ai, and look in its
+   production bindings for a KV namespace or a D1 database.
+3. Read what the July form promised. The best copy is the homepage in commit
+   `25f370f`: "Just an update when the beta opens." Compare it with a July
+   deployment if Cloudflare's history can still open one.
+4. Export the store into the private folder, and run the check, which
+   prints counts and endings but no address, and writes `send-list.txt`,
+   `set-aside.txt` and `check-by-eye.txt`.
+5. Make the two empty files the removals and the spring note need,
+   `removed-hashes.txt` and `later-releases.txt`.
+
+Don't paste the export or any address from it into a Claude session, an
+issue or a doc, and don't delete anything in Cloudflare yet. If the project
+has no KV or D1 binding at all, stop and tell me before step 3. If step 3
+then slips by more than a week or two, export once more just before it. The
+check's output is safe to show me once you've looked at its one sample line,
+as that file says.
 
 ## Step 3: Deploy the website to Cloudflare
 
-The live site isn't the repo's `site/` folder. It's a July 17 build from the
-desktop generator, which says the app doesn't collect precise location and
-describes subscriptions. `site/README-SITE.md` has the full reasoning. These
-are its commands, in order. If you want the waitlist addresses (decision 9),
-export them in the Cloudflare dashboard first. Deploying doesn't delete them,
-but it removes the endpoint.
+The live site isn't the repo's `site/` folder. On 16 October it was the July
+17 build from the desktop generator, which says the app doesn't collect
+precise location and describes subscriptions. By 23 October someone had
+deployed the October 16 rewrite of `site/` over it, and on 30 October it
+still served that: a privacy policy dated October 16, which lacks the
+October 20 text on census export 4.1 and the 30-day Apple grant, and a
+homepage that says "EVERY FACT CITED". So this step is a redeploy, for the
+newer text and the 2026-10-30 site fixes. `site/README-SITE.md` has the full
+reasoning. These are its commands, in order. Export the waitlist first
+(above). Deploying doesn't delete the addresses, but it removes the
+endpoint.
 
 ```bash
 cd /Users/allisonbowman/Developer/Garden-Gnome
@@ -668,7 +827,15 @@ cd /Users/allisonbowman/Developer/Garden-Gnome
 git status --short
 ```
 
-This must print nothing. Then:
+This must print nothing.
+
+```bash
+git log -1 --format='%h %d'
+```
+
+It should name `care-advice-honesty` and the commit EAS reports at the top of
+this file, or a later one, because the deploy copies the `site/` folder this
+checkout holds. If it's older, run `git pull --ff-only` and look again. Then:
 
 ```bash
 npx wrangler login
@@ -690,8 +857,8 @@ npx wrangler pages deployment list --project-name=PROJECT
 Find the deployment whose Environment is Production and note its Branch
 (often `main`). Below it's `PRODUCTION_BRANCH`.
 
-Check the links. This must end `13 pages, 0 broken`, and it did on `798f905`
-tonight:
+Check the links. This must end `13 pages, 0 broken`. It did on `b6fee6b` on
+2026-10-30, before that day's site fixes, so run it on the tip you deploy:
 
 ```bash
 python3 - site <<'EOF'
@@ -727,27 +894,18 @@ D=$(mktemp -d) && cp -R site/. "$D" && rm "$D/README-SITE.md" && npx wrangler pa
 `--branch` is required. Without it, wrangler takes the branch from git
 (`care-advice-honesty`) and publishes a preview, not plantadvocate.ai.
 
-Verify. Every line must print `ok`. Tonight, against the July site, they
-printed FAIL:
+Verify. The check block lives in `site/README-SITE.md`, under "Verifying the
+deploy", and the 2026-10-30 site fixes added lines to it, so print it from
+the checkout you deployed rather than copying an older list:
 
 ```bash
-check() { n=$(curl -sL "$1" | grep -c -- "$2"); if [ "$3" = present ]; then [ "$n" -gt 0 ]; else [ "$n" = 0 ]; fi && echo "ok   $1  $2" || echo "FAIL $1  $2 (on $n lines)"; }
-check https://plantadvocate.ai/privacy.html 'Effective Date: October 20, 2026' present
-check https://plantadvocate.ai/privacy.html 'Apple Weather' present
-check https://plantadvocate.ai/privacy.html 'Walk the garden' present
-check https://plantadvocate.ai/privacy.html "don't collect your precise location" absent
-check https://plantadvocate.ai/privacy.html 'Purchase status' absent
-check https://plantadvocate.ai/privacy.html 'JULY 17' absent
-check https://plantadvocate.ai/support.html 'Settings &rarr; Account &rarr; Delete account' present
-check https://plantadvocate.ai/support.html 'Restore Purchases' absent
-check https://plantadvocate.ai/support.html 'billing' absent
-check https://plantadvocate.ai/pricing.html '[$]6\|[$]12' absent
-check https://plantadvocate.ai/faq.html "isn't currently on the roadmap" absent
-check https://plantadvocate.ai/privacy.html 'no identifier links one export to another' present
-check https://plantadvocate.ai/privacy.html 'up to 30 days after the deletion' present
-check https://plantadvocate.ai/index.html 'SOURCES NAMED' present
-check https://plantadvocate.ai/index.html 'EVERY FACT CITED' absent
+sed -n '/^## Verifying the deploy/,/^## When the app changes/p' site/README-SITE.md
 ```
+
+Run the block it prints, from the `check()` line to the last `check` line.
+Every line must print `ok`. On 2026-10-23, against the October 16 pages then
+live, four lines of the older block printed FAIL, among them the October 20
+date and "EVERY FACT CITED".
 
 ```bash
 curl -s -o /dev/null -w '%{http_code} %{url_effective}\n' -L https://plantadvocate.ai/privacy.html
@@ -759,13 +917,24 @@ curl -s -o /dev/null -w '%{http_code} %{url_effective}\n' -L https://plantadvoca
 
 Both should print `200`, landing on `/privacy` and `/support`. Last, open
 https://plantadvocate.ai/privacy on your phone and read the top: the October
-16 date and the "What changed" line should both be there.
+20 date and the "What changed" line should both be there. (This said October
+16 until 2026-10-30; `site/privacy.html` has said October 20 since that
+day's text was written.)
 
 ## Step 4: App Store Connect
 
 **First, send the build up.** This can happen any time after the build
 finishes, even before step 2, and doing it early shortens 1.1.2's broken
 window.
+
+Only an EAS build goes up. iOS 27 crashes an Expo SDK 57 app at launch when
+it is built with the iOS 27 SDK, unless the app adopts the scene life cycle,
+which 1.1.3 doesn't. The EAS production profile builds with the image
+`macos-tahoe-26.5-xcode-26.6` (`mobile/eas.json`), which links the iOS 26.5
+SDK, so Apple's rule doesn't touch it. Don't change that image for 1.1.3, and
+never upload a 1.1.3 built on this Mac, whose only Xcode is 27.1
+(`docs/2026-10-24-ios27-scene-lifecycle.md`). From April 2027 every upload
+needs the iOS 27 SDK, which is why the scene-adopted 1.1.4 has to follow.
 
 ```bash
 cd /Users/allisonbowman/Developer/Garden-Gnome/mobile
@@ -807,20 +976,23 @@ to Test. Pick builds by build number, never by the version string.
 
 **Then the paperwork.** Everything is in `docs/app-store/`, ready to paste
 field by field, in the order its `README.md` gives. They were brought up
-to `307930e` and the 2026-10-20 fixes, so nothing in them asks you to cut a
-line any more: every change they describe is in the build, as long as step
-5 agrees. The changes that matter are the hazard and edibility wording, the
-operator-only census (export 4.1) with no Sync now button, iPhone only, the
-three named weather services and the manifest.
+to `307930e` and the 2026-10-20 fixes, and on 2026-10-30 to that day's
+changes, so nothing in them asks you to cut a line any more: every change
+they describe is in the build, as long as step 5 agrees. The changes that
+matter are the hazard and edibility wording with the not-advice line under
+each hazard note, the operator-only census (export 4.1) with no Sync now
+button, iPhone only, the three named weather services and the manifest.
 
 1. **App Information** (`listing.md`, `age-rating.md`): name
    `PlantAdvocate: Garden Care`, or `PlantAdvocate` if that name is taken;
-   subtitle; Lifestyle first, Reference second; content rights Yes and Yes.
-   Age rating: answer every question as `age-rating.md` does, and the result
-   should be 4+. Copyright: `2026 Allison Bowman`, exactly as the legal name
-   on your developer account reads (App Store Connect > Business, or the
-   Membership page).
-2. **Pricing and Availability:** Free.
+   subtitle (decision 10: the strategy's `Plants that suit each spot`, or
+   listing.md's); Lifestyle first, Reference second; content rights Yes and
+   Yes. Age rating: answer every question as `age-rating.md` does, and the
+   result should be 4+. Copyright: `2026 Allison Bowman`, exactly as the
+   legal name on your developer account reads (App Store Connect >
+   Business, or the Membership page).
+2. **Pricing and Availability:** Free, in the territories you chose in
+   decision 11 (recommended: the United States only), with no pre-order.
 3. **App Privacy** (`app-privacy.md`): Privacy Policy URL
    `https://plantadvocate.ai/privacy` (the app's `/privacy.html` is the same
    page). Then "Do you or your third-party partners collect data?" Yes, and
@@ -840,28 +1012,45 @@ three named weather services and the manifest.
    Content", with nothing used to track you.
 4. **The 1.1.3 version page:**
    - Screenshots (below).
-   - Promotional text, description and keywords from `listing.md`.
+   - Promotional text and description from `listing.md`, and the keywords
+     that go with the subtitle you chose in decision 10 (field A in
+     `docs/go-to-market/launch-kit/listing-proposals.md` for the strategy's
+     subtitle, or listing.md's field for listing.md's).
    - Support URL `https://plantadvocate.ai/support`, Marketing URL
      `https://plantadvocate.ai`, and copyright.
    - Under Build, choose 1.1.3 with **the build number from the top of this
      file**.
    - App Review Information from `review-notes.md`: tick Sign-in required
      (decision 7). Contact: Allison Bowman, a phone number you'll answer
-     during review with its country code, and an email you read daily, such
-     as support@plantadvocate.ai.
-   - Paste the Notes block as it is (it names the "Checks for today" card
-     and is 3,987 of 4,000 characters, so paste it exactly, with nothing
-     added at either end).
+     during review, in international format with a plus sign (`+1` and the
+     10 digits for a US number), and an email you read daily, such as
+     support@plantadvocate.ai.
+   - Paste the Notes block as it is. Fill in its two brackets first: the
+     phone you ran the TestFlight build on in step 5, or delete that
+     bracket, and the phone number. It is 3,822 of Apple's 4,000 bytes,
+     3,855 if the form sends each line break as two bytes, counted on
+     2026-10-30 with the brackets in place, so paste it exactly, with
+     nothing added at either end.
    - Under Version Release, recommend **Manually release this version**, so
-     you can update the site's "in beta" copy before the app appears.
+     you can update the site's "in beta" copy before the app appears. Don't
+     use pre-order.
 5. **Export compliance:** only if asked (`export-compliance.md`).
 
-**Screenshots.** The sandbox blocked the orchestrator from capturing them, so
-they're yours. `docs/app-store/screenshots.md` has the demo garden, the eight
-shots with their set-ups, the sizes, and the simulator commands. Shot 6 uses
-Dumb Cane (Dieffenbachia), whose sentence names the parts and NC State's
-high rating; English Yew and Castor Bean name no parts on this build. Two
-notes from tonight:
+**Screenshots.** They exist. `docs/screenshots/1.1.3/` holds 16: 8 in
+`17-pro-max/` (1320 x 2868, the iPhone 6.9" size) and 8 in `17-pro/` (1206 x
+2622, the 6.3" size), shot on iOS 26.5 simulators from `3f6d7da`, with
+seven retaken on 2026-10-24 after the °F fix. `CHECK.md` reports all 16
+passing. Upload each folder to its size in the order the strategy
+recommends, which is not file order: 01, 04, 06, then 02, 03, 05, 07, 08. The
+first three are what a searcher sees in the results list: what doesn't suit
+a spot, checks not chores, and hazards on Pothos
+(`docs/go-to-market/strategy.md`, step zero). Shot 6 is Pothos, not Dumb
+Cane: Dumb Cane's care notes still showed garbled dashes on the shoot's
+backend, and the shot list allows Pothos. If CHECK.md says otherwise on the
+day you upload, follow CHECK.md.
+
+`docs/app-store/screenshots.md` still has the demo garden, the shots' set-ups
+and the simulator commands, for any retake. Two notes if you retake one:
 
 - On shot 2 (Good candidates), read every visible name. Lily of the valley
   can appear (decision 6); scroll it out of frame. If monkshood, English
@@ -883,7 +1072,9 @@ Delete PlantAdvocate from the phone first, so every permission prompt shows
 fresh. Your garden lives on the server and comes back when you sign in. Then
 in TestFlight, install 1.1.3 with **the build number from the top of this
 file**. Write down the phone's model and iOS version (Settings > General >
-About), and whether Apple Intelligence is on.
+About), and whether Apple Intelligence is on. If the phone runs iOS 27, the
+build launching at all is the first time 1.1.3 has started on iOS 27; name
+the phone in the Notes' TESTED ON bracket (`docs/app-store/review-notes.md`).
 
 Go through these and note what you see for each:
 
@@ -955,6 +1146,21 @@ Go through these and note what you see for each:
 
    If a search shows two rows with the same name, the one with a Sources
    card is the researched one. Tell me about the duplicate.
+
+   Under each of those sentences there should be one line, word for word: "These notes repeat what the sources publish. They are
+   not medical or veterinary advice." (2026-10-30). Look for it on Pothos's
+   species page, on a plant's own page, and in Add plant once you pick a
+   species. If it's missing, the build predates that day's changes: tell me
+   before step 6, because the listing and the Notes now say it's there.
+
+   While you're in the Species tab, read the care notes too, which come
+   from the server since step 2's deploy. Catnip, Parsley, Nasturtium,
+   Gourds, Spider Plant and Boston Fern should say nothing about being
+   pet-safe, harmless or safe for most pets; Sage, Thyme, Baby's Breath,
+   Hollyhock, China Aster and Moonflower should say nothing about being
+   toxic. Dumb Cane and Boston Fern should read cleanly, with real dashes
+   and no "â€". Snake Plant's temperature should read "60–85°F", with a
+   capital F.
 6. **The Almanac.** Species tab > "What suits one of your spaces" > the
    Almanac. The list runs A to Z. Only gradable species carry a grade, and a
    line says how many "have nothing to grade yet and aren't in any grade".
@@ -1013,6 +1219,14 @@ status should change to Waiting for Review.
 After approval, three follow-ups: revert `min_machines_running` if decision 1
 was yes; change the site's "in beta" and early-access copy to the App Store
 link; and release the version, if you chose a manual release.
+`docs/go-to-market/launch-day-runbook.md` takes it from approval day: when to
+merge `claude/launch-day-site` (the morning you release, once it has been
+reviewed), when to deploy the site, the waitlist email and the first week.
+It suggests keeping the machine awake until a week after release.
+
+If App Review rejects instead, the prepared replies are in
+`docs/app-store/review-replies.md`, each with what to check before you paste
+it.
 
 ---
 
@@ -1029,6 +1243,8 @@ link; and release the version, if you chose a manual release.
 | 2 | Logs show `0017: N row(s) point at a missing environment ... Nothing was changed: the database is still at 0016` | 0017 refused cleanly. The API stays down until the rows are fixed | Stop and bring me the log and the snapshot ID. Don't hand-edit rows |
 | 2 | Verify prints `29 False` after a green deploy | The old machine is still answering, or the release didn't take | `fly status -a garden-gnome-api` and `fly releases -a garden-gnome-api`. Bring both |
 | 2 | `curl` returns nothing or HTTP 000 minutes later | The machine is asleep (`auto_stop`), which isn't broken | Run the curl again and wait for the cold start |
+| 2 | Logs show `curated text refresh skipped` after a traceback | The boot carried on, but production kept its old care notes, garbled dashes and safety claims included | Copy the traceback for me. No rollback; the fix is a deploy |
+| 2 | `curated text refreshed 0` on this first boot | Production's curated rows already matched the file, or the refresh found none of them as curated rows | Tell me. Step 5's care-note checks will show which |
 | 3 | Some check lines still say FAIL after the deploy | Either the deploy went to a preview (a wrong or missing `--branch`), or Cloudflare served a cached page | `npx wrangler pages deployment list --project-name=PROJECT` and look at the newest Environment. If it's Production, wait a minute and re-run the checks |
 | 4 | `eas submit` fails on Apple sign-in or credentials | Your Apple session, not the app | Run it again, let EAS walk you through sign-in, and send me the error text if it fails twice |
 | 4 | App Store Connect asks the encryption questions | The plist key didn't reach the build | Answer as `export-compliance.md` says, and tell me it asked |
@@ -1037,30 +1253,33 @@ link; and release the version, if you chose a manual release.
 | 5 | Census tab shows an error card | Production isn't on the new backend, or it was asleep | Try again once. If it persists, re-run step 2's openapi check |
 | 5 | Lily of the valley appears as a candidate | Expected (decision 6) | Keep it out of screenshots |
 | 5 | Foxglove, English yew, monkshood, jimsonweed, mayapple, taro or wisteria appears as a candidate | The candidate rule from the 2026-10-20 fixes isn't in this build | Note which and the build number, keep it out of screenshots, and tell me |
+| 5 | No "These notes repeat what the sources publish..." line under a hazard sentence | The build predates the 2026-10-30 changes | Don't submit it. Tell me the build number and the commit EAS reported |
+| 5 | A care note still says "Pet-safe", or shows "â€" | Production's rows weren't refreshed (step 2's `curated text` line) | Bring me that log line. The fix is data and a deploy, not a build |
 
 ## What to report back
 
 Roughly in the order that changes what happens next:
 
-1. Your answers to the nine decisions at the top. A one-word "yes" or "no"
-   per item is plenty.
+1. Your answers to the eleven decisions at the top. A one-word "yes" or
+   "no" per item is plenty; for decision 10, which subtitle.
 2. Whether PR #22 merged, and the RUN_ID.
 3. The `fly secrets list` names, the orphan check's output, the snapshot ID,
    and the retention line from `fly volumes show`.
 4. Whether you made the database copy, and its path.
 5. How Deploy and Smoke check ended. The openapi line, the `GET /` JSON, the
    two status codes, and `fly scale show`'s memory. The `fly logs` lines from
-   the first `Running upgrade` through the end of the claim sync block, or
-   the traceback.
-6. Whether every site check printed `ok`, and the project and production
-   branch names.
+   the first `Running upgrade` through the end of the claim sync block, the
+   `curated text refreshed N` line among them, or the traceback.
+6. Whether the waitlist export found a KV or D1 store, and what its check
+   printed. Then whether every site check printed `ok`, and the project and
+   production branch names.
 7. That `eas submit` went through, the build number App Store Connect shows,
    and any `ITMS-91` email.
 8. The phone's model, iOS version and Apple Intelligence state, then each of
    step 5's twelve items: as written, or what you saw instead. Screenshots of
    anything that reads wrong help most.
-9. That the screenshots uploaded at both sizes, and which species shot 6
-   used.
+9. That the screenshots uploaded at both sizes, in the order 01, 04, 06,
+   02, 03, 05, 07, 08, and which subtitle and keywords you pasted.
 10. The App Store Connect status after you submit, and anything App Review
     sends.
 11. Whether 1.1.2's Species tab and Census misbehaved in the window, if
@@ -1068,11 +1287,14 @@ Roughly in the order that changes what happens next:
 
 ## What this build has NOT proven
 
-Nothing on the ship branch has run on a device yet. The 481 mobile tests, the
+Nothing on the ship branch has run on a device yet. The mobile tests, the
 typecheck and the leak scan check logic and copy. They can't show the new
 Info.plist strings, the privacy manifest, iPhone-only on an iPad, the sign-in
-button's busy state, the error boundaries, or the restyled Gnome voice. Only
-step 5 shows those.
+button's busy state, the error boundaries, the not-advice line's place under
+each hazard note, or the restyled Gnome voice. Only step 5 shows those. For iOS
+27 the only evidence is an earlier PlantAdvocate build, made with the same
+Xcode 26.6 and iOS 26.5 SDK as the EAS image, which launched on an iOS 27.0
+simulator (`docs/2026-10-24-ios27-scene-lifecycle.md`).
 
 The backend deploy is untested in production. CI has never deployed this
 app. The 512 MB VM, the smoke check's `catalog.synced` test, the 5-minute
@@ -1088,10 +1310,15 @@ The claim sync has never met production's ~1,900 older species rows. Its
 linking, collision and `species created` numbers on production are unknown
 until the logs show them.
 
-The site deploy is untested from this repo. Every published page so far came
-from the desktop generator. Whether `wrangler pages deploy` with `--branch`
-lands on plantadvocate.ai, and what dropping `/api/waitlist` breaks, is known
-only from Cloudflare's documented behaviour.
+The curated-text refresh has run only in tests and on scratch databases. Its
+count on production, and whether it finds all 129 curated rows there, are
+unknown until step 2's logs show `curated text refreshed N`.
+
+The site deploy from these commands is untested. By 23 October someone had
+put `site/`'s October 16 rewrite live, but nothing in the repository says
+how. Whether `wrangler pages deploy` with `--branch` lands on
+plantadvocate.ai, and what dropping `/api/waitlist` breaks, is known only
+from Cloudflare's documented behaviour.
 
 App Review has never seen PlantAdvocate. The Sign-in required answer, the 4+
 rating with its hazard notes, and a login wall with no demo account are all
