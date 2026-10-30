@@ -17,6 +17,7 @@ import {
 import AreaFitCard from '../components/AreaFitCard';
 import EmptyState from '../components/EmptyState';
 import NotAdviceNote from '../components/NotAdviceNote';
+import ReportFact from '../components/ReportFact';
 import {
   LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
 } from '../care/loadFailed';
@@ -146,14 +147,22 @@ export default function SpeciesDetailScreen() {
         </Card>
       ) : null}
 
-      {/* Where the facts came from: names and links, never the passage. */}
-      {sources.length > 0 && (
+      {/* Where the facts came from: names and links, never the passage. At
+          their foot, a way to say a fact looks wrong; on its own where a
+          species has no sources yet, since a value not yet cited is the
+          likeliest to be wrong. */}
+      {sources.length > 0 ? (
         <Card style={styles.card}>
           <Card.Title title="Sources" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             <CareSourceRows sources={sources} />
+            <ReportFact species={species} />
           </Card.Content>
         </Card>
+      ) : (
+        <View style={styles.reportFactAlone}>
+          <ReportFact species={species} />
+        </View>
       )}
 
       {/* Schedules */}
@@ -214,6 +223,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   toxicityNote: { color: p.warn, marginTop: 4, lineHeight: 19 },
   notAdvice: { marginTop: 6 },
   card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
+  // Between two cards, closer to the one above, whose facts it reports.
+  reportFactAlone: { marginTop: -6, marginBottom: 6 },
   cardTitle: { color: p.ink, fontFamily: f.display },
   notes: { lineHeight: 22, color: p.ink },
   listItem: { paddingVertical: 4 },
