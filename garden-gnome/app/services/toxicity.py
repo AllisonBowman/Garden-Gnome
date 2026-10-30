@@ -814,6 +814,20 @@ def _action(tox: Toxicity, *, animals: bool, people: bool,
     return keep
 
 
+def _pets_source(tox: Toxicity) -> str:
+    """Whose verdict the pets' half is, when an authority's claim settled it.
+
+    The people's rating already names who gave it, and a "records no
+    toxicity" names who recorded that. A pet verdict of "toxic" named no
+    one, so the source was true of the page (its Sources card) but not of
+    the sentence. Said as the source rather than as "it is toxic to pets",
+    because on a crop "it" would read as the fruit just called food, and
+    the lead has already said which parts and which animals."""
+    if tox.toxic is True and tox.cited_to:
+        return f"For pets, the source is {tox.cited_to}."
+    return ""
+
+
 def _pets_unrecorded(tox: Toxicity) -> str:
     """What is on record for pets when nothing says they are at risk."""
     if tox.toxic is None:
@@ -827,14 +841,15 @@ def _pets_unrecorded(tox: Toxicity) -> str:
 
 
 def describe(tox: Toxicity, common_name: str = "This plant") -> str:
-    """Two to four plain sentences a caretaker can act on.
+    """A few short, plain sentences a caretaker can act on.
 
     Leads with what is eaten when a table knows a food crop's eaten part,
     because that is the case a flat label gets wrong and the reason people
     stop trusting warnings. Names people whenever a source records a hazard
     to them, and takes how bad it is from the source -- for people. Pets get
     a severity word only from a table or a source's own grave words about
-    them."""
+    them. Each verdict says whose it is: the pets' source, the people's
+    rating, or that nobody is on record."""
     name = common_name.lower()
     people = tox.people_at_risk
     animals = tox.animals_at_risk
@@ -894,6 +909,8 @@ def describe(tox: Toxicity, common_name: str = "This plant") -> str:
         lead = f"{warn}{_capital(who)}{parts}{agent}{effect}."
 
     sentences = [lead]
+    if animals and _pets_source(tox):
+        sentences.append(_pets_source(tox))
     if people and not people_in_clause:
         # Its own sentence, with the rating inside it: NC State's rating is
         # for people, and beside a cat's kidney failure it must not read as
