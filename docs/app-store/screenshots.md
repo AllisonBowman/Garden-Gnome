@@ -77,9 +77,13 @@ Snake Plant have no edible-and-toxic conflict to show.
 
 ## The shot list
 
-Shoot in this order and upload in this order. Each caption is 8 words, for
-the text over the screenshot if you frame them. Captions aren't an App
-Store Connect field.
+Shoot in this order. Upload in the order `docs/go-to-market/strategy.md`
+recommends, which differs: 01, 04, 06, then 02, 03, 05, 07, 08, so that the
+three a searcher sees in the results list are what doesn't suit a spot,
+checks not chores, and the hazard sentence. Each caption is 8 words, for the
+text over the screenshot if you frame them. Captions aren't an App Store
+Connect field. The set shot on 2026-10-23 and 24 is in
+`docs/screenshots/1.1.3/`, and all 16 files pass its `CHECK.md`.
 
 ### 1. What doesn't suit a spot
 
@@ -287,7 +291,7 @@ xcrun simctl io booted screenshot --type=png --mask=ignored ~/Desktop/pa-shots/6
 ```
 
 `--mask=ignored` saves the whole rectangle, with no transparent rounded
-corners. Name the files `01-…` to `08-…` so they sort in upload order, and
+corners. Name the files `01-…` to `08-…` so they sort in shot order, and
 put the iPhone 17 Pro set in `6.3/`.
 
 Check every file before uploading:
@@ -307,5 +311,6 @@ When you're done, `xcrun simctl status_bar booted clear` puts the real
 status bar back.
 
 In App Store Connect, open the 1.1.3 version, go to the iPhone screenshot
-sizes under Previews and Screenshots, and drag each set onto its size in
-order.
+sizes under Previews and Screenshots, and add each set to its size in the
+upload order above, 01, 04, 06, 02, 03, 05, 07, 08. If they land in file
+order, drag them into that order before you save.

@@ -2,7 +2,7 @@
 
 These follow `docs/app-store/screenshots.md`. They were shot on 2026-10-23 from the ship tip `3f6d7da` (branch `care-advice-honesty`, PR #22), and seven frames were retaken on 2026-10-24 after the check in `CHECK.md` and the °F fix. Every file is a portrait PNG with no alpha channel, checked with `sips -g pixelWidth -g pixelHeight -g hasAlpha`.
 
-`17-pro-max/` is 1320 x 2868, for the iPhone 6.9" (Dynamic Island, large) size in App Store Connect. `17-pro/` is 1206 x 2622, for the iPhone 6.3" (Dynamic Island, medium) size. Upload each folder to its size in file order, 01 to 08.
+`17-pro-max/` is 1320 x 2868, for the iPhone 6.9" (Dynamic Island, large) size in App Store Connect. `17-pro/` is 1206 x 2622, for the iPhone 6.3" (Dynamic Island, medium) size. Upload each folder to its size in the order `docs/go-to-market/strategy.md` recommends, which is not file order: 01, 04, 06, then 02, 03, 05, 07, 08. The first three are what a searcher sees in the results list.
 
 ## The files
 
