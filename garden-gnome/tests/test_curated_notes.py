@@ -10,10 +10,18 @@ record", never "safe" (ADR 0002, ADR 0005), and whether a plant can hurt
 anyone is said in one place: the hazard sentence that
 app/services/toxicity.py builds from the claim graph.
 
-So no prose in this file says a plant is safe. The check reads phrases, not
-a list of the plants that once had them, so a new entry is held to it too. A
-phrase that is genuinely about something else goes on the allow-list with
-its reason; there is none today.
+The other direction breaks the same rule. Sage, Thyme, Baby's Breath,
+Hollyhock and China Aster were "mildly toxic" in their notes while NC State
+records no toxicity to pets for them, and Moonflower's "all parts" went past
+its source, which names only the seeds. A verdict typed into prose has no
+citation and cannot follow the evidence when it changes, so a note states
+none, in either direction: no "safe", no "toxic", and no "edible", which is
+a harm-capable field shown only with its conditions (ADR 0008). A note may
+send the reader to the hazard note on the page, and that is all.
+
+The check reads phrases, not a list of the plants that once had them, so a
+new entry is held to it too. A phrase that is genuinely about something else
+goes on the allow-list with its reason; there is none today.
 """
 import json
 import re
@@ -32,7 +40,25 @@ SAFETY_CLAIM = re.compile(
     r"|\bnon-?toxic\w*|\bnot toxic\b|\bno toxicity\b",
     re.I)
 
-#: (scientific name, exact phrase) -> why the phrase is not a safety claim.
+#: A verdict that the plant harms someone, in the words such prose uses.
+#: "Fatal" and "irritant" count: "the latter usually fatal" beside a plant
+#: the hazard sentence calls toxic to pets reads as a hazard, whatever it
+#: meant about overwatering.
+VERDICT = re.compile(
+    r"\btoxi\w*|\bpoison\w*|\bvenom\w*|\bharmful\b|\birrita(?:nt|tion|tes?)\b"
+    r"|\bfatal\b|\bdeadly\b|\blethal\b|\bdangerous\b",
+    re.I)
+
+#: What a person may eat, or take for their health: ADR 0008 makes
+#: edibility harm-capable, and a care note is no place for medicine.
+EATING = re.compile(r"\b(?:in)?edible\b|\bmedicinal\b", re.I)
+
+#: A note may point at the hazard sentence without restating it.
+REFERENCE = re.compile(
+    r"\b(?:see|read|check)\s+the\s+(?:hazard|safety|toxicity)\s+(?:note|sentence|line)\b",
+    re.I)
+
+#: (scientific name, exact phrase) -> why the phrase is not a claim.
 ALLOWED: dict[tuple[str, str], str] = {}
 
 
@@ -49,12 +75,19 @@ def _prose(catalog):
             yield name, f"schedules[{schedule['care_type']}].notes", schedule.get("notes") or ""
 
 
-def claims(text: str, name: str = "") -> list[str]:
-    """The safety claims in a piece of prose, after its allowed phrases."""
+def _cleared(text: str, name: str) -> str:
     for (allowed_name, phrase) in ALLOWED:
         if allowed_name == name:
             text = text.replace(phrase, " ")
-    return [m.group(0) for m in SAFETY_CLAIM.finditer(text)]
+    return REFERENCE.sub(" ", text)
+
+
+def claims(text: str, name: str = "") -> list[str]:
+    """The safety claims in a piece of prose: that it is safe, that it is
+    toxic, or that it is food or medicine."""
+    text = _cleared(text, name)
+    return [m.group(0) for pattern in (SAFETY_CLAIM, VERDICT, EATING)
+            for m in pattern.finditer(text)]
 
 
 @pytest.fixture(scope="module")
@@ -80,13 +113,42 @@ def test_the_check_sees_a_safety_claim(text):
 
 
 @pytest.mark.parametrize("text", [
+    "Mildly toxic to cats and dogs.",
+    "ALL PARTS TOXIC — seeds especially.",
+    "TOXIC to dogs and cats (allium family).",
+    "All parts are poisonous to pets and humans.",
+    "Seeds and sap are harmful to pets.",
+    "Wear gloves — sap is an irritant.",
+    "Can cause skin irritation.",
+    "Can be fatal to pets and livestock.",
+    "Seeds and pods are especially dangerous to pets.",
+    "Toxicity is low.",
+])
+def test_the_check_sees_a_toxicity_verdict(text):
+    assert claims(text), text
+
+
+@pytest.mark.parametrize("text", [
+    "Purple flowers are edible.",
+    "Ornamental gourds are inedible.",
+    "Native perennial and medicinal herb.",
+])
+def test_the_check_sees_a_claim_about_eating(text):
+    assert claims(text), text
+
+
+@pytest.mark.parametrize("text", [
     "Let soil dry fully between waterings; rot is the main risk.",
     "Harvest once 1 foot tall; cut up to half the plant at a time.",
     "Wear gloves when pruning.",
     "Keep away from cold drafts and dry air.",
     "Excellent companion plant that deters aphids.",
+    "Plant when all frost danger passes.",
+    "Reduce watering as fruits cure on the vine.",
+    "Wear gloves when pruning; see the hazard note on this page.",
+    "Before sharing a cutting, read the toxicity note.",
 ])
-def test_the_check_leaves_care_advice_alone(text):
+def test_the_check_leaves_care_advice_and_a_reference_alone(text):
     assert not claims(text), text
 
 
