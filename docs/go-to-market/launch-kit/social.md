@@ -33,7 +33,7 @@ A post goes up only when every gate it lists is met. G0 applies to all of them.
 | G2 | The encoding and °F fixes are in the build and in production's existing rows | Strategy, same section |
 | G3 | Allison has read the in-app pages for the plants a post names against their cited sources | Strategy, the pets page's gates |
 | G4 | Allison has read Pothos's in-app hazard sentence against NC State's page | Strategy, hazard sentences |
-| G5 | The three hazard-sentence changes are shipped: "or your local poison centre", the pet verdict's source named in the sentence, and the code-table clauses cited or labelled | Strategy, hazard sentences |
+| G5 | The three hazard-sentence changes are shipped: "or your local poison centre", the pet verdict's source named in the sentence, and the code-table clauses cited or labelled. They landed on 2026-10-30, so G5 is met once step 2's deploy is live | Strategy, hazard sentences |
 | G6 | The page the post links to exists and is checked: a corrections log with a real entry, or the published write-up | Strategy, measurement and editorial sections |
 
 ## Launch week, L to L+7
@@ -42,7 +42,7 @@ The dates assume L on Wednesday 18 November 2026, which is only an example insid
 
 | Day | Example date | On the strategy's surfaces | Optional post |
 |---|---|---|---|
-| L | Wed 18 Nov | Release. Wait for the product page, which can take up to 24 hours. Clean-install check: sign-in, a growing area, the Almanac, a hazard note. Deploy the launch-day site edit (badge, banner, credit line, both privacy clauses, check line). The promotional text launch line is already live. Send nothing in bulk | None. Only the site's plain link goes out on L |
+| L | Wed 18 Nov | Release. Wait for the product page, which can take up to 24 hours. Clean-install check: sign-in, a growing area, the Almanac, a hazard note. Deploy the launch-day site edit (badge, banner, credit line, the campaign-label clause, check line). The early-access clause is already live, from step 3. The promotional text launch line is already live. Send nothing in bulk | None. Only the site's plain link goes out on L |
 | L+1 | Thu 19 Nov | Make campaign links as soon as the button appears (`waitlist`, `site`, `outreach` and `ph`; `writeup` waits until the piece exists). Give the site's buttons the `site` link, redeploy and re-run the check block, as [launch-day-runbook.md](../launch-day-runbook.md) sets out, so the campaign-label clause that went up on L describes links the site actually carries. Reply to any written review | None |
 | L+2 | Fri 20 Nov | Send the waitlist email with the `waitlist` link, only if the six conditions in [waitlist-email.md](waitlist-email.md) hold, among them a postal address, July form wording that supports a launch note, and the early-access privacy clause live. Otherwise it doesn't go. Start the individual replies to early-access emailers, which wait on the same postal address, each ending with "If you'd rather not hear from PlantAdvocate again, reply and say so." and "PlantAdvocate, [POSTAL ADDRESS]" | P1 |
 | L+3 | Sat 21 Nov | Finish the early-access replies (L+1 to L+3) | None |
@@ -181,7 +181,7 @@ The promotional text rotation is the strategy's, in its "promotional text calend
 |---|---|---|---|
 | 20 Dec to 3 Jan | Unchanged | None | Hands off. Replies only |
 | January | Default: "Feeding reminders rest from November to February..." to the end of January. Pets page: "Before a plant comes home, look it up..." from January to mid-March | W1, mid-January | Product Hunt's fallback weekend, 9 and 10 Jan. The spring nomination by Fri 15 Jan. The optional AHS proposal. The 31 January check |
-| February | Default: "February is repot-check month..." | W2 in the first week; W3 only if a correction has been logged | Hazard-sentence changes shipped by the end of February. Confirm Poison Prevention Week's 2027 dates. Decide on Apple Ads and on spring hours |
+| February | Default: "February is repot-check month..." | W2 in the first week; W3 only if a correction has been logged | Confirm Poison Prevention Week's 2027 dates. Decide on Apple Ads and on spring hours |
 | March | Default: "Planting this spring? Describe the bed once..." to mid-April. Pets page: the Poison Prevention Week line, probably 21 to 27 March, once G5 is met | S1 early in March; S2 mid-March; S3 during Poison Prevention Week | The Apple Ads test, mid-March to early April, if its conditions hold |
 | April | Default: "Looking for something for a bare bed?..." from mid-April into May | S4 mid-April; S5 only once the write-up is published | The lily of the valley write-up and its Hacker News submission, if AHS declined the proposal or Allison withdrew it after hearing nothing |
 | May | Unchanged | S6; S7 | World Bee Day, 20 May, has no post planned |
@@ -279,7 +279,7 @@ Say "12 tomatoes along the south fence" and PlantAdvocate, which I make, turns i
 
 Characters: 250, before the link.
 
-Fact: `b5-edible-and-garden.json`, Tomato. `outdoor_sun_exposure` full_sun and `water_regime` keep_moist are both cited to [NC State](https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/), and the record's dry-down note ties uneven moisture to blossom end rot and splitting. The spoken example is the listing's (WALK THE GARDEN) and shot 08's. The post leaves out tomato's hazard line. Its effect clause in the app ("drooling and stomach upset") comes from the `KNOWN_NUANCE` table in `toxicity.py`, sourced to "well-established Solanaceae chemistry", the same kind of clause G5 is about.
+Fact: `b5-edible-and-garden.json`, Tomato. `outdoor_sun_exposure` full_sun and `water_regime` keep_moist are both cited to [NC State](https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/), and the record's dry-down note ties uneven moisture to blossom end rot and splitting. The spoken example is the listing's (WALK THE GARDEN) and shot 08's. The post leaves out tomato's hazard line. Its effect clause in the app ("drooling and stomach upset") comes from the `KNOWN_NUANCE` table in `toxicity.py`, sourced to "well-established Solanaceae chemistry", the same kind of clause G5 is about. Since 2026-10-30 the app labels it "PlantAdvocate's own summary", and the post still leaves it out.
 
 Gates: G0.
 
@@ -353,7 +353,7 @@ Four things turned up that Allison may want to know. None blocks a post as draft
 
 First, the hazard sentence prints a plant's name in lower case: `describe` in `garden-gnome/app/services/toxicity.py` sets `name = common_name.lower()` (line 832). So pages read "christmas cactus", "thanksgiving cactus", "boston fern" and "american blue vervain" in their no-record sentences. It shows on a phone too: frame `03-check-before-planting.png` reads "No toxicity verdict recorded for lady fern yet". For lady fern the lower case is ordinary English, so that frame can stay; the names with a proper noun are the ones it breaks. It's a backend-only fix that ships with a deploy, and worth doing before any screenshot of those pages is taken, and before P6 sends anyone to the Christmas and Thanksgiving cactus pages.
 
-Second, tomato's effect clause in the app comes from a code table, not a cited page, like the lily and arum clauses the strategy names. The third hazard-sentence change should cover it too, along with the other `KNOWN_NUANCE` entries that carry an `effect`.
+Second, tomato's effect clause in the app comes from a code table, not a cited page, like the lily and arum clauses the strategy names. The third hazard-sentence change should cover it too, along with the other `KNOWN_NUANCE` entries that carry an `effect`. It did: the 2026-10-30 change labels tomato's and rhubarb's effect clauses "PlantAdvocate's own summary" along with the lily, daylily and arum ones.
 
 Third, the snake plant's check schedule (every 14 to 21 days, PlantAdvocate's own) sits a long way from NC State's winter interval of 1 to 2 months. The "Still damp" answer makes that honest in use, and P4 says outright that the app's check comes due more often, on its own uncited schedule. It's one example of why the 129 schedules are labelled uncited.
 

@@ -140,6 +140,12 @@ cited fact" rather than "every fact" is written down at
 Settings credits older data: "Species data provided in part by Perenual
 (perenual.com)." (`SettingsScreen.tsx:417`).
 
+Since 2026-10-30 a "Report a fact" link sits at the foot of each species
+page's Sources card, or in the same spot when a species has no sources yet.
+It opens a prefilled email to support naming the species and listing the
+facts the page shows (`mobile/src/components/ReportFact.tsx`,
+`mobile/src/care/factReport.ts`).
+
 ### Hazards and edibility
 
 Where a cited source records a plant as harmful to people or pets, the
@@ -148,10 +154,17 @@ for people where it gives one, and the parts where the source names them. A
 severity word such as "Seriously" belongs to people only, because NC State's
 Poison Severity rating is a rating for people (`CONTEXT.md:42-49`;
 `toxicity.py`, `describe`). Where people are at risk, the note ends with
-"If you suspect poisoning, call Poison Control (US 1-800-222-1222) right
-away", adding "or a vet" where animals are named (`toxicity.py:73, 800-803`).
-A plant is shown as edible only with its source's conditions
-(`toxicity.py:940-985`, `edibility_note`).
+"If you suspect poisoning, call Poison Control (US 1-800-222-1222) or your
+local poison centre right away", or "Poison Control (US 1-800-222-1222),
+your local poison centre or a vet" where animals are named too; the local
+poison centre was added on 2026-10-30 (`toxicity.py`, `LOCAL_POISON_CENTRE`).
+Where a source's claim settled the pet verdict, the note names it: "For
+pets, the source is NC State Extension." And words that come from the
+code's own tables rather than a cited passage, such as the arum family's
+calcium oxalate wording, follow as "PlantAdvocate's own summary: ..."
+(both 2026-10-30; `toxicity.py`, `_pets_source`, `_summary_sentence`). A
+plant is shown as edible only with its source's conditions
+(`toxicity.py`, `edibility_note`).
 
 Where nothing is recorded, the app says so and never calls the plant safe:
 "No toxicity is recorded for {plant} in our sources yet. That is not a
@@ -359,7 +372,7 @@ true only with a condition the claim drops.
 | "Anonymous census", "anonymized data" | The policy promises only that no identifier links two exports, and says someone who knew your city and exactly what you grow could in principle recognize your garden (`site/privacy.html`, Community census; `consent/copy.ts:112-116`). The login footer's "anonymized census" (`LoginScreen.tsx:113`) goes further than the policy | "off unless you turn it on", "with no name, email, notes, exact dates or coordinates" |
 | "Join a community of gardeners", "share your garden" | No social features, no user-generated content shown to others, no messaging (`age-rating.md:22-25`) | Don't describe the census as a community you join |
 | "Free forever" | The pricing page promises that if anything ever costs money, the care that keeps a plant alive stays free. It doesn't promise everything stays free (`site/pricing.html:279`) | "Free, with no ads and no in-app purchases." |
-| "Metric", "made for UK gardens" | Measurements are in feet, inches and °F (`realEstate.ts:163, 171`; `facts.ts:253`), the hazard number is US Poison Control, and the app is in English only (no localization in `mobile/src`) | Name the RHS as a source, not as a market |
+| "Metric", "made for UK gardens" | Measurements are in feet, inches and °F (`realEstate.ts:163, 171`; `facts.ts:253`), the hazard number is US Poison Control (since 2026-10-30 with "or your local poison centre" after it), and the app is in English only (no localization in `mobile/src`) | Name the RHS as a source, not as a market |
 | "Thousands of species", "about 1,000 species", "nearly 2,000 plants" | The safe figure is "more than 990" researched species. Production also lists about 1,900 older uncited rows, but "more than 990" counts researched species, not rows (`listing.md:13-21`; `handoff:234-239`) | "More than 990 species" |
 | "Nursery partners", "conservation partners" | The nursery program doesn't exist ("None of this exists yet", `site/nurseries.html:256`), and the conservation page "reflects intentions, not active partnerships yet" (`site/conservation.html:248`) | Describe them as plans, or leave them out |
 
@@ -402,12 +415,13 @@ since none exists.
 ## 4. Naming the cited organizations without implying endorsement
 
 The independence line is the last sentence of the App Store description,
-and it is the only place it appears today:
+and when this sheet was written it was the only place it appeared:
 
 > PlantAdvocate is independent. The organizations it cites have not reviewed or endorsed it.
 
-(`docs/app-store/listing.md:121`). No page in `site/` carries it. A grep of
-`site/*.html` for "independent", "endorse" and "affiliat" finds nothing. Any
+(`docs/app-store/listing.md`, the description's last line). On 2026-10-23 no
+page in `site/` carried it. Since the 2026-10-30 site fixes, the home page,
+About, the FAQ and Plant resources do, live with step 3. Any
 piece of copy that names an organization should carry that line, word for
 word, wherever the format allows it: a blog post, a press note, a pitch, a
 video description. Where it can't fit, a social post for instance, name the
@@ -508,12 +522,19 @@ say census data is shared with researchers.
 Two promises bind marketing directly. First, the policy says of account
 information: "We use account information only to run the App. We never use
 it for marketing or advertising, and we don't send marketing email."
-(`site/privacy.html:138`). So the email addresses of people who sign in can
+(`site/privacy.html:138`). The 2026-10-30 site fixes narrowed its last part
+on the ship branch, live with step 3, to: "We never use it for marketing or
+advertising, and we never add the address you sign in with to a mailing
+list. We send news about PlantAdvocate, such as its launch, only to people
+who asked for it, like those on the early-access list described under "This
+Website" below." Either way, the email addresses of people who sign in can
 never be used for a newsletter, a launch announcement or a survey. Second,
 the early-access list: "If you joined our early-access list on an earlier
 version of this site, we use that address only to tell you about
 PlantAdvocate, and we'll remove it if you ask." (`site/privacy.html:187`).
-A launch note to that list fits the promise; anything not about
+Since the same fixes it goes on to say that a removed address leaves only a
+one-way fingerprint, used only to keep that address off anything sent to
+the list. A launch note to that list fits the promise; anything not about
 PlantAdvocate doesn't, and an unsubscribe request has to be honoured.
 
 The website's own promise is "plantadvocate.ai has no analytics, ads or
@@ -541,6 +562,7 @@ Children's Privacy), and the listing answers Made for Kids "No"
 | 2026-10-23 | PR #22 (the ship branch) is open with CI green, per the orchestrator; not re-checked here | orchestrator context |
 | 2026-10-23 | Not on the App Store. The iTunes Lookup API returns no result for app id 6792203800, and a search for "PlantAdvocate" finds nothing. Never submitted to App Review | checked today; `handoff:110-111` |
 | 2026-10-23 | Production still runs the old backend: `GET /` answers version 0.2.0 with no catalog block, `openapi.json` has 29 paths and none under `/growing-areas`, and `/ai/status` reports every backend `stub` with vision `ready: false` | checked today against `https://garden-gnome-api.fly.dev` |
+| 2026-10-30 | The go-to-market branch is folded into `care-advice-honesty` at `b6fee6b`. That day's changes land on top: curated care notes without safety claims, the boot-time refresh of curated prose, the three hazard-sentence changes, the not-advice line and the Report a fact link in the app, and the site fixes. The live site still serves the October 16 rewrite. The 1.1.3 build has still not been started | `docs/2026-10-16-app-store-finish-line-handoff.md`, "Update, 2026-10-30" |
 | Launch day L | Allison releases manually after approval, which is the recommended setting | `handoff:855-856` |
 
 The store name is "PlantAdvocate: Garden Care", or "PlantAdvocate" if that
@@ -684,7 +706,8 @@ policy's "no identifier links one export to another". "the census is off
 unless you turn it on" would match.
 
 No page on the site carries the independence line. The resources page,
-which names all eight organizations, is the natural place for it.
+which names all eight organizations, is the natural place for it. (Fixed on
+the ship branch on 2026-10-30, on four pages, live with step 3.)
 
 `site/about.html:272` says "Species data comes from vetted horticultural
 sources", and `:282` says "Every piece of advice can be traced back to a
@@ -692,16 +715,19 @@ specific fact in the database". Settings credits Perenual for part of the
 older data, and the 129 schedules aren't cited. "Traced to the catalog" is
 true; "traced to a cited source" isn't always. `site/how-it-works.html:303`
 ("Every recommendation can point back to the specific fact") has the same
-reach.
+reach. (Fixed on the ship branch on 2026-10-30.)
 
 `site/recommendations.html:281` calls pothos "a safe bet for most rooms".
 It means light, but it puts "safe" beside a plant the app records as toxic.
+(Fixed on the ship branch on 2026-10-30.)
 
 The in-app privacy summary mentions "Gemini Nano on Android"
 (`mobile/src/consent/copy.ts:126`), which an iPhone user will read in
-Settings.
+Settings. (Still there on 2026-10-30, and so is the login footer's
+"anonymized census" above.)
 
 `site/README-SITE.md:49-50` says the policy's effective date "stays October
 16", but `site/privacy.html:129` says October 20, and the verification block
 checks for October 20. The handoff's phone check (`handoff:761-762`) also
-says October 16. The file is right; the two notes are stale.
+says October 16. The file is right; the two notes are stale. (Both notes
+were corrected on 2026-10-30.)
