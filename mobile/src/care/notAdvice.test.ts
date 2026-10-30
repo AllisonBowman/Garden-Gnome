@@ -58,11 +58,18 @@ test.each(SCREENS)('%s puts the note straight under its hazard sentence', (file,
   expect(src.slice(shown, note)).not.toMatch(/<(Card|Eyebrow|AreaFitCard|View)\b/);
 });
 
+/** Every file under `dir`, relative to src/, with forward slashes. */
+function walk(dir: string): string[] {
+  return fs.readdirSync(path.join(SRC, dir), { withFileTypes: true }).flatMap(
+    (e: { name: string; isDirectory(): boolean }) => {
+      const rel = dir ? `${dir}/${e.name}` : e.name;
+      return e.isDirectory() ? walk(rel) : [rel];
+    });
+}
+
 test('the sentence lives in one place, not in a copy per screen', () => {
-  const files: string[] = fs.readdirSync(SRC, { recursive: true });
-  const holders = files
+  const holders = walk('')
     .filter((f) => /\.tsx?$/.test(f) && !/\.test\.ts$/.test(f))
-    .filter((f) => /medical or veterinary/i.test(read(f)))
-    .map((f) => f.split(path.sep).join('/'));
+    .filter((f) => /medical or veterinary/i.test(read(f)));
   expect(holders).toEqual(['care/notAdvice.ts']);
 });
