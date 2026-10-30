@@ -4,8 +4,9 @@ species_catalog.json carried 25 em dashes reading "â€”" from the first comm
 UTF-8 bytes decoded once as Windows-1252 and saved again as UTF-8. Dumb Cane's
 care notes showed it in the app. Nothing between a data file and the screen
 can catch that -- seed.py and the claim sync copy a string onto its column as
-it is -- and once a row is seeded, seed() never rewrites it. So it is caught
-here, over every catalog data file, before it lands.
+it is, and since ADR 0010 every boot carries the curated file's prose onto
+the rows already seeded, a garbled string as faithfully as a mended one. So
+it is caught here, over every catalog data file, before it lands.
 
 The pattern is the shape mis-decoding leaves, not a list of the characters
 seen so far: the cp1252 reading of a UTF-8 lead byte for punctuation (â) or
