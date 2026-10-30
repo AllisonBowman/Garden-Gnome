@@ -1,5 +1,29 @@
 # PlantAdvocate go-to-market and 1.1.3 polish: where it stands
 
+**Note, 2026-10-30.** This file is now history; read
+`docs/2026-10-16-app-store-finish-line-handoff.md`, "Update, 2026-10-30",
+for what to do next. Two things below are no longer true. Its branch,
+`claude/go-to-market-strategy-cd07f3` (tip `2182e96`), and
+`claude/launch-day-site` (`fa4076b`) were pushed on 2026-10-26, after this
+was written. And on 2026-10-30 the branch was folded into
+`care-advice-honesty` at `b6fee6b`, and pushed. The commits kept their
+content and messages but have new IDs there: `cd5560e` is `7a6e67c`,
+`d956364` is `fd6f66a`, `5b2c9a1` is `e1c4091`, `cad38a8` is `d9afd5e`,
+`2fee66f` is `02f108f`, `e91d7f7` is `aa47bf0`, and this file's own commit
+is `b6fee6b`.
+
+A docs lane finished the document work under "What's unfinished" the same
+day: the completeness critic's leftovers and a read of `docs/go-to-market/`
+for contradictions between files, and the refresh of the finish-line
+handoff, which now carries every stale spot listed below and replaces the
+next steps here. Of "Found and not yet fixed", items 1, 2 and 3 were settled
+that day: the curated care notes were rewritten without safety claims, and
+a boot-time refresh of curated prose replaces the one-off in item 3, which
+nobody needs to run. Item 5's line went into 1.1.3 rather than 1.1.4; its
+"Report a fact" link stays for 1.1.4. Item 4, the three hazard-sentence
+changes, is still a decision, recommended for February. The launch-day site
+review, and `docs/go-to-market/launch-day-site.md` with it, is still to do.
+
 Written 2026-10-26 on the Mac about branch `claude/go-to-market-strategy-cd07f3`
 (worktree `.claude/worktrees/go-to-market-strategy-cd07f3`). The branch starts
 at the ship tip `3f6d7da` on `care-advice-honesty` and adds the commits listed
