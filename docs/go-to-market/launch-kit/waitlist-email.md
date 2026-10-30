@@ -224,7 +224,7 @@ From the PlantAdvocate early-access list: it's ready
 ```
 Characters: 52.
 
-The first is the strategy's and follows Apple's naming exactly. The second is the shortest, for phones that cut a subject off early. The third reminds a reader who signed up months ago why it's in their inbox (my guess is that this helps with spam reports).
+The first is from the strategy's first draft of this email and follows Apple's naming exactly. The second is the shortest, for phones that cut a subject off early. The third reminds a reader who signed up months ago why it's in their inbox (my guess is that this helps with spam reports).
 
 ### Preview text
 
@@ -272,7 +272,7 @@ The reason sentence restates what the July form promised, "Just an update when t
 
 The limits paragraph is there on purpose. The strategy expects the first complaints to be the sign-in wall, a missing species and a pet plant with no record. Saying the limits before someone installs is cheaper than a one-star review from someone who expected a camera verdict. The "plant you grow isn't there" invitation turns the missing-species complaint into a reply instead of a review.
 
-The rating line differs from the strategy's draft, which said "if PlantAdvocate turns out to be useful, a rating on the App Store helps other people find it". This version asks everyone the same way, "whatever you make of it", so it can't be read as asking only the people who liked the app. The FTC says asking only likely-happy customers "could violate the FTC Act", and Apple's guidelines bar filtered feedback ([launch-playbook.md](../research/launch-playbook.md)). It offers nothing in return, and it goes to every address on the send list.
+The rating line differs from the strategy's first draft, which said "if PlantAdvocate turns out to be useful, a rating on the App Store helps other people find it"; strategy.md now points here instead of carrying a draft. This version asks everyone the same way, "whatever you make of it", so it can't be read as asking only the people who liked the app. The FTC says asking only likely-happy customers "could violate the FTC Act", and Apple's guidelines bar filtered feedback ([launch-playbook.md](../research/launch-playbook.md)). It offers nothing in return, and it goes to every address on the send list.
 
 The footer covers what CAN-SPAM asks of a commercial email: who sent it, that it is an advertisement, why the person is getting it, how to opt out, and a postal address. The Act lets a sender drop the advertisement label for someone who gave "prior affirmative consent" to the message ([15 U.S.C. 7704(a)(5)(B)](https://www.law.cornell.edu/uscode/text/15/7704)). The July form asked people to join a beta, which isn't plainly consent to a launch announcement, and the label costs one sentence, so it stays. The opt-out and the address are required either way. The opt-out takes a reply in any words, because CAN-SPAM allows asking for no more than a reply email and any request to stop counts. The footer says the address will be removed, which is what the privacy policy promises ("we'll remove it if you ask", `site/privacy.html:187`), and the removal steps below make it true: the address goes from Cloudflare, the private folder and any mailing service, and only a one-way fingerprint stays, which is enough to keep it from being emailed again by mistake. The email's one promise about the future is in the body: the list won't hear from PlantAdvocate again, except people who reply asking for news of later releases.
 
