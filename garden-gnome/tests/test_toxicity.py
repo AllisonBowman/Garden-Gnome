@@ -212,6 +212,41 @@ def test_a_cited_false_names_who_said_so():
     assert "nothing harmful" not in text
 
 
+def test_a_cited_toxic_verdict_names_its_source_in_the_sentence():
+    """A cited "non-toxic" has always named who said so. A cited "toxic"
+    named no one, so "with the source named" was true of the page's Sources
+    card and not of the sentence."""
+    text = tx.describe_for_species("Ficus testii", "Test Fig", True,
+                                   cited_to="NC State Extension")
+    assert text == ("Toxic to pets. For pets, the source is NC State Extension. "
+                    "Keep it out of reach of pets and children.")
+    # No authority settled it, so none is named.
+    assert "source" not in tx.describe_for_species("Ficus lyrata", "Fiddle Leaf Fig", True)
+
+
+def test_the_pet_source_and_the_people_rating_each_name_their_own():
+    """Chinese evergreen: Clemson settled the pet flag, NC State rated it for
+    people. The people's sentence keeps its wording, which the listing and
+    the launch copy quote."""
+    detail = "NC State rates poison severity Low and flags the plant as a problem for cats."
+    text = tx.describe_for_species("Aglaonema commutatum", "Chinese Evergreen", True,
+                                   cited_to="Clemson Cooperative Extension", detail=detail)
+    assert "For pets, the source is Clemson Cooperative Extension." in text
+    assert "NC State Extension rates its poison severity for people low." in text
+    assert text.index("For pets") < text.index("rates its poison severity")
+
+
+def test_a_crops_pet_source_does_not_call_the_crop_toxic():
+    """On a crop "it is toxic to pets" would read as the fruit just called
+    food; the lead has said which parts, so the source sentence names only
+    the source."""
+    text = tx.describe_for_species("Solanum lycopersicum", "Tomato", True,
+                                   cited_to="NC State Extension")
+    assert text.startswith("The ripe fruit is the crop;")
+    assert "For pets, the source is NC State Extension." in text
+    assert "it is toxic" not in text.lower()
+
+
 def test_a_false_nobody_cited_is_not_called_a_finding():
     """A legacy False is a catalog default. "Nothing harmful has been noted"
     claimed someone looked; nobody on record did."""
