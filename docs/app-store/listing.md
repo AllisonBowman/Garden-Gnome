@@ -9,8 +9,9 @@ server and the website, some of this text isn't.
 Checked against the code at `307930e` on `care-advice-honesty`, the ship
 branch, with the review fixes made alongside it. Brought up to the
 2026-10-30 changes on the same branch: the line the app now shows under
-each hazard note, and the description's "temperature" in place of "cold
-hardiness", which no page shows. Every 1.1.3 change these blocks describe
+each hazard note, the hazard sentences' pet source and local poison
+centre, the Report a fact link, and the description's "temperature" in
+place of "cold hardiness", which no page shows. Every 1.1.3 change these blocks describe
 is on that branch once the 2026-10-30 changes land, so build from a tip
 that carries them; no line is waiting on anything later.
 
@@ -162,8 +163,9 @@ history. It covers everything since 1.1.2 build 15 (`a5d0d07`, 2 August
 Every line describes a change on `307930e`: the hazard and edibility
 wording, the operator-only census with no sync button, and
 `ios.supportsTablet` false in `mobile/app.json` are all in the build. The
-one exception is the not-advice line under each hazard note, which came
-with the 2026-10-30 changes.
+exceptions came with the 2026-10-30 changes: the not-advice line under each
+hazard note, the pet source and local poison centre in the hazard
+sentences, and the Report a fact link.
 
 <!-- field limit=4000 -->
 ```text
@@ -175,7 +177,9 @@ The Species Almanac. Open it from the Species tab or from a growing area, and na
 
 A cited catalog. More than 990 species now carry care facts from named sources such as NC State Extension and the Royal Horticultural Society. Each species page lists its sources and labels anything borrowed from the genus.
 
-Hazards stated plainly. Where a source records a plant as harmful to people or pets, its page says so. A plant is shown as edible only with the conditions its source gives. Under each hazard note, a line says these notes repeat what the sources publish and are not medical or veterinary advice.
+Hazards stated plainly. Where a source records a plant as harmful to people or pets, its page says so. A plant is shown as edible only with the conditions its source gives. A pet warning a source gives now names that source, and readers outside the US are pointed to their local poison centre. Under each hazard note, a line says these notes repeat what the sources publish and are not medical or veterinary advice.
+
+Report a fact. A link under each species page's sources opens an email to tell us a fact looks wrong.
 
 Checks, not chores. A watering check on the Checks for today card now asks you to feel the soil first, then tap Watered or Still damp. Either keeps your streak. Nothing is called overdue while it is inside its care window. A plant you add is dated that day, so its first check comes due without a log first.
 
@@ -193,7 +197,7 @@ iPhone only. On iPad, PlantAdvocate now runs as an iPhone app.
 
 New icon. A terracotta pot with a seedling.
 ```
-Characters: 2,291 of 4,000.
+Characters: 2,515 of 4,000.
 
 ## URLs
 
@@ -243,6 +247,8 @@ fixes are still changing are cited by function, not line.
 | Missing record never safe | `garden-gnome/app/services/toxicity.py`, `describe` (the no-verdict branches) and `hazard_line`; CONTEXT.md "Unknown" |
 | Hazard sentence: who, the source's severity for people, parts where the source names them | `toxicity.py`, `describe`. Parts come only from a source's own table; a bare flag names none (`from_legacy`) |
 | The not-advice line under each hazard note | `mobile/src/care/notAdvice.ts` holds the two sentences once, and `mobile/src/components/NotAdviceNote.tsx` shows them under the hazard note on species pages, plant pages and Add plant (the 2026-10-30 changes) |
+| A pet warning names its source; the local poison centre | `garden-gnome/app/services/toxicity.py`, `_pets_source` ("For pets, the source is ...") and `LOCAL_POISON_CENTRE`, after the US number (the 2026-10-30 changes) |
+| Report a fact | `mobile/src/components/ReportFact.tsx`, at the foot of the Sources card on `SpeciesDetailScreen.tsx`; the email is built in `mobile/src/care/factReport.ts` (the 2026-10-30 changes) |
 | Surfaces and goals | `mobile/src/growingAreas/realEstate.ts:12-68` |
 | Blank means unknown | `mobile/src/screens/GrowingAreasScreen.tsx:273-276` |
 | Shade fern in full sun, climber on a 7 ft fence | Fit engine run on a scratch sync: Lady Fern in a full-sun bed gets "This spot gets 6+ hours of direct sun; sources record it for part shade, full shade."; Chinese Wisteria under 84 in of headroom gets "Outgrows this spot: climbs to 25 ft and there is 7 ft of headroom" (`garden-gnome/app/services/fit.py:193-363`) |
