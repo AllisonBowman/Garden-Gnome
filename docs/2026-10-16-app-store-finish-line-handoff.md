@@ -12,9 +12,132 @@ migration range (0010 to 0020), VM size (256 MB), smoke check (12 tries in
 Where its restore advice still holds, it's repeated here, so you don't need it
 open.
 
-**Update, 2026-10-30.** Read this first. The steps below were brought up to
-date in place, and `docs/2026-10-26-go-to-market-handoff.md` is folded into
-them.
+## The launch morning, A to E
+
+Everything below, in the order to run it. Each line names the section that
+holds the exact commands and what to look for; tick a line only when that
+section's checks pass. Nothing here has been done: nothing builds, merges,
+deploys or submits until you run it, and every command is yours because it
+needs your Apple, GitHub, Fly or Cloudflare sign-in.
+
+Before the morning:
+
+- [ ] Answer the twelve decisions under "Decide these first". Each has a
+      default, and the seven questions emailed to you on 2026-10-31 (taro,
+      the Invasive Species exclusion, lily of the valley, the short care
+      notes, `min_machines_running`, screenshots 03 and 06, and where the
+      session runs) carry the same defaults, so silence means the defaults.
+- [ ] Decision 1 defaults to yes and is already on PR #22
+      (`min_machines_running = 1` since 2026-10-31). If you want it back to
+      0, tell me before you merge and wait for CI to go green again.
+
+A. The build (section A):
+
+- [ ] `cd mobile && npx --yes eas-cli@latest build --profile production --platform ios`,
+      sign in to Apple when EAS asks, and let it manage credentials.
+- [ ] Fill in the three lines in section A from
+      `npx --yes eas-cli@latest build:list --platform ios --limit 1`: the
+      build number (17 or higher), the EAS build ID, and the commit (the tip
+      of `care-advice-honesty`, `2ac7b19` or later).
+- [ ] On the build's page, check the image is `macos-tahoe-26.5-xcode-26.6`.
+
+B. Merge PR #22 (section B, step 1):
+
+- [ ] `gh auth status` shows you.
+- [ ] `gh pr checks 22 --repo AllisonBowman/Garden-Gnome`: Backend tests
+      and Mobile typecheck and tests both `pass`.
+- [ ] `gh pr view 22 --repo AllisonBowman/Garden-Gnome --json headRefOid,mergeable,mergeStateStatus`:
+      the build's commit, `MERGEABLE`, `CLEAN`.
+- [ ] `gh pr merge 22 --repo AllisonBowman/Garden-Gnome --merge`.
+- [ ] `gh run list --repo AllisonBowman/Garden-Gnome --branch master --limit 1`
+      gives RUN_ID; `gh run watch RUN_ID --repo AllisonBowman/Garden-Gnome`
+      ends with the two test jobs green and Deploy to Fly red with
+      `no access token available`, which is expected.
+
+C. Fly (section C, step 2):
+
+- [ ] `fly auth login`, then `fly auth whoami` shows your email.
+- [ ] `fly status -a garden-gnome-api` and
+      `fly secrets list -a garden-gnome-api`; write the secret names down.
+- [ ] Wake the machine with `curl -s --max-time 30 https://garden-gnome-api.fly.dev/`,
+      open `fly ssh console -a garden-gnome-api`, and run the orphan check
+      at the machine's prompt: it must print `[]`. Make the optional
+      database copy (decision 4) if you want the rehearsal, then `exit`.
+- [ ] `fly volumes list -a garden-gnome-api` gives VOLUME_ID;
+      `fly volumes show VOLUME_ID -a garden-gnome-api` (write down the
+      retention); `fly volumes snapshots create VOLUME_ID`;
+      `fly volumes snapshots list VOLUME_ID` shows a snapshot from now.
+- [ ] `fly tokens create deploy -x 999999h -a garden-gnome-api`, pasted
+      straight into `gh secret set FLY_API_TOKEN --env production --repo AllisonBowman/Garden-Gnome`;
+      then `gh secret list --env production --repo AllisonBowman/Garden-Gnome`
+      lists it.
+- [ ] `gh run rerun RUN_ID --failed --repo AllisonBowman/Garden-Gnome`, then
+      `gh run watch RUN_ID --repo AllisonBowman/Garden-Gnome`: Deploy and
+      Smoke check green, with `up after N attempt(s)`.
+- [ ] Verify, each as section C prints it: the openapi line prints
+      `34 True`; `GET /` shows `"version": "8c520db39b21:6:1"`,
+      `"synced": true` and `"claims": 10681`; `/ai/status` is `stub`
+      everywhere; `/growing-areas/` answers `401` and `/census/export`
+      `404`; `fly scale show` says 512 MB; and
+      `fly logs -a garden-gnome-api --no-tail` runs from
+      `0009_aloe_vera -> 0010_claims` to
+      `0021_pending_apple_revocation -> 0022_backfill_acquired_on`, then
+      `curated text refreshed N` with N above 0, then the
+      `claim sync: written` block, with no traceback.
+
+D. Cloudflare (sections D1 and D2, the waitlist and step 3):
+
+- [ ] Export the July waitlist first, with the commands in
+      `docs/go-to-market/launch-kit/waitlist-email.md` under "Before step
+      3", into `$HOME/PlantAdvocate-private`.
+- [ ] `cd /Users/allisonbowman/Developer/Garden-Gnome`; `git status --short`
+      prints nothing; `git log -1 --format='%h %d'` names
+      `care-advice-honesty` at the build's commit or later (if it's older,
+      `git pull --ff-only`).
+- [ ] `npx wrangler login`; `npx wrangler pages project list` gives PROJECT;
+      `npx wrangler pages deployment list --project-name=PROJECT` gives
+      PRODUCTION_BRANCH.
+- [ ] The link check in section D2 ends `13 pages, 0 broken`.
+- [ ] `D=$(mktemp -d) && cp -R site/. "$D" && rm "$D/README-SITE.md" && npx wrangler pages deploy "$D" --project-name=PROJECT --branch=PRODUCTION_BRANCH`.
+- [ ] `sed -n '/^## Verifying the deploy/,/^## When the app changes/p' site/README-SITE.md`
+      prints the verify block; run it, and every line prints `ok`. The two
+      `curl` lines after it print `200`. Open https://plantadvocate.ai/privacy
+      on your phone: October 20 and the "What changed" line are at the top.
+
+E. App Store Connect (sections E1 to E3, steps 4 to 6):
+
+- [ ] `cd /Users/allisonbowman/Developer/Garden-Gnome/mobile`;
+      `npx --yes eas-cli@latest whoami` shows `allisonbowman`;
+      `npx --yes eas-cli@latest build:view EAS_BUILD_ID` shows finished,
+      1.1.3, the build number and the commit.
+- [ ] `npx --yes eas-cli@latest submit --platform ios --profile production --id EAS_BUILD_ID`,
+      signing in to Apple when asked; then wait for Apple's processing email
+      and watch it for `ITMS-91` codes.
+- [ ] TestFlight: paste What's New from `docs/app-store/listing.md` into
+      What to Test, install the build on a phone, and go through the twelve
+      checks in section E2. Anything that reads wrong comes to me before
+      you submit.
+- [ ] App Information from `listing.md` and `age-rating.md` (4+); Pricing
+      and Availability: Free, the United States only, no pre-order; App
+      Privacy from `app-privacy.md`, the seven types, published.
+- [ ] The 1.1.3 version page: promotional text, description and the
+      keywords for the subtitle you chose (decision 10); the support and
+      marketing URLs and the copyright; the build by its number; App Review
+      Information from `review-notes.md` with Sign-in required ticked, your
+      phone in plus-sign format and the Notes block pasted as it is with its
+      two brackets filled; Manually release this version.
+- [ ] Screenshots: `docs/screenshots/1.1.3/17-pro-max/` to the 6.9" size and
+      `17-pro/` to the 6.3" size, each in the order 01, 04, 06, 02, 03, 05,
+      07, 08. 03 and 06 go up as they are unless you asked for a retake
+      (decision 12).
+- [ ] Wake the server: `curl -s --max-time 30 https://garden-gnome-api.fly.dev/`
+      shows `"synced": true`. Then Add for Review, Submit for Review, and
+      the status reads Waiting for Review.
+- [ ] Report back with the list at the end of this file.
+
+**Update, 2026-10-30.** The steps below were brought up to date in place,
+and `docs/2026-10-26-go-to-market-handoff.md` is folded into them. Where
+the 2026-10-31 block above says something different, it wins.
 
 The go-to-market branch, `claude/go-to-market-strategy-cd07f3`, was folded
 into `care-advice-honesty` at `b6fee6b` and pushed. So the °F fix and the 25
@@ -58,33 +181,8 @@ reported" lists what today settled. If
 you haven't filed the App Launch featuring nomination yet, it waits on
 nothing here (`docs/go-to-market/strategy.md`, "Featuring Nominations").
 
-**The build (updated 2026-10-20).** Not started yet, and it needs you. From
-this Mac, `eas build --profile production --platform ios --non-interactive`
-gets as far as "Using remote iOS credentials", then stops with "Distribution
-Certificate is not validated for non-interactive builds": EAS wants to check
-the certificate with Apple, and that takes your Apple sign-in. Run it
-yourself, without the non-interactive flag, from the repo root:
-
-```bash
-cd mobile && npx --yes eas-cli@latest build --profile production --platform ios
-```
-
-Say yes when it asks to validate the certificate and sign in to your Apple
-account; let EAS manage credentials if it asks. The attempt on the 20th
-already incremented the remote build number from 15 to 16 without building,
-so expect the build to come out as 17 (or higher). The build runs on Expo's
-machines for 15 to 30 minutes. When it finishes, fill in these three lines
-from `npx --yes eas-cli@latest build:list --platform ios --limit 1`:
-
-- Build number: `____` (expect 17 or higher; 1.1.2 was build 15)
-- EAS build ID: `____`
-- Commit EAS reports: `____` (since 2026-10-30, the tip of
-  `care-advice-honesty` that carries that day's changes, later than
-  `b6fee6b`)
-
-Wherever a step below says "the build number", it means the first of those
-lines. While you're on the build's page, check that it names the image
-`macos-tahoe-26.5-xcode-26.6`, the one `mobile/eas.json` pins.
+**The build** is section A below, after the decisions, with its three
+lines to fill in.
 
 **Update, 2026-10-17 and 2026-10-20.** The build was never started on the
 16th, and on the 20th the attempt from this Mac stopped at the certificate
@@ -206,15 +304,16 @@ in the steps. The rest can wait until after you submit; none of them blocks
 this submission.
 
 1. **Keep the server awake during review.** Recommend yes, then revert after
-   approval. The machine sleeps when idle (`min_machines_running = 0`), and a
-   first request after idle took 6.7 s on 15 October. That's an easy way for
-   a reviewer's first screen to say it couldn't reach the server. The setting
-   is a line in `garden-gnome/fly.toml`, so it ships through a deploy. Tell me
-   before step 1 and I'll add `min_machines_running = 1` to PR #22, after
-   which CI runs again and you wait for green. After approval, a one-line PR
-   puts it back to 0. The cost: the machine bills all day instead of only
-   while it's answering. Either way, step 6 has you wake the server just
-   before you press Submit.
+   approval, and since 2026-10-31 the yes is on the branch: `fly.toml` says
+   `min_machines_running = 1`, so step 2's deploy keeps one machine running.
+   Until then the machine sleeps when idle, and a first request after idle
+   took 6.7 s on 15 October, an easy way for a reviewer's first screen to
+   say it couldn't reach the server. The cost: the machine bills all day
+   instead of only while it's answering. If you'd rather not pay it, tell me
+   before you merge and I'll put the line back to 0 on PR #22, after which
+   CI runs again and you wait for green. After approval, a one-line PR puts
+   it back to 0 (the launch-day runbook suggests waiting until L+7). Either
+   way, step 6 has you wake the server just before you press Submit.
 2. **The VM goes to 512 MB.** `fly.toml` now asks for 512 MB instead of 256,
    and the deploy in step 2 applies that, which changes what Fly charges for
    the machine. Recommend accepting it. Before the new species-list cache,
@@ -306,12 +405,14 @@ this submission.
    summary" label, and no frame shows the not-advice line, which the build
    now puts under the sentence in 06 and under Lady Fern's note in 03. Shot
    05's Sources card may or may not reach down to the new "Report a fact"
-   link. Recommend asking Claude to retake those three at both sizes from
-   the build's commit, on the iOS 26.5 simulators, the way the 2026-10-24
-   retakes were made (`docs/screenshots/1.1.3/README.md`), and to run the
-   `CHECK.md` checks again before step 4. Uploading the
-   set as it is would show older wording on the frame that carries the
-   hazard sentence.
+   link. Recommend leaving all three as they are for this submission (the
+   2026-10-31 default): each frame still shows the app truthfully, the
+   wording that moved is a clause inside one sentence, and a retake costs
+   a two-day screenshot garden on the new backend. If you'd rather the
+   frames match the new wording, say so: the recipe is in
+   `docs/screenshots/1.1.3/README.md` under "How they were made", the
+   retake comes from the build's commit on the iOS 26.5 simulators, and
+   `CHECK.md` runs again before step 4.
 
 These can wait until after submission:
 
@@ -502,7 +603,37 @@ glossary entry for harm-capable fields now has ADR 0008's wording.
 
 ---
 
-## Step 1: Merge PR #22, only once its CI is green
+## A. The build, yours to start
+
+**Updated 2026-10-20, re-read 2026-10-31.** Not started yet, and it needs you. From
+this Mac, `eas build --profile production --platform ios --non-interactive`
+gets as far as "Using remote iOS credentials", then stops with "Distribution
+Certificate is not validated for non-interactive builds": EAS wants to check
+the certificate with Apple, and that takes your Apple sign-in. Run it
+yourself, without the non-interactive flag, from the repo root:
+
+```bash
+cd mobile && npx --yes eas-cli@latest build --profile production --platform ios
+```
+
+Say yes when it asks to validate the certificate and sign in to your Apple
+account; let EAS manage credentials if it asks. The attempt on the 20th
+already incremented the remote build number from 15 to 16 without building,
+so expect the build to come out as 17 (or higher). The build runs on Expo's
+machines for 15 to 30 minutes. When it finishes, fill in these three lines
+from `npx --yes eas-cli@latest build:list --platform ios --limit 1`:
+
+- Build number: `____` (expect 17 or higher; 1.1.2 was build 15)
+- EAS build ID: `____`
+- Commit EAS reports: `____` (the tip of `care-advice-honesty` when you
+  run it: `2ac7b19` or later. No app code has changed since `26ffeed`;
+  everything after it is documents)
+
+Wherever a step below says "the build number", it means the first of those
+lines. While you're on the build's page, check that it names the image
+`macos-tahoe-26.5-xcode-26.6`, the one `mobile/eas.json` pins.
+
+## B. Step 1: Merge PR #22, only once its CI is green
 
 Check that the GitHub CLI is logged in as you:
 
@@ -527,10 +658,10 @@ gh pr view 22 --repo AllisonBowman/Garden-Gnome --json headRefOid,mergeable,merg
 
 Look for `headRefOid` matching the tip that carries the 2026-10-30 changes
 (later than `b6fee6b`; or the newer commit, if I added the `fly.toml` line
-from decision 1), `MERGEABLE`, and `CLEAN`. Apart from that `fly.toml`
-commit, it should be the commit EAS reports at the top of this file. If it
-starts `b6fee6b`, `3f6d7da` or anything older, that day's changes aren't on
-the PR yet: stop and tell me.
+from decision 1), `MERGEABLE`, and `CLEAN`. Apart from that `fly.toml` commit, it should be the commit EAS reports in
+section A. On 2026-10-31 the PR's head was `2ac7b19`, mergeable and clean,
+with both test jobs green. If it starts `b6fee6b`, `3f6d7da` or anything
+older, the 2026-10-30 changes aren't on the PR yet: stop and tell me.
 
 ```bash
 gh pr merge 22 --repo AllisonBowman/Garden-Gnome --merge
@@ -557,7 +688,7 @@ secret doesn't exist yet, and it means nothing was deployed: production is
 untouched. If the test jobs fail on master after passing on the PR, stop and
 bring me the log.
 
-## Step 2: Deploy the backend to Fly
+## C. Step 2: Deploy the backend to Fly
 
 Do these in order. The orphan check and the snapshot both have to happen
 before anything deploys, and nothing deploys until you re-run the failed job
@@ -813,7 +944,7 @@ says they already exist). If you do, start it now: it needs care logged one
 and two days before the shoot, and it has to be built against this new
 backend.
 
-## Between steps 2 and 3: export the July waitlist
+## D1. Between steps 2 and 3: export the July waitlist
 
 Step 3's deploy drops the `/api/waitlist` endpoint. The addresses stay in
 Cloudflare's KV or D1 store, but get them out first, so the count is known
@@ -842,7 +973,7 @@ then slips by more than a week or two, export once more just before it. The
 check's output is safe to show me once you've looked at its one sample line,
 as that file says.
 
-## Step 3: Deploy the website to Cloudflare
+## D2. Step 3: Deploy the website to Cloudflare
 
 The live site isn't the repo's `site/` folder. On 16 October it was the July
 17 build from the desktop generator, which says the app doesn't collect
@@ -958,7 +1089,7 @@ https://plantadvocate.ai/privacy on your phone and read the top: the October
 16 until 2026-10-30; `site/privacy.html` has said October 20 since that
 day's text was written.)
 
-## Step 4: App Store Connect
+## E1. Step 4: App Store Connect
 
 **First, send the build up.** This can happen any time after the build
 finishes, even before step 2, and doing it early shortens 1.1.2's broken
@@ -1085,8 +1216,9 @@ a spot, checks not chores, and hazards on Pothos
 Cane: Dumb Cane's care notes still showed garbled dashes on the shoot's
 backend, and the shot list allows Pothos. Three of them, 03, 05 and 06,
 predate the 2026-10-30 changes to the hazard wording, the not-advice line
-and the Report a fact link; decision 12 recommends retaking them first. If
-CHECK.md says otherwise on the day you upload, follow CHECK.md.
+and the Report a fact link; decision 12 leaves them as they are unless you
+say otherwise. If CHECK.md says otherwise on the day you upload, follow
+CHECK.md.
 
 `docs/app-store/screenshots.md` still has the demo garden, the shots' set-ups
 and the simulator commands, for any retake. Two notes if you retake one:
@@ -1105,7 +1237,7 @@ A phone works instead of the simulator if it has a Dynamic Island. An iPhone
 what you've got. Phone shots come from the real TestFlight build, which is a
 point in their favour. Keep Settings out of every shot.
 
-## Step 5: TestFlight on a phone
+## E2. Step 5: TestFlight on a phone
 
 Delete PlantAdvocate from the phone first, so every permission prompt shows
 fresh. Your garden lives on the server and comes back when you sign in. Then
@@ -1250,7 +1382,7 @@ If any sentence, label or prompt reads wrong, that can change what gets
 pasted in step 4. Nothing is submitted until step 6, so tell me before going
 on.
 
-## Step 6: Submit for review
+## E3. Step 6: Submit for review
 
 Wake the server, so the reviewer's first request doesn't wait out a cold
 start:
