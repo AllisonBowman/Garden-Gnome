@@ -70,9 +70,10 @@ History:
   effective date stays October 20, since that version still hasn't been
   published, and its "What changed" line now names everything since the
   October 16 version that is live.
-- Launch day (branch `claude/launch-day-site`, merged only once the app is
-  live): every early-access call to action links to the App Store product
-  page, https://apps.apple.com/us/app/id6792203800. Every page carries the
+- Launch day (branch `claude/launch-day-site`, merged on the morning of
+  launch day just before the release, and deployed only once the App Store
+  page answers): every early-access call to action links to the App Store
+  product page, https://apps.apple.com/us/app/id6792203800. Every page carries the
   Smart App Banner tag, Open Graph and Twitter tags and Apple's credit line,
   and the footer links to a new press page. The privacy policy's wording is
   unchanged. `docs/go-to-market/launch-day-site.md` lists every change.
@@ -136,7 +137,9 @@ Why each part matters:
 - The live deployment has a Pages Function at `/api/waitlist` that the July
   homepage posted early-access emails to. This repo has no `functions/`
   folder, so the new deployment will not have that endpoint. Nothing in these
-  pages calls it any more (early access is a `mailto:` link now). If you want
+  pages calls it any more (early access became a
+  `mailto:` link on 2026-10-16, and on launch day the App Store link
+  replaced it). If you want
   the addresses already collected, export them from wherever that function
   stored them (KV or D1, in the Cloudflare dashboard) before or after the
   deploy; the data stays, only the endpoint goes. The privacy policy says
@@ -182,11 +185,13 @@ check https://plantadvocate.ai/privacy.html 'never add the address you sign in w
 check https://plantadvocate.ai/privacy.html 'one-way fingerprint' present
 ```
 
-**After launch day.** Once the launch-day site is deployed
-(`docs/go-to-market/launch-day-site.md` says when), run this group too, in
-the same terminal so `check` is already defined. Every line must print `ok`.
-Run against the pre-launch site, its `present` lines print FAIL, which is
-right for a site that doesn't link to the App Store yet. The press page is
+**After launch day.** Once the launch-day site is deployed, which
+happens only after the App Store product page answers
+(`docs/go-to-market/launch-day-site.md` and the launch-day runbook say
+when), run this group too, in the same terminal so `check` is already
+defined. Every line must print `ok`.
+Run against the pre-launch site, every line prints FAIL, which is right for
+a site that still offers early access and doesn't link to the App Store yet. The press page is
 checked for a line only it has, because Cloudflare answers a page that
 doesn't exist with the homepage.
 
