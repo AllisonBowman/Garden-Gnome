@@ -215,7 +215,8 @@ you submit (see README.md).
 
 ## Pricing and rights
 
-Price: Free (tier 0) in every territory. There are no in-app purchases: no
+Price: Free (tier 0). Availability: the United States only at launch (the
+finish-line handoff's decision 11; confirmed by Allison on 2026-10-31). There are no in-app purchases: no
 StoreKit or purchase library in `mobile/package.json`, and nothing in
 `mobile/src` sells anything.
 

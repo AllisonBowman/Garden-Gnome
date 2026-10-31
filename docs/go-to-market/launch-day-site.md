@@ -215,16 +215,25 @@ On the branch as it stands, on 2026-10-31:
 - The adversarial review: see the next section.
 
 Not checked, because it can't be yet: the Smart App Banner on a phone (the
-app has to be live), the Open Graph previews, and the product page itself.
+app has to be live), the Open Graph previews, the product page itself, and
+the two things the press page states as fact before the page exists, the
+privacy label and the category. The runbook's read of the product page on L
+covers all of them; if the label or the category on the live page differs,
+the press page changes in the same deploy.
 
 ### The adversarial review
 
 Four reviewers read the branch through one lens each (honesty against the
 truth sheet, Apple's rules, structure and links, voice and consistency with
-the ship branch's copy), and two refuters challenged every finding. The
-confirmed findings and what was done about each are listed in the
-finish-line handoff's 2026-10-31 block, with the commit that carried the
-fix.
+the ship branch's copy), and two refuters challenged every finding. Of 24
+findings, 21 were fixed in the branch's seventh commit before the refuters
+read it (the service mark, the iOS 26 condition, the numerals, the README
+lines, the Almanac and Gnome's voice explanations) or refuted; the 3 that
+stood are the README's merge timing (fixed in the same commit), the Mac and
+Apple Vision Pro availability boxes in App Store Connect (now in the
+finish-line handoff's step 4 and the runbook's approval-day check) and a
+possessive in the privacy policy, left for its next revision. The
+finish-line handoff's 2026-10-31 block records the same.
 
 ## Launch morning
 
