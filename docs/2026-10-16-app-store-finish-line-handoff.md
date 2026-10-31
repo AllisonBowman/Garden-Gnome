@@ -12,6 +12,75 @@ migration range (0010 to 0020), VM size (256 MB), smoke check (12 tries in
 Where its restore advice still holds, it's repeated here, so you don't need it
 open.
 
+**Update, 2026-10-31.** Read this first; the checklist below it is the
+launch morning. Written on this Mac in the main checkout, from `26ffeed`.
+
+What landed on `care-advice-honesty` today, all pushed:
+
+- The gtm-critic docs lane (`origin/claude/lane-gtm-critic`, now at
+  `a8d64f0`) is folded in: its ten commits, `754411d` to `2ac7b19`, brought
+  the go-to-market files and this handoff up to the 2026-10-30 changes.
+- This handoff opens with the A to E checklist, the build has its own
+  section before step 1, and the step headings carry their letters. The
+  pre-launch table in `docs/go-to-market/launch-day-runbook.md` and this
+  file's step 4 gained one step the review found: in App Store Connect,
+  untick Apple silicon Mac and Apple Vision Pro availability, because an
+  iPhone app is offered on both unless you do.
+- `fly.toml` says `min_machines_running = 1` (decision 1, yes). Step 2's
+  deploy applies it; a one-line PR puts it back after approval.
+- `docs/go-to-market/launch-day-site.md` exists. The launch-day site
+  branch, `claude/launch-day-site`, was rebased onto the ship tip, reviewed
+  against Apple's marketing guidelines, trademark guidelines, trademark
+  list and Smart App Banner page, fixed, and pushed at `d279afc`
+  (`launch-day-site-reviewed` points at the same commit; the old draft
+  `fa4076b` is gone from both). Seven commits on top of the ship tip, all
+  under `site/`: text links to the US product page in place of every
+  early-access call to action, the banner tag, Open Graph tags, Apple's
+  credit line (App Store credited as the registered service mark Apple's
+  own footer calls it), a press page, and the README's after-launch-day
+  check group. It changes no privacy policy wording and carries no badge.
+  Its pull request is not open; the runbook has you ask for it before L.
+  Never merge or deploy it before launch morning.
+- Four lines on the pre-launch site, found by the same review, ride with
+  step 3: the FAQ says every researched species page shows its sources,
+  Plant resources says the catalog cites its organizations, the pricing
+  page links to the planned nursery program, and the homepage has a meta
+  description. `docs/app-store/listing.md` says the United States only.
+- The gates on `2ac7b19`, the last commit that touched app code apart from
+  `fly.toml`: backend 7,094 passed, mobile 557 passed in 50 suites,
+  typecheck clean, leak scan clean, `site/` 13 pages with 0 broken links
+  (the launch-day branch 14 and 0). On this Mac jest needs
+  `npx jest --watchman=false`, because the sandbox blocks watchman; CI is
+  unaffected. PR #22's CI was green on `2ac7b19` and again on `0db827b`, both test
+  jobs passing, mergeable and clean; the pushes after it are documents
+  only.
+
+Allison answered the seven questions by email at 16:38 ET: "follow
+recommendations in all cases". So taro stays on the "something to eat"
+lists with its preparation note; the Invasive Species exclusion keeps its
+five species off candidate lists; lily of the valley reads "Toxic", as NC
+State rates it; 1.1.3 ships with the short care notes, and the lengthened
+notes are finished on branch `care-notes-1.1.4` so she can demo both
+versions; `min_machines_running` stays 1 through App Review and goes back
+to 0 after approval; screenshots 03 and 06 are not retaken; and the work
+runs on this Mac. Decisions 1, 6 and 12 below are settled by that answer.
+
+The care notes: `care-notes-1.1.4` was cut from `2ac7b19`. Its lengthening
+runs as a workflow, two writers, a judge and three adversarial verifiers
+per species, every sentence traced to a quote in the species' verified
+record, then an assembler that pins the text and the trace in tests and a
+completeness critic. The first run hit the account's session limit before
+any note cleared verification; it was resumed at 17:33 ET, and the next
+block or the branch's own handoff, `docs/2026-10-31-care-notes-1.1.4-handoff.md`,
+says how it ended. It is not merged anywhere.
+
+Checked from this Mac today: production still answers
+`{"status":"ok","service":"garden-gnome","version":"0.2.0"}` with 29 paths
+and no `/growing-areas`, and https://plantadvocate.ai still serves the
+October 16 pages (a privacy policy dated October 16, "EVERY FACT CITED" on
+the homepage). Nothing was deployed, merged, built or submitted today.
+Nothing is open for you beyond the checklist.
+
 ## The launch morning, A to E
 
 Everything below, in the order to run it. Each line names the section that
@@ -304,8 +373,8 @@ Each one comes with my recommendation. The first twelve change what happens
 in the steps. The rest can wait until after you submit; none of them blocks
 this submission.
 
-1. **Keep the server awake during review.** Recommend yes, then revert after
-   approval, and since 2026-10-31 the yes is on the branch: `fly.toml` says
+1. **Keep the server awake during review.** Settled yes by Allison on
+   2026-10-31, revert after approval, and the yes is on the branch: `fly.toml` says
    `min_machines_running = 1`, so step 2's deploy keeps one machine running.
    Until then the machine sleeps when idle, and a first request after idle
    took 6.7 s on 15 October, an easy way for a reviewer's first screen to
@@ -354,11 +423,10 @@ this submission.
    ("toxic only if large quantities eaten"), while Missouri Botanical Garden
    calls all parts very poisonous. Citing NC State would make the app say "NC
    State Extension rates it low severity" beside "Seriously toxic" (the server
-   keeps the graver source), and would take it off candidate lists. Recommend
-   leaving it as it is for this submission: "Toxic to pets and people", its
-   hazard line shown, still a possible candidate for a shady bed. If you'd
-   rather it were never put forward, say so; that is a one-record change and a
-   deploy, no app build.
+   keeps the graver source), and would take it off candidate lists. Settled by Allison on 2026-10-31: it stays as it is for this
+   submission, "Toxic to pets and people", its hazard line shown, still a
+   possible candidate for a shady bed. Changing that later is a one-record
+   change and a deploy, no app build.
 7. **The "Sign-in required" box in App Review Information.** Tick it;
    `docs/app-store/review-notes.md` says the same, under Sign-In
    Information. The app does require sign-in before it shows anything, so
@@ -406,8 +474,8 @@ this submission.
    summary" label, and no frame shows the not-advice line, which the build
    now puts under the sentence in 06 and under Lady Fern's note in 03. Shot
    05's Sources card may or may not reach down to the new "Report a fact"
-   link. Recommend leaving all three as they are for this submission (the
-   2026-10-31 default): each frame still shows the app truthfully, the
+   link. Settled by Allison on 2026-10-31: all three stay as they are for
+   this submission, because each frame still shows the app truthfully, the
    wording that moved is a clause inside one sentence, and a retake costs
    a two-day screenshot garden on the new backend. If you'd rather the
    frames match the new wording, say so: the recipe is in
