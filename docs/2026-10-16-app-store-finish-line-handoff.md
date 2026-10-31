@@ -484,10 +484,7 @@ These can wait until after submission:
   puts the July pages back.
 - **At launch**, replace the site's "in beta on iPhone", "Email us for early
   access" and the "Get early access" nav button with the App Store link.
-  That's why step 4 recommends releasing manually. The edits wait on branch
-  `claude/launch-day-site`, whose draft `fa4076b` is unreviewed; don't merge
-  or deploy it before launch day, and follow
-  `docs/go-to-market/launch-day-runbook.md` when the day comes.
+  That's why step 4 recommends releasing manually. The edits are reviewed and wait on branch `claude/launch-day-site` (`docs/go-to-market/launch-day-site.md` lists them); don't merge or deploy it before launch day, and follow `docs/go-to-market/launch-day-runbook.md` when the day comes.
 - **Two policy statements to confirm.** First, that Fly keeps volume
   snapshots for 5 days (step 2 shows the retention). Second, that Anthropic's
   commercial terms bar training on API content: read the current terms, since

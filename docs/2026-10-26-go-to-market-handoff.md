@@ -24,9 +24,9 @@ hazard-sentence changes landed, backend only, so they ship with the deploy;
 the table clauses are labelled "PlantAdvocate's own summary" rather than
 cited. Item 5: the not-advice line and the "Report a fact" link both went
 into 1.1.3 rather than 1.1.4. The six site copy fixes ride with step 3, and
-the two privacy changes the outreach lane asked for went with them. What is
-still to do is the launch-day site review, and
-`docs/go-to-market/launch-day-site.md` with it.
+the two privacy changes the outreach lane asked for went with them. The launch-day site review and
+`docs/go-to-market/launch-day-site.md` were finished on 2026-10-31; the
+finish-line handoff's block of that date says where the branch stands.
 
 Written 2026-10-26 on the Mac about branch `claude/go-to-market-strategy-cd07f3`
 (worktree `.claude/worktrees/go-to-market-strategy-cd07f3`). The branch starts

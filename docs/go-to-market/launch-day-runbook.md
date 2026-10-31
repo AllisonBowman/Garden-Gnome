@@ -2,7 +2,7 @@
 
 Written 2026-10-24 for Allison, against the ship tip `3f6d7da` (branch `care-advice-honesty`, PR #22). It covers what you do from the moment App Review approves 1.1.3, with a manual release, through the seventh day after you release it, then what must already be true before that day, and the check-ins for the first 30 days and the winter. L is the day you press Release. Approval can come the same day or a few days earlier.
 
-Nothing in this file has been done. Nothing was sent, posted, filed or submitted while writing it, and every outward step is yours to take, change or skip. It follows [strategy.md](strategy.md), which wins wherever the two disagree, and every line of public copy here was checked against [product-truth.md](product-truth.md). "The handoff" is [docs/2026-10-16-app-store-finish-line-handoff.md](../2026-10-16-app-store-finish-line-handoff.md), and its step and decision numbers are the ones meant here. The ready-to-edit drafts are in [launch-kit/](launch-kit/): the [waitlist email](launch-kit/waitlist-email.md), the [community posts](launch-kit/community-posts.md) with their reply bank, the [outreach emails](launch-kit/outreach-emails.md), the [press release](launch-kit/press-release.md), the [fact sheet](launch-kit/fact-sheet.md), the [listing proposals](launch-kit/listing-proposals.md) (the step zero fields and the promotional text) and the [social posts](launch-kit/social.md) (optional, with their own launch-week calendar). The site edits for launch day will be described in `launch-day-site.md`, which is written when branch `claude/launch-day-site` is reviewed and doesn't exist yet. The outlets and communities are in [targets.md](targets.md).
+Nothing in this file has been done. Nothing was sent, posted, filed or submitted while writing it, and every outward step is yours to take, change or skip. It follows [strategy.md](strategy.md), which wins wherever the two disagree, and every line of public copy here was checked against [product-truth.md](product-truth.md). "The handoff" is [docs/2026-10-16-app-store-finish-line-handoff.md](../2026-10-16-app-store-finish-line-handoff.md), and its step and decision numbers are the ones meant here. The ready-to-edit drafts are in [launch-kit/](launch-kit/): the [waitlist email](launch-kit/waitlist-email.md), the [community posts](launch-kit/community-posts.md) with their reply bank, the [outreach emails](launch-kit/outreach-emails.md), the [press release](launch-kit/press-release.md), the [fact sheet](launch-kit/fact-sheet.md), the [listing proposals](launch-kit/listing-proposals.md) (the step zero fields and the promotional text) and the [social posts](launch-kit/social.md) (optional, with their own launch-week calendar). The site edits for launch day are described in [launch-day-site.md](launch-day-site.md), reviewed on 2026-10-31 and waiting on branch `claude/launch-day-site`. The outlets and communities are in [targets.md](targets.md).
 
 Commands are zsh on the Mac, one per block, with no `#` comments, as in the handoff. Words in capitals inside a command, such as `PROJECT` or `RUN_ID`, are placeholders you fill in. Every time estimate is mine and counts your hands-on time, not time spent waiting for Apple or CI.
 
@@ -66,13 +66,13 @@ If you said yes to decision 1, the machine has been kept awake through review, a
 
 Release on a morning when you can give the next two days to it, because the waitlist email and the first replies fall on L+1 and L+2. If L would land on a Friday, or in a week you're away, wait for the next good morning; a day or two in Pending Developer Release costs nothing. If L falls in Thanksgiving week (Thursday 26 November 2026), the published promise to reply "usually within 2 business days" still applies, so plan the days around it.
 
-Once you've picked the morning, ask Claude to set the privacy policy's effective date on `claude/launch-day-site` to that day, and the matching check line in `site/README-SITE.md` with it. If L moves before you merge, change both again. The date has to be the day the policy goes live on plantadvocate.ai.
+The launch-day branch leaves the privacy policy's wording alone, so there is no effective date to set for L. The policy changes once, on L+1 or L+2, when the campaign-label clause goes up with the `site` token (below); that change carries the new effective date, which has to be the day the policy goes live on plantadvocate.ai.
 
 ## L: release day
 
 ### Merge the launch-day site branch
 
-The launch-day edits to the site are on a branch called `claude/launch-day-site`, apart from `site/` on the ship branch, because the step 3 deploy has to go out with no App Store links. The branch has been on GitHub since 2026-10-26 and holds one draft, `fa4076b`, which nobody has reviewed: the lane that made it stopped before its honesty, policy and voice reviews and its link check. Before L, ask Claude to review and finish the branch, write `docs/go-to-market/launch-day-site.md`, push the result and open the pull request. That file doesn't exist until the review writes it. It will list what the branch changes: the App Store badge, the Smart App Banner, Apple's credit line, the campaign-label clause in the privacy policy with a new effective date and "What changed" line, and the updated check line in `site/README-SITE.md`. The early-access clause the draft also carries no longer belongs to it: the 2026-10-30 site fixes put a narrower version on the ship branch, live with step 3, and the draft's `site/privacy.html` was cut from the older text, so the review has to bring it onto the ship branch's policy. The review also settles two wordings the research files leave open: the draft's "Download from the App Store" buttons, against Apple's naming rules in [research/aso.md](research/aso.md), and the credit line, which aso.md, [research/launch-playbook.md](research/launch-playbook.md) and the draft each word differently.
+The launch-day edits to the site are on a branch called `claude/launch-day-site`, apart from `site/` on the ship branch, because the step 3 deploy has to go out with no App Store links. Its draft, `fa4076b` from 2026-10-26, was rebased onto the ship tip, reviewed against Apple's marketing and trademark rules and [product-truth.md](product-truth.md), and finished on 2026-10-30 and 2026-10-31; the branch is pushed. [launch-day-site.md](launch-day-site.md) lists what it changes, page by page: text links to the US product page in place of every early-access call to action (no badge yet, because the badge needs Apple's artwork and a live app), the Smart App Banner, Apple's credit line in its international form, a press page, the Open Graph tags, and the after-launch-day check lines in `site/README-SITE.md`. It changes no privacy policy wording: the early-access clause went live with step 3, and the campaign-label clause goes up on L+1 or L+2 with the `site` token. The two wordings the research files left open are settled there too: the buttons read "Download from the App Store", which is Apple's own phrasing, and the credit line names Apple, iPhone, iPad and App Store as registered marks and Apple Intelligence as a trademark. Before L, ask Claude to open the branch's pull request if none is open.
 
 Merge it on the morning of L, just before you press Release, so this section is the first thing you do that day. Merging deploys nothing to plantadvocate.ai, because the site goes up only when you run wrangler. It does redeploy the backend, because since step 2 every push to master deploys to Fly, and it is better for that restart to happen while nobody outside is using the app. Once it is merged, don't deploy `site/` from master until the App Store page answers, or the site will link to a page that returns 404; merging on the day keeps that window short.
 
@@ -146,7 +146,7 @@ Look for `1`, then a line with `6792203800`, the name App Store Connect accepted
 curl -s -o /dev/null -w '%{http_code} %{url_effective}\n' -L https://apps.apple.com/app/id6792203800
 ```
 
-Look for `200`, landing on a `/us/app/` address that ends in `id6792203800`. On 2026-10-24 it answered `404`. The short form, `https://apps.apple.com/app/id6792203800`, is the one the launch-day site and the later "Rate PlantAdvocate" row use.
+Look for `200`, landing on a `/us/app/` address that ends in `id6792203800`. On 2026-10-24 it answered `404`. The launch-day site links to the US storefront form, `https://apps.apple.com/us/app/id6792203800`; the later "Rate PlantAdvocate" row uses the short form.
 
 ```bash
 curl -s "https://itunes.apple.com/lookup?id=6792203800&country=gb" | python3 -c "import json,sys; print(json.load(sys.stdin)['resultCount'])"
@@ -188,7 +188,7 @@ Look for the merge of the launch-day pull request, or a later commit.
 D=$(mktemp -d) && git -C /Users/allisonbowman/Developer/Garden-Gnome archive origin/master site | tar -x -C "$D" && rm "$D/site/README-SITE.md" && ls "$D/site"
 ```
 
-Look for the 13 pages, plus any file the launch-day branch added, such as a press page or the badge artwork. Then check the links in that copy. This is the step 3 checker with one change: a link to a local file that isn't a page, such as a badge image, passes if the file is there. It must end `0 broken`:
+Look for 14 pages: the 13 and `press.html`, which the launch-day branch adds. There is no badge artwork yet. Then check the links in that copy. This is the step 3 checker with one change: a link to a local file that isn't a page, such as a badge image, passes if the file is there. It must end `0 broken`:
 
 ```bash
 python3 - "$D/site" <<'EOF'
@@ -225,13 +225,13 @@ npx wrangler pages deploy "$D/site" --project-name=PROJECT --branch=PRODUCTION_B
 
 ### Check the site
 
-The check block in `site/README-SITE.md` changes in the launch-day branch, because the privacy policy's effective date moves. Print the version on master:
+The check block in `site/README-SITE.md` gains an after-launch-day group in the launch-day branch; the pre-launch group is unchanged, and the effective date stays October 20, because the branch changes no policy wording. Print the version on master:
 
 ```bash
 git -C /Users/allisonbowman/Developer/Garden-Gnome show origin/master:site/README-SITE.md | sed -n '/^## Verifying the deploy/,/^## When the app changes/p'
 ```
 
-Run that check block as printed, and look for `ok` on every line. Then run the lines `launch-day-site.md` gives for its own edits (the badge, the banner, the credit line and the campaign-label clause). That file is written when the launch-day branch is reviewed, before L. Whatever it lists, the lines below show that three beta phrases and the pre-release lines are gone, that the banner and the store link are on the homepage, and that Apple's credit line and the campaign-label clause are up. If launch-day-site.md words the credit line or that clause differently, use its line instead. The early-access clause went live with step 3 instead, and the check block above already tests it.
+Run both groups as printed, the pre-launch group and the after-launch-day group, and look for `ok` on every line. The after-launch-day group is the one [launch-day-site.md](launch-day-site.md) gives for the branch's own edits: the store link on every page, no early-access or beta wording anywhere, the banner tag and Apple's credit line on the homepage, and a line only the press page has. The lines below say the same in an older form, and running them too does no harm. There is no campaign-label line to check on L, because that clause goes up with the `site` token on L+1 or L+2. The early-access clause went live with step 3, and the pre-launch group already tests it.
 
 If you ran the README block in this terminal, `check` is already defined and you can skip the next block.
 
@@ -268,10 +268,10 @@ check https://plantadvocate.ai/index.html 'of Apple Inc' present
 ```
 
 ```bash
-check https://plantadvocate.ai/privacy.html 'campaign label' present
+check https://plantadvocate.ai/press.html 'for anyone writing about PlantAdvocate' present
 ```
 
-The loop leaves out a press page, because `site/` has none today and Cloudflare answers a page that doesn't exist with the homepage, so an `absent` check on it would always pass. The draft on the launch-day branch, `fa4076b`, adds `press.html`. If the reviewed branch keeps it, add a `present` check for a line only that page has, from launch-day-site.md.
+The loop leaves out the press page, because Cloudflare answers a page that doesn't exist with the homepage, so an `absent` check on it would always pass; the last line checks it for a sentence only that page has.
 
 Run against the pre-launch site, some of these print FAIL, which is right for a site that still says "in beta". After the deploy every line should print `ok`. If a line says FAIL, list the deployments and look at the newest one's Environment, as the handoff's table says for step 3:
 
@@ -281,9 +281,9 @@ npx wrangler pages deployment list --project-name=PROJECT
 
 If it reads Production, wait a minute for the cache and run the checks again. If the deploy itself is wrong, roll back while Claude fixes the branch: in the Cloudflare dashboard, open the project's Deployments, open the three-dot menu on the previous production deployment, and choose Rollback to this deployment ([Cloudflare, rollbacks](https://developers.cloudflare.com/pages/configuration/rollbacks/)).
 
-Last, open https://plantadvocate.ai in Safari on your phone. The Smart App Banner should show at the top, offering Open if the app is installed. Apple's banner doesn't appear in the simulator and doesn't come back on a phone once dismissed, so use a private tab if you closed it before. Tap the App Store badge and check that it lands on the product page. Open https://plantadvocate.ai/privacy and read the top: the new date and the "What changed" line should both be there.
+Last, open https://plantadvocate.ai in Safari on your phone. The Smart App Banner should show at the top, offering Open if the app is installed. Apple's banner doesn't appear in the simulator and doesn't come back on a phone once dismissed, so use a private tab if you closed it before. Tap a "Download from the App Store" button and check that it lands on the product page. Open https://plantadvocate.ai/privacy and read the top: still October 20 and its "What changed" line, because the branch changes no policy wording.
 
-That finishes L. Send nothing in bulk today. The site's buttons carry the plain store link for now, because campaign links can't be made yet. The privacy clause about campaign labels goes up a day ahead of the labels themselves, which is the order `site/README-SITE.md` asks for: the policy changes before the thing it describes.
+That finishes L. Send nothing in bulk today. The site's buttons carry the plain store link for now, because campaign links can't be made yet. The privacy clause about campaign labels goes up with the labels themselves, in the `site` token change on L+1 or L+2, which is what `site/README-SITE.md` asks for: the policy changes in the same change as the thing it describes.
 
 ## L+1 and L+2
 
@@ -301,7 +301,7 @@ This is the one launch email the July list can reasonably expect. The best recor
 
 Six things have to be true before it goes, and waitlist-email.md lists them. In short: the July form's wording supports one update, as the git copy does, and no July deployment you could open says otherwise (the privacy policy's "only to tell you about PlantAdvocate" narrows what the list may be used for but doesn't widen what the form promised); there is a postal address that isn't your home, without which the email doesn't go; the privacy policy's early-access clause is live, which it is from step 3's deploy since the 2026-10-30 site fixes; the clean install passed and the care notes are fixed in production; you have the `waitlist` campaign link; and a test copy to yourself, opened on your iPhone, lands on the product page.
 
-Send only to `send-list.txt` in `$HOME/PlantAdvocate-private`, which already leaves out the `.ca`, `.uk` and EU addresses the export check set aside in `set-aside.txt`. First run the fingerprint check in waitlist-email.md, which drops any address whose fingerprint is in `removed-hashes.txt`. Send from support@plantadvocate.ai as separate individual emails if there are a few dozen addresses. For more, use Buttondown or MailerLite with open and click tracking turned off, but only after the launch-day privacy edit names that service. The policy says it "names every company that receives any of your data", and its Data Sharing list has no mailing service. Ask Claude to add a line to that list on `claude/launch-day-site`, such as waitlist-email.md's "[SERVICE] sends our early-access email and holds that list's addresses only for that.", and to the early-access paragraph under This Website. A service the policy doesn't name gets none of the list. Never put the list in one To, CC or BCC line. Afterwards, every request to stop is a removal, honoured within 10 business days with the steps in waitlist-email.md's "Removals and replies": the address comes out of Cloudflare, the private folder and any mailing service, and only its fingerprint stays, in `removed-hashes.txt`. The reply address keeps working for at least 30 days, and nothing else in Cloudflare is deleted yet. Never add the address of anyone who signed in to the app to this list or any other, because the privacy policy says account information is used only to run the app.
+Send only to `send-list.txt` in `$HOME/PlantAdvocate-private`, which already leaves out the `.ca`, `.uk` and EU addresses the export check set aside in `set-aside.txt`. First run the fingerprint check in waitlist-email.md, which drops any address whose fingerprint is in `removed-hashes.txt`. Send from support@plantadvocate.ai as separate individual emails if there are a few dozen addresses. For more, use Buttondown or MailerLite with open and click tracking turned off, but only after the privacy policy names that service. The policy says it "names every company that receives any of your data", and its Data Sharing list has no mailing service. Ask Claude to add a line to that list, in the same change as the campaign-label clause or in its own, such as waitlist-email.md's "[SERVICE] sends our early-access email and holds that list's addresses only for that.", and to the early-access paragraph under This Website. A service the policy doesn't name gets none of the list. Never put the list in one To, CC or BCC line. Afterwards, every request to stop is a removal, honoured within 10 business days with the steps in waitlist-email.md's "Removals and replies": the address comes out of Cloudflare, the private folder and any mailing service, and only its fingerprint stays, in `removed-hashes.txt`. The reply address keeps working for at least 30 days, and nothing else in Cloudflare is deleted yet. Never add the address of anyone who signed in to the app to this list or any other, because the privacy policy says account information is used only to run the app.
 
 ### Reply to the people who emailed for early access
 
@@ -311,10 +311,14 @@ These are a separate group from the waitlist. The site told them "We'll write ba
 
 ### Give the site's buttons the `site` token
 
-[strategy.md](strategy.md#channels) puts the `site` campaign link on every App Store button on plantadvocate.ai, while the Smart App Banner keeps only `app-id=6792203800`, because the syntax for tokens in a banner isn't confirmed. Give Claude the `site` link. It will make a small pull request that changes the buttons and nothing else. Then repeat the commands under [Merge the launch-day site branch](#merge-the-launch-day-site-branch), from `gh pr diff` to `gh run watch`, with the new pull request's number, and the deploy and checks under [Deploy the launch-day site](#deploy-the-launch-day-site) and [Check the site](#check-the-site). Add this line to the checks:
+[strategy.md](strategy.md#channels) puts the `site` campaign link on every App Store button on plantadvocate.ai, while the Smart App Banner keeps only `app-id=6792203800`, because the syntax for tokens in a banner isn't confirmed. Give Claude the `site` link. It will make a small pull request that changes the buttons, adds the campaign-label clause to the privacy policy's website paragraph with a new effective date and "What changed" line ([launch-day-site.md](launch-day-site.md), "What comes after", has the wording), and moves the `Effective Date` check line in `site/README-SITE.md` to that date, and nothing else. Then repeat the commands under [Merge the launch-day site branch](#merge-the-launch-day-site-branch), from `gh pr diff` to `gh run watch`, with the new pull request's number, and the deploy and checks under [Deploy the launch-day site](#deploy-the-launch-day-site) and [Check the site](#check-the-site). Add these lines to the checks:
 
 ```bash
 check https://plantadvocate.ai/index.html 'ct=site' present
+```
+
+```bash
+check https://plantadvocate.ai/privacy.html 'campaign label' present
 ```
 
 Allow about 30 minutes. This merge also redeploys the backend with the same code, which restarts the machine for a minute or two. Do it outside the hours you expect people to arrive.
@@ -323,10 +327,10 @@ Allow about 30 minutes. This merge also redeploys the backend with the same code
 
 | When | What goes out | Link | Source |
 |---|---|---|---|
-| L | The launch-day site: badge, banner, credit line, the campaign-label clause, and the press page with the [press release](launch-kit/press-release.md) and [fact sheet](launch-kit/fact-sheet.md) if the branch carries one | Plain store link | [strategy.md](strategy.md#channels); `launch-day-site.md`, written when `claude/launch-day-site` is reviewed |
+| L | The launch-day site: store links, banner, credit line and the press page, a fact sheet (the [press release](launch-kit/press-release.md) stays in the kit) | Plain store link | [strategy.md](strategy.md#channels); [launch-day-site.md](launch-day-site.md) |
 | L+1 or L+2, L+3 at the latest | The waitlist email | `waitlist` | [launch-kit/waitlist-email.md](launch-kit/waitlist-email.md) |
 | L+1 to L+3 | Individual replies to early-access emailers | `waitlist` | [launch-playbook.md](research/launch-playbook.md) |
-| L+1 or L+2 | The site's buttons | `site` | [strategy.md](strategy.md#measurement-without-adding-trackers) |
+| L+1 or L+2 | The site's buttons, with the campaign-label clause in the privacy policy | `site` | [strategy.md](strategy.md#measurement-without-adding-trackers) |
 | From L | A reply to every written review, within 2 business days | None | [strategy.md](strategy.md#what-113-can-do-without-a-prompt) |
 | Once its gates are met | The pets custom product page, with the holiday line until the end of December | Its own plain URL | [strategy.md](strategy.md#the-pets-custom-product-page) |
 | Late November | Promotional text: the feeding-rest line, through January | None | [strategy.md](strategy.md#the-promotional-text-calendar) |
@@ -428,9 +432,9 @@ Everything in this table has to be true before you press Release. Most of it com
 | Availability is the United States only, release is manual, and there is no pre-order | Pricing and Availability, and the version page's release section | [strategy.md](strategy.md#step-zero-the-product-page-before-you-press-submit) |
 | TestFlight phone checks done | Each of step 5's twelve items noted | Handoff, step 5 |
 | A postal address that isn't your home | A USPS box, or a private mailbox registered with a commercial mail receiving agency | [strategy.md](strategy.md#before-the-site-deploy) |
-| The launch-day site branch is reviewed, ready and unmerged | Claude has reviewed and finished `claude/launch-day-site` (its draft, `fa4076b`, is unreviewed), written `launch-day-site.md`, pushed the branch and opened its pull request; the diff holds the badge, banner, credit line, the campaign-label clause with a new effective date and "What changed" line, its privacy edit brought onto the ship branch's policy, and the updated check line; its links check clean; nothing from it is deployed | `launch-day-site.md`, written in that review |
+| The launch-day site branch is reviewed, ready and unmerged | Done on 2026-10-31 except the pull request: `claude/launch-day-site` was rebased onto the ship tip, reviewed, finished and pushed, and [launch-day-site.md](launch-day-site.md) lists its changes (store links, banner, credit line, press page, tags, the after-launch-day check lines; no policy wording and no badge yet); its links check clean, 14 pages, 0 broken; nothing from it is deployed. Ask Claude to open the pull request before L | [launch-day-site.md](launch-day-site.md) |
 | The campaign tokens are chosen, not made | You know the five tokens and where each goes. Apple won't let a link be made until the app has been live with downloads for about 24 hours, so the links themselves are an L+1 job | [strategy.md](strategy.md#measurement-without-adding-trackers) |
-| The waitlist email is ready to send | A subject is picked, the body is filled in except the link, and the sending route is chosen: individual emails, or a service with tracking off, plantadvocate.ai verified, and its name in the launch-day privacy edit | [launch-kit/waitlist-email.md](launch-kit/waitlist-email.md) |
+| The waitlist email is ready to send | A subject is picked, the body is filled in except the link, and the sending route is chosen: individual emails, or a service with tracking off, plantadvocate.ai verified, and its name added to the privacy policy before the send | [launch-kit/waitlist-email.md](launch-kit/waitlist-email.md) |
 | The early-access emailers are found | An inbox label or folder holding the messages with the subject "Early access", and at most a count of them in a note in `$HOME/PlantAdvocate-private`. No address from them goes into the repository, a doc or a Claude session | [launch-playbook.md](research/launch-playbook.md) |
 | The inboxes are watched | App Store Connect notifications are on, the App Store Connect app is on your phone, and whoever holds the Admin, App Manager or Marketing role reads that email for featuring requests | [strategy.md](strategy.md#featuring-nominations) |
 | A clean-install phone is ready | You can delete the TestFlight build, and ideally you have a spare Apple ID that has never used PlantAdvocate | This file, L |
