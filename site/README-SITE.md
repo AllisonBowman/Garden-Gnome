@@ -18,13 +18,14 @@ but the generator can still put it back.
 
 ## What is here
 
-13 self-contained pages (inline CSS, no local JS files, no images; fonts load
+14 self-contained pages (inline CSS, no local JS files, no images; fonts load
 from Google Fonts):
 
 `index.html`, `how-it-works.html`, `pricing.html`, `nurseries.html`,
 `community-garden.html`, `faq.html`, `about.html`, `contact.html`,
 `support.html`, `privacy.html`, `recommendations.html`, `resources.html`,
-`conservation.html`.
+`conservation.html`, and `press.html`, which arrives with the launch-day
+site.
 
 The app links to two of them (`mobile/src/support.ts`):
 `PRIVACY_URL = https://plantadvocate.ai/privacy.html` and
@@ -69,6 +70,12 @@ History:
   effective date stays October 20, since that version still hasn't been
   published, and its "What changed" line now names everything since the
   October 16 version that is live.
+- Launch day (branch `claude/launch-day-site`, merged only once the app is
+  live): every early-access call to action links to the App Store product
+  page, https://apps.apple.com/us/app/id6792203800. Every page carries the
+  Smart App Banner tag, Open Graph and Twitter tags and Apple's credit line,
+  and the footer links to a new press page. The privacy policy's wording is
+  unchanged. `docs/go-to-market/launch-day-site.md` lists every change.
 
 ## Deploying
 
@@ -143,7 +150,8 @@ must leave `README-SITE.md` out by hand.
 
 ## Verifying the deploy
 
-Run from anywhere. Every line must print `ok`:
+Run from anywhere. This first block is the pre-launch group. Run it after
+every deploy, before and after launch day, and every line must print `ok`:
 
 ```bash
 check() { n=$(curl -sL "$1" | grep -c -- "$2"); if [ "$3" = present ]; then [ "$n" -gt 0 ]; else [ "$n" = 0 ]; fi && echo "ok   $1  $2" || echo "FAIL $1  $2 (on $n lines)"; }
@@ -173,6 +181,29 @@ check https://plantadvocate.ai/faq.html 'They are not medical or veterinary advi
 check https://plantadvocate.ai/privacy.html 'never add the address you sign in with' present
 check https://plantadvocate.ai/privacy.html 'one-way fingerprint' present
 ```
+
+**After launch day.** Once the launch-day site is deployed
+(`docs/go-to-market/launch-day-site.md` says when), run this group too, in
+the same terminal so `check` is already defined. Every line must print `ok`.
+Run against the pre-launch site, its `present` lines print FAIL, which is
+right for a site that doesn't link to the App Store yet. The press page is
+checked for a line only it has, because Cloudflare answers a page that
+doesn't exist with the homepage.
+
+```bash
+for p in index how-it-works pricing nurseries community-garden faq about contact support privacy recommendations resources conservation press; do check "https://plantadvocate.ai/$p.html" 'apps.apple.com/.*id6792203800' present; check "https://plantadvocate.ai/$p.html" '[Ee]arly access\|Join the beta\|in beta' absent; done
+check https://plantadvocate.ai/index.html 'app-id=6792203800' present
+check https://plantadvocate.ai/index.html 'trademarks of Apple Inc' present
+check https://plantadvocate.ai/press.html 'for anyone writing about PlantAdvocate' present
+```
+
+Then check that the store link itself answers:
+
+```bash
+curl -s -o /dev/null -w '%{http_code} %{url_effective}\n' -L https://apps.apple.com/us/app/id6792203800
+```
+
+It should print `200`, on an address that ends in `id6792203800`.
 
 Then confirm the two URLs the app opens still resolve:
 
