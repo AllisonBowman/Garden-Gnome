@@ -118,8 +118,9 @@ E. App Store Connect (sections E1 to E3, steps 4 to 6):
       checks in section E2. Anything that reads wrong comes to me before
       you submit.
 - [ ] App Information from `listing.md` and `age-rating.md` (4+); Pricing
-      and Availability: Free, the United States only, no pre-order; App
-      Privacy from `app-privacy.md`, the seven types, published.
+      and Availability: Free, the United States only, no pre-order, and Mac
+      and Apple Vision Pro availability unticked; App Privacy from
+      `app-privacy.md`, the seven types, published.
 - [ ] The 1.1.3 version page: promotional text, description and the
       keywords for the subtitle you chose (decision 10); the support and
       marketing URLs and the copyright; the build by its number; App Review
@@ -1158,6 +1159,11 @@ button, iPhone only, the three named weather services and the manifest.
    Business, or the Membership page).
 2. **Pricing and Availability:** Free, in the territories you chose in
    decision 11 (recommended: the United States only), with no pre-order.
+   On the same page, under Apple Silicon Mac Availability and Apple Vision
+   Pro Availability, untick "Make this app available" and save: App Store
+   Connect offers an iPhone app on both unless you do, nothing has been
+   tested on either, and the listing and the press page say iPhone only
+   (found by the 2026-10-31 review).
 3. **App Privacy** (`app-privacy.md`): Privacy Policy URL
    `https://plantadvocate.ai/privacy` (the app's `/privacy.html` is the same
    page). Then "Do you or your third-party partners collect data?" Yes, and

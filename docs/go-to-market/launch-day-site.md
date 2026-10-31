@@ -37,9 +37,7 @@ Every page, the 13 and the new press page:
   sign-up section, becomes "Get the app →" and links to the product page,
   `https://apps.apple.com/us/app/id6792203800`.
 - The footer gains a Press link and, on its last line, Apple's credit line:
-  "Apple, iPhone, iPad and App Store are trademarks of Apple Inc.,
-  registered in the U.S. and other countries. Apple Intelligence is a
-  trademark of Apple Inc."
+  "Apple, iPhone and iPad are trademarks of Apple Inc., registered in the U.S. and other countries. App Store is a service mark of Apple Inc., registered in the U.S. and other countries. Apple Intelligence is a trademark of Apple Inc."
 - Counts are written as digits ("5 species", "4 layers", "3 weeks").
 
 Page by page:
@@ -76,10 +74,7 @@ Page by page:
   exist yet, and Resources' says the catalog cites these organizations
   rather than that they are "behind" it.
 - `press.html`, new: a fact sheet for anyone writing about PlantAdvocate.
-  An "At a glance" table (the app and version, availability, who makes it,
-  price, platform, sign-in, the connection it needs, photo suggestions and
-  the Gnome's voice, language and units, category, species, check
-  schedules, weather, support), then what it does, what it doesn't do,
+  An "At a glance" table (the app and version, availability, who makes it, price, platform, sign-in, the connection it needs, photo suggestions and the Gnome's voice, which need Apple Intelligence turned on and iOS 26 or later, language and units, category, species, check schedules, weather, support), then what it does, what it doesn't do,
   where the facts come from, privacy, links and the press contact. Every
   figure and claim on it comes from [product-truth.md](product-truth.md)
   and [launch-kit/fact-sheet.md](launch-kit/fact-sheet.md). It links to
@@ -173,9 +168,7 @@ capitalized as the trademark list shows, never abbreviated, and never used
 sponsorship, or support". Nothing on the site suggests Apple's endorsement.
 
 From [Apple's trademark list](https://www.apple.com/legal/intellectual-property/trademark/appletmlist.html):
-Apple, App Store (a service mark), iPhone and iPad are registered, and Apple
-Intelligence is a trademark but not registered, which is why the credit line
-has two sentences. "Apple Weather" and "Sign in with Apple" are not on the
+Apple, iPhone and iPad are registered trademarks, App Store is a registered service mark (the marketing guidelines page's own footer reads "App Store is a service mark of Apple Inc., registered in the U.S. and other countries"), and Apple Intelligence is a trademark but not registered, which is why the credit line has three sentences. "Apple Weather" and "Sign in with Apple" are not on the
 list, so the credit line doesn't name them; the list says its absence of a
 name is no waiver, so if Apple asks for either, add it to the second
 sentence.
@@ -290,7 +283,9 @@ line, because the branch changes no policy wording.
   [launch-kit/waitlist-email.md](launch-kit/waitlist-email.md) has the line.
   It goes in the same change as the campaign-label clause if the send
   follows the links, or in its own.
-- **The privacy policy's "the PlantAdvocate iPhone app"**, at its next
-  revision: "PlantAdvocate for iPhone" is the form Apple's marketing rules
-  prefer, though the policy is not marketing copy and the phrase is not
-  wrong.
+- **Two phrases in the privacy policy**, at its next revision: "the
+  PlantAdvocate iPhone app" becomes "PlantAdvocate for iPhone", and "in
+  your iPhone's Settings" becomes "in Settings on your iPhone", the forms
+  Apple's marketing rules prefer and the support page already uses. The
+  policy is not marketing copy and neither phrase is wrong, so neither
+  waits for launch day.
