@@ -22,7 +22,7 @@ Eating stops being a verdict and becomes a cited description: what part is eaten
 
 ## Consequences
 
-On the seeded catalog, 257 species rows carry eaten parts: fruit 105, leaves 99, flowers 68, seeds 42, roots 29, stems 25, with 79 named for more than one part. Taro reads "Roots are eaten, only after cooking" with its hazards; chives and mint are on the eat list with the line to keep scraps from the dog; tomato and potato are on it by the table's words. Thirty-five species recorded as eaten stay without a part, because their passage names none, the readers refused the proposal, or the readers split; the audit lists each with the reason, and a research pass that cites a source's own line on the part can fill them.
+On the seeded catalog, 257 species rows carry eaten parts: fruit 105, leaves 99, flowers 68, seeds 42, roots 29, stems 25, with 78 named for more than one part. Taro reads "Roots are eaten, only after cooking" with its hazards; chives and mint are on the eat list with the line to keep scraps from the dog; tomato and potato are on it by the table's words. Thirty-five species recorded as eaten stay without a part, because their passage names none, the readers refused the proposal, or the readers split; the audit lists each with the reason, and a research pass that cites a source's own line on the part can fill them.
 
 Nine more species are kept off every candidate list than before: butterfly bush, Indian shot, Japanese privet, maiden grass, heavenly bamboo, bittersweet nightshade, small-leaf spiderwort, water lettuce and Bradford pear. Indian shot is listed on a sentence calling it an invasive species in Australia, which the rule reads like any other listing; narrowing the read to the plant's own region is a separate decision.
 

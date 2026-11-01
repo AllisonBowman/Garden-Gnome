@@ -177,6 +177,11 @@ def audit_records() -> list[dict]:
         for record in data["records"]:
             if record.get("is_edible") is not True:
                 continue
+            if len(name_of(record).split()) < 2:
+                # A bare genus record: its evidence feeds congeners through
+                # the resolver, and a harm-capable field never inherits, so
+                # a part minted here could reach nothing. Not a species.
+                continue
             entry = {"batch": path.name, "scientific_name": name_of(record),
                      "common_name": record.get("common_name"),
                      "already": record.get("eaten_parts"), "citations": []}

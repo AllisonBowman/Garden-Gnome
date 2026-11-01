@@ -4,18 +4,18 @@ Written 2026-11-01 for branch `candidate-categorization-proposal`, on the record
 
 ## What was done
 
-The catalog holds 293 verified records that say the plant is eaten (`is_edible` true). Each one already cites the passage that says so. `scripts/catalog/mint_eaten_parts.py` read every such passage and proposed the parts it names as eaten, from a fixed vocabulary of leaves, fruit, seeds, roots, flowers and stems. It reads clause by clause: a clause that speaks of eating and not of harm contributes the parts it names; a clause that speaks of harm contributes only a part it excepts; a comparison ("tastes like cucumber"), another plant's part, a part removed before eating and a timing phrase are blanked first. A crop named by its own word names its part: bananas are the fruit, lettuce the leaves. It fetched no page and added nothing a passage does not say. The script and its output, `scripts/catalog/pipeline/eaten-parts-mint.json`, are in the repository, so the proposals can be regenerated.
+The catalog holds 293 verified records that say the plant is eaten (`is_edible` true), one of them a bare genus record (Nymphaea) that the pass leaves alone, since a harm-capable field never inherits and a part minted on a genus could reach no species. Each one already cites the passage that says so. `scripts/catalog/mint_eaten_parts.py` read every such passage and proposed the parts it names as eaten, from a fixed vocabulary of leaves, fruit, seeds, roots, flowers and stems. It reads clause by clause: a clause that speaks of eating and not of harm contributes the parts it names; a clause that speaks of harm contributes only a part it excepts; a comparison ("tastes like cucumber"), another plant's part, a part removed before eating and a timing phrase are blanked first. A crop named by its own word names its part: bananas are the fruit, lettuce the leaves. It fetched no page and added nothing a passage does not say. The script and its output, `scripts/catalog/pipeline/eaten-parts-mint.json`, are in the repository, so the proposals can be regenerated.
 
-It proposed parts for 271 records and found no part in 22. Every proposal then went to two independent readers (Claude, Opus, no tools, the passage and the vocabulary only), one reading literally and one as a skeptic, each asked to say which proposed parts the passage supports, with the words, which it does not, and which it left out. A proposal was written only when both readers agreed: as proposed, or corrected to the same list. Their notes are in `scripts/catalog/pipeline/eaten-parts-verdicts.json`.
+It proposed parts for 270 records and found no part in 22. Every proposal then went to two independent readers (Claude, Opus, no tools, the passage and the vocabulary only), one reading literally and one as a skeptic, each asked to say which proposed parts the passage supports, with the words, which it does not, and which it left out. A proposal was written only when both readers agreed: as proposed, or corrected to the same list. Their notes are in `scripts/catalog/pipeline/eaten-parts-verdicts.json`.
 
 ## The numbers
 
-- Accepted as proposed: 244.
+- Accepted as proposed: 243.
 - Corrected by both readers to the same shorter list: 14.
 - Refused by both readers: 9; the field stays null.
 - Readers disagreed: 4; the field stays null.
 - No part named in the passage: 22; the field stays null.
-- Written: 258 records, each with a citation that names `eaten_parts` and carries the same url and quote as the citation behind `is_edible`.
+- Written: 257 records, each with a citation that names `eaten_parts` and carries the same url and quote as the citation behind `is_edible`.
 - Parts written: fruit 105, leaves 99, flowers 68, seeds 42, roots 29, stems 25.
 
 A record left null reads in the app as "no source names a part of this plant that is eaten", never as "nothing is eaten". It is off a list that asked for something to eat and counted there.
