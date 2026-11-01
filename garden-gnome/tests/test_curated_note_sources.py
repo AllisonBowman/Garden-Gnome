@@ -100,6 +100,12 @@ PINNED = {
         "It puts up with less than regular watering, and you do not need to raise the humidity. "
         "Grow it in rich soil that drains well."
     ),
+    "Fittonia albivenis": (
+        "Grow nerve plant in bright indirect light from an east or north window. "
+        "Dappled part sun also suits it, but avoid direct sun. "
+        "When you pot it, use a peaty or soil-based potting mix. "
+        "Keep the room above 55°F, even at its coolest."
+    ),
     "Anethum graveolens": (
         "Dill is an herb with a taproot, so any pot you use should be deep. "
         "Give it at least 6 hours of direct sun a day, or 2 to 6 hours in part shade. "
@@ -142,6 +148,12 @@ PINNED = {
         "Moist soil suits it, as long as the soil drains well. "
         "Feed it a balanced liquid fertilizer. "
         "Indoors, watch for aphids and spider mites, which you can wash off."
+    ),
+    "Cosmos bipinnatus": (
+        "Cosmos is a warm-season annual grown in average soil that drains well. "
+        "Keep it out of rich, fertile soil. "
+        "Plant it in the border of a cottage garden, cutting garden, or butterfly garden for summer color. "
+        "It grows in full sun, meaning at least 6 hours of direct sunlight each day."
     ),
     "Impatiens walleriana": (
         "Impatiens can be grown as a bedding annual, a container plant, or a houseplant. "
