@@ -16,11 +16,16 @@ on:
   push:
     branches: [master]
 
-# Never let two deploys race. Not cancel-in-progress: interrupting a deploy
-# mid-flight is worse than queueing behind it, because migrations run at boot.
+# One run per branch or pull request at a time. The group is per ref, so a
+# pull request's runs never share a queue with master's and can neither wait
+# behind a deploy nor push one out of the queue (GitHub keeps one pending run
+# per group and cancels the older when a newer arrives). A new push to a pull
+# request cancels its own stale run. A running master run is never cancelled;
+# a waiting one can only be replaced by a newer master push, whose deploy
+# ships everything the replaced one would have.
 concurrency:
-  group: deploy-production
-  cancel-in-progress: false
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   backend:
@@ -66,14 +71,26 @@ jobs:
     needs: [backend, mobile]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    # Requires a FLY_API_TOKEN repo secret. Create one scoped to this app:
+    # Never let two deploys race. Not cancel-in-progress: interrupting a
+    # deploy mid-flight is worse than queueing behind it, because migrations
+    # run at boot. On the job, not the workflow, so only deploys wait on it.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    # Requires a FLY_API_TOKEN secret on the production environment (a repo
+    # secret works too). Create one scoped to this app:
     #   fly tokens create deploy -x 999999h -a garden-gnome-api
     # A deploy token can deploy this app and nothing else — don't use a
     # personal auth token here.
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: superfly/flyctl-actions/setup-flyctl@master
+      # Pinned, action and CLI both, so what deploys is what was last
+      # checked, not whatever landed on master or in flyctl since. The SHA
+      # is the action's 1.6 release; bump both deliberately.
+      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
+        with:
+          version: 0.4.111
       - name: Deploy
         # Run from garden-gnome/, not the repo root. The Dockerfile's
         # `COPY app ./app` is relative to the build context, so a root-level
@@ -85,19 +102,39 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
       # The machine has min_machines_running = 0, so this also cold-starts it
-      # and proves it boots. Migrations run before uvicorn binds, so a broken
-      # migration shows up here as a failure to ever answer.
+      # and proves it boots. Migrations and the claim sync both run before
+      # uvicorn binds (the Dockerfile's CMD), so a broken migration shows up
+      # here as a failure to ever answer, and the first answer already says
+      # whether the sync ran: GET / reports catalog.synced, false when the
+      # boot logged "claim sync skipped" and is serving the old catalog.
+      #
+      # Five minutes, not two. A healthy first boot is about 5 s of CPU on a
+      # laptop, but Fly caps a shared core at 6.25% once its burst balance is
+      # spent, which projects to 2-2.5 minutes. Each try gets at most 10 s, so
+      # one request stuck behind a cold proxy cannot eat the budget.
       - name: Smoke check
         run: |
-          for i in $(seq 1 12); do
-            code=$(curl -s -o /dev/null -w "%{http_code}" https://garden-gnome-api.fly.dev/ || true)
+          url=https://garden-gnome-api.fly.dev
+          deadline=$((SECONDS + 300))
+          attempt=0
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            attempt=$((attempt + 1))
+            code=$(curl -s --max-time 10 -o root.json -w "%{http_code}" "$url/" || true)
             if [ "$code" = "200" ]; then
-              echo "up after ${i} attempt(s)"
-              curl -s https://garden-gnome-api.fly.dev/ai/status
-              exit 0
+              echo "up after ${attempt} attempt(s), ${SECONDS}s"
+              jq . root.json || cat root.json
+              curl -s --max-time 10 "$url/ai/status" || true
+              echo
+              if [ "$(jq -r '.catalog.synced' root.json 2>/dev/null)" = "true" ]; then
+                exit 0
+              fi
+              echo "The API is up but is not serving the catalog this build ships:"
+              echo "the claim sync was skipped or failed at boot. Look for"
+              echo "'claim sync skipped' in 'fly logs -a garden-gnome-api'."
+              exit 1
             fi
-            echo "attempt ${i}: got ${code}, waiting"
+            echo "attempt ${attempt}: got ${code}, waiting"
             sleep 10
           done
-          echo "never returned 200 — check 'fly logs -a garden-gnome-api' for a boot loop"
+          echo "never returned 200 in 5 minutes — check 'fly logs -a garden-gnome-api' for a boot loop"
           exit 1

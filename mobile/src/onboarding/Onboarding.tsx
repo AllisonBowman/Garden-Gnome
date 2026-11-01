@@ -4,31 +4,7 @@ import { Text, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
-
-interface Slide {
-  emoji: string;
-  title: string;
-  body: string;
-}
-
-// Minimal, calm — three beats of the core loop. Not a SaaS product tour.
-const SLIDES: Slide[] = [
-  {
-    emoji: '🌱',
-    title: 'Welcome to PlantAdvocate',
-    body: 'A calm home for your plants and the care you give them.',
-  },
-  {
-    emoji: '💧',
-    title: 'Add plants, log care',
-    body: "Add each plant, then tap to log watering, feeding, and more. PlantAdvocate keeps track so you don't have to.",
-  },
-  {
-    emoji: '🧙',
-    title: 'Ask the Gnome',
-    body: "Not sure what a plant needs? Ask for advice grounded in its species and its own care history.",
-  },
-];
+import { SLIDES } from './slides';
 
 interface Props {
   onSkip: () => void;

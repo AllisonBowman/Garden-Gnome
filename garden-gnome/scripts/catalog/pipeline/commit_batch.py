@@ -35,6 +35,7 @@ msg = f"""{subject}, {new:,} claims over {species} species
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 """
 subprocess.run(['git', 'add', path, TEST, DOCS], check=True)
-subprocess.run(['git', 'commit', '-q', '-m', msg], check=True)
+# Commit ONLY these paths: another team may have its own changes staged in this tree at the same moment.
+subprocess.run(['git', 'commit', '-q', '-m', msg, '--', path, TEST, DOCS], check=True)
 print(f'{batch}: +{delta} -> {new} claims, {species} species, {len(files)} batches')
 print(subprocess.run(['git', 'log', '--oneline', '-1'], capture_output=True, text=True).stdout.strip())

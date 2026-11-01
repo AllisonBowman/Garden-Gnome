@@ -1,4 +1,4 @@
-import { computeReminderPlan } from './plan';
+import { computeReminderPlan, waterCheck } from './plan';
 import { CareLog, Plant, Species } from '../types';
 
 // Plan 1.5: the watering verb is *check*. The interval is a prior on when a
@@ -47,10 +47,44 @@ describe('the water reminder asks for a check, not a pour', () => {
     expect(batches).toHaveLength(1);
     // watered Jul 1, due Jul 8 (min 7) at the 9am slot → 7 days elapsed
     expect(batches[0].body).toBe(
-      "Check Ferny — it's been 7 days. Push a finger 2 inches in; "
-      + "water thoroughly only if it's dry down there.");
+      "Check Ferny — it's been 7 days. Feel the soil before you water.");
     expect(batches[0].body).not.toMatch(/time to water/i);
     expect(batches[0].items[0].daysSinceCare).toBe(7);
+  });
+
+  // The old copy told every species to push a finger 2 inches in. No catalog
+  // record supplied that number, and for a plant kept evenly moist it is the
+  // wrong test. The check now says only what the species' own record says.
+  it('never gives a depth the species record did not', () => {
+    const batches = computeReminderPlan({
+      plants: [plant(1, 'Ferny')],
+      logsByPlant: { 1: [log(1, 'water', '2026-07-01T09:00:00')] },
+      speciesById: { 100: species(WATER) },
+      prefs: { water: true },
+      now: NOW,
+    });
+    expect(batches[0].body).not.toMatch(/inch|finger/i);
+  });
+
+  it('uses the species check depth when the record has one', () => {
+    const batches = computeReminderPlan({
+      plants: [plant(1, 'Ferny')],
+      logsByPlant: { 1: [log(1, 'water', '2026-07-01T09:00:00')] },
+      speciesById: { 100: { ...species(WATER), water_check_depth_cm: 3 } },
+      prefs: { water: true },
+      now: NOW,
+    });
+    expect(batches[0].body).toBe(
+      "Check Ferny — it's been 7 days. Feel the soil 3 cm down; water only if it's dry there.");
+  });
+
+  it('a keep-moist species is checked at the surface, in its sources’ words', () => {
+    expect(waterCheck({ waterRegime: 'keep_moist', checkDepthCm: 2 })).toBe(
+      'Its sources say keep the medium evenly moist; water if the surface feels dry.');
+    expect(waterCheck({ waterRegime: 'dry_thoroughly_between' })).toBe(
+      'Its sources say let the medium dry thoroughly between waterings; '
+      + 'feel the soil before you water.');
+    expect(waterCheck({})).toBe('Feel the soil before you water.');
   });
 
   it('uses the check verb in a batched day', () => {
@@ -70,7 +104,7 @@ describe('the water reminder asks for a check, not a pour', () => {
     expect(batches[0].body).not.toMatch(/water/i);
   });
 
-  it('leaves non-water reminders on their plain imperative', () => {
+  it('asks for a look when a feeding window opens, never "time to fertilize"', () => {
     const batches = computeReminderPlan({
       plants: [plant(1, 'Ferny')],
       logsByPlant: { 1: [log(1, 'fertilize', '2026-06-01T09:00:00')] },
@@ -79,6 +113,46 @@ describe('the water reminder asks for a check, not a pour', () => {
       now: NOW,
     });
     expect(batches).toHaveLength(1);
-    expect(batches[0].body).toBe('Time to fertilize Ferny.');
+    expect(batches[0].title).toBe('🪴 Time to look at Ferny');
+    expect(batches[0].body).toBe(
+      'Ferny has reached its feeding window. Have a look and decide whether it needs it.');
+  });
+
+  it('no reminder title or body is a chore', () => {
+    const batches = computeReminderPlan({
+      plants: [plant(1, 'Ferny'), plant(2, 'Mossy')],
+      logsByPlant: {
+        1: [log(1, 'fertilize', '2026-06-01T09:00:00'), log(1, 'water', '2026-07-01T09:00:00')],
+        2: [log(2, 'water', '2026-07-01T09:00:00')],
+      },
+      speciesById: { 100: species([...WATER, ...FEED]) },
+      prefs: { water: true, fertilize: true },
+      now: NOW,
+    });
+    for (const b of batches) {
+      expect(`${b.title} ${b.body}`)
+        .not.toMatch(/needs? (some )?care|time to (water|fertili[sz]e|prune|rotate|repot)/i);
+    }
+    expect(batches.some((b) => /plants could use a look today/.test(b.title))).toBe(true);
+  });
+});
+
+// The server dates a new plant 'YYYY-MM-DD'. Read as UTC midnight, that is
+// the evening before anywhere behind UTC (this suite runs in New York), and
+// the first check fired on day 6 of a 7-day schedule, saying "it's been 7
+// days".
+describe('a new plant’s first check counts from the day it was added here', () => {
+  it('reads the date-only acquired_on as a local date', () => {
+    const batches = computeReminderPlan({
+      plants: [{ ...plant(1, 'Ferny'), acquired_on: '2026-07-05' }],
+      logsByPlant: {},
+      speciesById: { 100: species(WATER) },
+      prefs: { water: true },
+      now: NOW, // Jul 5, 8am
+    });
+    expect(batches).toHaveLength(1);
+    const { date } = batches[0];
+    expect([date.getMonth(), date.getDate(), date.getHours()]).toEqual([6, 12, 9]);
+    expect(batches[0].items[0].daysSinceCare).toBe(7);
   });
 });

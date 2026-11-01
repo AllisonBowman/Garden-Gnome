@@ -148,6 +148,13 @@ export interface Species {
   // `is_houseplant` null is "nobody looked", never "outdoor plant".
   is_houseplant?: boolean | null;
   is_edible?: boolean | null;
+  /** One caretaker sentence, set by the server when the species is eaten but
+   *  only with conditions: a cited passage limits the parts or asks for
+   *  preparation, a human hazard is on record, or it is toxic to pets.
+   *  Whenever it is non-null it replaces "grown to eat" — edibility is shown
+   *  with its conditions or not at all. Absent from a server that predates
+   *  it, which reads as null. */
+  edibility_note?: string | null;
   attracts_pollinators?: boolean | null;
   /** A climber (0020): its mature height is reach given support, not stature. */
   climbs?: boolean | null;

@@ -27,28 +27,38 @@ export async function openExternal(url: string): Promise<void> {
   }
 }
 
+/** What a report is about. The care engine's three outputs are reported as
+ *  results; a fact is something a species page states. */
+export type ReportSurface = 'identification' | 'diagnosis' | 'care advice' | 'fact';
+
 /**
- * Build a mailto: URL that files a report about a care-engine result with
- * support. Reports go by email in v1 — no extra permissions, and the user
+ * Build a mailto: URL that files a report with support: a care-engine result
+ * that was wrong or inappropriate, or a fact on a species page that looks
+ * wrong. Reports go by email in v1 — no extra permissions, and the user
  * sees exactly what they are sending before they hit send.
  */
 export function buildReportMailto(
-  surfaceLabel: string,
+  surfaceLabel: ReportSurface,
   result: string,
   context: string[] = [],
 ): string {
   // Keep the whole mailto URL comfortably under client length limits
   const excerpt = result.length > 1000 ? `${result.slice(0, 1000)}…` : result;
+  // A fact report asks which fact and why, under what the page said; a
+  // result report asks what was wrong with the result.
+  const fact = surfaceLabel === 'fact';
   const body = [
-    'Tell us what was wrong or inappropriate about this result:',
+    fact
+      ? 'Which fact looks wrong, and why? A link to where you read otherwise helps us check it.'
+      : 'Tell us what was wrong or inappropriate about this result:',
     '',
     '',
-    '——— Reported result ———',
+    fact ? '——— What the page says ———' : '——— Reported result ———',
     ...context,
     excerpt,
     '———',
     `App: PlantAdvocate ${APP_VERSION} (${Platform.OS})`,
   ].join('\n');
-  const subject = `Report a ${surfaceLabel} result`;
+  const subject = fact ? 'Report a fact' : `Report a ${surfaceLabel} result`;
   return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }

@@ -6,13 +6,22 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { fetchSpecies } from '../api/species';
+import { fetchGrowingAreas } from '../api/growingAreas';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
-import { careFactRows, legacyStats } from '../care/facts';
+import { capitalize, careFactRows, legacyStats } from '../care/facts';
 import {
   CareFactList, CareSourceRows, CareStatusLine, LegacyStatRow,
 } from '../components/CareFacts';
+import AreaFitCard from '../components/AreaFitCard';
+import EmptyState from '../components/EmptyState';
+import NotAdviceNote from '../components/NotAdviceNote';
+import ReportFact from '../components/ReportFact';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 
 type Route = RouteProp<SpeciesStackParamList, 'SpeciesDetail'>;
 
@@ -23,17 +32,46 @@ const CARE_ICON: Record<string, string> = {
 
 export default function SpeciesDetailScreen() {
   const route = useRoute<Route>();
-  const { speciesId } = route.params;
+  const { speciesId, growingAreaId } = route.params;
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
 
-  const { data: species, isLoading } = useQuery({
+  const {
+    data: species, isError, error, refetch, isFetching,
+  } = useQuery({
     queryKey: ['species', speciesId],
     queryFn: () => fetchSpecies(speciesId),
   });
 
-  if (isLoading || !species) {
+  // Opened from an area's candidates (or the Almanac filtered to one), the
+  // page answers the question that led here: how does it suit that space?
+  // Only for an area still in the list — the card is headed with its name.
+  const { data: areas = [] } = useQuery({
+    queryKey: ['growingAreas'],
+    queryFn: fetchGrowingAreas,
+    enabled: growingAreaId != null,
+  });
+  const area = growingAreaId != null ? areas.find((a) => a.id === growingAreaId) ?? null : null;
+
+  // The record stays on screen when a later refresh fails (with a line
+  // saying so); the card is for a record that never loaded, and says why.
+  const view = loadView(species !== undefined, isError);
+  if (view === 'loading') {
     return <ActivityIndicator style={styles.center} size="large" />;
+  }
+  if (view === 'failed' || !species) {
+    return (
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('this species')}
+          body={loadFailedBody(error)}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
+      </View>
+    );
   }
 
   // Which cards have anything to say. A row minted from the claim tranche
@@ -46,6 +84,8 @@ export default function SpeciesDetailScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Drawn from what loaded before: an error now is a failed refresh. */}
+      {isError ? <RefreshFailed onRetry={() => refetch()} retrying={isFetching} /> : null}
       {/* Header */}
       <View style={styles.header}>
         <Text variant="headlineSmall" style={styles.title}>
@@ -67,7 +107,15 @@ export default function SpeciesDetailScreen() {
             ⚠️ Toxic to pets
           </Chip>
         ) : null}
+        {/* Under whatever was said about harm, the line the listing promises. */}
+        {species.toxicity_description || species.toxic_to_pets ? (
+          <NotAdviceNote style={styles.notAdvice} />
+        ) : null}
       </View>
+
+      {area ? (
+        <AreaFitCard areaId={area.id} areaName={area.name} speciesId={species.id} />
+      ) : null}
 
       {/* The resolved facts — what the claims settled, labelled where a value
           was borrowed from the genus. */}
@@ -99,14 +147,22 @@ export default function SpeciesDetailScreen() {
         </Card>
       ) : null}
 
-      {/* Where the facts came from: names and links, never the passage. */}
-      {sources.length > 0 && (
+      {/* Where the facts came from: names and links, never the passage. At
+          their foot, a way to say a fact looks wrong; on its own where a
+          species has no sources yet, since a value not yet cited is the
+          likeliest to be wrong. */}
+      {sources.length > 0 ? (
         <Card style={styles.card}>
           <Card.Title title="Sources" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             <CareSourceRows sources={sources} />
+            <ReportFact species={species} />
           </Card.Content>
         </Card>
+      ) : (
+        <View style={styles.reportFactAlone}>
+          <ReportFact species={species} />
+        </View>
       )}
 
       {/* Schedules */}
@@ -140,7 +196,7 @@ export default function SpeciesDetailScreen() {
             {traits.map((t) => (
               <View key={t.id} style={styles.traitRow}>
                 <Text variant="labelMedium" style={styles.traitKey}>
-                  {t.trait.replace(/_/g, ' ')}
+                  {capitalize(t.trait.replace(/_/g, ' '))}
                 </Text>
                 <Text variant="bodySmall">
                   {t.value}{t.unit ? ` ${t.unit}` : ''}
@@ -165,10 +221,13 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   toxicChip: { backgroundColor: p.warnSoft, alignSelf: 'flex-start' },
   toxicChipText: { color: p.warn },
   toxicityNote: { color: p.warn, marginTop: 4, lineHeight: 19 },
+  notAdvice: { marginTop: 6 },
   card: { marginBottom: 12, borderRadius: 12, backgroundColor: p.card },
+  // Between two cards, closer to the one above, whose facts it reports.
+  reportFactAlone: { marginTop: -6, marginBottom: 6 },
   cardTitle: { color: p.ink, fontFamily: f.display },
   notes: { lineHeight: 22, color: p.ink },
   listItem: { paddingVertical: 4 },
   traitRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line2 },
-  traitKey: { color: p.sub, textTransform: 'capitalize', flex: 1 },
+  traitKey: { color: p.sub, flex: 1 },
 });

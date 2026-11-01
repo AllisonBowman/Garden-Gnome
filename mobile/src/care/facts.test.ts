@@ -6,7 +6,7 @@
 // as "verified" (CONTEXT.md bans that word for care data).
 import {
   CATALOG_LINE, careFactRows, careSourceLabels, careStatusLine, legacyStats,
-  monthSpan, waterRegimeSentence,
+  lengthSaid, monthSpan, waterRegimeSentence,
 } from './facts';
 import { Species } from '../types';
 
@@ -135,6 +135,51 @@ test('a climber reads its height as reach, not stature', () => {
     .toBe('3 ft-6 ft tall');
 });
 
+// --- edibility (shown with its conditions or not at all) --------------------
+// "Grown to eat" on a plant whose leaves are poisonous, or that must be
+// cooked first, is the kind of half-truth that hurts someone. The server
+// writes one sentence with the conditions; when it does, that sentence
+// replaces the bare phrase rather than sitting beside it.
+
+const CONDITIONAL = 'Some parts are eaten, but only certain parts or after preparation, '
+  + 'and other parts are poisonous. Check the source before eating any of it.';
+
+test('edible with no conditions on record reads "grown to eat"', () => {
+  const by = Object.fromEntries(careFactRows(minted({ is_edible: true })).map((r) => [r.key, r]));
+  expect(by.place.value).toBe('Grown to eat');
+  expect(by.eating).toBeUndefined();
+});
+
+test('an edibility note replaces "grown to eat" and is its own caution row', () => {
+  const rows = careFactRows(minted({
+    is_houseplant: false, is_edible: true, edibility_note: CONDITIONAL,
+  }));
+  const by = Object.fromEntries(rows.map((r) => [r.key, r]));
+  expect(by.place.value).toBe('An outdoor plant');
+  expect(values(minted({ is_edible: true, edibility_note: CONDITIONAL })))
+    .not.toMatch(/grown to eat/i);
+  expect(by.eating).toEqual({
+    key: 'eating', label: 'Eating', value: CONDITIONAL, inferred: false, caution: true,
+  });
+  // Read last: after where it lives, so the caution closes the list.
+  expect(rows[rows.length - 1].key).toBe('eating');
+});
+
+test('the note alone is enough for the row; "grown to eat" never appears with it', () => {
+  const rows = careFactRows(minted({ is_edible: true, edibility_note: CONDITIONAL }));
+  expect(rows.map((r) => r.key)).toEqual(['eating']);
+});
+
+test('a blank note is no note, and not edible is never "grown to eat"', () => {
+  expect(values(minted({ is_edible: true, edibility_note: '  ' }))).toBe('Grown to eat');
+  expect(values(minted({ is_edible: false }))).toBe('');
+  expect(values(minted({ is_edible: null }))).toBe('');
+});
+
+test('no ordinary fact row is a caution row', () => {
+  expect(careFactRows(sourced()).some((r) => r.caution)).toBe(false);
+});
+
 test('a leading unit symbol keeps its case: "pH", never "PH"', () => {
   expect(values(minted({ soil_ph_min: 6, soil_ph_max: 6.5 }))).toBe('pH 6–6.5');
   expect(values(minted({ soil_ph_max: 6 }))).toBe('pH up to 6');
@@ -239,11 +284,21 @@ test('a second page from one authority is numbered so it does not read as a dupl
 
 test('a legacy row shows its four stats in plain words', () => {
   expect(legacyStats(minted(LEGACY))).toEqual([
-    { key: 'light', label: 'Light', value: 'bright indirect' },
+    { key: 'light', label: 'Light', value: 'Bright indirect' },
     { key: 'humidity', label: 'Humidity', value: '40–60%' },
     { key: 'temperature', label: 'Temp', value: '60–85°F' },
     { key: 'soil', label: 'Soil', value: 'well-draining' },
   ]);
+});
+
+// The stat row shows these values as they come, so the case is settled
+// here. A style's textTransform once did it, and iOS's 'capitalize' put
+// "60–85°f" in the App Store screenshots.
+test('a stat arrives in the case it is shown in: the light word capitalized, °F kept', () => {
+  const by = Object.fromEntries(legacyStats(minted(LEGACY)).map((s) => [s.key, s.value]));
+  expect(by.temperature).toBe('60–85°F');
+  expect(by.light).toBe('Bright indirect');
+  expect(legacyStats(minted({ ...LEGACY, light_need: 'low' }))[0].value).toBe('Low');
 });
 
 test('derived humidity is not a stat — nobody measured it', () => {
@@ -293,6 +348,34 @@ test('the legacy stats are captioned as catalog values, never as cited ones', ()
   expect(component.slice(start, end)).toContain('{CATALOG_LINE}');
 });
 
+/** Every .tsx under src, as [path relative to src, text]. */
+function tsxSources(dir = path.join(__dirname, '..')): [string, string][] {
+  const found: [string, string][] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...tsxSources(full));
+    else if (entry.name.endsWith('.tsx')) {
+      found.push([path.relative(path.join(__dirname, '..'), full), fs.readFileSync(full, 'utf8')]);
+    }
+  }
+  return found;
+}
+
+// A text transform changes a value nobody re-reads: iOS's 'capitalize'
+// lowercases the rest of every word ("°F" to "°f", "NC State" to "Nc
+// State"), and 'lowercase' takes "°F", "pH" and a species name down with
+// it. Case is settled in code, where a test can see it. Uppercase is left to
+// the eyebrow, whose labels are the app's own words and source names, which
+// it changes only in case.
+test('no screen changes the case of what it shows with a text transform', () => {
+  const offenders = tsxSources()
+    .filter(([file, text]) => (
+      /textTransform:\s*['"](capitalize|lowercase)['"]/.test(text)
+      || (/textTransform:\s*['"]uppercase['"]/.test(text) && file !== path.join('components', 'Eyebrow.tsx'))))
+    .map(([file]) => file);
+  expect(offenders).toEqual([]);
+});
+
 test('the detail screens show a legacy stat only through the captioned row, below the resolved facts', () => {
   for (const screen of ['PlantDetailScreen', 'SpeciesDetailScreen']) {
     const src = readSrc(`../screens/${screen}.tsx`);
@@ -304,4 +387,18 @@ test('the detail screens show a legacy stat only through the captioned row, belo
     expect(facts).toBeGreaterThan(status);
     expect(legacy).toBeGreaterThan(facts);
   }
+});
+
+// Shared with garden-gnome/tests/test_fit.py (LENGTHS_SAID): the fit engine's
+// sentences and the app's cards say a length by one rule. If these drift, an
+// area's card and its findings disagree about the same number — 87 in is
+// "7.3 ft" on both, where each language's own rounding would split it.
+const LENGTHS_SAID: [number, string][] = [
+  [18, '18 in'], [23.5, '23.5 in'], [24, '2 ft'], [84, '7 ft'],
+  [87, '7.3 ft'], [81, '6.8 ft'], [39.4, '3.3 ft'], [59.1, '4.9 ft'],
+  [720, '60 ft'],
+];
+
+test.each(LENGTHS_SAID)('says %p inches as the fit engine does: %p', (inches, said) => {
+  expect(lengthSaid(inches)).toBe(said);
 });
