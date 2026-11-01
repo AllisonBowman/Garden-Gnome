@@ -104,6 +104,12 @@ PINNED = {
         "Plant it in any soil that drains well. "
         "It copes if the soil goes dry at times."
     ),
+    "Stevia rebaudiana": (
+        "Stevia is a white-flowered herb that can be kept as a houseplant. "
+        "Give it full sun if possible, though it will tolerate partial shade. "
+        "Choose a spot with moderate temperatures and humid air. "
+        "Keep it in moist, well-drained soil that is loamy, sandy, rich in organic matter and slightly acidic."
+    ),
     "Centaurea cyanus": (
         "Bachelor's button is a cool-weather annual grown in average, well-drained soil. "
         "Plant it in beds, borders, cottage gardens, meadows, or a cutting garden. "
