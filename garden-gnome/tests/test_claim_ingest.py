@@ -405,7 +405,9 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # is_edible; docs/2026-11-01-eaten-parts-audit.md) = 10954. - 1: a weed
     # listing quoted from another species' page (Canna indica's citation of
     # the Canna flaccida page) is not this plant's and is not stored = 10953.
-    assert report.claims_written == 10953
+    # + 7 (a second readers' pass over the passages the first had refused or
+    # the script had read no part from, with needles counted as leaves) = 10960.
+    assert report.claims_written == 10960
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
