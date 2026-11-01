@@ -234,6 +234,56 @@ def test_the_web_preview_is_allowed_to_read_the_count(garden):
     assert "x-total-count" in exposed.lower()
 
 
+def _bed(garden, goals):
+    """Another bed of the same user, the same space as the back bed."""
+    with Session(create_engine(garden.db_url)) as s:
+        bed = GrowingArea(
+            name="Kitchen bed", type=GrowingAreaType.home, user_id=garden.user_id,
+            shelter=Shelter.exposed, temp_exposure=TempExposure.outdoor,
+            sun_exposure=SunExposure.full_sun, surface=GrowingSurface.raised_bed,
+            goals=goals)
+        s.add(bed)
+        s.commit()
+        return bed.id
+
+
+def test_a_bed_that_asked_for_food_lists_only_what_a_source_says_is_eaten(garden):
+    """ADR 0011: with the eat goal, every row carries the parts and the
+    line, the species that suit the space but have no part on record are
+    counted in a header, and the header is absent where the goal is."""
+    chives = _sunny_bed_species(
+        garden, common_name="Eattest Chives", scientific_name="Allium eattestii",
+        is_edible=True, eaten_parts=["leaves"], toxic_to_pets=True)
+    sunflower = _sunny_bed_species(
+        garden, common_name="Eattest Sunflower", scientific_name="Helianthus eattestii",
+        is_edible=True)
+    eat = _bed(garden, [GrowingGoal.edible.value])
+    same_space = _bed(garden, [])
+    resp = garden.client.get(
+        f"{BASE}/{eat}/candidates?limit=1000",
+        headers={**garden.headers, "Origin": "http://localhost:8081"})
+    body = resp.json()
+    ids = {c["species_id"] for c in body}
+    assert chives in ids and sunflower not in ids
+    assert all(c["eaten_parts"] and c["eating"] for c in body), body
+    row = next(c for c in body if c["species_id"] == chives)
+    assert row["eaten_parts"] == ["leaves"]
+    assert row["eating"].startswith("Leaves are eaten.")
+    assert "keep scraps" in row["eating"]
+    assert row["hazard"] == "Toxic to pets."
+    # Left off: every species that suits the same space and has no part on
+    # record, the sunflower among them.
+    every = garden.client.get(
+        f"{BASE}/{same_space}/candidates?limit=1000", headers=garden.headers).json()
+    assert any(c["species_id"] == sunflower for c in every)
+    assert resp.headers["X-Left-Off-Count"] == str(len(every) - len(body))
+    assert int(resp.headers["X-Left-Off-Count"]) >= 1
+    assert "x-left-off-count" in resp.headers.get("access-control-expose-headers", "").lower()
+    plain = garden.client.get(
+        f"{BASE}/{same_space}/candidates?limit=1000", headers=garden.headers)
+    assert "X-Left-Off-Count" not in plain.headers
+
+
 # --- misfits ---------------------------------------------------------------
 
 def test_the_shade_plant_in_the_sun_is_what_needs_addressing(garden):

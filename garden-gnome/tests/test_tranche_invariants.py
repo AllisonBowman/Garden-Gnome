@@ -100,8 +100,18 @@ def test_eaten_parts_is_a_list_of_known_tokens_on_a_plant_recorded_as_eaten(batc
     assert len(set(value)) == len(value), f"{_label(batch, record)}: a part twice"
     assert record.get("is_edible") is True, (
         f"{_label(batch, record)}: eaten_parts on a record not recorded as eaten")
-    assert any("eaten_parts" in (c.get("claim") or "") for c in record.get("citations") or []), (
-        f"{_label(batch, record)}: no citation names eaten_parts")
+    name = record.get("scientific_name_accepted") or record.get("scientific_name_given") or ""
+    assert len(name.split()) >= 2, (
+        f"{_label(batch, record)}: eaten_parts on a bare genus record, which no species can take")
+    citations = record.get("citations") or []
+    minted = [c for c in citations if (c.get("claim") or "").startswith("eaten_parts ")]
+    assert minted, f"{_label(batch, record)}: no citation names eaten_parts"
+    behind = [(c.get("url"), c.get("quote")) for c in citations
+              if "is_edible" in (c.get("claim") or "")]
+    for c in minted:
+        assert (c.get("url"), c.get("quote")) in behind, (
+            f"{_label(batch, record)}: the eaten_parts citation does not rest on the "
+            f"url and quote of the citation behind is_edible")
 
 
 @pytest.mark.parametrize("batch,record", list(_records()), ids=lambda x: x if isinstance(x, str) else "")

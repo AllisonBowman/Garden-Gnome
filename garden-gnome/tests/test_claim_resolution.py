@@ -188,7 +188,9 @@ def test_edibility_the_survival_floor_and_the_cadence_never_inherit():
     for field, value in (("is_edible", True),
                          ("outdoor_temp_min_f", -20),
                          ("water_growing_days_est", 7),
-                         ("water_dormant_days_est", 21)):
+                         ("water_dormant_days_est", 21),
+            ("eaten_parts", ["fruit"]),  # ADR 0011
+        ):
         result = resolve("Nymphaea odorata", [
             claim(field, value, subject="Nymphaea", authority=NC_STATE)])
 

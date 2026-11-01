@@ -21,7 +21,7 @@ import type { EatenPart, GrowingGoal } from '../types';
  *  headings say what a part covers, so tubers are found under roots and
  *  nuts under seeds, where the vocabulary files them. */
 export const EATEN_PART_GROUPS: { part: EatenPart; label: string }[] = [
-  { part: 'leaves', label: 'Leaves and herbs' },
+  { part: 'leaves', label: 'Leaves' },
   { part: 'fruit', label: 'Fruit' },
   { part: 'roots', label: 'Roots and tubers' },
   { part: 'seeds', label: 'Seeds and nuts' },

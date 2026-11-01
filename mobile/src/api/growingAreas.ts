@@ -145,14 +145,6 @@ export interface PlantMisfit {
  *  is missing reads as one that does not fit. */
 export const EVERY_CANDIDATE = 100_000;
 
-export async function fetchCandidates(
-  id: number, limit = 20,
-): Promise<Candidate[]> {
-  const client = await apiClient();
-  const { data } = await client.get<Candidate[]>(
-    `/growing-areas/${id}/candidates`, { params: { limit } });
-  return data;
-}
 
 /** The first `limit` of an area's ranked candidates, and how many there are
  *  in all — counted by the server before it cut the list. `total` is null

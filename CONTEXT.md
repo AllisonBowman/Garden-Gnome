@@ -116,7 +116,7 @@ against it because nothing is known about it — out of a recommendation. A
 Species a source rates a high-severity or fatal poison for people, records as
 a noxious weed, or tags as an invasive species is never put forward, however
 well it fits; the one exception is a table crop whose eaten part is named,
-which is offered with its hazard stated (ADR 0009).
+which is offered with its hazard stated (ADR 0009). When the Growing area asks for something to eat, a Candidate is also one a source names an eaten part of; the rest that suit the space are counted under the list, not shown on it (ADR 0011).
 
 **Reach**:
 What a climber's mature height means. A vine's published height is how far it

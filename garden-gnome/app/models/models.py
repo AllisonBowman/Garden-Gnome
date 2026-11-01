@@ -129,7 +129,7 @@ class GrowingGoal(str, Enum):
 
     A goal narrows recommendations; it never loosens them. Nothing here can
     make a species fit a space it does not fit."""
-    edible = "edible"              # herbs, veg, fruit — grown to eat
+    edible = "edible"              # a source names a part that is eaten (ADR 0011)
     low_upkeep = "low_upkeep"      # tolerates being left alone
     pollinators = "pollinators"    # feeds bees, butterflies, hummingbirds
 

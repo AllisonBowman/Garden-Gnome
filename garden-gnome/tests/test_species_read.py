@@ -368,3 +368,19 @@ def test_the_read_model_carries_the_eaten_parts_and_the_eating_line():
         assert read.eating.startswith("Leaves are eaten.")
         plain = schema.model_validate(basil)
         assert plain.eaten_parts is None and plain.eating is None
+
+
+def test_the_api_serves_the_eaten_parts_and_the_eating_line(api):
+    """GET /species/ is built from a cached SpeciesRead body and the detail
+    from SpeciesDetail; both carry the parts and the line (ADR 0011)."""
+    client, headers, engine = api
+    (sid,) = store(engine, minted("Allium apitestii", "Apitest Chives",
+                                  is_edible=True, eaten_parts=["leaves"],
+                                  toxic_to_pets=True))
+    listed = {sp["id"]: sp for sp in
+              client.get("/species/", headers=headers).json()}[sid]
+    assert listed["eaten_parts"] == ["leaves"]
+    assert listed["eating"].startswith("Leaves are eaten.")
+    detail = client.get(f"/species/{sid}", headers=headers).json()
+    assert detail["eaten_parts"] == ["leaves"]
+    assert detail["eating"] == listed["eating"]

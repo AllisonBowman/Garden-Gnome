@@ -37,14 +37,16 @@ NEVER = {"Podophyllum peltatum", "Wisteria floribunda", "Wisteria sinensis"}
 #: WEED_FIELD, ADR 0011): the phrase "invasive species" or "noxious weed" in
 #: a quote about this plant. Before that read, only the five whose tag sat
 #: under the pet flag's citation were caught. A new name here is a data
-#: change; a missing one means a record lost its citation. Canna indica is
-#: here on a sentence calling it an invasive species in Australia, which the
-#: rule reads like any other listing; narrowing that is a product decision.
+#: change; a missing one means a record lost its citation. Woodland
+#: forget-me-not is here because the "Not" in its name is a name and not a
+#: negation; Canna indica is not, because its only such sentence is quoted
+#: from the Canna flaccida page, which the researcher marked as another
+#: species' and the ingest therefore leaves out.
 WEEDS = {
-    "Berberis bealei", "Buddleja davidii", "Canna indica", "Hedera helix",
-    "Ligustrum japonicum", "Miscanthus sinensis", "Nandina domestica",
-    "Perilla frutescens", "Solanum dulcamara", "Tradescantia fluminensis",
-    "Wisteria floribunda", "Wisteria sinensis",
+    "Berberis bealei", "Buddleja davidii", "Hedera helix",
+    "Ligustrum japonicum", "Miscanthus sinensis", "Myosotis sylvatica",
+    "Nandina domestica", "Perilla frutescens", "Solanum dulcamara",
+    "Tradescantia fluminensis", "Wisteria floribunda", "Wisteria sinensis",
     "Pistia stratiotes", "Pyrus calleryana",
 }
 

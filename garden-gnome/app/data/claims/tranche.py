@@ -45,6 +45,12 @@ COMPANIONS = {
 # recompute.RESOLVED_FIELDS); the safety code reads the quotes back.
 WEED_FIELD = "weed_listing"
 WEED_RE = re.compile(r"\bnoxious weed|\binvasive species\b", re.I)
+# A researcher's note that the citation is about another plant: a congener's
+# page quoted for contrast, a genus-level line. Its listing is not this
+# plant's, by ADR 0002, and the claim text is where the tranche says so.
+NOT_THIS_PLANT_RE = re.compile(
+    r"different species|another species|other species|related species|sister species"
+    r"|genus[- ]level|genus page|congener", re.I)
 
 # A citation may name the stem once and thereby support both columns.
 STEMS = {
@@ -135,6 +141,8 @@ def claims_from_record(record: dict) -> tuple[list[ExtractedClaim], list[str]]:
 
     for c in citations:
         if not WEED_RE.search(c.get("quote") or ""):
+            continue
+        if NOT_THIS_PLANT_RE.search(c.get("claim") or ""):
             continue
         authority = authority_for(c.get("url"), c.get("source", ""))
         if authority is None or not authority_may_claim(authority.name, WEED_FIELD):

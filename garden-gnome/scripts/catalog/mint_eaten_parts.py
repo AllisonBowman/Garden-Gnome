@@ -89,8 +89,12 @@ HARM_RE = re.compile(
 #: except the ripe fruit".
 EXCEPT_RE = re.compile(r"\bexcept(?:ing| for)?\b(.{0,60})", re.I)
 
+#: A colon keeps its heading with its value ("EDIBLE PARTS: young leaves"),
+#: and "but" turns a clause only when harm follows it ("edible but the leaves
+#: are poisonous"), not in "thick skin but good for eating".
 CLAUSE_SPLIT_RE = re.compile(
-    r"[.;:!?]|\n|\s+(?:but|however|whereas|while|although|though)\s+|\s--\s|\s-\s",
+    r"[.;!?]|\n|\s+(?:however|whereas|while|although|though)\s+|\s--\s|\s-\s"
+    r"|\s+but\s+(?=[^.;]*\b(?:poison\w*|toxi\w*|inedible|harmful|not\b|never\b|avoid\w*))",
     re.I)
 
 
@@ -100,7 +104,7 @@ CLAUSE_SPLIT_RE = re.compile(
 #: parts are read, so they cannot be read as a part of this plant.
 NOT_A_PART_RE = re.compile(
     r"(?:tastes?|smells?|flavou?r(?:ed)?|looks?)\s+(?:like|similar to|of)\s+[^,.;]+"
-    r"|\blike\s+(?:a|an|the)?\s*\w+(?:\s+or\s+\w+)?"
+    r"|(?<![-\w])like\s+(?:a|an|the)?\s*\w+(?:\s+or\s+\w+)?"
     r"|\(\s*[^)]*(?:removed|discarded|peeled)[^)]*\)"
     r"|\buntil\s+(?:they|it)\s+(?:flower|bolt|seed)\w*"
     r"|\bfruit\s+salads?\b|\bsalads?\b",

@@ -402,8 +402,10 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # noxious weed or an invasive species is stored as a weed_listing claim,
     # whatever field it was filed under) = 10697. + 257 (ADR 0011: eaten_parts,
     # one claim per record the minting pass wrote, each on the citation behind
-    # is_edible; docs/2026-11-01-eaten-parts-audit.md) = 10954.
-    assert report.claims_written == 10954
+    # is_edible; docs/2026-11-01-eaten-parts-audit.md) = 10954. - 1: a weed
+    # listing quoted from another species' page (Canna indica's citation of
+    # the Canna flaccida page) is not this plant's and is not stored = 10953.
+    assert report.claims_written == 10953
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

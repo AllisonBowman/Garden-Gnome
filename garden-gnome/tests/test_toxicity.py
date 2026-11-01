@@ -791,6 +791,9 @@ def test_a_weed_listing_on_any_field_is_read_and_a_denial_is_not():
     assert tagged.invasive
     denied = tx.read_evidence(None, [], ["It is not an invasive species here."])
     assert not denied.invasive and not denied.noxious
+    named = tx.read_evidence(None, [], [
+        "Woodland Forget-Me-Not is listed as a noxious weed in one or more Midwestern states."])
+    assert named.noxious, "a hyphenated Not in a name is not a negation"
     # Nothing else is read off those quotes: no rating, no people, no eating.
     hazard = tx.read_evidence(None, [], ["Poison Severity: High. Poisonous to Humans."])
     assert not hazard.people and hazard.rating == ""
@@ -860,30 +863,98 @@ def test_both_conditions_give_the_full_note():
 def test_the_eating_line_leads_with_the_parts_and_keeps_the_condition():
     tox = tx.from_legacy(None, "Testus testii")
     plain = tx.read_evidence(None, [P("is_edible", True, "Leaves as flavoring and garnish")])
+    assert plain.edibility_conditions == () and not plain.edibility_drink_only
     assert tx.eating_line(["leaves"], tox, plain) == "Leaves are eaten."
     assert tx.eating_line(["fruit"], tox, plain) == "Fruit is eaten."
     assert tx.eating_line(["seeds", "flowers"], tox, plain) == "Seeds and flowers are eaten."
 
     cooked = tx.read_evidence(None, [P(
         "is_edible", True, "Mature dried seeds are edible if thoroughly boiled.")])
-    assert cooked.edibility_how == "cooked"
+    assert cooked.edibility_conditions == ("cooked",)
     assert tx.eating_line(["seeds"], tox, cooked) == (
         "Seeds are eaten, only after cooking. Check the source before eating any of it.")
 
     ripe = tx.read_evidence(None, [P(
         "is_edible", True, "Only the ripe fruit is edible; unripe fruit and other "
         "plant parts are listed as poisonous.")])
-    assert ripe.edibility_how == "ripe"
+    assert ripe.edibility_conditions == ("ripe",)
     assert tx.eating_line(["fruit"], tox, ripe) == (
         "Fruit is eaten, only when ripe. It is also recorded as poisonous to "
         "people. Check the source before eating any of it.")
 
-    little = tx.read_evidence(None, [P(
-        "is_edible", True, "Ripe (yellow and soft) fruit is edible raw but in "
-        "limited quantity.")])
-    assert little.edibility_how == "small_amounts"
-    assert tx.eating_line(["fruit"], tox, little).startswith(
-        "Fruit is eaten, only in small amounts.")
+    # Every condition the passage states travels, not the first one found.
+    mayapple = tx.read_evidence(None, [P(
+        "is_edible", True, "EDIBLE PARTS: Ripe (yellow and soft) fruit is edible raw "
+        "but in limited quantity. CAUTION: The roots, seeds, and leaves are poisonous.")])
+    assert mayapple.edibility_conditions == ("ripe", "small_amounts")
+    assert tx.eating_line(["fruit"], tox, mayapple).startswith(
+        "Fruit is eaten, only when ripe and only in small amounts.")
+
+
+def test_raw_or_cooked_is_no_cooking_condition_and_a_cooking_hazard_is_one():
+    """"Edible raw or cooked" leaves the choice to the eater; "poisonous until
+    cooked" and "raw or undercooked pods are toxic" do not, wherever they
+    stand, the passage or the record's toxicity detail."""
+    tox = tx.from_legacy(None, "Testus testii")
+    for quote in ("Nutmeats, in small quantities, edible raw or cooked.",
+                  "Leaves can be eaten raw or cooked in moderation.",
+                  "Ripe fruits are eaten raw or dried."):
+        evidence = tx.read_evidence(None, [P("is_edible", True, quote)])
+        assert "cooked" not in evidence.edibility_conditions, quote
+        assert "only after cooking" not in tx.eating_line(["seeds"], tox, evidence)
+    taro = tx.read_evidence(None, [P(
+        "is_edible", True, "Poisonous until cooked. Poisons neutralized by thoroughly "
+        "drying or cooking the plant or by steeping it in water. Taro root used in "
+        "Southeastern Asian cuisine.")])
+    assert taro.edibility_conditions == ("cooked",) and not taro.edibility_drink_only
+    fiddlehead = tx.read_evidence(None, [P("is_edible", True, "Fiddleheads can be cooked and consumed")])
+    assert fiddlehead.edibility_conditions == ("cooked",)
+    bean = tx.read_evidence("Raw or undercooked pods/beans are toxic.",
+                            [P("is_edible", True, "Pods are eaten as a vegetable.")])
+    assert bean.edibility_conditions == ("cooked",)
+    assert tx.eating_line(["fruit"], tox, bean).startswith("Fruit is eaten, only after cooking.")
+    flavour = tx.read_evidence(None, [P(
+        "is_edible", True, "The fruit is seedy and has a sweet flavor when fully ripened.")])
+    assert flavour.edibility_conditions == ()
+    # "cookies" is not cooking, and raw offered in one clause leaves cooking
+    # to the eater in the next.
+    mulberry = tx.read_evidence(None, [P(
+        "is_edible", True, "Ripe fruits are eaten raw or made into pies, jellies, and jams.  "
+        "Dried fruits can be added to bread, cookies, or puddings like raisins.")])
+    assert mulberry.edibility_conditions == ("ripe",)
+    sedum = tx.read_evidence(None, [P(
+        "is_edible", True, "The stems and leaves, when very young and tender, may be eaten "
+        "raw. Later, until they flower, they may be briefly cooked.")])
+    assert sedum.edibility_conditions == ()
+    wisteria = tx.read_evidence(None, [P(
+        "is_edible", True, "The seeds can be eaten ONLY once cooked. Young leaves are "
+        "commonly cooked and flowers can be eaten raw or cooked (stems removed).")])
+    assert wisteria.edibility_conditions == ("cooked",), "a stated cooking hazard overrides raw"
+
+
+def test_a_drink_only_passage_says_used_for_tea_and_never_eaten():
+    tox = tx.from_legacy(None, "Testus testii")
+    tea = tx.read_evidence(None, [P("is_edible", True, "Leaves and flowers used for tea")])
+    assert tea.edibility_drink_only
+    assert tx.eating_line(["leaves", "flowers"], tox, tea) == "Leaves and flowers are used for tea."
+    chamomile = tx.read_evidence(None, [P(
+        "is_edible", True, "The flowers are used for a tea; no more than one cup of tea per day.")])
+    assert tx.eating_line(["flowers"], tox, chamomile).startswith(
+        "Flowers are used for tea, only in small amounts.")
+    sumac = tx.read_evidence(None, [P(
+        "is_edible", True, "The fruits are soaked in water to make a tart lemony drink.")])
+    assert sumac.edibility_drink_only
+    # Soaking is preparation, not cooking.
+    assert sumac.edibility_conditions == ("prepared",)
+    assert tx.eating_line(["fruit"], tox, sumac) == "Fruit is used for a drink, only after preparation."
+    acorn = tx.read_evidence(None, [P(
+        "is_edible", True, "Acorns are eaten after the tannin has been leached or boiled out.")])
+    assert acorn.edibility_conditions == ("cooked",), "cooking covers preparation"
+    # A passage that also speaks of eating is not drink-only.
+    monstera = tx.read_evidence(None, [P(
+        "is_edible", True, "Only ripe fruits are edible and are used to flavor drinks "
+        "and ice cream or are eaten fresh.")])
+    assert not monstera.edibility_drink_only and monstera.edibility_conditions == ("ripe",)
 
 
 def test_the_eating_line_sends_pet_hazards_to_the_scraps_and_crops_to_the_table():

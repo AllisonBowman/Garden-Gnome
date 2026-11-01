@@ -377,7 +377,7 @@ _RATING_RE = re.compile(
     r"|\b(high|medium|moderate|low)\b\W{0,3}(?:poison\s+)?severity",
     re.I)
 _NEGATION_RE = re.compile(
-    r"\b(?:no|not|non|without|nothing|neither|nor|never|lacks?|absent|none)\b"
+    r"(?<!-)\b(?:no|not|non|without|nothing|neither|nor|never|lacks?|absent|none)\b"
     r"|non-",
     re.I)
 #: Statements that name people as the ones at risk. NC State's poison block
@@ -493,10 +493,17 @@ class Evidence:
     #: eaten part itself (cooked, ripe, in small amounts), rather than only
     #: saying the rest of the plant is not eaten.
     edibility_conditional: bool = False
-    #: Which condition, when `edibility_conditional`: "cooked", "small_amounts",
-    #: "ripe", or "other" for a condition the words do not sort. The eating
-    #: line says it in the caretaker's words (`eating_line`).
-    edibility_how: str = ""
+    #: The conditions the edibility passages put on eating the named parts,
+    #: read clause by clause (`_conditions_of`): any of "cooked", "prepared",
+    #: "ripe", "small_amounts", in that order. The eating line says them in the
+    #: caretaker's words (`eating_line`). Empty when the passage states none.
+    edibility_conditions: tuple[str, ...] = ()
+    #: The passages speak only of a tea or a drink made from the part, never
+    #: of eating it, so the line says "used for tea" and not "eaten".
+    edibility_drink_only: bool = False
+    #: The edibility passages themselves, kept so the line can tell a tea
+    #: from another drink. Server-side only, like every passage (ADR 0003).
+    eating_passages: tuple[str, ...] = ()
 
 
 _RATING_RANK = {"low": 1, "medium": 2, "moderate": 2, "high": 3}
@@ -595,7 +602,7 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = (),
     tree is invasive is still the source saying so."""
     people = grave = noxious = limited = False
     pets_grave = invasive = conditional = False
-    how = ""
+    eating_quotes: list[str] = []
     best_rank, best, best_by = 0, "", ""
 
     def rate(levels: list[str], by: str) -> None:
@@ -634,9 +641,9 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = (),
             people = people or named
             grave = grave or gravely
             if getattr(p, "value", None) is True:
+                eating_quotes.append(quote)
                 if _EDIBLE_CONDITION_RE.search(quote):
                     limited = conditional = True
-                    how = how or _how_of(quote)
                 elif _EDIBLE_HAZARD_RE.search(quote):
                     limited = True
         noxious = noxious or _noxious(quote)
@@ -646,32 +653,96 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = (),
         noxious = noxious or _noxious(quote)
         invasive = invasive or _invasive(quote)
 
+    conditions, drink_only = _conditions_of(eating_quotes, detail)
     return Evidence(people=people, rating=best, rated_by=best_by, grave=grave,
                     noxious=noxious, edibility_limited=limited,
                     animals_grave=pets_grave, invasive=invasive,
-                    edibility_conditional=conditional, edibility_how=how)
+                    edibility_conditional=conditional,
+                    edibility_conditions=conditions, edibility_drink_only=drink_only,
+                    eating_passages=tuple(eating_quotes))
 
 
-#: Which condition an edibility passage puts on the eaten part, in the order
-#: the caretaker needs them: a plant that must be cooked is cooked whatever
-#: else is said of it; a limit on quantity outranks ripeness, since "ripe
-#: fruit, in limited quantity" is a caution about how much.
-_HOW_RES: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("cooked", re.compile(
-        r"cook|boil|roast|steam|blanch|dried|leach|ferment|process|peel|soak"
-        r"|prepar", re.I)),
-    ("small_amounts", re.compile(
-        r"\bsmall\b|\blimited\b|\bmoderat|\bsparingly\b"
-        r"|\blarge (?:amounts?|quantit)", re.I)),
-    ("ripe", re.compile(r"\bripe", re.I)),
-)
+#: The conditions an edibility passage puts on eating the part it names, read
+#: clause by clause so that "eaten raw or cooked" sets no cooking condition
+#: and "the seeds can be eaten ONLY once cooked" does, and "ripe fruit ... in
+#: limited quantity" keeps both of its conditions.
+_COND_CLAUSE_RE = re.compile(r"[.;:]|\s(?:but|however|although|though|whereas)\s", re.I)
+_COOK_RE = re.compile(
+    r"\b(?:cook|cooks|cooked|cooking|boil|boils|boiled|boiling|roast|roasts|roasted"
+    r"|roasting|steam|steams|steamed|steaming|blanch|blanched|blanching|fried|frying"
+    r"|baked|baking)\b", re.I)
+#: Preparation that is not cooking: leaching, soaking, fermenting, peeling,
+#: processing. Said as "only after preparation"; cooking, when also named,
+#: covers it.
+_PREP_RE = re.compile(
+    r"\b(?:leach\w*|ferment\w*|peel\w*|soak\w*|process\w*|prepar\w*|dr(?:y|ied|ying) (?:thoroughly|first|before))\b", re.I)
+_RAW_RE = re.compile(r"\braw\b", re.I)
+_RIPE_RE = re.compile(r"\bripe(?:ned)?\b", re.I)
+_LITTLE_RE = re.compile(
+    r"\bsmall (?:amounts?|quantit(?:y|ies))|\blimited quantit|\bin moderation\b"
+    r"|\bsparingly\b|\bno more than\b"
+    r"|\bin (?:small|limited|moderate) (?:amounts?|quantit(?:y|ies))", re.I)
+_EAT_WORDS_RE = re.compile(
+    r"\b(?:eaten|edible|eat|eats|eating|consum\w*|foods?|salads?|vegetables?"
+    r"|flavou?r\w*|season\w*|garnish\w*|snacks?|cuisine|dishes|jams?|jell\w*"
+    r"|pies?|syrups?|raw|cooked|boiled|roasted|steamed|fried|baked|soups?|stews?"
+    r"|condiments?|spices?)\b", re.I)
+_TEA_RE = re.compile(r"\b(?:teas?|infusions?|steep\w*)\b", re.I)
+_DRINK_RE = re.compile(
+    r"\b(?:teas?|infusions?|drinks?|beverages?|coffee substitute|brew\w*|steep\w*"
+    r"|juice[sd]?)\b", re.I)
+#: A cooking condition said as a hazard: in the passage, or in the record's
+#: toxicity detail ("Raw or undercooked pods/beans are toxic").
+_COOK_HAZARD_RE = re.compile(
+    r"toxic if not (?:fully |thoroughly )?cooked|poisonous (?:until|unless|if not) cooked"
+    r"|raw or undercooked|must be (?:thoroughly )?cooked|destroyed by (?:thoroughly )?cooking"
+    r"|only (?:once|after|when|if) (?:thoroughly )?(?:cooked|boiled)"
+    r"|(?:not|never) (?:be )?(?:eaten|consumed) raw", re.I)
 
 
-def _how_of(quote: str) -> str:
-    for name, pattern in _HOW_RES:
-        if pattern.search(quote or ""):
-            return name
-    return "other"
+def _conditions_of(quotes: list[str], detail: str | None) -> tuple[tuple[str, ...], bool]:
+    """(conditions, drink_only) for the edibility passages of one plant.
+
+    A clause that offers the part raw sets no cooking condition however it
+    goes on; one that names cooking without raw does; so does a cooking
+    hazard in the passage or the toxicity detail. Ripeness counts when the
+    clause names it before the eating it describes ("Only ripe fruits are
+    edible"), not when it describes a flavour. A quantity limit counts
+    wherever it stands. The passages are drink-only when they name a tea or a
+    drink and no clause speaks of eating."""
+    found: list[str] = []
+
+    def add(name: str) -> None:
+        if name not in found:
+            found.append(name)
+
+    any_eating = False
+    raw_anywhere = any(_RAW_RE.search(q or "") for q in quotes)
+    for quote in quotes:
+        for clause in (c for c in _COND_CLAUSE_RE.split(quote or "") if c and c.strip()):
+            eats = _EAT_WORDS_RE.search(clause)
+            any_eating = any_eating or bool(eats)
+            # A passage that offers the part raw anywhere ("young leaves raw,
+            # later briefly cooked") leaves cooking to the eater; only a
+            # cooking hazard overrides that.
+            if _COOK_RE.search(clause) and not raw_anywhere:
+                add("cooked")
+            if _PREP_RE.search(clause) and not raw_anywhere:
+                add("prepared")
+            ripe = _RIPE_RE.search(clause)
+            if eats and ripe and ripe.start() < eats.start():
+                add("ripe")
+            if _LITTLE_RE.search(clause):
+                add("small_amounts")
+        if _COOK_HAZARD_RE.search(quote or ""):
+            add("cooked")
+    if _COOK_HAZARD_RE.search(detail or ""):
+        add("cooked")
+    drink_only = (not any_eating
+                  and any(_DRINK_RE.search(q or "") for q in quotes))
+    if "cooked" in found and "prepared" in found:
+        found.remove("prepared")
+    return tuple(c for c in ("cooked", "prepared", "ripe", "small_amounts") if c in found), drink_only
 
 
 # --- putting a record together ----------------------------------------------
@@ -1068,11 +1139,11 @@ EATEN_PART_WORDS = {
     "roots": "roots", "flowers": "flowers", "stems": "stems",
 }
 
-_HOW_WORDS = {
+_COND_WORDS = {
     "cooked": "only after cooking",
-    "small_amounts": "only in small amounts",
+    "prepared": "only after preparation",
     "ripe": "only when ripe",
-    "other": "with the condition the source gives",
+    "small_amounts": "only in small amounts",
 }
 
 
@@ -1095,9 +1166,17 @@ def eating_line(eaten_parts: list[str] | None, tox: Toxicity,
         return edibility_note(True, tox, evidence)
     words = [EATEN_PART_WORDS.get(p, p) for p in eaten_parts]
     verb = "is" if words == ["fruit"] else "are"
-    lead = f"{_capital(_join(words))} {verb} eaten"
-    if evidence.edibility_conditional:
-        lead += f", {_HOW_WORDS.get(evidence.edibility_how, _HOW_WORDS['other'])}"
+    if evidence.edibility_drink_only:
+        tea = any(_TEA_RE.search(q) for q in evidence.eating_passages) \
+            if evidence.eating_passages else True
+        done = "used for tea" if tea else "used for a drink"
+    else:
+        done = "eaten"
+    lead = f"{_capital(_join(words))} {verb} {done}"
+    if evidence.edibility_conditions:
+        lead += ", " + " and ".join(_COND_WORDS[c] for c in evidence.edibility_conditions)
+    elif evidence.edibility_conditional:
+        lead += ", with the condition the source gives"
     sentence = lead + "."
     if evidence.people:
         sentence += " It is also recorded as poisonous to people."

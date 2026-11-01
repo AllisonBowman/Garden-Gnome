@@ -25,7 +25,7 @@ const names = (rows: Candidate[]) => rows.map((c) => c.common_name);
 describe('the groups an eat list falls into', () => {
   it('runs leaves, fruit, roots, seeds, flowers, stems, each headed in plain words', () => {
     expect(EATEN_PART_GROUPS).toEqual([
-      { part: 'leaves', label: 'Leaves and herbs' },
+      { part: 'leaves', label: 'Leaves' },
       { part: 'fruit', label: 'Fruit' },
       { part: 'roots', label: 'Roots and tubers' },
       { part: 'seeds', label: 'Seeds and nuts' },
@@ -46,7 +46,7 @@ describe('grouping by the part eaten', () => {
       candidate(6, 'Tomato', ['fruit']),
     ];
     expect(groupByEatenPart(rows).map((g) => g.label)).toEqual([
-      'Leaves and herbs', 'Fruit', 'Roots and tubers', 'Seeds and nuts', 'Flowers',
+      'Leaves', 'Fruit', 'Roots and tubers', 'Seeds and nuts', 'Flowers',
       'Stems and shoots',
     ]);
   });
