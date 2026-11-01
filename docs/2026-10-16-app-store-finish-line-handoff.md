@@ -16,15 +16,24 @@ open.
 the 2026-10-31 block below. That block and the launch checklist under it
 still stand as written, and 1.1.3 still ships with the short notes.
 
-The branch `care-notes-1.1.4` is pushed, at `4f55db3`, and holds 11 of the 33
-lengthened notes as of 01:27 ET. The workflow is still clearing the rest. A
-note lands there only once all three verifiers pass it in the same round,
-in a commit that also carries its trace and its pin, and each batch goes up
-as it clears. So a stop costs no finished note. The full backend suite
-passed 7,153 tests on the first batch. The branch's own handoff,
+The branch `care-notes-1.1.4` is finished and pushed, at `0451683`, with 30
+of the 33 notes lengthened and 3 held back with their short notes: Boston
+Fern and Parlor Palm, whose records cite too little for 3 sentences, and
+Gourds, whose voice reviewers never agreed on where its line of other names
+belongs. A note landed only once all three verifiers had passed its exact
+text, in a commit that also carries its trace and its pin. On `7e50977`,
+the tip that carries the last note, the full backend suite passed 7,248
+tests; the mobile typecheck, the 557 jest tests and the leak scan are clean;
+and a completeness critic found nothing that had to change before a merge.
+What it asked for is in the last commit, which changes only a test file and
+the branch's handoff. That handoff,
 `docs/2026-10-31-care-notes-1.1.4-handoff.md`, shows every note's short and
-lengthened text side by side and says which are still in review. It is not
-merged anywhere.
+lengthened text side by side, lists the held three with their reasons and
+best drafts, and names the 26 sentences that rest on Missouri Botanical
+Garden pages this Mac cannot fetch: open those in a browser before merging.
+The branch is not merged anywhere. The rule of building both sides of a
+decision ended on 2026-11-01, so the branch stands as the 1.1.4 path, not
+as a second version to demo, and nothing more is built for it.
 
 **Update, 2026-10-31.** Read this first; the checklist below it is the
 launch morning. Written on this Mac in the main checkout, from `26ffeed`.
@@ -74,8 +83,8 @@ recommendations in all cases". So taro stays on the "something to eat"
 lists with its preparation note; the Invasive Species exclusion keeps its
 five species off candidate lists; lily of the valley reads "Toxic", as NC
 State rates it; 1.1.3 ships with the short care notes, and the lengthened
-notes are finished on branch `care-notes-1.1.4` so she can demo both
-versions; `min_machines_running` stays 1 through App Review and goes back
+notes are finished on branch `care-notes-1.1.4` so that both versions can
+be demoed; `min_machines_running` stays 1 through App Review and goes back
 to 0 after approval; screenshots 03 and 06 are not retaken; and the work
 runs on this Mac. Decisions 1, 6 and 12 below are settled by that answer.
 
