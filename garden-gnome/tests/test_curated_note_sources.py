@@ -36,6 +36,9 @@ VERIFIED = CATALOG.parent / "verified"
 SOURCES = CATALOG.parent / "curated_note_sources.json"
 #: The ship tip this work was cut from. Its notes are the short ones.
 BEFORE = "2ac7b19"
+#: A sentence may rest on part of a longer quote only if the part runs this
+#: long, so that it cannot be a few words lifted out of their context. A quote
+#: the record holds whole is not lifted from anything, so it may be shorter.
 MIN_QUOTE_WORDS = 6
 
 #: Subjects a care note leaves to the hazard sentence, or leaves out. The
@@ -261,11 +264,12 @@ def test_every_quote_is_in_the_species_own_record(name, traced, citations):
     held = citations[_key(name)]
     for sentence in traced[name]["sentences"]:
         quote = sentence["quote"]
-        assert len(quote.split()) >= MIN_QUOTE_WORDS, quote
-        sources = [c["source"] for c in held
-                   if c.get("url") == sentence["url"] and quote in (c.get("quote") or "")]
+        at_url = [c for c in held if c.get("url") == sentence["url"]]
+        sources = [c["source"] for c in at_url if quote in (c.get("quote") or "")]
         assert sources, f"no citation of {name} holds this quote at this url: {quote!r}"
         assert sentence["source"] in sources
+        whole = any(quote == c.get("quote") for c in at_url)
+        assert whole or len(quote.split()) >= MIN_QUOTE_WORDS, quote
 
 
 @pytest.mark.parametrize("name", sorted(PINNED))
