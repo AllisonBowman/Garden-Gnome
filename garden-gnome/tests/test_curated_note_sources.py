@@ -49,6 +49,11 @@ OFF_SUBJECT = re.compile(
 #: Scientific name -> the exact note species_catalog.json holds. An edit here
 #: has to come with the same edit to curated_note_sources.json.
 PINNED = {
+    "Chlorophytum comosum": (
+        "Spider plant grows best in average humidity and moist soil, though it tolerates drought and dry soil. "
+        "Check the soil and let it dry out briefly before you water again. "
+        "When you pot or repot it, use a general-purpose potting mix."
+    ),
     "Goeppertia orbifolia": (
         "You may know this plant by an older name, Calathea orbifolia. "
         "Keep the soil evenly moist, but never wet or soggy. "
