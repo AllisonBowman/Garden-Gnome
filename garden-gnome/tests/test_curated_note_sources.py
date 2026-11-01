@@ -61,6 +61,14 @@ PINNED = {
         "Aim for a stable temperature between 65°F and 75°F. "
         "Feed it once a month during the growing season."
     ),
+    "Hoya carnosa": (
+        "Wax plant is a climber that also suits a hanging basket. "
+        "Through the growing season, water moderately and consistently, letting the soil get nearly dry in between. "
+        "In winter, the plant needs less water and less bright light. "
+        "It loves high humidity, so try a humidifier or set the pot on a tray of wet pebbles. "
+        "Use a loose, fast-draining mix rich in organic matter and a pot with good drainage. "
+        "Soil kept too wet or too dry can make the leaves drop."
+    ),
     "Maranta leuconeura": (
         "Grow prayer plant indoors in bright light, away from strong direct sun. "
         "Too much sun will fade the colors of its leaves. "
