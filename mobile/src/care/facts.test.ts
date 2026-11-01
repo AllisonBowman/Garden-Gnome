@@ -180,6 +180,91 @@ test('no ordinary fact row is a caution row', () => {
   expect(careFactRows(sourced()).some((r) => r.caution)).toBe(false);
 });
 
+// --- what is eaten, by the part (ADR 0011) ---------------------------------
+// A server that names the parts a source records as eaten sends one line:
+// the parts, the condition on eating them, the hazards beside them. That line
+// is the eating row, the same one a candidate row carries, and "grown to eat"
+// gives way to it, since beside it the bare phrase is the same fact again
+// without its condition. The caution colour is kept for a line with a
+// condition or a hazard in it, which is when the server writes a note.
+
+const CHIVES_LINE = 'Leaves are eaten. Recorded as poisonous to pets, so keep scraps and '
+  + 'trimmings away from them.';
+const CHIVES_NOTE = 'Some parts are eaten, and it is recorded as poisonous to pets, so keep '
+  + 'scraps and trimmings away from them.';
+const TARO_LINE = 'Roots are eaten, only after cooking. Check the source before eating any of it.';
+const TARO_NOTE = 'Some parts are eaten, but only certain parts or after preparation. '
+  + 'Check the source before eating any of it.';
+
+test('the eating line is the row, in the warning colour when a hazard is on record', () => {
+  const chives = minted({
+    is_houseplant: false, is_edible: true,
+    eaten_parts: ['leaves'], eating: CHIVES_LINE, edibility_note: CHIVES_NOTE,
+  });
+  const rows = careFactRows(chives);
+  const by = Object.fromEntries(rows.map((r) => [r.key, r]));
+  expect(by.eating).toEqual({
+    key: 'eating', label: 'Eating', value: CHIVES_LINE, inferred: false, caution: true,
+  });
+  expect(by.place.value).toBe('An outdoor plant');
+  // The line carries the condition; the note is not said a second time.
+  expect(values(chives)).not.toContain(CHIVES_NOTE);
+  expect(rows[rows.length - 1].key).toBe('eating');
+});
+
+test('a condition on eating is a caution too, not only a hazard', () => {
+  const taro = careFactRows(minted({
+    is_edible: true, eaten_parts: ['roots'], eating: TARO_LINE, edibility_note: TARO_NOTE,
+  }));
+  expect(taro).toEqual([
+    { key: 'eating', label: 'Eating', value: TARO_LINE, inferred: false, caution: true },
+  ]);
+});
+
+test('a part eaten with nothing on record against it is said plainly, not as a caution', () => {
+  const basil = careFactRows(minted({
+    is_edible: true, eaten_parts: ['leaves'], eating: 'Leaves are eaten.',
+  }));
+  expect(basil).toEqual([
+    { key: 'eating', label: 'Eating', value: 'Leaves are eaten.', inferred: false },
+  ]);
+});
+
+test('"grown to eat" gives way to the eating line wherever the line exists', () => {
+  const s = minted({
+    is_houseplant: true, is_edible: true, attracts_pollinators: true,
+    eaten_parts: ['fruit', 'leaves'], eating: 'Fruit and leaves are eaten.',
+  });
+  const by = Object.fromEntries(careFactRows(s).map((r) => [r.key, r.value]));
+  expect(by.place).toBe('Grown indoors; feeds pollinators');
+  expect(by.eating).toBe('Fruit and leaves are eaten.');
+  expect(values(s)).not.toMatch(/grown to eat/i);
+});
+
+test('a server older than the eating line reads as it always did', () => {
+  // Absent, null or blank alike: no part named, so "grown to eat" or the note.
+  for (const older of [{}, { eaten_parts: null, eating: null }, { eating: '  ' }]) {
+    expect(values(minted({ is_edible: true, ...older }))).toBe('Grown to eat');
+    expect(careFactRows(minted({ is_edible: true, edibility_note: CONDITIONAL, ...older })))
+      .toEqual([
+        { key: 'eating', label: 'Eating', value: CONDITIONAL, inferred: false, caution: true },
+      ]);
+    expect(values(minted({ is_edible: false, ...older }))).toBe('');
+  }
+});
+
+test('the eating row answers to the field whose words it shows', () => {
+  // Neither field is ever borrowed from the genus (ADR 0007), so no real row
+  // shows this; it pins which field the row is attributed to.
+  const borrowed: Partial<Species> = { care_provenance: { eaten_parts: 'genus_inferred' } };
+  const line = careFactRows(minted({
+    is_edible: true, eaten_parts: ['leaves'], eating: 'Leaves are eaten.', ...borrowed,
+  }));
+  expect(line[0].inferred).toBe(true);
+  const note = careFactRows(minted({ is_edible: true, edibility_note: CONDITIONAL, ...borrowed }));
+  expect(note[0].inferred).toBe(false);
+});
+
 test('a leading unit symbol keeps its case: "pH", never "PH"', () => {
   expect(values(minted({ soil_ph_min: 6, soil_ph_max: 6.5 }))).toBe('pH 6–6.5');
   expect(values(minted({ soil_ph_max: 6 }))).toBe('pH up to 6');

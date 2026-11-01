@@ -9,10 +9,11 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { fetchPlants } from '../api/plants';
 import {
-  fetchGrowingAreas, fetchCandidates, EVERY_CANDIDATE, Candidate,
+  fetchGrowingAreas, fetchCandidatePage, EVERY_CANDIDATE, Candidate,
 } from '../api/growingAreas';
 import { uncheckedNotes } from '../growingAreas/realEstate';
 import { CHECK_FAILED, candidateHazard, confirmedLine } from '../growingAreas/fitFindings';
+import { eatingLine, leftOffNote } from '../growingAreas/eating';
 import { RANK_ORDER, inRankOrder } from '../growingAreas/ranking';
 import { Species } from '../types';
 import { tierOf, fingerprint, matchesQuery, TIER_LABELS, Tier } from '../almanac/tier';
@@ -51,7 +52,7 @@ function SpeciesCard({
 }: {
   species: Species; owned: boolean;
   /** The species as a candidate for the chosen area, when one is chosen:
-   *  its confirmed findings and its caution line. */
+   *  its confirmed findings, its caution line and what is eaten from it. */
   candidate?: Candidate;
   onPress: () => void;
 }) {
@@ -63,6 +64,11 @@ function SpeciesCard({
   // Put forward for a space, a plant's hazard is said on its card: a
   // recommendation that leaves it out reads as an all-clear.
   const hazard = candidate ? candidateHazard(candidate) : null;
+  // What is eaten and how, as the server says it: the parts with their
+  // condition and the hazards beside them, the line the area's own screen
+  // shows. Whole, never cut for space, because the part without its
+  // condition is a different claim.
+  const eating = candidate ? eatingLine(candidate) : null;
 
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
@@ -82,6 +88,8 @@ function SpeciesCard({
         </View>
 
         {hazard ? <Text style={styles.hazard}>⚠️ {hazard}</Text> : null}
+        {/* Under the hazard, so the caution comes first. */}
+        {eating ? <Text style={styles.eating}>{eating}</Text> : null}
         {confirmed ? <Text style={styles.confirmed}>{confirmed}</Text> : null}
         {owned ? <Text style={styles.owned}>✿ you keep this one</Text> : null}
       </Card.Content>
@@ -141,24 +149,33 @@ export default function AlmanacScreen() {
   // covers the offline case that a local copy would have. Every candidate,
   // not the best few: the endpoint truncates after ranking, and a species
   // cut off the end would vanish from this filter as if it did not fit.
+  // Read as a page, for the count that comes with it in a header: how many
+  // species an eat list left off for want of an eating record. Its own cache
+  // key, apart from the area screen's first few.
   const {
     // First load only: a background refetch keeps the cached list and notes
     // on screen rather than blanking them.
-    data: candidates = [], isLoading: fitLoading, isError: fitFailed, refetch: refetchFit,
+    data: candidatePage, isLoading: fitLoading, isError: fitFailed, refetch: refetchFit,
   } = useQuery({
     queryKey: ['growingAreaCandidates', areaId, 'every'],
-    queryFn: () => fetchCandidates(areaId as number, EVERY_CANDIDATE),
+    queryFn: () => fetchCandidatePage(areaId as number, EVERY_CANDIDATE),
     enabled: areaId != null,
   });
+  const candidates = useMemo(() => candidatePage?.rows ?? [], [candidatePage]);
   const candidateById = useMemo(
     () => new Map(candidates.map((c) => [c.species_id, c])),
     [candidates],
   );
   // Which axes the chosen area turns on that nothing on its list could
   // confirm — the same notes the area's own screen shows, so a thin list
-  // here is not read as a verdict on the space either.
+  // here is not read as a verdict on the space either. With them, for an
+  // area that asked for something to eat, how many species suit it but are
+  // off the list because no source records a part of them as eaten (ADR
+  // 0011). The list stays flat here; the area's own screen groups it.
   const notes = area != null && !fitLoading && !fitFailed
-    ? uncheckedNotes(area, candidates) : [];
+    ? [...uncheckedNotes(area, candidates), leftOffNote(candidatePage?.leftOff ?? null)]
+      .filter((note): note is string => note != null)
+    : [];
 
   const shown = useMemo(() => {
     const matching = species.filter((s) =>
@@ -347,6 +364,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   owned: { color: p.good, fontSize: 12, marginTop: 8, fontWeight: '600' },
   confirmed: { color: p.sub, fontSize: 12, lineHeight: 17, marginTop: 8 },
   hazard: { color: p.warn, fontSize: 12.5, lineHeight: 17, marginTop: 8, fontWeight: '600' },
+  eating: { color: p.ink, fontSize: 12.5, lineHeight: 17, marginTop: 8 },
   empty: { color: p.faint, fontStyle: 'italic', textAlign: 'center', marginTop: 32 },
   failed: { alignItems: 'center', gap: 8 },
   fitNote: { color: p.faint, fontSize: 12.5, lineHeight: 18, marginBottom: 10 },

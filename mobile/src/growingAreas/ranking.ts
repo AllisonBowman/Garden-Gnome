@@ -21,18 +21,34 @@ export const FIRST_FEW = 12;
 export const RANK_ORDER =
   'The more that’s confirmed here, the higher a species sits; where they tie, it’s A to Z.';
 
-/** The whole count the server sent with a cut list (its X-Total-Count
- *  header), or null when there is none to read — a server older than the
- *  count — in which case a screen says nothing about the rest rather than
- *  guess. Header names are matched case-blind: they reach the app in
- *  whatever case the platform hands them over. */
-export function totalCount(headers: unknown): number | null {
+/** A count the server sent in a header, or null when there is none to read
+ *  or it is not a count. Header names are matched case-blind: they reach the
+ *  app in whatever case the platform hands them over. */
+function headerCount(headers: unknown, name: string): number | null {
   if (headers == null || typeof headers !== 'object') return null;
   const hit = Object.entries(headers as Record<string, unknown>)
-    .find(([name]) => name.toLowerCase() === 'x-total-count');
+    .find(([key]) => key.toLowerCase() === name);
   if (!hit) return null;
   const text = String(hit[1]).trim();
   return /^\d+$/.test(text) ? Number(text) : null;
+}
+
+/** The whole count the server sent with a cut list (its X-Total-Count
+ *  header), or null when there is none to read — a server older than the
+ *  count — in which case a screen says nothing about the rest rather than
+ *  guess. */
+export function totalCount(headers: unknown): number | null {
+  return headerCount(headers, 'x-total-count');
+}
+
+/** How many species suit the spot but are off its list because no source
+ *  records a part of them as eaten (the X-Left-Off-Count header, ADR 0011),
+ *  or null when there is none to read. The server counts them only for a
+ *  space that asked for something to eat, and a server older than the count
+ *  never sends it; either way the screen then says nothing about who was
+ *  left off rather than guess. */
+export function leftOffCount(headers: unknown): number | null {
+  return headerCount(headers, 'x-left-off-count');
 }
 
 /** The line over the list: how many species the spot has nothing on record

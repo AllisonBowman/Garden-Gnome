@@ -145,6 +145,16 @@ describe('goals', () => {
       expect(g.hint).toMatch(/^Only species/);
     }
   });
+
+  it('keeps the eat goal’s chip and token, and says its list is grouped by the part eaten', () => {
+    // Older phones send `edible` and show the chip by its label, so neither
+    // moves; the hint says what the list now holds (ADR 0011).
+    const eat = GOALS.find((g) => g.value === 'edible')!;
+    expect(eat.label).toBe('🥕 Something to eat');
+    expect(eat.hint).toBe(
+      'Only species whose sources name a part that is eaten, grouped by the part, '
+      + 'each with its conditions.');
+  });
 });
 
 describe('unchecked notes', () => {
@@ -179,10 +189,26 @@ describe('unchecked notes', () => {
 
   it('says so when a goal was asked for and nothing could answer it', () => {
     const notes = uncheckedNotes(
-      { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: null, headroom_in: null },
+      { temp_exposure: 'outdoor', goals: ['pollinators'], area_sqft: null, headroom_in: null },
       [candidate(['sun', 'soil'])]);
     expect(notes.join(' ')).toMatch(/Nothing here is filtered by what you asked for/);
-    expect(notes.join(' ')).toMatch(/something to eat/);
+    expect(notes.join(' ')).toMatch(/feeds pollinators/);
+  });
+
+  it('never says a list that asked for something to eat went unfiltered', () => {
+    // The server keeps that list to species a source records a part of as
+    // eaten and counts the ones it left off (ADR 0011), so the caveat would
+    // now be untrue. The goal that can still go unanswered is still named.
+    const eatOnly = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: null, headroom_in: null },
+      [candidate(['sun', 'soil'])]);
+    expect(eatOnly).toEqual([]);
+    const both = uncheckedNotes(
+      { temp_exposure: 'outdoor', goals: ['edible', 'pollinators'], area_sqft: null, headroom_in: null },
+      [candidate(['sun'])]);
+    const text = both.join(' ');
+    expect(text).toMatch(/Nothing here is filtered by what you asked for \(feeds pollinators\)\./);
+    expect(text).not.toMatch(/something to eat/);
   });
 
   it('stays quiet about a goal the catalog did answer', () => {
@@ -246,10 +272,10 @@ describe('unchecked notes', () => {
 
   it('names the goal nothing answered, not the one something did', () => {
     const notes = uncheckedNotes(
-      { temp_exposure: 'outdoor', goals: ['edible', 'pollinators'], area_sqft: null, headroom_in: null },
+      { temp_exposure: 'outdoor', goals: ['low_upkeep', 'pollinators'], area_sqft: null, headroom_in: null },
       [candidate(['sun', 'goal:pollinators'])]);
     const text = notes.join(' ');
-    expect(text).toMatch(/something to eat/);
+    expect(text).toMatch(/low upkeep/);
     expect(text).not.toMatch(/feeds pollinators/);
   });
 
@@ -264,7 +290,7 @@ describe('unchecked notes', () => {
     // The catalog keeps being researched; "no species carries a mature size
     // yet" stayed on screen after the size backfill made it false.
     const notes = uncheckedNotes(
-      { temp_exposure: 'outdoor', goals: ['edible'], area_sqft: 32, headroom_in: 84,
+      { temp_exposure: 'outdoor', goals: ['pollinators'], area_sqft: 32, headroom_in: 84,
         surface: 'raised_bed', soil_depth_in: 12 },
       [candidate(['sun'])]);
     expect(notes).toHaveLength(3);

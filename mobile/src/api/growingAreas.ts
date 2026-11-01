@@ -1,9 +1,9 @@
 import { apiClient } from './client';
 import {
   GrowingArea, GrowingAreaType, Shelter, TempExposure, SunExposure, Weather,
-  GrowingSurface, GrowingGoal,
+  GrowingSurface, GrowingGoal, EatenPart,
 } from '../types';
-import { totalCount } from '../growingAreas/ranking';
+import { leftOffCount, totalCount } from '../growingAreas/ranking';
 
 export interface GrowingAreaClimate {
   shelter?: Shelter;
@@ -118,6 +118,15 @@ export interface Candidate {
    *  recommendation is exactly where a hazard must not go unsaid. Absent
    *  from a server that predates it. */
   hazard?: string | null;
+  /** What is eaten (ADR 0011): the parts a source names (for a food crop
+   *  whose record names none, the part the app's own crop table names),
+   *  which a list that asked for something to eat is grouped by, and the
+   *  one line that says them with their condition and the hazards recorded
+   *  beside them. Both null when no part is named. The line is shown as
+   *  sent and never cut, because the condition is the half that keeps it
+   *  honest. Absent from a server that predates them. */
+  eaten_parts?: EatenPart[] | null;
+  eating?: string | null;
 }
 
 /** A plant already standing here, and what specifically doesn't suit it. */
@@ -147,17 +156,25 @@ export async function fetchCandidates(
 
 /** The first `limit` of an area's ranked candidates, and how many there are
  *  in all — counted by the server before it cut the list. `total` is null
- *  from a server too old to send the count. */
+ *  from a server too old to send the count. `leftOff` is how many species
+ *  suit the space but are off the list because no source records a part of
+ *  them as eaten: counted only when the area asked for something to eat,
+ *  and null otherwise or from a server older than the count. */
 export interface CandidatePage {
   rows: Candidate[];
   total: number | null;
+  leftOff: number | null;
 }
 
 export async function fetchCandidatePage(id: number, limit: number): Promise<CandidatePage> {
   const client = await apiClient();
   const resp = await client.get<Candidate[]>(
     `/growing-areas/${id}/candidates`, { params: { limit } });
-  return { rows: resp.data, total: totalCount(resp.headers) };
+  return {
+    rows: resp.data,
+    total: totalCount(resp.headers),
+    leftOff: leftOffCount(resp.headers),
+  };
 }
 
 export async function fetchMisfits(id: number): Promise<PlantMisfit[]> {

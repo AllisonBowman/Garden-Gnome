@@ -10,7 +10,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   fetchGrowingArea, fetchGrowingAreaWeather, updateGrowingArea,
-  fetchCandidatePage, fetchMisfits,
+  fetchCandidatePage, fetchMisfits, Candidate,
 } from '../api/growingAreas';
 import { WeatherDay } from '../types';
 import {
@@ -37,6 +37,7 @@ import {
   CHECK_FAILED, candidateHazard, confirmedLine, plantTitle,
 } from '../growingAreas/fitFindings';
 import { FIRST_FEW, cutNote, listIntro } from '../growingAreas/ranking';
+import { eatingGroups, eatingLine, leftOffNote } from '../growingAreas/eating';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
 
@@ -206,6 +207,11 @@ export default function GrowingAreaDetailScreen() {
   const intro = candidatesIn && candidateRows.length > 0
     ? listIntro(candidateTotal, candidateRows.length) : null;
   const cut = candidatesIn ? cutNote(candidateRows, pastTheCut, candidateTotal) : null;
+  // A space that asked for something to eat sees its list by the part eaten
+  // (ADR 0011), and under it how many species suit the spot but were left
+  // off because no source records a part of them as eaten.
+  const eatGroups = candidatesIn ? eatingGroups(env.goals, candidateRows) : null;
+  const leftOff = candidatesIn ? leftOffNote(candidatePage?.leftOff ?? null) : null;
 
   const prompts = dimensionPrompts(env.surface ?? null);
   // Lengths are said the way the reasons below say them — "7 ft (84 in)" —
@@ -221,6 +227,46 @@ export default function GrowingAreaDetailScreen() {
   const unmeasured = dims
     .filter((d) => d.raw == null)
     .map((d) => d.label.replace(/ \(.*\)$/, '').toLowerCase());
+
+  // One candidate, wherever the list puts it: in its place in the ranking,
+  // or under each part of an eat list that its source names.
+  const candidateRow = (c: Candidate) => {
+    const hazard = candidateHazard(c);
+    const eating = eatingLine(c);
+    return (
+      <TouchableRipple
+        key={c.species_id}
+        onPress={() => navigation.navigate(
+          'SpeciesDetail', { speciesId: c.species_id, growingAreaId })}
+        accessibilityRole="button"
+        accessibilityHint={`Opens ${c.common_name}, with how it suits this space`}
+        style={styles.candidate}
+      >
+        <View>
+          <View style={styles.candidateHead}>
+            <Text style={styles.candidateName}>{c.common_name}</Text>
+            <Text style={styles.candidateMore}>›</Text>
+          </View>
+          <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
+          {/* Above the reasons, never below them: a recommendation
+              that buries its hazard under "confirmed here" reads as
+              an all-clear. */}
+          {hazard ? <Text style={styles.candidateHazard}>⚠️ {hazard}</Text> : null}
+          {/* What is eaten and how, as the server says it: the parts with
+              their condition and the hazards beside them. Whole, never cut
+              for space, because the part without its condition is a
+              different claim. Under the hazard, so the caution comes first. */}
+          {eating ? <Text style={styles.candidateEating}>{eating}</Text> : null}
+          {/* One line per candidate — which axes were confirmed — and
+              the findings themselves, each with whose word it is, on
+              the species page this opens. Six near-identical rows a
+              candidate made twelve candidates about seventy lines.
+              Only confirmed axes: an unknown is never a reason. */}
+          <Text style={styles.candidateWhy}>{confirmedLine(c.fits)}</Text>
+        </View>
+      </TouchableRipple>
+    );
+  };
 
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
@@ -373,39 +419,25 @@ export default function GrowingAreaDetailScreen() {
               source has confirmed it suits this spot — an unresearched plant
               isn’t a recommendation.
             </Text>
+          ) : eatGroups ? (
+            // Grouped by the part a source names as eaten, each group in the
+            // server's order; a species named for two parts is in both.
+            eatGroups.map((group) => (
+              <View key={group.part}>
+                <Eyebrow style={styles.eatGroupLabel}>{group.label}</Eyebrow>
+                {group.rows.map(candidateRow)}
+              </View>
+            ))
           ) : (
-            candidateRows.map((c) => {
-              const hazard = candidateHazard(c);
-              return (
-              <TouchableRipple
-                key={c.species_id}
-                onPress={() => navigation.navigate(
-                  'SpeciesDetail', { speciesId: c.species_id, growingAreaId })}
-                accessibilityRole="button"
-                accessibilityHint={`Opens ${c.common_name}, with how it suits this space`}
-                style={styles.candidate}
-              >
-                <View>
-                  <View style={styles.candidateHead}>
-                    <Text style={styles.candidateName}>{c.common_name}</Text>
-                    <Text style={styles.candidateMore}>›</Text>
-                  </View>
-                  <Text style={styles.candidateLatin}>{c.scientific_name}</Text>
-                  {/* Above the reasons, never below them: a recommendation
-                      that buries its hazard under "confirmed here" reads as
-                      an all-clear. */}
-                  {hazard ? <Text style={styles.candidateHazard}>⚠️ {hazard}</Text> : null}
-                  {/* One line per candidate — which axes were confirmed — and
-                      the findings themselves, each with whose word it is, on
-                      the species page this opens. Six near-identical rows a
-                      candidate made twelve candidates about seventy lines.
-                      Only confirmed axes: an unknown is never a reason. */}
-                  <Text style={styles.candidateWhy}>{confirmedLine(c.fits)}</Text>
-                </View>
-              </TouchableRipple>
-              );
-            })
+            candidateRows.map(candidateRow)
           )}
+          {/* Said under the list, so a short eat list reads as the sources'
+              silence on eating and not as a verdict on the space. */}
+          {leftOff ? (
+            <Text style={[styles.caveat, candidateRows.length === 0 && styles.underEmpty]}>
+              {leftOff}
+            </Text>
+          ) : null}
           {/* The rest: the Almanac narrowed to this area, in the same order. */}
           {cut ? (
             <View style={styles.cut}>
@@ -577,6 +609,9 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   candidateLatin: { fontSize: 12.5, fontStyle: 'italic', color: p.faint, marginBottom: 4 },
   candidateWhy: { fontSize: 13, lineHeight: 18, color: p.sub },
   candidateHazard: { fontSize: 13, lineHeight: 18, color: p.warn, fontWeight: '600', marginBottom: 4 },
+  candidateEating: { fontSize: 13, lineHeight: 18, color: p.ink, marginBottom: 4 },
+  eatGroupLabel: { marginBottom: 8 },
+  underEmpty: { marginTop: 12 },
   caveat: { fontSize: 13, lineHeight: 19, color: p.warn, marginBottom: 12 },
   listIntro: { fontSize: 13, lineHeight: 19, color: p.sub, marginBottom: 12 },
   cut: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: p.line, paddingTop: 12 },

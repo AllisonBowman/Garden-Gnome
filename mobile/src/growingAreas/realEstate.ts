@@ -54,7 +54,8 @@ export const GOALS: { value: GrowingGoal; label: string; hint: string }[] = [
   {
     value: 'edible',
     label: '🥕 Something to eat',
-    hint: 'Only species grown to eat.',
+    hint: 'Only species whose sources name a part that is eaten, grouped by the part, '
+      + 'each with its conditions.',
   },
   {
     value: 'low_upkeep',
@@ -275,9 +276,15 @@ export function uncheckedNotes(
 
   if (candidates.length === 0) return notes;
 
-  // Per goal, not per axis: a list narrowed by low upkeep (its own axis) or
-  // by pollinators has still not been narrowed by edibility.
+  // Per goal, not per axis: a list narrowed by low upkeep (its own axis) has
+  // still not been narrowed by pollinators. Something to eat is never named
+  // here. The server answers that wish itself (ADR 0011): a list that asked
+  // for it holds only species a source records a part of as eaten, and the
+  // species it left off for want of a record are counted under the list
+  // (`leftOffNote`). Named here, it would say an eat list was not filtered
+  // when it was.
   const unanswered = GOALS
+    .filter((g) => g.value !== 'edible')
     .filter((g) => (area.goals ?? []).includes(g.value) && !goalsConfirmed.has(g.value))
     .map((g) => goalPhrase(g.value));
   if (unanswered.length > 0) {

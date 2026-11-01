@@ -1,5 +1,5 @@
 import {
-  FIRST_FEW, RANK_ORDER, cutNote, inRankOrder, listIntro, totalCount,
+  FIRST_FEW, RANK_ORDER, cutNote, inRankOrder, leftOffCount, listIntro, totalCount,
 } from './ranking';
 import type { Candidate } from '../api/growingAreas';
 
@@ -27,6 +27,31 @@ describe('the count the server sent', () => {
     for (const junk of ['', ' ', 'many', '-1', '2.5', '12abc']) {
       expect(totalCount({ 'x-total-count': junk })).toBeNull();
     }
+  });
+});
+
+describe('the count of species an eat list left off', () => {
+  it('is read from its own header whatever case its name arrives in', () => {
+    expect(leftOffCount({ 'x-left-off-count': '31' })).toBe(31);
+    expect(leftOffCount({ 'X-Left-Off-Count': '31' })).toBe(31);
+    expect(leftOffCount({ 'x-left-off-count': 0 })).toBe(0);
+  });
+
+  it('is null, never a guess, when there is none or it cannot be read', () => {
+    // Sent only for a space that asked for something to eat, and never by a
+    // server older than the count.
+    expect(leftOffCount({ 'content-type': 'application/json' })).toBeNull();
+    expect(leftOffCount(undefined)).toBeNull();
+    for (const junk of ['', 'some', '-1', '2.5']) {
+      expect(leftOffCount({ 'x-left-off-count': junk })).toBeNull();
+    }
+  });
+
+  it('is never read from the total, nor the total from it', () => {
+    const headers = { 'x-total-count': '12', 'x-left-off-count': '40' };
+    expect(totalCount(headers)).toBe(12);
+    expect(leftOffCount(headers)).toBe(40);
+    expect(leftOffCount({ 'x-total-count': '12' })).toBeNull();
   });
 });
 

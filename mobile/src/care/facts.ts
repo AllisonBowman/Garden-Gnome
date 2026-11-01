@@ -27,8 +27,9 @@ export interface CareFactRow {
   /** True when any field this row drew on was borrowed from the genus. */
   inferred: boolean;
   /** A row that warns rather than describes — shown in the warning colour.
-   *  Only the edibility note today: "some parts are eaten, others are
-   *  poisonous" is read as a caution or it is read wrong. */
+   *  Only the eating row today, and only when a condition or a hazard is on
+   *  record: "some parts are eaten, others are poisonous" is read as a
+   *  caution or it is read wrong, and "Leaves are eaten." warns of nothing. */
   caution?: boolean;
 }
 
@@ -103,7 +104,7 @@ const RESOLVED_COLUMNS: (keyof Species)[] = [
   'water_regime', 'water_check_depth_cm', 'water_growing_days_est',
   'water_dormant_days_est', 'fertilize_active_months', 'fertilize_interval_days',
   'fertilize_strength', 'outdoor_sun_exposure', 'outdoor_temp_min_f',
-  'is_houseplant', 'is_edible', 'attracts_pollinators',
+  'is_houseplant', 'is_edible', 'eaten_parts', 'attracts_pollinators',
   'mature_height_in_min', 'mature_height_in_max',
   'mature_spread_in_min', 'mature_spread_in_max',
   'climbs',
@@ -220,6 +221,17 @@ export function edibilityNote(species: Species): string | null {
   return note ? note : null;
 }
 
+/** The server's eating line, when there is one: the parts a source names as
+ *  eaten, the condition on eating them, and the hazards recorded beside them
+ *  (ADR 0011). The same line a candidate row carries, so the species page
+ *  and the list never disagree. Where it is set it says what "grown to eat"
+ *  and the edibility note said, part by part, so it stands in for both.
+ *  Null when no source names a part, and from a server that predates it. */
+export function eatingLine(species: Species): string | null {
+  const line = species.eating?.trim();
+  return line ? line : null;
+}
+
 /** Whether "grown to eat" may stand on its own: edible, with no conditions
  *  on record. Edibility is shown with its conditions or not at all. */
 export function plainlyEdible(species: Species): boolean {
@@ -227,7 +239,10 @@ export function plainlyEdible(species: Species): boolean {
 }
 
 const CONCEPTS: {
-  key: CareFactKey; label: string; join: string; caution?: boolean;
+  key: CareFactKey; label: string; join: string;
+  /** Whether this species' row warns rather than describes; absent for a
+   *  concept that never does. */
+  caution?: (s: Species) => boolean;
   read: (s: Species) => Concept;
 }[] = [
   // The regime and the check depth — never the dry-down target, which is a
@@ -292,16 +307,30 @@ const CONCEPTS: {
     [s.is_houseplant == null ? null : (s.is_houseplant ? 'grown indoors' : 'an outdoor plant'),
       ['is_houseplant']],
     [s.climbs ? 'a climber that needs a support' : null, ['climbs']],
-    [plainlyEdible(s) ? 'grown to eat' : null, ['is_edible']],
+    // Only where no part is named: once one is, the eating row below says
+    // what is eaten and how, and "grown to eat" beside it would be the same
+    // fact twice, the second time without its condition.
+    [plainlyEdible(s) && eatingLine(s) == null ? 'grown to eat' : null, ['is_edible']],
     [s.attracts_pollinators ? 'feeds pollinators' : null, ['attracts_pollinators']],
   ]) },
-  // Its own row, in the warning colour, never folded into "Where it lives":
-  // the note is a whole sentence about which parts are safe to eat, and
-  // squeezed between "grown indoors" and "feeds pollinators" it would read
-  // as one more pleasant trait.
-  { key: 'eating', label: 'Eating', join: '', caution: true, read: (s) => concept([
-    [edibilityNote(s), ['is_edible']],
-  ]) },
+  // What is eaten: the eating line, which names the parts a source records
+  // as eaten with the condition on eating them and the hazards beside them
+  // (ADR 0011), or where no part is named, the edibility note. Its own row,
+  // never folded into "Where it lives": a whole sentence about which parts
+  // are eaten and how, squeezed between "grown indoors" and "feeds
+  // pollinators", would read as one more pleasant trait. In the warning
+  // colour only when a condition or a hazard is on record, which is when the
+  // server writes an edibility note: "Leaves are eaten." warns of nothing,
+  // and a caution on every plant with a part on record would teach a reader
+  // to skip the ones that mean it.
+  { key: 'eating', label: 'Eating', join: '',
+    caution: (s) => edibilityNote(s) != null,
+    read: (s) => concept([
+      [eatingLine(s), ['eaten_parts']],
+      // The note only where no part is named: the line already carries the
+      // condition, and two sentences on one row would say it twice.
+      [eatingLine(s) == null ? edibilityNote(s) : null, ['is_edible']],
+    ]) },
 ];
 
 /** One row per resolved concept the row can back, in reading order. A row
@@ -316,7 +345,7 @@ export function careFactRows(species: Species): CareFactRow[] {
       key, label,
       value: capitalize(parts.join(join)),
       inferred: isGenusInferred(species, ...used),
-      ...(caution ? { caution: true } : {}),
+      ...(caution?.(species) ? { caution: true } : {}),
     });
   }
   return rows;

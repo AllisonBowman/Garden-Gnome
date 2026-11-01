@@ -19,6 +19,13 @@ export type FertilizeStrength = 'full' | 'half' | 'quarter';
 /** The outdoor duration scale, kept apart from indoor light intensity — there
  *  is no honest mapping from hours of sun to a room's light level. */
 export type OutdoorSunExposure = 'full_sun' | 'part_sun' | 'part_shade' | 'full_shade';
+/** A part of a plant a source can name as eaten (0023, ADR 0011). A fixed
+ *  vocabulary, so every row says "leaves" the same way and a list can group
+ *  by it: tubers, bulbs, corms and rhizomes are roots; nuts, grain, beans
+ *  and peas are seeds; pods and berries are fruit. The condition on eating a
+ *  part is never in the token; it travels in `Species.eating`. A screen
+ *  names a part through `growingAreas/eating.ts`, never raw. */
+export type EatenPart = 'leaves' | 'fruit' | 'seeds' | 'roots' | 'flowers' | 'stems';
 /** How well-backed a species' care values are: at least one value cited to
  *  the species itself, every value borrowed from its genus, or nothing. A
  *  property of the data, deliberately not the review workflow's status. */
@@ -155,6 +162,19 @@ export interface Species {
    *  with its conditions or not at all. Absent from a server that predates
    *  it, which reads as null. */
   edibility_note?: string | null;
+  /** The parts a source names as eaten (0023, ADR 0011). Harm-capable, so
+   *  cited to this species or absent, never borrowed from its genus. Null is
+   *  "no source names a part", never "nothing on it is eaten". Absent from a
+   *  server that predates it, which reads as null. */
+  eaten_parts?: EatenPart[] | null;
+  /** What is eaten, in one line the server writes: the parts, the condition
+   *  a source puts on eating them, and the hazards recorded beside them.
+   *  Shown whole wherever it appears and never cut for space, because the
+   *  part without its condition is a different claim ("fruit" is not "ripe
+   *  fruit"). Where it is set it replaces "grown to eat". Null when no source
+   *  names a part; absent from a server that predates it, which reads as
+   *  null. */
+  eating?: string | null;
   attracts_pollinators?: boolean | null;
   /** A climber (0020): its mature height is reach given support, not stature. */
   climbs?: boolean | null;
