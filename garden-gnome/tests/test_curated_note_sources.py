@@ -45,9 +45,13 @@ MIN_QUOTE_WORDS = 6
 #: words tests/test_curated_notes.py refuses are refused here too, by claims().
 OFF_SUBJECT = re.compile(
     r"\b(?:pets?|cats?|dogs?|child(?:ren)?|kids?|bab(?:y|ies)|animals?"
-    r"|livestock|horses?|eat(?:s|en|ing)?|food|medicine|remedy|tea|sweetener"
-    r"|cures?)\b",
+    r"|livestock|horses?|eat(?:s|en|ing)?|foods?|medicines?|remed(?:y|ies)|teas?"
+    r"|sweeteners?|cures?)\b",
     re.I)
+
+#: A watering interval in days is the one number a care note never gives. The
+#: schedule card carries cadence, from the record; a note states a habit.
+INTERVAL = re.compile(r"\bevery\s+\d+(?:\s+to\s+\d+)?\s+days?\b", re.I)
 
 #: Scientific name -> the exact note species_catalog.json holds. An edit here
 #: has to come with the same edit to curated_note_sources.json.
@@ -316,6 +320,8 @@ def test_every_quote_is_in_the_species_own_record(name, traced, citations):
         assert sentence["source"] in sources
         whole = any(quote == c.get("quote") for c in at_url)
         assert whole or len(quote.split()) >= MIN_QUOTE_WORDS, quote
+    quotes = [s["quote"] for s in traced[name]["sentences"]]
+    assert len(set(quotes)) == len(quotes), "two sentences rest on one quote part"
 
 
 @pytest.mark.parametrize("name", sorted(PINNED))
@@ -332,7 +338,10 @@ def test_every_note_has_the_shape_the_page_expects(name, traced):
     assert 40 <= len(note.split()) <= 90
     assert note.endswith(".")
     assert "\n" not in note and "  " not in note
-    assert not set("—;()") & set(note)
+    assert not set("—;()/=~!") & set(note)
+    for sentence in traced[name]["sentences"]:
+        assert len(sentence["text"].split()) < 20, sentence["text"]
+    assert not INTERVAL.search(note), note
 
 
 def _before(tmp_path: Path) -> Path:
@@ -350,6 +359,19 @@ def _before(tmp_path: Path) -> Path:
     path = tmp_path / f"species_catalog_{BEFORE}.json"
     path.write_bytes(shown.stdout)
     return path
+
+
+def test_only_the_pinned_notes_moved_from_the_ship_tip(catalog_notes, tmp_path):
+    """A note outside PINNED has no trace, so none may have changed since BEFORE.
+
+    This is what keeps a held-back draft out of the catalog: the species held
+    back keep the text the ship tip gave them. Skips on CI's one-commit
+    checkout, like the boot test below.
+    """
+    shown = json.loads(_before(tmp_path).read_text(encoding="utf-8"))
+    before = {e["species"]["scientific_name"]: e["species"]["care_notes"] for e in shown}
+    moved = {name for name, text in catalog_notes.items() if before.get(name) != text}
+    assert moved == set(PINNED), sorted(moved ^ set(PINNED))
 
 
 def _boot_onto_the_pinned_notes(boot, older: Path):  # noqa: F811
