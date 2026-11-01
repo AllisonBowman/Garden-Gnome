@@ -114,6 +114,13 @@ PINNED = {
         "Support it if excess water or extra shade makes it lanky and floppy, and shelter it from strong wind. "
         "Outdoors, sow seed directly in early spring, once nights are above 45°F."
     ),
+    "Petroselinum crispum": (
+        "Parsley is an herb that does well in containers. "
+        "It can grow indoors on a bright windowsill, or outdoors in the ground or in pots. "
+        "Keep the soil moist but never soggy. "
+        "In the ground, give parsley fertile soil that holds moisture. "
+        "If potted parsley needs a boost, try a balanced, organic-based liquid fertilizer in the growing season."
+    ),
     "Nepeta cataria": (
         "This plant can turn weedy, so think about growing it in a container. "
         "It grows in full sun with at least 6 hours of direct sunlight a day. "
