@@ -176,6 +176,12 @@ PINNED = {
         "Give it full sun, with at least 6 hours of direct sunlight each day. "
         "Keep cutting off spent flowers, and it can bloom for most of the season."
     ),
+    "Echinacea purpurea": (
+        "Coneflower is a long-blooming plant for borders or groupings in pollinator gardens, meadows, and naturalized areas. "
+        "It grows in full sun with at least 6 hours of direct sunlight a day. "
+        "It also grows in partial shade with 2 to 6 hours of direct sun. "
+        "Plant it in well-drained soil that can be moist or occasionally dry."
+    ),
     "Coreopsis lanceolata": (
         "Lanceleaf coreopsis is a daisy-family wildflower of prairies and fields. "
         "Give it direct sun, 6 or more hours a day, or 2 to 6 hours in part shade. "
