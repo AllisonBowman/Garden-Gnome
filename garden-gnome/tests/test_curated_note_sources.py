@@ -152,6 +152,11 @@ PINNED = {
         "Grow it in full sun, with at least 6 hours of direct sunlight each day. "
         "Plant it in loam or a soil rich in organic matter, with good drainage."
     ),
+    "Gaillardia x grandiflora": (
+        "Grow blanket flower at the front of a border, in containers, on a patio, or along a walkway. "
+        "Give it full sun, with at least 6 hours of direct sunlight each day. "
+        "Keep cutting off spent flowers, and it can bloom for most of the season."
+    ),
     "Rudbeckia fulgida": (
         "Orange coneflower is grown in perennial beds, borders and naturalized areas. "
         "Give it full sun if you can, though it tolerates partial shade. "
