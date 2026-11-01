@@ -152,6 +152,13 @@ PINNED = {
         "Grow it in full sun, with at least 6 hours of direct sunlight each day. "
         "Plant it in loam or a soil rich in organic matter, with good drainage."
     ),
+    "Rudbeckia fulgida": (
+        "Orange coneflower is grown in perennial beds, borders and naturalized areas. "
+        "Give it full sun if you can, though it tolerates partial shade. "
+        "Plant it in humus-rich soil that holds moisture but drains well. "
+        "That said, it does fine in any soil that is not soggy. "
+        "Once it is established, it can handle drought."
+    ),
 }
 
 
