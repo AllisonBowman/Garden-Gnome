@@ -157,6 +157,13 @@ PINNED = {
         "Give it full sun, with at least 6 hours of direct sunlight each day. "
         "Keep cutting off spent flowers, and it can bloom for most of the season."
     ),
+    "Coreopsis lanceolata": (
+        "Lanceleaf coreopsis is a daisy-family wildflower of prairies and fields. "
+        "Give it direct sun, 6 or more hours a day, or 2 to 6 hours in part shade. "
+        "Plant it in soil that drains well. "
+        "Take care not to overwater it. "
+        "Feeding is optional, but if you feed it, use a low rate of controlled-release fertilizer."
+    ),
     "Rudbeckia fulgida": (
         "Orange coneflower is grown in perennial beds, borders and naturalized areas. "
         "Give it full sun if you can, though it tolerates partial shade. "
