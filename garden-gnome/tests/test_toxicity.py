@@ -777,6 +777,25 @@ def test_an_invasive_species_tag_is_never_put_forward():
     assert not tx.read_evidence("It is not an invasive species here.").invasive
 
 
+def test_a_weed_listing_on_any_field_is_read_and_a_denial_is_not():
+    """A size citation that calls the tree invasive is still the source
+    saying so (ADR 0011): the two listings are read from every quote cited
+    about the species, and only those two. A denial stays a denial."""
+    evidence = tx.read_evidence(None, [], [
+        "Callery pear is a large, dense, pyramidal tree listed as a noxious weed "
+        "in several states.", "Height: 30 ft. 0 in. - 50 ft. 0 in."])
+    assert evidence.noxious and not evidence.invasive
+    assert tx.never_put_forward(tx.from_legacy(None, "Pyrus calleryana",
+                                               evidence=evidence), evidence)
+    tagged = tx.read_evidence(None, [], ["This plant is an invasive species in North Carolina"])
+    assert tagged.invasive
+    denied = tx.read_evidence(None, [], ["It is not an invasive species here."])
+    assert not denied.invasive and not denied.noxious
+    # Nothing else is read off those quotes: no rating, no people, no eating.
+    hazard = tx.read_evidence(None, [], ["Poison Severity: High. Poisonous to Humans."])
+    assert not hazard.people and hazard.rating == ""
+
+
 # --- edibility ---------------------------------------------------------------
 
 def test_edible_and_poisonous_gets_a_note():

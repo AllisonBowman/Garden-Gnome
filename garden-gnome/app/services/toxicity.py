@@ -582,12 +582,17 @@ def _invasive(text: str) -> bool:
     return any(not _negated(text, m.start()) for m in _INVASIVE_RE.finditer(text or ""))
 
 
-def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
+def read_evidence(detail: str | None, passages: Iterable[Any] = (),
+                  other_quotes: Iterable[str] = ()) -> Evidence:
     """The facts the cited passages state about harm to people and eating.
 
     `detail` is the row's `toxicity_detail`; `passages` are the claim
     passages on the safety fields (`claims.store.Passage`, or anything with
-    `field`, `value`, `quote` and `authority`)."""
+    `field`, `value`, `quote` and `authority`). `other_quotes` are the quotes
+    cited about the species on every other field, read for the two listings
+    that keep a plant off candidate lists, a noxious weed or an invasive
+    species, and for nothing else (ADR 0011): a size citation that says the
+    tree is invasive is still the source saying so."""
     people = grave = noxious = limited = False
     pets_grave = invasive = conditional = False
     how = ""
@@ -634,6 +639,10 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
                     how = how or _how_of(quote)
                 elif _EDIBLE_HAZARD_RE.search(quote):
                     limited = True
+        noxious = noxious or _noxious(quote)
+        invasive = invasive or _invasive(quote)
+
+    for quote in other_quotes:
         noxious = noxious or _noxious(quote)
         invasive = invasive or _invasive(quote)
 
@@ -1181,10 +1190,30 @@ def _passages_for(species: Any) -> list:
         return []
 
 
+def _weed_quotes_for(species: Any) -> list[str]:
+    """The species' own cited quotes naming it a noxious weed or an invasive
+    species, on any field, when it sits in a session; none otherwise."""
+    try:
+        from sqlalchemy.exc import SQLAlchemyError
+        from sqlalchemy.orm import object_session
+        session = object_session(species)
+    except Exception:  # not a mapped instance
+        return []
+    if session is None:
+        return []
+    from app.data.claims.store import weed_quotes
+    subject = (getattr(species, "scientific_name_accepted", None)
+               or getattr(species, "scientific_name", "") or "")
+    try:
+        return weed_quotes(session, subject)
+    except SQLAlchemyError:
+        return []
+
+
 def safety_of(species: Any) -> Safety:
     """The toxicity record and the evidence behind it, for a catalog row."""
     evidence = read_evidence(getattr(species, "toxicity_detail", None),
-                             _passages_for(species))
+                             _passages_for(species), _weed_quotes_for(species))
     tox = from_legacy(
         species.toxic_to_pets, species.scientific_name,
         cited_to=cited_authority(species.care_provenance, species.care_sources),

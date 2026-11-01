@@ -398,7 +398,10 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # + 61 (b134).
     # + 2 (2026-10-17: foxglove and monkshood regain a toxicity_detail, NC State's
     #      Poisonous to Humans block; English yew and jimsonweed already had one).
-    assert report.claims_written == 10681
+    # + 16 (ADR 0011: every vetted citation whose quote lists the plant as a
+    # noxious weed or an invasive species is stored as a weed_listing claim,
+    # whatever field it was filed under) = 10697.
+    assert report.claims_written == 10697
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

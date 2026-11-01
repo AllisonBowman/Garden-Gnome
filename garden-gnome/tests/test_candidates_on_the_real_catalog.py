@@ -32,6 +32,21 @@ CROPS = {
 #: State with only its ripe fruit eaten; the two Asian wisterias are tagged
 #: invasive species on NC State's own pages.
 NEVER = {"Podophyllum peltatum", "Wisteria floribunda", "Wisteria sinensis"}
+#: Kept off every list by a source's own listing, read from every vetted
+#: citation about the species and not only the safety ones (tranche.
+#: WEED_FIELD, ADR 0011): the phrase "invasive species" or "noxious weed" in
+#: a quote about this plant. Before that read, only the five whose tag sat
+#: under the pet flag's citation were caught. A new name here is a data
+#: change; a missing one means a record lost its citation. Canna indica is
+#: here on a sentence calling it an invasive species in Australia, which the
+#: rule reads like any other listing; narrowing that is a product decision.
+WEEDS = {
+    "Berberis bealei", "Buddleja davidii", "Canna indica", "Hedera helix",
+    "Ligustrum japonicum", "Miscanthus sinensis", "Nandina domestica",
+    "Perilla frutescens", "Solanum dulcamara", "Tradescantia fluminensis",
+    "Wisteria floribunda", "Wisteria sinensis",
+    "Pistia stratiotes", "Pyrus calleryana",
+}
 
 
 @pytest.fixture(scope="module")
@@ -123,3 +138,20 @@ def test_taro_is_not_a_crop_the_exception_knows_and_is_rated_medium(catalog):
     assert safety.evidence.edibility_conditional
     assert safety.evidence.rating == "medium"
     assert not never_put_forward(safety.toxicity, safety.evidence)
+
+
+def test_a_weed_listing_on_any_cited_field_keeps_exactly_these_off_every_list(catalog):
+    """Across the whole tranche: the species a vetted source lists as an
+    invasive species or a noxious weed, on whatever field the citation was
+    filed under, and none of them is ever put forward."""
+    listed = set()
+    for name, sp in _species(catalog).items():
+        safety = safety_of(sp)
+        if safety.evidence.invasive or safety.evidence.noxious:
+            listed.add(name)
+            assert fit.never_a_candidate(sp), name
+    assert listed == WEEDS, listed ^ WEEDS
+    offered: set[str] = set()
+    for area in _beds(None):
+        offered |= _candidate_names(catalog, area)
+    assert not WEEDS & offered, WEEDS & offered

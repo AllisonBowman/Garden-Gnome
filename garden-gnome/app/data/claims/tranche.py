@@ -9,6 +9,7 @@ supports ("humidity_need low", "water_regime dry_thoroughly_between;
 water_dormant_days_est 45"), and some cite a range once for a pair of columns
 ("day_f 70-85" covers day_f_min and day_f_max), which is what STEMS handles.
 """
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -33,6 +34,17 @@ COMPANIONS = {
     "toxicity_detail": "toxic_to_pets",
     "water_dry_down_target": "water_regime",
 }
+
+# A listing that keeps a plant off every candidate list -- a noxious weed, an
+# invasive species (toxicity.never_put_forward, ADR 0009) -- is evidence
+# wherever the researcher filed the citation that holds it: NC State's tag
+# sits under the pet flag, but a source's sentence on invasiveness is as often
+# behind a name note or a size, and those never became claims. So any vetted
+# citation whose quote holds one of the two phrases is stored as a claim of
+# its own on this field (ADR 0011). No column takes it (it is not in
+# recompute.RESOLVED_FIELDS); the safety code reads the quotes back.
+WEED_FIELD = "weed_listing"
+WEED_RE = re.compile(r"\bnoxious weed|\binvasive species\b", re.I)
 
 # A citation may name the stem once and thereby support both columns.
 STEMS = {
@@ -120,4 +132,15 @@ def claims_from_record(record: dict) -> tuple[list[ExtractedClaim], list[str]]:
             citation_url=support.get("url", ""),
             quote=support.get("quote", ""),
         ))
+
+    for c in citations:
+        if not WEED_RE.search(c.get("quote") or ""):
+            continue
+        authority = authority_for(c.get("url"), c.get("source", ""))
+        if authority is None or not authority_may_claim(authority.name, WEED_FIELD):
+            continue
+        claims.append(ExtractedClaim(
+            subject=subject, field=WEED_FIELD, value=True, authority=authority,
+            citation_title=c.get("source", ""), citation_url=c.get("url", ""),
+            quote=c.get("quote", "")))
     return claims, unsupported

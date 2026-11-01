@@ -16,6 +16,7 @@ from app.models.models import Authority as AuthorityRow
 from app.models.models import Claim as ClaimRow
 
 from .resolve import Authority, Claim, Resolution, genus_of, resolve
+from .tranche import WEED_FIELD
 
 #: The fields whose cited passages say what a plant does to whoever eats or
 #: handles it. NC State files its poison block -- severity, symptoms, the
@@ -24,6 +25,14 @@ from .resolve import Authority, Claim, Resolution, genus_of, resolve
 #: caretaker most needs about people sit in these quotes and nowhere else.
 SAFETY_FIELDS = ("toxic_to_pets", "toxicity_detail", "is_edible")
 _SAFETY_CACHE_KEY = "claims.safety_passages"
+
+#: The two listings that keep a species off every candidate list
+#: (toxicity.never_put_forward) are stored as claims of their own at ingest,
+#: from every vetted citation that holds the phrase (tranche.WEED_FIELD, ADR
+#: 0011), so the safety code reads them here without opening the tranche
+#: files. Species scope only, as with the safety passages: a genus page does
+#: not list this plant. Only those quotes are cached, so the cache is small.
+_WEED_CACHE_KEY = "claims.weed_quotes"
 
 
 @dataclass(frozen=True)
@@ -59,6 +68,22 @@ def _load_safety_passages(session: Session) -> dict[str, list[Passage]]:
     return cache
 
 
+def _load_weed_quotes(session: Session) -> dict[str, list[str]]:
+    cache: dict[str, list[str]] = {}
+    rows = session.exec(
+        select(ClaimRow, AuthorityRow)
+        .join(AuthorityRow, ClaimRow.authority_id == AuthorityRow.id)  # type: ignore[arg-type]
+        .where(ClaimRow.field == WEED_FIELD)  # type: ignore[attr-defined]
+    ).all()
+    for claim_row, authority in rows:
+        if (authority.allowed_fields is not None
+                and claim_row.field not in authority.allowed_fields):
+            continue
+        if claim_row.quote:
+            cache.setdefault(claim_row.subject, []).append(claim_row.quote)
+    return cache
+
+
 def _claims_key(session: Session) -> tuple:
     """Changes whenever the safety passages can have: the catalog generation
     (a fresh token on every ORM write to a claim or an authority, in any
@@ -77,6 +102,8 @@ def _claims_key(session: Session) -> tuple:
 #: claims, 4 MB of Passage objects -- for a single species.
 _shared: tuple[tuple, dict[str, list[Passage]]] | None = None
 _shared_lock = threading.Lock()
+#: The weed quotes, the same way: one scan of every quote per catalog version.
+_shared_weeds: tuple[tuple, dict[str, list[str]]] | None = None
 
 
 def _shared_passages(session: Session) -> dict[str, list[Passage]]:
@@ -92,6 +119,32 @@ def _shared_passages(session: Session) -> dict[str, list[Passage]]:
         passages = _load_safety_passages(session)
         _shared = (key, passages)
         return passages
+
+
+def _shared_weed_quotes(session: Session) -> dict[str, list[str]]:
+    global _shared_weeds
+    key = _claims_key(session)
+    held = _shared_weeds
+    if held is not None and held[0] == key:
+        return held[1]
+    with _shared_lock:
+        held = _shared_weeds
+        if held is not None and held[0] == key:
+            return held[1]
+        quotes = _load_weed_quotes(session)
+        _shared_weeds = (key, quotes)
+        return quotes
+
+
+def weed_quotes(session: Session, subject: str) -> list[str]:
+    """Every cited quote about `subject` itself that names it a noxious weed
+    or an invasive species, whatever field it was filed under. Cached like
+    `safety_passages`, and forgotten with them."""
+    cache = session.info.get(_WEED_CACHE_KEY)
+    if cache is None:
+        cache = _shared_weed_quotes(session)
+        session.info[_WEED_CACHE_KEY] = cache
+    return cache.get(subject, [])
 
 
 def safety_passages(session: Session, subject: str) -> list[Passage]:
@@ -116,8 +169,10 @@ def safety_passages(session: Session, subject: str) -> list[Passage]:
 
 
 def forget_safety_passages(session: Session) -> None:
-    """Drop the cached passages, so the next read sees the claims as stored."""
+    """Drop the cached passages, and the weed quotes with them, so the next
+    read sees the claims as stored."""
     session.info.pop(_SAFETY_CACHE_KEY, None)
+    session.info.pop(_WEED_CACHE_KEY, None)
 
 
 def _to_claim(row: ClaimRow, authority: AuthorityRow) -> Claim:
