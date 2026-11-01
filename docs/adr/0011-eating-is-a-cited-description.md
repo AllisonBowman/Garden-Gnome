@@ -1,0 +1,31 @@
+# Eating is a cited description, by part, and not a verdict
+
+Status: accepted 2026-11-01, on Allison's direction that the edibles-versus-non-edibles line on the candidate lists was unclear and a different categorization would be good. Extends ADR 0008 and ADR 0009. Built on branch `candidate-categorization-proposal` for 1.1.4; not in 1.1.3.
+
+## Context
+
+A growing area can ask for "Something to eat". The fit rule answered from one boolean, `is_edible`, and the sentence of conditions derived beside it: a species recorded as eaten with no note fit, "Grown to eat"; one with a note sat as unknown with the note; one recorded as not eaten was a misfit, "Not grown to eat, and you asked for edibles". On the seeded catalog of 997 species, with the goal ticked, 183 fit, 105 were held as unknown by a note, 155 were misfits and 509 had no record.
+
+The note, not the eating, decided the side a plant landed on. Every food crop the toxicity table knows, tomato and potato among them, was unknown, because a crop always carries a note. Chives, oregano, catnip and lemongrass were unknown because a source flags them for pets, while basil and dill fit; the note's own docstring says a pet hazard "is a reason to keep scraps from the dog, not to doubt the orange", and the fit rule doubted it. Mint, parsley and lavender were unknown for a low-severity caution and shared a bucket with monstera. Taro, eaten only after cooking, was unknown. And "not grown to eat" was not an ornamental category: of the 190 records that say a plant is not eaten, 183 say it because a source calls the plant poisonous, which the hazard sentence on the same row already said.
+
+The records cannot carry a role scheme. Nothing cited names a plant type, a life cycle or a habit, so "ornamental", "vegetable" or "herb" would be the app's own opinion on every row. What the records do say about eating is specific: 266 of the 293 records that say the plant is eaten quote the part, and the same passages carry the conditions.
+
+## Decision
+
+Eating stops being a verdict and becomes a cited description: what part is eaten, with what condition, and what is recorded beside it.
+
+- A species row carries `eaten_parts`, the parts a source names as eaten, from a fixed vocabulary: leaves, fruit, seeds, roots, flowers, stems (`models.EatenPart`). Tubers, bulbs, corms and rhizomes are roots; nuts, grain, beans and peas are seeds; pods and berries are fruit. It is minted from the edibility passages the records already quote, by a script that fetches no page, and written only where two independent readers agreed with the passage (`docs/2026-11-01-eaten-parts-audit.md`). Each written record carries a citation naming the field on the same quote.
+- `eaten_parts` is harm-capable (ADR 0008): it never borrows from the genus and never resolves through a disagreement. One claim per record, so no disagreement arises from one source naming fewer parts than another. The resolver version moves to 7 and migration 0023 adds the column.
+- One line, `eating`, says the parts with the condition the passage puts on eating them and the hazards recorded beside them: "Roots are eaten, only after cooking. It is also recorded as poisonous to people. Check the source before eating any of it." The part and its condition travel together on every row, never cut for space, because "fruit" without "ripe" is a different claim. A food crop the toxicity table knows is named by the table's eaten part where its record names none, as ADR 0009 already names it, and its line is the table's own.
+- The eat goal fits a species whose source names a part, with that line as the finding, and is unknown for every other species, never a misfit: the hazard sentence already says what a source calls poisonous, and a preference is not the place to repeat it. When a bed asks for something to eat, its candidate list holds only species with an eaten part, grouped by the part on the phone, and the endpoint counts the species that suit the space but have no eating record, so the list can say so instead of carrying them under a caveat that the wish went unanswered.
+- The people's-severity rule, the crop exemption and its pinned set are unchanged. A species a source lists as a noxious weed or an invasive species is never put forward, as before, and that listing is now read from every vetted citation about the species rather than from the safety passages alone, because a source's sentence on invasiveness is as often filed behind a name note or a size. Ingest stores every such citation as a `weed_listing` claim of its own, species-scoped, and the seeded-catalog test pins the fourteen names it keeps off.
+
+## Consequences
+
+On the seeded catalog, 257 species rows carry eaten parts: fruit 105, leaves 99, flowers 68, seeds 42, roots 29, stems 25, with 79 named for more than one part. Taro reads "Roots are eaten, only after cooking" with its hazards; chives and mint are on the eat list with the line to keep scraps from the dog; tomato and potato are on it by the table's words. Thirty-five species recorded as eaten stay without a part, because their passage names none, the readers refused the proposal, or the readers split; the audit lists each with the reason, and a research pass that cites a source's own line on the part can fill them.
+
+Nine more species are kept off every candidate list than before: butterfly bush, Indian shot, Japanese privet, maiden grass, heavenly bamboo, bittersweet nightshade, small-leaf spiderwort, water lettuce and Bradford pear. Indian shot is listed on a sentence calling it an invasive species in Australia, which the rule reads like any other listing; narrowing the read to the plant's own region is a separate decision.
+
+The "Not grown to eat" misfit is gone, so a plant already standing in a bed that asked for food is no longer told to be addressed for not being food. The catalog fingerprint changes with the batch files and the resolver version, so this rides a catalog sync and a Fly deploy; phones read the parts and the line from the API and need no build for the data, and the 1.1.4 build groups the list and shows the line.
+
+What this does not change: the surfaces, the sun, soil, size and upkeep axes, the low-upkeep and pollinator goals, the hazard sentence, the toxicity tables, and 1.1.3 as it ships.
