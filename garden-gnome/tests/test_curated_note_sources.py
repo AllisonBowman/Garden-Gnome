@@ -133,6 +133,13 @@ PINNED = {
         "It grows best in well-drained, light soil that is moderately fertile. "
         "Feed it with a balanced fertilizer to support fast growth and heavy blooming."
     ),
+    "Salvia splendens": (
+        "Annual salvia is a bedding plant. "
+        "A spot with morning sun and midafternoon shade suits it. "
+        "The soil should drain very well, so use raised beds or work compost into heavy ground. "
+        "Water during dry spells. "
+        "Pinch back the young shoots to encourage bushier growth."
+    ),
     "Zinnia elegans": (
         "Zinnia is an upright flowering annual from Mexico, in the aster family. "
         "Grow it in full sun, with at least 6 hours of direct sunlight each day. "
