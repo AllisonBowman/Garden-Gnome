@@ -23,6 +23,7 @@ import pytest
 
 from app.data.claims.sync import binomial_key
 from app.models.models import (
+    EatenPart,
     FertilizeStrength, HumidityNeed, OutdoorSunExposure, SoilBase,
     SoilDrainage, WaterRegime)
 
@@ -42,7 +43,7 @@ TRANCHE_FIELDS = frozenset({
     "water_regime", "water_dry_down_target", "water_check_depth_cm",
     "water_growing_days_est", "water_dormant_days_est", "water_estimate_basis",
     "fertilize_interval_days", "fertilize_active_months", "fertilize_strength",
-    "is_edible", "attracts_pollinators", "climbs",
+    "is_edible", "attracts_pollinators", "climbs", "eaten_parts",
     "mature_height_in_min", "mature_height_in_max",
     "mature_spread_in_min", "mature_spread_in_max",
     "unknowns", "citations",
@@ -59,6 +60,9 @@ ENUM_FIELDS = {
 # `outdoor_sun_exposure` is declared list[str] on the model, so the enum is
 # not enforced at the column -- which is exactly why it has to be here.
 SUN_EXPOSURE = {e.value for e in OutdoorSunExposure}
+# The same for `eaten_parts` (0023): a list of EatenPart tokens, only on a
+# record that says the plant is eaten, with a citation that names the field.
+EATEN_PARTS = {e.value for e in EatenPart}
 
 
 def _batches():
@@ -84,6 +88,20 @@ def test_enum_columns_hold_a_token_not_prose(batch, record):
             f"{_label(batch, record)}: {field}={value!r} is not one of "
             f"{sorted(allowed)} -- recompute would write this straight into "
             f"the column")
+
+
+@pytest.mark.parametrize("batch,record", list(_records()), ids=lambda x: x if isinstance(x, str) else "")
+def test_eaten_parts_is_a_list_of_known_tokens_on_a_plant_recorded_as_eaten(batch, record):
+    value = record.get("eaten_parts")
+    if value is None:
+        return
+    assert isinstance(value, list) and value, _label(batch, record)
+    assert set(value) <= EATEN_PARTS, f"{_label(batch, record)}: eaten_parts={value!r}"
+    assert len(set(value)) == len(value), f"{_label(batch, record)}: a part twice"
+    assert record.get("is_edible") is True, (
+        f"{_label(batch, record)}: eaten_parts on a record not recorded as eaten")
+    assert any("eaten_parts" in (c.get("claim") or "") for c in record.get("citations") or []), (
+        f"{_label(batch, record)}: no citation names eaten_parts")
 
 
 @pytest.mark.parametrize("batch,record", list(_records()), ids=lambda x: x if isinstance(x, str) else "")

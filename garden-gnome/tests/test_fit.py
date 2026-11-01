@@ -319,12 +319,20 @@ def test_a_drought_tolerant_species_fits_a_low_upkeep_wish():
 # --- goals -----------------------------------------------------------------
 
 def test_a_goal_narrows_and_never_loosens():
+    """Without the goal the eating field is not consulted. With it, a species
+    no source records a part of as eaten is unknown there, never a misfit:
+    the hazard sentence on the same row already says what a source calls
+    poisonous, and a preference is not the place to repeat it (ADR 0011).
+    The narrowing happens at the list: see the left-off test below."""
     inedible = make_species(is_edible=False)
     plain = make_area(**OUTDOOR_BED)
-    # Without the goal the field is not consulted at all.
     assert not any(f.axis == Axis.goal for f in fit.assess(inedible, plain))
     asked = make_area(**OUTDOOR_BED, goals=[GrowingGoal.edible.value])
-    assert verdict_on(fit.assess(inedible, asked), Axis.goal) == Verdict.misfits
+    goal = next(f for f in fit.assess(inedible, asked) if f.axis == Axis.goal)
+    assert goal.verdict == Verdict.unknown
+    assert goal.goal == "edible"
+    assert goal.sentence == "No source names a part of this plant that is eaten."
+    assert goal.authorities == ()
 
 
 def test_an_unrecorded_goal_is_unknown_not_a_refusal():
@@ -348,23 +356,52 @@ def test_an_area_asked_and_answered_nothing_gets_no_goal_findings():
     assert not any(x.axis == Axis.goal for x in f)
 
 
-def test_edible_with_a_condition_is_not_a_confirmed_edible():
-    """Mayapple, taro and wisteria were confirmed "Grown to eat." in a bed
-    whose gardener asked for food. Eaten only cooked, or only in part, or
-    also poisonous, is not a confirmed edible: the finding is an unknown
-    and carries the condition instead."""
+def test_an_eaten_part_is_a_confirmed_fit_with_its_condition_on_the_line():
+    """Taro, chives and tomato used to sit as unknown on the eat goal because
+    each carries a note. A source naming the part that is eaten is the fit,
+    and the line carries the condition and the hazards beside it, every time
+    (ADR 0011)."""
     area = make_area(**OUTDOOR_BED, goals=[GrowingGoal.edible.value])
-    toxic_edible = make_species(is_edible=True, toxic_to_pets=True,
-                                is_houseplant=False)
-    goal = next(f for f in fit.assess(toxic_edible, area) if f.axis == Axis.goal)
-    assert goal.verdict == Verdict.unknown
+    chives = make_species(is_edible=True, toxic_to_pets=True, is_houseplant=False,
+                          eaten_parts=["leaves"])
+    goal = next(f for f in fit.assess(chives, area) if f.axis == Axis.goal)
+    assert goal.verdict == Verdict.fits
     assert goal.goal == "edible"
-    assert goal.sentence == toxic_edible.edibility_note
+    assert goal.sentence == chives.eating
+    assert goal.sentence.startswith("Leaves are eaten.")
+    assert "keep scraps" in goal.sentence
     assert "Grown to eat" not in goal.sentence
 
-    plain_edible = make_species(is_edible=True, is_houseplant=False)
-    goal = next(f for f in fit.assess(plain_edible, area) if f.axis == Axis.goal)
-    assert (goal.verdict, goal.sentence) == (Verdict.fits, "Grown to eat.")
+    # Recorded as eaten with no part named: unknown, neither a fit nor a misfit.
+    partless = make_species(is_edible=True, is_houseplant=False)
+    goal = next(f for f in fit.assess(partless, area) if f.axis == Axis.goal)
+    assert goal.verdict == Verdict.unknown
+
+
+def test_asking_for_something_to_eat_leaves_off_what_no_source_records_as_eaten():
+    """The goal narrows at the list: with it, only species a source records
+    a part of as eaten are candidates, and the rest are counted so the list
+    can say how many suit the space but have no eating record."""
+    eaten = make_species(scientific_name="Ocimum basilicum", common_name="Basil",
+                         is_houseplant=False, is_edible=True, eaten_parts=["leaves"])
+    unrecorded = make_species(scientific_name="Hosta sieboldiana", common_name="Hosta",
+                              is_houseplant=False)
+    asked = make_area(**OUTDOOR_BED, goals=[GrowingGoal.edible.value])
+    names = [c.species.scientific_name for c in fit.candidates([eaten, unrecorded], asked)]
+    assert names == ["Ocimum basilicum"]
+    assert fit.left_off_for_eating([eaten, unrecorded], asked) == 1
+
+    plain = make_area(**OUTDOOR_BED)
+    assert len(fit.candidates([eaten, unrecorded], plain)) == 2
+    assert fit.left_off_for_eating([eaten, unrecorded], plain) == 0
+
+    # A misfit elsewhere still disqualifies, eaten or not.
+    indoors = make_area(temp_exposure=TempExposure.indoor, shelter=Shelter.sheltered,
+                        sun_exposure=SunExposure.partial_sun,
+                        surface=GrowingSurface.windowsill,
+                        goals=[GrowingGoal.edible.value])
+    assert fit.candidates([eaten], indoors) == []
+    assert fit.left_off_for_eating([eaten], indoors) == 0
 
 
 def test_a_high_severity_poison_is_never_a_candidate_however_well_it_fits():
@@ -489,7 +526,7 @@ def test_every_axis_reads_an_enum_row_the_same_as_a_string_row():
     as_strings = fit.assess(
         make_species(is_houseplant=False, outdoor_sun_exposure=["full_sun"],
                      soil_base="garden_bed", water_regime="dry_thoroughly_between",
-                     is_edible=True),
+                     is_edible=True, eaten_parts=["leaves"]),
         make_area(temp_exposure="outdoor", shelter="exposed",
                   sun_exposure="full_sun", surface="raised_bed",
                   goals=["low_upkeep", "edible"]))
@@ -498,7 +535,7 @@ def test_every_axis_reads_an_enum_row_the_same_as_a_string_row():
                      outdoor_sun_exposure=[OutdoorSunExposure.full_sun],
                      soil_base=SoilBase.garden_bed,
                      water_regime=WaterRegime.dry_thoroughly_between,
-                     is_edible=True),
+                     is_edible=True, eaten_parts=["leaves"]),
         make_area(temp_exposure=TempExposure.outdoor, shelter=Shelter.exposed,
                   sun_exposure=SunExposure.full_sun,
                   surface=GrowingSurface.raised_bed,
@@ -677,7 +714,7 @@ def test_each_goal_finding_says_which_goal_it_answers():
     was checked for edibility" has to be able to tell them apart."""
     area = make_area(**OUTDOOR_BED, goals=["edible", "pollinators", "low_upkeep"])
     findings = fit.assess(
-        make_species(is_edible=True, attracts_pollinators=None,
+        make_species(is_edible=True, eaten_parts=["leaves"], attracts_pollinators=None,
                      water_regime="keep_moist"), area)
     by_goal = {f.goal: f for f in findings if f.goal}
     assert by_goal["edible"].verdict == Verdict.fits

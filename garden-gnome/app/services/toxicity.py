@@ -493,6 +493,10 @@ class Evidence:
     #: eaten part itself (cooked, ripe, in small amounts), rather than only
     #: saying the rest of the plant is not eaten.
     edibility_conditional: bool = False
+    #: Which condition, when `edibility_conditional`: "cooked", "small_amounts",
+    #: "ripe", or "other" for a condition the words do not sort. The eating
+    #: line says it in the caretaker's words (`eating_line`).
+    edibility_how: str = ""
 
 
 _RATING_RANK = {"low": 1, "medium": 2, "moderate": 2, "high": 3}
@@ -586,6 +590,7 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
     `field`, `value`, `quote` and `authority`)."""
     people = grave = noxious = limited = False
     pets_grave = invasive = conditional = False
+    how = ""
     best_rank, best, best_by = 0, "", ""
 
     def rate(levels: list[str], by: str) -> None:
@@ -626,6 +631,7 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
             if getattr(p, "value", None) is True:
                 if _EDIBLE_CONDITION_RE.search(quote):
                     limited = conditional = True
+                    how = how or _how_of(quote)
                 elif _EDIBLE_HAZARD_RE.search(quote):
                     limited = True
         noxious = noxious or _noxious(quote)
@@ -634,7 +640,29 @@ def read_evidence(detail: str | None, passages: Iterable[Any] = ()) -> Evidence:
     return Evidence(people=people, rating=best, rated_by=best_by, grave=grave,
                     noxious=noxious, edibility_limited=limited,
                     animals_grave=pets_grave, invasive=invasive,
-                    edibility_conditional=conditional)
+                    edibility_conditional=conditional, edibility_how=how)
+
+
+#: Which condition an edibility passage puts on the eaten part, in the order
+#: the caretaker needs them: a plant that must be cooked is cooked whatever
+#: else is said of it; a limit on quantity outranks ripeness, since "ripe
+#: fruit, in limited quantity" is a caution about how much.
+_HOW_RES: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("cooked", re.compile(
+        r"cook|boil|roast|steam|blanch|dried|leach|ferment|process|peel|soak"
+        r"|prepar", re.I)),
+    ("small_amounts", re.compile(
+        r"\bsmall\b|\blimited\b|\bmoderat|\bsparingly\b"
+        r"|\blarge (?:amounts?|quantit)", re.I)),
+    ("ripe", re.compile(r"\bripe", re.I)),
+)
+
+
+def _how_of(quote: str) -> str:
+    for name, pattern in _HOW_RES:
+        if pattern.search(quote or ""):
+            return name
+    return "other"
 
 
 # --- putting a record together ----------------------------------------------
@@ -995,6 +1023,81 @@ def never_put_forward(tox: Toxicity, evidence: Evidence) -> bool:
     if evidence.noxious or evidence.invasive:
         return True
     return tox.people_at_risk and (tox.rating == "high" or evidence.grave)
+
+
+#: The toxicity table's part names (PART_LABELS keys) as EatenPart tokens, so
+#: a crop the table knows is named by its eaten part on the eat list too
+#: (ADR 0009) when its record has not been minted a part yet.
+_TABLE_PART_TOKENS = {
+    "leaf": "leaves", "foliage": "leaves",
+    "fruit": "fruit", "ripe_fruit": "fruit", "berry": "fruit",
+    "seed": "seeds", "cooked_bean": "seeds", "peanut": "seeds", "nut": "seeds",
+    "root": "roots", "tuber": "roots", "bulb": "roots",
+    "flower": "flowers",
+    "stem": "stems", "stalk": "stems",
+}
+
+
+def table_eaten_parts(scientific_name: str) -> list[str]:
+    """The eaten parts the toxicity table names for a food crop, as EatenPart
+    tokens, in the table's order and once each; empty for anything else."""
+    known = lookup(scientific_name)
+    if not known or not known.edible_parts:
+        return []
+    out: list[str] = []
+    for part in known.edible_parts:
+        token = _TABLE_PART_TOKENS.get(part)
+        if token and token not in out:
+            out.append(token)
+    return out
+
+
+#: The parts a source can name as eaten, as a row says them
+#: (models.EatenPart holds the vocabulary; the tranche test holds records to it).
+EATEN_PART_WORDS = {
+    "leaves": "leaves", "fruit": "fruit", "seeds": "seeds",
+    "roots": "roots", "flowers": "flowers", "stems": "stems",
+}
+
+_HOW_WORDS = {
+    "cooked": "only after cooking",
+    "small_amounts": "only in small amounts",
+    "ripe": "only when ripe",
+    "other": "with the condition the source gives",
+}
+
+
+def eating_line(eaten_parts: list[str] | None, tox: Toxicity,
+                evidence: Evidence) -> str | None:
+    """What is eaten, in one line, or None when no source names a part.
+
+    The part and its condition travel together, every time, because the part
+    without the condition is the claim the catalog exists to avoid: "fruit"
+    without "ripe" is a different statement (ADR 0011). A food crop's line is
+    its edibility note, which the table already builds from the eaten part
+    and the parts that are not. Any other plant leads with the parts a source
+    named, then the condition the passage put on eating them, then what is
+    recorded against it: a hazard to people sends the reader to the source
+    (ADR 0003 keeps the passage on the server), and a hazard to pets is a
+    reason to keep scraps from the dog, not to doubt the leaves."""
+    if not eaten_parts:
+        return None
+    if tox.is_crop:
+        return edibility_note(True, tox, evidence)
+    words = [EATEN_PART_WORDS.get(p, p) for p in eaten_parts]
+    verb = "is" if words == ["fruit"] else "are"
+    lead = f"{_capital(_join(words))} {verb} eaten"
+    if evidence.edibility_conditional:
+        lead += f", {_HOW_WORDS.get(evidence.edibility_how, _HOW_WORDS['other'])}"
+    sentence = lead + "."
+    if evidence.people:
+        sentence += " It is also recorded as poisonous to people."
+    if evidence.people or evidence.edibility_limited:
+        sentence += " Check the source before eating any of it."
+    if tox.toxic is True:
+        sentence += (" Recorded as poisonous to pets, so keep scraps and "
+                     "trimmings away from them.")
+    return sentence
 
 
 def edibility_note(is_edible: bool | None, tox: Toxicity,

@@ -420,22 +420,26 @@ def _goal_findings(species: Species, area: GrowingArea) -> list[Finding]:
 
     edible = GrowingGoal.edible.value
     if edible in goals:
-        if species.is_edible is None:
-            out.append(_unknown(
-                Axis.goal, "No source says whether this is grown to eat.", edible))
-        elif species.is_edible and species.edibility_note:
-            # Eaten, but only some of it, or only cooked, or it is also
-            # poisonous. That is not a confirmed "something to eat": a fit
-            # here is what puts Mayapple forward to someone who asked for
-            # food. It stays visible as an unknown, with its condition.
-            out.append(_unknown(Axis.goal, species.edibility_note, edible))
-        elif species.is_edible:
-            out.append(_finding(Axis.goal, Verdict.fits, "Grown to eat.",
-                                species, "is_edible", goal=edible))
+        # Eating is a cited description, not a verdict (ADR 0011). A species
+        # whose source names a part that is eaten fits, and the line carries
+        # the part with its condition and the hazards recorded beside it, so
+        # taro fits as "roots, only after cooking" and chives fit with the
+        # note to keep scraps from the dog. A species no source records a
+        # part of is unknown here, never a misfit: the hazard sentence on
+        # the same row already says what a source calls poisonous, and a
+        # preference is not the place to repeat it. Mayapple is not a fit
+        # that slipped through -- `never_a_candidate` keeps it off every
+        # list before this is asked.
+        if species.parts_eaten:
+            # A crop the toxicity table knows is named by the table's eaten
+            # part where its record has none (ADR 0009); the finding then
+            # credits no authority, and the line is the table's own.
+            out.append(_finding(Axis.goal, Verdict.fits, species.eating,
+                                species, "eaten_parts", goal=edible))
         else:
-            out.append(_finding(Axis.goal, Verdict.misfits,
-                                "Not grown to eat, and you asked for edibles.",
-                                species, "is_edible", goal=edible))
+            out.append(_unknown(
+                Axis.goal, "No source names a part of this plant that is eaten.",
+                edible))
 
     pollinators = GrowingGoal.pollinators.value
     if pollinators in goals:
@@ -493,12 +497,22 @@ def score(findings: Iterable[Finding]) -> int:
     return sum(1 for f in findings if f.verdict == Verdict.fits)
 
 
-def is_candidate(findings: list[Finding]) -> bool:
+def is_candidate(findings: list[Finding], goals: Iterable[str] = ()) -> bool:
     """Zero misfits AND at least one confirmed fit -- CONTEXT.md's Candidate.
 
     The second half is what keeps an unexamined row out: nothing against it
-    because nothing is known about it is not a recommendation."""
-    return not misfits(findings) and score(findings) > 0
+    because nothing is known about it is not a recommendation.
+
+    When the gardener asked for something to eat, the list is of things to
+    eat: a species no source records a part of as eaten is left off it
+    (counted by `left_off_for_eating`) rather than carried under a caveat
+    that the wish went unanswered (ADR 0011)."""
+    if misfits(findings) or score(findings) == 0:
+        return False
+    if GrowingGoal.edible.value in set(goals):
+        return any(f.verdict == Verdict.fits and f.goal == GrowingGoal.edible.value
+                   for f in findings)
+    return True
 
 
 @dataclass(frozen=True)
@@ -569,13 +583,32 @@ def candidates(species_list: Iterable[Species], area: GrowingArea) -> list[Candi
     scores the order is `tie_order`'s, A to Z and stable between requests.
     Species `never_a_candidate` rules out are not considered at all.
     """
+    goals = _goals(area)
     scored = []
     for species in species_list:
         if never_a_candidate(species):
             continue
         findings = assess(species, area)
-        if not is_candidate(findings):
+        if not is_candidate(findings, goals):
             continue
         scored.append(Candidate(species=species, findings=findings))
     scored.sort(key=lambda c: (-c.score, *tie_order(c.species)))
     return scored
+
+
+def left_off_for_eating(species_list: Iterable[Species], area: GrowingArea) -> int:
+    """How many species suit the space but are off its list only because no
+    source records a part of them as eaten. Zero when the area did not ask
+    for something to eat. The list says this number, so a short list reads
+    as the catalog's silence on eating and not as a verdict on the space."""
+    goals = _goals(area)
+    if GrowingGoal.edible.value not in goals:
+        return 0
+    left_off = 0
+    for species in species_list:
+        if never_a_candidate(species):
+            continue
+        findings = assess(species, area)
+        if is_candidate(findings) and not is_candidate(findings, goals):
+            left_off += 1
+    return left_off

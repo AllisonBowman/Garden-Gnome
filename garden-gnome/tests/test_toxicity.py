@@ -836,6 +836,66 @@ def test_both_conditions_give_the_full_note():
                     "source before eating any of it.")
 
 
+# --- the eating line: the part, the condition, the hazards (ADR 0011) --------
+
+def test_the_eating_line_leads_with_the_parts_and_keeps_the_condition():
+    tox = tx.from_legacy(None, "Testus testii")
+    plain = tx.read_evidence(None, [P("is_edible", True, "Leaves as flavoring and garnish")])
+    assert tx.eating_line(["leaves"], tox, plain) == "Leaves are eaten."
+    assert tx.eating_line(["fruit"], tox, plain) == "Fruit is eaten."
+    assert tx.eating_line(["seeds", "flowers"], tox, plain) == "Seeds and flowers are eaten."
+
+    cooked = tx.read_evidence(None, [P(
+        "is_edible", True, "Mature dried seeds are edible if thoroughly boiled.")])
+    assert cooked.edibility_how == "cooked"
+    assert tx.eating_line(["seeds"], tox, cooked) == (
+        "Seeds are eaten, only after cooking. Check the source before eating any of it.")
+
+    ripe = tx.read_evidence(None, [P(
+        "is_edible", True, "Only the ripe fruit is edible; unripe fruit and other "
+        "plant parts are listed as poisonous.")])
+    assert ripe.edibility_how == "ripe"
+    assert tx.eating_line(["fruit"], tox, ripe) == (
+        "Fruit is eaten, only when ripe. It is also recorded as poisonous to "
+        "people. Check the source before eating any of it.")
+
+    little = tx.read_evidence(None, [P(
+        "is_edible", True, "Ripe (yellow and soft) fruit is edible raw but in "
+        "limited quantity.")])
+    assert little.edibility_how == "small_amounts"
+    assert tx.eating_line(["fruit"], tox, little).startswith(
+        "Fruit is eaten, only in small amounts.")
+
+
+def test_the_eating_line_sends_pet_hazards_to_the_scraps_and_crops_to_the_table():
+    pets = tx.from_legacy(True, "Allium schoenoprasum")
+    assert tx.eating_line(["leaves"], pets, tx.Evidence()) == (
+        "Leaves are eaten. Recorded as poisonous to pets, so keep scraps and "
+        "trimmings away from them.")
+    evidence = tx.read_evidence(None, EGGPLANT_PASSAGES)
+    eggplant = tx.from_legacy(True, "Solanum melongena", evidence=evidence)
+    assert eggplant.is_crop
+    assert tx.eating_line(["fruit"], eggplant, evidence) == tx.edibility_note(
+        True, eggplant, evidence)
+    assert tx.eating_line([], pets, tx.Evidence()) is None
+    assert tx.eating_line(None, pets, tx.Evidence()) is None
+
+
+def test_a_table_crop_is_named_by_the_tables_eaten_part_when_its_record_names_none():
+    from app.models.models import Species
+    assert tx.table_eaten_parts("Solanum tuberosum") == ["roots"]
+    assert tx.table_eaten_parts("Rheum rhabarbarum") == ["stems"]
+    assert tx.table_eaten_parts("Phaseolus lunatus") == ["seeds"]
+    assert tx.table_eaten_parts("Ficus lyrata") == []
+    potato = Species(common_name="Potato", scientific_name="Solanum tuberosum",
+                     toxic_to_pets=True, is_edible=True)
+    assert potato.parts_eaten == ["roots"]
+    assert potato.eating.startswith("The tubers are eaten;")
+    # Not recorded as eaten: the table does not speak for the record.
+    assert Species(common_name="Potato", scientific_name="Solanum tuberosum",
+                   toxic_to_pets=True).parts_eaten == []
+
+
 def test_no_note_unless_it_is_recorded_as_eaten():
     tox = tx.from_legacy(True, "Ficus lyrata")
     assert tx.edibility_note(None, tox, tx.Evidence()) is None

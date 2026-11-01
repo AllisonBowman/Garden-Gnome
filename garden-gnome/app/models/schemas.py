@@ -6,6 +6,7 @@ from sqlmodel import Field, SQLModel
 
 from app.data.claims.recompute import SERVER_ONLY_FIELDS
 from app.models.models import (
+    EatenPart,
     MaturityStage, CareOutcome, CareType, LightNeed, SoilMoisture, LeafCondition, GrowingAreaType,
     ReviewStatus, SpeciesSource, Shelter, TempExposure, SunExposure,
     CareDataStatus, FertilizeStrength, HumidityNeed, OutdoorSunExposure,
@@ -159,6 +160,13 @@ class CandidateRead(SQLModel):
     # record", never "safe". A recommendation that fits a space is still a
     # plant someone's dog or child can eat, and the row has to say so.
     hazard: Optional[str] = None
+    # What is eaten (ADR 0011): the parts a source names, so a list that
+    # asked for something to eat can group by them, and the one line that
+    # says the parts with their condition and the hazards beside them. Both
+    # null when no source names a part; a client shows the line as-is and
+    # never cuts it, because the condition is the half that keeps it honest.
+    eaten_parts: Optional[list[EatenPart]] = None
+    eating: Optional[str] = None
 
 
 class PlantMisfitRead(SQLModel):
@@ -349,6 +357,11 @@ class SpeciesRead(SQLModel):
     # place of "grown to eat" whenever it is set; the passage itself stays
     # on the server (ADR 0003).
     edibility_note: Optional[str] = None
+    # The parts a source names as eaten (0023, ADR 0011), and, derived on the
+    # model, the one line that says them with their condition and the
+    # hazards recorded beside them. Harm-capable, so never borrowed.
+    eaten_parts: Optional[list[EatenPart]] = None
+    eating: Optional[str] = None
     attracts_pollinators: Optional[bool] = None
     climbs: Optional[bool] = None
     mature_height_in_min: Optional[float] = None

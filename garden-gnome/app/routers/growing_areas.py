@@ -11,7 +11,7 @@ from sqlmodel import Session, select
 
 from app.db.database import get_session
 from app.deps import get_current_user
-from app.models.models import GrowingArea, Plant, Species, StewardshipRecord, User
+from app.models.models import GrowingArea, Plant, Species, StewardshipRecord, User, GrowingGoal
 from app.models.schemas import (
     GrowingAreaCreate, GrowingAreaPatch, GrowingAreaRead,
     FitFindingRead, CandidateRead, PlantMisfitRead, SpeciesFitRead,
@@ -164,6 +164,10 @@ def _as_findings(findings) -> list[FitFindingRead]:
 #: the list. Listed in main.py's CORS `expose_headers` so the web preview can
 #: read it too.
 TOTAL_HEADER = "X-Total-Count"
+#: When the area asked for something to eat: how many species suit the space
+#: but are off this list because no source records a part of them as eaten.
+#: The phone says the number under the list (ADR 0011). Absent otherwise.
+LEFT_OFF_HEADER = "X-Left-Off-Count"
 
 
 @_routes.get("/{area_id}/candidates", response_model=list[CandidateRead])
@@ -200,6 +204,9 @@ def growing_area_candidates(
     all_species = session.exec(select(Species)).all()
     ranked = fit.candidates(all_species, area)
     response.headers[TOTAL_HEADER] = str(len(ranked))
+    if GrowingGoal.edible.value in fit._goals(area):
+        response.headers[LEFT_OFF_HEADER] = str(
+            fit.left_off_for_eating(all_species, area))
     return [
         CandidateRead(
             species_id=c.species.id,
@@ -208,6 +215,8 @@ def growing_area_candidates(
             score=c.score,
             fits=_as_findings(fit.confirmed(c.findings)),
             hazard=hazard_line(safety_of(c.species).toxicity),
+            eaten_parts=c.species.parts_eaten or None,
+            eating=c.species.eating,
         )
         for c in ranked[:limit]
     ]
@@ -279,7 +288,7 @@ def growing_area_species_fit(
         score=fit.score(findings),
         # The same rule the candidate list applies, so a species left off
         # that list is never called a candidate here.
-        candidate=(fit.is_candidate(findings)
+        candidate=(fit.is_candidate(findings, fit._goals(area))
                    and not fit.never_a_candidate(species)),
         findings=_as_findings(findings),
     )

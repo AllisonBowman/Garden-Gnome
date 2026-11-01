@@ -67,10 +67,16 @@ class Resolution:
 # watering regime said as a number. `water_check_depth_cm` stays out: it says
 # where to feel the soil, and the feel decides, so a wrong depth misleads a
 # check rather than replacing it.
+#
+# ADR 0011 adds `eaten_parts`: the parts a source names as eaten. It is the
+# edibility statement with the part attached, so everything said of
+# `is_edible` holds of it, and a genus-borrowed "the fruit is eaten" is the
+# same wrong plate.
 HARM_CAPABLE = frozenset({
     "toxic_to_pets", "chill_damage_f", "water_regime",
     "is_edible", "outdoor_temp_min_f",
     "water_growing_days_est", "water_dormant_days_est",
+    "eaten_parts",
 })
 
 # How far two claims about the same field may sit apart before the difference

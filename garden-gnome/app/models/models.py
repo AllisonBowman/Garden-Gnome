@@ -219,6 +219,23 @@ class CareDataStatus(str, Enum):
     none = "none"            # nothing to say
 
 
+class EatenPart(str, Enum):
+    """The parts of a plant a source can name as eaten (0023, ADR 0011).
+
+    A fixed vocabulary, so a row says "leaves" the way every other row does
+    and the candidate list can group by it. Tubers, bulbs, corms and rhizomes
+    are roots; nuts and grain are seeds; pods, berries and the like are fruit.
+    The condition on eating them (cooked, ripe, in small amounts) is not a
+    part and lives in the cited passage, read by `toxicity.eating_line`.
+    """
+    leaves = "leaves"
+    fruit = "fruit"
+    seeds = "seeds"
+    roots = "roots"
+    flowers = "flowers"
+    stems = "stems"
+
+
 class OutdoorSunExposure(str, Enum):
     """The outdoor duration scale, kept strictly separate from indoor intensity.
 
@@ -421,6 +438,14 @@ class Species(SQLModel, table=True):
     # batches are re-researched.
     is_edible: Optional[bool] = None
     attracts_pollinators: Optional[bool] = None
+    # What is eaten, as the parts a source names (0023): EatenPart tokens.
+    # Harm-capable like `is_edible` and never borrowed from the genus (ADR
+    # 0008, ADR 0011): a cousin's "the fruit is eaten" is how a person eats
+    # the wrong plant. Null is "no source names a part", never "nothing is
+    # eaten". The candidate list groups by it when a bed asks for something
+    # to eat, and `eating` says it in one line with its conditions.
+    eaten_parts: Optional[list[str]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
     # A climber (0020). Where true, the mature height below is the REACH the
     # source publishes -- how far the vine runs given something to climb --
     # not a stature it holds on its own, and everything that shows it says
@@ -501,6 +526,32 @@ class Species(SQLModel, table=True):
             return None
         safety = safety_of(self)
         return edibility_note(self.is_edible, safety.toxicity, safety.evidence)
+
+    @property
+    def parts_eaten(self) -> list[str]:
+        """The parts eaten, as a row says them: the cited `eaten_parts`, or,
+        for a food crop the toxicity table knows and a source records as
+        eaten, the table's eaten part, since ADR 0009 names a crop by it.
+        Empty when neither a source nor the table names a part."""
+        if self.eaten_parts:
+            return list(self.eaten_parts)
+        if self.is_edible is True:
+            from app.services.toxicity import table_eaten_parts
+            return table_eaten_parts(self.scientific_name or "")
+        return []
+
+    @property
+    def eating(self) -> Optional[str]:
+        """What is eaten, in one line: the parts a source names, the
+        condition the source puts on eating them, and the hazards recorded
+        beside them (ADR 0011). None when no source names a part. The line a
+        candidate row and the Care facts carry, so the two never disagree."""
+        from app.services.toxicity import eating_line, safety_of
+        parts = self.parts_eaten
+        if not parts:
+            return None
+        safety = safety_of(self)
+        return eating_line(parts, safety.toxicity, safety.evidence)
 
 
 class CareSchedule(SQLModel, table=True):

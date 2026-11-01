@@ -46,7 +46,11 @@ from .store import resolve_from_db
 #: more. One row in the tranche held a borrowed one when this landed --
 #: Nymphaea odorata's "edible", off the Nymphaea genus page -- and it goes
 #: back to null. Every row is rewritten once.
-RESOLVER_VERSION = "6"
+#:
+#: "7": `eaten_parts` lands (0023, ADR 0011), minted from the edibility
+#: passages the tranche already quotes, so a species recorded as eaten can
+#: say which part. Harm-capable, never borrowed. Every row is rewritten once.
+RESOLVER_VERSION = "7"
 
 #: The only columns a Claim is allowed to set. An allowlist rather than a
 #: denylist: a claim naming `scientific_name` or `review_status` must not be
@@ -76,6 +80,8 @@ RESOLVED_FIELDS = frozenset({
     "mature_spread_in_min", "mature_spread_in_max",
     # 0020: qualifies the height above -- for a climber it is reach.
     "climbs",
+    # 0023: the parts a source names as eaten (ADR 0011).
+    "eaten_parts",
 })
 
 #: Resolved fields a client never sees: verbatim passages held as audit

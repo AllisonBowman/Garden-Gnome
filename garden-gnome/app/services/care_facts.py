@@ -44,6 +44,8 @@ RESOLVED_COLUMNS = (
     "mature_height_in_min", "mature_height_in_max",
     "mature_spread_in_min", "mature_spread_in_max",
     "climbs",
+    # 0023: the parts a source names as eaten (ADR 0011).
+    "eaten_parts",
 )
 
 # Wording for the categorical fields. A token like `chunky_aroid` is a column
@@ -328,10 +330,14 @@ def _size(sp: Species, tag: Tag) -> Told:
     if sp.is_houseplant is not None:
         grown = "grown indoors" if sp.is_houseplant else "an outdoor plant"
         lines.append(f"- Where it lives: {tag(grown, 'is_houseplant')}")
-    if sp.is_edible:
-        # The condition, when there is one, in place of "grown to eat": a
-        # model told only that a plant is eaten will happily suggest eating
-        # the poisonous half of it.
+    if sp.eating:
+        # The parts a source names, with their condition and the hazards
+        # beside them, in one line (ADR 0011). A model told only that a
+        # plant is eaten will happily suggest eating the poisonous half.
+        lines.append(f"- Eating: {tag(sp.eating, 'eaten_parts')}")
+    elif sp.is_edible:
+        # No part named yet: the condition, when there is one, in place of
+        # "grown to eat", for the same reason.
         lines.append(
             f"- Edible: {tag(sp.edibility_note or 'grown to eat', 'is_edible')}")
     if sp.attracts_pollinators:

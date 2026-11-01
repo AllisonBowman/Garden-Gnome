@@ -348,3 +348,23 @@ def test_the_catalog_travels_compressed_to_a_client_that_accepts_it(api):
     assert packed.headers.get("content-encoding") == "gzip"
     assert "content-encoding" not in plain.headers
     assert packed.json() == plain.json()
+
+
+def test_the_read_model_carries_the_eaten_parts_and_the_eating_line():
+    """The contract with the app (ADR 0011): `eaten_parts` and `eating` are on
+    SpeciesRead and SpeciesDetail, set when a source names a part, and null
+    otherwise -- the app shows the line as-is and never cuts it."""
+    from app.models.models import Species
+    from app.models.schemas import SpeciesDetail, SpeciesRead
+
+    chives = Species(id=3, common_name="Chives", scientific_name="Allium schoenoprasum",
+                     toxic_to_pets=True, is_edible=True, eaten_parts=["leaves"])
+    basil = Species(id=2, common_name="Basil", scientific_name="Ocimum basilicum",
+                    toxic_to_pets=None, is_edible=True)
+    for schema in (SpeciesRead, SpeciesDetail):
+        assert "eaten_parts" in schema.model_fields and "eating" in schema.model_fields
+        read = schema.model_validate(chives)
+        assert [p.value for p in read.eaten_parts] == ["leaves"]
+        assert read.eating.startswith("Leaves are eaten.")
+        plain = schema.model_validate(basil)
+        assert plain.eaten_parts is None and plain.eating is None

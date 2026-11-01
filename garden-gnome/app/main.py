@@ -62,7 +62,7 @@ app.add_middleware(
     # A browser hides response headers it isn't told to show. The candidate
     # count travels in one (growing_areas.TOTAL_HEADER), and the web preview
     # needs it as much as the phone does.
-    expose_headers=[growing_areas.TOTAL_HEADER],
+    expose_headers=[growing_areas.TOTAL_HEADER, growing_areas.LEFT_OFF_HEADER],
 )
 
 # The catalog goes to the phone whole -- the Species tab, Add Plant and the
