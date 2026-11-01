@@ -171,6 +171,13 @@ PINNED = {
         "That said, it does fine in any soil that is not soggy. "
         "Once it is established, it can handle drought."
     ),
+    "Viola cornuta": (
+        "Horned violet is a tufted perennial that spreads by creeping stems. "
+        "Grow it as a perennial in borders and woodland gardens, or as an annual in window boxes and containers. "
+        "You can also use it as a ground cover. "
+        "Plant it where it gets full sun or part shade. "
+        "Give it fertile, humus-rich soil that is moist but drains well."
+    ),
 }
 
 
