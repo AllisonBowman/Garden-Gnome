@@ -12,6 +12,20 @@ migration range (0010 to 0020), VM size (256 MB), smoke check (12 tries in
 Where its restore advice still holds, it's repeated here, so you don't need it
 open.
 
+**Update, 2026-11-01.** Read this first. Only the care notes moved since
+the 2026-10-31 block below. That block and the launch checklist under it
+still stand as written, and 1.1.3 still ships with the short notes.
+
+The branch `care-notes-1.1.4` is pushed, at `4f55db3`, and holds 11 of the 33
+lengthened notes as of 01:27 ET. The workflow is still clearing the rest. A
+note lands there only once all three verifiers pass it in the same round,
+in a commit that also carries its trace and its pin, and each batch goes up
+as it clears. So a stop costs no finished note. The full backend suite
+passed 7,153 tests on the first batch. The branch's own handoff,
+`docs/2026-10-31-care-notes-1.1.4-handoff.md`, shows every note's short and
+lengthened text side by side and says which are still in review. It is not
+merged anywhere.
+
 **Update, 2026-10-31.** Read this first; the checklist below it is the
 launch morning. Written on this Mac in the main checkout, from `26ffeed`.
 
@@ -70,9 +84,8 @@ runs as a workflow, two writers, a judge and three adversarial verifiers
 per species, every sentence traced to a quote in the species' verified
 record, then an assembler that pins the text and the trace in tests and a
 completeness critic. The first run hit the account's session limit before
-any note cleared verification; it was resumed at 17:33 ET, and the next
-block or the branch's own handoff, `docs/2026-10-31-care-notes-1.1.4-handoff.md`,
-says how it ended. It is not merged anywhere.
+any note cleared verification; it was resumed at 17:33 ET, and the
+2026-11-01 block above says where it went from there. It is not merged anywhere.
 
 Checked from this Mac today: production still answers
 `{"status":"ok","service":"garden-gnome","version":"0.2.0"}` with 29 paths
