@@ -112,6 +112,13 @@ PINNED = {
         "Feed it a balanced liquid fertilizer. "
         "Indoors, watch for aphids and spider mites, which you can wash off."
     ),
+    "Impatiens walleriana": (
+        "Impatiens can be grown as a bedding annual, a container plant, or a houseplant. "
+        "Outdoors, give it part to full shade, because too much sun can scorch the leaves. "
+        "Plant it in moist, well-drained, slightly acidic soil enriched with organic matter. "
+        "It does not tolerate drought well. "
+        "Overwatering can make the plant rot."
+    ),
     "Tropaeolum majus": (
         "Nasturtium is a warm-season annual with long stems and parasol-like leaves, grown in many kinds of gardens. "
         "Climbing types can quickly cover a fence or trellis. "
