@@ -165,6 +165,12 @@ PINNED = {
         "Grow it in full sun, with at least 6 hours of direct sunlight each day. "
         "Plant it in loam or a soil rich in organic matter, with good drainage."
     ),
+    "Rudbeckia hirta": (
+        "Grow black-eyed Susan in moist, well-drained soil, whether clay, loam, or sandy. "
+        "Give it 6 or more hours of direct sun a day, or 2 to 6 hours in part shade. "
+        "It holds up moderately well to drought and salt. "
+        "Expect each plant to be very short-lived."
+    ),
     "Gaillardia x grandiflora": (
         "Grow blanket flower at the front of a border, in containers, on a patio, or along a walkway. "
         "Give it full sun, with at least 6 hours of direct sunlight each day. "
