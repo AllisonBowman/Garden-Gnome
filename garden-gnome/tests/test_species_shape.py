@@ -20,6 +20,11 @@ from app.models.models import Claim, Species
 NOT_MATERIALISED = {
     "common_name", "scientific_name_given", "scientific_name_accepted",
     "name_note", "is_houseplant", "water_estimate_basis", "cool_rest_note",
+    # A source's listing of the plant as a noxious weed or an invasive species
+    # (tranche.WEED_FIELD, ADR 0011): stored as a claim so the candidate rule
+    # can read it from any cited field, never a value a row holds. Not
+    # stranded: the safety code reads the quote back (store.weed_quotes).
+    "weed_listing",
 }
 
 
