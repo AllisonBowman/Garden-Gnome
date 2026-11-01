@@ -90,6 +90,13 @@ PINNED = {
         "Feed with a balanced fertilizer at half strength 2 times a month, or at quarter strength each week. "
         "Spring bloomers with large white flowers need 1 week of autumn nights near 55°F to start flower spikes."
     ),
+    "Aspidistra elatior": (
+        "Give your cast iron plant bright indirect light where you can, though it copes with full shade. "
+        "Keep it out of direct sun. "
+        "Water it from spring through fall, then water less in winter while it rests. "
+        "It puts up with less than regular watering, and you do not need to raise the humidity. "
+        "Grow it in rich soil that drains well."
+    ),
     "Nepeta cataria": (
         "This plant can turn weedy, so think about growing it in a container. "
         "It grows in full sun with at least 6 hours of direct sunlight a day. "
