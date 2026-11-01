@@ -100,6 +100,14 @@ PINNED = {
         "It puts up with less than regular watering, and you do not need to raise the humidity. "
         "Grow it in rich soil that drains well."
     ),
+    "Anethum graveolens": (
+        "Dill is an herb with a taproot, so any pot you use should be deep. "
+        "Give it at least 6 hours of direct sun a day, or 2 to 6 hours in part shade. "
+        "Use rich, well-drained soil that stays moist but not wet all the time. "
+        "Water consistently to keep it from bolting. "
+        "Support it if excess water or extra shade makes it lanky and floppy, and shelter it from strong wind. "
+        "Outdoors, sow seed directly in early spring, once nights are above 45°F."
+    ),
     "Nepeta cataria": (
         "This plant can turn weedy, so think about growing it in a container. "
         "It grows in full sun with at least 6 hours of direct sunlight a day. "
@@ -112,6 +120,13 @@ PINNED = {
         "Give it full sun if possible, though it will tolerate partial shade. "
         "Choose a spot with moderate temperatures and humid air. "
         "Keep it in moist, well-drained soil that is loamy, sandy, rich in organic matter and slightly acidic."
+    ),
+    "Lobularia maritima": (
+        "Grow sweet alyssum in a sunny spot that gets some afternoon shade. "
+        "Plant it where drainage is very good so it does well in the garden. "
+        "It tolerates dryish soil. "
+        "Feed it monthly with an all-purpose fertilizer through the growing season. "
+        "You can grow it from seed."
     ),
     "Centaurea cyanus": (
         "Bachelor's button is a cool-weather annual grown in average, well-drained soil. "
@@ -163,6 +178,12 @@ PINNED = {
         "Water during dry spells. "
         "Pinch back the young shoots to encourage bushier growth."
     ),
+    "Helianthus annuus": (
+        "Grow sunflower in full sun, where it gets at least 6 hours of direct sunlight daily. "
+        "You can plant it in neutral soil, from pH 6.0 to 8.0. "
+        "Aim to grow it when temperatures are between 70°F and 85°F. "
+        "Once established, it tolerates drought."
+    ),
     "Zinnia elegans": (
         "Zinnia is an upright flowering annual from Mexico, in the aster family. "
         "Grow it in full sun, with at least 6 hours of direct sunlight each day. "
@@ -191,6 +212,12 @@ PINNED = {
         "Plant it in soil that drains well. "
         "Take care not to overwater it. "
         "Feeding is optional, but if you feed it, use a low rate of controlled-release fertilizer."
+    ),
+    "Penstemon digitalis": (
+        "This beardtongue is grown in small groups in borders, pollinator gardens or naturalized areas. "
+        "Give it at least 6 hours of direct sun a day, or 2 to 6 hours in part shade. "
+        "It prefers well-drained loam that is moist to dry, and tolerates clay that drains well. "
+        "It is suited to acidic soil."
     ),
     "Rudbeckia fulgida": (
         "Orange coneflower is grown in perennial beds, borders and naturalized areas. "
