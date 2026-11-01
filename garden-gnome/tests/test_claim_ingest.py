@@ -400,8 +400,10 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     #      Poisonous to Humans block; English yew and jimsonweed already had one).
     # + 16 (ADR 0011: every vetted citation whose quote lists the plant as a
     # noxious weed or an invasive species is stored as a weed_listing claim,
-    # whatever field it was filed under) = 10697.
-    assert report.claims_written == 10697
+    # whatever field it was filed under) = 10697. + 258 (ADR 0011: eaten_parts,
+    # one claim per record the minting pass wrote, each on the citation behind
+    # is_edible; docs/2026-11-01-eaten-parts-audit.md) = 10955.
+    assert report.claims_written == 10955
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than
