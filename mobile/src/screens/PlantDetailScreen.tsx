@@ -19,6 +19,7 @@ import { gnomeVoice } from '../gnomeVoice/restyle';
 import { serverMessage } from '../api/errorMessage';
 import { ensureCameraPermission } from '../photoPermissions';
 import { ensurePhotoUploadConsent } from '../consent/photoUpload';
+import { mayAskWith, questionToSend } from '../consent/questionUpload';
 import WeatherCredit from '../components/WeatherCredit';
 import ReportResult from '../components/ReportResult';
 import { CareOutcome, CareType } from '../types';
@@ -28,7 +29,18 @@ import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
 import { CareFactList, CareStatusLine, LegacyStatRow } from '../components/CareFacts';
+import AreaFitCard from '../components/AreaFitCard';
+import EmptyState from '../components/EmptyState';
+import NotAdviceNote from '../components/NotAdviceNote';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 import { CARE_TASKS_QUERY_KEY } from '../care/useCareTasks';
+import { NO_SCHEDULE_LINE, hasCheckSchedule } from '../care/schedule';
+import { fetchSpecies } from '../api/species';
+import { useAiCapabilities } from '../care/useAiCapabilities';
+import { adviceSourceLabel, diagnosisSourceLabel } from '../care/resultLabels';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 
@@ -60,7 +72,9 @@ export default function PlantDetailScreen() {
   const queryClient = useQueryClient();
   const [loggingType, setLoggingType] = useState<CareType | null>(null);
 
-  const { data: plant, isLoading } = useQuery({
+  const {
+    data: plant, isError, error, refetch, isFetching,
+  } = useQuery({
     queryKey: ['plant', plantId],
     queryFn: () => fetchPlant(plantId),
   });
@@ -69,6 +83,19 @@ export default function PlantDetailScreen() {
     queryKey: ['careLogs', plantId],
     queryFn: () => fetchCareLogs(plantId),
   });
+
+  // The plant read embeds its species without schedules, so whether it has
+  // a check schedule comes from the species' own record — the same one the
+  // species page caches under this key.
+  const speciesId = plant?.species_id;
+  const { data: speciesRecord } = useQuery({
+    queryKey: ['species', speciesId],
+    queryFn: () => fetchSpecies(speciesId as number),
+    enabled: speciesId != null,
+  });
+  // Only a record that was read and has none: a failed read is not "no
+  // schedule", and says nothing.
+  const noCheckSchedule = speciesRecord != null && !hasCheckSchedule(speciesRecord);
 
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const logMutation = useMutation({
@@ -109,6 +136,9 @@ export default function PlantDetailScreen() {
       queryClient.invalidateQueries({ queryKey: ['plant', plantId] });
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      // Both areas' "needs addressing" lists change when a plant moves.
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       setConfirmation(`🌍 Moved to ${dest?.name ?? 'its new home'} — history came along`);
       void rescheduleAllReminders();
@@ -125,6 +155,8 @@ export default function PlantDetailScreen() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['plants'] });
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+      queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+      queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       void rescheduleAllReminders();
       navigation.goBack();
@@ -144,14 +176,18 @@ export default function PlantDetailScreen() {
     ],
   );
 
+  // Free-text symptoms and photo check-ups are shown only when the server
+  // can actually read them; until then a tap would only say "not yet".
+  const capabilities = useAiCapabilities();
   const [symptoms, setSymptoms] = useState('');
   const [advice, setAdvice] = useState<(AdviceResponse & { gnomeStyled: boolean }) | null>(null);
   const adviceMutation = useMutation({
-    mutationFn: async () => {
+    // `question` has been through askTheGnome: empty, or agreed to be sent.
+    mutationFn: async (question: string) => {
       // The rule engine determines WHAT to say; the on-device gnome only
       // restyles HOW it's said (and falls back to the flat text everywhere
       // the model can't run or drifts from the given facts).
-      const result = await getAdvice(plantId, symptoms);
+      const result = await getAdvice(plantId, question);
       const voiced = await gnomeVoice(result.advice, plant?.nickname);
       return { ...result, advice: voiced.text, gnomeStyled: voiced.styled };
     },
@@ -165,6 +201,14 @@ export default function PlantDetailScreen() {
         ),
       ),
   });
+  // A question in the caretaker's own words goes to an outside AI service,
+  // so the first one waits for a yes (consent/questionUpload.ts). Advice
+  // without a question doesn't ask.
+  const askTheGnome = async () => {
+    const question = questionToSend(capabilities.symptoms, symptoms);
+    if (!(await mayAskWith(question))) return;
+    adviceMutation.mutate(question);
+  };
 
   const [diagnosisNotes, setDiagnosisNotes] = useState('');
   const [diagnosis, setDiagnosis] = useState<DiagnosisResponse | null>(null);
@@ -208,15 +252,36 @@ export default function PlantDetailScreen() {
     diagnoseMutation.mutate(res.assets[0]);
   };
 
-  if (isLoading || !plant) {
+  // The plant stays on screen when a later refresh fails (with a line saying
+  // so); the card is for a plant that never loaded, and says why.
+  const view = loadView(plant !== undefined, isError);
+  if (view === 'loading') {
     return <ActivityIndicator style={styles.center} size="large" />;
+  }
+  if (view === 'failed' || !plant) {
+    return (
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('this plant')}
+          body={loadFailedBody(error)}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetch()}
+          busy={isFetching}
+        />
+      </View>
+    );
   }
 
   const { species } = plant;
+  // Where it lives, for the card that says what that spot has against it.
+  const home = growingAreas.find((e) => e.id === plant.growing_area_id) ?? null;
 
   return (
     <View style={styles.container}>
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+      {/* Drawn from what loaded before: an error now is a failed refresh. */}
+      {isError ? <RefreshFailed onRetry={() => refetch()} retrying={isFetching} /> : null}
       {/* Header */}
       <Surface style={styles.header} elevation={1}>
         <Text variant="headlineSmall" style={styles.plantName}>
@@ -227,6 +292,12 @@ export default function PlantDetailScreen() {
             {species.scientific_name}
           </Text>
         )}
+        {/* Said where it is first seen: a plant with nothing scheduled
+            otherwise just never turns up on the to-do list, and the silence
+            reads as "fine". No interval is invented to fill the gap. */}
+        {noCheckSchedule ? (
+          <Text variant="bodySmall" style={styles.noSchedule}>{NO_SCHEDULE_LINE}</Text>
+        ) : null}
       </Surface>
 
       {/* Quick-log care */}
@@ -256,19 +327,21 @@ export default function PlantDetailScreen() {
       <Card style={styles.card}>
         <Card.Title title="Ask the Gnome 🧙" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
-          <TextInput
-            label="Anything wrong? (optional)"
-            value={symptoms}
-            onChangeText={setSymptoms}
-            mode="outlined"
-            multiline
-            numberOfLines={2}
-            placeholder="e.g. leaves turning yellow at the base"
-            style={styles.symptomsInput}
-          />
+          {capabilities.symptoms && (
+            <TextInput
+              label="Anything wrong? (optional)"
+              value={symptoms}
+              onChangeText={setSymptoms}
+              mode="outlined"
+              multiline
+              numberOfLines={2}
+              placeholder="e.g. leaves turning yellow at the base"
+              style={styles.symptomsInput}
+            />
+          )}
           <Button
             mode="contained"
-            onPress={() => adviceMutation.mutate()}
+            onPress={() => { void askTheGnome(); }}
             loading={adviceMutation.isPending}
             disabled={adviceMutation.isPending}
             style={styles.adviceBtn}
@@ -278,7 +351,7 @@ export default function PlantDetailScreen() {
           {!advice && !adviceMutation.isPending && (
             <Text style={styles.adviceHint}>
               Care tips for {plant.nickname}, grounded in its species and history.
-              Mention anything that looks off above.
+              {capabilities.symptoms ? ' Mention anything that looks off above.' : ''}
             </Text>
           )}
           {advice && (
@@ -301,8 +374,7 @@ export default function PlantDetailScreen() {
               <WeatherCredit attribution={advice.weather_attribution} />
               <View style={styles.resultMetaRow}>
                 <Pill tone="neutral" filled style={styles.metaPill}>
-                  {(advice.backend === 'stub' ? 'rule-based' : advice.backend)
-                    + (advice.gnomeStyled ? ' • gnome voice' : '')}
+                  {adviceSourceLabel(advice.backend, advice.gnomeStyled)}
                 </Pill>
                 <ReportResult
                   surfaceLabel="care advice"
@@ -318,85 +390,90 @@ export default function PlantDetailScreen() {
         </Card.Content>
       </Card>
 
-      {/* Photo diagnosis — specimen-card styling from the landing page */}
-      <Card style={styles.specimenCard}>
-        <View style={styles.specimenHeader}>
-          <Eyebrow color={palette.warn}>SPECIMEN CHECK-UP</Eyebrow>
-          <Text style={styles.specimenTitle}>Photo diagnosis 📷</Text>
-          <Text style={styles.specimenSub}>
-            Snap what worries you and crop in close — the Gnome reads it
-            against {species?.common_name ?? 'this species'}&apos;s care facts
-            and this plant&apos;s history, then files it to the timeline.
-          </Text>
-        </View>
-        <Card.Content style={styles.specimenBody}>
-          <TextInput
-            label="Anything specific you noticed? (optional)"
-            value={diagnosisNotes}
-            onChangeText={setDiagnosisNotes}
-            mode="outlined"
-            style={styles.diagnosisInput}
-            outlineColor={palette.line}
-            activeOutlineColor={palette.warn}
-            textColor={palette.ink}
-            placeholder="e.g. brown spots since last week"
-          />
-          <View style={styles.diagnosisBtnRow}>
-            {Platform.OS !== 'web' && (
+      {/* Photo diagnosis — specimen-card styling from the landing page.
+          Offered only once the server can examine a photo (see
+          care/aiCapabilities.ts): a check-up that answers "not switched on
+          yet" is a dead button to a caretaker and to App Review. */}
+      {capabilities.photoDiagnosis && (
+        <Card style={styles.specimenCard}>
+          <View style={styles.specimenHeader}>
+            <Eyebrow color={palette.warn}>SPECIMEN CHECK-UP</Eyebrow>
+            <Text style={styles.specimenTitle}>Photo diagnosis 📷</Text>
+            <Text style={styles.specimenSub}>
+              Snap what worries you and crop in close — the Gnome reads it
+              against {species?.common_name ?? 'this species'}&apos;s care facts
+              and this plant&apos;s history, then files it to the timeline.
+            </Text>
+          </View>
+          <Card.Content style={styles.specimenBody}>
+            <TextInput
+              label="Anything specific you noticed? (optional)"
+              value={diagnosisNotes}
+              onChangeText={setDiagnosisNotes}
+              mode="outlined"
+              style={styles.diagnosisInput}
+              outlineColor={palette.line}
+              activeOutlineColor={palette.warn}
+              textColor={palette.ink}
+              placeholder="e.g. brown spots since last week"
+            />
+            <View style={styles.diagnosisBtnRow}>
+              {Platform.OS !== 'web' && (
+                <Button
+                  mode="contained"
+                  icon="camera"
+                  onPress={() => pickAndDiagnose(true)}
+                  disabled={diagnoseMutation.isPending}
+                  buttonColor={palette.hedge}
+                  textColor={palette.btnInk}
+                  style={styles.diagnosisBtn}
+                >
+                  Take photo
+                </Button>
+              )}
               <Button
-                mode="contained"
-                icon="camera"
-                onPress={() => pickAndDiagnose(true)}
+                mode={Platform.OS === 'web' ? 'contained' : 'outlined'}
+                icon="image"
+                onPress={() => pickAndDiagnose(false)}
+                loading={diagnoseMutation.isPending}
                 disabled={diagnoseMutation.isPending}
-                buttonColor={palette.hedge}
-                textColor={palette.btnInk}
+                buttonColor={Platform.OS === 'web' ? palette.hedge : undefined}
+                textColor={Platform.OS === 'web' ? palette.btnInk : palette.warn}
                 style={styles.diagnosisBtn}
               >
-                Take photo
+                Choose photo
               </Button>
-            )}
-            <Button
-              mode={Platform.OS === 'web' ? 'contained' : 'outlined'}
-              icon="image"
-              onPress={() => pickAndDiagnose(false)}
-              loading={diagnoseMutation.isPending}
-              disabled={diagnoseMutation.isPending}
-              buttonColor={Platform.OS === 'web' ? palette.hedge : undefined}
-              textColor={Platform.OS === 'web' ? palette.btnInk : palette.warn}
-              style={styles.diagnosisBtn}
-            >
-              Choose photo
-            </Button>
-          </View>
-          {diagnoseMutation.isPending && (
-            <Text style={styles.diagnosisPending}>
-              Examining the specimen… this can take a moment.
-            </Text>
-          )}
-          {diagnosis && (
-            <View style={styles.testimony}>
-              <Eyebrow color={palette.warn}>GNOME&apos;S FINDINGS</Eyebrow>
-              {diagnosis.diagnosis.split('\n').filter((l) => l.trim()).map((line, i) => (
-                <Text key={i} style={styles.testimonyText}>{line}</Text>
-              ))}
-              <View style={styles.resultMetaRow}>
-                <Pill tone="neutral" filled style={styles.metaPill}>
-                  {diagnosis.backend === 'stub' ? 'diagnosis not enabled yet' : diagnosis.backend}
-                </Pill>
-                <ReportResult
-                  surfaceLabel="diagnosis"
-                  result={diagnosis.diagnosis}
-                  textColor={palette.warn}
-                  context={[
-                    `Plant: ${plant.nickname}`,
-                    ...(species ? [`Species: ${species.common_name} (${species.scientific_name})`] : []),
-                  ]}
-                />
-              </View>
             </View>
-          )}
-        </Card.Content>
-      </Card>
+            {diagnoseMutation.isPending && (
+              <Text style={styles.diagnosisPending}>
+                Examining the specimen… this can take a moment.
+              </Text>
+            )}
+            {diagnosis && (
+              <View style={styles.testimony}>
+                <Eyebrow color={palette.warn}>GNOME&apos;S FINDINGS</Eyebrow>
+                {diagnosis.diagnosis.split('\n').filter((l) => l.trim()).map((line, i) => (
+                  <Text key={i} style={styles.testimonyText}>{line}</Text>
+                ))}
+                <View style={styles.resultMetaRow}>
+                  <Pill tone="neutral" filled style={styles.metaPill}>
+                    {diagnosisSourceLabel(diagnosis.backend)}
+                  </Pill>
+                  <ReportResult
+                    surfaceLabel="diagnosis"
+                    result={diagnosis.diagnosis}
+                    textColor={palette.warn}
+                    context={[
+                      `Plant: ${plant.nickname}`,
+                      ...(species ? [`Species: ${species.common_name} (${species.scientific_name})`] : []),
+                    ]}
+                  />
+                </View>
+              </View>
+            )}
+          </Card.Content>
+        </Card>
+      )}
 
       {/* Species details: the notes, how well-backed the facts are, the
           resolved facts, and the legacy stats only where nothing resolved
@@ -426,9 +503,29 @@ export default function PlantDetailScreen() {
                 ⚠️ Caution: toxic to pets
               </Chip>
             ) : null}
+            {/* Under whatever was said about harm, the line the listing
+                promises. Not under the advice above: its schedule lines are
+                PlantAdvocate's own, so "repeat what the sources publish"
+                would claim too much there. */}
+            {species.toxicity_description || species.toxic_to_pets ? (
+              <NotAdviceNote style={styles.notAdvice} />
+            ) : null}
           </Card.Content>
         </Card>
       )}
+
+      {/* The spot it lives in, judged against it: a 60 ft climber in a bed
+          with 7 ft of headroom is flagged here, on its own page, and not
+          only on the area's. What is against it in full; what was confirmed
+          in a line. */}
+      {home ? (
+        <AreaFitCard
+          areaId={home.id}
+          areaName={home.name}
+          speciesId={plant.species_id}
+          confirmedInLine
+        />
+      ) : null}
 
       {/* Care log */}
       <Card style={styles.card}>
@@ -525,6 +622,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   header: { borderRadius: 12, padding: 16, marginBottom: 12 },
   plantName: { color: p.acc, fontFamily: f.display },
   scientific: { fontStyle: 'italic', color: p.sub, marginTop: 2, fontFamily: f.display },
+  noSchedule: { color: p.sub, lineHeight: 18, marginTop: 10 },
   card: { marginBottom: 12, borderRadius: 12 },
   cardTitle: { fontFamily: f.display },
   careGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
@@ -538,6 +636,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
     color: p.warn, backgroundColor: p.warnSoft, borderRadius: 8,
     padding: 10, lineHeight: 19,
   },
+  // Lined up with the sentence's text inside its tinted box.
+  notAdvice: { marginTop: 6, paddingHorizontal: 10 },
   logItem: { paddingVertical: 2 },
   moveHint: { color: p.sub, lineHeight: 20, marginBottom: 10 },
   moveRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
@@ -558,7 +658,9 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   },
   adviceText: { lineHeight: 21, color: p.ink },
   gnomeVoiceText: { fontStyle: 'italic', fontSize: 14.5 },
-  adviceWarningText: { color: p.warn, fontWeight: '600' },
+  // After the gnome's italic note, a safety line stays upright: it is the
+  // engine's own words, appended verbatim, not part of the restyle.
+  adviceWarningText: { color: p.warn, fontWeight: '600', fontStyle: 'normal' },
   metaPill: { marginTop: 2 },
   resultMetaRow: {
     flexDirection: 'row',

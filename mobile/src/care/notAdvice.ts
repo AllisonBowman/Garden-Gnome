@@ -1,0 +1,12 @@
+// The line that goes under every hazard sentence.
+//
+// The App Store listing and the review notes say it, and a reviewer reading
+// guideline 1.4.1 strictly could ask to see it on screen too
+// (docs/go-to-market/research/review-risk.md). It is said word for word
+// wherever it appears, so the app holds it once, here, and every screen
+// shows it through components/NotAdviceNote.tsx. Change it only together
+// with docs/app-store/listing.md and docs/app-store/review-notes.md.
+//
+// Pure on purpose (no React Native imports) so jest can pin it.
+export const NOT_ADVICE_LINE =
+  'These notes repeat what the sources publish. They are not medical or veterinary advice.';

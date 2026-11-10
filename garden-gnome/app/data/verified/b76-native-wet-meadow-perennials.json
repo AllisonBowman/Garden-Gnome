@@ -462,6 +462,12 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/helenium-flexuosum/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false: NC State lists poison symptoms for humans if this plant is eaten (severity Low, toxic principle sesquiterpene lactone; parts: flowers, leaves, seeds)",
+          "source": "NC State Extension Gardener Plant Toolbox, Helenium flexuosum",
+          "url": "https://plants.ces.ncsu.edu/plants/helenium-flexuosum/",
+          "quote": "Salivation, elevated temperature and pulse, with difficulty breathing, vomiting, and convulsions if eaten in large quantities."
         }
       ],
       "common_name": "Purple-headed Sneezeweed",
@@ -508,7 +514,12 @@
         "NC State's anchor page carries a poison profile for this species (low severity; poison part: Flowers, Leaves, Seeds; symptoms: salivation, elevated temperature and pulse, difficulty breathing, vomiting, and convulsions if eaten in large quantities; toxic principle: Sesquiterpene lactone) -- flagged here since it bears directly on edibility even though no page frames it as an edibility statement, so is_edible stays null per the rule rather than being inferred as false.",
         "RHS page (https://www.rhs.org.uk/plants/139751/helenium-flexuosum/details) loaded successfully (title: Helenium flexuosum) but carries no usable data for this species: its Size field reads only 'Size / Time to Maturity: No preference', and searches for 'Max Height', 'Max Spread', 'Ultimate height', 'Attracts', 'pollinator', 'bee', 'butterfl', 'Edible', 'Poison', 'Toxic', and 'Problem for' each returned 0 hits.",
         "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder, taxonid=277604) refused this machine (ProxyError on fetch, also sandbox-denied) and could not be read; not used to support or contradict any field.",
-        "Not a climber (NC State tags it Herbaceous Perennial), so the vine/liana size exclusion in rule 4 does not apply; both height and width came from NC State's structured Dimensions block, not a cultivar-specific figure."
+        "Not a climber (NC State tags it Herbaceous Perennial), so the vine/liana size exclusion in rule 4 does not apply; both height and width came from NC State's structured Dimensions block, not a cultivar-specific figure.",
+        "is_edible set false: NC State lists a Poisonous to Humans block for this species with Poison Severity: Low, Poison Toxic Principle: Sesquiterpene lactone, Poison Part: Flowers, Leaves, Seeds, and Causes Contact Dermatitis: No. The symptoms text is 'Salivation, elevated temperature and pulse, with difficulty breathing, vomiting, and convulsions if eaten in large quantities.' The page's only food-related wording is the wildlife tags '#food source herbage', '#food source nectar' and '#food source pollen', which describe wildlife forage, not human food. The page also gives an ethnobotany use of powdered leaves and flowers to induce sneezing and an infusion of leaves as a laxative (medicinal, not food).",
+        "climbs left null: NC State lists Habit/Form as Clumping and Erect, and Plant Type as Herbaceous Perennial, Native Plant, Poisonous, Wildflower. I searched the NC State page for 'Climb' and 'Vine' and found nothing. The RHS page returned no hits for 'Habit' or 'Climb'.",
+        "is_edible: the RHS page returned no hits for 'Edible', 'Poison' or 'Toxic', so only NC State addresses eating. Missouri Botanical Garden (plantfinder.mobot.org) was not read by me for these two fields; no other registered-host species page was searched.",
+        "Size and attracts_pollinators fields left null by instruction (already landed or not in scope); not researched.",
+        "is_edible lands false in size backfill round 6: NC State's Poisonous to Humans block (Poison Severity Low; Poison Part Flowers, Leaves, Seeds) gives Poison Symptoms ending 'convulsions if eaten in large quantities.', the page's own statement that eating the plant poisons, which the catalog now takes as support for false. This supersedes the earlier line here that kept is_edible null rather than inferring false from the same block. Noted at landing, verified against the cached copy."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -520,7 +531,8 @@
       "mature_height_in_min": 12,
       "mature_height_in_max": 36,
       "mature_spread_in_min": 12,
-      "mature_spread_in_max": 24
+      "mature_spread_in_max": 24,
+      "is_edible": false
     },
     {
       "chill_damage_f": null,
@@ -1618,6 +1630,7 @@
   ],
   "normalizations": [
     "2026-09-10: b76 landed by a second session (branch claude/database-build-goals-e548af). Eight native wet-meadow perennials: American Boneset, Purple-headed Sneezeweed, Great Blue Lobelia, American Blue Vervain, Allegheny Monkey Flower, Tall Meadow Rue, Tussock Sedge, Woolgrass. Auditor-supplied corrected wording used verbatim where the audit gave a whole string; every reachable citation substitute was ground-truthed with qc.py before being applied. Landing decisions: Eupatorium perfoliatum's soil_drainage came back moisture_retentive and lands moderate — its only wet-side evidence is Penn State's rain-garden Site Conditions labels ('needs constant moisture', 'Hydrologic zones: Wet/moist') and a flood-tolerance sentence, while NC State's Soil Drainage field pairs Good Drainage with Moist, NC State's Description reads 'average, medium to wet' and RHS's Moisture field reads 'Moist but well–drained or Poorly–drained' (the b54 rule: a rain-garden siting label is not a cultivation drainage requirement). Lobelia siphilitica's soil_drainage was nulled on audit for resting on RHS alone and is restored as moisture_retentive on NC State's Soil Drainage field (Moist, Occasionally Wet, no well-drained value) plus MoBot's Culture requirement 'Needs constant moisture.'; MoBot (kempercode=i460) and Penn State's Great Blue Lobelia page, which the research pass reported as non-existent, were worked in. All six Mimulus ringens MoBot citations were re-pointed from taxonid=286977 (which serves Asplenium platyneuron) to the correct kempercode=z410 page; Mimulus ringens is kept as scientific_name_accepted on RHS's Name Status Correct and NC State's current page title, with the Erythranthe reclassification disclosed as unverifiable against the closed source list. Thalictrum pubescens and Carex stricta landed is_houseplant null and land false, on MoBot's Type, Zone, Uses and Suggested Use fields. Five common names were title-cased or moved to a dedicated page's lead: Boneset -> American Boneset, Purplehead Sneezeweed -> Purple-headed Sneezeweed, Blue Vervain -> American Blue Vervain, Allegheny Monkeyflower -> Allegheny Monkey Flower, tussock sedge -> Tussock Sedge. Poison-block citations that glued an NC State label to its value ('Poison Severity: Low', 'Causes Contact Dermatitis: Yes/No') were re-quoted as the value alone, and Great Blue Lobelia's five-field semicolon-joined poison synthesis was split into one citation per rendered field. Two Penn State quotes carrying a stray pipe ('Soil:| Clay and sandy...') were re-quoted from the page. verify_quotes: every reachable quote verified after repair; MoBot pages skipped from this machine (ConnectError).",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -57,6 +57,44 @@ _CLOSING_RE = re.compile(
 )
 _SENTENCE_SPLIT_RE = re.compile(r"[.!?\n]+")
 
+# Assurances of safety. The stem check cannot see these: "Ferny is non-toxic,
+# so your cats can nibble freely" contains "toxic", which the toxicity
+# warning it replaced also contained, and "perfectly safe around pets" has no
+# care stem at all. Any of these words the facts do not themselves use is a
+# safety verdict the model made up. Mirrors the "safety-claim" reason the
+# phone's restyle guard applies (mobile gnomeVoice/restyle.ts).
+_SAFETY_CLAIM_RE = re.compile(
+    r"\b(?:non-?\s?toxic|not\s+(?:toxic|poisonous|harmful)|safe|harmless|edible"
+    r"|pet[- ]?(?:safe|friendly)|child[- ]?(?:safe|friendly))\b",
+    re.I)
+
+# Words that turn an instruction around: "hold off watering" against "water
+# it today", "toxic to pets" against "not toxic to pets".
+_NEGATOR_RE = re.compile(
+    r"\b(?:no|not|never|none|nothing|skip|avoid|without|non|hold\s+off|wait)\b"
+    r"|n't\b|non-",
+    re.I)
+
+
+#: A clause about the care log reports history, not an instruction: "Ferny
+#: has no watering logged yet" restates "none logged yet" and is not "don't
+#: water". Such clauses carry no polarity.
+_HISTORY_RE = re.compile(r"\b(?:logs?|logged|records?|recorded|history)\b", re.I)
+_CLAUSE_SPLIT_RE = re.compile(r"[.!?;\n]+")
+
+
+def _safety_terms(text: str) -> set[str]:
+    return {re.sub(r"[\s-]+", "", m.group(0).lower())
+            for m in _SAFETY_CLAIM_RE.finditer(text)}
+
+
+def _polarities(text: str, stem: str) -> set[bool]:
+    """Whether the clauses mentioning `stem` say it (False) or say it with a
+    negator (True). A stem the text never mentions has no polarity."""
+    return {bool(_NEGATOR_RE.search(clause))
+            for clause in _CLAUSE_SPLIT_RE.split(text.lower())
+            if stem in clause and not _HISTORY_RE.search(clause)}
+
 
 def normalize_number_words(text: str) -> str:
     """"thirty-five days" -> "35 days", so the digit-subset rule can see it."""
@@ -105,6 +143,23 @@ def grounding_failures(
         stem in out_lower and stem not in facts_lower for stem in CARE_STEMS
     ):
         failures.append("invented-care-activity")
+
+    # A safety verdict the facts never gave. Checked on every surface: a
+    # photo can show spots, but it cannot show that a plant is harmless.
+    if _safety_terms(stripped) - _safety_terms(facts):
+        failures.append("safety-claim")
+
+    # The same care word, turned the other way round: "hold off watering"
+    # restyled to "water it today", or "toxic to pets" to "not toxic to
+    # pets". A sentence the facts never phrase that way, for a stem they do
+    # mention, is an instruction they did not give. Fails closed -- a model
+    # saying "no need to water yet" beside a plain schedule is refused too,
+    # and the reader gets the rule-based wording instead.
+    for stem in CARE_STEMS:
+        said = _polarities(stripped, stem)
+        if said and said - _polarities(facts, stem) and stem in facts_lower:
+            failures.append("polarity")
+            break
 
     if _PLACEHOLDER_RE.search(stripped) or _PLACEHOLDER_WORDS_RE.search(stripped):
         failures.append("placeholder")

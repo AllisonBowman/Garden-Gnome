@@ -3,6 +3,8 @@
 Mirrors mobile/src/gnomeVoice/restyle.test.ts — the two guards enforce the
 same persona contract, so they are tested against the same defects.
 """
+import pytest
+
 from app.services.grounding import (
     grounding_failures,
     is_grounded,
@@ -116,3 +118,78 @@ class TestGroundedOutput:
             "Fertilizing runs every 35-45 days."
         )
         assert grounding_failures(FACTS, good) == []
+
+
+# The audit's three inversions, which passed the stem check because the stem
+# was present on both sides (mobile restyle.test.ts carries the same cases).
+TOXIC_FACTS = (
+    "SPECIES CARE FACTS (authoritative):\n"
+    "- Common name: Fern\n"
+    "- Toxic to pets: yes\n"
+    "CARE SCHEDULES (authoritative):\n"
+    "- Watering: every 7-10 days\n"
+)
+NO_RECORD_FACTS = TOXIC_FACTS.replace("- Toxic to pets: yes", "- Toxic to pets: no record")
+HOLD_OFF_FACTS = (
+    TOXIC_FACTS
+    + "Rain likely (70% on 2026-07-24) — hold off watering; the sky may do it for you.\n"
+)
+
+
+class TestSafetyClaims:
+    def test_a_warning_turned_into_an_assurance_is_rejected(self):
+        failures = grounding_failures(
+            TOXIC_FACTS, "Ferny is non-toxic, so your cats can nibble freely.")
+        assert "safety-claim" in failures
+
+    def test_no_record_turned_into_safe_is_rejected(self):
+        failures = grounding_failures(
+            NO_RECORD_FACTS, "Ferny is perfectly safe around pets and children.")
+        assert "safety-claim" in failures
+
+    @pytest.mark.parametrize("claim", [
+        "It is harmless.", "A pet-friendly choice.", "The fronds are edible.",
+        "It is not toxic.", "Nontoxic, so relax.",
+    ])
+    def test_each_assurance_word_is_caught(self, claim):
+        assert "safety-claim" in grounding_failures(TOXIC_FACTS, claim)
+
+    def test_a_term_the_facts_use_may_be_repeated(self):
+        facts = TOXIC_FACTS + "- Edible: grown to eat\n"
+        assert "safety-claim" not in grounding_failures(
+            facts, "Fern is edible, as its sources say.")
+
+    def test_safety_claims_are_checked_for_vision_too(self):
+        assert "safety-claim" in grounding_failures(
+            TOXIC_FACTS, "The leaves look healthy and the plant is harmless.",
+            check_care_stems=False)
+
+
+class TestPolarity:
+    def test_hold_off_turned_into_water_now_is_rejected(self):
+        assert "polarity" in grounding_failures(
+            HOLD_OFF_FACTS.replace("- Watering: every 7-10 days\n", ""),
+            "Water Ferny today.")
+
+    def test_toxic_turned_into_not_toxic_is_rejected(self):
+        failures = grounding_failures(TOXIC_FACTS, "Ferny is not toxic to your cats.")
+        assert "polarity" in failures
+
+    def test_a_plain_schedule_turned_into_skip_is_rejected(self):
+        """Fails closed: the facts never say to skip, so neither may the
+        model, even where skipping would be reasonable."""
+        assert "polarity" in grounding_failures(
+            TOXIC_FACTS, "Skip watering this week.")
+
+    def test_a_clause_about_the_log_is_history_not_an_instruction(self):
+        """'No watering logged yet' restates the history block; it is not
+        'do not water'."""
+        facts = TOXIC_FACTS + "RECENT CARE HISTORY: none logged yet.\n"
+        assert "polarity" not in grounding_failures(
+            facts, "Ferny has no watering logged yet; every 7-10 days suits it.")
+
+    def test_the_same_polarity_passes(self):
+        assert "polarity" not in grounding_failures(
+            HOLD_OFF_FACTS, "Rain is likely, so hold off watering Ferny.")
+        assert "polarity" not in grounding_failures(
+            TOXIC_FACTS, "Ferny is toxic to pets, so keep it up high.")

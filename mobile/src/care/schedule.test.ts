@@ -1,5 +1,11 @@
-import { computeCareTasks, careTaskDueLabel, CareTask } from './schedule';
+import {
+  allCaughtUp, computeCareTasks, careTaskDueLabel, CareTask, hasCheckSchedule,
+  NO_SCHEDULE_LINE, unreadLine, unscheduledLine, unscheduledPlants,
+} from './schedule';
 import { CareLog, Plant, Species } from '../types';
+
+declare const require: (id: string) => any;
+declare const __dirname: string;
 
 const NOW = new Date('2026-07-15T14:00:00'); // mid-afternoon, local
 
@@ -88,11 +94,26 @@ describe('computeCareTasks', () => {
   });
 
   it('falls back to acquired_on when there is no care history', () => {
-    const [task] = run({ plants: [plant({ acquired_on: '2026-07-01T00:00:00' })] });
+    // The server's own shape: a date with no time (YYYY-MM-DD).
+    const [task] = run({ plants: [plant({ acquired_on: '2026-07-01' })] });
     // acquired Jul 1; window Jul 8–11; today Jul 15 is 4 days past → overdue
     expect(task.status).toBe('overdue');
     expect(task.daysUntilDue).toBe(-7);
     expect(task.lastCareDate).toBeNull();
+  });
+
+  it('reads the server’s date-only acquired_on as that local day, not UTC midnight', () => {
+    // Added on the afternoon of Jul 8 in New York (where this suite runs);
+    // the server dates it 2026-07-08. Read as UTC midnight that is the
+    // evening of Jul 7 here, and the first check came due on day 6.
+    const [task] = computeCareTasks({
+      plants: [plant({ acquired_on: '2026-07-08' })],
+      logsByPlant: {},
+      speciesById: { 100: species(waterEvery7) },
+      now: new Date(2026, 6, 8, 14, 0),
+    });
+    expect(task.daysUntilDue).toBe(7);
+    expect([task.dueDate.getMonth(), task.dueDate.getDate()]).toEqual([6, 15]);
   });
 
   it('falls back to now (never immediately overdue) when there is no history and no acquired date', () => {
@@ -117,5 +138,82 @@ describe('computeCareTasks', () => {
   it('scopes nothing itself — every task carries its growingAreaId for the caller to filter', () => {
     const [task] = run();
     expect(task.growingAreaId).toBe(5);
+  });
+});
+
+// Most of the catalog has no schedule on record. Those plants get no task —
+// no interval is invented for them — and the screens must say so instead of
+// letting the silence, or "all caught up", read as nothing needed.
+describe('plants with no check schedule', () => {
+  const wood = { ...species([]), id: 130, common_name: 'Wood Sage' } as Species;
+  const mistOnly = species([
+    { id: 9, species_id: 100, care_type: 'mist' as const, interval_days_min: 2, interval_days_max: 3, notes: '' },
+  ]);
+
+  it('a species has a check schedule only with an interval the app can keep', () => {
+    expect(hasCheckSchedule(species(waterEvery7))).toBe(true);
+    expect(hasCheckSchedule(wood)).toBe(false);
+    expect(hasCheckSchedule({ ...wood, care_schedules: undefined } as Species)).toBe(false);
+    // Misting is never a reminder, so a misting interval alone schedules nothing.
+    expect(hasCheckSchedule(mistOnly)).toBe(false);
+  });
+
+  it('gets no task and is listed as unscheduled — never given an invented interval', () => {
+    const input = {
+      plants: [plant(), plant({ id: 2, nickname: 'Sage', species_id: 130, growing_area_id: 6 })],
+      logsByPlant: {},
+      speciesById: { 100: species(waterEvery7), 130: wood },
+      now: NOW,
+    };
+    expect(computeCareTasks(input).map((t) => t.plantId)).toEqual([1]);
+    expect(unscheduledPlants(input)).toEqual([
+      { plantId: 2, nickname: 'Sage', growingAreaId: 6 },
+    ]);
+  });
+
+  it('a species that failed to load is not called unscheduled', () => {
+    expect(unscheduledPlants({
+      plants: [plant({ species_id: 999 })], logsByPlant: {}, speciesById: {},
+    })).toEqual([]);
+  });
+
+  it('says plainly what is left out, with the count in digits', () => {
+    expect(unscheduledLine([])).toBeNull();
+    expect(unscheduledLine([{ plantId: 2, nickname: 'Sage' }])).toBe(
+      'No check schedule on record for Sage’s species yet, so nothing is scheduled '
+      + 'for it. Its care guide has what its sources say.');
+    const many = [1, 2, 3].map((id) => ({ plantId: id, nickname: `P${id}` }));
+    expect(unscheduledLine(many)).toMatch(/^3 plants have no check schedule on record/);
+  });
+
+  it('the plant page line points at the care guide and the silent reminders', () => {
+    expect(NO_SCHEDULE_LINE).toMatch(
+      /^No check schedule on record for this species yet; its care guide below has what its sources say\./);
+    expect(NO_SCHEDULE_LINE).toMatch(/no reminders/);
+  });
+
+  it('a log that could not be read is said, not treated as never cared for', () => {
+    expect(unreadLine(0)).toBeNull();
+    expect(unreadLine(1)).toMatch(/1 plant’s care log/);
+    expect(unreadLine(4)).toMatch(/4 plants’ care logs/);
+  });
+});
+
+// The to-do card's rule: "all caught up" is claimed only when no plant was
+// left out.
+describe('the to-do card never claims all caught up over unscheduled plants', () => {
+  it('is caught up only with checks on record and nothing left out', () => {
+    expect(allCaughtUp(3, 0)).toBe(true);
+    // A plant with no schedule, or a log that couldn't be read, is left out.
+    expect(allCaughtUp(3, 1)).toBe(false);
+    // Nothing scheduled at all is not "caught up" either.
+    expect(allCaughtUp(0, 0)).toBe(false);
+    expect(allCaughtUp(0, 2)).toBe(false);
+  });
+
+  it('is the rule the card uses', () => {
+    const src: string = require('fs').readFileSync(
+      require('path').join(__dirname, 'CareTodos.tsx'), 'utf8');
+    expect(src).toMatch(/allCaughtUp\(/);
   });
 });

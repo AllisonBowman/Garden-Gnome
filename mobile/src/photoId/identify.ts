@@ -2,6 +2,10 @@ import { Platform } from 'react-native';
 import { Species } from '../types';
 import { isAvailable, identify } from '../../modules/plant-id';
 import { matchSpecies, classifyMatches } from './fuzzyMatch';
+import {
+  NO_NAME_OBSERVATION, SUGGESTED_OBSERVATION, UNAVAILABLE_OBSERVATION,
+  UNREADABLE_OBSERVATION, notInCatalogObservation,
+} from './copy';
 
 // Single entry point the "Identify from a photo" UI calls. It hides which
 // on-device backend ran (Apple Foundation Models on iOS, Gemini Nano on
@@ -60,8 +64,7 @@ export async function identifySpeciesPhoto(
   if (!(await isAvailable())) {
     return {
       backend: 'unavailable',
-      observation:
-        "On-device plant identification isn't available on this device — search for your plant below.",
+      observation: UNAVAILABLE_OBSERVATION,
       candidates: [],
     };
   }
@@ -73,14 +76,14 @@ export async function identifySpeciesPhoto(
   } catch {
     return {
       backend,
-      observation: "Couldn't read the photo this time — search for your plant below.",
+      observation: UNREADABLE_OBSERVATION,
       candidates: [],
     };
   }
   if (!aiText || !aiText.trim()) {
     return {
       backend,
-      observation: "The model couldn't name this plant — search for it below.",
+      observation: NO_NAME_OBSERVATION,
       candidates: [],
     };
   }
@@ -93,28 +96,22 @@ export async function identifySpeciesPhoto(
     scientific_name: m.species.scientific_name,
   });
 
-  if (tier === 'confident') {
+  // Both tiers are suggestions to confirm, and say so the same way. The
+  // "confident" tier is only a close string match between the phone's answer
+  // and a catalog name; it says nothing about whether the answer was right.
+  if (tier === 'confident' || tier === 'plausible') {
     return withDebug({
       backend,
-      observation: 'Identified on-device — tap to confirm, or pick another below.',
-      candidates: candidates.map(toCandidate),
-    }, aiText);
-  }
-  if (tier === 'plausible') {
-    return withDebug({
-      backend,
-      observation: 'Best guesses from the photo — tap one, or search below.',
+      observation: SUGGESTED_OBSERVATION,
       candidates: candidates.map(toCandidate),
     }, aiText);
   }
 
-  // 4. No confident catalog match: surface the model's guess but flag that we
-  //    have no curated care data for it, and hand off to manual search.
+  // 4. No catalog match: say what the phone suggested, that the catalog has
+  //    no record of it, and hand off to manual search.
   return withDebug({
     backend,
-    observation:
-      `The photo looks like “${aiText.trim()}”, but that isn't in our care ` +
-      `database yet — search below to pick the closest match.`,
+    observation: notInCatalogObservation(aiText.trim()),
     candidates: [],
   }, aiText);
 }

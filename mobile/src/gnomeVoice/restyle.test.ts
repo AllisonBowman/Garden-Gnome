@@ -6,7 +6,9 @@ jest.mock('../../modules/plant-id', () => ({
   generate: jest.fn(),
 }));
 
-import { driftReasons, driftsFromFact, gnomeVoice, normalizeNumberWords } from './restyle';
+import {
+  driftReasons, driftsFromFact, gnomeVoice, normalizeNumberWords, splitSafetyLines,
+} from './restyle';
 import { SIGN_OFF } from './persona';
 import { isAvailable, generate } from '../../modules/plant-id';
 
@@ -116,6 +118,117 @@ describe('individual v2 checks', () => {
   it('still rejects empty and rambling output', () => {
     expect(driftReasons(SUNFLOWER_FACT, '   ')).toEqual(['empty']);
     expect(driftReasons(SUNFLOWER_FACT, 'x'.repeat(5000))).toContain('too-long');
+  });
+});
+
+// The audit's failing examples, each of which the v2 guard passed: every
+// stem the old checks looked for was present, and the advice was reversed.
+describe('a restyle that reverses a safety fact', () => {
+  it('rejects "non-toxic" written over a toxicity warning', () => {
+    expect(driftReasons(
+      'Toxic to cats and dogs (ASPCA).',
+      'Ferny is non-toxic, so your cats can nibble freely.',
+    )).toContain('safety-claim');
+  });
+
+  it('rejects "safe" written over "no record" — no record is not safe', () => {
+    expect(driftReasons(
+      'No toxicity record for this species.',
+      'Ferny is perfectly safe around pets and children.',
+    )).toContain('safety-claim');
+  });
+
+  it('rejects reassurance invented from facts that never mentioned harm', () => {
+    expect(driftReasons(SUNFLOWER_FACT, 'It is pet-friendly, and it was watered 2 days ago.'))
+      .toContain('safety-claim');
+  });
+
+  it('lets a note repeat a reassurance the facts did make', () => {
+    expect(driftReasons(
+      'Recorded as non-toxic to cats and dogs.',
+      'The record says it is non-toxic to cats and dogs.',
+    )).not.toContain('safety-claim');
+  });
+});
+
+describe('a restyle that reverses the advice', () => {
+  it('rejects "water it today" written over "hold off"', () => {
+    expect(driftReasons(SUNFLOWER_FACT, 'Water Ferny today.')).toEqual(['polarity']);
+  });
+
+  it('rejects "it can wait" written over "likely due"', () => {
+    const due = '💧 Watering: done 12 days ago — past the 10 day mark. Likely due.';
+    expect(driftReasons(due, 'Hold off on watering Ferny for a while.'))
+      .toContain('polarity');
+  });
+
+  it('rejects a dry-out written over a keep-moist regime', () => {
+    const moist = '💧 From its sources: keep the medium evenly moist.';
+    expect(driftReasons(moist, 'Let Ferny dry out completely between drinks.'))
+      .toContain('polarity');
+  });
+
+  it('rejects keeping a dry-between plant wet', () => {
+    const dry = '💧 From its sources: let the medium dry thoroughly between waterings.';
+    expect(driftReasons(dry, 'Keep the soil wet at all times, and it will thrive.'))
+      .toContain('polarity');
+  });
+
+  it('accepts a paraphrase that keeps the direction', () => {
+    expect(driftReasons(
+      SUNFLOWER_FACT,
+      'Ferny had a drink 2 days ago, so hold off on watering for 3 more days.',
+    )).toEqual([]);
+    const moist = '💧 From its sources: keep the medium evenly moist.';
+    expect(driftReasons(moist, 'Keep it evenly moist and never let it dry out.'))
+      .not.toContain('polarity');
+  });
+});
+
+describe('safety lines never reach the model', () => {
+  const WITH_WARNING = [
+    '💧 Watering: done 2 days ago. Next window opens in 3 days — hold off.',
+    '⚠️ Ferny is toxic to pets.',
+  ].join('\n');
+
+  it('splits warnings and toxicity lines from the rest, word for word', () => {
+    expect(splitSafetyLines(WITH_WARNING)).toEqual({
+      styleable: '💧 Watering: done 2 days ago. Next window opens in 3 days — hold off.',
+      safety: ['⚠️ Ferny is toxic to pets.'],
+    });
+    expect(splitSafetyLines('Sap is poisonous if eaten.\nRotate weekly.').safety)
+      .toEqual(['Sap is poisonous if eaten.']);
+  });
+
+  it('keeps the warning out of the prompt and appends it verbatim before the sign-off', async () => {
+    mockAvailable.mockResolvedValue(true);
+    mockGenerate.mockResolvedValue(
+      'Ferny had a drink 2 days ago, so the next watering window opens in 3 days.');
+    const result = await gnomeVoice(WITH_WARNING, 'Ferny');
+
+    const prompt = mockGenerate.mock.calls[mockGenerate.mock.calls.length - 1][0];
+    expect(prompt).not.toMatch(/toxic/i);
+    expect(result.styled).toBe(true);
+    expect(result.text.split('\n')).toEqual([
+      'Ferny had a drink 2 days ago, so the next watering window opens in 3 days.',
+      '⚠️ Ferny is toxic to pets.',
+      SIGN_OFF,
+    ]);
+  });
+
+  it('falls back flat, warning and all, when the model mentions a hazard it was never shown', async () => {
+    mockAvailable.mockResolvedValue(true);
+    mockGenerate.mockResolvedValue('Ferny is non-toxic; the next watering window opens in 3 days.');
+    const result = await gnomeVoice(WITH_WARNING, 'Ferny');
+    expect(result).toEqual({ text: WITH_WARNING, styled: false });
+  });
+
+  it('does not run the model at all when every line is a warning', async () => {
+    mockAvailable.mockResolvedValue(true);
+    mockGenerate.mockClear();
+    const result = await gnomeVoice('⚠️ Ferny is toxic to pets.');
+    expect(result).toEqual({ text: '⚠️ Ferny is toxic to pets.', styled: false });
+    expect(mockGenerate).not.toHaveBeenCalled();
   });
 });
 

@@ -12,6 +12,7 @@ from sqlmodel import Session, create_engine
 from app.data.claims.recompute import RESOLVED_FIELDS, SERVER_ONLY_FIELDS
 from app.models.models import CareDataStatus, Species, SpeciesSource
 from app.models.schemas import CareSourceRead, SpeciesDetail, SpeciesRead
+from tests.census_operator import as_operator
 
 NCSU = "https://plants.ces.ncsu.edu/plants/fuchsia-magellanica/"
 LEGACY = ("light_need", "humidity_pct_min", "humidity_pct_max",
@@ -102,6 +103,55 @@ def test_minted_row_toxicity_is_unknown_not_safe(api):
     assert "treat it as unknown rather than safe" in listed["toxicity_description"]
 
 
+def test_both_routes_name_people_from_the_cited_passages(api):
+    """The hazard to people sits in the claim passages, server-side. The
+    sentence and the edibility note state the fact; neither route carries
+    the passage (ADR 0003)."""
+    import json
+
+    from app.models.models import Authority, Claim
+
+    client, headers, engine = api
+    passage = ("Poisonous to Humans: Poison Severity: High Poison Symptoms: "
+               "HIGHLY TOXIC, MAY BE FATAL IF EATEN!")
+    with Session(engine) as s:
+        authority = Authority(name="Passage Test Extension", tier=2)
+        s.add(authority)
+        s.flush()
+        s.add(Claim(subject="Solanum passagetestii", field="toxicity_detail",
+                    value_json=json.dumps("prose"), authority_id=authority.id,
+                    citation_url="https://example.test/passage", quote=passage))
+        s.commit()
+    (sid,) = store(engine, minted(
+        "Solanum passagetestii", "Passagetest Nightshade",
+        toxic_to_pets=True, is_edible=True))
+
+    detail = client.get(f"/species/{sid}", headers=headers).json()
+    listed = {sp["id"]: sp for sp in
+              client.get("/species/", headers=headers).json()}[sid]
+    for body in (detail, listed):
+        # The rating's "seriously" is the people's; the pet flag carries
+        # no severity of its own.
+        assert body["toxicity_description"].startswith(
+            "⚠️ Seriously toxic to people, and toxic to pets.")
+        assert ("Passage Test Extension rates its poison severity for people "
+                "high.") in body["toxicity_description"]
+        assert body["edibility_note"].startswith("Some parts are eaten")
+        assert "FATAL" not in json.dumps(body)
+
+
+def test_an_edible_plant_with_nothing_against_it_has_no_note_key(api):
+    client, headers, engine = api
+    (sid,) = store(engine, minted("Ocimum notetestii", "Notetest Basil",
+                                  is_edible=True))
+    listed = {sp["id"]: sp for sp in
+              client.get("/species/", headers=headers).json()}[sid]
+    assert listed["is_edible"] is True
+    assert "edibility_note" not in listed  # absent, as every null on the list is
+    assert client.get(f"/species/{sid}", headers=headers).json()[
+        "edibility_note"] is None
+
+
 def test_detail_carries_values_provenance_and_named_sources_only(api):
     client, headers, engine = api
     (sid,) = store(engine, minted(
@@ -180,11 +230,11 @@ def resp_text(payload) -> str:
     return json.dumps(payload)
 
 
-def test_create_route_returns_a_fresh_row_without_sources(api):
+def test_create_route_returns_a_fresh_row_without_sources(api, monkeypatch):
     """POST /species/ answers with SpeciesDetail too; a row that has never
     been recomputed must not 500 on its null care_sources."""
     client, headers, _ = api
-    resp = client.post("/species/", headers=headers, json={
+    resp = client.post("/species/", headers={**headers, **as_operator(monkeypatch)}, json={
         "common_name": "Createtest Fern", "scientific_name": "Testus createus",
         "light_need": "medium", "humidity_pct_min": 40, "humidity_pct_max": 60,
         "temp_f_min": 60, "temp_f_max": 80, "soil_type": "mix"})
@@ -280,3 +330,21 @@ def test_detail_schema_tolerates_a_never_recomputed_row():
     out = SpeciesDetail.model_validate(minted("Testus nullus", "Nullus", id=1))
     assert out.care_sources == []
     assert out.toxic_to_pets is None
+
+
+def test_the_catalog_travels_compressed_to_a_client_that_accepts_it(api):
+    """Every species goes to the phone at once, and as plain JSON the list
+    is most of a megabyte. Compressed when the client says it can unpack
+    it, untouched when it can't -- and the same list either way."""
+    client, headers, engine = api
+    with Session(engine) as s:
+        for i in range(40):
+            s.add(minted(f"Compressus testae {i}", f"Compression Test Plant {i}"))
+        s.commit()
+
+    packed = client.get("/species/", headers={**headers, "Accept-Encoding": "gzip"})
+    plain = client.get("/species/", headers={**headers, "Accept-Encoding": "identity"})
+    assert packed.status_code == plain.status_code == 200
+    assert packed.headers.get("content-encoding") == "gzip"
+    assert "content-encoding" not in plain.headers
+    assert packed.json() == plain.json()

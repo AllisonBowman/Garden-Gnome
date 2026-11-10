@@ -4,6 +4,7 @@ import React, {
 import axios from 'axios';
 import { apiClient, getBaseUrl } from '../api/client';
 import { googleSignOutLocal } from './signIn';
+import { cancelAllReminders } from '../notifications/reminders';
 import {
   AuthUser, clearSession, getRefreshToken, onForcedSignOut,
   resolveInitialSession, storeSession, updateStoredUser,
@@ -58,6 +59,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const localSignOut = useCallback(async () => {
     await googleSignOutLocal();
     await clearSession();
+    // The next account on this phone must not be nudged about this one's plants.
+    await cancelAllReminders();
     setUser(null);
     setStatus('signedOut');
   }, []);

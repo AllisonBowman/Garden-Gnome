@@ -392,6 +392,30 @@ def test_dry_run_leaves_the_database_byte_identical(db):
         assert s.get(SyncState, FINGERPRINT_KEY) is None
 
 
+def test_a_sync_records_how_far_it_reached(db, tmp_path):
+    """catalog.synced judges the rows this sync reached; one added after it
+    -- an operator's POST /species/ -- is the next boot's to resolve."""
+    from app.db.catalog_state import SYNCED_THROUGH_KEY
+
+    engine, _ = db
+    tranche = tmp_path / "tranche"
+    write_batch(tranche, "b1-test.json", [
+        record("Reach One", "Reachia una", humidity_need="low"),
+        record("Reach Two", "Reachia duo", humidity_need="high")])
+    with Session(engine) as s:
+        sync_catalog(s, directory=tranche)
+    top = max(sp.id for sp in rows(engine))
+    with Session(engine) as s:
+        assert s.get(SyncState, SYNCED_THROUGH_KEY).value == str(top)
+        # A dry run moves nothing, this record included.
+        s.add(legacy_species("Reachia tertia"))
+        s.commit()
+    with Session(engine) as s:
+        sync_catalog(s, directory=tranche, dry_run=True)
+    with Session(engine) as s:
+        assert s.get(SyncState, SYNCED_THROUGH_KEY).value == str(top)
+
+
 # --- the real tranche ------------------------------------------------------
 
 def _seed_curated_catalog(session):

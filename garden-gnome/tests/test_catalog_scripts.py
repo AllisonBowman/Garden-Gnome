@@ -207,3 +207,23 @@ def test_the_restored_hybrids_are_in_the_candidate_pool():
         for species in batch["species"]:
             # gen_batch.py copies the note verbatim into the research prompt.
             assert species["note"].endswith(FIXED_NOTE_SENTENCE), species["latin"]
+
+
+def test_the_landing_gate_refuses_a_common_name_another_species_already_holds(tmp_path):
+    """b114's audit missed that "Zebra Plant" was already Haworthiopsis attenuata's name (b108's
+    audit caught the same clash), so finish() checks the landed corpus mechanically."""
+    rl = _repair_lib()
+    clash = rl.corpus_collisions(
+        [{"common_name": "Zebra Plant", "scientific_name_given": "Aphelandra squarrosa"}],
+        tmp_path / "b999-test.json")
+    assert clash and clash[0][3] == "Haworthiopsis attenuata"
+    # spelling and spacing are folded; the same species is not a collision with itself
+    assert rl.corpus_collisions(
+        [{"common_name": "zebra-plant", "scientific_name_given": "Aphelandra squarrosa"}],
+        tmp_path / "b999-test.json")
+    assert not rl.corpus_collisions(
+        [{"common_name": "Zebra Plant", "scientific_name_given": "Haworthiopsis attenuata"}],
+        tmp_path / "b999-test.json")
+    assert not rl.corpus_collisions(
+        [{"common_name": "Saffron Spike Zebra", "scientific_name_given": "Aphelandra squarrosa"}],
+        tmp_path / "b999-test.json")

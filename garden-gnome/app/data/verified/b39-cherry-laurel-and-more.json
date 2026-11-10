@@ -111,6 +111,18 @@
           "source": "NC State Extension Gardener Plant Toolbox",
           "url": "https://plants.ces.ncsu.edu/plants/prunus-laurocerasus/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false: NC State Plant Toolbox lists stems, leaves and seeds as containing cyanide (Poison Severity High, toxic principle cyanogenic glycosides)",
+          "source": "NC State Extension Gardener Plant Toolbox, Prunus laurocerasus",
+          "url": "https://plants.ces.ncsu.edu/plants/prunus-laurocerasus/",
+          "quote": "Stems, leaves, seeds contain cyanide, particularly toxic in the process of wilting: brick red mucous membranes, panting, shock."
+        },
+        {
+          "claim": "is_edible false: RHS states the seed kernels are harmful if eaten (corroborating the NC State poison listing)",
+          "source": "RHS, Prunus laurocerasus (cherry laurel) details",
+          "url": "https://www.rhs.org.uk/plants/13977/prunus-laurocerasus/details",
+          "quote": "Seed kernels harmful if eaten; wear gloves and other protective equipment when handling"
         }
       ],
       "common_name": "Cherry Laurel",
@@ -163,7 +175,12 @@
         "hgic.clemson.edu/factsheet/laurel/ could not be read: the sandbox network proxy refused this host with error:ProxyError even after being added to allowed_domains for the command. Its content was not consulted and nothing from it is guessed or included.",
         "This is a shrub/small tree per NC State ('Plant Type: Shrub, Tree'; RHS: 'large, spreading evergreen shrub'), not a climber, so rule 4 (climber size suppression) does not apply and the four size fields were populated normally.",
         "Size figures used are NC State's structured Dimensions block for the species itself (not a cultivar): Height: 10 ft. 0 in. - 20 ft. 0 in.; Width: 8 ft. 0 in. - 10 ft. 0 in. RHS's figures (Max Height 4-8 metres, Max Spread 'wider than 8 metres') were not used since NC State (the anchor, with a species-specific structured dimensions block) takes priority and RHS's spread value is open-ended/unusable per the task instructions; RHS was consulted only to cross-check pollinator/edibility signals.",
-        "attracts_pollinators set true from NC State's structured 'Attracts:' field listing Butterflies, Pollinators, Songbirds, and independently corroborated by RHS's 'Plants for pollinators' category tag on the same page."
+        "attracts_pollinators set true from NC State's structured 'Attracts:' field listing Butterflies, Pollinators, Songbirds, and independently corroborated by RHS's 'Plants for pollinators' category tag on the same page.",
+        "climbs left null: NC State lists Habit/Form as Dense, Oval, Rounded, Spreading and Plant Type as Perennial, Poisonous, Shrub, Tree; RHS gives Habit Bushy; searched all four cited pages for 'Climb' and found no hit. No page calls it a climber.",
+        "is_edible set false on the poison evidence only: NC State names stems, leaves and seeds as poisonous (cyanogenic glycosides: amygdalin, prunasin, prulaurasin; Poison Severity High; Poison Part Leaves, Seeds, Stems; symptoms gasping, weakness, excitement, pupil dilation, spasms, convulsions, coma, respiratory failure) and RHS says seed kernels are harmful if eaten and pets (dogs, rabbits, rodents) are harmed if eaten. No page says the fruit pulp is or is not edible; RHS only says 'Some have edible fruit' of the genus Prunus, which is a genus statement and was not used. NC State also tags it problem for cats, dogs and horses.",
+        "attracts_pollinators, mature_height_in_min/max and mature_spread_in_min/max returned null because they are already landed and are not part of this pass (NC State shows Height 10-20 ft and Width 8-10 ft, RHS Max Height 4-8 metres, but not recorded here per instructions).",
+        "No page refused this machine; NC State, RHS, UMD and Clemson all fetched ok. UMD and Clemson pages were searched for Poison, Toxic, Edible, Climb and carried no edibility or climbing statement. The edis.ifas.ufl.edu and other registered hosts were not searched for a separate species page.",
+        "is_edible lands false in size backfill round 6 on RHS's Potentially harmful field, 'Seed kernels harmful if eaten', and NC State's Poisonous to Humans block (Poison Severity High; cyanogenic glycosides; Poison Part Leaves, Seeds, Stems). This supersedes the earlier lines here saying no page addressed eating this species and that is_edible is null. Neither page says whether the fruit pulp is eaten. Noted at landing, verified against the cached copy."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -175,7 +192,8 @@
       "mature_height_in_min": 120,
       "mature_height_in_max": 240,
       "mature_spread_in_min": 96,
-      "mature_spread_in_max": 120
+      "mature_spread_in_max": 120,
+      "is_edible": false
     },
     {
       "chill_damage_f": null,
@@ -1476,6 +1494,7 @@
   "normalizations": [
     "2026-08-23: twenty-first batch of the \"blind spots\" pass -- Cherry Laurel, a deliberate Cotoneaster/Firethorn identification-confusion companion pair (Rockspray Cotoneaster and Firethorn are visually similar thorny berry shrubs in different genera; no content bleed found), Red-twig Dogwood (deliberately paired against the tree-form Flowering and Kousa Dogwoods already in this catalog), St. John's Wort, Virginia Sweetspire, Summersweet, and Dwarf Fothergilla. Cherry Laurel's toxic_to_pets=true rests on NC State's explicit '#problem for cats #problem for dogs' tags -- clean, no repeat of the b31/b32 non-cat/dog-scope defect despite this species' well-known cyanogenic toxicity inviting an easy over-generalization from its equally-tagged '#problem for horses'. Caught a serious defect this batch's own in-workflow audit found but the post-processing script mishandled: Red-twig Dogwood's common_name was nulled by the audit (correctly -- neither of its two citations actually established 'Red-twig Dogwood' as belonging specifically to Cornus alba rather than its sibling species C. sericea/stolonifera) but the batch script has no special handling for common_name, a required, non-nullable field -- restored using the audit's own conclusion that 'Tatarian Dogwood' is the better-supported name (the one both single-species sources, NC State and MOBOT, actually lead with), with a corrected citation set. This surfaces a script-level gap worth fixing in a future batch: common_name should never be eligible for the generic refute-and-null path. Six more repairs, all using the auditor's own live-fetched, verbatim-quoted evidence: Cherry Laurel's, Firethorn's, and St. John's Wort's name_notes were each trimmed to their one or two individually-cited, accurate sub-claims after the audit found an additional bundled sub-claim that was either uncited researcher synthesis (Firethorn's genus-reclassification narrative) or outright misleading (St. John's Wort's claim that RHS uses 'rose of Sharon' 'rather than' St. John's Wort, when RHS's own full common-names list includes both); Rockspray Cotoneaster's name_note was restored in full with a new Missouri Botanical Garden citation covering its one previously-uncited sub-claim (the 'wall cotoneaster' page title, independently confirmed by MOBOT's own common-names list); Summersweet's name_note was restored by widening a citation's quote that had been truncated exactly before its load-bearing content (the species names it's confused with). Separately, three soil_drainage values -- Virginia Sweetspire, Summersweet, and Dwarf Fothergilla -- were corrected from 'moderate' to 'moisture_retentive' after the audit identified and cited a specific, previously-undocumented refinement to this catalog's existing drainage-mapping convention: 'moderate' is reserved for a source's tags spanning BOTH 'Occasionally Dry' AND 'Occasionally Wet' alongside 'Good Drainage' (precedent: Common Morning Glory, Crape Myrtle, Golden Bamboo), while a combination with 'Moist'/'Occasionally Wet' but no 'Occasionally Dry' tag maps to 'moisture_retentive' instead (precedent: Jack-in-the-Pulpit correctly moisture_retentive; Camellia in b25 previously caught and reverted for this exact mistake) -- all three of this batch's corrected species matched the moisture_retentive pattern exactly, further corroborated in each case by multiple independent sources emphasizing wet-tolerance with no 'well-drained'/'average soil' language. Dwarf Fothergilla's fertilize_interval_days=44 was correctly left null by the audit as an invented number computed from two named calendar dates ('April 1st' and 'mid-May') that appear nowhere in the source as a literal day count -- a violation of this catalog's own repeatedly-enforced literal-number-derivation standard, consistent with precedent going back to b10's Leek and b14's Petunia.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- St. John's Wort -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]
 }

@@ -9,20 +9,26 @@
 
 ## What it is
 
-PlantAdvocate is a houseplant care app: a React Native (Expo) mobile client
-backed by a FastAPI service. You sign in, add your plants, log care events
-(watering, fertilizing, misting, …), and get care advice, photo-based species
-identification, and photo symptom diagnosis — all tailored to the specific
-species and that plant's own history. It's built for plant owners who want more
+PlantAdvocate is a houseplant and garden care app: a React Native (Expo) mobile
+client backed by a FastAPI service. You sign in, describe the growing areas you
+have (a windowsill, a balcony, a raised bed), add your plants, log care events
+(watering, fertilizing, misting, …), and get care advice and on-device
+photo-based species identification, tailored to the specific species and that
+plant's own history. Photo check-ups and free-text symptom reading are built
+but switched off in production. It's built for plant owners who want more
 than a generic watering-reminder app, and — at the systems level — as a study
 in building AI features that give *reliable* answers instead of merely
 plausible-sounding ones.
 
 ## Why it's interesting
 
-**The AI never reasons from scratch.** Every species has a curated database
-record — light needs, humidity/temperature ranges, soil type, toxicity, and a
-per-care-type schedule (water every 7–10 days, fertilize every 30–60, …). When
+**The AI never reasons from scratch.** A researched species' care values are
+claims, each cited to a horticultural authority (an extension service or
+botanical garden) and resolved into one catalog record — light needs, how dry
+the soil should get, humidity/temperature ranges, soil type, toxicity — with
+values borrowed from the genus labelled as borrowed. Older values no claim
+backs yet are labelled as not yet cited, and the check schedules written by
+hand for the original 129 species are not cited. When
 the app generates advice, identifies a plant, or diagnoses a photo, the model is
 handed those facts plus the plant's actual care log and instructed — explicitly
 in the system prompt — to answer *only* from what it's given, never inventing
@@ -31,14 +37,16 @@ care requirements or diagnoses the data doesn't support.
 This matters because plant-care misinformation is exactly what an ungrounded
 model produces confidently and wrong: a hallucinated watering interval or an
 invented pest diagnosis looks just as authoritative as a correct one. Grounding
-the model in a structured, human-reviewed knowledge base trades a little
+the model in a structured, cited knowledge base trades a little
 flexibility for real trustworthiness — the app can always point to *why* it said
 something. Two concrete expressions of that principle:
 
 - **Advice is a hybrid.** A free, deterministic rule-based engine handles
   routine schedule advice (it does the interval math against the species DB and
   the care log); an LLM is invoked only for open-ended symptom diagnosis, the
-  part that actually needs reasoning.
+  part that actually needs reasoning. In production that path is switched
+  off, and the app hides the symptom box until `GET /ai/status` reports a
+  real backend.
 - **Photo identification is catalog-constrained.** The vision model may only
   suggest species that exist in the curated catalog — so it can never propose a
   plant the app has no real care data for.
@@ -101,8 +109,9 @@ scoped to the signed-in user.
   tokens in `expo-secure-store`. Notifications, Camera, Image Picker. A custom
   Expo native module (`modules/plant-id`) bridges Apple Foundation Models
   (Swift) and Gemini Nano / ML Kit GenAI (Kotlin).
-- **Server-side AI:** Anthropic Claude API (cloud) for text advice; no hosted
-  vision backend (server photo diagnosis ships disabled). **On-device AI:**
+- **Server-side AI:** Anthropic Claude API (cloud), opt-in per feature through
+  environment variables; production runs the rule-based engine and keeps
+  photo diagnosis and symptom reading off. **On-device AI:**
   Apple Foundation Models (iOS 26+) / Gemini Nano (AICore Android) — no key,
   no network, no cost.
 
@@ -112,31 +121,46 @@ scoped to the signed-in user.
 - **Social sign-in only** — Sign in with Apple and Google; no passwords. Short
   lived JWT access tokens + rotating refresh tokens with reuse detection
   (a replayed token revokes the whole family).
-- **Per-user data isolation** — every plant, environment, and care log belongs
+- **Per-user data isolation** — every plant, growing area, and care log belongs
   to its owner; other users' resources return 404, not 403.
 - **In-app account deletion** (`DELETE /me`) — wipes all user data and revokes
-  the user's Apple session (App Store Guideline 5.1.1(v)).
-- **Opt-in anonymized census** — aggregate species/care-health data for
-  environmental analysis, off by default and stripped of all identifiers
-  (no nicknames, no addresses, no precise geo, rotated environment references).
+  the user's Apple session (App Store Guideline 5.1.1(v)). A revoke Apple
+  doesn't accept at once is retried from a queue holding only the encrypted
+  grant, which is dropped after 30 days or 10 tries.
+- **Opt-in community census** — off by default. Export 4.1 is one record per
+  planting (species, quantity, growth stage, acquisition month, starting
+  condition, care counted per type per calendar month, moves between growing
+  areas by month, growing-area type and city/region/country), with no names,
+  emails, nicknames, notes, coordinates or day-level dates. Identifiers are
+  fresh on every export and records come in a random order, so no identifier
+  links two exports, though a planting's monthly counts could still resemble
+  it. Export and sync are operator-only.
+- **Privacy policy** — `site/privacy.html` is the binding copy; it names every
+  recipient (Fly.io, Apple, Google, the weather services, and Anthropic once
+  the AI features are switched on). Change it in the same change as the code
+  whenever data goes somewhere new.
 
 **Care**
-- **Species catalog** — 400+ curated houseplant species with light/humidity/
-  temperature ranges, soil, toxicity, and per-care-type schedules; an
-  extensible key-value traits table; provenance + review status for entries
-  sourced beyond the original hand-written set.
-- **Plant inventory & environments** — plants live in per-user growing
-  environments (home, balcony, greenhouse, …) and can be transferred between a
-  user's own environments with a full chain-of-custody record, keeping a stable
-  UUID and their entire care history.
+- **Species catalog** — about 1,000 species (houseplants, edibles, perennials,
+  shrubs, trees, bulbs), every researched care value quoted from a named
+  extension service or botanical garden page
+  (`garden-gnome/app/data/verified/`), with genus-borrowed values labelled; an extensible key-value traits table;
+  provenance + review status for entries sourced beyond the original
+  hand-written set.
+- **Plant inventory & growing areas** — plants live in per-user growing areas
+  (home, balcony, raised bed, greenhouse, …) and can be transferred between a
+  user's own growing areas with a full chain-of-custody record, keeping a
+  stable UUID and their entire care history.
 - **Care logging & timeline** — quick logging across 8 care types with a
   confirmation snackbar, full chronological history with gap-from-previous per
   care type, and per-type stats (actual vs. scheduled interval).
 - **Ask the Gnome** — grounded care advice (`/plants/{id}/advice`) with optional
   free-text symptom input; rule-based by default, LLM for symptom diagnosis,
   restyled in the gnome's voice on-device where available.
-- **Photo diagnosis** — `/plants/{id}/diagnose-photo` reasons over an uploaded
-  photo plus the grounding facts and auto-logs the result to the timeline.
+- **Photo diagnosis** — built but switched off in production; the app shows
+  it only when the server reports a vision model ready (`GET /ai/status`).
+  When on, `/plants/{id}/diagnose-photo` reads the uploaded photo against the
+  grounding facts and logs only the written result to the timeline.
 - **Photo identification** — on-device species ID in Add Plant, catalog
   constrained, with tap-to-select candidates.
 - **Care reminders** — local notifications when plants come due, based on each
@@ -208,7 +232,7 @@ hidden in production.
 |---|---|
 | 1. Plant inventory + curated care database | ✅ Done |
 | 2. LLM reasoning layer on top of the care database | ✅ Done |
-| 3. Photo diagnosis + on-device photo identification | ✅ Done |
+| 3. Photo diagnosis + on-device photo identification | ✅ Done (diagnosis switched off in production) |
 | 4. Proactive scheduling & notifications | ✅ Done |
 | 5. Gnome character voice (on-device restyle) | ✅ Done |
 | 6. User accounts, data isolation & account deletion | ✅ Done (backend + client) |
@@ -216,8 +240,9 @@ hidden in production.
 | — Catalog expansion pipeline (Perenual + review) | ✅ Done |
 | Next: App Store submission (TestFlight → review) | 🔜 In progress |
 
-Product principle carried through every phase: the free tier stays genuinely
-useful — basic care guidance is never paywalled.
+Product principle carried through every phase: basic care guidance is never
+paywalled. Today the app is free, with no subscriptions, in-app purchases or
+ads.
 
 ## Repository layout
 
@@ -226,7 +251,9 @@ garden-gnome/     FastAPI backend — API, auth, SQLite/Alembic, AI services,
                   Fly.io deploy config, tests.  See its README.
 mobile/           Expo / React Native app — screens, auth, on-device AI native
                   module (modules/plant-id), reminders, streaks, onboarding.
-site/             The marketing site sources.
+site/             The marketing site's built HTML (plantadvocate.ai). Its
+                  generator is not in this repo; see site/README-SITE.md
+                  before deploying or regenerating.
 docs/             Plans, audits, design references, and screenshots — including
                   garden-gnome-auth-plan.md (the user-accounts implementation
                   plan and the design decisions it was built against) and

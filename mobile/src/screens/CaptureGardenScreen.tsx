@@ -10,7 +10,10 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchSpeciesList } from '../api/species';
 import { fetchGrowingAreas } from '../api/growingAreas';
+import { defaultAreaId } from '../growingAreas/placement';
 import { createPlantsBulk, PlantDraft } from '../api/plants';
+import { saveFailureAlert, saveInChunks } from '../capture/bulkSave';
+import LoadError from '../components/LoadError';
 import { Species } from '../types';
 import { splitUtterance } from '../capture/splitUtterance';
 import { groundEntries, GroundedEntry, effectiveCount } from '../capture/ground';
@@ -145,10 +148,17 @@ export default function CaptureGardenScreen() {
     }
   }, [listening, heard]);
 
-  const { data: catalog = [], isLoading: catalogLoading } = useQuery({
+  const {
+    data: catalogData, isLoading: catalogLoading, isError: catalogFailed,
+    error: catalogError, isFetching: catalogFetching, refetch: refetchCatalog,
+  } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
+  const catalog = useMemo(() => catalogData ?? [], [catalogData]);
+  // Without the catalog nothing said can be placed, and "nothing to add
+  // there" would blame the words for a failed load.
+  const catalogReady = catalogData !== undefined;
   const { data: growingAreas = [] } = useQuery({
     queryKey: ['growingAreas'],
     queryFn: fetchGrowingAreas,
@@ -160,7 +170,9 @@ export default function CaptureGardenScreen() {
   catalogRef.current = catalog;
 
   const [envId, setEnvId] = useState<number | null>(null);
-  const targetEnv = envId ?? growingAreas[0]?.id ?? null;
+  // The area the server would pick on its own — the oldest — so the chip
+  // that shows selected is the one the plants actually go into.
+  const targetEnv = envId ?? defaultAreaId(growingAreas);
 
   const add = useCallback(() => {
     const grounded = groundEntries(splitUtterance(heard), catalog);
@@ -179,24 +191,42 @@ export default function CaptureGardenScreen() {
 
   const ready = drafts.filter((d) => d.speciesId != null);
 
+  // In batches the server will take (at most 200 a call), each one all or
+  // nothing; see capture/bulkSave.ts. Whatever landed leaves the screen,
+  // whatever didn't stays here to send again.
   const save = useMutation({
-    mutationFn: () => createPlantsBulk(ready.map((d): PlantDraft => ({
-      species_id: d.speciesId as number,
-      quantity: d.count,
-      location: d.entry.location,
-      ...(targetEnv != null ? { growing_area_id: targetEnv } : {}),
-    }))),
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['plants'] });
-      queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
-      queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
-      setDrafts([]);
-      navigation.goBack();
-      void res;
+    mutationFn: () => saveInChunks(ready, (batch) => createPlantsBulk(
+      batch.map((d): PlantDraft => ({
+        species_id: d.speciesId as number,
+        quantity: d.count,
+        location: d.entry.location,
+        ...(targetEnv != null ? { growing_area_id: targetEnv } : {}),
+      })),
+    )),
+    onSuccess: ({ saved, unsaved, error }) => {
+      if (saved.length > 0) {
+        queryClient.invalidateQueries({ queryKey: ['plants'] });
+        queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
+        queryClient.invalidateQueries({ queryKey: ['growingArea'] });
+        queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
+      }
+      if (error == null) {
+        setDrafts([]);
+        navigation.goBack();
+        return;
+      }
+      const savedIds = new Set(saved.map((d) => d.id));
+      setDrafts((prev) => prev.filter((d) => !savedIds.has(d.id)));
+      // Caretaker words for why, and advice that can work (bulkSave.ts).
+      const { title, body } = saveFailureAlert(error, saved.length, unsaved.length);
+      Alert.alert(title, body);
     },
+    // saveInChunks reports a failed batch rather than throwing; this is for
+    // anything else, so a tap never ends in silence.
     onError: () => Alert.alert(
       'Nothing was saved',
-      "PlantAdvocate couldn't reach the server, so your garden is still here — try again in a moment.",
+      'Your list is still here. Try again in a moment.',
     ),
   });
 
@@ -257,10 +287,23 @@ export default function CaptureGardenScreen() {
         {listening && (
           <Text style={styles.listening}>● Listening — tap the square to stop.</Text>
         )}
+        {catalogFailed && !catalogReady && (
+          <Card style={styles.card} mode="elevated">
+            <Card.Content>
+              <LoadError
+                inline
+                message="Couldn’t load the plant catalog, so nothing you say can be matched yet. What you’ve typed stays here."
+                error={catalogError}
+                onRetry={() => refetchCatalog()}
+                retrying={catalogFetching}
+              />
+            </Card.Content>
+          </Card>
+        )}
         <Button
           mode="contained"
           onPress={add}
-          disabled={!heard.trim() || catalogLoading}
+          disabled={!heard.trim() || !catalogReady}
           style={styles.addBtn}
         >
           {catalogLoading ? 'Loading the catalog…' : 'Add these'}

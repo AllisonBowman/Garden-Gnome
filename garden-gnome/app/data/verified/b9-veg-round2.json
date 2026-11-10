@@ -220,6 +220,18 @@
           "source": "University of Maryland Extension, \"Growing Cabbage in a Home Garden\"",
           "url": "https://extension.umd.edu/resource/growing-cabbage-home-garden",
           "quote": "Cabbage to be cooked can be stored in a refrigerator for about 2 weeks."
+        },
+        {
+          "claim": "mature_height_in 3.9-19.7 (RHS Max Height 0.1-0.5 metres, converted to inches x 39.37)",
+          "source": "RHS Brassica oleracea Capitata Group | cabbage",
+          "url": "https://www.rhs.org.uk/plants/139301/brassica-oleracea-capitata-group/details",
+          "quote": "Max Height         0.1-0.5 metres"
+        },
+        {
+          "claim": "mature_spread_in 3.9-19.7 (RHS Max Spread 0.1-0.5 metres, converted to inches x 39.37)",
+          "source": "RHS Brassica oleracea Capitata Group | cabbage",
+          "url": "https://www.rhs.org.uk/plants/139301/brassica-oleracea-capitata-group/details",
+          "quote": "Max Spread         0.1-0.5 metres"
         }
       ],
       "common_name": "Cabbage",
@@ -265,12 +277,19 @@
         "day_f_min — removed on audit: Verified against the live Clemson HGIC page: the quoted sentence 'They grow best at temperatures of 60 to 65 °F' follows directly from 'Cabbage (...) and Chinese cabbage (...) are cool-season vegetables that should be grown in early spring or fall,' so 'They' refers to both crops jointly. Chinese cabbage is Brassica rapa (Pekinensis Group), a different species from this record's Brassica oleracea cabbage. The citation is a shared two-species statement, not evidence specific to cabbage alone, so day_f_min=60 is sourced to a claim broader than 'this species specifically.'",
         "day_f_max — removed on audit: Same defect as day_f_min: the source quote 'They grow best at temperatures of 60 to 65 °F' is confirmed (via direct fetch of the Clemson page) to be a joint statement covering both cabbage and Chinese cabbage (Brassica rapa) together, not a cabbage-specific figure. Attributing this shared range as this species' day_f_max over-reaches on species specificity.",
         "chill_damage_f — removed on audit: The Clemson quote 'Mature cabbages can withstand temperatures as low as 18 to 20 °F' establishes a survival/tolerance threshold for MATURE plants only — it does not say damage begins at 18°F, only that mature cabbage survives down to that range. The record applies 18 as chill_damage_f for the crop generally (the 'mature plants' qualifier from the claim label is not reflected in the field itself), which risks understating cold-damage risk to young transplants/seedlings, which are typically less cold-hardy than mature heads. The corroborating UMD source also gives a different low end (15°F vs Clemson's 18°F), underscoring that 'withstand as low as X' is an approximate survival boundary from these sources, not a precise, agreed-upon damage-onset temperature as the field name implies.",
-        "mature_height_in and mature_spread_in left null: none of the four cited pages publish a mature plant height or spread/width range for cabbage. UMD gives only planting spacing ('Spacing: 15\" - 18\" in-row x 30\" - 36\" between rows', and 'Close spacing (12 inches apart in the row) produces small heads') and head-size commentary ('size will vary with variety, fertility, and spacing'); HGIC's spacing figures could not be re-checked from this machine. Planting spacing and harvest-head variability are not a published mature plant height or spread, so they were not used (corrected at landing: the note had given the in-row spacing as 12-18 in.).",
         "plantfinder.mobot.org (Missouri Botanical Garden Plant Finder) refused this machine's fetch (error:ConnectError) both times it was tried -- no content was read from it, and nothing from it is guessed.",
         "The UGA CAES fieldreport PDF (https://fieldreport.caes.uga.edu/wp-content/uploads/2025/08/C-1218_2.pdf) could not be read through the qc.py/verify_quotes fetch path, which does not extract PDF text (status returned was 'pdf' with no text) -- no content was read from it and nothing from it is used or guessed.",
         "attracts_pollinators left null: neither HGIC nor UMD's pages mention bees, butterflies, moths, hummingbirds, or other pollinators in connection with cabbage; the only 'bee'-matching hits were about cabbage pest insects (cabbage looper, harlequin bug, etc.), which is not pollinator support and was not read as such.",
         "Searched HGIC and UMD explicitly for 'Poison', 'Toxic', and 'Problem for' before setting is_edible -- zero hits on either page, so no toxicity/pets-warning caveat applies and none is added to is_edible.",
-        "is_edible is not conditional here: no page names a toxic part, preparation requirement, or edible-part restriction for cabbage, so the field is a plain true with no accompanying caveat needed."
+        "is_edible is not conditional here: no page names a toxic part, preparation requirement, or edible-part restriction for cabbage, so the field is a plain true with no accompanying caveat needed.",
+        "is_edible: already landed, not researched here.",
+        "attracts_pollinators: left null; the RHS Capitata Group page was searched for 'pollinat' and returned 0 hits, and the Clemson and UMD pages had no pollinator statement about the plant.",
+        "climbs: left null; RHS lists Habit as 'Columnar upright' and no page calls the plant a climber.",
+        "Size note: RHS publishes Max Height and Max Spread as 0.1-0.5 metres (RHS UK-grown figures, converted x 39.37 to 3.9-19.7 inches); this is the figure as published and looks small relative to mature heads of some large-headed types, but no other registered page gave a size.",
+        "NC State Plant Toolbox: no Brassica oleracea (Capitata Group) page was found by WebSearch (search returned only RHS results); not used.",
+        "plantfinder.mobot.org and the UGA field report were not loaded; Missouri Botanical Garden was not retried, so its content is not claimed.",
+        "hgic.clemson.edu loaded only after adding the host to allowed_domains (first attempt hit a ProxyError); searched for 'Height', 'Spread', 'inches', 'feet|ft', 'Poison|Toxic' and found no plant mature-size figure (inch hits were planting spacing only).",
+        "extension.umd.edu loaded; searched for 'inches|feet' and 'pollinat|bee' and found only planting spacing and no pollinator statement about cabbage."
       ],
       "water_check_depth_cm": null,
       "water_dormant_days_est": null,
@@ -278,7 +297,11 @@
       "water_estimate_basis": null,
       "water_growing_days_est": null,
       "water_regime": "keep_moist",
-      "is_edible": true
+      "is_edible": true,
+      "mature_height_in_min": 3.9,
+      "mature_height_in_max": 19.7,
+      "mature_spread_in_min": 3.9,
+      "mature_spread_in_max": 19.7
     },
     {
       "chill_damage_f": null,
@@ -542,6 +565,12 @@
           "source": "RHS Brassica oleracea Botrytis Group | cauliflower",
           "url": "https://www.rhs.org.uk/plants/106080/brassica-oleracea-botrytis-group/details",
           "quote": "Max Spread         0.1-0.5 metres"
+        },
+        {
+          "claim": "attracts_pollinators true (NC State Plant Toolbox Wildlife Value: bees visit the flowers; page is the combined Cauliflower & Broccoli Group page, which lists Cauliflower among its common names)",
+          "source": "NC State Extension Gardener Plant Toolbox, Brassica oleracea Cauliflower & Broccoli Group",
+          "url": "https://plants.ces.ncsu.edu/plants/brassica-oleracea-cauliflower-broccoli-group/",
+          "quote": "Bees will visit the flowers"
         }
       ],
       "unknowns": [
@@ -568,13 +597,23 @@
         "Size comes from the RHS Botrytis Group page (0.1-0.5 m, i.e. 3.9-19.7 in). This looks low next to the 18-24 in plant spacing in UGA and Clemson guidance, so treat it as the published RHS value, not a field-verified one. NC State has no Botrytis Group page (404); its Brassica oleracea species page (10-24 in tall, 12-24 in wide) was not used because it is a different taxon.",
         "Reading note: the RHS values were rounded from 0.1 m = 3.937 in and 0.5 m = 19.685 in.",
         "plantfinder.mobot.org and the Missouri Botanical Garden Plant Finder were not fetched, so its listed 24-30 in height was not used.",
-        "UMD, Clemson, UGA and the RHS grow-your-own guide have no plant height or spread figure (searched Height, Spread, inches, feet)."
+        "UMD, Clemson, UGA and the RHS grow-your-own guide have no plant height or spread figure (searched Height, Spread, inches, feet).",
+        "is_edible, mature_height_in_*, mature_spread_in_*: already landed, returned null as instructed and not researched.",
+        "climbs: left null. NC State lists Habit/Form Erect, Rounded, Spreading; RHS details lists Habit Columnar upright; no page calls it a climber. Searched UMD, UGA, Clemson, RHS pages and NC State for 'climb' and 'vine' (only site-navigation hits).",
+        "attracts_pollinators source caveat: NC State has no page for Botrytis Group alone. Its page for cauliflower is the combined 'Brassica oleracea Cauliflower & Broccoli Group' page, which also covers Italica Group (broccoli) and others. 'Bees will visit the flowers' is stated for that combined group, so it may not hold for Botrytis Group on its own. The same page's Attracts field and tags list bees.",
+        "NC State Attracts field (label 'Attracts:' and value 'Bees') is stacked across separate elements, so only the Wildlife Value sentence is quoted.",
+        "Pollinators other than bees (butterflies, moths, hummingbirds) are not stated on any page read. RHS cauliflower pages mention butterfly and moth caterpillars feeding on brassicas, which is pest information and not pollination.",
+        "RHS plant details page, RHS grow-your-own, UMD, UGA and Clemson pages: searched for Attracts, Pollinator, butterfl, bee(s) and Wildlife; no pollinator statement (only navigation/menu text or pest text).",
+        "plantfinder.mobot.org refused this machine (fetch status error:ProxyError, then error:ConnectError with the host allowed); not read.",
+        "plants.ces.ncsu.edu/plants/brassica-oleracea-botrytis-group/ returned http-404; the combined group page was used instead.",
+        "Toxicity: NC State page shows 'Problem for Horses' (a pets/livestock warning); not relevant since is_edible is not set here. Searches for 'Poison' and 'Toxic' on that page returned 0 hits."
       ],
       "is_edible": true,
       "mature_height_in_min": 3.9,
       "mature_height_in_max": 19.7,
       "mature_spread_in_min": 3.9,
-      "mature_spread_in_max": 19.7
+      "mature_spread_in_max": 19.7,
+      "attracts_pollinators": true
     },
     {
       "chill_damage_f": null,
@@ -1213,6 +1252,7 @@
   "normalizations": [
     "2026-08-21: landed with zero manual fixes. Two of the eight subagent researchers (Brussels Sprouts, Sweet Corn) ran with the workflow's safety classifier rate-limited, so both were read in full by hand rather than trusting the loader pass alone. Both held up: Brussels Sprouts' audit independently verified NC State's and RHS's actual page titles and correctly killed a spliced-together scientific name neither source uses; Sweet Corn's audit re-fetched Clemson's page and caught that its own name_note misread 'rugosa replacing saccharata' as 'rugosa alongside saccharata', correctly nulling a fabricated composite trinomial. The four Brassica oleracea varieties in this batch (Brussels Sprouts, Cabbage, Cauliflower, Collards) share pages and boilerplate on some source sites -- the audit caught cauliflower's 'full sun' citation as boilerplate copied verbatim from UMD's broccoli page, and caught three separate 'average temperature' figures being misapplied to the day-only field across cabbage, carrot and cauliflower. The one numeric flag from a first-pass check (Swiss Chard's water_growing_days_est=7, quote says 'per week') is the same class of unambiguous unit conversion already accepted in prior batches.",
     "2026-09-10: toxic_to_pets verdict pass over every record that held null beside a cited toxicity_detail -- Collard Greens -> none. Sonnet re-research on the admissible domains for a cat/dog-scoped statement, Opus live audit, quotes mechanically verified; a null here now means searched-and-absent, recorded per record in unknowns.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

@@ -350,7 +350,55 @@ def test_the_whole_verified_tranche_lands_and_resolves(session):
     # + 85 (size backfill round 5 chunk 2).
     # + 62 (size backfill round 5 chunk 3).
     # + 66 (size backfill round 5 chunk 4).
-    assert report.claims_written == 6989
+    # + 14 (size backfill round 6 chunks 3+7).
+    # + 77 (b91).
+    # + 77 (b92).
+    # + 85 (b94).
+    # + 91 (b93).
+    # + 83 (b90).
+    # + 75 (b98).
+    # + 91 (b95).
+    # + 75 (b97).
+    # + 88 (b96).
+    # + 73 (b100).
+    # + 94 (b99).
+    # + 85 (b101).
+    # + 83 (b102).
+    # + 88 (b105).
+    # + 74 (b103).
+    # + 81 (b104).
+    # + 90 (b106).
+    # + 91 (b108).
+    # + 73 (b107).
+    # + 82 (b109).
+    # + 87 (b111).
+    # + 83 (b110).
+    # + 83 (b113).
+    # + 73 (b112).
+    # + 86 (b114).
+    # + 80 (b115).
+    # + 71 (b116).
+    # + 88 (b117).
+    # + 75 (b119).
+    # + 88 (b118).
+    # + 84 (b120).
+    # + 80 (b121).
+    # + 82 (b123).
+    # + 88 (b122).
+    # + 70 (b124).
+    # + 64 (b125).
+    # + 95 (b126).
+    # + 67 (b128).
+    # + 82 (b127).
+    # + 77 (b130).
+    # + 77 (b129).
+    # + 94 (b131).
+    # + 97 (b132).
+    # + 88 (b133).
+    # + 61 (b134).
+    # + 2 (2026-10-17: foxglove and monkshood regain a toxicity_detail, NC State's
+    #      Poisonous to Humans block; English yew and jimsonweed already had one).
+    assert report.claims_written == 10681
     # Still 8, not 9 -- ask.ifas.ufl.edu resolves to the same "UF/IFAS
     # Extension" authority name as edis.ifas.ufl.edu, and _authority_row
     # mints rows by name, so it reuses the existing row rather than

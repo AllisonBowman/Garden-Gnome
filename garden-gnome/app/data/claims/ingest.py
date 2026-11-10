@@ -19,6 +19,7 @@ from app.models.models import Claim as ClaimRow
 
 from .authorities import allowed_fields_of, licence_of
 from .names import canonical
+from .store import forget_safety_passages
 from .tranche import claims_from_record
 
 
@@ -94,6 +95,10 @@ def ingest_records(session: Session, records, *,
             ))
             report.claims_written += 1
 
+    # Toxicity and edibility sentences read cited passages through a
+    # per-session cache (store.safety_passages); new evidence must not be
+    # hidden behind it.
+    forget_safety_passages(session)
     if dry_run:
         session.rollback()
     elif commit:

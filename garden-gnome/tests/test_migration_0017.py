@@ -10,6 +10,7 @@ directions, with a real row on the other end.
 import sqlite3
 from pathlib import Path
 
+import pytest
 from alembic import command
 
 from tests.test_migration_0015 import _config, _insert_plant_of
@@ -143,4 +144,123 @@ def test_downgrade_puts_every_name_back_with_the_link_intact(
     conn = sqlite3.connect(db)
     _assert_renamed(conn)
     assert conn.execute("SELECT count(*) FROM growingarea").fetchone() == (1,)
+    conn.close()
+
+
+# --- A dangling area link is refused before any DDL ---------------------------
+#
+# SQLite DDL is not transactional under this Alembic setup, so a check that
+# runs after the rename cannot undo it. The check that matters runs first, and
+# a refusal must leave the file exactly the 0016 schema, so the fix is "repair
+# the rows and boot again", not "restore a snapshot".
+
+
+def _schema(conn) -> list:
+    return sorted(conn.execute(
+        "SELECT type, name, tbl_name, sql FROM sqlite_master").fetchall(),
+        key=lambda r: (r[0], r[1]))
+
+
+def _version(conn) -> str:
+    return conn.execute("SELECT version_num FROM alembic_version").fetchone()[0]
+
+
+def _dangle(conn, table: str) -> None:
+    """One row in `table` whose area link names area 9999, which does not
+    exist -- possible in production, which has never enforced foreign keys."""
+    species_id = conn.execute(
+        "SELECT id FROM species WHERE scientific_name = 'Hosta sieboldiana'"
+    ).fetchone()[0]
+    if table == "plant":
+        conn.execute(
+            "INSERT INTO plant (plant_uuid, nickname, species_id, location, "
+            "maturity_stage, created_at, pest_observed_at_acquisition, "
+            "intake_notes, environment_id) VALUES ('u-lost', 'Lost', ?, '', "
+            "'juvenile', '2026-01-01 00:00:00', 0, '', 9999)", (species_id,))
+    else:
+        conn.execute(
+            "INSERT INTO stewardshiprecord (plant_id, environment_id, "
+            "installation_uuid, started_at, transfer_notes) SELECT id, 9999, "
+            "'inst', '2026-02-01 00:00:00', '' FROM plant WHERE nickname = 'Wired'")
+    conn.commit()
+
+
+@pytest.mark.parametrize("table", ["plant", "stewardshiprecord"])
+def test_a_dangling_area_link_is_refused_before_the_rename(
+        tmp_path: Path, monkeypatch, table: str):
+    db, cfg = _at_previous(tmp_path, monkeypatch, f"dangling-{table}.db")
+    conn = sqlite3.connect(db)
+    _plant_in_an_area(conn)
+    _dangle(conn, table)
+    before = _schema(conn)
+    conn.close()
+
+    with pytest.raises(RuntimeError) as refused:
+        command.upgrade(cfg, "head")
+
+    message = str(refused.value)
+    # It names the row and the missing area, and says nothing was changed.
+    assert f"{table} row" in message and "9999" in message
+    assert "still at 0016" in message
+
+    conn = sqlite3.connect(db)
+    assert _version(conn) == PREVIOUS
+    assert _schema(conn) == before, "0017 touched the schema before refusing"
+    assert not [t for t in _tables(conn) if t.startswith("_alembic_tmp")]
+    conn.close()
+
+
+def test_repairing_the_row_lets_the_next_boot_migrate(tmp_path: Path, monkeypatch):
+    db, cfg = _at_previous(tmp_path, monkeypatch, "repaired.db")
+    conn = sqlite3.connect(db)
+    _plant_in_an_area(conn)
+    _dangle(conn, "plant")
+    conn.close()
+
+    with pytest.raises(RuntimeError):
+        command.upgrade(cfg, "head")
+    # The second boot is the one that used to die on "no such table"; now it
+    # refuses for the same reason as the first, and still changes nothing.
+    with pytest.raises(RuntimeError, match="still at 0016"):
+        command.upgrade(cfg, "head")
+
+    conn = sqlite3.connect(db)
+    conn.execute("UPDATE plant SET environment_id = NULL WHERE nickname = 'Lost'")
+    conn.commit()
+    conn.close()
+
+    command.upgrade(cfg, "head")
+
+    conn = sqlite3.connect(db)
+    _assert_renamed(conn)
+    assert _version(conn) == head_revision()
+    assert conn.execute(
+        "SELECT g.name FROM plant p JOIN growingarea g ON g.id = p.growing_area_id "
+        "WHERE p.nickname = 'Wired'").fetchone() == ("Back bed",)
+    conn.close()
+
+
+def test_a_dangling_reference_elsewhere_does_not_block_the_rename(
+        tmp_path: Path, monkeypatch):
+    """The audit's exact case: one care log whose plant is gone. Renaming the
+    area table cannot make that row any worse, so it is no reason to keep the
+    API from booting; the row is carried across untouched."""
+    db, cfg = _at_previous(tmp_path, monkeypatch, "elsewhere.db")
+    conn = sqlite3.connect(db)
+    _plant_in_an_area(conn)
+    conn.execute(
+        "INSERT INTO carelog (plant_id, action, notes, logged_at) VALUES "
+        "(9999, 'water', '', '2026-03-01 00:00:00')")
+    conn.commit()
+    conn.close()
+
+    command.upgrade(cfg, "head")
+
+    conn = sqlite3.connect(db)
+    assert _version(conn) == head_revision()
+    assert "growingarea" in _tables(conn) and "environment" not in _tables(conn)
+    assert conn.execute(
+        "SELECT g.name FROM plant p JOIN growingarea g ON g.id = p.growing_area_id "
+        "WHERE p.nickname = 'Wired'").fetchone() == ("Back bed",)
+    assert [r[0] for r in conn.execute("PRAGMA foreign_key_check")] == ["carelog"]
     conn.close()

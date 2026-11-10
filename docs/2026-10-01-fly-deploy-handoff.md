@@ -1,5 +1,10 @@
 # Deploying PR #20 to Fly: what only you can do
 
+> **Superseded on 2026-10-16** by `docs/2026-10-16-app-store-finish-line-handoff.md`,
+> which carries the deploy steps for the ship branch (migrations through 0021,
+> a 512 MB VM, the catalog check in the smoke step, the operator token). Kept
+> for its account of why the deploy matters to the 1.1.2 app.
+
 Written 2026-10-01 about master at `35dbf1e` (the merge of PR #20) and PR #21,
 which has to land on top of it before anything is deployed. Every step needs
 your Fly login or your GitHub admin rights, so none of it can be done from the

@@ -1,8 +1,9 @@
 # PlantAdvocate — backend 🌱
 
-FastAPI service for **PlantAdvocate**, an AI-powered plant care assistant. The
-curated `Species` table is the authoritative care-knowledge source; the LLM /
-vision layers reason *on top of* it so advice is grounded, not hallucinated.
+FastAPI service for **PlantAdvocate**, a houseplant and garden care app. The
+`Species` table, resolved from cited claims, is the authoritative
+care-knowledge source; the rule-based advisor and the optional LLM / vision
+layers reason *on top of* it so advice is grounded, not hallucinated.
 (The gnome is the app's mascot; some identifiers keep the original
 `garden-gnome` name.) The product-level overview is in the
 [repo root README](../README.md).
@@ -12,13 +13,18 @@ isolation, Alembic-managed SQLite on a persistent volume, and a live Fly.io
 deployment. See the sections below.
 
 ## What's here
-- Curated **species catalog** (400+) with per-care-type schedules, traits, and
+- **Species catalog** of about 1,000 species (houseplants, edibles, perennials,
+  shrubs, trees, bulbs): every care value is a claim quoted from a named
+  extension service or botanical garden page (`app/data/verified/`),
+  genus-borrowed values are labelled, and harm-capable fields never inherit
+  (ADR 0007). Plus the original per-care-type schedules, traits, and
   provenance/review status.
-- **Plant inventory, environments, care logging, timeline & stats**, all scoped
-  to the signed-in user.
+- **Plant inventory, growing areas, care logging, timeline & stats**, all
+  scoped to the signed-in user.
 - **Grounded advice** (`/plants/{id}/advice`) and **photo diagnosis /
-  identification** — pluggable backends (`stub` / Anthropic for advice;
-  vision ships stub-only, see below).
+  identification** — pluggable backends (`stub` / Anthropic). Production runs
+  `stub` for all three, so symptom reading and photo diagnosis are off and the
+  app hides them (`GET /ai/status`).
 - **User accounts & auth** — Apple + Google sign-in, rotating refresh tokens,
   account deletion, per-IP rate limiting (see below).
 - **Alembic** migrations and a **pytest** suite.
@@ -92,12 +98,19 @@ without the first two. Variable names only; generate/collect your own values:
 | `APPLE_PRIVATE_KEY` | The `.p8` PEM contents **inline** (used instead of the path where there's no file on disk, e.g. Fly). Literal `\n` is normalized to real newlines. Inline wins if both are set. |
 | `GOOGLE_CLIENT_ID` | Google OAuth iOS client id |
 | `ADVISOR_BACKEND` | `stub` (default) / `anthropic` — see below |
-| `VISION_BACKEND` | `stub` (default and only value — no hosted vision backend) |
+| `VISION_BACKEND` | `stub` (default) / `anthropic` — production keeps `stub` |
 | `ADVISOR_SYMPTOMS_BACKEND` | Backend for free-text symptom diagnosis only (hybrid) |
 | `RATE_LIMIT_SIGNIN` / `RATE_LIMIT_TOKEN` | Optional overrides, e.g. `10/minute` |
 
 Provider variables are only needed once real Apple/Google sign-ins are
 exercised; the test suite runs fully mocked without them.
+
+> **Before setting any backend to `anthropic` in production:** that sends
+> user content (photos, questions, nicknames, care notes) to Anthropic.
+> `site/privacy.html` already describes what goes, but it also promises the
+> app asks before the first photo or question is sent, so the in-app consent
+> has to ship first. Everyday advice (`ADVISOR_BACKEND`) must stay `stub`:
+> the policy says it is built by fixed rules, not by an outside AI service.
 
 ### Database migrations (Alembic)
 
@@ -135,9 +148,12 @@ is not collected.
 python -m app.data.seed
 ```
 
-This populates the curated catalog (400+ species) from `species_catalog.json`.
-Idempotent — safe to run repeatedly (skips species already present) and it
-migrates the DB to head first, so it's also what the container runs on boot.
+This seeds the original 129-species hand-written catalog from
+`species_catalog.json`, then syncs the cited claims in `app/data/verified/`
+(about 1,000 species) into the species table. Idempotent — safe to run
+repeatedly (skips species already present; the claim sync is a no-op when
+the tranche is unchanged) and it migrates the DB to head first, so it's also
+what the container runs on boot.
 
 ## Run the API
 
@@ -186,17 +202,18 @@ app/
   db/database.py     # SQLite engine, session dependency, run_migrations()
   models/
     models.py        # Species, CareSchedule, SpeciesTrait, Plant, CareLog,
-                     # Environment, User, AuthIdentity, RefreshToken
+                     # GrowingArea, User, AuthIdentity, RefreshToken
     schemas.py       # request/response schemas
   routers/
     species.py       # read-only species DB + /species/identify-photo
     plants.py        # plant CRUD + care logs + advice + photo diagnosis
-    environments.py  # per-user environments
-    census.py        # opt-in anonymized aggregate/export/sync
+    growing_areas.py # per-user growing areas (/environments still answers, deprecated)
+    census.py        # opt-in census summary; operator-only export/sync
+    ai.py            # GET /ai/status: which backends are live
     auth.py          # sign-in (apple/google), refresh, logout, /me, DELETE /me
   services/
     advisor.py       # text advice service (stub/anthropic)
-    vision.py        # photo diagnosis + identification (stub only)
+    vision.py        # photo diagnosis + identification (stub / anthropic)
     tokens.py        # access JWTs + rotating refresh tokens (reuse detection)
     oauth/           # apple.py, google.py, jwks.py — provider verification
   data/
@@ -300,8 +317,9 @@ likely first) plus the model's observation text; the mobile Add Plant flow
 renders these as tap-to-select chips. Uses the same `VISION_BACKEND` switch.
 
 **No hosted vision backend is configured, on purpose.** `VISION_BACKEND`
-knows only `stub`: both endpoints answer with a friendly not-enabled message
-(and, for identification, no candidates). Photo species ID runs *on-device*
+defaults to `stub`, and production keeps it there: both endpoints answer with
+a friendly not-enabled message (and, for identification, no candidates). An
+`anthropic` backend exists for when check-ups are switched on. Photo species ID runs *on-device*
 in the mobile app (Apple Foundation Models / Gemini Nano — see the mobile
 README); server-side photo diagnosis ships disabled until a backend
 direction is chosen. The service keeps advisor.py's backend-swap shape, so
@@ -318,5 +336,5 @@ Backend feature-complete for v1: grounded advice, photo diagnosis +
 identification, per-user accounts with Apple/Google sign-in, account deletion,
 opt-in census, Alembic migrations, and a live Fly.io deployment. Next up is App
 Store submission (the mobile client ships the sign-in and account-management UI;
-see the root README roadmap). Product principle throughout: the free tier stays
-genuinely useful — basic care is never paywalled.
+see the root README roadmap). Product principle throughout: basic care is never
+paywalled; today the app is free, with no in-app purchases.

@@ -28,6 +28,7 @@ import time
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
 
+from sqlalchemy import func
 from sqlmodel import Session, col, or_, select
 
 from app.models.models import ReviewStatus, Species, SpeciesSource, SyncState
@@ -171,6 +172,23 @@ def _mint_and_link(session: Session, directory: Path, report: SyncReport) -> Non
         common_names.add(common.casefold())
 
 
+def _record_reach(session: Session) -> None:
+    """Note the highest species row this sync reached, so a row added after
+    it (an operator's POST /species/) is not read as the sync falling short
+    (catalog_state.catalog_status)."""
+    from app.db.catalog_state import SYNCED_THROUGH_KEY
+
+    session.flush()
+    top = session.exec(select(func.max(Species.id))).one()
+    value = str(top or 0)
+    state = session.get(SyncState, SYNCED_THROUGH_KEY)
+    if state is None:
+        session.add(SyncState(key=SYNCED_THROUGH_KEY, value=value))
+    elif state.value != value:
+        state.value = value
+        session.add(state)
+
+
 def sync_catalog(session: Session, *, directory: Path | None = None,
                  dry_run: bool = False, force: bool = False) -> SyncReport:
     """Ingest, mint or link, recompute -- as one transaction, or not at all.
@@ -209,6 +227,7 @@ def sync_catalog(session: Session, *, directory: Path | None = None,
         elif state.value != report.fingerprint:
             state.value = report.fingerprint
             session.add(state)
+        _record_reach(session)
         session.commit()
     report.seconds = time.monotonic() - started
     return report

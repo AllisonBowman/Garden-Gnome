@@ -11,6 +11,13 @@
 //   no app-behaviour promises    -> commitment-language check
 //   no letter scaffolding        -> scaffolding check + code-appended sign-off
 //   numbers stay digits          -> number-word normalization + digit-subset check
+//   change no care detail        -> polarity check ("hold off" never becomes
+//                                   "water it today"; a regime never flips)
+//
+// And one rule the prompt does not state, because it is enforced before the
+// model runs: hazards are never restyled. Warning lines are split off, kept
+// from the model, and appended verbatim; a note that reassures about harm
+// anyway trips the safety-claim check.
 
 /**
  * The one sign-off, appended by code so the model never writes a signature.

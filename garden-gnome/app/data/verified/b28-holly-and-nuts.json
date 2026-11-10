@@ -61,7 +61,13 @@
         "UF/IFAS ST304 (ask.ifas.ufl.edu) was readable and gives Height: 35 to 50 feet, Spread: 15 to 25 feet, and fruit 'attracts birds' (not pollinators) -- broadly consistent with NC State but not used as the primary citation since NC State is the anchor.",
         "UGA CAES 'Great hedges make great neighbors' gives American holly (Ilex opaca) as a 15- to 30-foot height, 10- to 20-foot width in a hedge/landscape-use context, with no edibility or pollinator-attraction statement for this species -- not used as primary citation; NC State anchor used instead for size.",
         "Confirmed Ilex opaca is a tree, not a climber/vine/liana: NC State lists Plant Type 'Tree', and no 'climb', 'vine', or 'liana' hits were found on any fetched page, so rule 4 (no size for climbers) does not apply and all four size fields are populated from the anchor.",
-        "RHS (rhs.org.uk/plants/21251/ilex-opaca) does address eating: its Potentially harmful field reads 'Fruit are ornamental - not to be eaten.' with the same pets warning -- an explicit denial the line above misses. is_edible stays null in this landing (not re-proposed); noted at landing, verified against the cached copy."
+        "RHS (rhs.org.uk/plants/21251/ilex-opaca) does address eating: its Potentially harmful field reads 'Fruit are ornamental - not to be eaten.' with the same pets warning -- an explicit denial the line above misses. is_edible stays null in this landing (not re-proposed); noted at landing, verified against the cached copy.",
+        "NC State Plant Toolbox lists this plant under 'Poisonous to Humans': Poison Severity Low; Poison Symptoms 'Nausea, vomiting (not in horses), diarrhea, depression.'; Poison Toxic Principle 'Illicin, possibly saponic glycosides, and triterpenoids.'; Causes Contact Dermatitis No; Poison Part Fruits. The page also tags #problem for cats, #problem for dogs, #problem for horses.",
+        "is_edible is false because NC State lists the fruits as poisonous to humans with ingestion symptoms; the page's 'food source' tags refer to wildlife, not human food. No page read states a human food use.",
+        "climbs left null: NC State Habit/Form is Conical, Open, Pyramidal and Plant Type is Tree; no page read calls it a climber, so null rather than false.",
+        "attracts_pollinators, mature_height_in_min/max and mature_spread_in_min/max are already landed and were deliberately returned null (not researched, never overwritten).",
+        "plantfinder.mobot.org and ask.ifas.ufl.edu were not fetched in this pass; only the NC State page was read via qc.py. Other previously cited pages were not re-read because the two fields were answered by the NC State anchor page.",
+        "is_edible re-cited at landing: the citation quoted only NC State's Poison Symptoms list ('Nausea, vomiting (not in horses), diarrhea, depression.'), which does not itself say the plant is poisonous to eat; it now quotes the page's Problems value 'Poisonous to Humans', under which the Poisonous to Humans block names Poison Part 'Fruits'. RHS's Potentially harmful field separately reads 'Fruit are ornamental - not to be eaten.' This supersedes the earlier lines here that say is_edible is or stays null. Noted at landing, verified against the cached copy."
       ],
       "citations": [
         {
@@ -135,13 +141,20 @@
           "source": "NC State Extension Gardener Plant Toolbox - Ilex opaca",
           "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
           "quote": "Pollinators"
+        },
+        {
+          "claim": "is_edible false (NC State Problems field lists American holly as Poisonous to Humans; its Poisonous to Humans block gives Poison Part: Fruits, severity Low)",
+          "source": "NC State Extension Gardener Plant Toolbox, Ilex opaca",
+          "url": "https://plants.ces.ncsu.edu/plants/ilex-opaca/",
+          "quote": "Poisonous to Humans"
         }
       ],
       "attracts_pollinators": true,
       "mature_height_in_min": 480,
       "mature_height_in_max": 720,
       "mature_spread_in_min": 120,
-      "mature_spread_in_max": 240
+      "mature_spread_in_max": 240,
+      "is_edible": false
     },
     {
       "common_name": "Peach",
@@ -1486,6 +1499,7 @@
     "Black Walnut's toxicity_detail catch is a precise example of the plant-hazard-vs-animal-hazard confusion this batch's species note specifically warned about: a UGA quote calling juglone \"a strong respiratory toxin\" was being used as animal-toxicity evidence, but the audit traced the full source paragraph and found that sentence is the transition into the article's plant-root/soil allelopathy section (the standard meaning of \"respiratory toxin\" in juglone literature is inhibiting cellular respiration in root cells, not an animal inhalation hazard) -- correctly excluded rather than presented as pet-relevant.",
     "Fountain Grass surfaced a genuine taxonomic split this catalog hasn't hit before with an even split rather than a majority: RHS and Missouri Botanical Garden both anchor to Pennisetum alopecuroides as accepted, while NC State Extension and University of Maryland Extension both independently anchor to Cenchrus alopecuroides -- landed with scientific_name_accepted null and the full four-source conflict documented in name_note.",
     "Pennisetum's own scientific_name_accepted also carried the same string-\"null\"-instead-of-JSON-null bug seen in b23/b24/b27, again caught and self-corrected by the auditor's own explicit finding before this landing pass even ran its check.",
+    "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed.",
     "size backfill: mature_height_in_*, mature_spread_in_*, is_edible and attracts_pollinators added to already-landed records, researched against the pages this batch was already cited to and audited before landing. No pre-existing field was read or changed."
   ]

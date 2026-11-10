@@ -1,23 +1,36 @@
-import React, { useMemo, useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { View, ScrollView, FlatList, StyleSheet } from 'react-native';
 import {
-  Text, Card, Searchbar, ActivityIndicator, Chip,
+  Text, Card, Searchbar, ActivityIndicator, Chip, Button,
 } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { fetchPlants } from '../api/plants';
-import { fetchGrowingAreas, fetchCandidates } from '../api/growingAreas';
+import {
+  fetchGrowingAreas, fetchCandidates, EVERY_CANDIDATE, Candidate,
+} from '../api/growingAreas';
+import { uncheckedNotes } from '../growingAreas/realEstate';
+import { CHECK_FAILED, candidateHazard, confirmedLine } from '../growingAreas/fitFindings';
+import { RANK_ORDER, inRankOrder } from '../growingAreas/ranking';
 import { Species } from '../types';
 import { tierOf, fingerprint, matchesQuery, TIER_LABELS, Tier } from '../almanac/tier';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
 import Pill from '../components/Pill';
+import EmptyState from '../components/EmptyState';
+import {
+  LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
+} from '../care/loadFailed';
+import RefreshFailed from '../components/RefreshFailed';
 import type { CensusStackParamList } from '../../App';
 
+// Registered in more than one tab's stack, with the same params in each;
+// typed against the Census stack, where it began.
 type Nav = NativeStackNavigationProp<CensusStackParamList, 'Almanac'>;
+type Route = RouteProp<CensusStackParamList, 'Almanac'>;
 type Filter = 'all' | Tier;
 
 const FILTERS: { value: Filter; label: string }[] = [
@@ -34,21 +47,31 @@ const TIER_TONE: Record<Tier, 'good' | 'accent' | 'warn'> = {
 };
 
 function SpeciesCard({
-  species, owned, onPress,
+  species, owned, candidate, onPress,
 }: {
-  species: Species; owned: boolean; onPress: () => void;
+  species: Species; owned: boolean;
+  /** The species as a candidate for the chosen area, when one is chosen:
+   *  its confirmed findings and its caution line. */
+  candidate?: Candidate;
+  onPress: () => void;
 }) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const tier = tierOf(species);
   const fp = fingerprint(species);
+  const confirmed = candidate ? confirmedLine(candidate.fits) : null;
+  // Put forward for a space, a plant's hazard is said on its card: a
+  // recommendation that leaves it out reads as an all-clear.
+  const hazard = candidate ? candidateHazard(candidate) : null;
 
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
       <Card.Content>
         <View style={styles.cardHead}>
           <Text variant="titleMedium" style={styles.common}>{species.common_name}</Text>
-          <Pill tone={TIER_TONE[tier]} filled>{TIER_LABELS[tier]}</Pill>
+          {/* No badge without a grade: a species with nothing on record to
+              grade is not a beginner's plant, it is an ungraded one. */}
+          {tier ? <Pill tone={TIER_TONE[tier]} filled>{TIER_LABELS[tier]}</Pill> : null}
         </View>
         <Text variant="bodySmall" style={styles.latin}>{species.scientific_name}</Text>
 
@@ -58,6 +81,8 @@ function SpeciesCard({
           <Text style={styles.fpItem}>{fp.humidity}</Text>
         </View>
 
+        {hazard ? <Text style={styles.hazard}>⚠️ {hazard}</Text> : null}
+        {confirmed ? <Text style={styles.confirmed}>{confirmed}</Text> : null}
         {owned ? <Text style={styles.owned}>✿ you keep this one</Text> : null}
       </Card.Content>
     </Card>
@@ -66,17 +91,28 @@ function SpeciesCard({
 
 export default function AlmanacScreen() {
   const navigation = useNavigation<Nav>();
+  const route = useRoute<Route>();
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   // Which growing area to narrow the catalog to, or null for the whole thing.
-  const [areaId, setAreaId] = useState<number | null>(null);
+  // Opened from an area's screen, it starts narrowed to that area: the rest
+  // of the candidates that screen showed the first few of.
+  const openedFor = route.params?.growingAreaId ?? null;
+  const [areaId, setAreaId] = useState<number | null>(openedFor);
+  useEffect(() => {
+    if (openedFor != null) setAreaId(openedFor);
+  }, [openedFor]);
 
-  const { data: species = [], isLoading } = useQuery({
+  const {
+    data: catalogData, isError: catalogFailed, error: catalogError,
+    refetch: refetchCatalog, isFetching: catalogFetching,
+  } = useQuery({
     queryKey: ['species'],
     queryFn: fetchSpeciesList,
   });
+  const species = useMemo(() => catalogData ?? [], [catalogData]);
   // Which species the caretaker already keeps — the almanac reads differently
   // when it can point at your own shelf.
   const { data: plants = [] } = useQuery({ queryKey: ['plants'], queryFn: fetchPlants });
@@ -90,113 +126,204 @@ export default function AlmanacScreen() {
     queryFn: fetchGrowingAreas,
   });
 
+  // An area deleted elsewhere stops being a filter rather than becoming one
+  // that matches nothing.
+  const area = areas.find((a) => a.id === areaId) ?? null;
+  useEffect(() => {
+    if (areaId != null && areas.length > 0 && area == null) setAreaId(null);
+  }, [areaId, areas, area]);
+
   // The fit rules live on the server and are asked for, not re-implemented
-  // here. `care/facts.ts` mirrors the backend's *wording*, which can drift
-  // harmlessly; a verdict cannot — two places deciding what suits a space
-  // would eventually disagree about it, and the user would see both. React
-  // Query's cache covers the offline case that a local copy would have.
-  const { data: candidates = [], isFetching: fitLoading } = useQuery({
-    queryKey: ['growingAreaCandidates', areaId, 'almanac'],
-    queryFn: () => fetchCandidates(areaId as number, 500),
+  // here. There is no mirrored TS fit engine, on purpose: `care/facts.ts`
+  // mirrors the backend's *wording*, which can drift harmlessly; a verdict
+  // cannot — two places deciding what suits a space would eventually
+  // disagree about it, and the user would see both. React Query's cache
+  // covers the offline case that a local copy would have. Every candidate,
+  // not the best few: the endpoint truncates after ranking, and a species
+  // cut off the end would vanish from this filter as if it did not fit.
+  const {
+    // First load only: a background refetch keeps the cached list and notes
+    // on screen rather than blanking them.
+    data: candidates = [], isLoading: fitLoading, isError: fitFailed, refetch: refetchFit,
+  } = useQuery({
+    queryKey: ['growingAreaCandidates', areaId, 'every'],
+    queryFn: () => fetchCandidates(areaId as number, EVERY_CANDIDATE),
     enabled: areaId != null,
   });
-  const fitIds = useMemo(
-    () => new Set(candidates.map((c) => c.species_id)),
+  const candidateById = useMemo(
+    () => new Map(candidates.map((c) => [c.species_id, c])),
     [candidates],
   );
+  // Which axes the chosen area turns on that nothing on its list could
+  // confirm — the same notes the area's own screen shows, so a thin list
+  // here is not read as a verdict on the space either.
+  const notes = area != null && !fitLoading && !fitFailed
+    ? uncheckedNotes(area, candidates) : [];
 
-  const shown = useMemo(
-    () => species.filter((s) =>
+  const shown = useMemo(() => {
+    const matching = species.filter((s) =>
       matchesQuery(s, query)
       && (filter === 'all' || tierOf(s) === filter)
-      && (areaId == null || fitIds.has(s.id))),
-    [species, query, filter, areaId, fitIds],
+      && (areaId == null || candidateById.has(s.id)));
+    // Narrowed to an area, the species go in the order the area's own screen
+    // ranks them, so "see all" carries on from where that list stopped.
+    return areaId == null ? matching : inRankOrder(matching, candidates);
+  }, [species, query, filter, areaId, candidateById, candidates]);
+  const ungraded = useMemo(
+    () => species.filter((s) => tierOf(s) == null).length,
+    [species],
   );
 
-  if (isLoading) return <ActivityIndicator style={styles.center} size="large" />;
+  const renderItem = useCallback(({ item }: { item: Species }) => (
+    <SpeciesCard
+      species={item}
+      owned={ownedIds.has(item.id)}
+      candidate={areaId != null ? candidateById.get(item.id) : undefined}
+      // Filtered to an area, the species page shows how it suits that
+      // area in full — the detail behind the card's "Confirmed here".
+      onPress={() => navigation.navigate('SpeciesDetail', {
+        speciesId: item.id, growingAreaId: areaId ?? undefined,
+      })}
+    />
+  ), [ownedIds, areaId, candidateById, navigation]);
 
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text variant="bodyMedium" style={styles.intro}>
-          A living count of what growers keep — {species.length} species in the
-          catalog{ownedIds.size > 0 ? `, ${ownedIds.size} of them on your shelf` : ''}.
-          Read any species to learn its ways.
-        </Text>
+  // A catalog that never arrived is not an empty one: the header would read
+  // "0 species in the catalog" and every search would match nothing. One
+  // that arrived and then failed to refresh stays, with a line saying so.
+  const view = loadView(catalogData !== undefined, catalogFailed);
+  if (view === 'loading') return <ActivityIndicator style={styles.center} size="large" />;
 
-        <Searchbar
-          placeholder={`Search ${species.length} species…`}
-          value={query}
-          onChangeText={setQuery}
-          style={styles.search}
-          inputStyle={styles.searchInput}
+  if (view === 'failed') {
+    return (
+      <View style={styles.container}>
+        <EmptyState
+          emoji={LOAD_FAILED.emoji}
+          title={loadFailedTitle('the Almanac')}
+          body={loadFailedBody(catalogError, 'list')}
+          actionLabel={LOAD_FAILED.action}
+          onAction={() => refetchCatalog()}
+          busy={catalogFetching}
         />
+      </View>
+    );
+  }
 
+  // Not an empty list: an empty list here would read as "nothing suits this
+  // spot", and a request that failed has judged nothing.
+  const fitCheckFailed = area != null && fitFailed;
+
+  // Everything above the cards, as one element rather than a component, so
+  // the search field keeps its focus and keyboard while the list under it
+  // changes with every letter typed.
+  const header = (
+    <>
+      {catalogFailed ? (
+        <RefreshFailed onRetry={() => refetchCatalog()} retrying={catalogFetching} />
+      ) : null}
+      <Text variant="bodyMedium" style={styles.intro}>
+        A living count of what growers keep — {species.length} species in the
+        catalog{ownedIds.size > 0 ? `, ${ownedIds.size} of them on your shelf` : ''}.
+        Read any species to learn its ways.
+      </Text>
+
+      <Searchbar
+        placeholder={`Search ${species.length} species…`}
+        value={query}
+        onChangeText={setQuery}
+        style={styles.search}
+        inputStyle={styles.searchInput}
+      />
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
+        {FILTERS.map((f) => (
+          <Chip
+            key={f.value}
+            selected={filter === f.value}
+            onPress={() => setFilter(f.value)}
+            style={styles.filterChip}
+            compact
+          >
+            {f.label}
+          </Chip>
+        ))}
+      </ScrollView>
+
+      {areas.length > 0 ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
-          {FILTERS.map((f) => (
+          <Chip
+            selected={areaId === null}
+            onPress={() => setAreaId(null)}
+            style={styles.filterChip}
+            compact
+          >
+            Anywhere
+          </Chip>
+          {areas.map((a) => (
             <Chip
-              key={f.value}
-              selected={filter === f.value}
-              onPress={() => setFilter(f.value)}
+              key={a.id}
+              selected={areaId === a.id}
+              onPress={() => setAreaId(a.id)}
               style={styles.filterChip}
               compact
             >
-              {f.label}
+              {`Fits ${a.name}`}
             </Chip>
           ))}
         </ScrollView>
+      ) : null}
 
-        {areas.length > 0 ? (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
-            <Chip
-              selected={areaId === null}
-              onPress={() => setAreaId(null)}
-              style={styles.filterChip}
-              compact
-            >
-              Anywhere
-            </Chip>
-            {areas.map((a) => (
-              <Chip
-                key={a.id}
-                selected={areaId === a.id}
-                onPress={() => setAreaId(a.id)}
-                style={styles.filterChip}
-                compact
-              >
-                {`Fits ${a.name}`}
-              </Chip>
-            ))}
-          </ScrollView>
-        ) : null}
+      {filter !== 'all' ? (
+        <Text style={styles.fitNote}>
+          Graded only where the catalog records humidity, temperature or light
+          {ungraded > 0 ? ` — ${ungraded} species have nothing to grade yet and aren’t in any grade` : ''}.
+        </Text>
+      ) : null}
 
-        <Eyebrow style={styles.eyebrow}>Species · {shown.length} shown</Eyebrow>
+      <Eyebrow style={styles.eyebrow}>Species · {fitFailed ? 0 : shown.length} shown</Eyebrow>
 
-        {areaId != null && !fitLoading ? (
+      {area != null && !fitLoading && !fitFailed ? (
+        <>
           <Text style={styles.fitNote}>
-            Showing only species a source confirms suit this spot. A plant the
-            catalog can’t judge isn’t hidden because it’s wrong — it’s absent
-            because nothing is known.
+            Showing species with nothing on record against {area.name} and at
+            least one thing confirmed. A plant missing from here may simply be
+            one the catalog can’t judge for this spot yet. {RANK_ORDER}
           </Text>
-        ) : null}
+          {notes.map((note, i) => (
+            <Text key={i} style={styles.caveat}>{note}</Text>
+          ))}
+        </>
+      ) : null}
+    </>
+  );
 
-        {shown.length === 0 ? (
-          <Text style={styles.empty}>
-            {fitLoading
-              ? 'Checking what suits that spot…'
-              : 'Nothing matches that. Try a different name, or widen the filter.'}
-          </Text>
-        ) : (
-          shown.map((s) => (
-            <SpeciesCard
-              key={s.id}
-              species={s}
-              owned={ownedIds.has(s.id)}
-              onPress={() => navigation.navigate('SpeciesDetail', { speciesId: s.id })}
-            />
-          ))
-        )}
-      </ScrollView>
+  const empty = fitCheckFailed ? (
+    <View style={styles.failed}>
+      <Text style={styles.empty}>{CHECK_FAILED}</Text>
+      <Button compact onPress={() => refetchFit()}>Try again</Button>
+    </View>
+  ) : (
+    <Text style={styles.empty}>
+      {fitLoading
+        ? 'Checking what suits that spot…'
+        : 'Nothing matches that. Try a different name, or widen the filter.'}
+    </Text>
+  );
+
+  // A list, not a column: "Anywhere" is the whole catalog, hundreds of cards,
+  // and a column built every one of them before the first could be read —
+  // again on every letter typed and every chip tapped. Only what is on
+  // screen, and a little either side, is built now.
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={fitCheckFailed ? [] : shown}
+        keyExtractor={(s) => String(s.id)}
+        renderItem={renderItem}
+        ListHeaderComponent={header}
+        ListEmptyComponent={empty}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      />
     </View>
   );
 }
@@ -218,6 +345,10 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   fingerprint: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 8 },
   fpItem: { color: p.sub, fontSize: 12 },
   owned: { color: p.good, fontSize: 12, marginTop: 8, fontWeight: '600' },
+  confirmed: { color: p.sub, fontSize: 12, lineHeight: 17, marginTop: 8 },
+  hazard: { color: p.warn, fontSize: 12.5, lineHeight: 17, marginTop: 8, fontWeight: '600' },
   empty: { color: p.faint, fontStyle: 'italic', textAlign: 'center', marginTop: 32 },
+  failed: { alignItems: 'center', gap: 8 },
   fitNote: { color: p.faint, fontSize: 12.5, lineHeight: 18, marginBottom: 10 },
+  caveat: { color: p.warn, fontSize: 12.5, lineHeight: 18, marginBottom: 10 },
 });

@@ -3,6 +3,7 @@ import {
   GrowingArea, GrowingAreaType, Shelter, TempExposure, SunExposure, Weather,
   GrowingSurface, GrowingGoal,
 } from '../types';
+import { totalCount } from '../growingAreas/ranking';
 
 export interface GrowingAreaClimate {
   shelter?: Shelter;
@@ -89,7 +90,18 @@ export interface FitFinding {
   verdict: 'fits' | 'misfits' | 'unknown';
   sentence: string;
   borrowed: boolean;
+  /** Whose word it is: the authorities whose pages settled a value this
+   *  finding rests on, for this species itself. Empty for an unknown and
+   *  for a value only the genus answered (`borrowed` says that). Absent from
+   *  a server that predates it. */
+  authorities?: string[];
+  /** Which of the area's goals this finding answers. Edible and pollinators
+   *  share the `goal` axis, so this is the only way to tell them apart.
+   *  Absent from a server that predates it. */
+  goal?: GrowingGoal | null;
 }
+
+export type FitAxis = FitFinding['axis'];
 
 /** A species put forward for an area. `fits` holds only confirmed axes —
  *  never the unknown ones, because "no idea how big it gets" is not a reason
@@ -100,6 +112,12 @@ export interface Candidate {
   scientific_name: string;
   score: number;
   fits: FitFinding[];
+  /** One short caution line when the species is recorded toxic to pets or
+   *  people ("Toxic to pets and people if eaten."), null otherwise. Shown as
+   *  a warning on every row or card that lists the candidate, because a
+   *  recommendation is exactly where a hazard must not go unsaid. Absent
+   *  from a server that predates it. */
+  hazard?: string | null;
 }
 
 /** A plant already standing here, and what specifically doesn't suit it. */
@@ -111,6 +129,13 @@ export interface PlantMisfit {
   misfits: FitFinding[];
 }
 
+/** A limit no catalog this app holds will reach, for a caller that needs
+ *  every candidate rather than the best few. The endpoint ranks and then
+ *  truncates, so a filter built on a truncated list silently drops whatever
+ *  ranked past the cut — and in a "fits this area" filter, a species that
+ *  is missing reads as one that does not fit. */
+export const EVERY_CANDIDATE = 100_000;
+
 export async function fetchCandidates(
   id: number, limit = 20,
 ): Promise<Candidate[]> {
@@ -120,8 +145,44 @@ export async function fetchCandidates(
   return data;
 }
 
+/** The first `limit` of an area's ranked candidates, and how many there are
+ *  in all — counted by the server before it cut the list. `total` is null
+ *  from a server too old to send the count. */
+export interface CandidatePage {
+  rows: Candidate[];
+  total: number | null;
+}
+
+export async function fetchCandidatePage(id: number, limit: number): Promise<CandidatePage> {
+  const client = await apiClient();
+  const resp = await client.get<Candidate[]>(
+    `/growing-areas/${id}/candidates`, { params: { limit } });
+  return { rows: resp.data, total: totalCount(resp.headers) };
+}
+
 export async function fetchMisfits(id: number): Promise<PlantMisfit[]> {
   const client = await apiClient();
   const { data } = await client.get<PlantMisfit[]>(`/growing-areas/${id}/misfits`);
+  return data;
+}
+
+/** One species against one area, every axis — what Add Plant asks before
+ *  the plant is saved. `findings` holds fits, misfits and unknowns alike;
+ *  `candidate` is the server's own Candidate verdict, never re-derived. */
+export interface SpeciesFit {
+  species_id: number;
+  common_name: string;
+  scientific_name: string;
+  score: number;
+  candidate: boolean;
+  findings: FitFinding[];
+}
+
+export async function fetchSpeciesFit(
+  areaId: number, speciesId: number,
+): Promise<SpeciesFit> {
+  const client = await apiClient();
+  const { data } = await client.get<SpeciesFit>(
+    `/growing-areas/${areaId}/fit/${speciesId}`);
   return data;
 }

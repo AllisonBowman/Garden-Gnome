@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Community Garden — PlantAdvocate</title>
-<meta name="description" content="A demo virtual community garden — choose a species and watch it grow at its own realistic pace.">
+<meta name="description" content="A playful demo garden — choose a species and watch it grow at its own pace.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -261,8 +261,8 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
 <section class="page-head">
   <div class="wrap">
     <div class="eyebrow">Community garden &middot; demo</div>
-    <h1>Pick a plant. <em>Watch it grow the way it actually would.</em></h1>
-    <p class="page-sub">Five species, five different growth rates and shapes &mdash; a fast-trailing pothos fills in within hours, an echeveria barely moves. This is a working local demo: your plots live in this browser, identified by a persistent cookie rather than IP (IPs are shared and unreliable across visitors).</p>
+    <h1>Pick a plant. <em>Watch it grow at its own pace.</em></h1>
+    <p class="page-sub">Five species, five different growth rates and shapes, sped up so you can watch &mdash; a fast-trailing pothos fills in within hours, an echeveria barely moves. A playful demo: your plots are saved in this browser and never leave it.</p>
   </div>
 </section>
 
@@ -277,15 +277,14 @@ footer{border-top:1px solid var(--line); padding:56px 0 32px;}
       <button class="btn-ghost" onclick="resetGarden()">Reset my garden</button>
     </div>
     <div class="form-note" id="garden-status" style="margin-top:20px;"></div>
-    <div class="gardener-tag" id="gardener-tag"></div>
   </div>
 </section>
 
 <section id="trust">
   <div class="panel wrap">
     <div class="section-tag">Every plant lives somewhere</div>
-    <h2>In PlantAdvocate, each plant belongs to a growing environment.</h2>
-    <p class="lede">This demo is a playful version of a real idea in the app: your plants aren't a flat list &mdash; they live in environments, each with its own conditions. A sunny windowsill, a shaded balcony, a greenhouse, a community plot. A plant can even move between them and keep its full history intact, so its care always reflects where it actually lives.</p>
+    <h2>In PlantAdvocate, each plant belongs to a growing area.</h2>
+    <p class="lede">This demo is a playful version of a real idea in the app: your plants aren't a flat list &mdash; they live in growing areas, each with its own conditions. A sunny windowsill, a shaded balcony, a greenhouse, a community plot. A plant can even move between them and keep its full history intact, so its care always reflects where it actually lives.</p>
   </div>
 </section>
 
@@ -389,28 +388,26 @@ function plantSVG(key, stage){
   return '<svg viewBox="0 0 120 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">'+inner+'</svg>';
 }
 
-/* --- cookie-based gardener identity --- */
-function setCookie(name,value,days){
-  const d = new Date(); d.setTime(d.getTime()+days*24*60*60*1000);
-  document.cookie = name+'='+value+';expires='+d.toUTCString()+';path=/;SameSite=Lax';
-}
-function getCookie(name){
-  const m = document.cookie.match(new RegExp('(^| )'+name+'=([^;]+)'));
-  return m ? m[2] : null;
-}
-function getOrCreateGardenerId(){
-  let id = getCookie('gg_gardener_id');
-  if(!id){
-    id = 'g_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
-    setCookie('gg_gardener_id', id, 365);
-  }
-  return id;
-}
-const GARDENER_ID = getOrCreateGardenerId();
-const STORAGE_KEY = 'gg-community-garden-' + GARDENER_ID;
+/* --- plots live in this browser's local storage; nothing is sent anywhere --- */
+const STORAGE_KEY = 'gg-community-garden';
+
+// Earlier versions keyed the plots by an id kept in a cookie, which the
+// browser then sent with every request to the site. Move those plots to the
+// plain key once, and expire the cookie.
+(function migrateFromCookie(){
+  try{
+    const m = document.cookie.match(/(?:^|; )gg_gardener_id=([^;]+)/);
+    if(!m) return;
+    const oldKey = 'gg-community-garden-' + m[1];
+    const old = localStorage.getItem(oldKey);
+    if(old && !localStorage.getItem(STORAGE_KEY)) localStorage.setItem(STORAGE_KEY, old);
+    localStorage.removeItem(oldKey);
+  }catch(e){}
+  document.cookie = 'gg_gardener_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax';
+})();
 
 function loadGarden(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }catch(e){ return {}; } }
-function saveGarden(g){ localStorage.setItem(STORAGE_KEY, JSON.stringify(g)); }
+function saveGarden(g){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(g)); }catch(e){} }
 
 let selectedSpecies = 'pothos';
 
@@ -460,7 +457,6 @@ function renderGarden(){
   document.getElementById('garden-status').textContent = planted===0
     ? 'Select a species above, then click a plot to plant it.'
     : planted + ' of ' + GRID_SIZE + ' plots planted. Growth updates automatically over time.';
-  document.getElementById('gardener-tag').textContent = 'Gardener ID (cookie): ' + GARDENER_ID;
 }
 function plantAt(i){
   const garden = loadGarden();
@@ -469,7 +465,7 @@ function plantAt(i){
   renderGarden();
 }
 function resetGarden(){
-  localStorage.removeItem(STORAGE_KEY);
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
   renderGarden();
 }
 initPicker();
@@ -498,7 +494,6 @@ setInterval(renderGarden, 60000);
       <div class="foot-col">
         <h4>Community</h4>
         <a href="community-garden.html">Community garden</a>
-        <a href="testimonials.html">Beta experiences</a>
         <a href="resources.html">Plant resources</a>
         <a href="conservation.html">Conservation</a>
       </div>
@@ -510,7 +505,7 @@ setInterval(renderGarden, 60000);
     </div>
     <div class="foot-bottom">
       <span>PLANTADVOCATE &mdash; built for growers who want the truth, translated.</span>
-      <span>&copy; 2026 PlantAdvocate</span>
+      <span>&copy; 2026 PlantAdvocate &middot; <a href="https://ocean-dweller.human-memory.ai/" style="color:inherit; text-decoration:underline; text-underline-offset:3px;">An Ocean Dweller Media project</a></span>
     </div>
   </div>
 </footer>

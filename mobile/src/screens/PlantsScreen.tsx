@@ -14,6 +14,7 @@ import { PlantsStackParamList } from '../../App';
 import StreakBadges from '../streaks/StreakBadges';
 import CareTodos from '../care/CareTodos';
 import EmptyState from '../components/EmptyState';
+import LoadError from '../components/LoadError';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 
@@ -79,7 +80,9 @@ export default function PlantsScreen() {
   const navigation = useNavigation<Nav>();
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
-  const { data: plants, isLoading, isError, refetch, isRefetching } = useQuery({
+  const {
+    data: plants, isLoading, isError, error, refetch, isRefetching,
+  } = useQuery({
     queryKey: ['plants'],
     queryFn: fetchPlants,
   });
@@ -95,14 +98,17 @@ export default function PlantsScreen() {
     return <ActivityIndicator style={styles.center} size="large" />;
   }
 
-  if (isError) {
+  // Only when there is nothing to show: a background refetch that fails
+  // keeps the list it already has. The button is the way out that pull-to-
+  // refresh can't be here, because the list isn't on screen to pull.
+  if (isError && !plants) {
     return (
-      <View style={styles.center}>
-        <Text variant="bodyLarge" style={styles.errorText}>
-          Could not reach the backend.{'\n'}
-          {__DEV__ ? 'Check the API URL in Settings.' : 'Please check your connection and try again.'}
-        </Text>
-      </View>
+      <LoadError
+        message="Couldn’t load your plants."
+        error={error}
+        onRetry={() => refetch()}
+        retrying={isRefetching}
+      />
     );
   }
 
@@ -171,6 +177,4 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   fab: { position: 'absolute', right: 16, bottom: 24, backgroundColor: p.acc },
   captureFab: { position: 'absolute', right: 16, bottom: 84 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  errorText: { textAlign: 'center', color: p.warn },
-  empty: { textAlign: 'center', color: p.faint, marginTop: 48, fontSize: 15 },
 });

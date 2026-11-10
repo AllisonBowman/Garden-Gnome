@@ -40,9 +40,13 @@ A Resolved value borrowed from the species' genus rather than asserted about
 the species itself. Honest to show, dishonest to hide.
 
 **Harm-capable field**:
-A field where a wrong value can injure an animal or kill a plant — toxicity,
-cold tolerance, watering regime. Harm-capable fields never resolve
-automatically through disagreement and never accept an inferred value.
+A field where a wrong value can injure a person or an animal, or kill a
+plant — toxicity, edibility, cold tolerance (the survival floor), the
+watering regime and its day estimates. Harm-capable fields never resolve
+automatically through disagreement and never accept an inferred value
+(ADR 0007, ADR 0008). A source's poison severity rating is about people;
+what a plant does to pets comes from the pet tags, or from wording that
+names them, never from that rating.
 
 **Care data status**:
 How well-backed a Species' care values are — `sourced`, `inferred`, or `none`.
@@ -108,7 +112,11 @@ shows — a plant nobody can judge is absent from it, not listed as fine.
 **Candidate**:
 A Species put forward for a Growing area: zero Misfits *and* at least one
 confirmed fit. The second half is what keeps an unresearched species — nothing
-against it because nothing is known about it — out of a recommendation.
+against it because nothing is known about it — out of a recommendation. A
+Species a source rates a high-severity or fatal poison for people, records as
+a noxious weed, or tags as an invasive species is never put forward, however
+well it fits; the one exception is a table crop whose eaten part is named,
+which is offered with its hazard stated (ADR 0009).
 
 **Reach**:
 What a climber's mature height means. A vine's published height is how far it

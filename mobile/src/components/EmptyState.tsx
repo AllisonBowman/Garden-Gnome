@@ -10,11 +10,18 @@ interface Props {
   body: string;
   actionLabel?: string;
   onAction?: () => void;
+  /** The action is under way (a retry in flight): the button spins and
+   *  can't be pressed twice. */
+  busy?: boolean;
 }
 
 /** Calm, reusable empty state — a friendly icon, a line of reassurance, and
- *  an optional call to action. Matches the app's low-pressure tone. */
-export default function EmptyState({ emoji, title, body, actionLabel, onAction }: Props) {
+ *  an optional call to action. Matches the app's low-pressure tone. Also the
+ *  way out of a failed load: a screen that couldn't fetch says so and offers
+ *  to try again, rather than spinning forever. */
+export default function EmptyState({
+  emoji, title, body, actionLabel, onAction, busy = false,
+}: Props) {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   return (
@@ -26,6 +33,8 @@ export default function EmptyState({ emoji, title, body, actionLabel, onAction }
         <Button
           mode="contained"
           onPress={onAction}
+          loading={busy}
+          disabled={busy}
           style={styles.button}
           buttonColor={palette.acc}
           textColor={palette.btnInk}

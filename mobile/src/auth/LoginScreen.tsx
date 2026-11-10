@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Text } from 'react-native-paper';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { useAuth } from './AuthContext';
 import { signInWithApple, signInWithGoogle } from './signIn';
+import { createSignInGate, Provider } from './signInGate';
+import { SIGN_IN_REASON } from './loginCopy';
 
 // Sign in with Apple renders Apple's own button component (required styling).
 // Loaded lazily so the web bundle never imports the native module.
@@ -18,10 +20,14 @@ export default function LoginScreen() {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const { setSession } = useAuth();
-  const [busy, setBusy] = useState<'apple' | 'google' | null>(null);
+  const [busy, setBusy] = useState<Provider | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Checked synchronously, before anything awaits: two quick taps can both
+  // land before the re-render that covers the buttons. See signInGate.ts.
+  const gate = useRef(createSignInGate()).current;
 
-  async function run(kind: 'apple' | 'google') {
+  async function run(kind: Provider) {
+    if (!gate.tryStart(kind)) return;
     setBusy(kind);
     setError(null);
     try {
@@ -36,6 +42,7 @@ export default function LoginScreen() {
         setError('Sign-in didn\'t complete. Please try again.');
       }
     } finally {
+      gate.finish();
       setBusy(null);
     }
   }
@@ -52,16 +59,32 @@ export default function LoginScreen() {
       </View>
 
       <View style={styles.buttons}>
+        {/* Why there is a sign-in at all, before anyone is asked for one. */}
+        <Text style={styles.why}>{SIGN_IN_REASON}</Text>
+        {/* Apple's button has no disabled or loading state of its own, so
+            while any sign-in runs it is dimmed, stops taking touches, and
+            shows a spinner when it is the one running. */}
         {Platform.OS === 'ios' && AppleAuthentication && (
-          <AppleAuthentication.AppleAuthenticationButton
-            buttonType={
-              AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-            buttonStyle={
-              AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-            cornerRadius={8}
-            style={styles.appleButton}
-            onPress={() => run('apple')}
-          />
+          <View
+            pointerEvents={busy !== null ? 'none' : 'auto'}
+            style={busy !== null ? styles.appleBusy : undefined}
+            accessibilityState={{ disabled: busy !== null, busy: busy === 'apple' }}
+          >
+            <AppleAuthentication.AppleAuthenticationButton
+              buttonType={
+                AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+              buttonStyle={
+                AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+              cornerRadius={8}
+              style={styles.appleButton}
+              onPress={() => run('apple')}
+            />
+            {busy === 'apple' && (
+              <View style={styles.appleSpinner}>
+                <ActivityIndicator color="#FFFFFF" />
+              </View>
+            )}
+          </View>
         )}
         {Platform.OS !== 'web' && (
           <Button
@@ -113,7 +136,16 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
     maxWidth: 300,
   },
   buttons: { gap: 12, alignItems: 'stretch' },
+  why: {
+    textAlign: 'center', color: p.sub, fontSize: 14, lineHeight: 20,
+    marginBottom: 4, alignSelf: 'center', maxWidth: 320,
+  },
   appleButton: { height: 48 },
+  appleBusy: { opacity: 0.6 },
+  appleSpinner: {
+    position: 'absolute', top: 0, right: 0, bottom: 0, left: 0,
+    justifyContent: 'center', alignItems: 'flex-end', paddingRight: 16,
+  },
   // Google's brand button keeps its required white fill + #DADCE0 border in
   // both themes, so a theme token would break the brand spec here.
   googleButton: { borderRadius: 8, borderWidth: 1, borderColor: '#DADCE0' },

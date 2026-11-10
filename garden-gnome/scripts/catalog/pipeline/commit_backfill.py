@@ -84,7 +84,8 @@ def main() -> int:
 
     body = Path(body_file).read_text().rstrip() + '\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n'
     subprocess.run(['git', 'add', *files, TEST, DOCS], check=True)
-    subprocess.run(['git', 'commit', '-q', '-m', f'{subject}\n\n{body}'], check=True)
+    # Commit ONLY these paths: another team may have its own changes staged in this tree at the same moment.
+    subprocess.run(['git', 'commit', '-q', '-m', f'{subject}\n\n{body}', '--', *files, TEST, DOCS], check=True)
     print(f'{label}: {delta:+d} claims -> {new_total}')
     print(run(['git', 'log', '--oneline', '-1']).stdout.strip())
     return 0

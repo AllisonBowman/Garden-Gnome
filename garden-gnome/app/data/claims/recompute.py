@@ -40,7 +40,13 @@ from .store import resolve_from_db
 #: "5": `climbs` lands (0020). A climber's height is its reach, and fifty
 #: climbers that took no size while the field could not say so are
 #: re-researched with it. Every row is rewritten once.
-RESOLVER_VERSION = "5"
+#:
+#: "6": edibility, the survival floor and the watering day estimates are
+#: harm-capable (ADR 0008), so none of them is borrowed from the genus any
+#: more. One row in the tranche held a borrowed one when this landed --
+#: Nymphaea odorata's "edible", off the Nymphaea genus page -- and it goes
+#: back to null. Every row is rewritten once.
+RESOLVER_VERSION = "6"
 
 #: The only columns a Claim is allowed to set. An allowlist rather than a
 #: denylist: a claim naming `scientific_name` or `review_status` must not be

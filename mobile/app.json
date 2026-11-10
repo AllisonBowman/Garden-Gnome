@@ -7,19 +7,83 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.allisonbowman.plantadvocate",
       "appleTeamId": "FK6E9XBY6Y",
       "usesAppleSignIn": true,
+      "privacyManifests": {
+        "NSPrivacyTracking": false,
+        "NSPrivacyTrackingDomains": [],
+        "NSPrivacyCollectedDataTypes": [
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeName",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeEmailAddress",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeUserID",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypePreciseLocation",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeCoarseLocation",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+              "NSPrivacyCollectedDataTypePurposeAnalytics"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeCustomerSupport",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeOtherUserContent",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+              "NSPrivacyCollectedDataTypePurposeAnalytics"
+            ]
+          }
+        ]
+      },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSSpeechRecognitionUsageDescription": "PlantAdvocate turns what you say into a list of plants, so you can walk your garden and name what's growing instead of typing it all in. Recognition happens on your device wherever it can."
+        "NSSpeechRecognitionUsageDescription": "On Walk the garden, PlantAdvocate turns what you say into a list of plants. Your phone does this itself where it can, and Apple does it otherwise. PlantAdvocate only receives the plants you confirm."
       }
     },
     "android": {
       "package": "com.allisonbowman.gardengnome",
       "adaptiveIcon": {
-        "backgroundColor": "#2D6A4F",
+        "backgroundColor": "#2F4A33",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -43,7 +107,12 @@
           "backgroundColor": "#F6FAF7"
         }
       ],
-      "expo-secure-store",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": false
+        }
+      ],
       "expo-apple-authentication",
       [
         "@react-native-google-signin/google-signin",
@@ -54,28 +123,33 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow PlantAdvocate to access your camera to photograph plants.",
-          "microphonePermission": "PlantAdvocate listens while you describe your garden aloud, so you can add plants without stopping to type.",
+          "cameraPermission": "PlantAdvocate uses the camera to photograph a plant. Your phone can suggest what it is, and when photo check-ups are offered you can send the photo for one. On Walk the garden the camera shows your garden behind your list. That view isn't recorded or sent anywhere.",
+          "microphonePermission": "On Walk the garden, PlantAdvocate listens while you say what's planted, so you can add plants without typing. PlantAdvocate never receives or keeps the sound.",
           "recordAudioAndroid": false
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow PlantAdvocate to access your photos to add plant images."
+          "photosPermission": "PlantAdvocate lets you choose a photo of a plant. Your phone can suggest what it is, and when photo check-ups are offered you can send the photo for one.",
+          "cameraPermission": "PlantAdvocate uses the camera to photograph a plant. Your phone can suggest what it is, and when photo check-ups are offered you can send the photo for one. On Walk the garden the camera shows your garden behind your list. That view isn't recorded or sent anywhere.",
+          "microphonePermission": "On Walk the garden, PlantAdvocate listens while you say what's planted, so you can add plants without typing. PlantAdvocate never receives or keeps the sound."
         }
       ],
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Allow PlantAdvocate to use your location to set a growing environment's place and its local weather."
+          "locationWhenInUsePermission": "PlantAdvocate uses your location to set a growing area's place, so it can fetch that area's local forecast.",
+          "locationAlwaysAndWhenInUsePermission": false,
+          "locationAlwaysPermission": false,
+          "motionUsagePermission": false
         }
       ],
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
-          "color": "#2D6A4F"
+          "icon": "./assets/android-icon-monochrome.png",
+          "color": "#2F4A33"
         }
       ],
       "expo-status-bar",

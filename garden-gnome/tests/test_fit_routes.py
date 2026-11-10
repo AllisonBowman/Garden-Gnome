@@ -50,6 +50,23 @@ def garden(migrated_db_url):
             "mystery": dict(
                 common_name="Unresearched Thing",
                 scientific_name="Ignotus ignotus"),
+            # Cited for its sun range, borrowed from the genus for its soil:
+            # the two ways a finding says where it came from. Never planted,
+            # and a sun misfit in the bed, so it is on no list by default.
+            "attributed": dict(
+                common_name="Attributed Fern", scientific_name="Umbra testae",
+                outdoor_sun_exposure=["part_shade", "full_shade"],
+                soil_base="garden_bed",
+                care_provenance={"outdoor_sun_exposure": "sourced",
+                                 "soil_base": "genus_inferred"},
+                care_sources=[
+                    {"authority": "NC State Extension",
+                     "url": "https://plants.ces.ncsu.edu/umbra",
+                     "fields": ["outdoor_sun_exposure"], "inferred": False},
+                    {"authority": "Royal Horticultural Society",
+                     "url": "https://www.rhs.org.uk/umbra",
+                     "fields": ["soil_base"], "inferred": True},
+                ]),
         }.items():
             row = s.exec(select(Species).where(
                 Species.scientific_name == kw["scientific_name"])).first()
@@ -82,7 +99,7 @@ def garden(migrated_db_url):
 
         data = dict(
             bed_id=bed.id, their_bed_id=theirs.id, user_id=user.id,
-            species=made,
+            species=made, db_url=migrated_db_url,
             headers={"Authorization": f"Bearer {tokens.issue_access_token(user.id)}"},
         )
 
@@ -115,6 +132,54 @@ def test_an_unresearched_species_is_never_put_forward(garden):
     assert "Unresearched Thing" not in [c["common_name"] for c in body]
 
 
+def test_every_candidate_carries_its_hazard_line(garden):
+    """Contract item 3: `hazard` on every candidate, null when nothing is
+    recorded -- the coneflower here has no toxicity record."""
+    body = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000",
+        headers=garden.headers).json()
+    assert body and all("hazard" in c for c in body)
+    echinacea = next(c for c in body if c["common_name"] == "Purple Coneflower")
+    assert echinacea["hazard"] is None
+
+
+def _sunny_bed_species(garden, **kw):
+    """A species shaped to fit the garden's sunny pollinator bed."""
+    with Session(create_engine(garden.db_url)) as s:
+        row = Species(is_houseplant=False, outdoor_sun_exposure=["full_sun"],
+                      soil_base="garden_bed", attracts_pollinators=True, **kw)
+        s.add(row)
+        s.commit()
+        return row.id
+
+
+def test_a_toxic_candidate_says_so_on_its_row(garden):
+    sid = _sunny_bed_species(
+        garden, common_name="Hazardtest Foxglove",
+        scientific_name="Digitalis hazardtestii", toxic_to_pets=True,
+        toxicity_detail="NC State rates poison severity Low; Poisonous to Humans.")
+    body = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000",
+        headers=garden.headers).json()
+    row = next(c for c in body if c["species_id"] == sid)
+    assert row["hazard"] == "Toxic to pets and people."
+
+
+def test_a_high_severity_poison_is_left_off_the_list_and_not_called_a_candidate(garden):
+    sid = _sunny_bed_species(
+        garden, common_name="Excludetest Hemlock",
+        scientific_name="Conium excludetestii", toxic_to_pets=True,
+        toxicity_detail="NC State's Poisonous to Humans block: Poison Severity: High.")
+    every = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000", headers=garden.headers)
+    assert sid not in [c["species_id"] for c in every.json()]
+    assert every.headers["X-Total-Count"] == str(len(every.json()))
+    fit_body = garden.client.get(
+        f"{BASE}/{garden.bed_id}/fit/{sid}", headers=garden.headers).json()
+    assert fit_body["candidate"] is False
+    assert fit_body["score"] > 0, "it fits the space; it is still not suggested"
+
+
 def test_every_candidate_says_why_and_only_confirmed_reasons_count(garden):
     body = garden.client.get(
         f"{BASE}/{garden.bed_id}/candidates", headers=garden.headers).json()
@@ -135,6 +200,38 @@ def test_limit_is_honoured(garden):
     body = garden.client.get(
         f"{BASE}/{garden.bed_id}/candidates?limit=1", headers=garden.headers).json()
     assert len(body) <= 1
+
+
+def test_the_count_before_the_cut_travels_with_the_cut_list(garden):
+    """A screen showing the first twelve has to be able to say "12 of 263".
+    The body stays the bare list every installed build parses; the whole
+    count rides in a header, whatever the limit cut it to."""
+    every = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=100000", headers=garden.headers)
+    cut = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=0", headers=garden.headers)
+    assert cut.status_code == 200, cut.text
+    assert cut.json() == []
+    total = len(every.json())
+    assert total >= 1, "the coneflower belongs in this bed"
+    assert cut.headers["X-Total-Count"] == str(total)
+    assert every.headers["X-Total-Count"] == str(total)
+
+
+def test_a_negative_limit_is_refused_rather_than_dropping_the_last_candidate(garden):
+    resp = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=-1", headers=garden.headers)
+    assert resp.status_code == 422
+
+
+def test_the_web_preview_is_allowed_to_read_the_count(garden):
+    """A browser hides a response header CORS doesn't expose, and the web
+    preview runs in one."""
+    resp = garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1",
+        headers={**garden.headers, "Origin": "http://localhost:8081"})
+    exposed = resp.headers.get("access-control-expose-headers", "")
+    assert "x-total-count" in exposed.lower()
 
 
 # --- misfits ---------------------------------------------------------------
@@ -162,19 +259,87 @@ def test_a_plant_that_suits_the_space_is_absent_from_the_list(garden):
     assert "Echie" not in [m["nickname"] for m in body]
 
 
-# --- scoping ---------------------------------------------------------------
+# --- one species, before it is planted ------------------------------------
+# What Add Plant asks. The misfit list only speaks for plants already in the
+# area and the candidate list only for species that cleared it, so neither
+# could say what a spot has against the plant someone is about to put in it.
 
-@pytest.mark.parametrize("suffix", ["candidates", "misfits"])
-def test_another_accounts_area_is_a_404_on_both(garden, suffix):
+def _fit(garden, key):
+    return garden.client.get(
+        f"{BASE}/{garden.bed_id}/fit/{garden.species[key]}", headers=garden.headers)
+
+
+def test_the_misfit_is_known_before_the_plant_goes_in(garden):
+    resp = _fit(garden, "hosta")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["common_name"] == "Hosta"
+    assert body["candidate"] is False
+    sun = next(f for f in body["findings"] if f["axis"] == "sun")
+    assert sun["verdict"] == "misfits"
+    assert "6+ hours of direct sun" in sun["sentence"]
+
+
+def test_every_axis_comes_back_unknowns_included(garden):
+    """The client decides what to show, never what the verdict is -- so it
+    gets the unknowns too, labelled as unknowns."""
+    body = _fit(garden, "mystery").json()
+    assert body["candidate"] is False and body["score"] == 0
+    assert body["findings"], "every axis should still report"
+    assert {f["verdict"] for f in body["findings"]} == {"unknown"}
+    axes = [f["axis"] for f in body["findings"]]
+    assert axes[:4] == ["indoor_outdoor", "sun", "soil", "footprint"]
+
+
+def test_the_candidate_flag_agrees_with_the_candidate_list(garden):
+    listed = {c["species_id"] for c in garden.client.get(
+        f"{BASE}/{garden.bed_id}/candidates?limit=1000",
+        headers=garden.headers).json()}
+    for key in ("coneflower", "hosta", "mystery", "attributed"):
+        body = _fit(garden, key).json()
+        assert body["candidate"] == (garden.species[key] in listed), key
+
+
+def test_a_finding_says_whose_word_it_is_and_what_was_borrowed(garden):
+    body = _fit(garden, "attributed").json()
+    sun = next(f for f in body["findings"] if f["axis"] == "sun")
+    assert sun["verdict"] == "misfits"
+    assert sun["authorities"] == ["NC State Extension"]
+    assert sun["borrowed"] is False
+    soil = next(f for f in body["findings"] if f["axis"] == "soil")
+    assert soil["borrowed"] is True
+    assert soil["authorities"] == [], "a genus page does not speak for the species"
+    assert "from the genus" in soil["sentence"]
+
+
+def test_a_goal_finding_says_which_goal_it_answers(garden):
+    body = _fit(garden, "coneflower").json()
+    goal = next(f for f in body["findings"] if f["axis"] == "goal")
+    assert goal["goal"] == "pollinators"
+    assert all(f["goal"] is None for f in body["findings"] if f["axis"] != "goal")
+
+
+def test_an_unknown_species_is_a_404(garden):
     assert garden.client.get(
-        f"{BASE}/{garden.their_bed_id}/{suffix}", headers=garden.headers
+        f"{BASE}/{garden.bed_id}/fit/987654321", headers=garden.headers
     ).status_code == 404
 
 
-@pytest.mark.parametrize("suffix", ["candidates", "misfits"])
-def test_both_require_a_token(garden, suffix):
-    assert garden.client.get(
-        f"{BASE}/{garden.bed_id}/{suffix}").status_code == 401
+# --- scoping ---------------------------------------------------------------
+
+def _paths(garden, area_id):
+    return [f"{BASE}/{area_id}/candidates", f"{BASE}/{area_id}/misfits",
+            f"{BASE}/{area_id}/fit/{garden.species['hosta']}"]
+
+
+def test_another_accounts_area_is_a_404_on_every_fit_endpoint(garden):
+    for path in _paths(garden, garden.their_bed_id):
+        assert garden.client.get(path, headers=garden.headers).status_code == 404, path
+
+
+def test_every_fit_endpoint_requires_a_token(garden):
+    for path in _paths(garden, garden.bed_id):
+        assert garden.client.get(path).status_code == 401, path
 
 
 # --- the plants filter the misfit endpoint needed --------------------------

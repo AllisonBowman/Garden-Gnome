@@ -19,8 +19,12 @@ primary_region = 'iad'
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
 
 [[vm]]
   size = 'shared-cpu-1x'
-  memory = '256mb'
+  # 512, not 256. uvicorn idles near 116 MB and the first GET /species/ (the
+  # whole catalog, built once and then cached) takes it to about 153 MB.
+  # Before that cache, ten phones at once took it past 240 MB, which a 256 MB
+  # guest cannot give a process; the headroom is for the next thing like it.
+  memory = '512mb'

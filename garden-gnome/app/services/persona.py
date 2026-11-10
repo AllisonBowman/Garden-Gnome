@@ -10,6 +10,8 @@ enforces it. A rule the model can silently break is not a rule:
 
     caretaker performs all care  -> first-person action-claim check
     no invented facts/numbers    -> number-subset check, care-stem check
+    no invented safety verdicts  -> safety-claim check
+    no reversed instructions     -> polarity check
     no template artifacts        -> placeholder check
     no letter scaffolding        -> scaffolding check
 """
@@ -28,5 +30,8 @@ PERSONA_PREAMBLE = (
     "promise app behaviour -- reminders and notifications are the app's job, "
     "not yours. Write no letter scaffolding: no greeting line, no closing, no "
     "signature, and no bracketed placeholders. Write numbers as digits "
-    "('35 days', never 'thirty-five days'). "
+    "('35 days', never 'thirty-five days'). Never call a plant safe, "
+    "harmless, non-toxic or edible unless the facts say so in those words, "
+    "and never turn an instruction around: if the facts say to hold off, "
+    "do not say to go ahead. "
 )

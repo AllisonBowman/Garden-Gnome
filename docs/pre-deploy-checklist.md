@@ -9,6 +9,42 @@
 > (`rescue/deployed-production`, `8f02b7b`) and against master. Nothing is
 > inferred from the feature list.
 
+## Before using this for a deploy today
+
+Deploys now go through CI (`docs/deploys.md`): a push to master tests, then
+deploys. Deploy by hand only when CI can't, and know what has changed since
+the July run below, which is kept as it happened:
+
+- **Where to run it.** `fly.toml` and the Dockerfile live in `garden-gnome/`,
+  and the build context has to be that directory. From a clean checkout of
+  master: `cd garden-gnome && fly deploy --remote-only -a garden-gnome-api`.
+  CI deploys with flyctl `0.4.111`, pinned along with the
+  `setup-flyctl` action's commit; use the same version by hand, or bump CI
+  to match on purpose.
+- **The token.** CI reads `FLY_API_TOKEN` from the repository's
+  `production` environment (`gh secret set FLY_API_TOKEN --env production`),
+  a deploy token scoped to this app. A hand deploy uses your own
+  `fly auth login` and needs no token.
+- **The backup.** Take a volume snapshot first: `fly volumes list -a
+  garden-gnome-api` for the `gnome_data` volume's ID, then `fly volumes
+  snapshots create VOLUME_ID`. The `sftp get` in Pre-flight below copies the
+  live SQLite file, which can catch it mid-write; if you want a file too,
+  make it with SQLite's own backup (the one-liner in
+  `docs/2026-10-16-app-store-finish-line-handoff.md`, step 2).
+- **The machine.** `shared-cpu-1x` with 512 MB, not 256 (`fly.toml`).
+- **Boot takes longer.** `python -m app.data.seed` migrates and runs the
+  claim sync before uvicorn binds. A first boot of a release can take
+  minutes on Fly's throttled shared CPU, so wait up to 5 minutes for `/`,
+  as CI's smoke check does, before reading silence as a failure.
+- **What "up" means.** `GET /` now carries a `catalog` block. A deploy is
+  good only when it answers 200 with `"synced": true`. CI's smoke check
+  fails the run on `false`, which means the boot logged `claim sync skipped`
+  and the API is serving the old catalog: look for that line and its
+  traceback in `fly logs`. It isn't a rollback case.
+- **The secrets.** The twelve-secret count and the digest reasoning below are
+  July's. Read `fly secrets list` fresh; the handoff's step 2 lists which
+  names to expect and which must be absent.
+
 This is not a routine deploy. Production has been running an unversioned build
 since **Jul 23** — see the banner in `docs/local-session-handoff.md`. Its source
 is now archived under `recovered/` on the rescue branch, so the deploy can no
