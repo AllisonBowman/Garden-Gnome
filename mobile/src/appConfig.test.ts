@@ -74,18 +74,22 @@ test('the image picker repeats the camera and microphone strings exactly', () =>
   expect(picker.microphonePermission).toBe(camera.microphonePermission);
 });
 
-test('permissions the app never asks for ship no string', () => {
+test('permissions the app never asks for ship no string, except motion', () => {
   // Foreground location only (src/location/permissions.ts); no motion; the
   // keychain is never read behind Face ID.
   expect(location.locationAlwaysAndWhenInUsePermission).toBe(false);
   expect(location.locationAlwaysPermission).toBe(false);
-  expect(location.motionUsagePermission).toBe(false);
+  // Motion is the exception: the app never asks, but expo-location links
+  // Core Motion, and App Store Connect rejects the upload without the key
+  // (error 90683, 1.1.3 build 18). So it ships a string that says so.
+  expect(location.motionUsagePermission).toMatch(/doesn't use motion/);
+  expect(location.motionUsagePermission).toMatch(/never asks/);
   expect(location.isIosBackgroundLocationEnabled).not.toBe(true);
   expect(secureStore.faceIDPermission).toBe(false);
   const plist = expo.ios.infoPlist as Record<string, unknown>;
   for (const key of [
     'NSLocationAlwaysUsageDescription', 'NSLocationAlwaysAndWhenInUseUsageDescription',
-    'NSMotionUsageDescription', 'NSFaceIDUsageDescription',
+    'NSFaceIDUsageDescription',
   ]) {
     expect(plist[key]).toBeUndefined();
   }
