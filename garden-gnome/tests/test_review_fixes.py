@@ -474,7 +474,11 @@ def test_a_point_the_weather_service_does_not_cover_uses_the_existing_service(is
         with iso.db() as s:
             vitals_mod.vitals(s, s.get(User, iso.a["user_id"]), s.get(Property, prop["id"]),
                               today=NOV_15)
-            assert fcm.outside_coverage(s, 43.0, -79.0)
+            # Read the cache at the same clock the report was built with
+            # (vitals runs at 14:00 on `today`); the entry lives 3 hours, so
+            # checking it against the real clock fails later in the day.
+            assert fcm.outside_coverage(
+                s, 43.0, -79.0, now=datetime(NOV_15.year, NOV_15.month, NOV_15.day, 14, 0))
     finally:
         site_http.use_transport(prev)
     assert seen == [{}]  # the full chain: the Weather Service says it is not a United States point

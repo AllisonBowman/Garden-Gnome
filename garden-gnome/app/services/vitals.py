@@ -291,7 +291,8 @@ def _with_property(session: Session, user: User, prop: Property, today: Optional
         cards += _weather_cards(fc, inp.today, inp.frost_bias, first_frost)
     forecast = plan.forecast
     if fc is None:
-        payload = _fallback_weather(session, prop.pin_lat, prop.pin_lng)
+        payload = _fallback_weather(session, prop.pin_lat, prop.pin_lng,
+                                    now=_report_clock(today))
         if payload:
             extra, fo = _payload_cards(payload, inp.today)
             cards += extra
@@ -327,11 +328,21 @@ def _existing_weather(lat: float, lng: float, *, open_meteo: bool = True) -> Opt
         return None
 
 
-def _fallback_weather(session: Session, lat: float, lng: float) -> Optional[dict]:
-    """Weather when our National Weather Service forecast has none."""
+def _report_clock(today: Optional[date]) -> Optional[datetime]:
+    """The instant a report for a fixed `today` is built at (14:00, as the
+    plan does); None means the real clock."""
+    return datetime.combine(today, datetime.min.time()).replace(hour=14) if today else None
+
+
+def _fallback_weather(session: Session, lat: float, lng: float, *,
+                      now: Optional[datetime] = None) -> Optional[dict]:
+    """Weather when our National Weather Service forecast has none. `now` is
+    the report's own clock, so the cache is read at the instant it was
+    written at; without it a report built for a fixed day would read the
+    3-hour cache against the real time of day."""
     if not coverage.in_united_states(lat, lng):
         return _existing_weather(lat, lng)
-    if fcm.outside_coverage(session, lat, lng) and not coverage.in_territory(lat, lng):
+    if fcm.outside_coverage(session, lat, lng, now=now) and not coverage.in_territory(lat, lng):
         # Inside the rough boxes, but the Weather Service says it is not a
         # United States place (a city just over the border).
         return _existing_weather(lat, lng)
@@ -396,7 +407,7 @@ def _without_property(session: Session, user: User, today: Optional[date]) -> Vi
             fc = fcm.get_forecast(session, area.lat, area.lng, now=now)
             session.commit()
             if fc is None:
-                payload = _fallback_weather(session, area.lat, area.lng)
+                payload = _fallback_weather(session, area.lat, area.lng, now=now)
                 if payload:
                     cards, forecast = _payload_cards(payload, today or date.today())
             else:
