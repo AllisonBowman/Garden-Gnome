@@ -148,13 +148,28 @@ export default function HomeScreen() {
     return <ActivityIndicator style={styles.center} size="large" />;
   }
   if (form === 'failed') {
+    // Home is the only way into the rest of the app, so a report that will
+    // not load must not strand the person: plants, species and settings
+    // (where the sign-out and server settings live) stay one tap away.
     return (
-      <LoadError
-        message="Couldn’t load today’s report."
-        error={vitalsQ.error}
-        onRetry={() => vitalsQ.refetch()}
-        retrying={vitalsQ.isRefetching}
-      />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        refreshControl={<RefreshControl refreshing={vitalsQ.isRefetching} onRefresh={() => { void vitalsQ.refetch(); }} />}
+      >
+        <LoadError
+          inline
+          message="Couldn’t load today’s report."
+          error={vitalsQ.error}
+          onRetry={() => vitalsQ.refetch()}
+          retrying={vitalsQ.isRefetching}
+        />
+        <View style={styles.links}>
+          <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}>Plants</Button>
+          <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}>Species</Button>
+          <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}>Settings</Button>
+        </View>
+      </ScrollView>
     );
   }
 
