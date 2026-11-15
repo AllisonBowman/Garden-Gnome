@@ -33,7 +33,7 @@ from datetime import date, datetime, timedelta, timezone
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
-from sqlmodel import Session, select
+from sqlmodel import Session, delete, select
 
 from app.models.models import ForecastCache, Property, ProviderUsage
 from app.services import coverage
@@ -255,11 +255,12 @@ def _cache_put(session: Session, cell: str, provider: str, payload: dict, now: d
 
 
 def prune_expired(session: Session, *, now: Optional[datetime] = None) -> int:
+    """Delete every cached forecast (and Weather Service points answer) past
+    its `expires_at`, in one statement that reads no payloads. Returns the
+    count. Called hourly by app.services.housekeeping; the caller commits."""
     now = now or datetime.utcnow()
-    rows = session.exec(select(ForecastCache).where(ForecastCache.expires_at <= now)).all()
-    for r in rows:
-        session.delete(r)
-    return len(rows)
+    result = session.execute(delete(ForecastCache).where(ForecastCache.expires_at <= now))
+    return result.rowcount or 0
 
 
 def _cell(lat: float, lng: float) -> tuple[str, float, float]:

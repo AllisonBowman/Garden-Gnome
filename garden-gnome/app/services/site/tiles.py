@@ -8,7 +8,8 @@ and a suffix ("blk1_15565_-25656_dem1m"), which is how `prune_unused`
 knows when no property maps to it any more.
 
 Sources call `fetch_or_get`; the routes and account deletion call
-`prune_unused`. Writes are flushed, and committed at once on a session
+`prune_unused`, and the hourly housekeeping (app.services.housekeeping)
+calls `prune_expired` and `prune_unused`. Writes are flushed, and committed at once on a session
 marked with `commit_eagerly`, which every build step and imagery route
 does: a source usually makes another outbound request right after a write,
 and SQLite holds one write lock for the whole database, so a flushed but
@@ -195,6 +196,28 @@ def prune_unused(session: Session, *, keep_blocks: Iterable[str] = (),
             GeodataTile.id.in_(doomed[start:start + 500])))
     session.flush()
     return len(doomed)
+
+
+#: How many expired tiles `prune_expired` deletes in one call.
+EXPIRED_BATCH = 500
+
+
+def prune_expired(session: Session, *, now: Optional[datetime] = None,
+                  limit: int = EXPIRED_BATCH) -> int:
+    """Delete up to `limit` tiles past their expiry. Returns the count, so a
+    caller that commits after each call can repeat until it is under
+    `limit` (the housekeeping timer does, keeping each write lock short).
+    Only ids are read, never the payloads. A tile that never expires
+    (`expires_at` is null) is left alone. Flushes; the caller commits."""
+    ids = list(session.exec(
+        select(GeodataTile.id)
+        .where(GeodataTile.expires_at.is_not(None))
+        .where(GeodataTile.expires_at <= _now(now))
+        .limit(limit)).all())
+    if ids:
+        session.execute(delete(GeodataTile).where(GeodataTile.id.in_(ids)))
+    session.flush()
+    return len(ids)
 
 
 # --- the volume ------------------------------------------------------------------------

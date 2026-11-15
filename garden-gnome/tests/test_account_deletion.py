@@ -388,6 +388,9 @@ def test_every_boot_drops_expired_grants_before_it_retries(monkeypatch):
     calls = []
     monkeypatch.setattr(main, "run_migrations", lambda: None)
     monkeypatch.setattr(main, "seed_default_growing_area", lambda: None)
+    # The background timer would prune and retry against the default
+    # database (not the test one); it has its own tests.
+    monkeypatch.setattr(main, "_start_site_profile_retries", lambda: None)
     monkeypatch.setattr(main.auth, "purge_expired_apple_revocations",
                         lambda engine: calls.append("drop expired"))
     monkeypatch.setattr(main.auth, "start_queued_apple_revokes",
