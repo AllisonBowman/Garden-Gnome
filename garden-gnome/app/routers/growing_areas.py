@@ -115,12 +115,41 @@ def patch_growing_area(
     session: Session = Depends(get_session),
 ):
     area = _owned(area_id, user, session)
-    for field, value in payload.model_dump(exclude_unset=True).items():
+    changes = payload.model_dump(exclude_unset=True)
+    if area.property_id is not None:
+        changes = _zone_patch(area, changes, session)
+    for field, value in changes.items():
         setattr(area, field, value)
     session.add(area)
     session.commit()
     session.refresh(area)
     return _with_count(area, session)
+
+
+#: What the 1.1.x place picker sends. A zone's place is the property's pin,
+#: written only by the server (PLAN.md section 5), so these are ignored.
+_ZONE_PLACE_FIELDS = ("city", "region", "country", "lat", "lng")
+_EXPOSURE_TO_SUN = {"full_sun": "full_sun", "partial_sun": "part_shade",
+                    "shade": "shade"}
+
+
+def _zone_patch(area: GrowingArea, changes: dict, session: Session) -> dict:
+    """An old-route edit of a zone. A place edit is ignored and answered
+    200 with the property's values, so the old client's success path runs;
+    a sun edit is recorded as the owner's correction (`sun_source = owner`)."""
+    from app.models.models import OverrideMethod, Property
+    from app.routers.properties import record_override
+
+    for field in _ZONE_PLACE_FIELDS:
+        changes.pop(field, None)
+    sun = changes.pop("sun_exposure", None)
+    if sun is not None:
+        prop = session.get(Property, area.property_id)
+        if prop is not None:
+            value = _EXPOSURE_TO_SUN[getattr(sun, "value", sun)]
+            record_override(session, prop, area, "sun", value,
+                            OverrideMethod.old_client_edit)
+    return changes
 
 
 @_routes.delete("/{area_id}", status_code=204)
@@ -130,6 +159,11 @@ def delete_growing_area(
     session: Session = Depends(get_session),
 ):
     area = _owned(area_id, user, session)
+    if area.property_id is not None and area.is_whole_lot:
+        raise HTTPException(
+            status_code=409,
+            detail="This is the whole-lot zone of a property. Delete the property instead.",
+        )
     plants = session.exec(
         select(Plant).where(Plant.growing_area_id == area.id)
     ).all()
@@ -149,6 +183,11 @@ def delete_growing_area(
             status_code=409,
             detail="Growing area has stewardship history and can't be deleted.",
         )
+    if area.property_id is not None:
+        # A zone's readings, corrections and event states go with it:
+        # SQLite reuses row ids, and a new zone must not inherit them.
+        from app.routers.properties import _delete_site_rows
+        _delete_site_rows(session, area.property_id, zone_id=area.id)
     session.delete(area)
     session.commit()
 

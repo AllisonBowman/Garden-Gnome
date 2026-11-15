@@ -18,7 +18,7 @@ import LoadError from '../components/LoadError';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 
-type Nav = NativeStackNavigationProp<PlantsStackParamList, 'PlantsList'>;
+type Nav = NativeStackNavigationProp<PlantsStackParamList, 'Plants'>;
 
 const LIGHT_LABELS: Record<string, string> = {
   low: 'Low light',

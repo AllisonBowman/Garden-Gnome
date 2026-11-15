@@ -1,16 +1,21 @@
-import { Platform } from 'react-native';
+import { AppState, Platform } from 'react-native';
+import axios from 'axios';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import { loadGardenCareData } from '../api/plants';
 import { fetchGrowingAreas, fetchGrowingAreaWeather } from '../api/growingAreas';
+import { fetchPropertiesOrOff, fetchSeasonalPlan, fetchZones } from '../api/properties';
 import { GrowingArea } from '../types';
+import { SeasonalPlan } from '../types/site';
 import {
   computeReminderPlan, ReminderPrefs, REMINDER_CARE_TYPES, WeatherSignal,
 } from './plan';
+import { fallHardeningStart, SeasonalInput } from '../season/alerts';
 import { computeWeatherSignal } from '../weather/signal';
 
 const PREFS_KEY = 'garden_gnome_reminder_prefs';
 const WEATHER_SHIFT_KEY = 'garden_gnome_weather_shift';
+const SEASONAL_ALERTS_KEY = 'garden_gnome_seasonal_alerts';
 const CHANNEL_ID = 'care-reminders';
 
 // expo-notifications has no web implementation (Android/iOS only in SDK 57)
@@ -72,6 +77,72 @@ export async function setWeatherShiftPref(enabled: boolean): Promise<void> {
   } else {
     await SecureStore.setItemAsync(WEATHER_SHIFT_KEY, value);
   }
+}
+
+// "Frost and weather alerts" (default OFF, opt-in; PLAN.md section 7). Its
+// own switch, honoured even when every care-type switch is off.
+export async function getSeasonalAlertsPref(): Promise<boolean> {
+  const raw = Platform.OS === 'web'
+    ? localStorage.getItem(SEASONAL_ALERTS_KEY)
+    : await SecureStore.getItemAsync(SEASONAL_ALERTS_KEY);
+  return raw === '1';
+}
+
+export async function setSeasonalAlertsPref(enabled: boolean): Promise<void> {
+  const value = enabled ? '1' : '0';
+  if (Platform.OS === 'web') {
+    localStorage.setItem(SEASONAL_ALERTS_KEY, value);
+  } else {
+    await SecureStore.setItemAsync(SEASONAL_ALERTS_KEY, value);
+  }
+}
+
+/** A seasonal plan, or null when this server has the season feature off
+ *  (it answers 404). Any other failure throws. */
+async function seasonalPlanOrOff(propertyId: number): Promise<SeasonalPlan | null> {
+  try {
+    return await fetchSeasonalPlan(propertyId);
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) return null;
+    throw err;
+  }
+}
+
+interface SeasonalLoad {
+  seasonal: SeasonalInput;
+  outdoorFeedingStop: { growingAreaIds: number[]; from: Date } | null;
+}
+
+/**
+ * Every property's seasonal plan: its alerts (merged; the planner applies
+ * the daily, weekly and total limits across them) and, for the feeding
+ * gate, the property's zones once fall hardening has begun. Null when the
+ * feature is off or the person has no property. Throws on a failed load, so
+ * the caller can keep the previous schedule.
+ */
+async function loadSeasonal(needZones: boolean): Promise<SeasonalLoad | null> {
+  const properties = await fetchPropertiesOrOff();
+  if (!properties?.length) return null;
+  const alerts: SeasonalInput['alerts'] = [];
+  const events: NonNullable<SeasonalInput['events']> = [];
+  const zoneIds: number[] = [];
+  let from: Date | null = null;
+  for (const prop of properties) {
+    const plan = await seasonalPlanOrOff(prop.id);
+    if (!plan) continue;
+    alerts.push(...plan.alerts);
+    events.push(...plan.events);
+    const start = fallHardeningStart(plan);
+    if (needZones && start) {
+      for (const z of await fetchZones(prop.id)) zoneIds.push(z.growing_area_id);
+      // The earliest start across properties is the cautious one.
+      if (!from || start < from) from = start;
+    }
+  }
+  return {
+    seasonal: { alerts, events },
+    outdoorFeedingStop: from && zoneIds.length ? { growingAreaIds: zoneIds, from } : null,
+  };
 }
 
 // Build the per-growing area weather nudge map used by the planner when the
@@ -138,14 +209,6 @@ export async function ensureNotificationPermission(): Promise<boolean> {
 
 // ── Scheduling ────────────────────────────────────────────────────────────────
 
-let inFlight = false;
-
-/**
- * Recompute the full reminder schedule from live data and replace all
- * pending notifications. Called on app start, after logging care, after
- * adding a plant, and when reminder settings change. Safe to fire-and-forget:
- * failures (e.g. offline) leave the previous schedule in place.
- */
 /**
  * Forget every scheduled reminder. Called when a session ends, so the next
  * account on this phone is never nudged about the last one's plants.
@@ -159,13 +222,46 @@ export async function cancelAllReminders(): Promise<void> {
   }
 }
 
-export async function rescheduleAllReminders(): Promise<void> {
-  if (!isSupported || inFlight) return;
-  inFlight = true;
+let inFlight: Promise<void> | null = null;
+let rerunWanted = false;
+
+/**
+ * Recompute the full schedule (care reminders and seasonal alerts, in one
+ * planning pass) from live data and replace all pending notifications.
+ * Called on app start, after logging care, after adding a plant, when
+ * reminder settings change, and when the app returns to the foreground with
+ * seasonal alerts on. Safe to fire-and-forget: failures (e.g. offline) leave
+ * the previous schedule in place.
+ *
+ * A call made while one is running is not dropped: the running pass is
+ * followed by exactly one more, so the last change always lands in one
+ * complete plan (AUDIT.md section 4.3).
+ */
+export function rescheduleAllReminders(): Promise<void> {
+  if (!isSupported) return Promise.resolve();
+  if (inFlight) {
+    rerunWanted = true;
+    return inFlight;
+  }
+  inFlight = (async () => {
+    try {
+      do {
+        rerunWanted = false;
+        await reschedulePass();
+      } while (rerunWanted);
+    } finally {
+      inFlight = null;
+    }
+  })();
+  return inFlight;
+}
+
+async function reschedulePass(): Promise<void> {
   try {
     const prefs = await getReminderPrefs();
-    const anyEnabled = REMINDER_CARE_TYPES.some((t) => prefs[t]);
-    if (!anyEnabled) {
+    const anyCare = REMINDER_CARE_TYPES.some((t) => prefs[t]);
+    const seasonalOn = await getSeasonalAlertsPref();
+    if (!anyCare && !seasonalOn) {
       await Notifications.cancelAllScheduledNotificationsAsync();
       return;
     }
@@ -181,27 +277,51 @@ export async function rescheduleAllReminders(): Promise<void> {
 
     // The same load the to-do list and streaks read, joined if it is already
     // running (at launch it usually is). Plant lists embed species WITHOUT
-    // care_schedules; the load fetches each species' record once.
-    const garden = await loadGardenCareData();
-    // A plant whose log or species couldn't be read would lose its reminders
-    // in the full replace below. Keep the previous schedule instead, exactly
-    // as a failed load does; the next reschedule refreshes it.
-    if (garden.unreadPlantIds.length > 0) return;
-    const { plants, logsByPlant, speciesById } = garden;
+    // care_schedules; the load fetches each species' record once. Skipped
+    // when only seasonal alerts are on: they need no plants.
+    let plants: Awaited<ReturnType<typeof loadGardenCareData>>['plants'] = [];
+    let logsByPlant: Awaited<ReturnType<typeof loadGardenCareData>>['logsByPlant'] = {};
+    let speciesById: Awaited<ReturnType<typeof loadGardenCareData>>['speciesById'] = {};
+    if (anyCare) {
+      const garden = await loadGardenCareData();
+      // A plant whose log or species couldn't be read would lose its reminders
+      // in the full replace below. Keep the previous schedule instead, exactly
+      // as a failed load does; the next reschedule refreshes it.
+      if (garden.unreadPlantIds.length > 0) return;
+      ({ plants, logsByPlant, speciesById } = garden);
+    }
+
+    // The seasonal plan: its alerts when the owner turned them on, and the
+    // fall feeding gate for outdoor plants when feeding checks are on. A
+    // failed load with alerts on keeps the previous schedule (the replace
+    // below would otherwise wipe the alerts already set); with alerts off it
+    // only means no feeding gate this pass.
+    let seasonalLoad: SeasonalLoad | null = null;
+    if (seasonalOn || prefs.fertilize) {
+      try {
+        seasonalLoad = await loadSeasonal(!!prefs.fertilize);
+      } catch {
+        if (seasonalOn) return;
+      }
+    }
 
     // Opt-in: let the forecast nudge watering due-dates (default off).
-    const weatherByEnv = (await getWeatherShiftPref())
+    const weatherByEnv = anyCare && (await getWeatherShiftPref())
       ? await buildWeatherSignals(plants)
       : undefined;
 
     const batches = computeReminderPlan({
       plants, logsByPlant, speciesById, prefs, weatherByEnv,
+      seasonal: seasonalOn ? seasonalLoad?.seasonal : null,
+      outdoorFeedingStop: seasonalLoad?.outdoorFeedingStop ?? null,
     });
 
-    // This app schedules no other local notifications, so a full replace is safe
+    // Every local notification this app sends comes from this one plan, so a
+    // full replace is safe (seasonal alerts are rebuilt in the same pass).
     await Notifications.cancelAllScheduledNotificationsAsync();
     for (const batch of batches) {
       await Notifications.scheduleNotificationAsync({
+        ...(batch.identifier ? { identifier: batch.identifier } : {}),
         content: { title: batch.title, body: batch.body, sound: true },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DATE,
@@ -213,7 +333,27 @@ export async function rescheduleAllReminders(): Promise<void> {
   } catch {
     // Offline or backend unreachable — keep the previously scheduled
     // reminders; the next successful reschedule will refresh them.
-  } finally {
-    inFlight = false;
   }
+}
+
+// ── Returning to the app ──────────────────────────────────────────────────────
+
+/** At most one foreground re-plan in this long, so flicking between apps
+ *  does not refetch the plan every time. */
+const FOREGROUND_REPLAN_MS = 15 * 60_000;
+let lastForegroundReplan = 0;
+
+// An on-device alert is only as fresh as the forecast it was built from, so
+// with seasonal alerts on, coming back to the app re-plans with the newest
+// forecast. Care reminders do not need this; they re-plan on every log.
+if (isSupported) {
+  AppState.addEventListener('change', (state) => {
+    if (state !== 'active') return;
+    const now = Date.now();
+    if (now - lastForegroundReplan < FOREGROUND_REPLAN_MS) return;
+    lastForegroundReplan = now;
+    void getSeasonalAlertsPref()
+      .then((on) => (on ? rescheduleAllReminders() : undefined))
+      .catch(() => undefined);
+  });
 }

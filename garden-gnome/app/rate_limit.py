@@ -19,6 +19,10 @@ from starlette.requests import Request
 SIGNIN_LIMIT = os.getenv("RATE_LIMIT_SIGNIN", "10/minute")
 # Token maintenance is routine (every ~30 min per device): looser budget.
 TOKEN_LIMIT = os.getenv("RATE_LIMIT_TOKEN", "30/minute")
+# Routes that make the server call the federal geodata services (a new
+# property, a refresh, an aerial image for a block): each costs about 20
+# outbound requests and half a megabyte of cache, so one caller gets a few.
+SITE_BUILD_LIMIT = os.getenv("RATE_LIMIT_SITE_BUILD", "10/minute;60/hour")
 
 #: Set by Fly's edge proxy on every request it forwards: the address the
 #: request actually came from. Fly overwrites any value a client sends, and

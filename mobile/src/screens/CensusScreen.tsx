@@ -14,7 +14,7 @@ import { loadView } from '../care/loadFailed';
 import { areaTypeLabel } from '../growingAreas/realEstate';
 import type { CensusStackParamList } from '../../App';
 
-type Nav = NativeStackNavigationProp<CensusStackParamList, 'CensusSummary'>;
+type Nav = NativeStackNavigationProp<CensusStackParamList, 'Census'>;
 
 
 export default function CensusScreen() {
@@ -87,7 +87,7 @@ export default function CensusScreen() {
           <Card.Content>
             {areaTypes.length === 0 ? (
               <Text variant="bodySmall" style={styles.emptyNote}>
-                No growing areas yet. Add one from the Growing areas tab.
+                No growing spaces yet. Add one from Your growing spaces on Home.
               </Text>
             ) : areaTypes.map(([type, count]) => (
               <View key={type} style={styles.envRow}>

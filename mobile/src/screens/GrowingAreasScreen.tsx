@@ -26,7 +26,7 @@ import {
   surfaceName,
 } from '../growingAreas/realEstate';
 
-type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreasList'>;
+type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'Spaces'>;
 
 function GrowingAreaCard({ area, onPress }: { area: GrowingArea; onPress: () => void }) {
   const { palette, fonts } = useAppTheme();
@@ -171,7 +171,7 @@ export default function GrowingAreasScreen() {
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
       setModalVisible(false);
       reset();
-      navigation.navigate('GrowingAreaDetail', { growingAreaId: area.id, name: area.name });
+      navigation.navigate('SpaceDetail', { growingAreaId: area.id, name: area.name });
     },
     // The modal stays open with everything entered, so it can simply be sent
     // again — which is what the message says.
@@ -219,7 +219,7 @@ export default function GrowingAreasScreen() {
             <GrowingAreaCard
               key={a.id}
               area={a}
-              onPress={() => navigation.navigate('GrowingAreaDetail', { growingAreaId: a.id, name: a.name })}
+              onPress={() => navigation.navigate('SpaceDetail', { growingAreaId: a.id, name: a.name })}
             />
           ))
         )}

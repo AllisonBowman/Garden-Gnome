@@ -24,7 +24,36 @@ from app.db.database import engine, get_session, run_migrations  # noqa: E402
 from app.data.seed import seed_default_growing_area  # noqa: E402
 from app.rate_limit import limiter  # noqa: E402
 from app.routers import ai, auth, species, plants, growing_areas, census  # noqa: E402
+from app.routers import properties  # noqa: E402
 from app.services.vision import vision_status  # noqa: E402
+
+
+SITE_RETRY_EVERY_S = 300
+
+
+def _start_site_profile_retries() -> None:
+    """Every 5 minutes, run the site profile background steps whose retry is
+    due (app.services.site.profile.run_due_retries). Only while
+    SITE_PROFILE_ENABLED is on; a daemon thread, so it never holds shutdown."""
+    if not get_settings().site_profile_enabled:
+        return
+    import threading
+    import time
+
+    from app.services.site import profile as site_profile
+    from app.services.site import tiles as site_tiles
+
+    def loop():
+        while True:
+            try:
+                site_tiles.check_volume()
+                site_profile.run_due_retries()
+            except Exception:  # noqa: BLE001 -- logged, and tried again later
+                logging.getLogger("plantadvocate.site_profile").exception(
+                    "site profile retry pass failed")
+            time.sleep(SITE_RETRY_EVERY_S)
+
+    threading.Thread(target=loop, name="site-profile-retries", daemon=True).start()
 
 
 @asynccontextmanager
@@ -38,6 +67,7 @@ async def lifespan(app: FastAPI):
     auth.purge_expired_apple_revocations(engine)
     auth.start_queued_apple_revokes(engine)
     census.operator_token()  # a too-short operator secret is said at boot
+    _start_site_profile_retries()  # background steps that failed are tried again
     vs = await vision_status()  # surface a dead vision config at boot, not first photo
     print(f"[vision] backend={vs['backend']} ready={vs['ready']} "
           f"model={vs['model'] or '-'} — {vs['detail']}")
@@ -80,6 +110,11 @@ app.include_router(plants.router)
 app.include_router(growing_areas.router)
 app.include_router(growing_areas.legacy_router)
 app.include_router(census.router)
+# Land stewardship (1.2.0). Every route here answers 404 while its feature
+# flag is off (app.config: SITE_PROFILE_ENABLED, SEASON_PLAN_ENABLED).
+app.include_router(properties.router)
+app.include_router(properties.imagery_router)
+app.include_router(properties.vitals_router)
 
 app.mount(
     "/ui",

@@ -13,6 +13,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
@@ -56,6 +57,24 @@ class Settings(BaseSettings):
     weatherkit_service_id: Optional[str] = None
     weatherkit_private_key_path: Optional[str] = None
     weatherkit_private_key: Optional[str] = None
+
+    # --- Land stewardship overhaul, dark launched (PLAN.md D5) ---
+    # Off means the new routes answer 404 and no outbound geodata request is
+    # made (app/deps.require_flag, app/services/site/http.py). Tests and local
+    # development turn them on; production turns them on only with the
+    # owner's go-ahead.
+    site_profile_enabled: bool = False
+    season_plan_enabled: bool = False
+
+    @model_validator(mode="after")
+    def _land_needs_home(self):
+        """Home is the only way into the land screens, and Home's report is
+        /vitals, which is a season route: land without the season would
+        leave an owner's property unreachable."""
+        if self.site_profile_enabled and not self.season_plan_enabled:
+            raise ValueError("SITE_PROFILE_ENABLED needs SEASON_PLAN_ENABLED on too: "
+                             "Home reaches the land screens through /vitals")
+        return self
 
     def apple_private_key_pem(self) -> Optional[str]:
         """Resolve the Apple signing key PEM from the inline env var or the

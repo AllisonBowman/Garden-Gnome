@@ -20,6 +20,12 @@
 #
 # Flags:  --full   force a clean prebuild even if nothing native changed
 #         --no-sync skip the git sync (build exactly what's on disk)
+#         --force-sync sync even over uncommitted work (it is discarded)
+#
+# The sync refuses to run when you are on another branch, or when tracked
+# files other than prebuild noise have uncommitted changes: it would switch
+# branches and hard-reset, discarding that work. To build work in progress
+# (for example the 1.2.0 branch), run:  npm run sim -- --no-sync
 set -uo pipefail
 
 BRANCH="claude/plant-advocate-screenshots-xxt8ed"
@@ -33,10 +39,12 @@ METRO_LOG="/tmp/pa-metro.log"
 
 FORCE_PREBUILD=0
 DO_SYNC=1
+FORCE_SYNC=0
 for arg in "$@"; do
   case "$arg" in
     --full) FORCE_PREBUILD=1 ;;
     --no-sync) DO_SYNC=0 ;;
+    --force-sync) FORCE_SYNC=1 ;;
   esac
 done
 
@@ -50,6 +58,19 @@ note() { printf "${y}• %s${z}\n" "$1"; }
 die()  { printf "${r}✖ %s${z}\n" "$1"; exit 1; }
 
 # ── 1. Sync exactly to the remote branch ──────────────────────────────────────
+if [[ "$DO_SYNC" == "1" && "$FORCE_SYNC" != "1" ]]; then
+  CURRENT="$(git -C "$ROOT" branch --show-current)"
+  if [[ "$CURRENT" != "$BRANCH" ]]; then
+    die "You are on '$CURRENT', not '$BRANCH'. Syncing would switch branches and discard uncommitted work. To build what is on disk: npm run sim -- --no-sync"
+  fi
+  # Prebuild and this script rewrite these; anything else is real work.
+  DIRTY="$(git -C "$ROOT" status --porcelain --untracked-files=no \
+    | grep -v -E ' mobile/(package\.json|package-lock\.json|src/buildInfo\.ts)$' || true)"
+  if [[ -n "$DIRTY" ]]; then
+    printf "%s\n" "$DIRTY"
+    die "Uncommitted changes above would be discarded by the sync. Commit them, or build what is on disk: npm run sim -- --no-sync"
+  fi
+fi
 if [[ "$DO_SYNC" == "1" ]]; then
   step "Syncing $BRANCH from origin…"
   git -C "$ROOT" fetch -q origin "$BRANCH" || die "git fetch failed — check your connection."

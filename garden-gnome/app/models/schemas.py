@@ -584,3 +584,381 @@ class PlantTimelineSummary(SQLModel):
     plant_id: int
     nickname: str
     by_care_type: list[CareTypeSummary]
+
+
+# --- Land stewardship (build spec section 4) -------------------------------------
+#
+# The whole contract the 1.2.0 app is typed against (mobile/src/types/site.ts).
+# Field names and literal values are fixed by the spec; change neither without
+# changing the spec. Dates are ISO YYYY-MM-DD, instants ISO 8601 in UTC.
+# `Optional[...] = None` is the spec's "?": the key is always present and may
+# be null.
+
+from typing import Any, Literal  # noqa: E402
+
+from pydantic import BaseModel, ConfigDict, model_validator  # noqa: E402
+
+PinSourceLit = Literal["owner_pin", "device_location"]
+LotContentLit = Literal[
+    "trees_that_drop_leaves", "evergreens", "shrubs", "lawn", "garden_beds",
+    "potted_plants", "vegetables", "mostly_paved"]
+FrostBiasLit = Literal["earlier", "later"]
+ProfileStatusLit = Literal["pending", "building", "ready", "partial", "failed"]
+VegetationTypeLit = Literal["tree", "shrub", "grass", "garden_bed", "bare_hardscape"]
+LeafHabitLit = Literal["drops_leaves", "evergreen", "mixed"]
+BoundarySourceLit = Literal["default", "owner"]
+ConfidenceLit = Literal[
+    "you_told_us", "you_measured", "good_estimate", "area_estimate",
+    "rough_estimate", "not_known_yet", "neighbourhood_context"]
+ConfidenceLabelLit = Literal[
+    "You told us", "You measured", "Good estimate", "Area estimate",
+    "Rough estimate", "Not known yet", "Neighbourhood context"]
+ProvenanceLit = Literal["owner", "public_map", "modelled", "default"]
+SiteFieldLit = Literal[
+    "sun", "soil_drainage", "water_collects", "soil_texture", "soil_ph",
+    "disturbed_soil", "slope", "facing", "flooding", "land_cover",
+    "hardiness_zone", "frost_dates"]
+OverrideKindLit = Literal["choice", "number", "none"]
+OverrideMethodLit = Literal["tap", "measured"]
+FrostRiskLit = Literal["none", "frost", "freeze", "hard_freeze"]
+TaskStateLit = Literal["open", "done", "not_needed"]
+AppliesToKindLit = Literal["lot", "zones", "plants"]
+SeasonEventTypeLit = Literal[
+    "first_frost", "first_freeze", "hard_freeze", "fall_hardening",
+    "leaf_drop", "dormancy", "last_frost", "spring_emergence",
+    "tender_plants_out", "spring_cleanup"]
+SeasonEventStatusLit = Literal[
+    "happened", "happening", "forecast", "expected", "typically_around",
+    "done", "not_needed"]
+OwnerActionLit = Literal[
+    "mark_happened", "mark_not_yet", "mark_done", "mark_not_needed", "clear"]
+EventStateLit = Literal["done", "not_needed", "happened", "not_yet", "clear"]
+VitalToneLit = Literal["ok", "watch", "act"]
+VitalKeyLit = Literal[
+    "weather_now", "frost", "rain", "heat", "sun", "soil", "drainage", "season"]
+SpaceKindLit = Literal["zone", "space"]
+#: Screen names from build spec section 6, for VitalCard.link.
+ScreenLit = Literal[
+    "Home", "PropertySetup", "Land", "ZoneMap", "Season", "Spaces",
+    "SpaceDetail", "Plants", "PlantDetail", "AddPlant", "CaptureGarden",
+    "Species", "SpeciesDetail", "Settings", "Census"]
+
+#: The words shown for each confidence, fixed by the spec.
+CONFIDENCE_LABELS: dict[str, str] = {
+    "you_told_us": "You told us",
+    "you_measured": "You measured",
+    "good_estimate": "Good estimate",
+    "area_estimate": "Area estimate",
+    "rough_estimate": "Rough estimate",
+    "not_known_yet": "Not known yet",
+    "neighbourhood_context": "Neighbourhood context",
+}
+
+#: The values a site value may be read from, for override validation.
+SITE_FIELDS: tuple[str, ...] = SiteFieldLit.__args__  # type: ignore[attr-defined]
+
+
+class _Shape(BaseModel):
+    """Contract shapes refuse keys they do not declare, so a typo in a
+    service fails a test instead of reaching the app."""
+    model_config = ConfigDict(extra="forbid")
+
+
+class Box(_Shape):
+    """Degrees. The server stores a zone's box as a GeoJSON Polygon."""
+    west: float
+    south: float
+    east: float
+    north: float
+
+    @model_validator(mode="after")
+    def _ordered(self):
+        if not (-180 <= self.west < self.east <= 180):
+            raise ValueError("a box needs -180 <= west < east <= 180")
+        if not (-90 <= self.south < self.north <= 90):
+            raise ValueError("a box needs -90 <= south < north <= 90")
+        return self
+
+
+class LatLng(_Shape):
+    lat: float
+    lng: float
+
+
+class ProfileStatus(_Shape):
+    fast: ProfileStatusLit = "pending"
+    background: ProfileStatusLit = "pending"
+
+
+class PropertyCreate(_Shape):
+    name: Optional[str] = None
+    pin_lat: float = Field(ge=-90, le=90)
+    pin_lng: float = Field(ge=-180, le=180)
+    pin_source: PinSourceLit
+    lot_contents: Optional[list[LotContentLit]] = None
+
+
+class PropertyPatch(_Shape):
+    name: Optional[str] = None
+    pin_lat: Optional[float] = Field(default=None, ge=-90, le=90)
+    pin_lng: Optional[float] = Field(default=None, ge=-180, le=180)
+    lot_contents: Optional[list[LotContentLit]] = None
+    frost_bias: Optional[FrostBiasLit] = None
+
+
+class PropertyOut(_Shape):
+    id: int
+    uuid: str
+    name: str
+    pin_lat: float
+    pin_lng: float
+    pin_source: PinSourceLit
+    city: Optional[str] = None
+    region: Optional[str] = None
+    country: Optional[str] = None
+    timezone: Optional[str] = None
+    lot_contents: list[LotContentLit] = []
+    frost_bias: Optional[FrostBiasLit] = None
+    whole_lot_zone_id: Optional[int] = None
+    profile_status: ProfileStatus
+    created_at: datetime
+
+
+class SourceOut(_Shape):
+    name: str
+    detail: Optional[str] = None
+    version: Optional[str] = None
+    url: Optional[str] = None
+
+
+class Explained(_Shape):
+    """A value with its reason and sources (PLAN.md D25). `confidence_label`
+    may be left out; it is filled from `confidence`, and a label that does
+    not match its confidence is refused."""
+    display: str
+    confidence: ConfidenceLit
+    confidence_label: Optional[ConfidenceLabelLit] = None
+    reason: str
+    sources: list[SourceOut]
+    provenance: ProvenanceLit
+
+    @model_validator(mode="after")
+    def _label(self):
+        want = CONFIDENCE_LABELS[self.confidence]
+        if self.confidence_label is None:
+            self.confidence_label = want
+        elif self.confidence_label != want:
+            raise ValueError(
+                f"confidence {self.confidence!r} is shown as {want!r}, "
+                f"not {self.confidence_label!r}")
+        return self
+
+
+class OverrideChoice(_Shape):
+    value: Any
+    label: str
+
+
+class PublicReading(_Shape):
+    display: str
+    confidence_label: ConfidenceLabelLit
+
+
+class SiteValue(Explained):
+    field: SiteFieldLit
+    title: str
+    value: Optional[Any] = None
+    zone_id: Optional[int] = None
+    can_override: bool = False
+    override_choices: list[OverrideChoice] = []
+    override_kind: OverrideKindLit = "none"
+    # The public-data reading, present only while an owner correction shows.
+    public: Optional[PublicReading] = None
+
+
+class ZoneValues(_Shape):
+    zone_id: int
+    name: str
+    is_whole_lot: bool
+    values: list[SiteValue] = []
+
+
+class SiteProfileOut(_Shape):
+    property_id: int
+    status: ProfileStatus
+    updated_at: Optional[datetime] = None
+    values: list[SiteValue] = []
+    zones: list[ZoneValues] = []
+    notes: list[str] = []
+
+
+class RefreshOut(_Shape):
+    status: str
+
+
+class OverrideIn(_Shape):
+    zone_id: Optional[int] = None
+    field: SiteFieldLit
+    value: Any
+    method: OverrideMethodLit
+
+
+class ZoneCreate(_Shape):
+    name: Optional[str] = None
+    vegetation_type: VegetationTypeLit
+    box: Box
+    leaf_habit: Optional[LeafHabitLit] = None
+    #: False when the owner did not draw the box (the approximate whole lot
+    #: was used): the zone then counts as the default footprint.
+    drawn: bool = True
+
+
+class ZonePatch(_Shape):
+    name: Optional[str] = None
+    vegetation_type: Optional[VegetationTypeLit] = None
+    box: Optional[Box] = None
+    leaf_habit: Optional[LeafHabitLit] = None
+
+
+class ZoneOut(_Shape):
+    id: int
+    growing_area_id: int          # the same number as id (PLAN.md D1)
+    property_id: int
+    name: str
+    # Null only for the whole-lot zone, which is every kind of ground at once
+    # until the owner describes it.
+    vegetation_type: Optional[VegetationTypeLit] = None
+    is_whole_lot: bool
+    box: Optional[Box] = None
+    boundary_source: BoundarySourceLit
+    leaf_habit: Optional[LeafHabitLit] = None
+    plant_count: int = 0
+    values: list[SiteValue] = []
+
+
+class ImageryOut(_Shape):
+    tile_key: str
+    image_path: str               # "/imagery/tiles/{tile_key}.jpg"
+    width: int
+    height: int
+    bounds: Box
+    source: SourceOut
+    captured: Optional[str] = None
+    pin: Optional[LatLng] = None
+    default_footprint: Optional[Box] = None
+
+
+class ForecastDay(_Shape):
+    date: date
+    high_f: Optional[float] = None
+    low_f: Optional[float] = None
+    precipitation_chance: Optional[float] = None
+    summary: str
+    frost_risk: FrostRiskLit
+
+
+class ForecastOut(_Shape):
+    provider: str
+    provider_name: str
+    fetched_at: datetime
+    days: list[ForecastDay] = []
+
+
+class AppliesTo(_Shape):
+    kind: AppliesToKindLit
+    ids: list[int] = []
+
+
+class SeasonTask(_Shape):
+    task_key: str
+    text: str
+    low_impact_note: Optional[str] = None
+    reason: str
+    sources: list[SourceOut]
+    applies_to: AppliesTo
+    state: TaskStateLit = "open"
+
+
+class EventWindow(_Shape):
+    start: Optional[date] = None
+    end: Optional[date] = None
+    text: str
+
+
+class SeasonEventSummary(_Shape):
+    """A SeasonEvent without its tasks (Vitals.season_ahead)."""
+    event_key: str
+    type: SeasonEventTypeLit
+    title: str
+    status: SeasonEventStatusLit
+    window: EventWindow
+    explained: Explained
+    owner_actions: list[OwnerActionLit] = []
+    sort_date: Optional[date] = None
+
+
+class SeasonEvent(SeasonEventSummary):
+    tasks: list[SeasonTask] = []
+
+
+class SeasonEventStateIn(_Shape):
+    state: EventStateLit
+    observed_on: Optional[date] = None
+
+
+class SeasonAlert(_Shape):
+    alert_key: str
+    event_key: str
+    title: str
+    body: str
+    fire_at: datetime
+    built_from_forecast_at: datetime
+
+
+class SeasonalPlanOut(_Shape):
+    property_id: int
+    generated_at: datetime
+    season_label: str
+    forecast: Optional[ForecastOut] = None
+    events: list[SeasonEvent] = []
+    alerts: list[SeasonAlert] = []
+    notes: list[str] = []
+
+
+class VitalCard(_Shape):
+    key: VitalKeyLit
+    title: str
+    value_text: str
+    detail: str
+    tone: VitalToneLit
+    explained: Optional[Explained] = None
+    link: Optional[ScreenLit] = None
+
+
+class ThisWeekItem(_Shape):
+    event_key: Optional[str] = None
+    task: SeasonTask
+
+
+class SpaceOut(_Shape):
+    growing_area_id: int
+    name: str
+    kind: SpaceKindLit
+    vegetation_type: Optional[VegetationTypeLit] = None
+    indoor: bool
+    plant_count: int = 0
+
+
+class VitalsOut(_Shape):
+    generated_at: datetime
+    headline: str
+    property: Optional[PropertyOut] = None
+    forecast: Optional[ForecastOut] = None
+    cards: list[VitalCard] = []
+    this_week: list[ThisWeekItem] = []
+    season_ahead: list[SeasonEventSummary] = []
+    spaces: list[SpaceOut] = []
+    notes: list[str] = []
+    #: Whether this server can add a property (SITE_PROFILE_ENABLED), so
+    #: Home offers "Add your land" only where it leads somewhere.
+    can_add_land: bool = False

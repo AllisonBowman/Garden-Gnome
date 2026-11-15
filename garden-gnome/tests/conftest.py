@@ -24,6 +24,10 @@ os.environ.setdefault("APPLE_BUNDLE_ID", "com.allisonbowman.plantadvocate")
 os.environ.setdefault("APPLE_TEAM_ID", "TESTTEAM99")
 os.environ.setdefault("APPLE_KEY_ID", "TESTKEY123")
 os.environ.setdefault("GOOGLE_CLIENT_ID", "test-client.apps.googleusercontent.com")
+# The land stewardship routes are dark in production (PLAN.md D5) and on in
+# tests; tests that check the dark state turn a flag off themselves.
+os.environ.setdefault("SITE_PROFILE_ENABLED", "true")
+os.environ.setdefault("SEASON_PLAN_ENABLED", "true")
 
 
 @pytest.fixture(autouse=True)
@@ -34,6 +38,25 @@ def _rate_limiting_off():
     limiter.enabled = False
     yield
     limiter.enabled = False
+
+
+@pytest.fixture(autouse=True)
+def _no_outbound_network():
+    """Automated tests never touch the network (build spec section 2): any
+    OutboundClient built without its own transport gets one that refuses.
+    A test that needs answers passes httpx.MockTransport to the client, or
+    calls app.services.site.http.use_transport itself."""
+    import httpx
+
+    from app.services.site import http as site_http
+
+    def refuse(request):
+        raise AssertionError(
+            f"a test tried to reach the network: {request.method} {request.url}")
+
+    previous = site_http.use_transport(lambda: httpx.MockTransport(refuse))
+    yield
+    site_http.use_transport(previous)
 
 
 @pytest.fixture(scope="session")
