@@ -21,7 +21,7 @@ import {
 } from '../care/loadFailed';
 import RefreshFailed from '../components/RefreshFailed';
 
-type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'SpeciesList'>;
+type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'Species'>;
 
 const LIGHT_ICON: Record<string, string> = {
   low: '🌑', medium: '🌤', bright_indirect: '☁️', direct: '☀️',

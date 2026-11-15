@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, Alert, View, Platform } from 'react-native';
 import { Text, TextInput, Button, Card, Divider, Switch } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/types';
 import { getBaseUrl, setBaseUrl } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import {
@@ -14,6 +17,7 @@ import { useAiCapabilities } from '../care/useAiCapabilities';
 import {
   getReminderPrefs, setReminderPrefs, ensureNotificationPermission,
   rescheduleAllReminders, getWeatherShiftPref, setWeatherShiftPref,
+  getSeasonalAlertsPref, setSeasonalAlertsPref,
 } from '../notifications/reminders';
 import { ReminderPrefs } from '../notifications/plan';
 import { useAppTheme } from '../theme/ThemeProvider';
@@ -64,6 +68,7 @@ function confirmDialog(
 }
 
 export default function SettingsScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Settings'>>();
   const { user, signOut, deleteAccount, updateUser } = useAuth();
   // The privacy list describes what the app does today. Photo check-ups and
   // free-text questions are offered only while the server can serve them,
@@ -76,6 +81,7 @@ export default function SettingsScreen() {
   const [testing, setTesting] = useState(false);
   const [prefs, setPrefs]   = useState<ReminderPrefs>({});
   const [weatherShift, setWeatherShift] = useState(false);
+  const [seasonalAlerts, setSeasonalAlerts] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [censusSaving, setCensusSaving] = useState(false);
@@ -117,6 +123,7 @@ export default function SettingsScreen() {
     if (SHOW_BACKEND_OVERRIDE) getBaseUrl().then(setUrl);
     getReminderPrefs().then(setPrefs);
     getWeatherShiftPref().then(setWeatherShift);
+    getSeasonalAlertsPref().then(setSeasonalAlerts);
   }, []);
 
   // Consent has to round-trip to the server before the UI claims it happened:
@@ -144,6 +151,21 @@ export default function SettingsScreen() {
     setWeatherShift(value);
     await setWeatherShiftPref(value);
     // Recompute the schedule so the change takes effect immediately.
+    void rescheduleAllReminders();
+  }
+
+  // Frost and weather alerts from the seasonal plan: their own switch, off by
+  // default, asking for notification permission the same way care reminders do.
+  async function toggleSeasonalAlerts(value: boolean) {
+    if (value && !(await ensureNotificationPermission())) {
+      Alert.alert(
+        'Notifications disabled',
+        'PlantAdvocate needs notification permission for frost and weather alerts. You can enable it in your device settings.',
+      );
+      return;
+    }
+    setSeasonalAlerts(value);
+    await setSeasonalAlertsPref(value);
     void rescheduleAllReminders();
   }
 
@@ -334,6 +356,21 @@ export default function SettingsScreen() {
                   ? 'Nudges watering reminders by a day or two for outdoor, unsheltered plants — later before rain, sooner in a heat spike. Needs a location on the growing area.'
                   : 'Turn on watering reminders above to use this.'}
               </Text>
+              <Divider style={styles.innerDivider} />
+              <View style={styles.reminderRow}>
+                <Text variant="bodyMedium" style={styles.reminderLabel}>
+                  ❄️ Frost and weather alerts
+                </Text>
+                <Switch
+                  value={seasonalAlerts}
+                  onValueChange={toggleSeasonalAlerts}
+                  color={palette.acc}
+                  accessibilityLabel="Frost and weather alerts"
+                />
+              </View>
+              <Text variant="bodySmall" style={styles.subHint}>
+                A note before a frost or freeze night and other moments in your seasonal plan, at most one a day and none between 9 pm and 8 am. Each alert uses the forecast from the last time you opened the app and says when that forecast was made, so it can be out of date. Needs your land added.
+              </Text>
             </>
           )}
         </Card.Content>
@@ -362,6 +399,19 @@ export default function SettingsScreen() {
           <Text variant="bodySmall" style={styles.subHint}>
             {user?.census_opt_in ? CENSUS_CONSENT.on : CENSUS_CONSENT.off}
           </Text>
+          {/* The census was its own tab before 1.2.0; it lives here now,
+              beside the switch that decides whether you are counted in it. */}
+          <Button
+            mode="text"
+            compact
+            icon="chart-bar"
+            onPress={() => navigation.navigate('Census')}
+            style={styles.censusLink}
+            textColor={palette.acc}
+            accessibilityLabel="See the census of what everyone grows"
+          >
+            See the census
+          </Button>
 
           <Divider style={styles.innerDivider} />
 
@@ -477,4 +527,5 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
     borderLeftWidth: 2, borderLeftColor: p.line,
   },
   privacyBtn: { marginTop: 12, borderRadius: 8 },
+  censusLink: { alignSelf: 'flex-start', marginTop: 4 },
 });

@@ -6,6 +6,9 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
+  // The file crawler only: watchman cannot write its state file in some
+  // sandboxes, and these tests never watch.
+  watchman: false,
   // One time zone for every run, west of UTC (see the file).
   globalSetup: '<rootDir>/jest.globalSetup.js',
   transform: {

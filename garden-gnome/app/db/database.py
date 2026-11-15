@@ -1,19 +1,42 @@
 import os
 from uuid import uuid4
 
-from sqlalchemy import text
+from sqlalchemy import event, text
 from sqlmodel import SQLModel, Session, create_engine
 
 # Overridable so hosted deployments can point at a persistent volume
 # (e.g. sqlite:////data/garden_gnome.db on Fly.io)
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///garden_gnome.db")
 
+#: How long a write waits for another one to finish before it fails
+#: (seconds). The background site profile step commits after every source,
+#: so a write never waits on an outbound request; this covers ordinary
+#: overlap between requests and the background thread.
+BUSY_TIMEOUT_S = 15
+
 # check_same_thread=False is needed for SQLite + FastAPI
 engine = create_engine(
     DATABASE_URL,
     echo=False,
-    connect_args={"check_same_thread": False},
+    connect_args={"check_same_thread": False, "timeout": BUSY_TIMEOUT_S},
 )
+
+
+def _sqlite_pragmas(dbapi_connection, _record) -> None:
+    """Write-ahead logging, so reads never wait for a write and a write
+    waits only for another write. The setting is stored in the database
+    file; an in-memory database keeps its own journal and ignores it."""
+    cursor = dbapi_connection.cursor()
+    try:
+        cursor.execute(f"PRAGMA busy_timeout = {BUSY_TIMEOUT_S * 1000}")
+        if cursor.execute("PRAGMA database_list").fetchone()[2]:  # a file, not memory
+            cursor.execute("PRAGMA journal_mode = WAL")
+    finally:
+        cursor.close()
+
+
+if DATABASE_URL.startswith("sqlite"):
+    event.listen(engine, "connect", _sqlite_pragmas)
 
 
 def init_db() -> None:

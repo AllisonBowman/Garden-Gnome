@@ -14,6 +14,7 @@ import {
   identifySpeciesPhoto, IdentifyResponse, photoIdAvailable,
 } from '../photoId/identify';
 import { PHOTO_SUGGESTIONS_LABEL } from '../photoId/copy';
+import { PHOTO_ID_ENTRY_SHOWN } from '../photoId/entry';
 import LoadError from '../components/LoadError';
 import { fetchGrowingAreas, fetchSpeciesFit } from '../api/growingAreas';
 import { serverMessage } from '../api/errorMessage';
@@ -139,7 +140,11 @@ export default function AddPlantScreen() {
   // Whether on-device photo ID can run here. When false we hide the button
   // entirely (never a dead button) and users rely on the search below.
   const [aiIdAvailable, setAiIdAvailable] = useState(false);
-  useEffect(() => { photoIdAvailable().then(setAiIdAvailable); }, []);
+  // Hidden in 1.2.0 (build spec A10): the native module stays, the way in
+  // does not, so the phone is never even asked.
+  useEffect(() => {
+    if (PHOTO_ID_ENTRY_SHOWN) photoIdAvailable().then(setAiIdAvailable);
+  }, []);
 
   const identifyMutation = useMutation({
     mutationFn: (photo: { uri: string; mimeType?: string; fileName?: string | null }) =>
@@ -237,7 +242,7 @@ export default function AddPlantScreen() {
           />
         )}
 
-        {aiIdAvailable && catalogReady && (
+        {PHOTO_ID_ENTRY_SHOWN && aiIdAvailable && catalogReady && (
           <>
             <View style={styles.identifyBtnRow}>
               {Platform.OS !== 'web' && (

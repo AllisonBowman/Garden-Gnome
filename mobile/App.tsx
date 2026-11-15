@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { AppState, Platform, Text } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AppThemeProvider, useAppTheme } from './src/theme/ThemeProvider';
 import { QueryClient, QueryClientProvider, focusManager } from '@tanstack/react-query';
@@ -19,6 +18,12 @@ import GrowingAreaDetailScreen from './src/screens/GrowingAreaDetailScreen';
 import CensusScreen        from './src/screens/CensusScreen';
 import AlmanacScreen      from './src/screens/AlmanacScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
+import HomeScreen          from './src/screens/HomeScreen';
+import PropertySetupScreen from './src/screens/PropertySetupScreen';
+import LandScreen          from './src/screens/LandScreen';
+import ZoneMapScreen       from './src/screens/ZoneMapScreen';
+import SeasonScreen        from './src/screens/SeasonScreen';
+import type { RootStackParamList } from './src/navigation/types';
 import { rescheduleAllReminders } from './src/notifications/reminders';
 import Onboarding from './src/onboarding/Onboarding';
 import { GROWING_AREAS_TAB } from './src/onboarding/slides';
@@ -31,58 +36,18 @@ import LoginScreen from './src/auth/LoginScreen';
 import ErrorBoundary, { guarded } from './src/components/ErrorBoundary';
 import { refreshAfterCrash } from './src/components/crashRefresh';
 
-// ── Param lists (imported by child screens) ───────────────────────────────────
-/** What Add Plant may be opened with: `growingAreaId` preselects where the
- *  plant goes, set when it is opened from an area's own screen. */
-export type AddPlantParams = { growingAreaId?: number } | undefined;
-
-/** A species, and — when it was opened from an area's candidates or the
- *  Almanac's area filter — the area it was being read against, whose full
- *  findings the page then shows. */
-export type SpeciesDetailParams = { speciesId: number; growingAreaId?: number };
-
-/** The Almanac, and the growing area to open it narrowed to — set when it
- *  is opened from that area's screen to see the rest of its candidates. */
-export type AlmanacParams = { growingAreaId?: number } | undefined;
-
-export type PlantsStackParamList = {
-  PlantsList:    undefined;
-  PlantDetail:   { plantId: number };
-  AddPlant:      AddPlantParams;
-  CaptureGarden: undefined;
-};
-
-export type SpeciesStackParamList = {
-  SpeciesList:   undefined;
-  SpeciesDetail: SpeciesDetailParams;
-  // The catalog narrowed to a growing area, which this tab's list can't do.
-  Almanac:       AlmanacParams;
-};
-
-export type GrowingAreasStackParamList = {
-  GrowingAreasList:  undefined;
-  GrowingAreaDetail: { growingAreaId: number; name?: string };
-  // Reached from an area, so "see what suits it, read about it, put one in"
-  // stays in this tab and Back returns to the area, which then shows it.
-  AddPlant:          AddPlantParams;
-  SpeciesDetail:     SpeciesDetailParams;
-  // The rest of an area's candidates, past the few its screen shows.
-  Almanac:           AlmanacParams;
-};
-
-export type CensusStackParamList = {
-  CensusSummary: undefined;
-  Almanac:       AlmanacParams;
-  SpeciesDetail: SpeciesDetailParams;
-};
-
-type RootTabParamList = {
-  Plants:       undefined;
-  Species:      undefined;
-  GrowingAreas: undefined;
-  Census:       undefined;
-  Settings:     undefined;
-};
+// ── Param lists ───────────────────────────────────────────────────────────────
+// One stack, no tabs (build spec section 6). The param list lives in
+// src/navigation/types.ts so screens can import it without importing this
+// file; the old per-tab names are kept as aliases of it so the screens that
+// import them keep compiling.
+export type {
+  RootStackParamList, AddPlantParams, SpeciesDetailParams, AlmanacParams,
+} from './src/navigation/types';
+export type PlantsStackParamList = RootStackParamList;
+export type SpeciesStackParamList = RootStackParamList;
+export type GrowingAreasStackParamList = RootStackParamList;
+export type CensusStackParamList = RootStackParamList;
 
 // ── React Query ───────────────────────────────────────────────────────────────
 // One automatic retry, and only for a failure that can pass: no signal, a
@@ -106,9 +71,14 @@ const queryClient = new QueryClient({
 const resetData = () => refreshAfterCrash(queryClient);
 
 // ── Screens, each behind its own error boundary ───────────────────────────────
-// A render error costs one screen: the header's back button, the tab bar and
-// every other tab keep working. Wrapped once here, never inside a render, so
-// each wrapper keeps its identity.
+// A render error costs one screen: the header's back button and every other
+// screen keep working. Wrapped once here, never inside a render, so each
+// wrapper keeps its identity.
+const Home          = guarded(HomeScreen, 'Home', resetData);
+const PropertySetup = guarded(PropertySetupScreen, 'Add your land', resetData);
+const Land          = guarded(LandScreen, 'Your land', resetData);
+const ZoneMap       = guarded(ZoneMapScreen, 'Zone map', resetData);
+const Season        = guarded(SeasonScreen, 'The season', resetData);
 const Plants        = guarded(PlantsScreen, 'My Plants', resetData);
 const PlantDetail   = guarded(PlantDetailScreen, 'Plant', resetData);
 const AddPlant      = guarded(AddPlantScreen, 'Add plant', resetData);
@@ -121,15 +91,11 @@ const GrowingAreaDetail = guarded(GrowingAreaDetailScreen, 'Growing area', reset
 const Census        = guarded(CensusScreen, 'Census', resetData);
 const Settings      = guarded(SettingsScreen, 'Settings', resetData);
 
-// ── Stack navigators ──────────────────────────────────────────────────────────
-const PlantsStack       = createNativeStackNavigator<PlantsStackParamList>();
-const SpeciesStack      = createNativeStackNavigator<SpeciesStackParamList>();
-const GrowingAreasStack = createNativeStackNavigator<GrowingAreasStackParamList>();
-const CensusStack       = createNativeStackNavigator<CensusStackParamList>();
-const Tab               = createBottomTabNavigator<RootTabParamList>();
+// ── The one stack ─────────────────────────────────────────────────────────────
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 // Header colors come from the active theme so the nav bar matches Almanac /
-// Observatory (hook, so each navigator recomputes on a theme toggle).
+// Observatory (hook, so the navigator recomputes on a theme toggle).
 function useHeaderOpts() {
   const { palette } = useAppTheme();
   return {
@@ -139,59 +105,33 @@ function useHeaderOpts() {
   };
 }
 
-function PlantsNavigator() {
+function RootNavigator() {
   return (
-    <PlantsStack.Navigator screenOptions={useHeaderOpts()}>
-      <PlantsStack.Screen name="PlantsList"  component={Plants}      options={{ title: 'My Plants' }} />
-      <PlantsStack.Screen name="PlantDetail" component={PlantDetail} options={{ title: 'Plant' }} />
-      <PlantsStack.Screen name="AddPlant"    component={AddPlant}    options={{ title: 'Add plant' }} />
-      <PlantsStack.Screen name="CaptureGarden" component={CaptureGarden} options={{ title: 'Walk the garden' }} />
-    </PlantsStack.Navigator>
-  );
-}
-
-function SpeciesNavigator() {
-  return (
-    <SpeciesStack.Navigator screenOptions={useHeaderOpts()}>
-      <SpeciesStack.Screen name="SpeciesList"   component={Species}       options={{ title: 'Species catalog' }} />
-      <SpeciesStack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
-      <SpeciesStack.Screen name="Almanac" component={Almanac} options={{ title: 'Species Almanac' }} />
-    </SpeciesStack.Navigator>
-  );
-}
-
-function CensusNavigator() {
-  return (
-    <CensusStack.Navigator screenOptions={useHeaderOpts()}>
-      <CensusStack.Screen name="CensusSummary" component={Census}  options={{ title: 'Census' }} />
-      <CensusStack.Screen name="Almanac"       component={Almanac} options={{ title: 'Species Almanac' }} />
-      <CensusStack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
-    </CensusStack.Navigator>
-  );
-}
-
-function GrowingAreasNavigator() {
-  return (
-    <GrowingAreasStack.Navigator screenOptions={useHeaderOpts()}>
-      <GrowingAreasStack.Screen name="GrowingAreasList" component={GrowingAreas} options={{ title: GROWING_AREAS_TAB }} />
-      <GrowingAreasStack.Screen
-        name="GrowingAreaDetail"
+    <Stack.Navigator initialRouteName="Home" screenOptions={useHeaderOpts()}>
+      <Stack.Screen name="Home"          component={Home}          options={{ title: 'PlantAdvocate' }} />
+      <Stack.Screen name="PropertySetup" component={PropertySetup} options={{ title: 'Add your land' }} />
+      <Stack.Screen name="Land"          component={Land}          options={{ title: 'Your land' }} />
+      <Stack.Screen name="ZoneMap"       component={ZoneMap}       options={{ title: 'Zone map' }} />
+      <Stack.Screen name="Season"        component={Season}        options={{ title: 'The season' }} />
+      {/* First-run onboarding sends people here by this title. */}
+      <Stack.Screen name="Spaces"        component={GrowingAreas}  options={{
+        title: GROWING_AREAS_TAB,
+      }} />
+      <Stack.Screen
+        name="SpaceDetail"
         component={GrowingAreaDetail}
         options={({ route }) => ({ title: route.params.name ?? 'Growing area' })}
       />
-      <GrowingAreasStack.Screen name="AddPlant" component={AddPlant} options={{ title: 'Add plant' }} />
-      <GrowingAreasStack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
-      <GrowingAreasStack.Screen name="Almanac" component={Almanac} options={{ title: 'Species Almanac' }} />
-    </GrowingAreasStack.Navigator>
-  );
-}
-
-// ── Tab icon ──────────────────────────────────────────────────────────────────
-function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
-  return (
-    <Text style={{ fontSize: focused ? 22 : 18, opacity: focused ? 1 : 0.5 }}>
-      {emoji}
-    </Text>
+      <Stack.Screen name="Plants"        component={Plants}        options={{ title: 'My Plants' }} />
+      <Stack.Screen name="PlantDetail"   component={PlantDetail}   options={{ title: 'Plant' }} />
+      <Stack.Screen name="AddPlant"      component={AddPlant}      options={{ title: 'Add plant' }} />
+      <Stack.Screen name="CaptureGarden" component={CaptureGarden} options={{ title: 'Walk the garden' }} />
+      <Stack.Screen name="Species"       component={Species}       options={{ title: 'Species catalog' }} />
+      <Stack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
+      <Stack.Screen name="Almanac"       component={Almanac}       options={{ title: 'Species Almanac' }} />
+      <Stack.Screen name="Settings"      component={Settings}      options={{ title: 'Settings' }} />
+      <Stack.Screen name="Census"        component={Census}        options={{ title: 'Census' }} />
+    </Stack.Navigator>
   );
 }
 
@@ -200,9 +140,8 @@ function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
 // inside AuthProvider, so App wraps it below.
 function AuthGate() {
   const { status } = useAuth();
-  const { palette, name: themeName } = useAppTheme();
-  const headerOpts = useHeaderOpts();
-  const navigationRef = useNavigationContainerRef();
+  const { name: themeName } = useAppTheme();
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const signedIn = status === 'signedIn';
 
@@ -223,7 +162,7 @@ function AuthGate() {
   // has no plants. Runs only once signed in (the plants call needs a token).
   // Asked through the query cache, so it gets the same one automatic retry
   // as every screen (the first request after a quiet spell meets a server
-  // still waking up) and the Plants tab reuses the answer instead of asking
+  // still waking up) and the Plants screen reuses the answer instead of asking
   // again.
   useEffect(() => {
     if (!signedIn) return;
@@ -247,11 +186,7 @@ function AuthGate() {
   const onboardingAddPlant = () => {
     void setOnboardingSeen();
     setShowOnboarding(false);
-    // Tab 'Plants' contains a stack with the 'AddPlant' screen. The ref has no
-    // typed param list, so cast navigate to a permissive signature.
-    (navigationRef.navigate as (name: string, params?: object) => void)(
-      'Plants', { screen: 'AddPlant' },
-    );
+    if (navigationRef.isReady()) navigationRef.navigate('AddPlant', undefined);
   };
 
   // Booting: keep the splash background, no flicker to login
@@ -269,63 +204,7 @@ function AuthGate() {
   return (
     <NavigationContainer ref={navigationRef}>
       <StatusBar style="light" />
-      <Tab.Navigator
-              screenOptions={{
-                tabBarActiveTintColor: palette.acc,
-                tabBarInactiveTintColor: palette.sub,
-                tabBarStyle: {
-                  paddingBottom: 4,
-                  backgroundColor: palette.card,
-                  borderTopColor: palette.line,
-                },
-                ...headerOpts,
-              }}
-            >
-              <Tab.Screen
-                name="Plants"
-                component={PlantsNavigator}
-                options={{
-                  headerShown: false,
-                  tabBarIcon: ({ focused }) => <TabIcon emoji="🌱" focused={focused} />,
-                }}
-              />
-              <Tab.Screen
-                name="Species"
-                component={SpeciesNavigator}
-                options={{
-                  headerShown: false,
-                  tabBarIcon: ({ focused }) => <TabIcon emoji="📚" focused={focused} />,
-                }}
-              />
-              <Tab.Screen
-                name="GrowingAreas"
-                component={GrowingAreasNavigator}
-                options={{
-                  headerShown: false,
-                  // The tab label falls back to the route name, which is
-                  // an identifier, not a word anyone should read. First-run
-                  // onboarding sends people here by this title.
-                  title: GROWING_AREAS_TAB,
-                  tabBarIcon: ({ focused }) => <TabIcon emoji="🌍" focused={focused} />,
-                }}
-              />
-              <Tab.Screen
-                name="Census"
-                component={CensusNavigator}
-                options={{
-                  headerShown: false,
-                  tabBarIcon: ({ focused }) => <TabIcon emoji="📊" focused={focused} />,
-                }}
-              />
-              <Tab.Screen
-                name="Settings"
-                component={Settings}
-                options={{
-                  title: 'Settings',
-                  tabBarIcon: ({ focused }) => <TabIcon emoji="⚙️" focused={focused} />,
-                }}
-              />
-      </Tab.Navigator>
+      <RootNavigator />
       {showOnboarding && (
         <Onboarding onSkip={dismissOnboarding} onAddPlant={onboardingAddPlant} />
       )}
@@ -354,7 +233,7 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <AppThemeProvider>
           {/* The last line of defence: anything the per-screen boundaries
-              don't cover (sign-in, the tab bar, onboarding) shows a card
+              don't cover (sign-in, the header, onboarding) shows a card
               with Try again instead of closing the app. */}
           <ErrorBoundary where="the app" onReset={resetData}>
             <AuthProvider>

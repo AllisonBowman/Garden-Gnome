@@ -1,6 +1,7 @@
 import { CareLog, CareType, Plant, Species, WaterRegime } from '../types';
 import { waterRegimeSentence } from '../care/facts';
 import { parseServerDate } from '../api/serverDate';
+import { planSeasonalNotices, SeasonalInput, SEASONAL_RESERVE } from '../season/alerts';
 
 // Care types that can have reminders (matches the quick-log actions on
 // PlantDetailScreen; 'clean'/'other' have no species schedules).
@@ -106,7 +107,25 @@ export interface ReminderBatch {
   title: string;
   body: string;
   items: ReminderItem[];
+  /** 'seasonal' for a frost or weather alert from the seasonal plan (it has
+   *  no plant items); absent for a care batch. */
+  kind?: 'seasonal';
+  /** The notification identifier for a seasonal alert (its alert key), so a
+   *  reschedule replaces it rather than doubling it. */
+  identifier?: string;
 }
+
+/**
+ * The most notifications the plan ever asks the phone to hold. iOS keeps 64
+ * pending and silently drops the rest; staying under it leaves room for the
+ * system. Seasonal alerts reserve SEASONAL_RESERVE of these; care batches
+ * take what is left.
+ */
+export const MAX_PENDING_NOTIFICATIONS = 60;
+
+/** How long after fall hardening begins outdoor plants get no feeding check:
+ *  through the winter, until spring growth (about seven months). */
+export const FALL_FEEDING_STOP_DAYS = 210;
 
 interface PlanInput {
   plants: Plant[];
@@ -124,6 +143,19 @@ interface PlanInput {
    * weather influence, so the schedule is identical to the weather-free plan.
    */
   weatherByEnv?: Record<number, WeatherSignal>;
+  /**
+   * The seasonal plan's alerts, when the owner has turned on "Frost and
+   * weather alerts". They are planned in this same pass (decision D21), so
+   * the cancel-and-replace in reminders.ts rebuilds them with the care
+   * batches. Honoured even when every care type is off.
+   */
+  seasonal?: SeasonalInput | null;
+  /**
+   * Outdoor growing areas on a property (its zones) and the day fall
+   * hardening began there: no feeding check for a plant in one of those
+   * areas from that day through the winter.
+   */
+  outdoorFeedingStop?: { growingAreaIds: number[]; from: Date } | null;
 }
 
 /**
@@ -138,8 +170,11 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
   const {
     plants, logsByPlant, speciesById, prefs,
     now = new Date(), horizonDays = 30, deliveryHour = 9,
-    weatherByEnv,
+    weatherByEnv, seasonal, outdoorFeedingStop,
   } = input;
+  const stopAreas = new Set(outdoorFeedingStop?.growingAreaIds ?? []);
+  const stopFrom = outdoorFeedingStop?.from.getTime() ?? 0;
+  const stopUntil = stopFrom + FALL_FEEDING_STOP_DAYS * 86_400_000;
 
   // Earliest allowed delivery slot: today at deliveryHour if that's still in
   // the future, otherwise tomorrow. Overdue plants land in this slot.
@@ -218,6 +253,11 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
       // Checked against the slot, not today: a feeding reminder that would land
       // in December is dropped even when it was computed in October.
       if (!isInSeason(careType, slot)) continue;
+      // An outdoor plant hardening off for winter is not fed (PLAN.md section
+      // 7, "One voice for cold and feeding advice").
+      if (careType === 'fertilize' && plant.growing_area_id != null
+        && stopAreas.has(plant.growing_area_id)
+        && slot.getTime() >= stopFrom && slot.getTime() < stopUntil) continue;
 
       const key = `${slot.getFullYear()}-${slot.getMonth()}-${slot.getDate()}`;
       let batch = byDay.get(key);
@@ -239,9 +279,21 @@ export function computeReminderPlan(input: PlanInput): ReminderBatch[] {
     }
   }
 
-  return [...byDay.values()]
+  const care: ReminderBatch[] = [...byDay.values()]
     .sort((a, b) => a.date.getTime() - b.date.getTime())
     .map(({ date, items }) => ({ date, items, ...composeMessage(items) }));
+
+  const notices = planSeasonalNotices(seasonal, { now, reserve: SEASONAL_RESERVE });
+  const seasonalBatches: ReminderBatch[] = notices.map((n) => ({
+    date: n.date, title: n.title, body: n.body, items: [],
+    kind: 'seasonal', identifier: n.identifier,
+  }));
+
+  // One shared budget: seasonal alerts keep their reserved share, care
+  // batches (soonest first) fill the rest.
+  const careRoom = MAX_PENDING_NOTIFICATIONS - seasonalBatches.length;
+  return [...care.slice(0, careRoom), ...seasonalBatches]
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
 }
 
 function composeMessage(items: ReminderItem[]): { title: string; body: string } {

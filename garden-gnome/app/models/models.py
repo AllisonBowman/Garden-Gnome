@@ -1,9 +1,12 @@
 from datetime import datetime, date
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 from uuid import uuid4
 
-from sqlalchemy import JSON, Column, DateTime, UniqueConstraint
+from sqlalchemy import (
+    JSON, CheckConstraint, Column, DateTime, Index, Integer, LargeBinary,
+    UniqueConstraint, text,
+)
 from sqlmodel import SQLModel, Field, Relationship
 
 
@@ -153,6 +156,73 @@ class SunExposure(str, Enum):
     full_sun = "full_sun"        # 6+ hours of direct sun
     partial_sun = "partial_sun"  # 3–6 hours
     shade = "shade"              # under 3 hours of direct sun
+
+
+# --- Land stewardship (PLAN.md section 5) -----------------------------------
+# New vocabularies live in new enums. The ones the 1.1.x client reads above
+# are frozen (PLAN.md D20).
+
+class PinSource(str, Enum):
+    owner_pin = "owner_pin"              # the owner placed it on the aerial image
+    device_location = "device_location"  # the phone's location, confirmed by the owner
+
+
+class FrostBias(str, Enum):
+    """The owner's "frost comes earlier / later here than the forecast says"."""
+    earlier = "earlier"
+    later = "later"
+
+
+class LotContent(str, Enum):
+    """Answers to "What's on your lot?" (PLAN.md D19). Stored on the property."""
+    trees_that_drop_leaves = "trees_that_drop_leaves"
+    evergreens = "evergreens"
+    shrubs = "shrubs"
+    lawn = "lawn"
+    garden_beds = "garden_beds"
+    potted_plants = "potted_plants"
+    vegetables = "vegetables"
+    mostly_paved = "mostly_paved"
+
+
+class VegetationType(str, Enum):
+    """What grows in a zone (PLAN.md D18). Potted plants are not a zone type."""
+    tree = "tree"
+    shrub = "shrub"
+    grass = "grass"
+    garden_bed = "garden_bed"
+    bare_hardscape = "bare_hardscape"
+
+
+class LeafHabit(str, Enum):
+    drops_leaves = "drops_leaves"
+    evergreen = "evergreen"
+    mixed = "mixed"
+
+
+class BoundarySource(str, Enum):
+    default = "default"  # the approximate square around the pin, a guess
+    owner = "owner"      # a box the owner drew
+
+
+class ReadingLevel(str, Enum):
+    """Internal confidence (PLAN.md D17). Shown to the owner in plain words."""
+    high = "high"
+    medium = "medium"
+    low = "low"
+    unknown = "unknown"
+
+
+class ReadingProvenance(str, Enum):
+    public_map = "public_map"
+    modelled = "modelled"
+    default = "default"
+
+
+class OverrideMethod(str, Enum):
+    tap = "tap"
+    measured = "measured"
+    old_client_edit = "old_client_edit"  # a sun edit through /growing-areas
 
 
 class AuthProvider(str, Enum):
@@ -633,8 +703,189 @@ class GrowingArea(SQLModel, table=True):
 
     created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
 
+    # Zones (0024, PLAN.md D1 and section 5). A zone is a growing area with
+    # `property_id` set; every row made before the overhaul, and every row the
+    # 1.1.x client creates, leaves all of these null and behaves as before.
+    # `property_id` is an indexed integer with no database foreign key (D3).
+    # `boundary_geojson` is a GeoJSON Polygon in longitude, latitude order.
+    # `sun_source` is "owner" only once the owner has said what the sun is;
+    # until then `sun_exposure` above is the column's default, not a fact.
+    property_id: Optional[int] = Field(default=None, index=True)
+    vegetation_type: Optional[VegetationType] = None
+    boundary_geojson: Optional[dict] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    boundary_source: Optional[BoundarySource] = None
+    is_whole_lot: bool = Field(default=False)
+    leaf_habit: Optional[LeafHabit] = None
+    sun_source: Optional[str] = None
+
     user: Optional[User] = Relationship(back_populates="growing_areas")
     plants: list["Plant"] = Relationship(back_populates="growing_area")
+
+
+class Property(SQLModel, table=True):
+    """A piece of land a person looks after, found by the pin they confirmed.
+
+    No street address and no postal code are stored (PLAN.md D8): the pin is
+    the location. `city`, `region`, `country` and `timezone` are filled on the
+    server from public data for the pin, never accepted from the client.
+    `profile_status` holds the site profile's per-step status, for example
+    {"fast": "ready", "background": "pending"}; `lot_contents` the answers to
+    "What's on your lot?" (LotContent values; null means skipped). `goals` is
+    reserved for Phase 4 and nothing writes it yet."""
+    id: Optional[int] = Field(default=None, primary_key=True)
+    uuid: str = Field(default_factory=lambda: str(uuid4()), unique=True)
+    user_id: str = Field(foreign_key="user.id", index=True)
+    name: str = ""
+    pin_lat: float
+    pin_lng: float
+    pin_source: PinSource = PinSource.owner_pin
+    city: Optional[str] = None
+    region: Optional[str] = None
+    country: Optional[str] = None
+    timezone: Optional[str] = None
+    lot_contents: Optional[list[str]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    frost_bias: Optional[FrostBias] = None
+    goals: Optional[list[str]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    profile_status: Optional[dict] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+
+
+class SiteReading(SQLModel, table=True):
+    """One reading of one site value from one source (append-only).
+
+    A newer reading of the same field sets `superseded_at` on the older one
+    instead of replacing it. `zone_id` is a growing-area id (no database
+    foreign key, like `property_id`); null means the whole property.
+    `value` and `reason_codes` are JSON; `detail` holds the extra numbers the
+    owner-facing sentence needs (app.services.site.types.Reading.detail)."""
+    __tablename__ = "site_reading"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    property_id: int = Field(index=True)
+    zone_id: Optional[int] = Field(default=None, index=True)
+    field: str
+    value: Optional[Any] = Field(default=None, sa_column=Column(JSON, nullable=True))
+    level: ReadingLevel
+    provenance: ReadingProvenance
+    source_key: str
+    source_version: str = ""
+    method: str = ""
+    reason_codes: Optional[list[str]] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    detail: Optional[dict] = Field(
+        default=None, sa_column=Column(JSON, nullable=True))
+    fetched_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+    superseded_at: Optional[datetime] = _utc_naive(default=None)
+
+
+class ForecastCache(SQLModel, table=True):
+    """A short-lived forecast, keyed by a text cell (never floating point).
+
+    Lives 3 hours (PLAN.md section 5). The only Apple WeatherKit data this
+    server may keep (D10); nothing here is accumulated into a history."""
+    __tablename__ = "forecast_cache"
+    __table_args__ = (UniqueConstraint("cell_key", "provider"),)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    cell_key: str = Field(index=True)
+    provider: str
+    payload: Optional[Any] = Field(default=None, sa_column=Column(JSON, nullable=True))
+    fetched_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+    expires_at: datetime = _utc_naive()
+
+
+class ObservedCellSeason(SQLModel, table=True):
+    """Observed freezes and season facts for a cell or a station, from open
+    government data only. A database check refuses an Apple source (D10)."""
+    __tablename__ = "observed_cell_season"
+    __table_args__ = (
+        UniqueConstraint("cell_key", "station_id", "source", "season_year"),
+        CheckConstraint(
+            "lower(source) NOT LIKE '%apple%' AND lower(source) NOT LIKE '%weatherkit%'",
+            name="ck_observed_cell_season_not_apple"),
+    )
+    id: Optional[int] = Field(default=None, primary_key=True)
+    cell_key: Optional[str] = Field(default=None, index=True)
+    station_id: Optional[str] = Field(default=None, index=True)
+    source: str
+    season_year: int
+    payload: Optional[Any] = Field(default=None, sa_column=Column(JSON, nullable=True))
+    fetched_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+
+
+class SeasonEventState(SQLModel, table=True):
+    """What the owner said about one seasonal event, so "done" and "not
+    needed" survive the plan being recomputed on every request.
+
+    `event_key` holds type, season year and stage, for example
+    "first_frost:2026:fall". Unique on (property, zone, event), with a null
+    zone counted as zone 0, since SQLite treats nulls as distinct."""
+    __tablename__ = "season_event_state"
+    __table_args__ = (Index("uq_season_event_state_key", "property_id",
+                            text("coalesce(zone_id, 0)"), "event_key", unique=True),)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    property_id: int = Field(index=True)
+    zone_id: Optional[int] = Field(default=None)
+    event_key: str
+    status: str
+    band: Optional[str] = None
+    provider_name: Optional[str] = None
+    observed_on: Optional[date] = None
+    first_seen_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+    updated_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+
+
+class ProviderUsage(SQLModel, table=True):
+    """Calls made to a metered provider in a month ("2026-11"): the Apple
+    WeatherKit quota counter."""
+    __tablename__ = "provider_usage"
+    __table_args__ = (UniqueConstraint("provider", "month"),)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    provider: str
+    month: str
+    calls: int = 0
+
+
+class GeodataTile(SQLModel, table=True):
+    """Public geodata fetched for one grid-snapped block, shared between
+    neighbours and holding no user identifier (D7).
+
+    `tile_key` starts with the block key (app.services.site.grid), which is
+    how a tile is known to be unused once no property's block maps to it.
+    `payload` is zlib-compressed; `bytes` (`size_bytes`) is its uncompressed
+    size."""
+    __tablename__ = "geodata_tile"
+    __table_args__ = (UniqueConstraint("provider", "dataset_version", "tile_key"),)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    provider: str
+    dataset_version: str
+    tile_key: str = Field(index=True)
+    payload: bytes = Field(sa_column=Column(LargeBinary, nullable=False))
+    # The column is `bytes` (PLAN.md section 5); the attribute is not, because
+    # a class attribute named `bytes` would shadow the type above it.
+    size_bytes: int = Field(
+        default=0, sa_column=Column("bytes", Integer, nullable=False, default=0))
+    fetched_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+    expires_at: Optional[datetime] = _utc_naive(default=None)
+    last_used_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+
+
+class SiteOverride(SQLModel, table=True):
+    """An owner's correction of a site value (append-only).
+
+    Retracting one sets `retracted_at`; a refresh never touches this table.
+    `zone_id` null means the whole property."""
+    __tablename__ = "site_override"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    property_id: int = Field(index=True)
+    zone_id: Optional[int] = Field(default=None)
+    field: str
+    value: Optional[Any] = Field(default=None, sa_column=Column(JSON, nullable=True))
+    method: OverrideMethod
+    created_at: datetime = _utc_naive(default_factory=datetime.utcnow)
+    retracted_at: Optional[datetime] = _utc_naive(default=None)
 
 
 class Plant(SQLModel, table=True):

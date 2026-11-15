@@ -31,6 +31,7 @@ from app.models.schemas import (
     AppleSignInRequest, AuthTokensOut, GoogleSignInRequest, LogoutRequest,
     RefreshRequest, UserOut, UserPatch,
 )
+from app.routers import properties
 from app.services import tokens
 from app.services.oauth import (
     ProviderConfigError, ProviderTokenError, exchange_apple_code,
@@ -411,6 +412,11 @@ def delete_me(
     for plant in plants:
         session.delete(plant)
     session.flush()
+
+    # Properties and their site rows (readings, corrections, event states);
+    # a shared geodata tile goes only when no other property maps to it.
+    # Zones are growing areas and go with the growing areas below.
+    properties.delete_properties_of(session, user.id)
 
     # GrowingAreas next. The router-level "has stewardship history" 409
     # guard is for user-initiated growing area deletes only — account

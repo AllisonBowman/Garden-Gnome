@@ -21,7 +21,9 @@ const MIN_CHARS = 4;
 export default function AddressPicker({
   onChange,
 }: {
-  onChange: (place: ResolvedPlace | null) => void;
+  /** `origin` says whether the place was typed or came from "Use my
+   *  location"; callers that do not need it can ignore it. */
+  onChange: (place: ResolvedPlace | null, origin?: 'typed' | 'device') => void;
 }) {
   const [query, setQuery] = useState('');
   const [suggestion, setSuggestion] = useState<ResolvedPlace | null>(null);
@@ -51,11 +53,11 @@ export default function AddressPicker({
     scheduleSearch(text);
   };
 
-  const pick = (place: ResolvedPlace) => {
+  const pick = (place: ResolvedPlace, origin: 'typed' | 'device' = 'typed') => {
     setSelected(place);
     setSuggestion(null);
     setQuery(place.address);
-    onChange(place);
+    onChange(place, origin);
   };
 
   const useMyLocation = async () => {
@@ -63,7 +65,7 @@ export default function AddressPicker({
     setLocating(true);
     const place = await locateMe();
     setLocating(false);
-    if (place) pick(place);
+    if (place) pick(place, 'device');
     else Alert.alert(
       'Location unavailable',
       "Couldn't determine your address from your location. Try typing it instead.",

@@ -40,8 +40,8 @@ import { FIRST_FEW, cutNote, listIntro } from '../growingAreas/ranking';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
 
-type Route = RouteProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
-type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'GrowingAreaDetail'>;
+type Route = RouteProp<GrowingAreasStackParamList, 'SpaceDetail'>;
+type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'SpaceDetail'>;
 
 const SHELTER_LABEL: Record<string, string> = {
   sheltered: '🏠 Sheltered',

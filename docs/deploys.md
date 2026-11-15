@@ -146,3 +146,121 @@ has the full procedure — including the two gates that matter (back up the
 volume; verify `git status --porcelain` *and* `git log origin/master..HEAD` are
 both empty) and the two normal conditions that look like a failed deploy and
 aren't.
+
+## Rolling back 1.2.0 (migrations 0023 to 0031)
+
+1.2.0 adds nine migrations, `0023_property` to `0031_site_override`. The
+image before it (master `26525f9`) only knows up to
+`0022_backfill_acquired_on`. Everything below was tried on 2026-11-15 on a
+copy of the schema with invented rows (Python 3.12.13, the old and new trees
+exported with `git archive`), not on production. Commands marked
+**(not run here)** were never run against Fly; check what they print.
+
+### Do not just deploy the old image
+
+The old image cannot start against a 0031 database. Its boot
+(`python -m app.data.seed`) stops with:
+
+```
+alembic.util.exc.CommandError: Can't locate revision identified by '0031_site_override'
+```
+
+and exits 1, so uvicorn never starts and the smoke check never gets a 200.
+The old image also cannot repair this itself: it does not contain the
+0023 to 0031 files, so it cannot downgrade. If this has already happened,
+deploy 1.2.0 again first, then follow path A.
+
+### Two ways back, and what each loses
+
+| | path A: downgrade, then old image | path B: snapshot `vs_wNoyJ8J0oQ0f7wXmkw9` |
+|---|---|---|
+| Plants, care logs, accounts, sign-ins written while 1.2.0 ran | kept | **lost** (everything after the snapshot) |
+| Properties (pin, lot contents, goals) | **lost** | lost (none existed before) |
+| Zone details: boundary, vegetation, leaf habit, sun source, whole lot, which property | **lost** | lost |
+| Zones themselves | kept, as ordinary growing areas, plants still in them | lost, with their plants |
+| Owner corrections (`site_override`), seasonal answers (`season_event_state`) | **lost** | lost |
+| Site readings, forecast, freeze, tile caches and provider counts | lost (refetchable) | lost |
+
+Prefer path A. Use B only if the downgrade fails or the data itself is
+damaged.
+
+After path A, a zone such as "Whole lot" or "Veg bed" shows up in the old app
+as one more growing area. Owners will see these; that is expected.
+
+### Path A: downgrade with 1.2.0 still deployed
+
+1. Snapshot the volume first (same as before any deploy):
+   `fly volumes list -a garden-gnome-api`, then
+   `fly volumes snapshots create VOLUME_ID`, and wait for it in
+   `fly volumes snapshots list VOLUME_ID`.
+2. Write down the release to go back to. `fly releases -a garden-gnome-api`
+   lists them; you want the image of the release before 1.2.0
+   **(not run here; check the output shows an image reference)**.
+3. Check the database is at 0031:
+
+   ```bash
+   fly ssh console -a garden-gnome-api -C "python -c \"import sqlite3;print(sqlite3.connect('/data/garden_gnome.db').execute('select * from alembic_version').fetchone())\""
+   ```
+
+   Expect `('0031_site_override',)` **(not run here)**.
+4. Run the downgrade inside the running 1.2.0 machine. It is the only image
+   that has the downgrade code:
+
+   ```bash
+   fly ssh console -a garden-gnome-api -C "sh -c 'cd /app && DATABASE_URL=sqlite:////data/garden_gnome.db python -m alembic downgrade 0022_backfill_acquired_on'"
+   ```
+
+   **(not run here.)** Locally it printed nine `Running downgrade` lines,
+   the last one `0023_property -> 0022_backfill_acquired_on`, and exited 0.
+   Every table and row that existed at 0022 came back identical. The only
+   differences were rows added while 1.2.0 ran and line breaks in the
+   rebuilt `growingarea` schema.
+5. Go straight to step 6. Between step 4 and step 6:
+   - the running 1.2.0 process answers `GET /` with 200 but
+     `GET /growing-areas` with 500, because its model still expects the
+     zone columns;
+   - **do not restart the machine.** A 1.2.0 boot runs the migrations again
+     and puts the database back at 0031, with empty new tables. If that
+     happens, repeat step 4.
+6. Deploy the previous image:
+   `fly deploy --image PREVIOUS_IMAGE -a garden-gnome-api`, from
+   `garden-gnome/` **(not run here)**.
+7. Check it came up: `fly logs -a garden-gnome-api` shows
+   `claim sync: ...` and no traceback, and step 3's command prints
+   `('0022_backfill_acquired_on',)`. Locally the old tree then booted
+   (seed exit 0), `GET /` returned 200 with `"synced": true`, it listed
+   growing areas and plants, and it saved a new care log.
+8. Stop master from deploying 1.2.0 again. Every push to master deploys, and
+   the next push would run 0023 to 0031 again. Revert the 1.2.0 merge on
+   master before anything else lands there.
+
+### Path B: restore the snapshot
+
+`vs_wNoyJ8J0oQ0f7wXmkw9` was taken on 2026-11-15 just before the deploy.
+Check that it is listed in `fly volumes snapshots list VOLUME_ID`. Fly
+restores a snapshot into a new volume, and the machine then has to use that
+volume. The commands for that are not in this repository and were **not run
+here**. Look them up rather than guessing. Then deploy the previous image
+(path A, step 6), never 1.2.0: 1.2.0 would migrate the restored file to 0031
+again on boot. Do step 8 too.
+
+### SQLite journal mode: nothing to do
+
+1.2.0 switches the file to write-ahead logging (WAL), and the setting stays
+in the file after the downgrade. The old code does not set a journal mode,
+so it keeps using WAL. Locally that worked even with a `-wal` file still
+holding unsaved writes, both from 1.2.0 and from after the downgrade. The
+old boot read all of them, and every one showed up in `carelog`.
+
+- No checkpoint is needed before rolling back. If you want the main file
+  complete on its own anyway:
+  `python -c "import sqlite3;c=sqlite3.connect('/data/garden_gnome.db');print(c.execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone())"`
+  (inside `fly ssh console`). Locally it printed `(0, 0, 0)`, and after it
+  the `.db` file alone held every row.
+- Do not try to switch back to the old journal mode while the app is
+  running. Locally, `PRAGMA journal_mode=DELETE` failed with
+  `database is locked` while another connection was open. It is not needed.
+- Never copy `garden_gnome.db` by itself while the app runs. Unsaved writes
+  live in `garden_gnome.db-wal`. A plain copy of the `.db` file left out a
+  care log that a SQLite backup kept. Use the SQLite backup one-liner
+  mentioned above, or a volume snapshot.
