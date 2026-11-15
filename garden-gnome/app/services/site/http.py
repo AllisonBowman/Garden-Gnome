@@ -89,7 +89,12 @@ _WKT = re.compile(
 
 class OutboundRefused(ValueError):
     """The guard would not send this request. A programming error in a
-    source, never an outage: it is not a SourceUnavailable."""
+    source, never an outage: it is not a SourceUnavailable.
+
+    The message names the parameter (or part of the request) that was off
+    the grid and never the value itself: a refused value is usually an exact
+    pin, and this message reaches the server log (a failed profile step is
+    logged with its exception)."""
 
 
 class GeodataDisabled(OutboundRefused):
@@ -144,19 +149,19 @@ def _as_float(text: str, where: str) -> float:
     try:
         return float(Decimal(text))
     except (InvalidOperation, ValueError):
-        raise OutboundRefused(f"{where}: {text!r} is not a number") from None
+        raise OutboundRefused(f"{where}: a value is not a number") from None
 
 
 def _need_lat(text: str, where: str) -> None:
     if not grid.lat_on_grid(_as_float(text, where)):
         raise OutboundRefused(
-            f"{where}: latitude {text} is not on the snap grid; send the block")
+            f"{where}: a latitude is not on the snap grid; send the block")
 
 
 def _need_lng(text: str, where: str) -> None:
     if not grid.lng_on_grid(_as_float(text, where)):
         raise OutboundRefused(
-            f"{where}: longitude {text} is not on the snap grid; send the block")
+            f"{where}: a longitude is not on the snap grid; send the block")
 
 
 def _pairs_lnglat(nums: list[str], where: str) -> None:
@@ -235,7 +240,7 @@ def _check_declared(name: str, kind: Coord, value: Any) -> None:
         for n in nums:
             if _decimals(n) > 2:
                 raise OutboundRefused(
-                    f"{where}: {n} is finer than two decimal places (about "
+                    f"{where}: a value is finer than two decimal places (about "
                     "a kilometre), the most a weather service is told")
     else:  # pragma: no cover - every kind is handled above
         raise OutboundRefused(f"{where}: unknown coordinate kind {kind!r}")
@@ -273,7 +278,7 @@ def _scan(value: Any, where: str) -> None:
         v = _as_float(text, where)
         if abs(v) <= 180 and not grid.on_grid(v):
             raise OutboundRefused(
-                f"{where}: {text} looks like a coordinate that is not on the "
+                f"{where}: a value looks like a coordinate that is not on the "
                 "snap grid; declare it with coords= and send the block")
 
 

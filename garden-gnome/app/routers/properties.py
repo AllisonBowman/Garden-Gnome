@@ -44,6 +44,7 @@ from app.models.schemas import (
     ZonePatch,
 )
 from app.rate_limit import SITE_BUILD_LIMIT, limiter
+from app.services import coverage
 from app.services import vitals as vitals_service
 from app.services.season import plan as plan_service
 from app.services.site import grid, tiles
@@ -669,6 +670,11 @@ def _imagery(session: Session, lat: float, lng: float,
              footprint: Optional[dict]) -> ImageryOut:
     module = _imagery_module()
     if module is None or not hasattr(module, "block_imagery"):
+        raise HTTPException(status_code=503, detail=IMAGERY_UNAVAILABLE)
+    # The aerial photography is of the United States only, and the privacy
+    # policy says no map service is asked about land outside it. The check
+    # is the same rough outline the site profile uses (services/coverage.py).
+    if not coverage.in_united_states(lat, lng):
         raise HTTPException(status_code=503, detail=IMAGERY_UNAVAILABLE)
     block = grid.snap_block(lat, lng)
     tiles.commit_eagerly(session)  # no write lock held across the image fetch

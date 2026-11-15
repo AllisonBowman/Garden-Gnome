@@ -15,9 +15,14 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///garden_gnome.db")
 BUSY_TIMEOUT_S = 15
 
 # check_same_thread=False is needed for SQLite + FastAPI
+# hide_parameters: when a statement fails, SQLAlchemy would otherwise put
+# the values being written into the error text, and that text is logged. A
+# failed write to `property` or a zone carries the pin, which the privacy
+# policy says our logs never hold.
 engine = create_engine(
     DATABASE_URL,
     echo=False,
+    hide_parameters=True,
     connect_args={"check_same_thread": False, "timeout": BUSY_TIMEOUT_S},
 )
 

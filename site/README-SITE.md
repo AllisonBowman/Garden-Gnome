@@ -69,6 +69,20 @@ History:
   effective date stays October 20, since that version still hasn't been
   published, and its "What changed" line now names everything since the
   October 16 version that is live.
+- 2026-11-15: the privacy policy covers version 1.2.0 (effective November
+  15, 2026). It adds what is kept for your land (pin, zones, corrections,
+  seasonal answers, worked-out values), names the public map services the
+  server asks about the block of land around a pin (the Natural Resources
+  Conservation Service, the U.S. Geological Survey, and Amazon Web
+  Services for the canopy height map), gives the weather order for Home,
+  the seasonal plan and growing areas, says how long copies of public data
+  are kept, what logs can include, and how land is removed. Every changed
+  sentence was checked against the code twice; three server changes were
+  made so the text is true (request logs drop query strings, database
+  errors hide written values, no aerial image is asked for outside the
+  United States, and an hourly cleanup clears expired copies). Support and
+  Pricing no longer offer identifying a plant from a photo, which 1.2.0
+  hides, and Support says location is also used to find your land.
 
 ## Deploying
 
