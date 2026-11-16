@@ -298,6 +298,218 @@ def test_the_walker_fails_on_an_empty_reason_or_source():
         assert_explained({"explained": dict(good, reason="")})
 
 
+# --- map layers -------------------------------------------------------------------
+#
+# A pin no other test uses, so the grids cached here never reach another
+# test's background step (the test database is shared).
+LAYER_PIN = (40.0123, -105.2456)
+PARIS = (48.8566, 2.3522)
+
+
+@pytest.fixture()
+def layer_tiles(iso):  # noqa: F811
+    """Cache (or not) the grids for LAYER_PIN's block; removed afterwards."""
+    import struct
+
+    import numpy as np
+
+    from app.services.site.sources import canopy as canopy_source
+    from app.services.site.sources import elevation
+    from app.services.site import terrain
+    from tests.test_site_terrain import cache_window, window_from
+
+    block = grid.snap_block(*LAYER_PIN)
+
+    def put(window=True, canopy=True):
+        with iso.db() as s:
+            if window:
+                cache_window(s, block, window_from(lambda e, n: 0 * e + 1600.0,
+                                                   pin=LAYER_PIN))
+            if canopy:
+                h = np.zeros((500, 600), np.uint8)
+                h[240:260, 290:310] = 20
+                tiles.put(s, canopy_source.PROVIDER, canopy_source.DATASET_VERSION,
+                          canopy_source.tile_key(block),
+                          struct.pack("<HH", *h.shape) + h.tobytes())
+            s.commit()
+    elevation._RECENT.clear()
+    terrain._ANALYSES.clear()
+    yield block, put
+    with iso.db() as s:
+        for row in s.exec(select(GeodataTile).where(
+                GeodataTile.tile_key.startswith(block.key))).all():
+            s.delete(row)
+        s.commit()
+    elevation._RECENT.clear()
+    terrain._ANALYSES.clear()
+
+
+@pytest.fixture()
+def layer_prop(iso, layer_tiles):  # noqa: F811
+    """A property at LAYER_PIN, created before any client patch."""
+    return _create(iso, pin=LAYER_PIN)["id"]
+
+
+@pytest.fixture()
+def no_client(monkeypatch, layer_prop):
+    """From here on, building an OutboundClient fails the test, and nothing
+    is sent."""
+    def refuse(self, *a, **k):
+        raise AssertionError("a map layer route built an outbound client")
+    before = site_http.requests_sent()
+    monkeypatch.setattr(site_http.OutboundClient, "__init__", refuse)
+    yield
+    assert site_http.requests_sent() == before
+
+
+def test_layers_are_not_ready_until_the_grids_are_cached(iso, layer_tiles, layer_prop,  # noqa: F811
+                                                         no_client):
+    from app.models.schemas import MapLayersOut
+    block, _ = layer_tiles
+    pid, h = layer_prop, iso.a["headers"]
+    r = iso.client.get(f"/properties/{pid}/layers", headers=h)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    MapLayersOut.model_validate(body)
+    assert_explained(body)
+    assert body["property_id"] == pid and body["bounds"] == grid.block_box(block)
+    assert [l["kind"] for l in body["layers"]] == ["sun", "trees", "water"]
+    for layer in body["layers"]:
+        assert layer["status"] == "not_ready" and layer["image_path"] is None
+        assert "still being prepared" in layer["status_text"]
+        assert layer["legend"] and layer["notes"]
+    r = iso.client.get(f"/properties/{pid}/layers/sun.png", headers=h)
+    assert r.status_code == 409 and "still being prepared" in r.json()["detail"]
+    assert iso.client.get(f"/properties/{pid}/layers/roads.png",
+                          headers=h).status_code == 404
+
+
+def test_a_missing_source_is_not_ready_and_the_others_draw(iso, layer_tiles, layer_prop,  # noqa: F811
+                                                           no_client):
+    block, put = layer_tiles
+    put(window=False, canopy=True)
+    pid, h = layer_prop, iso.a["headers"]
+    by = {l["kind"]: l for l in iso.client.get(f"/properties/{pid}/layers",
+                                                 headers=h).json()["layers"]}
+    assert by["trees"]["status"] == "ready"
+    assert by["sun"]["status"] == "not_ready" and by["water"]["status"] == "not_ready"
+    assert iso.client.get(f"/properties/{pid}/layers/water.png", headers=h).status_code == 409
+    assert iso.client.get(f"/properties/{pid}/layers/trees.png", headers=h).status_code == 200
+
+
+def test_layer_pictures_are_drawn_from_the_cache_and_line_up(iso, layer_tiles, layer_prop,  # noqa: F811
+                                                             no_client):
+    import io
+
+    import numpy as np
+    from PIL import Image
+
+    block, put = layer_tiles
+    put()
+    pid, h = layer_prop, iso.a["headers"]
+    body = iso.client.get(f"/properties/{pid}/layers", headers=h).json()
+    assert_explained(body)
+    for layer in body["layers"]:
+        assert layer["status"] == "ready", layer
+        assert layer["image_path"] == f"/properties/{pid}/layers/{layer['kind']}.png"
+        r = iso.client.get(layer["image_path"], headers=h)
+        assert r.status_code == 200
+        assert r.headers["content-type"] == "image/png"
+        assert r.headers["cache-control"] == "private, max-age=86400"
+        img = np.asarray(Image.open(io.BytesIO(r.content)))
+        assert img.shape == (layer["height"], layer["width"], 4)
+        if layer["kind"] == "trees":
+            assert img[250, 300, 3] > 0 and img[100, 100, 3] == 0
+        if layer["kind"] == "sun":
+            assert img[50, 60, 3] > 0               # under the 20 m crown
+    with iso.db() as s:
+        keys = {t.tile_key for t in s.exec(select(GeodataTile).where(
+            GeodataTile.provider == "site_layers")).all()}
+    assert {f"{block.key}_lyr_{k}" for k in ("sun", "trees", "water")} <= keys
+    # A second look reads the stored picture.
+    again = iso.client.get(f"/properties/{pid}/layers/trees.png", headers=h)
+    assert again.status_code == 200
+    # The app adds the aerial tile key so a moved pin gets a new address.
+    keyed = iso.client.get(f"/properties/{pid}/layers/trees.png?tile={block.key}_naip",
+                           headers=h)
+    assert keyed.status_code == 200 and keyed.content == again.content
+
+
+def test_drawing_a_layer_holds_no_write_lock(iso, layer_tiles, layer_prop, no_client,  # noqa: F811
+                                            migrated_db_url, monkeypatch):
+    """The picture is drawn with no write transaction open, so a long sun
+    draw never makes other writers wait (the tile touches commit first)."""
+    import sqlite3
+    from datetime import datetime, timedelta
+
+    from app.services.site import layers as layer_service
+
+    block, put = layer_tiles
+    put()
+    with iso.db() as s:   # touched over an hour ago, so the next read writes
+        for row in s.exec(select(GeodataTile).where(
+                GeodataTile.tile_key.startswith(block.key))).all():
+            row.last_used_at = datetime.utcnow() - timedelta(hours=2)
+            s.add(row)
+        s.commit()
+    path = migrated_db_url.removeprefix("sqlite:///")
+    seen = []
+    real = layer_service.draw
+
+    def draw(*a, **k):
+        other = sqlite3.connect(path, timeout=0)
+        try:
+            other.execute("BEGIN IMMEDIATE")
+            other.rollback()
+            seen.append("free")
+        except sqlite3.OperationalError as exc:
+            seen.append(str(exc))
+        finally:
+            other.close()
+        return real(*a, **k)
+    monkeypatch.setattr(layer_service, "draw", draw)
+    r = iso.client.get(f"/properties/{layer_prop}/layers/sun.png", headers=iso.a["headers"])
+    assert r.status_code == 200
+    assert seen == ["free"]
+
+
+def test_not_ready_says_read_again_once_nothing_is_preparing(iso, layer_tiles, layer_prop,  # noqa: F811
+                                                             no_client):
+    from app.services.site import layers as layer_service
+    pid, h = layer_prop, iso.a["headers"]
+    with iso.db() as s:
+        prop = s.get(Property, pid)
+        prop.profile_status = {"fast": "ready", "background": "ready"}
+        s.add(prop)
+        s.commit()
+    body = iso.client.get(f"/properties/{pid}/layers", headers=h).json()
+    assert {l["status_text"] for l in body["layers"]} == {layer_service.READ_AGAIN_TEXT}
+    r = iso.client.get(f"/properties/{pid}/layers/trees.png", headers=h)
+    assert r.status_code == 409 and r.json()["detail"] == layer_service.READ_AGAIN_TEXT
+
+
+def test_layers_outside_the_united_states_are_unavailable(iso):  # noqa: F811
+    prop = _create(iso, pin=PARIS)
+    h = iso.a["headers"]
+    before = site_http.requests_sent()
+    body = iso.client.get(f"/properties/{prop['id']}/layers", headers=h).json()
+    assert [l["status"] for l in body["layers"]] == ["unavailable"] * 3
+    assert all("United States" in l["status_text"] for l in body["layers"])
+    r = iso.client.get(f"/properties/{prop['id']}/layers/trees.png", headers=h)
+    assert r.status_code == 409 and "United States" in r.json()["detail"]
+    assert site_http.requests_sent() == before
+
+
+def test_another_persons_layers_are_404(iso, layer_tiles):  # noqa: F811
+    _, put = layer_tiles
+    put()
+    theirs = _create(iso, who="b", pin=LAYER_PIN)["id"]
+    for url in (f"/properties/{theirs}/layers", f"/properties/{theirs}/layers/trees.png"):
+        r = iso.client.get(url, headers=iso.a["headers"])
+        assert r.status_code == 404 and r.json()["detail"] == "Property not found"
+        assert iso.client.get(url, headers=iso.b["headers"]).status_code == 200
+
+
 # --- isolation --------------------------------------------------------------------
 
 def _routes_for(pid: int, zid: int):
@@ -316,6 +528,9 @@ def _routes_for(pid: int, zid: int):
         ("patch", f"/properties/{pid}/zones/{zid}", {"name": "Mine"}),
         ("delete", f"/properties/{pid}/zones/{zid}", None),
         ("get", f"/properties/{pid}/imagery", None),
+        ("get", f"/properties/{pid}/layers", None),
+        ("get", f"/properties/{pid}/layers/sun.png", None),
+        ("get", f"/properties/{pid}/layers/trees.png", None),
         ("get", f"/properties/{pid}/seasonal-plan", None),
         ("put", f"/properties/{pid}/seasonal-plan/events/first_frost:2026:fall",
          {"state": "done"}),

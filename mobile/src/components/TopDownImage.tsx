@@ -41,6 +41,17 @@ export interface TopDownImageProps {
   /** Where the view starts: centred on this image point, with about `span`
    *  image pixels across. Without it the whole image is shown. */
   initialFocus?: { x: number; y: number; span: number };
+  /** A second picture over the same ground (a map layer), stretched exactly
+   *  over the aerial image so it pans and zooms with it. Decorative: the
+   *  image's own label should say what it shows. */
+  overlayUri?: string | null;
+  overlayHeaders?: Record<string, string>;
+  /** 0 to 1; the layer's own pixels are already partly see-through. */
+  overlayOpacity?: number;
+  /** Called when the overlay fails to load, so a screen can say so. */
+  onOverlayError?: () => void;
+  /** Called when the aerial image itself fails to load. */
+  onImageError?: () => void;
 }
 
 type Gesture =
@@ -56,7 +67,8 @@ type Gesture =
  */
 export default function TopDownImage({
   imagery, imageUri, headers, children, gesturesEnabled = true, onTapPoint, style,
-  accessibilityLabel, onGestureActive, initialFocus,
+  accessibilityLabel, onGestureActive, initialFocus, overlayUri, overlayHeaders, overlayOpacity = 1,
+  onOverlayError, onImageError,
 }: TopDownImageProps) {
   const { palette } = useAppTheme();
   const image = useMemo(() => ({ width: imagery.width, height: imagery.height }), [imagery.width, imagery.height]);
@@ -179,9 +191,25 @@ export default function TopDownImage({
             width: image.width * t.scale, height: image.height * t.scale,
           }}
           resizeMode="stretch"
+          onError={onImageError}
           accessible
           accessibilityRole="image"
           accessibilityLabel={accessibilityLabel ?? `Top-down aerial image. ${imagery.source.name}.`}
+        />
+      ) : null}
+      {ready && overlayUri ? (
+        <Image
+          source={{ uri: overlayUri, headers: overlayHeaders }}
+          style={{
+            position: 'absolute', left: t.tx, top: t.ty,
+            width: image.width * t.scale, height: image.height * t.scale,
+            opacity: overlayOpacity,
+          }}
+          resizeMode="stretch"
+          onError={onOverlayError}
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
         />
       ) : null}
       {ready && children ? (

@@ -768,6 +768,10 @@ class SiteValue(Explained):
     field: SiteFieldLit
     title: str
     value: Optional[Any] = None
+    # Numbers behind `display` that `value` does not carry, added alongside it
+    # (sun: {"hours": 7.0}, since its value is the category word). None for an
+    # owner's answer and for fields with nothing extra.
+    facts: Optional[dict[str, Any]] = None
     zone_id: Optional[int] = None
     can_override: bool = False
     override_choices: list[OverrideChoice] = []
@@ -846,6 +850,35 @@ class ImageryOut(_Shape):
     captured: Optional[str] = None
     pin: Optional[LatLng] = None
     default_footprint: Optional[Box] = None
+
+
+#: Map layers over the aerial image (map and visuals spec, section 3).
+MapLayerKindLit = Literal["sun", "trees", "water"]
+MapLayerStatusLit = Literal["ready", "not_ready", "unavailable"]
+
+
+class LegendStep(_Shape):
+    color: str                    # "#RRGGBB"; the picture draws it semi-transparent
+    label: str
+
+
+class MapLayerOut(_Shape):
+    kind: MapLayerKindLit
+    title: str
+    status: MapLayerStatusLit
+    status_text: Optional[str] = None
+    image_path: Optional[str] = None   # "/properties/{id}/layers/{kind}.png" when ready
+    width: int
+    height: int
+    legend: list[LegendStep] = []
+    explained: Explained
+    notes: list[str] = []
+
+
+class MapLayersOut(_Shape):
+    property_id: int
+    bounds: Box                   # the whole block, the same as ImageryOut.bounds
+    layers: list[MapLayerOut] = []
 
 
 class ForecastDay(_Shape):

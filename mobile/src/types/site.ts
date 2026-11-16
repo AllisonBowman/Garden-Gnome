@@ -125,11 +125,22 @@ export interface OverrideChoice {
   label: string;
 }
 
+/** Extra numbers on a site value (see `SiteValue.facts`). */
+export interface SiteValueFacts {
+  /** Sun: average hours of direct sun a day in the growing season. */
+  hours?: number;
+  [key: string]: unknown;
+}
+
 export interface SiteValue extends Explained {
   field: SiteField;
   title: string;
   /** JSON value behind `display`; its shape depends on the field. */
   value?: unknown;
+  /** Numbers behind `display` that `value` does not carry, or null. Sun:
+   *  `{hours}` (the value itself is the category word). Absent on an older
+   *  server and on an owner's own answer. */
+  facts?: SiteValueFacts | null;
   zone_id?: number | null;
   can_override: boolean;
   override_choices: OverrideChoice[];
@@ -220,6 +231,48 @@ export interface Imagery {
   captured?: string | null;
   pin?: { lat: number; lng: number } | null;
   default_footprint?: Box | null;
+}
+
+// ── Map layers ───────────────────────────────────────────────────────────────
+
+/** A picture the server draws over the aerial image from copies it already
+ *  holds (map and visuals spec section 3). */
+export type MapLayerKind = 'sun' | 'trees' | 'water';
+
+/** `ready`: drawn, or drawable now. `not_ready`: a source is still being
+ *  copied. `unavailable`: outside the United States, or the ground data is
+ *  too coarse. `status_text` says which in plain words. */
+export type MapLayerStatus = 'ready' | 'not_ready' | 'unavailable';
+
+/** One step of a layer's legend: the colour drawn in the picture
+ *  ("#RRGGBB") and what it means. */
+export interface LegendStep {
+  color: string;
+  label: string;
+}
+
+export interface MapLayer {
+  kind: MapLayerKind;
+  title: string;
+  status: MapLayerStatus;
+  status_text?: string | null;
+  /** Path on our server (GET /properties/{id}/layers/{kind}.png); null
+   *  unless ready. */
+  image_path?: string | null;
+  /** The layer picture's own size in pixels. It covers `MapLayers.bounds`,
+   *  the same ground as the aerial image, so it is stretched over it. */
+  width: number;
+  height: number;
+  legend: LegendStep[];
+  explained: Explained;
+  /** What the layer does not count ("Buildings are not counted."). */
+  notes: string[];
+}
+
+export interface MapLayers {
+  property_id: number;
+  bounds: Box;
+  layers: MapLayer[];
 }
 
 // ── Forecast and seasonal plan ───────────────────────────────────────────────

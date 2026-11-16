@@ -10,10 +10,14 @@ import {
 import { rescheduleAllReminders } from '../notifications/reminders';
 import { Forecast, OwnerAction, SeasonEvent, SeasonTask, SeasonalPlan } from '../types/site';
 import {
-  ACTION_LABELS, STATUS_WORDS, TASK_STATE_WORDS, actionBody, forecastCells, forecastCredit,
+  ACTION_LABELS, STATUS_WORDS, TASK_STATE_WORDS, actionBody, forecastCredit,
   observedDayChoices, orderedActions, orderedTasks, seasonSections,
 } from '../season/sections';
 import ExplainedBlock from '../components/ExplainedBlock';
+import ForecastBars from '../components/ForecastBars';
+import { followTarget } from '../land/followTarget';
+import { timelineDrawsAnything } from '../season/timeline';
+import SeasonTimeline from '../components/SeasonTimeline';
 import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
 import Pill from '../components/Pill';
@@ -32,6 +36,11 @@ type Styles = ReturnType<typeof makeStyles>;
 // already happened or been settled. Each event shows its status, its window,
 // "Why and data source", its tasks with their low-impact notes, and the
 // owner's answers (happened or not yet, done, not needed, clear).
+//
+// Visuals (map and visuals spec section 4.4): the forecast is drawn as bars
+// (each day keeps the text strip's spoken sentence), and the season's
+// timeline sits above the sections; tapping an event on it scrolls to its
+// card. Events with no dates are not drawn and stay in the list.
 
 /** Apple's attribution page, linked whenever Apple Weather supplied the forecast. */
 const APPLE_WEATHER_LEGAL = 'https://weatherkit.apple.com/legal-attribution.html';
@@ -61,19 +70,33 @@ export default function SeasonScreen() {
   // An event's y is inside its section, so both offsets are needed.
   const sectionY = useRef<Record<string, number>>({});
   const targetY = useRef<{ section: string; y: number } | null>(null);
-  const scrolled = useRef(false);
+  // The bars and the timeline above take their full height after they are
+  // measured, so the event is followed until the owner scrolls.
+  const [follow] = useState(() => followTarget(
+    (y) => scroller.current?.scrollTo({ y, animated: true }),
+    (run) => { requestAnimationFrame(run); },
+  ));
   const tryScroll = useCallback(() => {
     const t = targetY.current;
-    if (!t || scrolled.current || sectionY.current[t.section] == null) return;
-    scrolled.current = true;
-    const y = sectionY.current[t.section] + t.y;
-    requestAnimationFrame(() => scroller.current?.scrollTo({ y: Math.max(0, y - 12), animated: true }));
-  }, []);
+    const base = t ? sectionY.current[t.section] : undefined;
+    if (!t || base == null) return;
+    follow.place(base + t.y);
+  }, [follow]);
   const onSectionLayout = useCallback((section: string, y: number) => {
     sectionY.current[section] = y;
     tryScroll();
   }, [tryScroll]);
+  // Every event's place, for a tap on the timeline.
+  const eventY = useRef<Record<string, { section: string; y: number }>>({});
+  const scrollToEvent = useCallback((key: string) => {
+    const at = eventY.current[key];
+    const base = at ? sectionY.current[at.section] : undefined;
+    if (!at || base == null) return;
+    follow.release();   // the owner chose another place
+    scroller.current?.scrollTo({ y: Math.max(0, base + at.y - 12), animated: true });
+  }, [follow]);
   const onEventLayout = useCallback((section: string, key: string, y: number) => {
+    eventY.current[key] = { section, y };
     if (eventKey && key === eventKey) {
       targetY.current = { section, y };
       tryScroll();
@@ -116,6 +139,7 @@ export default function SeasonScreen() {
       ref={scroller}
       style={styles.container}
       contentContainerStyle={styles.content}
+      onScrollBeginDrag={follow.release}
       refreshControl={<RefreshControl refreshing={pulling} onRefresh={onRefresh} />}
     >
       {planQ.isError && <RefreshFailed onRetry={() => planQ.refetch()} retrying={planQ.isRefetching} />}
@@ -133,6 +157,13 @@ export default function SeasonScreen() {
         <Text style={styles.error} accessibilityLiveRegion="polite">
           That answer was not saved. Check your connection and try again.
         </Text>
+      ) : null}
+
+      {timelineDrawsAnything(plan.events) ? (
+        <View style={styles.section}>
+          <Eyebrow style={styles.eyebrow}>The year at a glance</Eyebrow>
+          <SeasonTimeline events={plan.events} onPressEvent={scrollToEvent} />
+        </View>
       ) : null}
 
       {sections.length === 0 ? (
@@ -160,20 +191,12 @@ export default function SeasonScreen() {
 }
 
 function ForecastStrip({ forecast, styles }: { forecast: Forecast; styles: Styles }) {
-  const cells = forecastCells(forecast.days);
+  // The bars replace the text strip; each day's spoken sentence is the
+  // strip's (forecastCells), and the rain and frost words stay on screen.
   return (
     <View style={styles.section}>
       <Eyebrow style={styles.eyebrow}>Forecast</Eyebrow>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.strip}>
-        {cells.map((c) => (
-          <View key={c.date} style={styles.day} accessible accessibilityLabel={c.a11y}>
-            <Text style={styles.dayName}>{c.day}</Text>
-            <Text style={styles.dayTemps}>{c.temps}</Text>
-            {c.rain ? <Text style={styles.dayLine}>{c.rain}</Text> : null}
-            {c.frost ? <Text style={styles.dayFrost}>{c.frost}</Text> : null}
-          </View>
-        ))}
-      </ScrollView>
+      <ForecastBars days={forecast.days} />
       <Text style={styles.quiet}>{forecastCredit(forecast.provider_name, forecast.fetched_at)}</Text>
       {isAppleForecast(forecast) ? (
         <WeatherCredit attribution={{ text: forecast.provider_name, url: APPLE_WEATHER_LEGAL }} />
@@ -292,15 +315,6 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   headline: { color: p.acc, fontFamily: f.display, fontSize: 22, fontWeight: '700', marginBottom: 8 },
   section: { marginTop: 16 },
   eyebrow: { marginBottom: 8 },
-  strip: { gap: 8, paddingRight: 8 },
-  day: {
-    minWidth: 92, padding: 10, borderRadius: 12, borderWidth: 1, borderColor: p.line,
-    backgroundColor: p.card,
-  },
-  dayName: { color: p.faint, fontFamily: f.label, fontSize: 12 },
-  dayTemps: { color: p.ink, fontSize: 15, fontWeight: '600', marginTop: 2 },
-  dayLine: { color: p.sub, fontSize: 12.5, marginTop: 2 },
-  dayFrost: { color: p.warn, fontSize: 12.5, fontWeight: '600', marginTop: 2 },
   quiet: { color: p.faint, fontSize: 12.5, marginTop: 6 },
   quietBlock: { color: p.sub, fontSize: 14, marginTop: 16 },
   error: { color: p.warn, fontSize: 13.5, marginTop: 12 },

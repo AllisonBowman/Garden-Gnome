@@ -223,3 +223,15 @@ export function forecastCredit(providerName: string, fetchedAt: string): string 
   const time = `${h % 12 === 0 ? 12 : h % 12}${d.getMinutes() ? `:${String(d.getMinutes()).padStart(2, '0')}` : ''} ${h < 12 ? 'am' : 'pm'}`;
   return `Forecast: ${name}, as of ${time} ${shortDay(d)}.`;
 }
+
+/**
+ * The frost nights in words, for under the forecast bars, which mark them
+ * with a snowflake but cannot show how hard: "Frost in the forecast: Today
+ * (freeze), Wed (frost possible)." Null when no night has a frost risk.
+ */
+export function frostNightsLine(days: ForecastDay[], today: Date = new Date()): string | null {
+  const nights = forecastCells(days, today)
+    .filter((c) => c.frost)
+    .map((c) => `${c.day} (${c.frost!.toLowerCase()})`);
+  return nights.length ? `Frost in the forecast: ${nights.join(', ')}.` : null;
+}

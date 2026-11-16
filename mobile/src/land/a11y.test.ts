@@ -11,9 +11,17 @@ const ROOT = path.join(__dirname, '..');
 const FILES = [
   'screens/PropertySetupScreen.tsx',
   'screens/LandScreen.tsx',
+  'screens/HomeScreen.tsx',
+  'screens/SeasonScreen.tsx',
   'components/TopDownImage.tsx',
   'land/PinMarker.tsx',
   'land/CorrectionControl.tsx',
+  'components/LandMap.tsx',
+  'components/LayerChips.tsx',
+  'components/MapLegend.tsx',
+  'components/ForecastBars.tsx',
+  'components/SeasonTimeline.tsx',
+  'components/ReadingTile.tsx',
 ];
 const CONTROLS = ['Button', 'Chip', 'Pressable', 'TextInput', 'TouchableRipple', 'ZoomButton'];
 

@@ -8,7 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList, ScreenName } from '../navigation/types';
 import {
-  SITE_QUERY_KEYS, fetchSiteProfile, fetchVitalsOrOff,
+  SITE_QUERY_KEYS, fetchMapLayersOrOff, fetchPropertyImagery, fetchSiteProfile, fetchVitalsOrOff,
+  fetchZones,
 } from '../api/properties';
 import { fetchGrowingAreas, fetchGrowingAreaWeather } from '../api/growingAreas';
 import { useCareTasks } from '../care/useCareTasks';
@@ -18,10 +19,18 @@ import { homeForm, offersAddLand, usesLegacyRoutes } from '../home/form';
 import { mergeThisWeek, moreCareLine, weekCounts, WeekItem } from '../home/week';
 import { pickHeadline, HeadlineDay } from '../home/headline';
 import { legacyWeatherCards, weatherCards, seasonCard } from '../home/weather';
-import { landLines } from '../home/land';
+import { readingTiles } from '../land/readingTiles';
+import { MapChipKey, chosenChip, mapChips } from '../land/mapLayers';
+import { IMAGERY_STALE_MS, landMapState, layersRefetchEvery } from '../home/landMap';
 import { orderSpaces, spaceLine, spacesFromAreas } from '../home/spaces';
 import { EVENT_STATUS_WORDS, profileProgressLine, seasonAhead } from '../home/season';
 import ExplainedBlock from '../components/ExplainedBlock';
+import ForecastBars from '../components/ForecastBars';
+import LandMap from '../components/LandMap';
+import LayerChips from '../components/LayerChips';
+import MapLegend from '../components/MapLegend';
+import ReadingTileGrid from '../components/ReadingTile';
+import SeasonTimeline from '../components/SeasonTimeline';
 import ConfidenceChip from '../components/ConfidenceChip';
 import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
@@ -42,6 +51,13 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 // spaces, and one calm "Add your land" card); and for a server with the new
 // routes off, the same no-property report built from the routes the app used
 // before, with the card hidden.
+//
+// Visuals (map and visuals spec section 4.4): forecast bars at the top of
+// Weather, the season's timeline at the top of "The season ahead", and
+// "Your land" as the land map (read-only, on the yard, with layer chips and
+// legend) and reading tiles. None of the land visuals show without land.
+// The map, its zones and its layers load on their own: any of them failing
+// is one line and the rest of Home renders.
 
 const SCREENS_NEEDING_PROPERTY = new Set<ScreenName>(['Land', 'Season', 'ZoneMap']);
 
@@ -64,6 +80,27 @@ export default function HomeScreen() {
     queryFn: () => fetchSiteProfile(property!.id),
     enabled: property != null,
   });
+
+  // The land map: the same query keys as the zone map, so the cache is shared.
+  const imageryQ = useQuery({
+    queryKey: SITE_QUERY_KEYS.imagery(property?.id ?? -1),
+    queryFn: () => fetchPropertyImagery(property!.id),
+    enabled: property != null,
+    retry: 1,
+    staleTime: IMAGERY_STALE_MS,
+  });
+  const zonesQ = useQuery({
+    queryKey: SITE_QUERY_KEYS.zones(property?.id ?? -1),
+    queryFn: () => fetchZones(property!.id),
+    enabled: property != null,
+  });
+  const layersQ = useQuery({
+    queryKey: SITE_QUERY_KEYS.mapLayers(property?.id ?? -1),
+    queryFn: () => fetchMapLayersOrOff(property!.id),
+    enabled: property != null,
+    refetchInterval: (q) => layersRefetchEvery(q.state.data),
+  });
+  const [wantedChip, setWantedChip] = useState<MapChipKey>('aerial');
 
   // The routes the app used before, for a server with the new ones off.
   const areasQ = useQuery({
@@ -105,7 +142,15 @@ export default function HomeScreen() {
 
   const spaces: VitalSpace[] = orderSpaces(
     legacy ? spacesFromAreas(areasQ.data ?? []) : (vitals?.spaces ?? []));
-  const land = property ? landLines(profileQ.data, vitals?.cards ?? []) : [];
+  const tiles = property ? readingTiles(profileQ.data, vitals?.cards ?? []) : [];
+  const chips = mapChips(layersQ.data);
+  const chosen = chosenChip(chips, wantedChip);
+  const mapState = landMapState({
+    imagery: { hasData: !!imageryQ.data, isLoading: imageryQ.isLoading, isError: imageryQ.isError },
+    zones: { hasData: zonesQ.data !== undefined, isError: zonesQ.isError },
+    layers: { hasData: layersQ.data !== undefined, isError: layersQ.isError },
+  });
+  const forecastDays = legacy ? [] : (vitals?.forecast?.days ?? []);
   const ahead = seasonAhead(vitals?.season_ahead ?? []);
   const season = seasonCard(vitals?.cards ?? []);
   const progress = profileProgressLine(profileQ.data?.status ?? property?.profile_status);
@@ -136,13 +181,16 @@ export default function HomeScreen() {
         vitalsQ.refetch(),
         care.refetch(),
         property ? profileQ.refetch() : null,
+        property ? imageryQ.refetch() : null,
+        property ? zonesQ.refetch() : null,
+        property ? layersQ.refetch() : null,
         legacy ? areasQ.refetch() : null,
         weatherArea ? weatherQ.refetch() : null,
       ]);
     } finally {
       setPulling(false);
     }
-  }, [vitalsQ, care, profileQ, areasQ, weatherQ, property, legacy, weatherArea]);
+  }, [vitalsQ, care, profileQ, imageryQ, zonesQ, layersQ, areasQ, weatherQ, property, legacy, weatherArea]);
 
   if (form === 'loading') {
     return <ActivityIndicator style={styles.center} size="large" />;
@@ -165,9 +213,12 @@ export default function HomeScreen() {
           retrying={vitalsQ.isRefetching}
         />
         <View style={styles.links}>
-          <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}>Plants</Button>
-          <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}>Species</Button>
-          <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}>Settings</Button>
+          <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}
+          accessibilityLabel="Open plants">Plants</Button>
+          <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}
+          accessibilityLabel="Open species">Species</Button>
+          <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}
+          accessibilityLabel="Open settings">Settings</Button>
         </View>
       </ScrollView>
     );
@@ -188,9 +239,10 @@ export default function HomeScreen() {
       {property ? <Text style={styles.place}>{placeLine(property)}</Text> : null}
 
       {/* ── Weather vitals ── */}
-      {cards.length > 0 && (
+      {(cards.length > 0 || forecastDays.length > 0) && (
         <View style={styles.section}>
           <Eyebrow style={styles.eyebrow}>Weather</Eyebrow>
+          {forecastDays.length > 0 ? <ForecastBars days={forecastDays} /> : null}
           {cards.map((c) => (
             <VitalCardView key={c.key} card={c} styles={styles} onOpen={linkTarget(c.link)
               ? () => go(linkTarget(c.link)!) : undefined} />
@@ -237,6 +289,7 @@ export default function HomeScreen() {
       {property && (ahead.length > 0 || season) ? (
         <View style={styles.section}>
           <Eyebrow style={styles.eyebrow}>The season ahead</Eyebrow>
+          <SeasonTimeline events={ahead} onPressEvent={(key) => go('Season', { eventKey: key })} />
           {season ? <VitalCardView card={season} styles={styles} onOpen={() => go('Season')} /> : null}
           {ahead.map((e) => (
             <Pressable
@@ -253,7 +306,8 @@ export default function HomeScreen() {
               <ConfidenceChip confidence={e.explained.confidence} label={e.explained.confidence_label} />
             </Pressable>
           ))}
-          <Button mode="text" compact onPress={() => go('Season')} textColor={palette.acc} style={styles.more}>
+          <Button mode="text" compact onPress={() => go('Season')} textColor={palette.acc} style={styles.more}
+            accessibilityLabel="The whole season">
             The whole season
           </Button>
         </View>
@@ -264,19 +318,37 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <Eyebrow style={styles.eyebrow}>Your land</Eyebrow>
           {progress ? <Text style={styles.quiet}>{progress}</Text> : null}
-          {profileQ.isError && !profileQ.data && land.length === 0 ? (
+          {mapState.kind === 'map' && imageryQ.data ? (
+            <LandMap
+              imagery={imageryQ.data}
+              zones={zonesQ.data ?? []}
+              layer={chosen.layer}
+              onPress={() => go('Land')}
+              pressHint="Opens your land"
+              imageryVersion={imageryQ.dataUpdatedAt}
+              layersVersion={layersQ.dataUpdatedAt}
+            />
+          ) : (
+            <Text style={styles.mapLine} accessibilityLiveRegion="polite">{mapState.line}</Text>
+          )}
+          {mapState.notes.map((n) => <Text key={n} style={styles.quiet}>{n}</Text>)}
+          {mapState.kind === 'map' ? (
+            <>
+              <LayerChips chips={chips} chosen={chosen.key} onChoose={setWantedChip} />
+              <MapLegend layer={chosen.layer} />
+            </>
+          ) : null}
+          {profileQ.isError && !profileQ.data && tiles.length === 0 ? (
             <LoadError inline message="Couldn’t load what is known about your land." error={profileQ.error}
               onRetry={() => profileQ.refetch()} retrying={profileQ.isRefetching} />
           ) : null}
-          {land.map((l) => (
-            <ExplainedBlock
-              key={l.key}
-              title={l.title}
-              explained={l.explained}
-              onPress={() => go('Land', { field: l.field })}
-            />
-          ))}
-          <Button mode="text" compact onPress={() => go('Land')} textColor={palette.acc} style={styles.more}>
+          {tiles.length > 0 ? (
+            <View style={styles.tiles}>
+              <ReadingTileGrid tiles={tiles} onOpen={(t) => go('Land', { field: t.field })} />
+            </View>
+          ) : null}
+          <Button mode="text" compact onPress={() => go('Land')} textColor={palette.acc} style={styles.more}
+            accessibilityLabel="Everything about your land">
             Everything about your land
           </Button>
         </View>
@@ -326,7 +398,8 @@ export default function HomeScreen() {
             <Text style={styles.chevron}>›</Text>
           </Pressable>
         ))}
-        <Button mode="text" compact onPress={() => navigation.navigate('Spaces')} textColor={palette.acc} style={styles.more}>
+        <Button mode="text" compact onPress={() => navigation.navigate('Spaces')} textColor={palette.acc} style={styles.more}
+          accessibilityLabel={spaces.length === 0 ? 'Add a growing space' : 'All growing spaces'}>
           {spaces.length === 0 ? 'Add a growing space' : 'All growing spaces'}
         </Button>
       </View>
@@ -335,9 +408,12 @@ export default function HomeScreen() {
 
       {/* ── Quiet links ── */}
       <View style={styles.links}>
-        <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}>Plants</Button>
-        <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}>Species</Button>
-        <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}>Settings</Button>
+        <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}
+          accessibilityLabel="Open plants">Plants</Button>
+        <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}
+          accessibilityLabel="Open species">Species</Button>
+        <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}
+          accessibilityLabel="Open settings">Settings</Button>
       </View>
     </ScrollView>
   );
@@ -462,6 +538,8 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   quiet: { color: p.faint, fontSize: 12.5, lineHeight: 18, marginTop: 6 },
   quietBlock: { color: p.faint, fontSize: 13, lineHeight: 19, marginTop: 14, paddingHorizontal: 4 },
   more: { alignSelf: 'flex-start', marginTop: 4 },
+  mapLine: { color: p.sub, fontSize: 13.5, lineHeight: 19, paddingVertical: 8 },
+  tiles: { marginTop: 10 },
   inlineSpin: { marginVertical: 8 },
   addLand: { marginTop: 18, borderRadius: 14, backgroundColor: p.accSoft },
   addLandTitle: { color: p.acc, fontFamily: f.display, fontSize: 17, fontWeight: '700', marginBottom: 6 },
