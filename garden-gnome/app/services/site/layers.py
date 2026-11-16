@@ -118,8 +118,8 @@ TREE_COLOURS = (
     (165, 50, 190, 180),    # 10 to 20 m
     (80, 20, 120, 195),     # 20 m or more
 )
-TREE_LABELS = ("2 to 5 metres tall", "5 to 10 metres tall", "10 to 20 metres tall",
-               "20 metres or more")
+TREE_LABELS = ("6 to 16 feet tall", "16 to 33 feet tall", "33 to 66 feet tall",
+               "66 feet or more")
 WATER_COLOURS = (
     (0, 230, 255, 190),     # runs through
     (25, 70, 255, 210),     # collects
@@ -141,7 +141,7 @@ NOTES = {
             "is not counted.",
             "This is for the growing season, when leaves are out."],
     "trees": ["A height of 0 can mean no trees or no data.",
-              "Canopy under 2 metres (lawn and low shrubs) is not drawn."],
+              "Canopy under 6 feet (lawn and low shrubs) is not drawn."],
     "water": ["Soil is not drawn on this map. The Where water collects reading counts it.",
               "This is not a flood insurance determination."],
 }
@@ -588,7 +588,7 @@ def explained(kind: str, block: Block, *, win=None, canopy=None) -> dict:
                   else f"from {_month_day(start)} to {_month_day(end)}")
         return {
             "display": ("Hours of direct sun a day in the growing season, "
-                        f"{season}, in squares about 5 metres across."),
+                        f"{season}, in squares about 16 feet across."),
             "confidence": "rough_estimate",
             "reason": ("Worked out on our server from the sun's path at the middle of "
                        "this map, every 10 minutes on every 7th day, the slope of the "
@@ -605,10 +605,10 @@ def explained(kind: str, block: Block, *, win=None, canopy=None) -> dict:
         res = (canopy.resolution_m if canopy is not None else
                float(max(1, round(canopy_source.ground_resolution_m(block_centre(block)[0])))))
         return {
-            "display": f"Tree canopy height, mapped at {res:g} metre detail.",
+            "display": f"Tree canopy height, mapped {words.squares_across(res)}.",
             "confidence": "area_estimate",
             "reason": ("From a canopy height map made from satellite imagery by Meta and "
-                       "World Resources Institute. Canopy under 2 metres is not drawn. "
+                       "World Resources Institute. Canopy under 6 feet is not drawn. "
                        "A height of 0 can mean no trees or no data."),
             "sources": [src],
             "provenance": "modelled",
@@ -619,9 +619,9 @@ def explained(kind: str, block: Block, *, win=None, canopy=None) -> dict:
                         "the elevation survey."),
             "confidence": "rough_estimate",
             "reason": ("Worked out on our server from the elevation survey: low spots "
-                       "where rain would stand at least 10 centimetres deep, and paths "
-                       "that gather runoff from at least 2,000 square metres (about half "
-                       "an acre) uphill. Soil is not counted on this map. This is not a "
+                       "where rain would stand at least 4 inches deep, and paths "
+                       "that gather runoff from about half an acre or more "
+                       "uphill. Soil is not counted on this map. This is not a "
                        "flood insurance determination."),
             "sources": [words.source("terrain"), _elevation_source(win)],
             "provenance": "modelled",

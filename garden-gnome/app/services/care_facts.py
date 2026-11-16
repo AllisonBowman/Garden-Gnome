@@ -229,7 +229,7 @@ def _water(sp: Species, tag: Tag) -> Told:
     if regime:
         parts.append(tag(regime, "water_regime"))
     if sp.water_check_depth_cm is not None:
-        parts.append(tag(f"check {_num(sp.water_check_depth_cm)} cm down",
+        parts.append(tag(f"check {depth_said(sp.water_check_depth_cm)} down",
                          "water_check_depth_cm"))
     growing, dormant = sp.water_growing_days_est, sp.water_dormant_days_est
     if growing is not None and dormant is not None:
@@ -418,11 +418,16 @@ def _said_band(low, high, unit: str) -> str:
     return f"up to {_num(high)}{unit}"
 
 
-def _depth_said(cm: float) -> str:
-    """A soil depth to the nearest half centimetre. A source's two inches is
-    5.08 cm, and nobody feeling soil means the .08."""
-    half = math.floor(cm * 2 + 0.5) / 2
-    return _num(half if half > 0 else cm)
+def depth_said(cm: float) -> str:
+    """A soil depth in centimetres, said in inches to the nearest half inch:
+    "1 inch", "1.5 inches", "2 inches", and "half an inch" for anything
+    shallower. A source's two inches is 5.08 cm, and nobody feeling soil
+    means the .08. Rounds a half up, like the app's own `depthSaid`
+    (mobile care/facts.ts), so the card and this sentence agree."""
+    half = math.floor(cm / 2.54 * 2 + 0.5) / 2
+    if half <= 0.5:
+        return "half an inch"
+    return f"{_num(half)} {'inch' if half == 1 else 'inches'}"
 
 
 def caretaker_fact_lines(species: Species) -> list[str]:
@@ -500,8 +505,8 @@ def caretaker_fact_lines(species: Species) -> list[str]:
 
     water = []
     if sp.water_check_depth_cm is not None:
-        water.append(tag(f"feel the soil {_depth_said(sp.water_check_depth_cm)} "
-                         "cm down to decide", "water_check_depth_cm"))
+        water.append(tag(f"feel the soil {depth_said(sp.water_check_depth_cm)} "
+                         "down to decide", "water_check_depth_cm"))
     growing, dormant = sp.water_growing_days_est, sp.water_dormant_days_est
     if growing is not None or dormant is not None:
         if growing is not None and dormant is not None:

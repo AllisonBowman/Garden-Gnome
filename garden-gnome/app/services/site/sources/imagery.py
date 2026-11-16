@@ -49,7 +49,7 @@ SERVICE = "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/
 SOURCE_NAME = ("National Agriculture Imagery Program aerial photography, United States "
                "Department of Agriculture, through the United States Geological Survey "
                "National Map")
-SOURCE_DETAIL = "Public domain. Shows the area around your pin, about 500 metres across."
+SOURCE_DETAIL = "Public domain. Shows the area around your pin, about 1,600 feet across."
 SOURCE_URL = "https://www.usgs.gov/centers/eros/science/usgs-eros-archive-aerial-photography-national-agriculture-imagery-program-naip"
 SUFFIX = "_naip"
 META_SUFFIX = "_naipmeta"

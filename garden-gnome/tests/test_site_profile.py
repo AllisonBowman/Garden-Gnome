@@ -173,8 +173,8 @@ def test_full_profile_with_every_source(iso, sources, inline):  # noqa: F811
     # The hours ride alongside the category word, additively.
     assert sun["facts"] == {"hours": 4.6}
     assert all(v["facts"] is None for f, v in values.items() if f != "sun")
-    assert ("Counts the slope of the ground and tree canopy mapped at "
-            "1 metre detail. Buildings are not counted.") in sun["reason"]
+    assert ("Counts the slope of the ground and tree canopy mapped in squares "
+            "about 3 feet across. Buildings are not counted.") in sun["reason"]
     assert sun["confidence_label"] == "Rough estimate"  # default footprint, no buildings
     assert sun["override_kind"] == "choice"
     assert [c["value"] for c in sun["override_choices"]] == ["full_sun", "part_shade", "shade"]

@@ -240,7 +240,7 @@ def test_water_line_wording_and_no_dry_down_target():
     sp = sourced_species(water_dry_down_target="verbatim researcher prose")
     water = line_starting(species_fact_lines(sp), "- Water:")
     assert water == (
-        "- Water: let the surface dry between waterings; check 3 cm down; "
+        "- Water: let the surface dry between waterings; check 1 inch down; "
         "roughly every 7 days in growth, 14 in dormancy (estimate)")
 
     for regime, sentence in (
@@ -316,7 +316,7 @@ def test_row_borrowed_entirely_from_the_genus_says_so():
     lines = species_fact_lines(borrowed)
     assert "cold damage" not in line_starting(lines, "- Temperature:")
     assert line_starting(lines, "- Water:").startswith(
-        "- Water: check 3 cm down (genus-inferred)")
+        "- Water: check 1 inch down (genus-inferred)")
     assert ("- Care data: borrowed from the genus, not confirmed for this "
             "species") in lines
     value_lines = [ln for ln in lines if ln.startswith((
@@ -373,12 +373,12 @@ def test_a_borrowed_water_detail_is_labelled_but_the_regime_never_is():
         ALL_SOURCED, water_check_depth_cm="genus_inferred"))
     prompt = _build_prompt(sp, make_plant(), [], [])
     assert ("- Water: let the surface dry between waterings; "
-            "check 3 cm down (genus-inferred)") in prompt
+            "check 1 inch down (genus-inferred)") in prompt
     lines = _advise_stub(sp, make_plant(), [], []).splitlines()
     assert line_starting(lines, "💧 From its sources:") == \
         "💧 From its sources: let the surface dry between waterings."
     assert line_starting(lines, "💧 Water check:").startswith(
-        "💧 Water check: feel the soil 3 cm down to decide (borrowed from the genus)")
+        "💧 Water check: feel the soil 1 inch down to decide (borrowed from the genus)")
     assert "water_regime" in HARM_CAPABLE
 
 
@@ -485,7 +485,7 @@ def test_no_prompt_style_line_reaches_a_caretaker():
     assert not re.search(r"\d-\d", text), "a hyphen for a range"
     assert not any(ln.startswith("- ") for ln in lines), "a prompt fact line"
     assert line_starting(lines, "💧 Water check:").startswith(
-        "💧 Water check: feel the soil 5 cm down to decide")
+        "💧 Water check: feel the soil 2 inches down to decide")
 
 
 def test_a_dormancy_only_estimate_keeps_its_unit():

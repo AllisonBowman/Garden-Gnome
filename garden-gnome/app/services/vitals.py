@@ -111,7 +111,7 @@ def _weather_cards(fc: fcm.Forecast, today: date, frost_bias: Optional[str],
             tone="ok",
             explained=_nws_explained(fc, f"{period}: {cur['temp_f']} {DEGREE}.",
                                      "The first period of the Weather Service forecast for your area. "
-                                     "It is a forecast for an area about 2.5 kilometres across, not a "
+                                     "It is a forecast for an area about a mile and a half across, not a "
                                      "thermometer in your yard.")))
     # Frost: the first night in seven with a frost band on the adjusted low.
     hit = None

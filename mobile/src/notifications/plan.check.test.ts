@@ -75,7 +75,7 @@ describe('the water reminder asks for a check, not a pour', () => {
       now: NOW,
     });
     expect(batches[0].body).toBe(
-      "Check Ferny — it's been 7 days. Feel the soil 3 cm down; water only if it's dry there.");
+      "Check Ferny — it's been 7 days. Feel the soil 1 inch down; water only if it's dry there.");
   });
 
   it('a keep-moist species is checked at the surface, in its sources’ words', () => {

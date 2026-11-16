@@ -193,7 +193,7 @@ export default function PropertySetupScreen() {
 
           <Text style={styles.note}>
             The pin is what gets stored, not an address. Public soil, elevation and land maps are asked
-            only about an area about 500 metres across that contains it.
+            only about an area about 1,600 feet across that contains it.
           </Text>
 
           {(createM.isError || editM.isError) ? (
@@ -343,7 +343,7 @@ function PinOnImage({ imagery, uri, headers, pin, onPin, onGestureActive, palett
       <View style={styles.nudges}>
         {(['north', 'west', 'east', 'south'] as Direction[]).map((d) => (
           <Button key={d} mode="outlined" compact onPress={() => move(d)} textColor={palette.acc}
-            accessibilityLabel={`Move the pin a few metres ${d}`}>
+            accessibilityLabel={`Move the pin about 16 feet ${d}`}>
             {d === 'north' ? '↑' : d === 'south' ? '↓' : d === 'east' ? '→' : '←'}
           </Button>
         ))}

@@ -155,6 +155,38 @@ def _words(code: str) -> str:
     return code.replace("_", " ").strip().lower()
 
 
+FEET_PER_METRE = 3.28084
+
+
+def feet_said(metres: float) -> str:
+    """A map's grid size in metres, said in feet the way a gardener would:
+    "about 3 feet" for 1 metre, "about 10 feet" for 3, "about 30 feet" for
+    10, "about 100 feet" for 30.
+
+    The rule: convert to feet, then round to the nearest whole foot under
+    20 feet, to the nearest 10 feet from 20 up to 200 feet, and to the
+    nearest 100 feet above that, with a thousands comma ("about 1,600
+    feet"). Never less than 1 foot, and "1 foot" is singular."""
+    feet = max(0.0, float(metres)) * FEET_PER_METRE
+    if feet < 19.5:
+        n = max(1, int(feet + 0.5))
+    elif feet < 205:
+        n = int(feet / 10 + 0.5) * 10
+    else:
+        n = int(feet / 100 + 0.5) * 100
+    return f"about {n:,} {'foot' if n == 1 else 'feet'}"
+
+
+def squares_across(metres: float) -> str:
+    """'in squares about 3 feet across': the detail a map was made at."""
+    return f"in squares {feet_said(metres)} across"
+
+
+#: The ring around the pin the yard readings leave out (terrain.PIN_RADIUS_M,
+#: 10 metres), in the owner's words.
+LEAVES_OUT_HOUSE = " Leaves out about 33 feet around your pin, where the house usually is."
+
+
 def source(key: str, version: str = "", detail: Optional[Mapping] = None) -> dict:
     """A Source shape for a source key. A reading may name itself through
     detail["source_name"] / ["source_detail"] / ["source_url"]."""
@@ -452,10 +484,10 @@ def _survey(d: Mapping, res: Optional[float]) -> str:
     what = ("a laser ground survey" if res is not None and res <= 3.5
             else "an elevation survey")
     out = f"From {what}"
-    if res is not None:
-        out += f" at {res:g} metre detail"
     if year:
         out += f" flown in {year}"
+    if res is not None:
+        out += (", mapped " if year else " mapped ") + squares_across(res)
     return out + " (United States Geological Survey 3D Elevation Program)."
 
 
@@ -467,7 +499,7 @@ def slope(r: R, caps: tuple[str, ...], default_footprint: bool) -> Text:
     cls = _text(d, "class") or _slope_class(pct)
     display = f"Steepness: {cls}, about {round(pct):g}%."
     reason = _survey(d, _num(d.get("resolution_m")))
-    reason += " Leaves out 10 metres around your pin, where the house usually is."
+    reason += LEAVES_OUT_HOUSE
     if default_footprint:
         reason += " " + APPROX_YARD
     return Text(display, reason, sources_of([r], "3dep"))
@@ -543,7 +575,7 @@ def sun(r: Optional[R], rd: Mapping[str, Optional[R]], caps: tuple[str, ...],
         res = _num(d.get("canopy_resolution_m"))
         if "canopy_height" in counted and res is not None:
             words[counted.index("canopy_height")] = (
-                f"tree canopy mapped at {res:g} metre detail")
+                f"tree canopy mapped {squares_across(res)}")
         reason = ("Worked out on our server from the sun's path at your latitude. "
                   f"Counts {_list(words)}.")
     if "buildings" not in counted and "buildings" not in not_counted:
@@ -592,7 +624,7 @@ def water_collects(r: R, rd: Mapping[str, Optional[R]], caps: tuple[str, ...],
     reason = (f"Worked out from {_list(agreed)}." if agreed
               else "Worked out from the soil survey and the elevation survey.")
     if any(s in d.get("signals", []) for s in ("low_spot", "flow")):
-        reason += " Leaves out 10 metres around your pin, where the house usually is."
+        reason += LEAVES_OUT_HOUSE
     if "disturbed_soil" in caps:
         reason += " Part of this soil area is mapped as built-up land, so treat it as a starting guess."
     if "near_soil_map_line" in caps:
@@ -628,7 +660,7 @@ def land_cover(r: R, rd: Mapping[str, Optional[R]]) -> Text:
     if ts is not None:
         display += f" Trees cover {_percent(ts)} of the area."
     res = _num(d.get("resolution_m")) or 30
-    reason = f"From satellite land cover mapping at {res:g} metre detail"
+    reason = f"From satellite land cover mapping {squares_across(res)}"
     if d.get("year"):
         reason += f", year {d['year']}"
     reason += (". It describes the neighbourhood, not your lot; the zones you draw are "
@@ -683,7 +715,9 @@ def frost_dates(normals: Mapping[str, Any], caps: tuple[str, ...]) -> Optional[T
         km = _num(station.get("distance_km"))
         if km is not None:
             miles = km / 1.609
-            reason += f", about {round(miles):g} miles away" if miles >= 1 else ", under a mile away"
+            n = round(miles)
+            reason += (", under a mile away" if miles < 1
+                       else f", about {n} mile{'' if n == 1 else 's'} away")
     reason += ". Half of years come earlier than these dates and half later."
     if "stations_differ" in caps:
         reason += " Nearby stations differ by more than a week, so treat the dates as a range."
