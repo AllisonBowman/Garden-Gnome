@@ -263,7 +263,7 @@ export default function LandScreen() {
       ) : null}
 
       {sections.map((s) => (
-        <View key={s.key} style={styles.section} onLayout={(e) => remember(s.key, e.nativeEvent.layout.y)}>
+        <View key={s.key} style={styles.section} collapsable={false} onLayout={(e) => remember(s.key, e.nativeEvent.layout.y)}>
           <Eyebrow style={styles.eyebrow}>{s.title}</Eyebrow>
           {s.values.map((v) => row(v))}
         </View>
@@ -272,7 +272,7 @@ export default function LandScreen() {
       {profile.notes.map((n) => <Text key={n} style={styles.quietBlock}>{n}</Text>)}
 
       {/* ── Zones ── */}
-      <View style={styles.section} onLayout={(e) => remember('zones', e.nativeEvent.layout.y)}>
+      <View style={styles.section} collapsable={false} onLayout={(e) => remember('zones', e.nativeEvent.layout.y)}>
         <Eyebrow style={styles.eyebrow}>Your zones</Eyebrow>
         {zones.length === 0 ? (
           <Text style={styles.quiet}>
@@ -281,7 +281,7 @@ export default function LandScreen() {
           </Text>
         ) : null}
         {zones.map((z) => (
-          <View key={z.zone_id} style={styles.zone} onLayout={(e) => remember(`zone-${z.zone_id}`, e.nativeEvent.layout.y)}>
+          <View key={z.zone_id} style={styles.zone} collapsable={false} onLayout={(e) => remember(`zone-${z.zone_id}`, e.nativeEvent.layout.y)}>
             <Text style={styles.zoneName} accessibilityRole="header">{z.name}</Text>
             {groupValues(z.values).flatMap((s) => s.values).map((v) => row(v, z.zone_id))}
             {z.values.length === 0 ? <Text style={styles.quiet}>No values for this zone yet.</Text> : null}

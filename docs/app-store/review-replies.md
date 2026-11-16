@@ -1,5 +1,10 @@
 # Prepared replies to App Review for 1.1.3
 
+> **For 1.2.0:** these replies were written for 1.1.3, which was never
+> submitted. Before pasting one for 1.2.0 build 26, check every step and
+> claim in it against [review-notes.md](review-notes.md): Home replaced the
+> tabs, the land features are new, and photo identification is hidden.
+
 These are replies to paste into App Store Connect if App Review rejects 1.1.3
 or asks a question. They cover the risks in the table in
 `docs/go-to-market/research/review-risk.md` that a reply can answer: 2.1(a)

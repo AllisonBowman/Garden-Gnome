@@ -183,11 +183,6 @@ function AuthGate() {
     void setOnboardingSeen();
     setShowOnboarding(false);
   };
-  const onboardingAddPlant = () => {
-    void setOnboardingSeen();
-    setShowOnboarding(false);
-    if (navigationRef.isReady()) navigationRef.navigate('AddPlant', undefined);
-  };
 
   // Booting: keep the splash background, no flicker to login
   if (status === 'loading') return null;
@@ -206,7 +201,7 @@ function AuthGate() {
       <StatusBar style="light" />
       <RootNavigator />
       {showOnboarding && (
-        <Onboarding onSkip={dismissOnboarding} onAddPlant={onboardingAddPlant} />
+        <Onboarding onSkip={dismissOnboarding} />
       )}
     </NavigationContainer>
   );

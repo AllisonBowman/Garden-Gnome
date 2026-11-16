@@ -17,7 +17,7 @@
 // under the open block (Home: "Open in Your land").
 
 import React, { useState } from 'react';
-import { LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import Svg, { Circle, Rect } from 'react-native-svg';
 import { ReadingTile as Tile, ReadingTileKey, TileGauge, TileSteps } from '../land/readingTiles';
@@ -25,6 +25,7 @@ import ExplainedBlock from './ExplainedBlock';
 import ConfidenceChip from './ConfidenceChip';
 import Eyebrow from './Eyebrow';
 import { useAppTheme } from '../theme/ThemeProvider';
+import { useMeasuredWidth } from './useMeasuredWidth';
 import { Palette } from '../theme/tokens';
 
 export interface ReadingTileProps {
@@ -47,12 +48,11 @@ function gaugeColor(key: ReadingTileKey, p: Palette): string {
 /** A track with the reading's share filled, a dot at its end, and what
  *  each end of the track means under it. */
 function Gauge({ gauge, color, palette }: { gauge: TileGauge; color: string; palette: Palette }) {
-  const [w, setW] = useState(0);
-  const onLayout = (e: LayoutChangeEvent) => setW(e.nativeEvent.layout.width);
+  const { width: w, measureProps } = useMeasuredWidth();
   const x = Math.max(GAUGE_H / 2, Math.min(w - GAUGE_H / 2, gauge.fraction * w));
   return (
     <View>
-      <View onLayout={onLayout} style={styles.gauge}>
+      <View {...measureProps} style={styles.gauge}>
         {w > 0 ? (
           <Svg width={w} height={GAUGE_H + 4}>
             <Rect x={0} y={2} width={w} height={GAUGE_H} rx={GAUGE_H / 2} fill={palette.line2} />
@@ -92,8 +92,7 @@ function Steps({ steps, color, palette }: { steps: TileSteps; color: string; pal
 
 /** Sand, silt and clay side by side in one bar. */
 function MixBar({ mix, palette }: { mix: NonNullable<Tile['mix']>; palette: Palette }) {
-  const [w, setW] = useState(0);
-  const onLayout = (e: LayoutChangeEvent) => setW(e.nativeEvent.layout.width);
+  const { width: w, measureProps } = useMeasuredWidth();
   const parts = [
     { share: mix.sand, color: palette.hedge },
     { share: mix.silt, color: palette.sub },
@@ -101,7 +100,7 @@ function MixBar({ mix, palette }: { mix: NonNullable<Tile['mix']>; palette: Pale
   ];
   let x = 0;
   return (
-    <View onLayout={onLayout} style={styles.gauge}>
+    <View {...measureProps} style={styles.gauge}>
       {w > 0 ? (
         <Svg width={w} height={GAUGE_H + 4}>
           {parts.map((p, i) => {

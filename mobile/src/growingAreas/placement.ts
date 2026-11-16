@@ -36,8 +36,8 @@ export const FIRST_AREA_NAME = 'My Home';
  *  it exists — so the only useful advice is to set a space up first. */
 export const NO_AREA_NOTE =
   `You have no growing areas yet, so this plant will go in a new one called `
-  + `“${FIRST_AREA_NAME}”. Set up a space under Growing areas first if you’d `
-  + 'like it checked against this plant.';
+  + `“${FIRST_AREA_NAME}”. To have the space checked against this plant, first `
+  + 'add a growing space from Home.';
 
 /** Said when the areas could not be loaded: the plant still lands somewhere,
  *  and the screen says where rather than leaving it to be discovered — the

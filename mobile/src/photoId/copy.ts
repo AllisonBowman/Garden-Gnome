@@ -14,7 +14,7 @@ export const PHOTO_SUGGESTIONS_LABEL =
 
 /** Kept for the report email: what the gardener was shown. */
 export const SUGGESTED_OBSERVATION =
-  'Suggested from the photo — confirm it’s right, or pick another below.';
+  'Suggested from the photo. Confirm it’s right, or pick another below.';
 
 export const UNAVAILABLE_OBSERVATION =
   'Your phone can’t suggest plants from photos. Search for yours below.';

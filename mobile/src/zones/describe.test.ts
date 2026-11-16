@@ -1,7 +1,7 @@
 import {
   correctionBodies, correctionQuestions, defaultZoneBox, defaultZoneName, deleteBlockedReason,
   DEFAULT_SUN_CHOICES, draftProblem, emptyDraft, leafHabitApplies, squareAround, VEGETATION_CHOICES,
-  LEAF_HABIT_CHOICES, zoneCreateBody, zoneLabel, zonePatchBody, zoneShownValues, zoneValuesPending,
+  LEAF_HABIT_CHOICES, mapZoneLabel, zoneCreateBody, zoneLabel, zonePatchBody, zoneShownValues, zoneValuesPending,
 } from './describe';
 import { SiteValue, Zone } from '../types/site';
 
@@ -100,6 +100,14 @@ describe('what the map shows', () => {
     expect(zoneLabel({ name: 'Whole lot', is_whole_lot: true, boundary_source: 'default' }))
       .toBe('Approximate yard (typical United States lot size, not your property line)');
     expect(zoneLabel({ name: 'Whole lot', is_whole_lot: true, boundary_source: 'owner' })).toBe('Whole lot');
+  });
+  it('gives the map a short name for the default yard and keeps other names', () => {
+    expect(mapZoneLabel({ name: 'Whole lot', is_whole_lot: true, boundary_source: 'default' })).toBe('Your yard');
+    expect(mapZoneLabel({ name: 'Back lot', is_whole_lot: true, boundary_source: 'owner' })).toBe('Back lot');
+    expect(mapZoneLabel({ name: 'Garden bed', is_whole_lot: false, boundary_source: 'owner' })).toBe('Garden bed');
+    // The list under the map keeps the full, careful wording.
+    expect(zoneLabel({ name: 'Whole lot', is_whole_lot: true, boundary_source: 'default' }))
+      .toMatch(/^Approximate yard/);
   });
   it('shows sun and where water collects once the server has them', () => {
     expect(zoneValuesPending([])).toBe(true);

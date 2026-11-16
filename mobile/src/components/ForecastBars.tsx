@@ -15,8 +15,9 @@
 // screen: a rain line under the days and one sentence naming the frost
 // nights.
 
-import React, { useState } from 'react';
-import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useMeasuredWidth } from './useMeasuredWidth';
 import { Icon, Text } from 'react-native-paper';
 import Svg, { Circle, Line, Rect } from 'react-native-svg';
 import { ForecastDay } from '../types/site';
@@ -40,15 +41,14 @@ const HEAD = FORECAST_HEAD; // day name and icon above the bars
 
 export default function ForecastBars({ days, height = 120, today }: ForecastBarsProps) {
   const { palette, fonts } = useAppTheme();
-  const [width, setWidth] = useState(0);
-  const onLayout = (e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width);
+  const { width, measureProps } = useMeasuredWidth();
   if (days.length === 0) return null;
   const layout = forecastBars(days, { width: Math.max(width, 1), height, padTop: PAD, padBottom: PAD }, today);
   const anyRain = layout.days.some((d) => d.rainText);
   const frostLine = frostNightsLine(days, today);
 
   return (
-    <View onLayout={onLayout} style={styles.wrap}>
+    <View {...measureProps} style={styles.wrap}>
       {/* The chart's height is known before its width, so it is reserved on
           first paint and the notes below do not jump once it is measured. */}
       <View style={{ height: forecastChartHeight(height, anyRain) }}>

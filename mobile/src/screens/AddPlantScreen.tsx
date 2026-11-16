@@ -36,6 +36,13 @@ import {
   CHECK_FAILED, misfitIntro, misfitsOf, speciesFitNote,
 } from '../growingAreas/fitFindings';
 
+/** The initial condition choices (the stored values are unchanged), in two
+ *  rows of two so every label fits at 375 points wide. */
+const CONDITION_ROWS: Array<Array<{ value: string; label: string }>> = [
+  [{ value: 'excellent', label: 'Excellent' }, { value: 'good', label: 'Good' }],
+  [{ value: 'fair', label: 'Fair' }, { value: 'poor', label: 'Poor' }],
+];
+
 export default function AddPlantScreen() {
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
@@ -131,7 +138,7 @@ export default function AddPlantScreen() {
         "Couldn't save",
         serverMessage(
           err,
-          "This plant couldn't be saved just now. Check your connection and try again — nothing was lost.",
+          "This plant couldn't be saved just now. Check your connection and try again. Nothing was lost.",
         ),
       ),
   });
@@ -159,7 +166,7 @@ export default function AddPlantScreen() {
         'No match just now',
         serverMessage(
           err,
-          "The Gnome couldn't read this photo just now — you can still pick the species from the search below.",
+          "The Gnome couldn't read this photo just now. You can still pick the species from the search below.",
         ),
       ),
   });
@@ -225,7 +232,7 @@ export default function AddPlantScreen() {
         />
         {quantityValue > 1 && (
           <Text style={styles.quantityHint}>
-            Kept together as one planting — care you log covers all
+            Kept together as one planting. Care you log covers all
             {' '}{quantityValue}.
           </Text>
         )}
@@ -441,17 +448,20 @@ export default function AddPlantScreen() {
         />
 
         <Eyebrow style={styles.sectionLabel}>Initial condition</Eyebrow>
-        <SegmentedButtons
-          value={condition}
-          onValueChange={setCondition}
-          buttons={[
-            { value: 'excellent', label: 'Excellent' },
-            { value: 'good',      label: 'Good'      },
-            { value: 'fair',      label: 'Fair'      },
-            { value: 'poor',      label: 'Poor'      },
-          ]}
-          style={styles.segmented}
-        />
+        {/* Two rows of two: four in one row cut "Excellent" short on a
+            375 point wide phone (each button keeps 16 points of padding a
+            side). Same four values, one choice across both rows. */}
+        {CONDITION_ROWS.map((row, i) => (
+          <SegmentedButtons
+            key={i}
+            value={condition}
+            onValueChange={setCondition}
+            buttons={row.map((c) => ({
+              ...c, accessibilityLabel: `Initial condition: ${c.label}`,
+            }))}
+            style={i === CONDITION_ROWS.length - 1 ? styles.segmented : styles.segmentedRow}
+          />
+        ))}
 
         <Button
           mode="contained"
@@ -510,6 +520,7 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   fitFoot: { color: p.sub, fontSize: 12.5, lineHeight: 18, marginTop: 2 },
   retry: { alignSelf: 'flex-start', marginTop: 4 },
   segmented: { marginBottom: 8 },
+  segmentedRow: { marginBottom: 6 },
   saveBtn: { marginTop: 24, borderRadius: 8 },
   saveBtnContent: { paddingVertical: 6 },
 });

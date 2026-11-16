@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Alert, PanResponder, ScrollView, StyleSheet, View,
+  Alert, LayoutChangeEvent, PanResponder, ScrollView, StyleSheet, View,
 } from 'react-native';
 import { ActivityIndicator, Button, Card, Chip, Text, TextInput } from 'react-native-paper';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -18,7 +18,10 @@ import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
 import { useImagerySource } from '../land/useImagerySource';
 import { pixelRectToBox } from '../land/imageGeometry';
-import { viewRect, yardFocus, zoneRects as layoutZoneRects } from '../land/mapLayout';
+import {
+  ZoneRect, mapInk, placeLabels, viewRect, yardFocus, zoneRects as layoutZoneRects,
+} from '../land/mapLayout';
+import MapLabels from '../components/MapLabels';
 import {
   HANDLES, HANDLE_NAMES, Handle, Point, Rect, contains, handlePoint, hitHandle, hitZone,
   isUsableRect, moveHandle, moveRect, rectFromCorners, scaleRect,
@@ -26,7 +29,7 @@ import {
 import {
   DELETE_REFUSED, LEAF_HABIT_CHOICES, VEGETATION_CHOICES, VEGETATION_WORDS, ZoneDraft,
   correctionQuestions, defaultZoneBox, deleteBlockedReason, draftFromZone,
-  draftProblem, emptyDraft, leafHabitApplies, zoneA11yLabel, zoneLabel,
+  draftProblem, emptyDraft, leafHabitApplies, mapZoneLabel, zoneA11yLabel, zoneLabel,
   zoneShownValues, zoneValuesPending,
 } from '../zones/describe';
 import { AnswersNotSaved, saveZone } from '../zones/save';
@@ -63,6 +66,7 @@ export default function ZoneMapScreen() {
   const { propertyId } = params;
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
+  const ink = mapInk(palette);
   const queryClient = useQueryClient();
 
   const imageryQ = useQuery({
@@ -288,6 +292,11 @@ export default function ZoneMapScreen() {
                   styles={styles}
                 />
               ))}
+              <ZoneLabels
+                rects={zoneRects.filter((zr) => zr.id !== editingId)}
+                ctx={ctx}
+                ink={ink}
+              />
               {mode.kind !== 'view' && !editingId && rect ? <DraftBox rect={rect} ctx={ctx} styles={styles} /> : null}
               {drawing ? (
                 <DrawLayer imagery={imagery} rect={rect} onRect={setRect} ctx={ctx} styles={styles} />
@@ -442,7 +451,41 @@ function ZoneBox({ zone, rect, ctx, active, styles }: {
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
     >
-      <Text style={styles.boxLabel} numberOfLines={2}>{zoneLabel(zone)}</Text>
+      {/* Only the box being edited carries its name inside it; the others
+          are named by ZoneLabels, placed so names never break inside a word. */}
+      {active ? <Text style={styles.boxLabel} numberOfLines={2}>{mapZoneLabel(zone)}</Text> : null}
+    </View>
+  );
+}
+
+/**
+ * The names of the boxes not being edited, placed the way LandMap places
+ * them (mapLayout.placeLabels, MapLabels): wrapped only at spaces, at most
+ * two lines, outside the box when it does not fit, inside the view, on a
+ * see-through plate. Drawn zones come before the whole lot so their names
+ * win. Decorative and touch-transparent: taps still reach the image.
+ */
+function ZoneLabels({ rects, ctx, ink }: {
+  rects: ZoneRect[]; ctx: TopDownImageContext; ink: { line: string; halo: string };
+}) {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const onLayout = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    setSize({ width, height });
+  };
+  const ordered = [...rects].sort((a, b) => Number(a.zone.is_whole_lot) - Number(b.zone.is_whole_lot));
+  const labels = size.width > 0
+    ? placeLabels(ordered.map((r) => ({ id: r.id, text: mapZoneLabel(r.zone), box: viewRect(r.rect, ctx) })), size)
+    : [];
+  return (
+    <View
+      style={StyleSheet.absoluteFill}
+      pointerEvents="none"
+      onLayout={onLayout}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
+      <MapLabels labels={labels} width={size.width} ink={ink} />
     </View>
   );
 }

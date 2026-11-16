@@ -15,8 +15,9 @@
 // status); with `onPressEvent` it is a button with a 44 point target.
 // Colours by tone: frost warn, autumn hedge, spring good, settled line.
 
-import React, { useState } from 'react';
-import { LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
+import React from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { useMeasuredWidth } from './useMeasuredWidth';
 import { Text } from 'react-native-paper';
 import Svg, { Circle, Line, Rect } from 'react-native-svg';
 import { SeasonEventSummary } from '../types/site';
@@ -53,8 +54,7 @@ function toneColor(tone: TimelineTone, p: Palette): string {
 
 export default function SeasonTimeline({ events, onPressEvent, today }: SeasonTimelineProps) {
   const { palette, fonts } = useAppTheme();
-  const [width, setWidth] = useState(0);
-  const onLayout = (e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width);
+  const { width, measureProps } = useMeasuredWidth();
   const layout = width > 0 ? seasonTimeline(events, { width, charWidth: CHAR_W }, today) : null;
   if (layout && layout.items.length === 0) return null;
   const height = timelineHeight(layout ? layout.rows : 1);
@@ -62,7 +62,7 @@ export default function SeasonTimeline({ events, onPressEvent, today }: SeasonTi
 
   return (
     <View style={styles.wrap}>
-    <View onLayout={onLayout} style={{ width: '100%', height }}>
+    <View {...measureProps} style={{ width: '100%', height }}>
       {layout ? (
         <>
           <View

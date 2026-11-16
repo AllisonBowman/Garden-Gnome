@@ -192,6 +192,10 @@ def _land_cards(session: Session, prop: Property) -> list[VitalCard]:
         values = site_profile(session, prop).values
     except Exception as exc:  # the profile is a teammate's; Home must still answer
         logger.info("site profile unavailable for vitals: %s", exc)
+        # A failed flush leaves the session needing a rollback, and the rest
+        # of the report reads with it. Everything this request wrote is
+        # committed already (the plan commits its own writes).
+        session.rollback()
     by_field = {v.field: v for v in values if v.zone_id is None}
     cards = []
     for key, title, fields in _LAND:

@@ -1,9 +1,14 @@
-# Export compliance for 1.1.3
+# Export compliance for 1.2.0 (build 26)
+
+Confirmed on 2026-11-16 against `master` at `8379754`. 1.2.0 adds no
+cryptography to the app. Its new dependency, `react-native-svg`
+(`mobile/package.json`), only draws, and the map images load over HTTPS from the same server,
+through iOS networking, like every other request.
 
 ## The answer
 
 PlantAdvocate uses no encryption except what iOS itself provides, so it
-needs no export documentation. `mobile/app.json:79` sets
+needs no export documentation. `mobile/app.json:79` still sets
 `ITSAppUsesNonExemptEncryption` to `false` in the app's Info.plist. App
 Store Connect reads that key from each uploaded build and doesn't ask the
 encryption questions at all.

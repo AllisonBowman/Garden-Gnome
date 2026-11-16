@@ -27,7 +27,8 @@ test('a suggestion always asks the gardener to confirm it', () => {
   expect(PHOTO_SUGGESTIONS_LABEL).toMatch(/^Suggested from the photo/);
   expect(PHOTO_SUGGESTIONS_LABEL).toMatch(/check it’s right/);
   expect(SUGGESTED_OBSERVATION).toMatch(/^Suggested from the photo/);
-  expect(SUGGESTED_OBSERVATION).toMatch(/confirm/);
+  expect(SUGGESTED_OBSERVATION).toMatch(/confirm/i);
+  expect(SUGGESTED_OBSERVATION).not.toContain("\u2014");
 });
 
 test('no line names the machinery', () => {
