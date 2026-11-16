@@ -2,6 +2,8 @@
 // PrivacyInfo.xcprivacy at build time, where nobody reads them until a
 // reviewer does, so the test reads them here.
 //
+import { PHOTO_ID_ENTRY_SHOWN } from './photoId/entry';
+
 // app.json is read from source the way support.version.test.ts reads it.
 declare const require: (id: string) => any;
 declare const __dirname: string;
@@ -56,13 +58,34 @@ test('each string names the feature that uses it', () => {
   expect(shown.NSCameraUsageDescription).toMatch(/check-up/);
   expect(shown.NSCameraUsageDescription).toMatch(/Walk the garden/);
   expect(shown.NSPhotoLibraryUsageDescription).toMatch(/photo of a plant/);
+  expect(shown.NSPhotoLibraryUsageDescription).toMatch(/check-up/);
+  // Both places the "Use my location" button appears: setting up your land,
+  // and a growing area's place (components/AddressPicker.tsx).
+  expect(shown.NSLocationWhenInUseUsageDescription).toMatch(/Use my location/);
+  expect(shown.NSLocationWhenInUseUsageDescription).toMatch(/your land/);
   expect(shown.NSLocationWhenInUseUsageDescription).toMatch(/growing area/);
   expect(shown.NSLocationWhenInUseUsageDescription).toMatch(/forecast/);
+  expect(shown.NSLocationWhenInUseUsageDescription).toMatch(/public maps/);
   expect(shown.NSMicrophoneUsageDescription).toMatch(/Walk the garden/);
   expect(shown.NSSpeechRecognitionUsageDescription).toMatch(/Walk the garden/);
   // Where the sound goes, since the policy promises it never reaches us.
   expect(shown.NSSpeechRecognitionUsageDescription).toMatch(/Apple/);
   expect(shown.NSMicrophoneUsageDescription).toMatch(/never receives/);
+});
+
+test('no string offers what this version does not', () => {
+  // Photo identification is hidden from 1.2.0 (src/photoId/entry.ts). While
+  // it is, no prompt may say the phone can suggest what a plant is. When the
+  // entry is switched back on, the camera and photos strings change with it.
+  expect(PHOTO_ID_ENTRY_SHOWN).toBe(false);
+  for (const text of Object.values(shown)) {
+    expect(text).not.toMatch(/suggest what it is/i);
+    expect(text).not.toMatch(/identif/i);
+  }
+  // A photo check-up is only ever described as something offered later:
+  // the server has it switched off (care/aiCapabilities.ts).
+  expect(shown.NSCameraUsageDescription).toMatch(/When photo check-ups are offered/);
+  expect(shown.NSPhotoLibraryUsageDescription).toMatch(/When photo check-ups are offered/);
 });
 
 test('the image picker repeats the camera and microphone strings exactly', () => {
