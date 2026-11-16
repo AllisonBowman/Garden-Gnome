@@ -1,167 +1,160 @@
-# App Privacy answers for 1.1.3
+# App Privacy answers for 1.2.0 (build 26)
 
-These are the answers for App Store Connect > App Privacy, checked against
-the code at `307930e` on `care-advice-honesty`, with the review fixes made
-alongside it. Files those fixes are still changing are cited by function,
-not line. They describe the build as it ships, with photo check-ups and
-free-text symptom reading switched off on the server.
-Production's `GET /ai/status` answered `advisor_symptoms_backend: "stub"`
-and `vision.ready: false` on 16 October, and the app shows neither feature
-while it says so (`mobile/src/care/aiCapabilities.ts:45-55`).
+These are the answers for App Store Connect > App Privacy, checked on
+2026-11-16 against `master` at `8379754`, the commit build 26 is made from,
+against the privacy manifest in `mobile/app.json`, and against the published
+policy text in `site/privacy.html` (effective November 16, 2026 in the copy read
+on 2026-11-16; another change was editing it at the same time). They describe the build as it ships: identifying a
+plant from a photo is hidden (`mobile/src/photoId/entry.ts`), and photo
+check-ups and free-text questions are switched off on the server, so the app
+hides them (`mobile/src/care/aiCapabilities.ts`).
 
-App Privacy belongs to the app, not to a build. It can be changed at any
-time and the change goes live without a review. That matters here, because
-photo check-ups can be switched on from the server with no app update.
-Update these answers first (see "Before switching on photo check-ups or
-symptom reading" below).
+## Does anything in App Store Connect need changing from 1.1.3?
+
+**No answer changes.** 1.2.0 collects more data, but every new item falls
+inside a data type and purpose the 1.1.3 answers already declared:
+
+- the land pin, the zone boxes and the spot sent to fetch the aerial image
+  are **Precise Location** (already declared, App Functionality);
+- the land's town, state, country and time zone are **Coarse Location**
+  (already declared, App Functionality and Analytics);
+- the land's name, what is on the lot, the frost-earlier-or-later answer,
+  each zone's description, every correction and every seasonal answer are
+  **Other User Content** (already declared, App Functionality and
+  Analytics);
+- reporting a land result is an email to support, **Customer Support**
+  (already declared).
+
+No new type is added: no push token (alerts are local notifications), no
+photos, no audio, no street address, no search history. The privacy
+manifest in `mobile/app.json` already lists exactly the 7 types below with
+the same purposes, so it needs no change either.
+
+What does need doing: App Privacy was answered on paper for 1.1.3, and
+nothing in the repository records that the answers were saved and
+published in App Store Connect. Open App Privacy, check each type against
+the table below, and press Publish if it offers to. App Privacy belongs to
+the app, not to a build, and a change goes live without a review.
 
 Privacy Policy URL (asked on this page): `https://plantadvocate.ai/privacy`.
 Leave the optional User Privacy Choices URL blank. The only choice in the
-app is the census switch, which is in the app itself.
+app is the census switch in Settings.
 
 ## The first question
 
 **Do you or your third-party partners collect data from this app?** Yes.
-
-Apple counts data as collected when it leaves the phone and is kept longer
-than it takes to answer the request. PlantAdvocate's server keeps the
-account, the plants and their records, so the answer is yes.
+The server keeps the account, plants, growing spaces and land.
 
 ## Collected
 
-None of the collected data is used for tracking. No data is combined with
-other companies' data for advertising, and no data goes to a data broker.
-So for every row below, **Used for tracking = No**.
-
-Each type is linked to the user, because it is stored under the account.
-For the 2 types the census can count (Coarse Location and Other User
-Content), the export carries no account identifier. But Apple asks once per
-type, and the same data is linked for app functionality.
+None of the collected data is used for tracking, combined with other
+companies' data for advertising, or sold. So for every row,
+**Used for tracking = No**. Each type is **linked to the user**, because it
+is stored under the account.
 
 | Apple category | Data type | Linked | Purposes | Where in the code |
 |---|---|---|---|---|
-| Contact Info | Name | Yes | App Functionality | Apple's full name, sent only at first sign-in, and Google's profile name are stored as `User.display_name` (`mobile/src/auth/signIn.ts:57-67`; `garden-gnome/app/routers/auth.py`, `sign_in_with_apple` and `sign_in_with_google`; `models.py:256`) |
-| Contact Info | Email Address | Yes | App Functionality | The Apple or Google email, which may be an Apple relay address, is stored in `User.email` and `AuthIdentity.email_at_signup` and used to link a second sign-in method to the same account (`auth.py`, `_sign_in`; `models.py:255, 288`) |
-| Identifiers | User ID | Yes | App Functionality | The account's own ID and the Apple and Google subject IDs (`garden-gnome/app/models/models.py:254, 287`) |
-| Location | Precise Location | Yes | App Functionality | A growing area's latitude and longitude, from "Use my location" or a geocoded address, are stored on the area and sent from the server to fetch its forecast (`mobile/src/location/lookup.ts:12-38`; `models.py:611-612`; `garden-gnome/app/services/weather.py:376-396`) |
-| Location | Coarse Location | Yes | App Functionality, Analytics | A growing area's city, region and country are stored on the area (`models.py:608-610`). For people who join the census, they are the only location in the operator's census export (`garden-gnome/app/routers/census.py`, `build_export`, the `growing_area` block) |
-| User Content | Customer Support | Yes | App Functionality | "Report this result" and the support address in Settings open a prefilled email to support@plantadvocate.ai, carrying the result text, the plant and species, and the app version. The reply is kept in that mailbox (`mobile/src/support.ts:35-53`; `components/ReportResult.tsx:35`; `SettingsScreen.tsx:435-442`) |
-| User Content | Other User Content | Yes | App Functionality, Analytics | Nicknames, spot notes, intake notes, counts, care logs and their outcomes, moves between areas, and each growing area's name, surface, measurements, conditions and goals (`models.py:593-722`; `mobile/src/api/plants.ts:101-156`; `api/growingAreas.ts:51-80`). For people who join the census, the operator's export 4.1 counts each planting's species, how many, growth stage, starting condition, the month it was acquired, its care as counts per month, the months it moved between growing areas and any split link, with no nickname, notes, day-level date or account ID (`census.py`, `build_export`) |
+| Contact Info | Name | Yes | App Functionality | Apple's full name at first sign-in, or Google's profile name, stored as `User.display_name` (`garden-gnome/app/models/models.py:326`; `mobile/src/auth/signIn.ts`) |
+| Contact Info | Email Address | Yes | App Functionality | The Apple or Google email, possibly an Apple relay address, in `User.email` and `AuthIdentity.email_at_signup` (`models.py:325, 358`) |
+| Identifiers | User ID | Yes | App Functionality | The account ID and the Apple and Google subject IDs (`models.py:324, 352-358`) |
+| Location | Precise Location | Yes | App Functionality | New in 1.2.0: the land pin as exact coordinates, with whether it came from the phone's location or from placing it (`models.py:726-752`, `Property.pin_lat`, `pin_lng`, `pin_source`); each zone's box as a GeoJSON polygon and its copy of the pin (`models.py:711-720`, `boundary_geojson`; `garden-gnome/app/routers/properties.py:217-224`); the outline each site reading was worked out for (`models.py:757-782`, `SiteReading`; `site/privacy.html`, "Your land"). The spot the app sends before the pin is placed is used to fetch the aerial image and is not kept (`mobile/src/api/properties.ts:200-203`; `site/privacy.html`, "Your land's pin"). As in 1.1.3: a growing space's coordinates, for its forecast (`models.py:684-685`) |
+| Location | Coarse Location | Yes | App Functionality, Analytics | New in 1.2.0: the land's town, state, country and time zone, filled on the server from the National Weather Service answer (`models.py:743-746`; `site/privacy.html`, "Your land"), and copied to each zone (`properties.py:217-224`). As in 1.1.3: a growing space's city, region and country. For people who join the census, a zone's or space's city, region and country are the only location in the operator's export (`garden-gnome/app/routers/census.py:265-272`) |
+| User Content | Customer Support | Yes | App Functionality | Report a fact, Report this result and the support address open a prefilled email to support (`mobile/src/support.ts:35-63`; `mobile/src/components/ReportResult.tsx`, `ReportFact.tsx`). A land result is reported by email too (`site/privacy.html`, "AI Processing") |
+| User Content | Other User Content | Yes | App Functionality, Analytics | New in 1.2.0: the land's name, lot contents and frost bias (`models.py:739, 747-749`); each zone's name, what grows there and leaf habit (`models.py:711-720`); every correction, including ones taken back (`models.py:875-889`, `SiteOverride`); every seasonal answer, such as a frost that happened and its date, or a task done (`models.py:818-838`, `SeasonEventState`). As in 1.1.3: nicknames, notes, care logs and each space's description. The census counts plantings only; none of the new land data is in its export (`census.py:216-283`) |
 
-Analytics, here, means only the community census. It is off unless the
-person turns it on (`models.py:268`). It counts what people grow and how it
-fares, so the care advice can improve. Nothing else in the app or the server
-measures how the app is used.
+Analytics, here, means only the community census, off unless the person
+turns it on (`models.py:338`). Nothing else measures how the app is used.
 
 ## Not collected
 
 | Apple category | Data type | Why it is not collected |
 |---|---|---|
-| Contact Info | Phone Number, Physical Address, Other User Contact Info | Never asked for. A typed address is geocoded on the phone, and only the city, region, country and coordinates are saved (`mobile/src/location/geocode.ts:21-28`) |
-| Health & Fitness | Health, Fitness | Nothing in the app or server touches either |
-| Financial Info | Payment Info, Credit Info, Other Financial Info | The app is free, with no purchases (`mobile/package.json` has no purchase library) |
-| Location | (see above) | Both location types are declared above |
+| Contact Info | Physical Address, Phone Number, Other User Contact Info | A typed address goes to the phone's own geocoder (`mobile/src/location/lookup.ts:16-19`) and is never sent to the server: the land setup sends only the pin (`mobile/src/land/setup.ts:7-9`; `Property` has no address column, `models.py:726-752`) |
+| Health & Fitness | Health, Fitness | Nothing touches either. The motion string in `mobile/app.json` says the app never asks |
+| Financial Info | All | Free, with no purchases (`mobile/package.json`) |
 | Sensitive Info | Sensitive Info | Never asked for |
-| Contacts | Contacts | No contacts access in the app |
-| User Content | Emails or Text Messages | The app never reads the person's mail or messages. Support email is declared above as Customer Support |
-| User Content | Photos or Videos | Not in 1.1.3 as shipped. Identifying a plant from a photo runs on the phone, and the picture is never uploaded (`mobile/src/photoId/identify.ts:56-117`; `modules/plant-id/ios/PlantIdModule.swift:39-56`). The photo check-up, the only upload, is hidden while the server reports vision off (`mobile/src/screens/PlantDetailScreen.tsx:379`) |
-| User Content | Audio Data | Walk the garden turns speech into text through Apple's Speech framework, on the phone where it can and otherwise on Apple's servers (`mobile/modules/plant-speech/ios/PlantSpeechModule.swift:134, 180`). PlantAdvocate never receives the audio or the transcript, only the plants the person confirms (`mobile/src/screens/CaptureGardenScreen.tsx:197-204`; `api/plants.ts:135-139`) |
+| Contacts | Contacts | No contacts access |
+| User Content | Emails or Text Messages | The app never reads mail or messages. Support email is declared as Customer Support |
+| User Content | Photos or Videos | Nothing is uploaded in build 26. Photo identification is hidden, and the photo check-up, the only upload, is hidden while the server reports vision off. The aerial image is public map data the server fetches, not the person's photo. The Walk the garden camera is a live backdrop that is not recorded (`mobile/app.json`, `expo-camera` string) |
+| User Content | Audio Data | Speech becomes text through Apple's Speech framework. PlantAdvocate never receives the audio or the transcript, only the plants confirmed (`mobile/modules/plant-speech/ios/PlantSpeechModule.swift`; `mobile/src/consent/copy.ts`, the `voice` flow) |
 | User Content | Gameplay Content | No games |
 | Browsing History | Browsing History | No in-app browser. Links open in Safari |
-| Search History | Search History | Species search filters the list already on the phone. Search terms never reach the server (`mobile/src/api/species.ts:7-11`) |
-| Identifiers | Device ID | No advertising ID, no vendor ID, no push token. Reminders are local notifications (`mobile/src/notifications/reminders.ts:191`) |
+| Search History | Search History | Species search filters the list on the phone (`mobile/src/api/species.ts:7-11`, no search parameter). Address search runs on the phone |
+| Identifiers | Device ID | No advertising ID, vendor ID or push token. Care reminders and frost alerts are local notifications (`mobile/src/notifications/reminders.ts:323`); `site/privacy.html`, "Plants and growing areas" says no notification token is kept |
 | Purchases | Purchase History | No purchases |
-| Usage Data | Product Interaction, Advertising Data, Other Usage Data | No analytics or ad SDK in `mobile/package.json`, and no event endpoint on the server. Care logs are the person's own records, declared above as Other User Content |
-| Diagnostics | Crash Data, Performance Data, Other Diagnostic Data | No crash or performance SDK. The only logs are the server's own operational logs, which aren't tied to an account or used to study anyone |
-| Other Data | Other Data Types | Nothing else |
+| Usage Data | All | No analytics or ad SDK in `mobile/package.json`, and no event endpoint |
+| Diagnostics | All | No crash or performance SDK. Server logs are operational, not tied to studying anyone (`site/privacy.html`, "Technical data") |
+| Other Data | Other Data Types | Nothing else. Site readings worked out from public maps describe the land, and are covered by Precise Location (their outline) and Other User Content (the corrections beside them) |
 
 ## What the label will show
 
 "Data Linked to You": Contact Info, Identifiers, Location, User Content.
-
-"Data Used to Track You": nothing.
-
-"Data Not Linked to You": nothing.
+"Data Used to Track You": nothing. "Data Not Linked to You": nothing.
+The same as 1.1.3.
 
 ## Where the server sends data onward
 
 None of these is a third-party SDK in the app. They are services the
-PlantAdvocate server calls to do its job, and their data is already declared
-above.
+server calls, and their data is already declared above.
 
-- Sign-in: the phone talks to Apple or Google directly to sign in. The server
-  checks the token with them, and on account deletion asks Apple to revoke
-  the Sign in with Apple link (`garden-gnome/app/routers/auth.py`,
-  `delete_me`). If Apple doesn't accept at once, the encrypted grant, with
-  nothing that says whose it was, waits in `pending_apple_revocation` to be
-  retried and is deleted after 30 days or 10 tries, whichever comes first.
-  The privacy policy's deletion paragraph says so.
-- Weather: a growing area's coordinates go to Apple WeatherKit, then the U.S.
-  National Weather Service, then Open-Meteo, until one of them answers
-  (`garden-gnome/app/services/weather.py:376-396`). The in-app privacy
-  summary names all three (`mobile/src/consent/copy.ts`, the `location`
-  flow).
+- Sign-in: Apple or Google, and on account deletion a request to Apple to
+  revoke the sign-in (`garden-gnome/app/routers/auth.py:374-430`).
+- Public map services, asked about a block about 1,600 feet (500 meters)
+  across that contains the pin, never the pin: the U.S. Department of
+  Agriculture soil survey (`garden-gnome/app/services/site/sources/soil.py:35`),
+  the U.S. Geological Survey for elevation, land cover and aerial images
+  (`elevation.py:47`, `landcover.py:36`, `imagery.py:48`), and Amazon Web
+  Services for the canopy height map (`canopy.py:52`). The hardiness zone and
+  frost normals are read from files on the server.
+- The Sun, Trees and Water layer pictures are drawn on the server only from
+  copies of elevation and canopy data it already holds, and are stored with
+  the block's other copies and deleted with them
+  (`garden-gnome/app/services/site/layers.py`; provider `site_layers` in
+  `geodata_tile`). They send nothing anywhere.
+- Weather: coordinates rounded to about two-thirds of a mile go to the National
+  Weather Service, Apple Weather or Open-Meteo, in the order
+  `site/privacy.html`, "Weather" sets out.
 
+The policy names each of these (`site/privacy.html`, "What changed", "Public maps for your land", "Weather" and the list of who receives what).
 The Google Sign-In SDK is the one third-party SDK that handles personal
 data, and it only signs in. Before submitting, open the archived build in
 Xcode (Organizer > the archive > Generate Privacy Report) and check that it
 lists nothing beyond the types above.
 
-## The privacy manifest has to say the same
+## Deletion
 
-The app's privacy manifest (`expo.ios.privacyManifests` in
-`mobile/app.json`) should declare these entries. Each has
-`NSPrivacyCollectedDataTypeLinked = true` and
-`NSPrivacyCollectedDataTypeTracking = false`.
+Delete account removes the land with everything else: properties, site
+readings, corrections and seasonal answers
+(`garden-gnome/app/routers/properties.py:278-305`, called from `auth.py`,
+`delete_me`), and zones go with the growing areas. Map copies are filed by
+block with no user identifier, and a block's copies are pruned when no land
+in the records uses it (`garden-gnome/app/models/models.py:851-873`;
+`properties.py:300-301`).
 
-| `NSPrivacyCollectedDataType` | `NSPrivacyCollectedDataTypePurposes` |
-|---|---|
-| `NSPrivacyCollectedDataTypeName` | `NSPrivacyCollectedDataTypePurposeAppFunctionality` |
-| `NSPrivacyCollectedDataTypeEmailAddress` | `NSPrivacyCollectedDataTypePurposeAppFunctionality` |
-| `NSPrivacyCollectedDataTypeUserID` | `NSPrivacyCollectedDataTypePurposeAppFunctionality` |
-| `NSPrivacyCollectedDataTypePreciseLocation` | `NSPrivacyCollectedDataTypePurposeAppFunctionality` |
-| `NSPrivacyCollectedDataTypeCoarseLocation` | `NSPrivacyCollectedDataTypePurposeAppFunctionality`, `NSPrivacyCollectedDataTypePurposeAnalytics` |
-| `NSPrivacyCollectedDataTypeCustomerSupport` | `NSPrivacyCollectedDataTypePurposeAppFunctionality` |
-| `NSPrivacyCollectedDataTypeOtherUserContent` | `NSPrivacyCollectedDataTypePurposeAppFunctionality`, `NSPrivacyCollectedDataTypePurposeAnalytics` |
+## The privacy manifest says the same
 
-Also `NSPrivacyTracking = false`, with no tracking domains. There is no
-`PhotosorVideos` entry and no `AudioData` entry.
-
-Coarse Location and Customer Support are on this list because the code
-collects them. A growing area keeps its city, region and country, and the
-census export carries them. Reports and support mail arrive in PlantAdvocate's
-inbox. If the manifest leaves either out, add them there rather than
-dropping them here.
+`expo.ios.privacyManifests` in `mobile/app.json` declares Name, Email
+Address, User ID, Precise Location, Coarse Location (App Functionality and
+Analytics), Customer Support and Other User Content (App Functionality and
+Analytics), each linked and not tracking, with `NSPrivacyTracking` false and
+no tracking domains. No Photos or Videos, Audio Data or Device ID entry. It
+matches the table above and needs no change for 1.2.0.
 
 ## Before switching on photo check-ups or symptom reading
 
-Switching either on is a server setting, and the app shows it the next time
-it asks `GET /ai/status`. Do these first, in this order:
-
-1. Ship the in-app consent for sending a photo, or the question text, to
-   another company, and update the privacy policy to name that company.
-2. Here, add **User Content > Photos or Videos**: linked, App Functionality,
-   not tracking. A photo check-up uploads the photo under the person's
-   account (`mobile/src/api/plants.ts:191-217`), and the model that reads
-   it belongs to another company. Typed symptoms are already covered by
-   Other User Content (App Functionality), so symptom reading changes
-   nothing here, but the policy has to name the company that reads them.
-3. Add the `PhotosorVideos` entry to the privacy manifest in the next build.
-4. Only then change the server setting.
+Either is a server setting, and the app shows it the next time it asks
+`GET /ai/status`. First: ship in-app consent for sending a photo or a
+question to another company and name that company in the policy; add
+**User Content > Photos or Videos** here (linked, App Functionality, not
+tracking) for photo check-ups; add the `PhotosorVideos` entry to the
+manifest in the next build; only then change the server setting.
 
 ## If the census changes
 
-The census answers assume what 1.1.3 does. Joining is a switch in the app,
-off by default (`models.py:268`). Exporting is an operator job: with no
-`CENSUS_OPERATOR_TOKEN` set, `/census/export` and `/census/sync` answer 404
-(`garden-gnome/app/routers/census.py`, `require_operator`). Export 4.1
-(`build_export`) has no name, email, nickname, notes, coordinates, account
-ID or day-level date. Every identifier in it is made new for that export,
-its records come in a random order, and care is counted per type per
-calendar month. A planting's monthly counts could still resemble it in a
-later export, so the policy promises only that no identifier links 2
-exports, not that they can never be matched.
-
-If the export ever goes to another organization, say who in the privacy
-policy. If it ever carries a stable identifier, change Coarse Location and
-Other User Content here, and the consent copy in Settings.
+The census answers assume what 1.2.0 does: joining is a switch, off by
+default; export and sync answer only the operator
+(`garden-gnome/app/routers/census.py`, `require_operator`); the export has
+no name, email, nickname, notes, coordinates, account ID, land pin, zone box,
+correction or seasonal answer. If it ever goes to another organization, or
+carries a stable identifier, change Coarse Location and Other User Content
+here, the policy, and the consent copy in Settings.

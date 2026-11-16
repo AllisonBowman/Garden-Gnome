@@ -1,4 +1,6 @@
-import { aToZ, byCommonName, catalogCollation, foldName, matchesQuery } from './catalog';
+import {
+  aToZ, byCommonName, catalogCollation, emptyCatalogMessage, foldName, matchesQuery,
+} from './catalog';
 import { Species } from '../types';
 
 const sp = (id: number, common: string, scientific = 'Testus', over: Partial<Species> = {}) => (
@@ -83,4 +85,13 @@ test('a plain word still matches as it always did, and only where it appears', (
 
 test('folding lower-cases, single-spaces and writes the marker one way', () => {
   expect(foldName('  Citrus  ×paradisi ')).toBe('citrus x paradisi');
+});
+
+// --- the empty list ----------------------------------------------------------
+
+test('an empty catalog with no search says so, instead of quoting an empty search', () => {
+  expect(emptyCatalogMessage('')).toBe('No species to show yet.');
+  expect(emptyCatalogMessage('   ')).toBe('No species to show yet.');
+  expect(emptyCatalogMessage('fern')).toBe('No species match "fern".');
+  expect(emptyCatalogMessage(' fern ')).toBe('No species match "fern".');
 });

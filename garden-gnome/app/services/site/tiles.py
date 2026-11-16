@@ -9,13 +9,30 @@ knows when no property maps to it any more.
 
 Sources call `fetch_or_get`; the routes and account deletion call
 `prune_unused`, and the hourly housekeeping (app.services.housekeeping)
-calls `prune_expired` and `prune_unused`. Writes are flushed, and committed at once on a session
-marked with `commit_eagerly`, which every build step and imagery route
-does: a source usually makes another outbound request right after a write,
-and SQLite holds one write lock for the whole database, so a flushed but
-uncommitted tile would make every other write in the app wait for that
-request (and fail after the busy timeout). The tile cache is a cache, so
-committing it early loses nothing. `prune_unused` only flushes.
+calls `prune_expired` and `prune_unused`. `put` flushes, and commits at
+once on a session marked with `commit_eagerly`, which every build step and
+the imagery route does: a source usually makes another outbound request
+right after a write, and SQLite holds one write lock for the whole
+database, so a flushed but uncommitted tile would make every other write in
+the app wait for that request (and fail after the busy timeout). The tile
+cache is a cache, so committing it early loses nothing. `prune_unused` only
+flushes.
+
+A read (`get`, `get_json`) is never a write in the caller's session. The
+`last_used_at` bookkeeping a hit does (at most once an hour per tile) runs
+on its own short connection and transaction (`_touch`): one guarded UPDATE,
+committed at once, with a short wait for the lock, and skipped (logged at
+debug) when the database is busy, since a later hit does it instead. So a
+touch never raises to the caller, never leaves the caller's session needing
+a rollback, and never leaves a GET holding SQLite's write lock for the rest
+of the request. (It used to be flushed in the request's session: the
+request then held the write lock until it ended, which /vitals and
+/site-profile never committed, and the other requests of the Home screen
+waited on it until the busy timeout and failed with "database is locked".)
+The one exception: when the caller's session already holds a write
+transaction (it flushed a write, say a `put` of the same tile not yet
+committed), the touch is one more row in that transaction, since a second
+connection could neither see an uncommitted row nor get the lock.
 """
 from __future__ import annotations
 
@@ -23,12 +40,18 @@ import json
 import logging
 import os
 import shutil
+import threading
 import time
 import zlib
 from datetime import datetime, timedelta
-from typing import Callable, Iterable, Optional
+from typing import Any, Callable, Iterable, Optional
 
-from sqlmodel import Session, delete, select
+from sqlalchemy import or_, update
+from sqlalchemy.engine import Engine
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm.attributes import set_committed_value
+from sqlalchemy.pool import NullPool
+from sqlmodel import Session, create_engine, delete, select
 
 from app.models.models import GeodataTile, Property
 from app.services.site import grid
@@ -48,12 +71,19 @@ KEEP_RECENT = timedelta(hours=2)
 IMAGERY_PROVIDERS = frozenset({"naip"})
 
 
+#: The longest a `last_used_at` touch waits for SQLite's write lock before
+#: it is skipped (seconds). Short: a touch is bookkeeping, and a request
+#: must never wait on it.
+TOUCH_WAIT_S = 0.25
+
+
 _EAGER = "tiles_commit_eagerly"
 
 
 def commit_eagerly(session: Session) -> Session:
-    """Mark a session so tile writes commit at once (see the module note).
-    Returns the session."""
+    """Mark a session so `put` commits at once (see the module note).
+    Returns the session. Reads need no mark: they never write in the
+    session."""
     session.info[_EAGER] = True
     return session
 
@@ -89,17 +119,111 @@ def _row(session: Session, provider: str, dataset_version: str,
 def get(session: Session, provider: str, dataset_version: str, tile_key: str,
         *, now: Optional[datetime] = None) -> Optional[bytes]:
     """The stored bytes, or None when missing or expired. A hit moves
-    `last_used_at` forward."""
+    `last_used_at` forward, at most once an hour, outside the caller's
+    session (`_touch`); a busy database only skips that."""
     row = _row(session, provider, dataset_version, tile_key)
     t = _now(now)
     if row is None or (row.expires_at is not None and row.expires_at <= t):
         return None
     payload = zlib.decompress(row.payload)
     if row.last_used_at is None or t - row.last_used_at >= TOUCH_EVERY:
-        row.last_used_at = t
-        session.add(row)
-        _settle(session)
+        _touch(session, row, t)
     return payload
+
+
+# --- the last-used touch ------------------------------------------------------------
+
+_TOUCH_ENGINES: dict[Any, Engine] = {}
+_TOUCH_ENGINES_LOCK = threading.Lock()
+
+
+def _touch_statement(row_id: int, t: datetime):
+    """One row, and only if nobody moved it in the last hour (a concurrent
+    request may have just done so)."""
+    cutoff = t - TOUCH_EVERY
+    col = GeodataTile.__table__.c.last_used_at
+    return (update(GeodataTile.__table__)
+            .where(GeodataTile.__table__.c.id == row_id)
+            .where(or_(col.is_(None), col <= cutoff))
+            .values(last_used_at=t))
+
+
+def _memory_database(engine: Engine) -> bool:
+    db = engine.url.database or ""
+    return engine.dialect.name == "sqlite" and (
+        db in ("", ":memory:") or "mode=memory" in str(engine.url))
+
+
+def _touch_engine(engine: Engine) -> Engine:
+    """An engine on the same database with no pool (a touch never waits for
+    a pooled connection the requests are holding) and a short lock wait."""
+    key = engine.url
+    with _TOUCH_ENGINES_LOCK:
+        eng = _TOUCH_ENGINES.get(key)
+        if eng is None:
+            args = ({"check_same_thread": False, "timeout": TOUCH_WAIT_S}
+                    if engine.dialect.name == "sqlite" else {})
+            eng = create_engine(engine.url, poolclass=NullPool, hide_parameters=True,
+                                connect_args=args)
+            _TOUCH_ENGINES[key] = eng
+        return eng
+
+
+def _holds_write_transaction(session: Session) -> bool:
+    """True when the session's connection has a transaction open in the
+    driver. The SQLite driver opens one only for a write (reads run outside
+    a transaction), so this means the caller holds the write lock."""
+    try:
+        raw = session.connection().connection.dbapi_connection
+    except SQLAlchemyError:
+        return False
+    return bool(getattr(raw, "in_transaction", False))
+
+
+def _touch_within(session: Session, row_id: int, t: datetime) -> Optional[int]:
+    """The touch as one more statement in the caller's open transaction.
+    Through the connection, not the ORM: no flush, so a failure here never
+    marks the session as needing a rollback. Returns the rows changed, or
+    None when it failed."""
+    try:
+        return session.connection().execute(_touch_statement(row_id, t)).rowcount
+    except SQLAlchemyError as exc:
+        logger.debug("tile touch skipped in the caller's transaction (%s)",
+                     type(exc).__name__)
+        return None
+
+
+def _touch_apart(engine: Engine, row_id: int, t: datetime) -> Optional[int]:
+    """The touch on its own connection: BEGIN IMMEDIATE, the guarded UPDATE,
+    COMMIT. Returns the rows changed, or None when it was skipped."""
+    try:
+        with _touch_engine(engine).connect() as conn:
+            if conn.dialect.name == "sqlite":
+                conn.exec_driver_sql("BEGIN IMMEDIATE")
+            n = conn.execute(_touch_statement(row_id, t)).rowcount
+            conn.commit()
+            return n
+    except SQLAlchemyError as exc:  # usually "database is locked": a later hit touches it
+        logger.debug("tile touch skipped (%s)", type(exc).__name__)
+        return None
+
+
+def _touch(session: Session, row: GeodataTile, t: datetime) -> None:
+    """Move `row.last_used_at` to `t` without writing in the caller's
+    session (see the module note). Never raises."""
+    try:
+        bind = session.get_bind()
+        engine = getattr(bind, "engine", bind)
+        n: Optional[int] = None
+        if _memory_database(engine) or _holds_write_transaction(session):
+            n = _touch_within(session, row.id, t)
+        if n is None and not _memory_database(engine):
+            n = _touch_apart(engine, row.id, t)
+        if n:
+            # Keep the caller's copy in step without marking it changed.
+            set_committed_value(row, "last_used_at", t)
+    except Exception as exc:  # noqa: BLE001 -- bookkeeping never fails a read
+        logger.debug("tile touch skipped (%s)", type(exc).__name__)
 
 
 def put(session: Session, provider: str, dataset_version: str, tile_key: str,

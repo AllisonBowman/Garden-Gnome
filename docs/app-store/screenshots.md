@@ -1,9 +1,9 @@
-# Screenshots for 1.1.3
+# Screenshots for 1.2.0 (build 26)
 
-1.1.3 is iPhone only (`ios.supportsTablet` false in `mobile/app.json`), so
-App Store Connect asks for no iPad screenshots. If the build still says
-`true`, it will ask for 13-inch iPad shots as well. Fix the build rather
-than shooting them.
+1.2.0 is iPhone only and portrait only (`mobile/app.json`:
+`ios.supportsTablet` false, `orientation` portrait), so App Store Connect
+asks for no iPad screenshots. The new land features come first: a searcher
+sees the first three in the results list.
 
 ## Sizes
 
@@ -33,221 +33,90 @@ own size:
 All portrait. The app is locked to portrait (`mobile/app.json`
 `orientation`).
 
-## The demo account
+## The screenshot account
 
-Use an account made for the screenshots, not your own. Its name and email
-appear only in Settings, which is not in the list. The growing areas and
-plants live on the server, so the second simulator shows the same garden
-after signing in.
+Use an account made for the screenshots, not your own: its name and email
+show in Settings, which is not in the list. Land, zones and plants live on
+the server, so the second simulator shows the same account after signing in.
 
-Set this up against production, after the 1.1.3 backend is deployed.
-Since `7dac70d` the server dates a plant the day it's added, and with
-nothing logged its first check counts from that day
-(`mobile/src/care/schedule.ts`, `computeCareTasks`). The plan below adds
-everything 2 days ahead and logs water on chosen days, so that exactly
-Basil and Boston Fern are due on the day: Rosemary (every 7 to 14 days)
-and Snake Plant (every 14 to 21) aren't due yet, and Lady Fern and Chinese
-Wisteria have no check schedule.
+Set it up against production with both feature flags on, the day before the
+shoot, so the background reading and the map layers have finished. Use a
+public place, never a home address. The U.S. National Arboretum is the
+build spec's test landmark, and its block has the 1 metre elevation survey
+and canopy data that all 3 layers need
+(`docs/design/2026-11-15-sun-and-drainage-sources.md`).
 
-**2 days before the shoot:**
+1. Sign in. On the welcome cards tap Skip.
+2. Home > Add your land. Type `3501 New York Avenue NE, Washington, DC`,
+   tap the suggestion, Next. Leave the pin where the search put it, or
+   move it onto open ground, then This is my home. Tap Trees that drop their
+   leaves, Lawn and Garden beds, then Save your land, then See your report.
+3. Home > Everything about your land > Draw zones on the map. Add 3 zones
+   with Add a bed or area: a box over open lawn (Lawn or grass), a box over a
+   stand of trees (Trees, then Loses its leaves in fall), and a small box named
+   `Vegetable bed` (Garden bed). Save each.
+4. Home > All growing spaces (or Add a growing space) > the zone or space
+   of your choice > Add a plant here: add **Basil** and **Tomato**, so This
+   week has care in it. Optional.
+5. Next day, open Home and pull down once. Check that Your land no longer
+   says the map is being prepared, and that the Sun, Trees and Water chips
+   are all enabled. If one says it is still being prepared, wait and pull
+   again. If one says it is unavailable, shoot the others and say so.
 
-A new account opens with the first-run tips. Tap Skip.
-
-1. Growing areas tab > New growing area. Name **Back fence bed**, In-ground
-   bed, Footprint 24, Headroom 84, Soil depth 18, and a place (a town
-   search is enough). Next: leave Outdoors, Exposed, Full sun. Next: tick
-   Feeds pollinators. Create.
-2. On Back fence bed, Add a plant here 3 times: **Lady Fern**, **Chinese
-   Wisteria**, **Rosemary**.
-3. New growing area: **Kitchen windowsill**, Windowsill, no measurements,
-   the same place. Leave Indoors, Partial sun. No goals. Create.
-4. On Kitchen windowsill, add **Basil**, **Boston Fern** and **Snake Plant**.
-5. Open Boston Fern and tap Watered.
-
-**1 day before the shoot:** open Basil and tap Watered.
-
-**On the day:** Basil (water every 1 to 2 days) and Boston Fern (every 2 to
-4 days) are both due, so the Plants tab shows 2 checks.
-
-These species were checked on a scratch sync of the catalog at `b083a90`.
-Lady Fern misfits a full-sun bed on sun. Chinese Wisteria outgrows 84 in of
-headroom ("climbs to 25 ft and there is 7 ft of headroom"). Basil, Boston
-Fern and Snake Plant have care schedules. Basil, Boston Fern, Rosemary and
-Snake Plant have no edible-and-toxic conflict to show.
+Name the land in Your land > This property, for example `Arboretum test`.
+The place line on Home shows the land's name and town
+(`mobile/src/screens/HomeScreen.tsx`, `placeLine`).
 
 ## The shot list
 
-Shoot in this order. Upload in the order `docs/go-to-market/strategy.md`
-recommends, which differs: 01, 04, 06, then 02, 03, 05, 07, 08, so that the
-three a searcher sees in the results list are what doesn't suit a spot,
-checks not chores, and the hazard sentence. Each caption is 8 words, for the
-text over the screenshot if you frame them. Captions aren't an App Store
-Connect field. The set shot on 2026-10-23 and 24 is in
-`docs/screenshots/1.1.3/`, and all 16 files pass its `CHECK.md`.
+Shoot and upload in this order. Each caption is 8 words or fewer, for the
+text over the screenshot if you frame them; captions are not an App Store
+Connect field. Every caption describes what the shot shows, and none
+promises accuracy.
 
-### 1. What doesn't suit a spot
+| # | File | Screen | State it must be in | Caption |
+|---|---|---|---|---|
+| 1 | `01-home-forecast.png` | Home, top | The headline, the place line, and the Weather section with the forecast bars in full: each day's high and low, the 32 °F line if it falls in range, any frost nights marked, and the "Forecast: National Weather Service." credit. If the forecast is missing, wait and pull down; never shoot an empty Weather section | Today's weather and frost nights, at a glance. |
+| 2 | `02-home-land-map.png` | Home, scrolled to Your land | The land map on the Aerial chip, with the pin and the 3 zone boxes and labels, the chips row, and the reading tiles (sun hours, hardiness zone, where water collects, topsoil) with their confidence labels. No "still being prepared" line | Your land, read from public maps. |
+| 3 | `03-land-sun-layer.png` | Home > Everything about your land | The map with the Sun chip on, its legend (from "Under tree canopy" to "9 hours or more, full sun") and its notes ("Buildings are not counted." among them) in view | Where the sun falls in the growing season. |
+| 4 | `04-land-water-layer.png` | Your land | The Water chip on, with both legend steps ("runs through" and "collects") and the note "This is not a flood insurance determination." If the Water layer is unavailable at this spot, use the Trees chip instead and name the file `04-land-trees-layer.png` | Where water collects and runs after rain. |
+| 5 | `05-season-timeline.png` | Home > The whole season | The forecast bars and "The year at a glance" timeline with today marked, and the first event card below it with its status pill and tasks | Frost, leaf drop and spring, on one timeline. |
+| 6 | `06-zone-map.png` | Your land > Open the zone map | The aerial image with the 3 zone boxes and labels, and the Zones list under it with Add a bed or area | Draw a box over each bed, then describe it. |
+| 7 | `07-species-care-facts.png` | Home > Species > Snake Plant | The care facts and the Sources card together, sources named. A line labelled not yet cited may show and can stay | Care facts cited to the sources behind them. |
+| 8 | `08-species-hazards.png` | Species > Dumb Cane (Dieffenbachia) | The hazard sentence in full, naming people and pets, NC State's severity rating for people, and the parts, with the line "These notes repeat what the sources publish. They are not medical or veterinary advice." under it. If the sentence reads as if NC State rated the hazard to pets, don't shoot it, and say so | Harm to people and pets, stated plainly. |
 
-Screen: Growing areas > Back fence bed, top of the page.
+Why this order: shots 1 to 6 are what is new in 1.2.0 and what the
+subtitle promises; 7 and 8 are the plant features that carry over. If you
+want a ninth or tenth, add Walk the garden (Plants > Walk the garden, type
+`12 tomatoes along the south fence, a rosemary by the gate`, tap Add these,
+don't tap Add 2 to the garden) as `09-walk-the-garden.png`.
 
-Set up: "The space" card and "Needs addressing" in view, showing Lady Fern
-(sun) and Chinese Wisteria (headroom), each with its reason and source.
-
-<!-- field limit=8 unit=words exact -->
-```text
-See what doesn't suit each spot, and why.
-```
-Words: 8 of 8.
-
-### 2. Good candidates
-
-Screen: Back fence bed, scrolled to "Good candidates here".
-
-Set up: the list intro and 3 or more candidates in view, each with its
-confirmed line. Before shooting, read every visible name. A source's
-serious poison for people is never a candidate unless it is a food crop
-eaten without conditions (potato, eggplant, peanut, tomatillo and butter
-bean can appear, each with its hazard line). If mayapple, taro, wisteria,
-foxglove, English yew, monkshood or jimsonweed shows, the exclusion isn't
-in the build: don't shoot it, and say so. A food crop with a warning line
-is true, but scroll it out of frame if it would lead the shot.
-
-<!-- field limit=8 unit=words exact -->
-```text
-Plants that suit this spot, backed by sources.
-```
-Words: 8 of 8.
-
-### 3. The check before planting
-
-Screen: Back fence bed > Add a plant here.
-
-Set up: search Lady Fern and pick it, so the misfit box shows under the
-area buttons. Don't save. Go back afterwards.
-
-<!-- field limit=8 unit=words exact -->
-```text
-Check the spot before you plant, not after.
-```
-Words: 8 of 8.
-
-### 4. Checks, not chores
-
-Screen: Plants tab.
-
-Set up: the streak badges and the "Checks for today" card with Check
-Basil and Check Boston Fern, each offering Watered and Still damp, with
-the plant cards below. The card also says 2 plants have no check schedule
-for their species (Lady Fern and Chinese Wisteria). That line is true; keep
-it in if it fits, or let it fall below the frame.
-
-<!-- field limit=8 unit=words exact -->
-```text
-A check, not a chore: look, then log.
-```
-Words: 8 of 8.
-
-### 5. Cited care facts
-
-Screen: Species tab > Snake Plant.
-
-Set up: the care facts and the Sources card in view together. Snake Plant
-is cited to NC State Extension and others. Its page may also show an older
-value under "From the catalog — not yet cited". That label is the app
-being honest, so it can stay in frame, and it is why the caption says
-"each cited fact" rather than "every fact".
-
-<!-- field limit=8 unit=words exact -->
-```text
-Each cited fact names the source behind it.
-```
-Words: 8 of 8.
-
-### 6. Hazards, stated plainly
-
-Screen: Species tab > Dumb Cane (Dieffenbachia), a common houseplant whose
-cited record names people and pets, carries NC State's high Poison Severity
-rating, which is a rating for people, and names the parts. Pothos or Peace
-Lily also work; English Yew and Castor Bean do not, because their records
-name no parts on this build.
-
-Set up: the hazard sentence in view, naming people, pets, the parts, the
-rating and the Poison Control line. The severity word ("Seriously") belongs
-to people; pets are named as "toxic to" them unless the record says more.
-If the sentence reads as if NC State rated the hazard to pets, don't shoot
-it, and say so. If the sentence is cut off, scroll it fully into view
-before shooting.
-
-<!-- field limit=8 unit=words exact -->
-```text
-Harm to people and pets is stated plainly.
-```
-Words: 8 of 8.
-
-### 7. The Almanac, narrowed to a space
-
-Screen: Species tab > the "What suits one of your spaces" card > the
-Species Almanac.
-
-Set up: tap the "Fits Kitchen windowsill" chip. The list shows that area's
-candidates, with Basil marked as one you keep.
-
-<!-- field limit=8 unit=words exact -->
-```text
-Narrow the catalog to what fits your space.
-```
-Words: 8 of 8.
-
-### 8. Walk the garden
-
-Screen: Plants tab > Walk the garden.
-
-Set up: type `12 tomatoes along the south fence, a rosemary by the gate`
-and tap Add these, so 2 confirmed cards and "Add 2 to the garden" show.
-Don't tap it. On the simulator the backdrop is plain, which is fine.
-
-<!-- field limit=8 unit=words exact -->
-```text
-Walk the garden and say what is growing.
-```
-Words: 8 of 8.
-
-### Alternate: Ask the Gnome
-
-Use this in place of shot 6 or 7 if you'd rather show the advice.
-
-Screen: Plants tab > Basil > Ask the Gnome > Get care advice.
-
-Set up: the advice and its "rule-based" pill in view.
-
-<!-- field limit=8 unit=words exact -->
-```text
-Ask the Gnome: advice from facts and history.
-```
-Words: 8 of 8.
+Before shooting each screen, check that nothing on it is a loading spinner,
+an error line, or a "still being prepared" note.
 
 ## Never in a screenshot
 
 - Settings. It shows the account's name and email. A development or
-  preview build also shows the Backend connection card
-  (`mobile/src/screens/SettingsScreen.tsx:252-294`).
-- Photo identification. It needs Apple Intelligence, and the listing
-  doesn't lead with it.
-- A photo check-up or symptom box. They are hidden in production anyway.
-- Any loading spinner or error screen.
+  preview build also shows the Backend connection card.
+- Any home address or a pin on a private home. Use the Arboretum.
+- Photo identification, a photo check-up or a symptom box. They are hidden
+  in this build and must not appear in the listing.
+- Any loading spinner, error screen or empty section.
 
 ## Building and capturing on the simulator
 
 Use a Release build, so no developer menu, Metro banner, backend card or
-debug text can appear. These commands run from the main checkout on this
-Mac. Don't use `mobile/scripts/sim-build.sh`: it resets the checkout to
-another branch. `--clean` deletes and regenerates `mobile/ios/`, which git
-ignores, so only local edits there are lost.
+debug text can appear. Build from the commit build 26 was made from. Don't use
+`mobile/scripts/sim-build.sh`: it resets the checkout to another branch.
+`--clean` deletes and regenerates `mobile/ios/`, which git ignores.
 
-Don't reuse `docs/screenshots/`. Those are July development captures, and
-one of them shows the photo check-up this version hides.
+The 1.2.0 set uploaded on 2026-11-16 was captured on an iPhone 17 simulator
+(1206 x 2622) from a Release build pointed at a local test server holding the
+National Arboretum as its land, because the simulator cannot Sign in with Apple
+without the owner's Apple ID.
 
 ```sh
-cd ~/Developer/Garden-Gnome/mobile
+cd mobile
 
 # Regenerate ios/ from app.json, so the build is iPhone only and has the new icon.
 npx expo prebuild --platform ios --clean
@@ -287,7 +156,7 @@ needs the simulator itself signed in to an Apple Account (its Settings app).
 Then set up each screen and capture it:
 
 ```sh
-xcrun simctl io booted screenshot --type=png --mask=ignored ~/Desktop/pa-shots/6.9/01-needs-addressing.png
+xcrun simctl io booted screenshot --type=png --mask=ignored ~/Desktop/pa-shots/6.9/01-home-forecast.png
 ```
 
 `--mask=ignored` saves the whole rectangle, with no transparent rounded
@@ -310,7 +179,9 @@ sips -s format jpeg -s formatOptions 92 in.png --out in.jpg
 When you're done, `xcrun simctl status_bar booted clear` puts the real
 status bar back.
 
-In App Store Connect, open the 1.1.3 version, go to the iPhone screenshot
-sizes under Previews and Screenshots, and add each set to its size in the
-upload order above, 01, 04, 06, 02, 03, 05, 07, 08. If they land in file
-order, drag them into that order before you save.
+In App Store Connect, open the 1.2.0 version, go to the iPhone screenshot
+sizes under Previews and Screenshots, and add each set to its size in file
+order, 01 to 08. Or copy them into `mobile/store/apple/screenshot/en-US/`
+under each size's folder and replace the `screenshots` list in
+`mobile/store.config.json` with the new file names before
+`eas metadata:push`. The list there today names the 1.1.3 files.

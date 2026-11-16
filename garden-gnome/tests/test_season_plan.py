@@ -350,3 +350,124 @@ def test_zilker_vitals_read_plainly(iso):  # noqa: F811
     assert "Fall hardening" not in cards["season"].detail
     assert out.headline and "—" not in out.headline
     assert_explained(out.model_dump(mode="json"))
+
+
+# --- writes made while answering a GET, under concurrent requests ---------------------
+
+def test_two_requests_storing_the_same_forecast_cell_both_succeed(migrated_db_url):
+    """Home asks for /vitals and the seasonal plan at once: on a cold cache
+    both fetch the same cell and store it. The second store used to fail
+    the unique index on (cell, provider) and answer 500."""
+    from sqlalchemy import event
+    from sqlmodel import Session, create_engine
+    engine = create_engine(migrated_db_url)
+    now = datetime(2026, 11, 16, 2, 24)
+    with Session(engine) as a, Session(engine) as b:
+        assert fcm._cache_get(b, "wx2_1_2", fcm.PROVIDER, now) is None
+        stored_a = []
+
+        def a_stores():
+            fcm._cache_put(a, "wx2_1_2", fcm.PROVIDER, {"from": "a"}, now)
+            a.commit()
+            stored_a.append(True)
+
+        @event.listens_for(b, "do_orm_execute")
+        def a_stores_meanwhile(state):
+            """A stores the cell between B's look for a row and B's write:
+            after B's look when B looks first, else just before B writes."""
+            if stored_a:
+                return None
+            if state.is_select:
+                result = state.invoke_statement()
+                a_stores()
+                return result
+            a_stores()
+            return None
+
+        fcm._cache_put(b, "wx2_1_2", fcm.PROVIDER, {"from": "b"}, now)
+        b.commit()
+        assert stored_a
+    with Session(engine) as s:
+        rows = s.exec(select(ForecastCache).where(ForecastCache.cell_key == "wx2_1_2")).all()
+        assert [r.payload for r in rows] == [{"from": "b"}]
+        assert rows[0].expires_at == now + fcm.CACHE_LIFE
+    engine.dispose()
+
+
+def test_a_busy_database_loses_the_forecast_cache_write_not_the_request(migrated_db_url):
+    import sqlite3
+
+    from sqlmodel import Session, create_engine
+    engine = create_engine(migrated_db_url, connect_args={"timeout": 0.2})
+    holder = sqlite3.connect(migrated_db_url.removeprefix("sqlite:///"), timeout=0)
+    now = datetime(2026, 11, 16, 2, 24)
+    try:
+        holder.execute("BEGIN IMMEDIATE")
+        with Session(engine) as s:
+            fcm._cache_put(s, "wx2_1_3", fcm.PROVIDER, {"x": 1}, now)   # never raises
+            assert fcm._cache_get(s, "wx2_1_3", fcm.PROVIDER, now) is None  # usable; not kept
+    finally:
+        holder.rollback()
+        holder.close()
+    with Session(engine) as s:   # the next request stores it
+        fcm._cache_put(s, "wx2_1_3", fcm.PROVIDER, {"x": 1}, now)
+        assert fcm._cache_get(s, "wx2_1_3", fcm.PROVIDER, now) == {"x": 1}
+    engine.dispose()
+
+
+def test_two_requests_counting_weatherkit_calls_lose_no_count(migrated_db_url):
+    """The monthly quota counter: two first-of-the-month counts at once used
+    to insert two rows (the second failing the unique index), and two later
+    ones could both write calls + 1 over the same old value."""
+    from sqlalchemy import event
+    from sqlmodel import Session, create_engine
+    engine = create_engine(migrated_db_url)
+    now = datetime(2031, 1, 1, 0, 5)   # a month no other test counts in
+    try:
+        for _ in range(2):   # the first count of the month, then a later one
+            with Session(engine) as a, Session(engine) as b:
+                assert fcm._usage_ok(a, now) and fcm._usage_ok(b, now)
+                counted_a = []
+
+                def a_counts_meanwhile(state):
+                    """A counts between B's read of the counter and B's write."""
+                    if counted_a or state.session is not b:
+                        return None
+                    result = state.invoke_statement() if state.is_select else None
+                    fcm._count_usage(a, now)
+                    a.commit()
+                    counted_a.append(True)
+                    return result
+                event.listen(b, "do_orm_execute", a_counts_meanwhile)
+                fcm._count_usage(b, now)
+                b.commit()
+                assert counted_a
+        with Session(engine) as s:
+            rows = s.exec(select(ProviderUsage).where(ProviderUsage.month == "2031-01")).all()
+            assert [(r.provider, r.calls) for r in rows] == [(fcm.WEATHERKIT, 4)]
+    finally:
+        with Session(engine) as s:
+            for r in s.exec(select(ProviderUsage).where(ProviderUsage.month == "2031-01")).all():
+                s.delete(r)
+            s.commit()
+        engine.dispose()
+
+
+def test_home_still_answers_when_the_land_report_fails_with_a_failed_flush(iso, monkeypatch):  # noqa: F811
+    """/vitals catches a failing land report and carries on, but the
+    session was left needing a rollback, so the next read (its spaces) used
+    to raise PendingRollbackError and the whole report answered 500."""
+    from app.services.site import profile as profile_mod
+    prop = _create(iso)
+
+    def broken(session, prop):
+        session.add(ProviderUsage(provider="broken", month=None))   # NOT NULL
+        session.flush()
+    monkeypatch.setattr(profile_mod, "site_profile", broken)
+    monkeypatch.setattr(vitals_mod, "_existing_weather", lambda *a, **k: None)
+    r = iso.client.get(f"/vitals?property_id={prop['id']}", headers=iso.a["headers"])
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert {c["value_text"] for c in body["cards"] if c["key"] in ("sun", "soil")} == {
+        "Not known yet"}
+    assert body["spaces"]

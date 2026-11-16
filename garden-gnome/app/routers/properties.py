@@ -679,7 +679,7 @@ def _imagery(session: Session, lat: float, lng: float,
     if not coverage.in_united_states(lat, lng):
         raise HTTPException(status_code=503, detail=IMAGERY_UNAVAILABLE)
     block = grid.snap_block(lat, lng)
-    tiles.commit_eagerly(session)  # no write lock held across the image fetch
+    tiles.commit_eagerly(session)  # a fetched image is committed as soon as it is stored
     # The image service is slow when cold (12 to 61 s measured). The app
     # waits 60 s for this route, so: one attempt that ends before that.
     client = site_http.OutboundClient(flag="site_profile",
@@ -734,7 +734,6 @@ def imagery_tile(tile_key: str, user: User = Depends(get_current_user),
     if module is None or not hasattr(module, "tile_jpeg"):
         raise HTTPException(status_code=404, detail="Image not found")
     data = module.tile_jpeg(session, tile_key)
-    session.commit()  # the tile cache moved last_used_at
     if data is None:
         raise HTTPException(status_code=404, detail="Image not found")
     return Response(content=data, media_type="image/jpeg",
@@ -777,7 +776,6 @@ def property_layers(request: Request, property_id: int,
         session, _layer_block(prop), property_id=prop.id,
         in_us=coverage.in_united_states(prop.pin_lat, prop.pin_lng),
         preparing=_layers_preparing(prop))
-    session.commit()  # the tile cache moved last_used_at
     return out
 
 
@@ -787,9 +785,11 @@ def property_layers(request: Request, property_id: int,
 def property_layer_image(request: Request, property_id: int, kind: str,
                          user: User = Depends(get_current_user),
                          session: Session = Depends(get_session)):
-    # Tile touches and the stored picture commit at once, so no write lock
-    # is held while the picture is drawn (seconds on the small machine).
-    tiles.commit_eagerly(session)
+    # Nothing is written before the picture is drawn (seconds on the small
+    # machine): reading the cached grids writes nothing in this session (the
+    # tile cache's last-used touch has its own transaction), so no write
+    # lock is held while drawing. The drawn picture is stored afterwards and
+    # committed below.
     prop = _owned_property(property_id, user, session)
     if kind not in layer_service.KINDS:
         raise HTTPException(status_code=404, detail="Map layer not found")
@@ -799,11 +799,10 @@ def property_layer_image(request: Request, property_id: int, kind: str,
         data = layer_service.layer_png(session, _layer_block(prop), kind,
                                        property_id=prop.id)
     except layer_service.LayerNotReady as exc:
-        session.commit()
         detail = (layer_service.not_ready_text(_layers_preparing(prop))
                   if exc.status == "not_ready" else exc.text)
         raise HTTPException(status_code=409, detail=detail) from None
-    session.commit()  # the tile cache moved last_used_at, or stored the picture
+    session.commit()  # a freshly drawn picture was stored
     return Response(content=data, media_type="image/png",
                     headers={"Cache-Control": "private, max-age=86400"})
 

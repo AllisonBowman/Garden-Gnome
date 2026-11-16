@@ -38,7 +38,9 @@ describe('what the picker says when it has nothing to show', () => {
   });
 
   it('points at setting a space up first — the made area cannot be described later', () => {
-    expect(NO_AREA_NOTE).toMatch(/Set up a space under Growing areas first/);
+    // There are no tabs: the way to a new space is Home's "Add a growing space".
+    expect(NO_AREA_NOTE).toMatch(/first add a growing space from Home/);
+    expect(NO_AREA_NOTE).not.toMatch(/\btab\b|under Growing areas/i);
   });
 
   it('says where the plant goes when the areas could not be loaded', () => {

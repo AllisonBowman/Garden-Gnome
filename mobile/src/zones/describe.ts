@@ -207,6 +207,17 @@ export function zoneLabel(z: Pick<Zone, 'name' | 'is_whole_lot' | 'boundary_sour
   return z.name;
 }
 
+/** The short name drawn on the map itself (the zone map and LandMap). The
+ *  whole-lot zone on its default boundary is "Your yard" there; the list
+ *  under the map and the map's spoken description keep zoneLabel, which says
+ *  the boundary is an approximate guess. Every other zone shows its own name. */
+export const DEFAULT_YARD_MAP_NAME = 'Your yard';
+
+export function mapZoneLabel(z: Pick<Zone, 'name' | 'is_whole_lot' | 'boundary_source'>): string {
+  if (z.is_whole_lot && z.boundary_source === 'default') return DEFAULT_YARD_MAP_NAME;
+  return z.name;
+}
+
 /** The values shown under a saved zone: sun and where water collects. */
 export const ZONE_VALUE_FIELDS: SiteField[] = ['sun', 'water_collects'];
 

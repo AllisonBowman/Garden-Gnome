@@ -33,9 +33,10 @@ import Svg, { Circle, Rect as SvgRect } from 'react-native-svg';
 import { Imagery, MapLayer, Zone } from '../types/site';
 import TopDownImage, { TopDownImageContext } from './TopDownImage';
 import { useSignedImage } from '../land/useSignedImage';
-import { LABEL_STYLE, mapInk, pinPoint, placeLabels, viewRect, yardFocus, zoneRects } from '../land/mapLayout';
+import { mapInk, pinPoint, placeLabels, viewRect, yardFocus, zoneRects } from '../land/mapLayout';
 import { layerPicturePath, layerReady, mapA11yLabel, pictureLoadKey } from '../land/mapLayers';
-import { zoneLabel } from '../zones/describe';
+import { mapZoneLabel, zoneLabel } from '../zones/describe';
+import MapLabels from './MapLabels';
 import { useAppTheme } from '../theme/ThemeProvider';
 
 export interface LandMapProps {
@@ -156,7 +157,7 @@ function MapMarks({ ctx, imagery, rects, ink, pinColor }: {
   const pin = size.width > 0 ? pinPoint(imagery, ctx, size) : null;
   // Wrapped only at spaces, inside the box or just outside it, off the pin.
   const labels = size.width > 0
-    ? placeLabels(boxes.map(({ r, box }) => ({ id: r.id, text: zoneLabel(r.zone), box })), size, { pin })
+    ? placeLabels(boxes.map(({ r, box }) => ({ id: r.id, text: mapZoneLabel(r.zone), box })), size, { pin })
     : [];
 
   return (
@@ -189,22 +190,7 @@ function MapMarks({ ctx, imagery, rects, ink, pinColor }: {
           ) : null}
         </Svg>
       ) : null}
-      {labels.map((l) => (
-        // The rows are already broken at spaces; no fixed width, so the text
-        // sizes to its own lines and is never broken inside a word.
-        <Text
-          key={l.id}
-          style={[styles.label, {
-            left: l.left, top: l.top, maxWidth: Math.max(0, size.width - l.left), color: ink.line,
-            fontSize: LABEL_STYLE.fontSize, lineHeight: LABEL_STYLE.lineHeight, textShadowColor: ink.halo,
-            // A see-through plate in the halo colour, so an outline that runs
-            // behind the name does not strike through it.
-            backgroundColor: /^#[0-9a-fA-F]{6}$/.test(ink.halo) ? `${ink.halo}B3` : undefined,
-          }]}
-        >
-          {l.rows.join('\n')}
-        </Text>
-      ))}
+      <MapLabels labels={labels} width={size.width} ink={ink} />
     </View>
   );
 }
@@ -212,10 +198,6 @@ function MapMarks({ ctx, imagery, rects, ink, pinColor }: {
 const styles = StyleSheet.create({
   placeholder: {
     width: '100%', minHeight: 120, borderRadius: 12, alignItems: 'center', justifyContent: 'center', padding: 12,
-  },
-  label: {
-    position: 'absolute', fontWeight: '700', textShadowRadius: 3, textShadowOffset: { width: 0, height: 1 },
-    paddingHorizontal: 3, marginLeft: -3, borderRadius: 4, overflow: 'hidden',
   },
   note: { fontSize: 12.5, lineHeight: 18, marginTop: 6 },
 });

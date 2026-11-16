@@ -9,7 +9,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { fetchSpeciesList } from '../api/species';
 import { Species } from '../types';
 import { legacyStats, waterRegimeSentence } from '../care/facts';
-import { matchesQuery } from '../care/catalog';
+import { emptyCatalogMessage, matchesQuery } from '../care/catalog';
 import { SpeciesStackParamList } from '../../App';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -159,14 +159,14 @@ export default function SpeciesScreen() {
                 What suits one of your spaces ›
               </Text>
               <Text variant="bodySmall" style={styles.almanacSub}>
-                The same catalog, narrowed to one of your growing areas — the
-                species with the most confirmed for it first.
+                The same catalog, narrowed to one of your growing areas. The
+                species with the most confirmed for it come first.
               </Text>
             </Card.Content>
           </Card>
         )}
         ListEmptyComponent={
-          <Text style={styles.empty}>No species match "{search}".</Text>
+          <Text style={styles.empty}>{emptyCatalogMessage(search)}</Text>
         }
       />
     </View>

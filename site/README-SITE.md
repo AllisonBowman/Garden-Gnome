@@ -83,6 +83,20 @@ History:
   United States, and an hourly cleanup clears expired copies). Support and
   Pricing no longer offer identifying a plant from a photo, which 1.2.0
   hides, and Support says location is also used to find your land.
+- 2026-11-16: the privacy policy is effective November 16, 2026, for the
+  land map on Home and Your land (master 8379754, build 25). It adds a "Map
+  layers" paragraph (Sun, Trees and Water are drawn on the server only from
+  its copies of elevation and canopy height data, and send nothing outside
+  it), says the drawn pictures are copies filed by block that expire no
+  later than the data they were drawn from, says when the aerial image can
+  be asked for (only when the server has no copy or its copy is past its
+  age limit: at pin setup, when the public maps are read, and when Home,
+  Your land or the zone map shows the map), and says a map layer log names
+  the property number and the layer, never the block. Every length is now
+  in feet or miles first, with meters after it. Support adds answers on the
+  map and its layer chips, what each layer does not count, a layer that is
+  not ready ("Read the public maps again" on Your land), the forecast bars
+  and season timeline, and why lengths are in feet. Not yet deployed.
 
 ## Deploying
 

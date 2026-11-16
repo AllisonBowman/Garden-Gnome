@@ -33,6 +33,8 @@ from datetime import date, datetime, timedelta, timezone
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from sqlalchemy.exc import OperationalError
 from sqlmodel import Session, delete, select
 
 from app.models.models import ForecastCache, Property, ProviderUsage
@@ -242,16 +244,29 @@ def _cache_get(session: Session, cell: str, provider: str, now: datetime) -> Opt
 
 
 def _cache_put(session: Session, cell: str, provider: str, payload: dict, now: datetime) -> None:
+    """Store (or replace) one cached answer and commit it at once, so no
+    write lock is held across the outbound calls that follow (the points
+    answer is stored before the gridpoint fetch).
+
+    One upsert: Home asks for /vitals and the seasonal plan at once, and
+    both may miss the same cell, fetch it and store it; a plain insert made
+    the second fail the unique index on (cell, provider). And a cache is
+    worth losing rather than failing the request for: when the database
+    stays busy past the busy timeout, the write is rolled back (the session
+    is left usable) and the next request fetches again. Call it with
+    nothing else of the caller's pending: it commits."""
     if WEATHERKIT in provider.lower() or "apple" in provider.lower():
         raise ValueError("Apple WeatherKit data is never stored (PLAN.md D10)")
-    row = session.exec(select(ForecastCache).where(ForecastCache.cell_key == cell)
-                       .where(ForecastCache.provider == provider)).first()
-    if row is None:
-        row = ForecastCache(cell_key=cell, provider=provider, payload=payload,
-                            fetched_at=now, expires_at=now + CACHE_LIFE)
-    else:
-        row.payload, row.fetched_at, row.expires_at = payload, now, now + CACHE_LIFE
-    session.add(row)
+    values = {"payload": payload, "fetched_at": now, "expires_at": now + CACHE_LIFE}
+    try:
+        session.execute(sqlite_insert(ForecastCache)
+                        .values(cell_key=cell, provider=provider, **values)
+                        .on_conflict_do_update(index_elements=["cell_key", "provider"],
+                                               set_=values))
+        session.commit()
+    except OperationalError as exc:
+        logger.info("forecast cache not kept this time (%s)", type(exc).__name__)
+        session.rollback()
 
 
 def prune_expired(session: Session, *, now: Optional[datetime] = None) -> int:
@@ -355,10 +370,8 @@ def get_forecast(session: Session, lat: float, lng: float, *,
                 client.close()
     except Exception as exc:  # an enhancement, never a hard dependency
         logger.info("forecast unavailable for %s: %s", cell, exc)
-        session.commit()  # keeps an "outside coverage" answer
-        return None
+        return None  # an "outside coverage" answer was kept by _cache_put
     _cache_put(session, cell, PROVIDER, _serialise(fc), now)
-    session.commit()
     return fc
 
 
@@ -384,13 +397,16 @@ def _usage_ok(session: Session, now: datetime) -> bool:
 
 
 def _count_usage(session: Session, now: datetime) -> None:
+    """One more call this month, as one atomic upsert: two requests counting
+    at once neither lose a count (a read, then a write of calls + 1) nor
+    fail the unique index on (provider, month) with two first-of-the-month
+    inserts. The caller commits (the plan does)."""
     month = now.strftime("%Y-%m")
-    row = session.exec(select(ProviderUsage).where(ProviderUsage.provider == WEATHERKIT)
-                       .where(ProviderUsage.month == month)).first()
-    if row is None:
-        row = ProviderUsage(provider=WEATHERKIT, month=month, calls=0)
-    row.calls += 1
-    session.add(row)
+    table = ProviderUsage.__table__
+    session.execute(sqlite_insert(ProviderUsage)
+                    .values(provider=WEATHERKIT, month=month, calls=1)
+                    .on_conflict_do_update(index_elements=["provider", "month"],
+                                           set_={"calls": table.c.calls + 1}))
 
 
 def add_second_opinion(session: Session, fc: Optional[Forecast], lat: float, lng: float, *,

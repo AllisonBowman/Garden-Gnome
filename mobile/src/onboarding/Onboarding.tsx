@@ -2,16 +2,25 @@ import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import type { RootStackParamList } from '../navigation/types';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
-import { SLIDES } from './slides';
+import { FINISH, SLIDES } from './slides';
 
 interface Props {
+  /** Marks onboarding as seen and hides it. */
   onSkip: () => void;
-  onAddPlant: () => void;
 }
 
-export default function Onboarding({ onSkip, onAddPlant }: Props) {
+export default function Onboarding({ onSkip }: Props) {
+  // Rendered inside the NavigationContainer but outside the stack, so this is
+  // the container's own navigation object.
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const finish = () => {
+    onSkip();
+    navigation.navigate(FINISH.route);
+  };
   const { palette, fonts } = useAppTheme();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [index, setIndex] = useState(0);
@@ -40,21 +49,17 @@ export default function Onboarding({ onSkip, onAddPlant }: Props) {
         </View>
         <Button
           mode="contained"
-          onPress={isLast ? onAddPlant : () => setIndex((i) => i + 1)}
+          onPress={isLast ? finish : () => setIndex((i) => i + 1)}
           style={styles.cta}
           contentStyle={styles.ctaContent}
           buttonColor={palette.btn}
           textColor={palette.btnInk}
         >
-          {isLast ? 'Add your first plant' : 'Next'}
+          {isLast ? FINISH.label : 'Next'}
         </Button>
-        {isLast ? (
-          <Pressable onPress={onSkip} hitSlop={8}>
-            <Text style={styles.later}>Maybe later</Text>
-          </Pressable>
-        ) : (
-          <View style={styles.laterSpacer} />
-        )}
+        {/* The last button already ends onboarding on Home, so no second
+            "Maybe later" link that would do the same; Skip stays at the top. */}
+        <View style={styles.laterSpacer} />
       </View>
     </SafeAreaView>
   );
@@ -84,6 +89,5 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
   dotActive: { backgroundColor: p.acc, width: 22 },
   cta: { borderRadius: 10, alignSelf: 'stretch' },
   ctaContent: { paddingVertical: 8 },
-  later: { color: p.sub, fontSize: 15, marginTop: 16 },
   laterSpacer: { height: 31, marginTop: 16 },
 });

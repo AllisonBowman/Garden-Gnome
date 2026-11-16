@@ -56,3 +56,11 @@ export function matchesQuery(s: Species, query: string): boolean {
     .map(foldName);
   return names.some((n) => n.includes(q) || (bare !== '' && withoutMarker(n).includes(bare)));
 }
+
+/** What the catalog says when its list is empty: that nothing matches the
+ *  search, or, with no search typed, that there are no species yet (never
+ *  `No species match ""`). */
+export function emptyCatalogMessage(search: string): string {
+  const q = search.trim();
+  return q ? `No species match "${q}".` : 'No species to show yet.';
+}

@@ -1,11 +1,16 @@
-# Age rating for 1.1.3
+# Age rating for 1.2.0 (build 26)
 
 App Store Connect > App Information > Age Rating. The questions are the
 ones on Apple's "Age ratings values and definitions" page as it read on
-15 October 2026. Answers are checked against the code at `307930e`.
+15 October 2026. Answers were rechecked on 2026-11-16 against `master` at
+`8379754`, the commit build 26 is made from, and they match the `advisory`
+block pulled into `mobile/store.config.json`, which is left unchanged.
 
-The expected result is **4+**. Nothing below is answered in a way that
-raises it.
+The expected result is still **4+**. Nothing 1.2.0 adds changes an answer:
+the land map, layers, zones, seasonal plan and frost alerts are about a
+person's own yard and its weather. Nobody else sees them, they carry no
+mature content, and "Why and data source" links open in Safari
+(`mobile/src/components/ExplainedBlock.tsx:87`).
 
 ## In-App Controls
 
@@ -18,8 +23,8 @@ raises it.
 
 | Question | Answer | Why |
 |---|---|---|
-| Unrestricted Web Access | No | There is no in-app browser or web view. Source links, the weather credit and support links open in Safari (`mobile/src/components/CareFacts.tsx:118`, `components/WeatherCredit.tsx:39`, `support.ts:17-19`) |
-| User-Generated Content | No | Nicknames, notes, care logs and growing areas are private to the account and are never shown to anyone else. The census, for people who join it, is counted by the operator. No one else ever sees it in the app (`garden-gnome/app/routers/census.py`, `census_summary`, serves only the caller's own summary) |
+| Unrestricted Web Access | No | There is no in-app browser or web view. Source links, the weather credit, the land's data source links and support links open in Safari (`mobile/src/components/CareFacts.tsx:118`, `components/WeatherCredit.tsx:39`, `components/ExplainedBlock.tsx:87`, `support.ts:17-19`) |
+| User-Generated Content | No | Nicknames, notes, care logs, growing areas, land, zones and corrections are private to the account and are never shown to anyone else. The census, for people who join it, is counted by the operator. No one else ever sees it in the app (`garden-gnome/app/routers/census.py`, `census_summary`, serves only the caller's own summary) |
 | Social Media | No | No feed, likes, follows or sharing |
 | Social Media Disabled for Users Under 13 | No | There is no social media to disable |
 | Messaging and Chat | No | People can't contact each other in the app. Support is an email to PlantAdvocate |
@@ -60,7 +65,7 @@ warning people about foxglove would be a strange result.
 | Cartoon or Fantasy Violence | None | |
 | Realistic Violence | None | |
 | Prolonged Graphic or Sadistic Realistic Violence | None | |
-| Guns or Other Weapons | None | The only blade is the scissors icon on the Pruned button (`mobile/src/screens/PlantDetailScreen.tsx:50`) |
+| Guns or Other Weapons | None | The only blade is the scissors icon on the Pruned button (`mobile/src/screens/PlantDetailScreen.tsx:55`) |
 
 ## Chance-Based Activities
 
@@ -68,7 +73,7 @@ warning people about foxglove would be a strange result.
 |---|---|---|
 | Gambling | No | |
 | Simulated Gambling | None | |
-| Contests | None | Streak badges such as First Sprout and Green Thumb mark a person's own care record (`mobile/src/streaks/streaks.ts:200-215`). There is no event, ranking or competition between people. Even "Infrequent" would still give 4+ |
+| Contests | None | Streak badges such as First Sprout and Green Thumb mark a person's own care record (`mobile/src/streaks/streaks.ts:197-210`). There is no event, ranking or competition between people. Even "Infrequent" would still give 4+ |
 | Loot Boxes | No | |
 
 ## The rest of the page
