@@ -170,6 +170,9 @@ def test_full_profile_with_every_source(iso, sources, inline):  # noqa: F811
     sun = values["sun"]
     assert sun["value"] == "part_shade"
     assert "about 4.5 hours" in sun["display"]
+    # The hours ride alongside the category word, additively.
+    assert sun["facts"] == {"hours": 4.6}
+    assert all(v["facts"] is None for f, v in values.items() if f != "sun")
     assert ("Counts the slope of the ground and tree canopy mapped at "
             "1 metre detail. Buildings are not counted.") in sun["reason"]
     assert sun["confidence_label"] == "Rough estimate"  # default footprint, no buildings
@@ -385,6 +388,8 @@ def test_owner_sun_correction_wins_and_the_estimate_stays_visible(iso, sources, 
     sun = _value(body["values"], "sun")
     assert sun["confidence_label"] == "You told us" and sun["provenance"] == "owner"
     assert sun["value"] == "full_sun" and sun["display"].startswith("Sun: full sun")
+    # An owner's answer has no hours.
+    assert sun["facts"] is None
     assert sun["public"]["confidence_label"] == "Rough estimate"
     assert "part shade" in sun["public"]["display"]
     assert sun["sources"][0]["name"] == "Your correction"
@@ -401,6 +406,7 @@ def test_owner_sun_correction_wins_and_the_estimate_stays_visible(iso, sources, 
     back = iso.client.delete(f"/properties/{prop['id']}/overrides/sun", headers=h).json()
     sun = _value(back["values"], "sun")
     assert sun["value"] == "part_shade" and sun["public"] is None
+    assert sun["facts"] == {"hours": 4.6}
 
 
 def test_soil_acidity_measured_and_choices_refused(iso, sources, inline):  # noqa: F811
@@ -469,3 +475,15 @@ def test_the_real_hardiness_source_through_the_profile(iso, monkeypatch):  # noq
     assert hz["display"].startswith("Hardiness zone 8a:")
     assert hz["confidence_label"] == "Area estimate"
     assert "either could apply" in hz["reason"]
+
+
+def test_sun_facts_carry_the_hours_and_nothing_else():
+    from app.services.site.copy import R
+    r = lambda v: R(field="sun_estimate", value=v, level="low", source_key="sunpos")  # noqa: E731
+    assert profile._facts_of("sun", r({"category": "full_sun", "hours": 7})) == {"hours": 7.0}
+    assert profile._facts_of("sun", r({"category": "full_sun", "hours": 6.96})) == {"hours": 7.0}
+    assert profile._facts_of("sun", r({"category": "full_sun"})) is None
+    assert profile._facts_of("sun", r({"category": "full_sun", "hours": True})) is None
+    assert profile._facts_of("sun", r("full_sun")) is None
+    assert profile._facts_of("sun", None) is None
+    assert profile._facts_of("slope", r({"hours": 3})) is None

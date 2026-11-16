@@ -2,7 +2,7 @@ import axios from 'axios';
 import { apiClient, getBaseUrl } from './client';
 import { getAccessToken } from '../auth/tokenStorage';
 import {
-  Box, Imagery, OverridePut, Property, PropertyCreate, PropertyPatch,
+  Box, Imagery, MapLayers, OverridePut, Property, PropertyCreate, PropertyPatch,
   RefreshAccepted, SeasonEvent, SeasonEventPut, SeasonalPlan, SiteField,
   SiteProfile, Vitals, Zone, ZoneCreate, ZonePatch,
 } from '../types/site';
@@ -65,6 +65,7 @@ export const SITE_QUERY_KEYS = {
   zones: (id: number) => ['properties', id, 'zones'] as const,
   imagery: (id: number) => ['properties', id, 'imagery'] as const,
   seasonalPlan: (id: number) => ['properties', id, 'seasonalPlan'] as const,
+  mapLayers: (id: number) => ['properties', id, 'mapLayers'] as const,
   vitals: ['vitals'] as const,
 };
 
@@ -230,16 +231,24 @@ export async function imageryUri(imagery: Pick<Imagery, 'image_path'>): Promise<
  * image element cannot send a sign-in header (the web preview).
  */
 export async function fetchImageryDataUri(imagery: Pick<Imagery, 'image_path'>): Promise<string> {
+  return fetchSignedDataUri(imagery.image_path);
+}
+
+/**
+ * Any picture on our server (an aerial image, a map layer), as a `data:`
+ * address, fetched through the signed-in client. See `fetchImageryDataUri`.
+ */
+export async function fetchSignedDataUri(imagePath: string): Promise<string> {
   const client = await apiClient();
-  const path = imagery.image_path.startsWith('/') ? imagery.image_path : `/${imagery.image_path}`;
+  const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
   const { data } = await client.get<Blob>(path, { responseType: 'blob', timeout: IMAGERY_TIMEOUT_MS });
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       if (typeof reader.result === 'string' && reader.result.startsWith('data:')) resolve(reader.result);
-      else reject(new Error('The aerial image could not be read.'));
+      else reject(new Error('The picture could not be read.'));
     };
-    reader.onerror = () => reject(new Error('The aerial image could not be read.'));
+    reader.onerror = () => reject(new Error('The picture could not be read.'));
     reader.readAsDataURL(data);
   });
 }
@@ -284,6 +293,28 @@ export function pixelsToBox(
     west: Math.min(p.lng, q.lng), east: Math.max(p.lng, q.lng),
     south: Math.min(p.lat, q.lat), north: Math.max(p.lat, q.lat),
   };
+}
+
+// ── Map layers ───────────────────────────────────────────────────────────────
+
+export async function fetchMapLayers(propertyId: number): Promise<MapLayers> {
+  const client = await apiClient();
+  const { data } = await client.get<MapLayers>(`/properties/${propertyId}/layers`);
+  return data;
+}
+
+/**
+ * The property's map layers (sun, trees, water), or `null` when this server
+ * answers 404: an older server without the route, or the feature off. The
+ * map then shows the aerial image only. Any other failure is an error.
+ */
+export async function fetchMapLayersOrOff(propertyId: number): Promise<MapLayers | null> {
+  try {
+    return await fetchMapLayers(propertyId);
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) return null;
+    throw err;
+  }
 }
 
 // ── Seasonal plan ────────────────────────────────────────────────────────────

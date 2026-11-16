@@ -17,7 +17,8 @@ import ExplainedBlock from '../components/ExplainedBlock';
 import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
 import { useImagerySource } from '../land/useImagerySource';
-import { boxToPixelRect, pixelRectToBox } from '../land/imageGeometry';
+import { pixelRectToBox } from '../land/imageGeometry';
+import { viewRect, yardFocus, zoneRects as layoutZoneRects } from '../land/mapLayout';
 import {
   HANDLES, HANDLE_NAMES, Handle, Point, Rect, contains, handlePoint, hitHandle, hitZone,
   isUsableRect, moveHandle, moveRect, rectFromCorners, scaleRect,
@@ -108,13 +109,7 @@ export default function ZoneMapScreen() {
   const [problem, setProblem] = useState<string | null>(null);
 
   // Zones as image rectangles, for drawing and for taps.
-  const zoneRects = useMemo(() => {
-    if (!imagery) return [];
-    return zones.flatMap((z) => {
-      const box = z.box ?? (z.is_whole_lot ? imagery.default_footprint : null);
-      return box ? [{ id: z.id, zone: z, rect: boxToPixelRect(imagery.bounds, imagery.width, imagery.height, box) }] : [];
-    });
-  }, [zones, imagery]);
+  const zoneRects = useMemo(() => (imagery ? layoutZoneRects(imagery, zones) : []), [zones, imagery]);
 
   const openZone = (z: Zone) => {
     setDraft(draftFromZone(z));
@@ -435,31 +430,6 @@ export default function ZoneMapScreen() {
 }
 
 // ── Boxes ────────────────────────────────────────────────────────────────────
-
-/** Start the map on the yard: centred on the pin (or the approximate yard),
- *  showing about a quarter of the image across, roughly 125 metres. */
-function yardFocus(imagery: Imagery): { x: number; y: number; span: number } | undefined {
-  const span = Math.round(imagery.width * 0.25);
-  if (imagery.default_footprint) {
-    const r = boxToPixelRect(imagery.bounds, imagery.width, imagery.height, imagery.default_footprint);
-    return { x: r.x + r.w / 2, y: r.y + r.h / 2, span };
-  }
-  if (imagery.pin) {
-    const b = imagery.bounds;
-    return {
-      x: ((imagery.pin.lng - b.west) / (b.east - b.west)) * imagery.width,
-      y: ((b.north - imagery.pin.lat) / (b.north - b.south)) * imagery.height,
-      span,
-    };
-  }
-  return undefined;
-}
-
-function viewRect(rect: Rect, ctx: TopDownImageContext) {
-  const a = ctx.toView({ x: rect.x, y: rect.y });
-  const b = ctx.toView({ x: rect.x + rect.w, y: rect.y + rect.h });
-  return { left: a.x, top: a.y, width: b.x - a.x, height: b.y - a.y };
-}
 
 function ZoneBox({ zone, rect, ctx, active, styles }: {
   zone: Zone; rect: Rect; ctx: TopDownImageContext; active: boolean; styles: Styles;

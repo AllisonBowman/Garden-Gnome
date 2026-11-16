@@ -491,6 +491,19 @@ def _schedule_retry(status: dict, now: datetime) -> None:
         status.pop("next_retry_at", None)
 
 
+def _warm_layers(session: Session, block, property_id: int) -> None:
+    """Draw the map layers (sun, trees, water) from the grids the sources
+    above just cached, so the app's first look only reads them. Best effort
+    and cache only (no client is passed or built): a failure is logged and
+    never changes the step's status; a request draws the layer later."""
+    try:
+        from app.services.site import layers
+        layers.warm(session, block, property_id=property_id)
+    except Exception as exc:  # noqa: BLE001 -- the pictures are optional here
+        session.rollback()
+        logger.info("map layer warm-up failed for property %s: %s", property_id, exc)
+
+
 def _background(session: Session, prop: Property, status: dict, now: datetime) -> dict:
     sources = dict(status.get("sources") or {})
     if not in_united_states(prop.pin_lat, prop.pin_lng):
@@ -543,6 +556,7 @@ def _background(session: Session, prop: Property, status: dict, now: datetime) -
             except Exception as exc:  # noqa: BLE001 -- the image is optional here
                 sources[IMAGERY_SOURCE] = "failed"
                 logger.info("imagery warm-up failed for property %s: %s", prop.id, exc)
+    _warm_layers(session, block, prop.id)
     sources.update(results)
     status["sources"] = sources
     status["background"] = _overall(results)
@@ -723,11 +737,23 @@ def _value_of(field: str, r: Optional[words.R]) -> Any:
     return v
 
 
+def _facts_of(field: str, r: Optional[words.R]) -> Optional[dict]:
+    """Numbers the reading has that the site value's `value` leaves out: for
+    sun, the hours (its value is the category word). None otherwise."""
+    if r is None or field != "sun" or not isinstance(r.value, dict):
+        return None
+    hours = r.value.get("hours")
+    if isinstance(hours, bool) or not isinstance(hours, (int, float)):
+        return None
+    return {"hours": round(float(hours), 1)}
+
+
 def _site_value(field: str, text: words.Text, confidence: str, provenance: str,
-                value: Any, zone_id: Optional[int]) -> SiteValue:
+                value: Any, zone_id: Optional[int],
+                facts: Optional[dict] = None) -> SiteValue:
     spec = override_rules.spec(field)
     return SiteValue(
-        field=field, title=words.TITLES[field], value=value, zone_id=zone_id,
+        field=field, title=words.TITLES[field], value=value, facts=facts, zone_id=zone_id,
         display=text.display, confidence=confidence, reason=text.reason,
         sources=[SourceOut(**s) for s in text.sources], provenance=provenance,
         can_override=spec.kind != "none",
@@ -808,7 +834,8 @@ def _public_value(field: str, rd: dict[str, Optional[words.R]], status: dict, *,
     text = builders[field]()
     confidence = d.confidence if not text.display.endswith("not known yet.") else "not_known_yet"
     return _site_value(field, text, confidence, _prov(rd, field),
-                       _value_of(field, main), zone_id)
+                       _value_of(field, main), zone_id,
+                       facts=_facts_of(field, main) if confidence != "not_known_yet" else None)
 
 
 def _prov(rd: dict, field: str) -> str:

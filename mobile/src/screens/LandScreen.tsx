@@ -6,12 +6,20 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
 import {
-  SITE_QUERY_KEYS, deleteOverride, fetchProperty, fetchSiteProfile, putOverride, refreshHome,
-  refreshSiteProfile, updateProperty,
+  SITE_QUERY_KEYS, deleteOverride, fetchMapLayersOrOff, fetchProperty, fetchPropertyImagery,
+  fetchSiteProfile, fetchZones, putOverride, refreshHome, refreshSiteProfile, updateProperty,
 } from '../api/properties';
 import { serverMessage } from '../api/errorMessage';
 import { FrostBias, LotContent, PropertyPatch, SiteProfile, SiteValue } from '../types/site';
 import ExplainedBlock from '../components/ExplainedBlock';
+import LandMap from '../components/LandMap';
+import LayerChips from '../components/LayerChips';
+import MapLegend from '../components/MapLegend';
+import ReadingTileGrid from '../components/ReadingTile';
+import { MapChipKey, chosenChip, mapChips } from '../land/mapLayers';
+import { readingTiles } from '../land/readingTiles';
+import { followTarget } from '../land/followTarget';
+import { IMAGERY_STALE_MS, landMapState, layersRefetchEvery } from '../home/landMap';
 import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
 import RefreshFailed from '../components/RefreshFailed';
@@ -36,6 +44,11 @@ type Route = RouteProp<RootStackParamList, 'Land'>;
 // a tap away, and the property's own settings: name, pin, lot contents and
 // the frost earlier or later setting. Refreshes itself while the server is
 // still reading.
+//
+// It opens with the land map (map and visuals spec section 4.4): the aerial
+// image with pan and zoom, the zones outlined, the layer chips, the layer's
+// legend, notes and "Why and data source", a link to draw or change zones,
+// then the reading tiles, then the sections above.
 
 export default function LandScreen() {
   const navigation = useNavigation<Nav>();
@@ -57,6 +70,26 @@ export default function LandScreen() {
   });
   const profile = profileQ.data;
   const property = propertyQ.data;
+
+  // The land map, on the zone map's query keys so the cache is shared.
+  const imageryQ = useQuery({
+    queryKey: SITE_QUERY_KEYS.imagery(propertyId),
+    queryFn: () => fetchPropertyImagery(propertyId),
+    retry: 1,
+    staleTime: IMAGERY_STALE_MS,
+  });
+  const zonesQ = useQuery({
+    queryKey: SITE_QUERY_KEYS.zones(propertyId),
+    queryFn: () => fetchZones(propertyId),
+  });
+  const layersQ = useQuery({
+    queryKey: SITE_QUERY_KEYS.mapLayers(propertyId),
+    queryFn: () => fetchMapLayersOrOff(propertyId),
+    refetchInterval: (q) => layersRefetchEvery(q.state.data),
+  });
+  const [wantedChip, setWantedChip] = useState<MapChipKey>('aerial');
+  // A finger on the map pans it; the page must not scroll meanwhile.
+  const [onMap, setOnMap] = useState(false);
 
   // ── Corrections ──
   const afterProfile = useCallback(async (next: SiteProfile) => {
@@ -100,20 +133,29 @@ export default function LandScreen() {
   // ── Opening at one value or one zone ──
   const scroll = useRef<ScrollView>(null);
   const offsets = useRef<Record<string, number>>({});
-  const scrolled = useRef(false);
+  // The map and tiles above take their full height after their data
+  // arrives, so the target is followed until the owner scrolls.
+  const [follow] = useState(() => followTarget((y) => scroll.current?.scrollTo({ y, animated: true })));
   const target = zoneId != null ? `zone-${zoneId}` : sectionOf(field);
+  const targetY = (): number | undefined => {
+    if (!target) return undefined;
+    if (zoneId == null) return offsets.current[target];
+    const local = offsets.current[target];
+    const zonesAt = offsets.current.zones;
+    return local == null || zonesAt == null ? undefined : zonesAt + local;
+  };
   const remember = (key: string, y: number) => {
     offsets.current[key] = y;
-    if (!scrolled.current && key === target) {
-      scrolled.current = true;
-      setTimeout(() => scroll.current?.scrollTo({ y: Math.max(0, y - 12), animated: true }), 50);
-    }
+    follow.place(targetY());
   };
 
   const onRefresh = useCallback(async () => {
     setPulling(true);
-    try { await Promise.all([profileQ.refetch(), propertyQ.refetch()]); } finally { setPulling(false); }
-  }, [profileQ, propertyQ]);
+    try {
+      await Promise.all([profileQ.refetch(), propertyQ.refetch(), imageryQ.refetch(), zonesQ.refetch(),
+        layersQ.refetch()]);
+    } finally { setPulling(false); }
+  }, [profileQ, propertyQ, imageryQ, zonesQ, layersQ]);
 
   if (profileQ.isLoading) return <ActivityIndicator style={styles.center} size="large" />;
   if (!profile) {
@@ -127,6 +169,14 @@ export default function LandScreen() {
   const zones = drawnZones(profile);
   const progress = profileProgressLine(profile.status);
   const saveError = setM.error ?? clearM.error;
+  const tiles = readingTiles(profile, []);
+  const chips = mapChips(layersQ.data);
+  const chosen = chosenChip(chips, wantedChip);
+  const mapState = landMapState({
+    imagery: { hasData: !!imageryQ.data, isLoading: imageryQ.isLoading, isError: imageryQ.isError },
+    zones: { hasData: zonesQ.data !== undefined, isError: zonesQ.isError },
+    layers: { hasData: layersQ.data !== undefined, isError: layersQ.isError },
+  });
 
   const row = (v: SiteValue, zone?: number) => (
     <ExplainedBlock
@@ -150,6 +200,8 @@ export default function LandScreen() {
       style={styles.container}
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
+      scrollEnabled={!onMap}
+      onScrollBeginDrag={follow.release}
       refreshControl={<RefreshControl refreshing={pulling} onRefresh={onRefresh} />}
     >
       {profileQ.isError ? <RefreshFailed onRetry={() => profileQ.refetch()} retrying={profileQ.isRefetching} /> : null}
@@ -163,6 +215,43 @@ export default function LandScreen() {
       ) : null}
       {saveError ? (
         <Text style={styles.error}>{serverMessage(saveError, 'Couldn’t save that change. Try again.')}</Text>
+      ) : null}
+
+      {/* ── The land map ── */}
+      <View style={styles.section}>
+        <Eyebrow style={styles.eyebrow}>The map</Eyebrow>
+        {mapState.kind === 'map' && imageryQ.data ? (
+          <LandMap
+            imagery={imageryQ.data}
+            zones={zonesQ.data ?? []}
+            layer={chosen.layer}
+            interactive
+            onGestureActive={setOnMap}
+            imageryVersion={imageryQ.dataUpdatedAt}
+            layersVersion={layersQ.dataUpdatedAt}
+          />
+        ) : (
+          <Text style={styles.quiet} accessibilityLiveRegion="polite">{mapState.line}</Text>
+        )}
+        {mapState.notes.map((n) => <Text key={n} style={styles.quiet}>{n}</Text>)}
+        {mapState.kind === 'map' ? (
+          <>
+            <LayerChips chips={chips} chosen={chosen.key} onChoose={setWantedChip} />
+            <MapLegend layer={chosen.layer} />
+          </>
+        ) : null}
+        <Button mode="outlined" textColor={palette.acc} style={styles.action}
+          onPress={() => navigation.navigate('ZoneMap', { propertyId })}
+          accessibilityLabel="Draw or change your zones on the zone map">
+          Draw or change your zones
+        </Button>
+      </View>
+
+      {tiles.length > 0 ? (
+        <View style={styles.section}>
+          <Eyebrow style={styles.eyebrow}>At a glance</Eyebrow>
+          <ReadingTileGrid tiles={tiles} />
+        </View>
       ) : null}
 
       {sections.length === 0 ? (
@@ -192,7 +281,7 @@ export default function LandScreen() {
           </Text>
         ) : null}
         {zones.map((z) => (
-          <View key={z.zone_id} style={styles.zone} onLayout={(e) => remember(`zone-${z.zone_id}`, e.nativeEvent.layout.y + (offsets.current.zones ?? 0))}>
+          <View key={z.zone_id} style={styles.zone} onLayout={(e) => remember(`zone-${z.zone_id}`, e.nativeEvent.layout.y)}>
             <Text style={styles.zoneName} accessibilityRole="header">{z.name}</Text>
             {groupValues(z.values).flatMap((s) => s.values).map((v) => row(v, z.zone_id))}
             {z.values.length === 0 ? <Text style={styles.quiet}>No values for this zone yet.</Text> : null}

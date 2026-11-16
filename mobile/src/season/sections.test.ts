@@ -1,5 +1,5 @@
 import {
-  actionBody, forecastCells, forecastCredit, observedDayChoices, orderedActions, orderedTasks,
+  actionBody, forecastCells, forecastCredit, frostNightsLine, observedDayChoices, orderedActions, orderedTasks,
   sectionOf, seasonSections, STATUS_WORDS, ACTION_LABELS,
 } from './sections';
 import { Explained, SeasonEvent, SeasonTask } from '../types/site';
@@ -96,6 +96,17 @@ describe('forecast strip', () => {
     expect(today.a11y).toBe('Today, high 54 degrees Fahrenheit, low 33 degrees Fahrenheit, 20 percent chance of rain, Frost possible, Sunny');
     expect(tomorrow).toMatchObject({ day: 'Tomorrow', rain: null, frost: null });
     expect(later).toMatchObject({ day: 'Tue', temps: 'No temperature', frost: 'Hard freeze' });
+  });
+  it('names the frost nights and how hard, for under the bars', () => {
+    expect(frostNightsLine([
+      { date: '2026-11-15', high_f: 54, low_f: 33, summary: 'Sunny', frost_risk: 'frost' },
+      { date: '2026-11-16', high_f: 48, low_f: 40, summary: 'Cloudy', frost_risk: 'none' },
+      { date: '2026-11-17', high_f: 30, low_f: 18, summary: 'Clear', frost_risk: 'hard_freeze' },
+    ], TODAY)).toBe('Frost in the forecast: Today (frost possible), Tue (hard freeze).');
+    expect(frostNightsLine([
+      { date: '2026-11-15', high_f: 54, low_f: 43, summary: 'Sunny', frost_risk: 'none' },
+    ], TODAY)).toBeNull();
+    expect(frostNightsLine([], TODAY)).toBeNull();
   });
   it('credits the provider with the forecast time', () => {
     expect(forecastCredit('National Weather Service', new Date(2026, 10, 15, 14, 0).toISOString()))

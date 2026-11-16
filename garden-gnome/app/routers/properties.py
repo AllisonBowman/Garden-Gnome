@@ -1,4 +1,5 @@
-"""Properties, zones, the site profile, imagery, the seasonal plan and Home.
+"""Properties, zones, the site profile, imagery, map layers, the seasonal plan
+and Home.
 
 Every route in build spec section 4. All of them need a signed-in user and
 see only that user's rows: another person's property or zone is a 404, never
@@ -38,7 +39,7 @@ from app.models.models import (
     StewardshipRecord, SunExposure, TempExposure, User,
 )
 from app.models.schemas import (
-    Box, ImageryOut, OverrideIn, PropertyCreate, PropertyOut,
+    Box, ImageryOut, MapLayersOut, OverrideIn, PropertyCreate, PropertyOut,
     PropertyPatch, RefreshOut, SeasonEvent, SeasonEventStateIn,
     SeasonalPlanOut, SiteProfileOut, VitalsOut, ZoneCreate, ZoneOut,
     ZonePatch,
@@ -49,6 +50,7 @@ from app.services import vitals as vitals_service
 from app.services.season import plan as plan_service
 from app.services.site import grid, tiles
 from app.services.site import http as site_http
+from app.services.site import layers as layer_service
 from app.services.site import profile as profile_service
 
 logger = logging.getLogger("plantadvocate.properties")
@@ -736,6 +738,73 @@ def imagery_tile(tile_key: str, user: User = Depends(get_current_user),
     if data is None:
         raise HTTPException(status_code=404, detail="Image not found")
     return Response(content=data, media_type="image/jpeg",
+                    headers={"Cache-Control": "private, max-age=86400"})
+
+
+# --- map layers -------------------------------------------------------------------
+#
+# Sun, trees and water pictures over the aerial image, drawn only from the
+# elevation and canopy copies the server already holds (services/site/
+# layers.py): these routes never build an outbound client. A layer whose
+# source is not cached yet reads "not_ready" in the list and answers 409 as
+# a picture; one that cannot be drawn here (outside the United States, or
+# ground data too coarse) reads "unavailable" and answers 409 too.
+
+#: Gentler than SITE_BUILD_LIMIT: these answers cost no outside request,
+#: and a screen asks for the list and up to three pictures.
+LAYER_LIMIT = "30/minute"
+
+
+def _layer_block(prop: Property):
+    return grid.snap_block(prop.pin_lat, prop.pin_lng)
+
+
+def _layers_preparing(prop: Property) -> bool:
+    """True while the background step that caches the layers' sources is
+    pending or building, so "check back in a few minutes" is true."""
+    bg = profile_service.profile_status(prop).background
+    return bg in ("pending", "building")
+
+
+@router.get("/{property_id}/layers", response_model=MapLayersOut,
+            dependencies=[Depends(require_site_profile)])
+@limiter.limit(LAYER_LIMIT)
+def property_layers(request: Request, property_id: int,
+                    user: User = Depends(get_current_user),
+                    session: Session = Depends(get_session)):
+    prop = _owned_property(property_id, user, session)
+    out = layer_service.layers_for(
+        session, _layer_block(prop), property_id=prop.id,
+        in_us=coverage.in_united_states(prop.pin_lat, prop.pin_lng),
+        preparing=_layers_preparing(prop))
+    session.commit()  # the tile cache moved last_used_at
+    return out
+
+
+@router.get("/{property_id}/layers/{kind}.png",
+            dependencies=[Depends(require_site_profile)])
+@limiter.limit(LAYER_LIMIT)
+def property_layer_image(request: Request, property_id: int, kind: str,
+                         user: User = Depends(get_current_user),
+                         session: Session = Depends(get_session)):
+    # Tile touches and the stored picture commit at once, so no write lock
+    # is held while the picture is drawn (seconds on the small machine).
+    tiles.commit_eagerly(session)
+    prop = _owned_property(property_id, user, session)
+    if kind not in layer_service.KINDS:
+        raise HTTPException(status_code=404, detail="Map layer not found")
+    if not coverage.in_united_states(prop.pin_lat, prop.pin_lng):
+        raise HTTPException(status_code=409, detail=layer_service.OUTSIDE_US_TEXT)
+    try:
+        data = layer_service.layer_png(session, _layer_block(prop), kind,
+                                       property_id=prop.id)
+    except layer_service.LayerNotReady as exc:
+        session.commit()
+        detail = (layer_service.not_ready_text(_layers_preparing(prop))
+                  if exc.status == "not_ready" else exc.text)
+        raise HTTPException(status_code=409, detail=detail) from None
+    session.commit()  # the tile cache moved last_used_at, or stored the picture
+    return Response(content=data, media_type="image/png",
                     headers={"Cache-Control": "private, max-age=86400"})
 
 
