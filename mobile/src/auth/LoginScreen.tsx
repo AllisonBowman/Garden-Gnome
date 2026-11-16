@@ -53,8 +53,7 @@ export default function LoginScreen() {
         <Text style={styles.mascot}>🧙🌱</Text>
         <Text style={styles.title}>PlantAdvocate</Text>
         <Text style={styles.tagline}>
-          Plant care that knows what it&apos;s talking about — with a gnome
-          who never guesses.
+          Look after your land and your plants, through the seasons.
         </Text>
       </View>
 

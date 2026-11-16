@@ -169,10 +169,10 @@ export default function SeasonScreen() {
       {sections.length === 0 ? (
         <Text style={styles.quietBlock}>Nothing is in your seasonal plan yet.</Text>
       ) : sections.map((s) => (
-        <View key={s.key} style={styles.section} onLayout={(ev) => onSectionLayout(s.key, ev.nativeEvent.layout.y)}>
+        <View key={s.key} style={styles.section} collapsable={false} onLayout={(ev) => onSectionLayout(s.key, ev.nativeEvent.layout.y)}>
           <Eyebrow style={styles.eyebrow}>{s.title}</Eyebrow>
           {s.events.map((e) => (
-            <View key={e.event_key} onLayout={(ev) => onEventLayout(s.key, e.event_key, ev.nativeEvent.layout.y)}>
+            <View key={e.event_key} collapsable={false} onLayout={(ev) => onEventLayout(s.key, e.event_key, ev.nativeEvent.layout.y)}>
               <EventCard
                 event={e}
                 highlighted={e.event_key === eventKey}
