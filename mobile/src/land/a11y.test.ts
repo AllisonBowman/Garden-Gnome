@@ -58,3 +58,54 @@ test('owner-facing copy has no em dashes', () => {
     expect(fs.readFileSync(path.join(ROOT, file), 'utf8')).not.toContain('—');
   }
 });
+
+/** The text a person can see or hear in a source file: string literals
+ *  (quotes and template text) and JSX text, with comments left out. An
+ *  identifier such as metresBetween is code, not copy, and is not returned. */
+function visibleText(source: string): string[] {
+  const out: string[] = [];
+  let code = '';
+  for (let i = 0; i < source.length; i++) {
+    const c = source[i];
+    if (c === '/' && source[i + 1] === '/') {
+      while (i < source.length && source[i] !== '\n') i++;
+      code += '\n';
+    } else if (c === '/' && source[i + 1] === '*') {
+      const end = source.indexOf('*/', i + 2);
+      i = end < 0 ? source.length : end + 1;
+      code += ' ';
+    } else if (c === "'" || c === '"' || c === '`') {
+      let j = i + 1;
+      for (; j < source.length && source[j] !== c; j++) if (source[j] === '\\') j++;
+      out.push(source.slice(i + 1, j));
+      code += '""';
+      i = j;
+    } else {
+      code += c;
+    }
+  }
+  const jsx = /> *([^<>{}]+?) *</g;
+  let m: RegExpExecArray | null;
+  while ((m = jsx.exec(code))) out.push(m[1]);
+  return out;
+}
+
+const METRIC_WORDS = /\b(metres?|meters?|kilomet(er|re)s?|centimet(er|re)s?)\b/i;
+
+test('the metric scan finds copy and passes code', () => {
+  const sample = [
+    'const d = metresBetween(a, b) >= MOVED_METRES; // a few metres',
+    '/* about 500 metres */ const label = `Move the pin a few metres ${d}`;',
+    '<Text>an area about 500 meters across</Text>',
+  ].join('\n');
+  expect(visibleText(sample).filter((t) => METRIC_WORDS.test(t))).toEqual([
+    'Move the pin a few metres ${d}', 'an area about 500 meters across']);
+});
+
+test('owner-facing copy gives lengths in feet, not metres', () => {
+  for (const file of FILES) {
+    const found = visibleText(fs.readFileSync(path.join(ROOT, file), 'utf8'))
+      .filter((t) => METRIC_WORDS.test(t));
+    expect({ file, found }).toEqual({ file, found: [] });
+  }
+});

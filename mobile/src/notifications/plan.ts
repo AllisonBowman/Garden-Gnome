@@ -1,5 +1,5 @@
 import { CareLog, CareType, Plant, Species, WaterRegime } from '../types';
-import { waterRegimeSentence } from '../care/facts';
+import { depthSaid, waterRegimeSentence } from '../care/facts';
 import { parseServerDate } from '../api/serverDate';
 import { planSeasonalNotices, SeasonalInput, SEASONAL_RESERVE } from '../season/alerts';
 
@@ -356,7 +356,7 @@ export function waterCheck(it: Pick<ReminderItem, 'waterRegime' | 'checkDepthCm'
     return `Its sources say ${regime}; water if the surface feels dry.`;
   }
   if (it.checkDepthCm != null && it.checkDepthCm > 0) {
-    return `Feel the soil ${it.checkDepthCm} cm down; water only if it's dry there.`;
+    return `Feel the soil ${depthSaid(it.checkDepthCm)} down; water only if it's dry there.`;
   }
   if (regime) return `Its sources say ${regime}; feel the soil before you water.`;
   return 'Feel the soil before you water.';

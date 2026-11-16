@@ -70,7 +70,7 @@ test('one row per resolved concept, in the order a caretaker reads them', () => 
 test('the watering row is the regime and the check depth, no dry-down target', () => {
   const water = careFactRows(sourced()).find((r) => r.key === 'water')!;
   expect(water.label).toBe('Watering');
-  expect(water.value).toBe('Let the surface dry between waterings; check 3 cm down');
+  expect(water.value).toBe('Let the surface dry between waterings; check 1 inch down');
 });
 
 test('light, humidity, temperature and soil read as sentences, not columns', () => {

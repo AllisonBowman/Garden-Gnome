@@ -147,6 +147,16 @@ function span(lo: number | null | undefined, hi: number | null | undefined, word
 /** 3 -> "3", 2.5 -> "2.5": depths, hours and degrees read as counts. */
 const num = (v: number) => String(v);
 
+/** A soil depth in centimetres, said in inches to the nearest half inch:
+ *  "1 inch", "1.5 inches", "half an inch" for anything shallower. The same
+ *  rule as the server's care_facts.depth_said, so the card and the advice
+ *  agree. */
+export function depthSaid(cm: number): string {
+  const half = Math.floor((cm / 2.54) * 2 + 0.5) / 2;
+  if (half <= 0.5) return 'half an inch';
+  return `${num(half)} ${half === 1 ? 'inch' : 'inches'}`;
+}
+
 /** Sentence case for a row, leaving a leading unit symbol alone: "pH 6–6.5"
  *  is a symbol, and "PH" reads as a typo. Exported so a screen capitalizes
  *  in code: a `textTransform: 'capitalize'` lowercases the rest of every
@@ -234,7 +244,7 @@ const CONCEPTS: {
   // verbatim passage and stays on the server (ADR 0003).
   { key: 'water', label: 'Watering', join: '; ', read: (s) => concept([
     [waterRegimeSentence(s), ['water_regime']],
-    [s.water_check_depth_cm != null ? `check ${num(s.water_check_depth_cm)} cm down` : null,
+    [s.water_check_depth_cm != null ? `check ${depthSaid(s.water_check_depth_cm)} down` : null,
       ['water_check_depth_cm']],
   ]) },
   { key: 'light', label: 'Light', join: '; ', read: (s) => concept([
