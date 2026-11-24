@@ -7,6 +7,7 @@
 //
 // Pure on purpose (no React Native imports) so jest can pin it.
 import { Species } from '../types';
+import { t } from '../i18n';
 import {
   CATALOG_LINE, INFERRED_PILL, careFactRows, legacyStats,
 } from './facts';
@@ -17,17 +18,18 @@ export function reportedFacts(species: Species): string {
   const sentence = species.toxicity_description?.trim();
   if (sentence) lines.push(sentence);
   // An older server sends only the flag, and the page shows a chip for it.
-  else if (species.toxic_to_pets === true) lines.push('⚠️ Toxic to pets');
+  else if (species.toxic_to_pets === true) lines.push(t('care.report.toxicToPets'));
   for (const row of careFactRows(species)) {
-    const label = row.inferred ? `${row.label} (${INFERRED_PILL})` : row.label;
-    lines.push(`${label}: ${row.caution ? `⚠️ ${row.value}` : row.value}`);
+    const label = row.inferred
+      ? t('care.report.inferred', { label: row.label, pill: INFERRED_PILL }) : row.label;
+    lines.push(t('care.report.line', { label, value: row.caution ? `⚠️ ${row.value}` : row.value }));
   }
   // Under the page's "From the catalog — not yet cited" caption.
   const uncited = CATALOG_LINE.charAt(0).toLowerCase() + CATALOG_LINE.slice(1);
   for (const stat of legacyStats(species)) {
-    lines.push(`${stat.label} (${uncited}): ${stat.value}`);
+    lines.push(t('care.report.legacy', { label: stat.label, caption: uncited, value: stat.value }));
   }
   const notes = species.care_notes?.trim();
-  if (notes) lines.push(`Care notes: ${notes}`);
+  if (notes) lines.push(t('care.report.careNotes', { notes }));
   return lines.join('\n');
 }

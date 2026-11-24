@@ -4,35 +4,29 @@
 // display-only; the precise, species-aware timing lives in each plant's advice).
 import { GrowingArea, Weather } from '../types';
 import { parseServerDate } from '../api/serverDate';
+import { language, localeTag, t } from '../i18n';
 
 // WeatherKit reports camelCase condition codes (e.g. "MostlyCloudy"). Friendly
-// text for the common ones; fall back to spacing the camelCase.
-const CONDITION_LABEL: Record<string, string> = {
-  Clear: 'Clear',
-  MostlyClear: 'Mostly clear',
-  PartlyCloudy: 'Partly cloudy',
-  MostlyCloudy: 'Mostly cloudy',
-  Cloudy: 'Cloudy',
-  Rain: 'Rain',
-  Drizzle: 'Drizzle',
-  Showers: 'Showers',
-  Thunderstorms: 'Thunderstorms',
-  Snow: 'Snow',
-  Windy: 'Windy',
-  Haze: 'Haze',
-  Foggy: 'Fog',
-};
+// text for the common ones (i18n weather.conditions); fall back to spacing the
+// camelCase, in English, for the rest.
+const KNOWN_CONDITIONS = [
+  'Clear', 'MostlyClear', 'PartlyCloudy', 'MostlyCloudy', 'Cloudy', 'Rain', 'Drizzle',
+  'Showers', 'Thunderstorms', 'Snow', 'Windy', 'Haze', 'Foggy',
+] as const;
+type KnownCondition = (typeof KNOWN_CONDITIONS)[number];
+const isKnown = (code: string): code is KnownCondition => (KNOWN_CONDITIONS as readonly string[]).includes(code);
 
 export function conditionText(code: string | null): string {
   if (!code) return '';
-  return CONDITION_LABEL[code] ?? code.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return isKnown(code) ? t(`weather.conditions.${code}`) : code.replace(/([a-z])([A-Z])/g, '$1 $2');
 }
 
 export function weekday(dateStr: string): string {
   // dateStr is a plain YYYY-MM-DD: a day on the caretaker's calendar.
   const d = parseServerDate(dateStr);
   if (!d) return dateStr;
-  return d.toLocaleDateString(undefined, { weekday: 'short' });
+  // Spanish says the whole name: the short "mar" would read as "the sea".
+  return d.toLocaleDateString(localeTag, { weekday: language === 'es' ? 'long' : 'short' });
 }
 
 // One plain sentence describing how much weather reaches this spot, from its
@@ -41,20 +35,20 @@ export function exposureSummary(env: GrowingArea): string {
   const sheltered = env.shelter === 'sheltered';
   const indoor = env.temp_exposure === 'indoor';
   if (sheltered && indoor) {
-    return 'Sheltered and indoors — the forecast barely reaches your plants here. Treat weather as context, not a to-do.';
+    return t('weather.exposure.shelteredIndoor');
   }
   // A covered porch or balcony is not open sky: the server's own reading of
   // "partial" is some rain and wind, never the full forecast.
   if (env.shelter === 'partial' && !indoor) {
-    return 'Partly covered and outdoors — plants here feel the temperature and some of the rain.';
+    return t('weather.exposure.partial');
   }
   if (!sheltered && !indoor) {
-    return 'Open to the sky and outdoors — plants here feel the full forecast.';
+    return t('weather.exposure.open');
   }
   if (indoor) {
-    return 'Some weather reaches this spot, but the temperature stays indoor-steady — mostly rain and light to think about, not cold.';
+    return t('weather.exposure.indoorSome');
   }
-  return 'Roofed but out in the open air — plants here feel the temperature swings, though rain mostly misses them.';
+  return t('weather.exposure.roofed');
 }
 
 // Translated implications, each gated by the growing area's physical exposure so
@@ -70,7 +64,7 @@ export function translateWeather(env: GrowingArea, weather: Weather): string[] {
 
   const today = days[0];
   if (today && today.daylight_hours != null) {
-    lines.push(`☀️ ~${today.daylight_hours}h of daylight — the light budget outdoor plants get right now.`);
+    lines.push(t('weather.lines.daylight', { hours: today.daylight_hours }));
   }
 
   if (unsheltered) {
@@ -80,26 +74,26 @@ export function translateWeather(env: GrowingArea, weather: Weather): string[] {
     const wet = days.find((d) => (d.precip_chance_pct ?? 0) >= 60);
     if (wet) {
       const reach = env.shelter === 'partial'
-        ? 'some of it may reach plants here'
-        : 'it may water unsheltered plants here';
-      lines.push(`🌧️ Rain likely (${wet.precip_chance_pct}% ${weekday(wet.date)}) — ${reach}; check the soil afterwards before you water again.`);
+        ? t('weather.lines.reachPartial')
+        : t('weather.lines.reachOpen');
+      lines.push(t('weather.lines.rainLikely', { pct: wet.precip_chance_pct, day: weekday(wet.date), reach }));
     }
   }
   if (outdoor) {
     const hot = days.find((d) => (d.high_f ?? -999) >= 90);
     if (hot) {
-      lines.push(`🔥 Hot stretch (high ${hot.high_f}°F ${weekday(hot.date)}) — plants here dry out faster; check soil sooner.`);
+      lines.push(t('weather.lines.hot', { high: hot.high_f, day: weekday(hot.date) }));
     }
     const cold = days.find((d) => (d.low_f ?? 999) <= 40);
     if (cold) {
-      lines.push(`❄️ Cold night (low ${cold.low_f}°F ${weekday(cold.date)}) — tender plants here may want cover or a move inside.`);
+      lines.push(t('weather.lines.cold', { low: cold.low_f, day: weekday(cold.date) }));
     }
   }
   if (openSun) {
     const uvVals = [weather.current?.uv_index ?? -1, ...days.map((d) => d.uv_max ?? -1)];
     const peak = Math.max(...uvVals);
     if (peak >= 8) {
-      lines.push(`😎 Very high UV (up to ${peak}) — even sun-lovers here can scorch at midday.`);
+      lines.push(t('weather.lines.uv', { peak }));
     }
   }
   return lines;

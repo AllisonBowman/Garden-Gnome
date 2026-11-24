@@ -44,6 +44,7 @@
 //                 are listed above CENSUS_FIELDS below).
 
 import type { AiCapabilities, AiCapability } from '../care/aiCapabilities';
+import { t } from '../i18n';
 
 /** Where a piece of data physically ends up. */
 export type Destination =
@@ -72,9 +73,9 @@ export interface DataFlow {
 }
 
 export const DESTINATION_LABELS: Record<Destination, string> = {
-  device: 'Stays on your phone',
-  server: 'Sent to our server',
-  partner: 'Shared with another service',
+  device: t('consent.destination.device'),
+  server: t('consent.destination.server'),
+  partner: t('consent.destination.partner'),
 };
 
 // ── What the census counts ────────────────────────────────────────────────────
@@ -93,121 +94,71 @@ export const DESTINATION_LABELS: Record<Destination, string> = {
 // Records are shuffled, so a record's place in the file says nothing either.
 
 /** Every field a census record carries, as one clause. */
-export const CENSUS_FIELDS =
-  'its species, how many there are, its growth stage, the month you got it and '
-  + 'how it looked then (soil, leaves, any pests), how many times each kind of '
-  + 'care was logged in each month, how many growing areas it has been in and '
-  + 'the months it moved between them, which planting it was split from if it '
-  + 'was, and its growing area’s type, city, region and country';
+export const CENSUS_FIELDS = t('consent.census.fields');
 
 /** What a census record never carries. */
-export const CENSUS_LEFT_OUT =
-  'There is no name, no email, no nicknames, no notes, no exact dates and no '
-  + 'coordinates.';
+export const CENSUS_LEFT_OUT = t('consent.census.leftOut');
 
 /** How far the census promises exports can't be put together, and no
  *  further: the identifiers are new every time, but a planting's monthly
  *  care counts are its own and could look alike from one export to the
  *  next. */
-export const CENSUS_LINKING =
-  'Each planting and growing area gets a new label in every export, and the '
-  + 'records are shuffled, so no identifier links one export to another. That '
-  + 'is the promise, and no more: a planting’s monthly care counts could still '
-  + 'look alike from one export to the next.';
+export const CENSUS_LINKING = t('consent.census.linking');
 
 export const DATA_FLOWS: DataFlow[] = [
   {
     id: 'identify',
-    title: 'Identifying a plant from a photo',
+    title: t('consent.flows.identify.title'),
     destination: 'device',
-    summary: 'The photo is read on your phone and never uploaded.',
-    detail:
-      'Your phone’s own AI looks at the picture and suggests a name — Apple '
-      + 'Intelligence on iPhone, Gemini Nano on Android. The image is not sent '
-      + 'to us, and it is not sent to anyone else. If your phone can’t do this, '
-      + 'the feature simply says so rather than falling back to uploading.',
+    summary: t('consent.flows.identify.summary'),
+    detail: t('consent.flows.identify.detail'),
   },
   {
     id: 'diagnose',
-    title: 'Asking the Gnome to look at an ailing plant',
+    title: t('consent.flows.diagnose.title'),
     destination: 'partner',
     requires: 'photoDiagnosis',
-    summary: 'This one does upload the photo. It is not kept.',
-    detail:
-      'Photo check-ups work differently from identification. The picture, and '
-      + 'any note you add, goes to our server, which passes it to an outside AI '
-      + 'service to be read. The photo is not saved to your account, and '
-      + 'PlantAdvocate does not use it to train anything. Only the reading, as '
-      + 'text, is saved to your plant’s timeline. The app asks before the first '
-      + 'photo is sent.',
+    summary: t('consent.flows.diagnose.summary'),
+    detail: t('consent.flows.diagnose.detail'),
   },
   {
     id: 'care',
-    title: 'Your plants and care log',
+    title: t('consent.flows.care.title'),
     destination: 'server',
-    summary: 'Nicknames, species, and what you did when.',
-    detail:
-      'Stored so your schedule survives a new phone, and so advice can account '
-      + 'for what you have actually been doing rather than what the label says. '
-      + 'This is your record; you can delete the whole account, and everything '
-      + 'in it, from this screen.',
+    summary: t('consent.flows.care.summary'),
+    detail: t('consent.flows.care.detail'),
   },
   {
     id: 'advice',
-    title: 'Free-text questions to the Gnome',
+    title: t('consent.flows.advice.title'),
     destination: 'partner',
     requires: 'symptoms',
-    summary: 'Your question goes to an outside AI service. Your photos don’t.',
-    detail:
-      'Care advice is built from the curated species database. When you add a '
-      + 'question in your own words, our server sends it to an outside AI '
-      + 'service to be answered. The plant’s nickname, species facts and recent '
-      + 'care log go with it, and so do its growing area’s name, conditions and '
-      + 'forecast. Your name, email and coordinates are not included. The app '
-      + 'asks before the first question is sent.',
+    summary: t('consent.flows.advice.summary'),
+    detail: t('consent.flows.advice.detail'),
   },
   {
     id: 'voice',
-    title: 'Walking the garden out loud',
+    title: t('consent.flows.voice.title'),
     destination: 'partner',
-    summary: 'Your speech becomes text on your phone, or at Apple. We never get the audio.',
-    detail:
-      'Walk the garden uses the microphone only while it says Listening. It '
-      + 'stops when you tap stop or leave the screen. Your iPhone turns speech '
-      + 'into text on the phone where it can. Where it can’t, iOS sends the '
-      + 'audio to Apple’s speech service to transcribe, and the screen tells you '
-      + 'which is happening. PlantAdvocate never receives the audio. Only the '
-      + 'plants you confirm — species, how many, and any spot you named — reach '
-      + 'your account, as text.',
+    summary: t('consent.flows.voice.summary'),
+    detail: t('consent.flows.voice.detail'),
   },
   {
     id: 'location',
-    title: 'A growing area’s location',
+    title: t('consent.flows.location.title'),
     destination: 'partner',
-    summary: 'Coordinates go to weather services. They never reach the census.',
-    detail:
-      'When you give a growing area an address or use your current location, '
-      + 'your phone’s own map service turns it into a place. We store its city, '
-      + 'region, country and coordinates. To get that spot’s forecast, our '
-      + 'server asks weather services in turn and stops at the first that '
-      + 'answers: Apple Weather, then the U.S. National Weather Service, then '
-      + 'Open-Meteo, which also covers places outside the U.S. Each one asked '
-      + 'gets the coordinates rounded to about a kilometer, and nothing else '
-      + 'about you, and the forecast card names whichever one answered. '
-      + 'Coordinates are left out of the community census by construction, not '
-      + 'by policy.',
+    summary: t('consent.flows.location.summary'),
+    detail: t('consent.flows.location.detail'),
   },
   {
     id: 'census',
-    title: 'The community census',
+    title: t('consent.flows.census.title'),
     destination: 'partner',
-    summary: 'Off unless you turn it on.',
+    summary: t('consent.flows.census.summary'),
     optIn: true,
-    detail:
-      'The census asks what the whole community is growing and how it is '
-      + 'faring, so care advice can improve for everyone. If you join, each of '
-      + `your plantings is counted: ${CENSUS_FIELDS}. ${CENSUS_LEFT_OUT} `
-      + `${CENSUS_LINKING} If you don’t join, none of your data is counted at all.`,
+    detail: t('consent.flows.census.detail', {
+      fields: CENSUS_FIELDS, leftOut: CENSUS_LEFT_OUT, linking: CENSUS_LINKING,
+    }),
   },
 ];
 
@@ -238,46 +189,29 @@ export function leavingDevice(): DataFlow[] {
 // meaningful consent for an upload happening six weeks later.
 
 export const PHOTO_DIAGNOSIS_NOTICE = {
-  title: 'This sends your photo off your phone',
-  body:
-    'A photo check-up is the one feature that uploads a picture. It goes to our '
-    + 'server with any note you add, and on to an outside AI service that reads '
-    + 'it. The photo isn’t saved, and PlantAdvocate doesn’t use it to train '
-    + 'anything. Only the reading is kept, on your plant’s timeline.\n\n'
-    + 'Identifying a plant is different — that happens entirely on your phone.',
-  confirmLabel: 'Send the photo',
-  cancelLabel: 'Not now',
+  title: t('consent.photoNotice.title'),
+  body: t('consent.photoNotice.body'),
+  confirmLabel: t('consent.photoNotice.confirm'),
+  cancelLabel: t('consent.photoNotice.cancel'),
 } as const;
 
 /** Before the first question in the caretaker's own words is sent
  *  (consent/questionUpload.ts). Shown only while the box is offered. */
 export const QUESTION_NOTICE = {
-  title: 'This sends your question off your phone',
-  body:
-    'A question in your own words goes to our server and on to an outside AI '
-    + 'service to be answered. Your plant’s nickname, species facts and recent '
-    + 'care log go with it, and so do its growing area’s name, conditions and '
-    + 'forecast. Your name, email and coordinates are not included.\n\n'
-    + '“Not now” sends nothing, and your question stays in the box.',
-  confirmLabel: 'Send my question',
-  cancelLabel: 'Not now',
+  title: t('consent.questionNotice.title'),
+  body: t('consent.questionNotice.body'),
+  confirmLabel: t('consent.questionNotice.confirm'),
+  cancelLabel: t('consent.questionNotice.cancel'),
 } as const;
 
 export const CENSUS_CONSENT = {
-  label: 'Join the community census',
-  on:
-    `Each of your plantings is counted: ${CENSUS_FIELDS}. ${CENSUS_LEFT_OUT} `
-    + CENSUS_LINKING,
-  off:
-    'Your data is not counted. If you turn this on, each of your plantings is '
-    + 'counted as “The community census” below lists it, with no name, email, '
-    + 'notes, exact dates or coordinates. It helps the care advice get better '
-    + 'for plants like yours; turning it back off stops it immediately. Counts '
-    + 'already taken aren’t recalled.',
+  label: t('consent.censusConsent.label'),
+  on: t('consent.censusConsent.on', {
+    fields: CENSUS_FIELDS, leftOut: CENSUS_LEFT_OUT, linking: CENSUS_LINKING,
+  }),
+  off: t('consent.censusConsent.off'),
 } as const;
 
 /** Shown above the flow list. Sets the honest frame: this is a plain summary,
  *  and the policy is the binding document. */
-export const PRIVACY_INTRO =
-  'Plainly: what this app does with what you give it. The full policy is '
-  + 'linked at the bottom and is the binding version.';
+export const PRIVACY_INTRO = t('consent.privacyIntro');

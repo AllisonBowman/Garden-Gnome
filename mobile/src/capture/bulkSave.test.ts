@@ -133,3 +133,28 @@ test('a failure that isn’t the network isn’t blamed on it', () => {
   expect(body).not.toMatch(/reach the server/);
   expect(body).toMatch(/Something went wrong/);
 });
+
+describe('in Spanish', () => {
+  afterEach(() => { delete (globalThis as { __TEST_LOCALES__?: string[] }).__TEST_LOCALES__; });
+
+  function spanish(): typeof import('./bulkSave') {
+    (globalThis as { __TEST_LOCALES__?: string[] }).__TEST_LOCALES__ = ['es-MX'];
+    let mod: typeof import('./bulkSave') | undefined;
+    jest.isolateModules(() => { mod = require('./bulkSave'); });
+    return mod!;
+  }
+
+  it('says nothing was saved, and that the list is still there', () => {
+    const { saveFailureAlert: alert } = spanish();
+    const { title, body } = alert(new Error('boom'), 0, 3);
+    expect(title).toBe('No se guardó nada');
+    expect(body).toBe('Algo salió mal al guardarlas. Tu lista sigue aquí. Inténtalo de nuevo en un momento.');
+  });
+
+  it('counts what landed and what is left, singular and plural', () => {
+    const { saveFailureAlert: alert } = spanish();
+    expect(alert(new Error('boom'), 200, 1).title).toBe('Se guardaron 200 de 201');
+    expect(alert(new Error('boom'), 200, 1).body).toMatch(/La otra 1 sigue aquí\./);
+    expect(alert(new Error('boom'), 200, 50).body).toMatch(/Las otras 50 siguen aquí\./);
+  });
+});

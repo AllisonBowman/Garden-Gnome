@@ -8,5 +8,6 @@
 // with docs/app-store/listing.md and docs/app-store/review-notes.md.
 //
 // Pure on purpose (no React Native imports) so jest can pin it.
-export const NOT_ADVICE_LINE =
-  'These notes repeat what the sources publish. They are not medical or veterinary advice.';
+import { t } from '../i18n';
+
+export const NOT_ADVICE_LINE = t('care.notAdvice');

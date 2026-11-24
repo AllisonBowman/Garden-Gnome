@@ -39,6 +39,7 @@ import WeatherCredit from '../components/WeatherCredit';
 import { WHY_LABEL, disclosureLines } from '../components/explainedText';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -207,18 +208,18 @@ export default function HomeScreen() {
       >
         <LoadError
           inline
-          message="Couldn’t load today’s report."
+          message={t('home.screen.loadFailed')}
           error={vitalsQ.error}
           onRetry={() => vitalsQ.refetch()}
           retrying={vitalsQ.isRefetching}
         />
         <View style={styles.links}>
           <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}
-          accessibilityLabel="Open plants">Plants</Button>
+          accessibilityLabel={t('home.screen.openPlants')}>{t('home.screen.plants')}</Button>
           <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}
-          accessibilityLabel="Open species">Species</Button>
+          accessibilityLabel={t('home.screen.openSpecies')}>{t('home.screen.species')}</Button>
           <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}
-          accessibilityLabel="Open settings">Settings</Button>
+          accessibilityLabel={t('home.screen.openSettings')}>{t('home.screen.settings')}</Button>
         </View>
       </ScrollView>
     );
@@ -241,7 +242,7 @@ export default function HomeScreen() {
       {/* ── Weather vitals ── */}
       {(cards.length > 0 || forecastDays.length > 0) && (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>Weather</Eyebrow>
+          <Eyebrow style={styles.eyebrow}>{t('home.screen.weather')}</Eyebrow>
           {forecastDays.length > 0 ? <ForecastBars days={forecastDays} /> : null}
           {cards.map((c) => (
             <VitalCardView key={c.key} card={c} styles={styles} onOpen={linkTarget(c.link)
@@ -250,26 +251,26 @@ export default function HomeScreen() {
           {legacy
             ? <WeatherCredit attribution={legacyWeather?.attribution} />
             : vitals?.forecast
-              ? <Text style={styles.quiet}>{`Forecast: ${vitals.forecast.provider_name}.`}</Text>
+              ? <Text style={styles.quiet}>{t('season.credit.forecastBy', { name: vitals.forecast.provider_name })}</Text>
               : null}
         </View>
       )}
       {legacy && !weatherArea && areasQ.data && (
         <Text style={styles.quietBlock}>
-          Give a growing space a location and its weather shows here.
+          {t('home.screen.giveLocation')}
         </Text>
       )}
 
       {/* ── This week ── */}
       <View style={styles.section}>
-        <Eyebrow style={styles.eyebrow}>This week</Eyebrow>
+        <Eyebrow style={styles.eyebrow}>{t('home.screen.thisWeek')}</Eyebrow>
         {care.isLoading && !care.loaded ? <ActivityIndicator style={styles.inlineSpin} /> : null}
         {care.isError && !care.loaded ? (
-          <LoadError inline message="Couldn’t load your plants’ care." error={null}
+          <LoadError inline message={t('home.screen.careFailed')} error={null}
             onRetry={() => care.refetch()} retrying={care.isRefetching} />
         ) : null}
         {week.items.length === 0 && care.loaded ? (
-          <Text style={styles.quiet}>Nothing is due this week.</Text>
+          <Text style={styles.quiet}>{t('home.screen.nothingDue')}</Text>
         ) : null}
         {week.items.map((item) => (
           <WeekRow
@@ -288,7 +289,7 @@ export default function HomeScreen() {
       {/* ── The season ahead ── */}
       {property && (ahead.length > 0 || season) ? (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>The season ahead</Eyebrow>
+          <Eyebrow style={styles.eyebrow}>{t('home.screen.seasonAhead')}</Eyebrow>
           <SeasonTimeline events={ahead} onPressEvent={(key) => go('Season', { eventKey: key })} />
           {season ? <VitalCardView card={season} styles={styles} onOpen={() => go('Season')} /> : null}
           {ahead.map((e) => (
@@ -296,19 +297,19 @@ export default function HomeScreen() {
               key={e.event_key}
               onPress={() => go('Season', { eventKey: e.event_key })}
               accessibilityRole="button"
-              accessibilityLabel={`${e.title}. ${EVENT_STATUS_WORDS[e.status]} ${e.window.text}. Opens the seasonal plan.`}
+              accessibilityLabel={t('home.screen.eventA11y', { title: e.title, status: EVENT_STATUS_WORDS[e.status], when: e.window.text })}
               style={styles.row}
             >
               <View style={styles.rowText}>
                 <Text style={styles.rowTitle}>{e.title}</Text>
-                <Text style={styles.rowDetail}>{`${EVENT_STATUS_WORDS[e.status]}: ${e.window.text}`}</Text>
+                <Text style={styles.rowDetail}>{t('home.screen.eventDetail', { status: EVENT_STATUS_WORDS[e.status], when: e.window.text })}</Text>
               </View>
               <ConfidenceChip confidence={e.explained.confidence} label={e.explained.confidence_label} />
             </Pressable>
           ))}
           <Button mode="text" compact onPress={() => go('Season')} textColor={palette.acc} style={styles.more}
-            accessibilityLabel="The whole season">
-            The whole season
+            accessibilityLabel={t('home.screen.wholeSeason')}>
+            {t('home.screen.wholeSeason')}
           </Button>
         </View>
       ) : null}
@@ -316,7 +317,7 @@ export default function HomeScreen() {
       {/* ── Your land ── */}
       {property ? (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>Your land</Eyebrow>
+          <Eyebrow style={styles.eyebrow}>{t('home.screen.yourLand')}</Eyebrow>
           {progress ? <Text style={styles.quiet}>{progress}</Text> : null}
           {mapState.kind === 'map' && imageryQ.data ? (
             <LandMap
@@ -324,7 +325,7 @@ export default function HomeScreen() {
               zones={zonesQ.data ?? []}
               layer={chosen.layer}
               onPress={() => go('Land')}
-              pressHint="Opens your land"
+              pressHint={t('home.screen.opensLand')}
               imageryVersion={imageryQ.dataUpdatedAt}
               layersVersion={layersQ.dataUpdatedAt}
             />
@@ -339,7 +340,7 @@ export default function HomeScreen() {
             </>
           ) : null}
           {profileQ.isError && !profileQ.data && tiles.length === 0 ? (
-            <LoadError inline message="Couldn’t load what is known about your land." error={profileQ.error}
+            <LoadError inline message={t('home.screen.landFailed')} error={profileQ.error}
               onRetry={() => profileQ.refetch()} retrying={profileQ.isRefetching} />
           ) : null}
           {tiles.length > 0 ? (
@@ -348,8 +349,8 @@ export default function HomeScreen() {
             </View>
           ) : null}
           <Button mode="text" compact onPress={() => go('Land')} textColor={palette.acc} style={styles.more}
-            accessibilityLabel="Everything about your land">
-            Everything about your land
+            accessibilityLabel={t('home.screen.everythingLand')}>
+            {t('home.screen.everythingLand')}
           </Button>
         </View>
       ) : null}
@@ -357,20 +358,18 @@ export default function HomeScreen() {
       {offersAddLand(form, vitals) ? (
         <Card style={styles.addLand} mode="contained">
           <Card.Content>
-            <Text style={styles.addLandTitle}>Have a yard or garden beds?</Text>
+            <Text style={styles.addLandTitle}>{t('home.screen.addLandTitle')}</Text>
             <Text style={styles.addLandBody}>
-              Add your land and PlantAdvocate reads its soil, sun and typical frost dates
-              from public maps, then plans the season with you. Pots on a balcony or a
-              windowsill need nothing more.
+              {t('home.screen.addLandBody')}
             </Text>
             <Button
               mode="outlined"
               onPress={() => navigation.navigate('PropertySetup')}
               textColor={palette.acc}
               style={styles.addLandBtn}
-              accessibilityLabel="Add your land"
+              accessibilityLabel={t('home.screen.addLand')}
             >
-              Add your land
+              {t('home.screen.addLand')}
             </Button>
           </Card.Content>
         </Card>
@@ -378,9 +377,9 @@ export default function HomeScreen() {
 
       {/* ── Your growing spaces ── */}
       <View style={styles.section}>
-        <Eyebrow style={styles.eyebrow}>Your growing spaces</Eyebrow>
+        <Eyebrow style={styles.eyebrow}>{t('home.screen.growingSpaces')}</Eyebrow>
         {legacy && areasQ.isError && !areasQ.data ? (
-          <LoadError inline message="Couldn’t load your growing spaces." error={areasQ.error}
+          <LoadError inline message={t('home.screen.spacesFailed')} error={areasQ.error}
             onRetry={() => areasQ.refetch()} retrying={areasQ.isRefetching} />
         ) : null}
         {spaces.map((s) => (
@@ -399,8 +398,8 @@ export default function HomeScreen() {
           </Pressable>
         ))}
         <Button mode="text" compact onPress={() => navigation.navigate('Spaces')} textColor={palette.acc} style={styles.more}
-          accessibilityLabel={spaces.length === 0 ? 'Add a growing space' : 'All growing spaces'}>
-          {spaces.length === 0 ? 'Add a growing space' : 'All growing spaces'}
+          accessibilityLabel={spaces.length === 0 ? t('home.screen.addSpace') : t('home.screen.allSpaces')}>
+          {spaces.length === 0 ? t('home.screen.addSpace') : t('home.screen.allSpaces')}
         </Button>
       </View>
 
@@ -409,11 +408,11 @@ export default function HomeScreen() {
       {/* ── Quiet links ── */}
       <View style={styles.links}>
         <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}
-          accessibilityLabel="Open plants">Plants</Button>
+          accessibilityLabel={t('home.screen.openPlants')}>{t('home.screen.plants')}</Button>
         <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}
-          accessibilityLabel="Open species">Species</Button>
+          accessibilityLabel={t('home.screen.openSpecies')}>{t('home.screen.species')}</Button>
         <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}
-          accessibilityLabel="Open settings">Settings</Button>
+          accessibilityLabel={t('home.screen.openSettings')}>{t('home.screen.settings')}</Button>
       </View>
     </ScrollView>
   );
@@ -471,7 +470,7 @@ function WeekRow({ item, styles, onPress }: {
   if (item.kind === 'care') {
     return (
       <Pressable onPress={onPress} accessibilityRole="button"
-        accessibilityLabel={`${item.text}. ${item.detail}. Opens the plant.`} style={styles.row}>
+        accessibilityLabel={t('home.screen.careA11y', { text: item.text, detail: item.detail })} style={styles.row}>
         <View style={styles.rowText}>
           <Text style={styles.rowTitle}>{item.text}</Text>
           <Text style={[styles.rowDetail, item.overdue && styles.overdue]}>{item.detail}</Text>
@@ -485,7 +484,7 @@ function WeekRow({ item, styles, onPress }: {
   return (
     <View style={styles.taskWrap}>
       <Pressable onPress={onPress} accessibilityRole="button"
-        accessibilityLabel={`${item.text}.${settled ? ' Done.' : ''} Opens the seasonal plan.`} style={styles.row}>
+        accessibilityLabel={t(settled ? 'home.screen.taskDoneA11y' : 'home.screen.taskA11y', { text: item.text })} style={styles.row}>
         <View style={styles.rowText}>
           <Text style={[styles.rowTitle, settled && styles.settled]}>
             {settled ? `✓ ${item.text}` : item.text}
@@ -496,13 +495,13 @@ function WeekRow({ item, styles, onPress }: {
       </Pressable>
       <Pressable onPress={() => setOpen((o) => !o)} accessibilityRole="button"
         accessibilityState={{ expanded: open }}
-        accessibilityLabel={`${WHY_LABEL}. ${open ? 'Hide' : 'Show'}.`} hitSlop={8}>
+        accessibilityLabel={t('home.screen.whyA11y', { why: WHY_LABEL, toggle: open ? t('home.screen.hide') : t('home.screen.show') })} hitSlop={8}>
         <Text style={styles.why}>{`${open ? '▾' : '▸'} ${WHY_LABEL}`}</Text>
       </Pressable>
       {open && (
         <View style={styles.whyBody}>
           <Text style={styles.rowDetail}>{lines.reason}</Text>
-          {lines.sources.map((s) => <Text key={s} style={styles.quiet}>{`Data: ${s}`}</Text>)}
+          {lines.sources.map((s) => <Text key={s} style={styles.quiet}>{t('home.screen.data', { source: s })}</Text>)}
         </View>
       )}
     </View>

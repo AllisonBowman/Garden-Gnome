@@ -10,6 +10,7 @@
 //
 // Pure on purpose (no React Native imports) so jest can pin it.
 import { Species } from '../types';
+import { t } from '../i18n';
 
 const SIGN = '⚠️';
 
@@ -47,6 +48,6 @@ export function toxicityLine(
     return { text, hazard };
   }
   // An older server sends only the flag.
-  if (species.toxic_to_pets === true) return { text: `${SIGN} Toxic to pets.`, hazard: true };
+  if (species.toxic_to_pets === true) return { text: `${SIGN} ${t('care.toxicToPets')}`, hazard: true };
   return null;
 }

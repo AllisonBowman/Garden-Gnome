@@ -8,6 +8,7 @@ import { searchAddress, locateMe } from '../location/lookup';
 import { ResolvedPlace } from '../location/geocode';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { t } from '../i18n';
 
 const DEBOUNCE_MS = 600;
 const MIN_CHARS = 4;
@@ -67,8 +68,8 @@ export default function AddressPicker({
     setLocating(false);
     if (place) pick(place, 'device');
     else Alert.alert(
-      'Location unavailable',
-      "Couldn't determine your address from your location. Try typing it instead.",
+      t('land.address.unavailableTitle'),
+      t('land.address.unavailableBody'),
     );
   };
 
@@ -78,7 +79,7 @@ export default function AddressPicker({
   return (
     <View>
       <TextInput
-        label="Address or place (optional)"
+        label={t('land.address.label')}
         value={query}
         onChangeText={onType}
         mode="outlined"
@@ -96,27 +97,29 @@ export default function AddressPicker({
         disabled={locating}
         style={styles.gpsBtn}
       >
-        Use my location
+        {t('land.address.useMyLocation')}
       </Button>
 
       {suggestion && !selected ? (
         <TouchableRipple onPress={() => pick(suggestion)} style={styles.suggestion}>
           <View>
             <Text variant="bodyMedium" style={styles.suggestionText}>📍 {suggestion.address}</Text>
-            <Text variant="bodySmall" style={styles.suggestionHint}>Tap to use this place</Text>
+            <Text variant="bodySmall" style={styles.suggestionHint}>{t('land.address.tapToUse')}</Text>
           </View>
         </TouchableRipple>
       ) : null}
 
       {selected ? (
         <Text variant="bodySmall" style={styles.confirmed}>
-          ✓ Location set{selected.city ? ` — ${selected.city}${selected.region ? `, ${selected.region}` : ''}` : ''}
+          {selected.city
+            ? t('land.address.setIn', { place: `${selected.city}${selected.region ? `, ${selected.region}` : ''}` })
+            : t('land.address.set')}
         </Text>
       ) : null}
 
       {noMatch ? (
         <Text variant="bodySmall" style={styles.noMatch}>
-          No match yet — keep typing the full address, or use your location.
+          {t('land.address.noMatch')}
         </Text>
       ) : null}
     </View>

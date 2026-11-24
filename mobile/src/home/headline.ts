@@ -1,6 +1,8 @@
 import { FrostRisk } from '../types/site';
 import { parseServerDate } from '../api/serverDate';
 import { startOfDay } from '../care/schedule';
+import { t } from '../i18n';
+import { weekdayLong } from '../season/dateWords';
 
 // Home's headline: one plain sentence about today and the season. The server
 // writes it when it has the plan; this picks one when it gives none (the
@@ -29,8 +31,6 @@ export interface HeadlineInput {
 /** How far ahead a frost is worth leading with, in days from today. */
 export const FROST_LOOKAHEAD_DAYS = 3;
 
-const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
 /** The risk a forecast low carries, when the forecast does not say:
  *  32 °F and under is a freeze, 28 °F and under a hard freeze, and up to
  *  36 °F frost is possible on clear, still nights. */
@@ -42,24 +42,20 @@ export function riskFromLow(low: number | null | undefined): FrostRisk {
   return 'none';
 }
 
-const RISK_PHRASE: Record<Exclude<FrostRisk, 'none'>, string> = {
-  frost: 'Frost is possible',
-  freeze: 'A freeze is possible',
-  hard_freeze: 'A hard freeze is possible',
-};
+const riskPhrase = (risk: Exclude<FrostRisk, 'none'>): string => t(`home.headline.${risk}`);
 
 /** "today", "tomorrow", "Thursday". */
 export function dayWord(day: Date, today: Date): string {
   const diff = Math.round((startOfDay(day).getTime() - startOfDay(today).getTime()) / 86_400_000);
-  if (diff === 0) return 'today';
-  if (diff === 1) return 'tomorrow';
-  return WEEKDAYS[day.getDay()];
+  if (diff === 0) return t('home.days.today');
+  if (diff === 1) return t('home.days.tomorrow');
+  return t('home.days.weekday', { weekday: weekdayLong(day) });
 }
 
 /** "tonight", "tomorrow night", "Thursday night". */
 export function nightWord(day: Date, today: Date): string {
   const word = dayWord(day, today);
-  return word === 'today' ? 'tonight' : `${word} night`;
+  return word === t('home.days.today') ? t('home.days.tonight') : t('home.days.night', { day: word });
 }
 
 /** The first frost-risk night in the lookahead, or null. */
@@ -83,10 +79,8 @@ export function nextFrostNight(
 function dueSentence(careDue: number, openSeasonTasks: number): string | null {
   const total = careDue + openSeasonTasks;
   if (total === 0) return null;
-  if (openSeasonTasks === 0) {
-    return careDue === 1 ? '1 plant is worth a look.' : `${careDue} plants are worth a look.`;
-  }
-  return total === 1 ? '1 thing to do this week.' : `${total} things to do this week.`;
+  if (openSeasonTasks === 0) return t('home.headline.careDue', { count: careDue });
+  return t('home.headline.things', { count: total });
 }
 
 export function pickHeadline(input: HeadlineInput): string {
@@ -95,9 +89,9 @@ export function pickHeadline(input: HeadlineInput): string {
   const today = input.today ?? new Date();
   const parts: string[] = [];
   const frost = nextFrostNight(input.days, today);
-  if (frost) parts.push(`${RISK_PHRASE[frost.risk]} ${nightWord(frost.date, today)}.`);
+  if (frost) parts.push(t('home.headline.frostSentence', { risk: riskPhrase(frost.risk), night: nightWord(frost.date, today) }));
   const due = dueSentence(input.careDue, input.openSeasonTasks);
   if (due) parts.push(due);
-  if (parts.length === 0) return 'Nothing needs you today.';
+  if (parts.length === 0) return t('home.headline.nothing');
   return parts.join(' ');
 }

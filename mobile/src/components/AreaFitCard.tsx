@@ -9,6 +9,7 @@ import {
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import FitFindingRow from './FitFindingRow';
+import { t } from '../i18n';
 
 /** How one species suits one growing area, in full: what is against it, what
  *  was confirmed and on whose word, and what nobody could judge. Where a
@@ -43,20 +44,20 @@ export default function AreaFitCard({
 
   return (
     <Card style={styles.card}>
-      <Card.Title title={`In ${areaName}`} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+      <Card.Title title={t('areas.fit.inArea', { area: areaName })} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
       <Card.Content>
         {isLoading ? (
           <ActivityIndicator style={styles.loading} />
         ) : isError ? (
           <View>
             <Text style={styles.quiet}>{CHECK_FAILED}</Text>
-            <Button compact onPress={() => refetch()} style={styles.retry}>Try again</Button>
+            <Button compact onPress={() => refetch()} style={styles.retry}>{t('areas.fit.tryAgain')}</Button>
           </View>
         ) : fit ? (
           <>
             {against.length > 0 ? (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Against it here</Text>
+                <Text style={styles.sectionTitle}>{t('areas.fit.against')}</Text>
                 {against.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
               </View>
             ) : null}
@@ -64,7 +65,7 @@ export default function AreaFitCard({
               <Text style={[styles.quiet, styles.section]}>{confirmedLine(confirmed)}</Text>
             ) : confirmed.length > 0 ? (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Confirmed here</Text>
+                <Text style={styles.sectionTitle}>{t('areas.fit.confirmed')}</Text>
                 {confirmed.map((f, i) => <FitFindingRow key={`${f.axis}-${i}`} finding={f} />)}
               </View>
             ) : null}

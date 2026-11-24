@@ -14,6 +14,7 @@
 // Pure on purpose (no React Native imports) so jest can pin it.
 import axios from 'axios';
 import { isRetryableError, serverMessage } from '../api/errorMessage';
+import { t } from '../i18n';
 
 /** The most plants one POST /plants/bulk accepts. */
 export const BULK_LIMIT = 200;
@@ -73,8 +74,8 @@ export function saveFailureAlert(
   unsavedCount: number,
 ): SaveFailureAlert {
   const title = savedCount === 0
-    ? 'Nothing was saved'
-    : `Saved ${savedCount} of ${savedCount + unsavedCount}`;
+    ? t('capture.save.nothingSaved')
+    : t('capture.save.savedSome', { saved: savedCount, total: savedCount + unsavedCount });
   const status = axios.isAxiosError(error) ? error.response?.status : undefined;
 
   // The session ended under the save: the app is signing out, so the list
@@ -82,31 +83,30 @@ export function saveFailureAlert(
   if (status === 401) {
     return {
       title,
-      body: 'You’ve been signed out, so the rest weren’t saved. Sign in again to add them.',
+      body: t('capture.save.signedOut'),
     };
   }
 
   const left = savedCount === 0
-    ? 'Your list is still here.'
-    : `The other ${unsavedCount} ${unsavedCount === 1 ? 'is' : 'are'} still here.`;
+    ? t('capture.save.listStillHere')
+    : t('capture.save.othersStillHere', { count: unsavedCount });
 
   let why: string;
-  let advice = 'Try again in a moment.';
+  let advice = t('capture.save.tryAgainSoon');
   if (status === undefined) {
     why = axios.isAxiosError(error) || isRetryableError(error)
-      ? 'PlantAdvocate couldn’t reach the server.'
-      : 'Something went wrong while saving them.';
+      ? t('capture.save.unreachable')
+      : t('capture.save.somethingWrong');
   } else if (status === 503) {
-    why = sentence(serverMessage(error, 'The server couldn’t take them just now.'));
+    why = sentence(serverMessage(error, t('capture.save.serverBusy')));
   } else if (isRetryableError(error)) {
-    why = 'The server couldn’t take them just now.';
+    why = t('capture.save.serverBusy');
   } else {
     // A refusal that will be the same next time: something in the list no
     // longer matches the server (a species or growing area changed since
     // the walk began).
-    why = 'The server didn’t accept them as they are. A species or growing area in the list '
-      + 'may have changed since you started.';
-    advice = 'Check the list, then try again.';
+    why = t('capture.save.refused');
+    advice = t('capture.save.checkList');
   }
   return { title, body: `${why} ${left} ${advice}` };
 }

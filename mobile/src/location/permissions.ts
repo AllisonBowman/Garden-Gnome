@@ -1,5 +1,6 @@
 import { Alert, Linking } from 'react-native';
 import * as Location from 'expo-location';
+import { t } from '../i18n';
 
 /**
  * Ask for foreground location access before reading the device position.
@@ -22,12 +23,11 @@ export async function ensureLocationPermission(): Promise<boolean> {
 
   // Previously denied — iOS won't prompt again, so Settings is the only route.
   Alert.alert(
-    'Location access is off',
-    "PlantAdvocate can't read your location because location access is turned off. "
-    + 'You can turn it on in Settings, or just type the address instead.',
+    t('common.locationOff.title'),
+    t('common.locationOff.body'),
     [
-      { text: 'Not now', style: 'cancel' },
-      { text: 'Open Settings', onPress: () => { void Linking.openSettings(); } },
+      { text: t('common.notNow'), style: 'cancel' },
+      { text: t('common.openSettings'), onPress: () => { void Linking.openSettings(); } },
     ],
   );
   return false;

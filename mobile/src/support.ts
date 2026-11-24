@@ -1,4 +1,5 @@
 import { Alert, Linking, Platform } from 'react-native';
+import { t } from './i18n';
 
 // Single source of truth for the app's outward-facing contact points.
 // The App Store listing uses the same URLs (privacy/support must resolve
@@ -19,10 +20,10 @@ export async function openExternal(url: string): Promise<void> {
     await Linking.openURL(url);
   } catch {
     Alert.alert(
-      'Could not open link',
+      t('common.link.title'),
       url.startsWith('mailto:')
-        ? `No mail app is set up on this device. You can reach us at ${SUPPORT_EMAIL}.`
-        : `Your device could not open ${url}.`,
+        ? t('common.link.noMail', { email: SUPPORT_EMAIL })
+        : t('common.link.cannotOpen', { url }),
     );
   }
 }
@@ -49,8 +50,8 @@ export function buildReportMailto(
   const fact = surfaceLabel === 'fact';
   const body = [
     fact
-      ? 'Which fact looks wrong, and why? A link to where you read otherwise helps us check it.'
-      : 'Tell us what was wrong or inappropriate about this result:',
+      ? t('common.report.factPrompt')
+      : t('common.report.resultPrompt'),
     '',
     '',
     fact ? '——— What the page says ———' : '——— Reported result ———',
@@ -59,6 +60,8 @@ export function buildReportMailto(
     '———',
     `App: PlantAdvocate ${APP_VERSION} (${Platform.OS})`,
   ].join('\n');
-  const subject = fact ? 'Report a fact' : `Report a ${surfaceLabel} result`;
+  const subject = fact
+    ? t('common.report.factSubject')
+    : t('common.report.resultSubject', { surface: surfaceLabel });
   return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }

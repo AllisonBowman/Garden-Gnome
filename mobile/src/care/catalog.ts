@@ -2,6 +2,7 @@
 // any name it goes by. Pure, so the Species tab, the Almanac and the pickers
 // list and find species the same way.
 import { Species } from '../types';
+import { t } from '../i18n';
 
 // One collator for every comparison, in English: accents and case set
 // aside, so "Ångel's trumpet" sorts with the A's and "baby's breath" beside
@@ -62,5 +63,5 @@ export function matchesQuery(s: Species, query: string): boolean {
  *  `No species match ""`). */
 export function emptyCatalogMessage(search: string): string {
   const q = search.trim();
-  return q ? `No species match "${q}".` : 'No species to show yet.';
+  return q ? t('care.catalog.noMatch', { query: q }) : t('care.catalog.noneYet');
 }

@@ -26,6 +26,7 @@ import {
 } from '../season/timeline';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette } from '../theme/tokens';
+import { t } from '../i18n';
 
 export interface SeasonTimelineProps {
   /** Full events (Season) or the summaries Home has; both carry `window`. */
@@ -106,7 +107,7 @@ export default function SeasonTimeline({ events, onPressEvent, today }: SeasonTi
             ))}
             {todayBox ? (
               <Text style={[styles.today, { top: todayBox.top, left: todayBox.left, width: todayBox.width, color: palette.ink }]}>
-                Today
+                {t('season.dates.today')}
               </Text>
             ) : null}
           </View>
@@ -130,7 +131,7 @@ export default function SeasonTimeline({ events, onPressEvent, today }: SeasonTi
             return onPressEvent ? (
               <Pressable key={it.event_key} style={box} hitSlop={{ top: 5, bottom: 5 }}
                 onPress={() => onPressEvent(it.event_key)}
-                accessibilityRole="button" accessibilityLabel={it.a11y} accessibilityHint="Opens this event">
+                accessibilityRole="button" accessibilityLabel={it.a11y} accessibilityHint={t('season.timeline.opensEvent')}>
                 {title}
               </Pressable>
             ) : (

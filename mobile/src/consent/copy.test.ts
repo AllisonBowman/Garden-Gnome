@@ -14,6 +14,12 @@ const path = require('path');
 
 const readSrc = (rel: string): string =>
   fs.readFileSync(path.join(__dirname, rel), 'utf8');
+// Screen text lives in the English resources (src/i18n/en) once translated,
+// so a screen's words are its source plus those resources.
+type Tree = { [k: string]: string | Tree };
+const leafText = (tree: Tree): string[] =>
+  Object.values(tree).flatMap((v) => (typeof v === 'string' ? [v] : leafText(v)));
+const EN_TEXT = leafText(require('../i18n/en').default).join('\n');
 
 const flow = (id: string) => DATA_FLOWS.find((f) => f.id === id)!;
 const text = (id: string) => `${flow(id).summary} ${flow(id).detail}`;
@@ -148,7 +154,7 @@ test('the voice flow is true of the speech module and the capture screen', () =>
   expect(speech).toMatch(/requiresOnDeviceRecognition\s*=\s*onDevice/);
   expect(speech).toMatch(/supportsOnDeviceRecognition/);
   const capture = readSrc('../screens/CaptureGardenScreen.tsx');
-  expect(capture).toMatch(/sends audio to Apple/);
+  expect(`${capture}\n${EN_TEXT}`).toMatch(/sends audio to Apple/);
 
   // Only the confirmed plants reach the server: the bulk payload is built
   // from the drafts' species, count and spot, never the transcript. The save

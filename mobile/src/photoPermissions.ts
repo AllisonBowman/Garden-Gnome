@@ -1,5 +1,6 @@
 import { Alert, Linking } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { t } from './i18n';
 
 /**
  * Ask for camera access before opening the camera.
@@ -27,11 +28,11 @@ export async function ensureCameraPermission(): Promise<boolean> {
   // Previously denied — iOS will not show the prompt again, so the only route
   // is Settings. Say so plainly rather than leaving a dead button.
   Alert.alert(
-    'Camera access is off',
-    "PlantAdvocate can't open the camera because camera access is turned off. You can turn it on in Settings, or use “Choose photo” to pick an existing picture.",
+    t('common.cameraOff.title'),
+    t('common.cameraOff.body'),
     [
-      { text: 'Not now', style: 'cancel' },
-      { text: 'Open Settings', onPress: () => { void Linking.openSettings(); } },
+      { text: t('common.notNow'), style: 'cancel' },
+      { text: t('common.openSettings'), onPress: () => { void Linking.openSettings(); } },
     ],
   );
   return false;

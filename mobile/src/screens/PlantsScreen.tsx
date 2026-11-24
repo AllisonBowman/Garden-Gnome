@@ -15,17 +15,16 @@ import StreakBadges from '../streaks/StreakBadges';
 import CareTodos from '../care/CareTodos';
 import EmptyState from '../components/EmptyState';
 import LoadError from '../components/LoadError';
+import { t } from '../i18n';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 
 type Nav = NativeStackNavigationProp<PlantsStackParamList, 'Plants'>;
 
-const LIGHT_LABELS: Record<string, string> = {
-  low: 'Low light',
-  medium: 'Medium',
-  bright_indirect: 'Bright indirect',
-  direct: 'Direct sun',
-};
+const LIGHT_NEEDS = ['low', 'medium', 'bright_indirect', 'direct'] as const;
+const LIGHT_LABELS: Record<string, string> = Object.fromEntries(
+  LIGHT_NEEDS.map((k) => [k, t(`plants.list.light.${k}`)]),
+);
 
 function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
   const { palette, fonts } = useAppTheme();
@@ -61,7 +60,7 @@ function PlantCard({ plant, onPress }: { plant: Plant; onPress: () => void }) {
                 style={[styles.chip, styles.toxicChip]}
                 textStyle={styles.toxicChipText}
               >
-                Pet caution
+                {t('plants.list.petCaution')}
               </Chip>
             )}
           </View>
@@ -104,7 +103,7 @@ export default function PlantsScreen() {
   if (isError && !plants) {
     return (
       <LoadError
-        message="Couldn’t load your plants."
+        message={t('plants.list.loadFailed')}
         error={error}
         onRetry={() => refetch()}
         retrying={isRefetching}
@@ -130,9 +129,9 @@ export default function PlantsScreen() {
         ListEmptyComponent={
           <EmptyState
             emoji="🪴"
-            title="Your garden's empty"
-            body="Add your first plant and PlantAdvocate will help you keep it thriving. Gentle reminders when care is due, no pressure."
-            actionLabel="Add your first plant"
+            title={t('plants.list.emptyTitle')}
+            body={t('plants.list.emptyBody')}
+            actionLabel={t('plants.list.emptyAction')}
             onAction={() => navigation.navigate('AddPlant')}
           />
         }
@@ -148,7 +147,7 @@ export default function PlantsScreen() {
         style={styles.captureFab}
         color={palette.acc}
         onPress={() => navigation.navigate('CaptureGarden')}
-        label="Walk the garden"
+        label={t('plants.list.walk')}
         variant="surface"
         size="small"
       />
@@ -157,7 +156,7 @@ export default function PlantsScreen() {
         style={styles.fab}
         color={palette.btnInk}
         onPress={() => navigation.navigate('AddPlant')}
-        label="Add plant"
+        label={t('plants.list.add')}
       />
     </View>
   );

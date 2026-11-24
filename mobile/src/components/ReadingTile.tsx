@@ -27,6 +27,8 @@ import Eyebrow from './Eyebrow';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { useMeasuredWidth } from './useMeasuredWidth';
 import { Palette } from '../theme/tokens';
+import { t } from '../i18n';
+import { localConfidenceLabel } from './explainedText';
 
 export interface ReadingTileProps {
   tile: Tile;
@@ -129,7 +131,7 @@ export function ReadingTile({ tile, open = false, onPress }: ReadingTileProps) {
       {tile.detail ? <Text style={[styles.detail, { color: palette.sub }]} numberOfLines={3}>{tile.detail}</Text> : null}
       {/* "Not known yet" as the value needs no chip repeating it. */}
       {tile.confidenceLabel.trim().toLowerCase() === tile.valueText.trim().toLowerCase() ? null : (
-        <ConfidenceChip confidence={tile.explained.confidence} label={tile.confidenceLabel} style={styles.chip} />
+        <ConfidenceChip confidence={tile.explained.confidence} label={localConfidenceLabel(tile.confidenceLabel, tile.explained.confidence)} style={styles.chip} />
       )}
     </>
   );
@@ -142,7 +144,7 @@ export function ReadingTile({ tile, open = false, onPress }: ReadingTileProps) {
       style={frame}
       accessibilityRole="button"
       accessibilityLabel={tile.a11y}
-      accessibilityHint={open ? 'Hides why and the data source' : 'Shows why and the data source'}
+      accessibilityHint={open ? t('land.tileHideHint') : t('land.tileShowHint')}
       accessibilityState={{ expanded: open }}
     >
       {body}
@@ -164,7 +166,7 @@ export interface ReadingTileGridProps {
 
 /** Tiles in two columns, with the tapped tile's ExplainedBlock under them. */
 export default function ReadingTileGrid({
-  tiles, selected, onSelect, onOpen, openLabel = 'Open in Your land',
+  tiles, selected, onSelect, onOpen, openLabel = t('land.openInYourLand'),
 }: ReadingTileGridProps) {
   const [own, setOwn] = useState<ReadingTileKey | null>(null);
   const current = selected !== undefined ? selected : own;
@@ -185,7 +187,7 @@ export default function ReadingTileGrid({
           <ExplainedBlock explained={openTile.explained} title={openTile.title} initiallyOpen />
           {onOpen ? (
             <Button mode="text" compact onPress={() => onOpen(openTile)} style={styles.openBtn}
-              accessibilityLabel={`${openLabel}: ${openTile.title}`}>
+              accessibilityLabel={t('land.openA11y', { label: openLabel, title: openTile.title })}>
               {openLabel}
             </Button>
           ) : null}

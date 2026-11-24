@@ -22,6 +22,13 @@ import {
   LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
 } from '../care/loadFailed';
 import RefreshFailed from '../components/RefreshFailed';
+import { t } from '../i18n';
+
+/** A schedule's care type in the reader's language; an unknown type as sent. */
+function careTypeLabel(type: string): string {
+  const key = `species.detail.careType.${type}`;
+  return t(key as 'species.detail.careType.other', { defaultValue: type.charAt(0).toUpperCase() + type.slice(1) });
+}
 
 type Route = RouteProp<SpeciesStackParamList, 'SpeciesDetail'>;
 
@@ -64,7 +71,7 @@ export default function SpeciesDetailScreen() {
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
-          title={loadFailedTitle('this species')}
+          title={loadFailedTitle(t('species.detail.loadFailedWhat'))}
           body={loadFailedBody(error)}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
@@ -80,7 +87,7 @@ export default function SpeciesDetailScreen() {
   const hasFacts = careFactRows(species).length > 0;
   const hasLegacy = legacyStats(species).length > 0;
   const sources = species.care_sources ?? [];
-  const traits = (species.traits ?? []).filter((t) => t.trait !== 'humidity_source');
+  const traits = (species.traits ?? []).filter((tr) => tr.trait !== 'humidity_source');
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -104,7 +111,7 @@ export default function SpeciesDetailScreen() {
           </Text>
         ) : species.toxic_to_pets ? (
           <Chip icon="alert" style={styles.toxicChip} textStyle={styles.toxicChipText}>
-            ⚠️ Toxic to pets
+            {t('species.detail.toxicToPets')}
           </Chip>
         ) : null}
         {/* Under whatever was said about harm, the line the listing promises. */}
@@ -121,7 +128,7 @@ export default function SpeciesDetailScreen() {
           was borrowed from the genus. */}
       {hasFacts && (
         <Card style={styles.card}>
-          <Card.Title title="Care facts" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('species.detail.careFacts')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             <CareFactList species={species} />
           </Card.Content>
@@ -140,7 +147,7 @@ export default function SpeciesDetailScreen() {
       {/* Care notes */}
       {species.care_notes ? (
         <Card style={styles.card}>
-          <Card.Title title="Care notes" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('species.detail.careNotes')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             <Text variant="bodyMedium" style={styles.notes}>{species.care_notes}</Text>
           </Card.Content>
@@ -153,7 +160,7 @@ export default function SpeciesDetailScreen() {
           likeliest to be wrong. */}
       {sources.length > 0 ? (
         <Card style={styles.card}>
-          <Card.Title title="Sources" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('species.detail.sources')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             <CareSourceRows sources={sources} />
             <ReportFact species={species} />
@@ -168,14 +175,14 @@ export default function SpeciesDetailScreen() {
       {/* Schedules */}
       {species.care_schedules && species.care_schedules.length > 0 && (
         <Card style={styles.card}>
-          <Card.Title title="Recommended schedule" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('species.detail.schedule')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             {species.care_schedules.map((sched) => (
               <List.Item
                 key={sched.id}
-                title={`${CARE_ICON[sched.care_type] ?? '•'} ${sched.care_type.charAt(0).toUpperCase() + sched.care_type.slice(1)}`}
+                title={`${CARE_ICON[sched.care_type] ?? '•'} ${careTypeLabel(sched.care_type)}`}
                 description={
-                  `Every ${sched.interval_days_min}–${sched.interval_days_max} days` +
+                  t('species.detail.every', { min: sched.interval_days_min, max: sched.interval_days_max }) +
                   (sched.notes ? `\n${sched.notes}` : '')
                 }
                 descriptionNumberOfLines={4}
@@ -191,15 +198,15 @@ export default function SpeciesDetailScreen() {
           a developer-text leak. */}
       {traits.length > 0 && (
         <Card style={styles.card}>
-          <Card.Title title="Plant traits" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('species.detail.traits')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
-            {traits.map((t) => (
-              <View key={t.id} style={styles.traitRow}>
+            {traits.map((tr) => (
+              <View key={tr.id} style={styles.traitRow}>
                 <Text variant="labelMedium" style={styles.traitKey}>
-                  {capitalize(t.trait.replace(/_/g, ' '))}
+                  {capitalize(tr.trait.replace(/_/g, ' '))}
                 </Text>
                 <Text variant="bodySmall">
-                  {t.value}{t.unit ? ` ${t.unit}` : ''}
+                  {tr.value}{tr.unit ? ` ${tr.unit}` : ''}
                 </Text>
               </View>
             ))}

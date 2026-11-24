@@ -17,13 +17,14 @@
 // number nobody stated.
 import { Species, WaterRegime } from '../types';
 import { outdoorSunPhrase } from '../care/facts';
+import { t } from '../i18n';
 
 export type Tier = 'beginner' | 'intermediate' | 'fussy';
 
 export const TIER_LABELS: Record<Tier, string> = {
-  beginner: 'Beginner',
-  intermediate: 'Intermediate',
-  fussy: 'Fussy',
+  beginner: t('almanac.tiers.beginner'),
+  intermediate: t('almanac.tiers.intermediate'),
+  fussy: t('almanac.tiers.fussy'),
 };
 
 /** Humidity above this is hard to hold in a normal room without help. */
@@ -117,18 +118,18 @@ export interface Fingerprint {
 }
 
 const LIGHT_GLYPH: Record<string, string> = {
-  low: '◐ low',
-  medium: '◑ medium',
-  bright_indirect: '☀ bright indirect',
-  direct: '☀☀ direct sun',
+  low: t('almanac.light.low'),
+  medium: t('almanac.light.medium'),
+  bright_indirect: t('almanac.light.bright_indirect'),
+  direct: t('almanac.light.direct'),
 };
 
 /** The watering regime in a glyph's worth of words. */
 const REGIME_GLYPH: Record<WaterRegime, string> = {
-  keep_moist: '💧 evenly moist',
-  keep_barely_moist: '💧 barely moist',
-  dry_surface_between: '💧 top dries between',
-  dry_thoroughly_between: '💧 dries out between',
+  keep_moist: t('almanac.regime.keep_moist'),
+  keep_barely_moist: t('almanac.regime.keep_barely_moist'),
+  dry_surface_between: t('almanac.regime.dry_surface_between'),
+  dry_thoroughly_between: t('almanac.regime.dry_thoroughly_between'),
 };
 
 /** Light from the resolved columns first — hours of direct sun, then the
@@ -137,10 +138,10 @@ const REGIME_GLYPH: Record<WaterRegime, string> = {
 function lightGlyph(s: Species): string {
   if (s.direct_sun_hours_max != null) {
     return s.direct_sun_hours_max === 0
-      ? '☀ no direct sun'
-      : `☀ up to ${s.direct_sun_hours_max}h direct sun`;
+      ? t('almanac.light.noDirect')
+      : t('almanac.light.upTo', { hours: s.direct_sun_hours_max });
   }
-  if (s.light_fc_min != null) return `☀ ${s.light_fc_min}+ footcandles`;
+  if (s.light_fc_min != null) return t('almanac.light.footcandles', { fc: s.light_fc_min });
   const outdoor = outdoorSunPhrase(s.outdoor_sun_exposure);
   if (outdoor) return `☀ ${outdoor}`;
   if (s.light_need) return LIGHT_GLYPH[s.light_need] ?? `☀ ${s.light_need.replace(/_/g, ' ')}`;
@@ -165,7 +166,7 @@ export function fingerprint(s: Species): Fingerprint {
     water: s.water_regime && REGIME_GLYPH[s.water_regime]
       ? REGIME_GLYPH[s.water_regime]
       : water
-        ? `💧 every ${water.interval_days_min}–${water.interval_days_max}d`
+        ? t('almanac.regime.every', { min: water.interval_days_min, max: water.interval_days_max })
         : '💧 —',
     light: lightGlyph(s),
     // The cited category first; the legacy band only when its numbers came

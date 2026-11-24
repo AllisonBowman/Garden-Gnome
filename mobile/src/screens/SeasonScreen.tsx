@@ -11,8 +11,9 @@ import { rescheduleAllReminders } from '../notifications/reminders';
 import { Forecast, OwnerAction, SeasonEvent, SeasonTask, SeasonalPlan } from '../types/site';
 import {
   ACTION_LABELS, STATUS_WORDS, TASK_STATE_WORDS, actionBody, forecastCredit,
-  observedDayChoices, orderedActions, orderedTasks, seasonSections,
+  observedDayA11y, observedDayChoices, orderedActions, orderedTasks, seasonSections,
 } from '../season/sections';
+import { t } from '../i18n';
 import ExplainedBlock from '../components/ExplainedBlock';
 import ForecastBars from '../components/ForecastBars';
 import { followTarget } from '../land/followTarget';
@@ -126,7 +127,7 @@ export default function SeasonScreen() {
   if (!plan) {
     return (
       <LoadError
-        message="Couldn’t load your seasonal plan."
+        message={t('season.screen.loadFailed')}
         error={planQ.error}
         onRetry={() => planQ.refetch()}
         retrying={planQ.isRefetching}
@@ -143,31 +144,31 @@ export default function SeasonScreen() {
       refreshControl={<RefreshControl refreshing={pulling} onRefresh={onRefresh} />}
     >
       {planQ.isError && <RefreshFailed onRetry={() => planQ.refetch()} retrying={planQ.isRefetching} />}
-      <Text style={styles.headline} accessibilityRole="header">{plan.season_label || 'Your seasonal plan'}</Text>
+      <Text style={styles.headline} accessibilityRole="header">{plan.season_label || t('season.screen.titleFallback')}</Text>
 
       {plan.forecast && plan.forecast.days.length > 0 ? (
         <ForecastStrip forecast={plan.forecast} styles={styles} />
       ) : (
         <Text style={styles.quiet}>
-          No forecast right now. Dates below are typical dates for your area, not this year's forecast.
+          {t('season.screen.noForecast')}
         </Text>
       )}
 
       {act.isError ? (
         <Text style={styles.error} accessibilityLiveRegion="polite">
-          That answer was not saved. Check your connection and try again.
+          {t('season.screen.notSaved')}
         </Text>
       ) : null}
 
       {timelineDrawsAnything(plan.events) ? (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>The year at a glance</Eyebrow>
+          <Eyebrow style={styles.eyebrow}>{t('season.screen.yearAtAGlance')}</Eyebrow>
           <SeasonTimeline events={plan.events} onPressEvent={scrollToEvent} />
         </View>
       ) : null}
 
       {sections.length === 0 ? (
-        <Text style={styles.quietBlock}>Nothing is in your seasonal plan yet.</Text>
+        <Text style={styles.quietBlock}>{t('season.screen.empty')}</Text>
       ) : sections.map((s) => (
         <View key={s.key} style={styles.section} collapsable={false} onLayout={(ev) => onSectionLayout(s.key, ev.nativeEvent.layout.y)}>
           <Eyebrow style={styles.eyebrow}>{s.title}</Eyebrow>
@@ -195,7 +196,7 @@ function ForecastStrip({ forecast, styles }: { forecast: Forecast; styles: Style
   // strip's (forecastCells), and the rain and frost words stay on screen.
   return (
     <View style={styles.section}>
-      <Eyebrow style={styles.eyebrow}>Forecast</Eyebrow>
+      <Eyebrow style={styles.eyebrow}>{t('season.screen.forecast')}</Eyebrow>
       <ForecastBars days={forecast.days} />
       <Text style={styles.quiet}>{forecastCredit(forecast.provider_name, forecast.fetched_at)}</Text>
       {isAppleForecast(forecast) ? (
@@ -253,16 +254,16 @@ function EventCard({ event, highlighted, busy, onAction, styles }: {
         )}
         {pickingDay && (
           <View>
-            <Text style={styles.pickLabel}>When did it happen at your place?</Text>
+            <Text style={styles.pickLabel}>{t('season.screen.whenHappened')}</Text>
             <View style={styles.actions}>
-              {observedDayChoices().map((d) => (
+              {observedDayChoices().map((d, i) => (
                 <Button
                   key={d.value}
                   mode="outlined"
                   compact
                   disabled={busy}
                   onPress={() => onAction('mark_happened', d.value)}
-                  accessibilityLabel={`It happened ${d.label === 'Today' || d.label === 'Yesterday' ? d.label.toLowerCase() : `on ${d.label}`}`}
+                  accessibilityLabel={observedDayA11y(i, d.label)}
                   style={styles.actionBtn}
                 >
                   {d.label}
@@ -292,7 +293,7 @@ function TaskRow({ task, styles }: { task: SeasonTask; styles: Styles }) {
         onPress={() => setOpen((o) => !o)}
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
-        accessibilityLabel={`${WHY_LABEL} for this task. ${open ? 'Hide' : 'Show'}.`}
+        accessibilityLabel={t('season.screen.whyTaskA11y', { why: WHY_LABEL, toggle: open ? t('season.screen.hide') : t('season.screen.show') })}
         hitSlop={8}
         style={styles.toggle}
       >
@@ -301,7 +302,7 @@ function TaskRow({ task, styles }: { task: SeasonTask; styles: Styles }) {
       {open && (
         <View style={styles.detail}>
           {lines.reason ? <Text style={styles.reason}>{lines.reason}</Text> : null}
-          {lines.sources.map((s, i) => <Text key={i} style={styles.source}>{`Data: ${s}`}</Text>)}
+          {lines.sources.map((s, i) => <Text key={i} style={styles.source}>{t('season.screen.data', { source: s })}</Text>)}
         </View>
       )}
     </View>

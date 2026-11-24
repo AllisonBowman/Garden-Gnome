@@ -1,4 +1,5 @@
 import { LegendStep, MapLayer, MapLayerKind, MapLayers } from '../types/site';
+import { t } from '../i18n';
 
 // The land map's layer chips and the words around them (map and visuals spec
 // sections 1 and 4.2): Aerial first (nothing drawn over the photograph),
@@ -20,11 +21,13 @@ export interface MapChip {
   a11y: string;
 }
 
-export const AERIAL_LABEL = 'Aerial';
+export const AERIAL_LABEL = t('land.aerial');
 
 const KNOWN_KINDS: MapLayerKind[] = ['sun', 'trees', 'water'];
 
-const FALLBACK_TITLES: Record<MapLayerKind, string> = { sun: 'Sun', trees: 'Trees', water: 'Water' };
+const FALLBACK_TITLES: Record<MapLayerKind, string> = {
+  sun: t('land.layerTitles.sun'), trees: t('land.layerTitles.trees'), water: t('land.layerTitles.water'),
+};
 
 /** Whether a layer can be drawn now: ready, with a picture to load. */
 export function layerReady(layer: MapLayer | null | undefined): boolean {
@@ -43,8 +46,8 @@ export function layerStatusText(layer: MapLayer): string | null {
   if (layerReady(layer)) return null;
   const own = layer.status_text?.trim();
   if (own) return own;
-  if (layer.status === 'unavailable') return `The ${titleOf(layer).toLowerCase()} map is not available for this place.`;
-  return `The ${titleOf(layer).toLowerCase()} map is still being prepared. Check back in a few minutes.`;
+  if (layer.status === 'unavailable') return t('land.layerUnavailable', { layer: titleOf(layer).toLowerCase() });
+  return t('land.layerPreparing', { layer: titleOf(layer).toLowerCase() });
 }
 
 /**
@@ -55,7 +58,7 @@ export function layerStatusText(layer: MapLayer): string | null {
 export function mapChips(layers: MapLayers | null | undefined): MapChip[] {
   const chips: MapChip[] = [{
     key: 'aerial', label: AERIAL_LABEL, enabled: true, layer: null,
-    a11y: 'Aerial. The photograph alone, with nothing drawn over it.',
+    a11y: t('land.aerialA11y'),
   }];
   const seen = new Set<MapLayerKind>();
   for (const layer of layers?.layers ?? []) {
@@ -65,8 +68,8 @@ export function mapChips(layers: MapLayers | null | undefined): MapChip[] {
     const enabled = layerReady(layer);
     chips.push({
       key: layer.kind, label, enabled, layer,
-      a11y: enabled ? `${label} layer. Draws ${label.toLowerCase()} over the photograph.`
-        : `${label} layer, not available yet. ${layerStatusText(layer)}`,
+      a11y: enabled ? t('land.layerA11y', { label, lower: label.toLowerCase() })
+        : t('land.layerNotReadyA11y', { label, status: layerStatusText(layer) }),
     });
   }
   return chips;
@@ -80,7 +83,7 @@ export function chosenChip(chips: MapChip[], wanted: MapChipKey | null | undefin
 
 /** One line per layer that cannot be switched on yet, for under the chips. */
 export function layerStatusLines(chips: MapChip[]): string[] {
-  return chips.filter((c) => !c.enabled && c.layer).map((c) => `${c.label}: ${layerStatusText(c.layer!)}`);
+  return chips.filter((c) => !c.enabled && c.layer).map((c) => t('land.layerStatusLine', { label: c.label, status: layerStatusText(c.layer!) }));
 }
 
 /**
@@ -122,8 +125,10 @@ export function legendSteps(layer: MapLayer | null | undefined): LegendStep[] {
 /** One sentence for a screen reader about the legend. */
 export function legendA11y(layer: MapLayer): string {
   const steps = legendSteps(layer);
-  if (steps.length === 0) return `${titleOf(layer)} legend: no colours were given.`;
-  return `${titleOf(layer)} legend, ${steps.length} ${steps.length === 1 ? 'colour' : 'colours'}: ${steps.map((s) => s.label).join(', ')}.`;
+  if (steps.length === 0) return t('land.legendNone', { title: titleOf(layer) });
+  return t('land.legendA11y', {
+    title: titleOf(layer), count: steps.length, labels: steps.map((s) => s.label).join(t('land.listSeparator')),
+  });
 }
 
 /**
@@ -138,18 +143,20 @@ export function mapA11yLabel(opts: {
 }): string {
   const parts: string[] = [];
   const source = opts.sourceName?.trim();
-  parts.push(source ? `Top-down aerial image of your land, from ${source.replace(/[.\s]+$/, '')}.`
-    : 'Top-down aerial image of your land.');
+  parts.push(source ? t('land.mapFrom', { source: source.replace(/[.\s]+$/, '') })
+    : t('land.mapPlain'));
   const names = opts.zoneNames.map((n) => n.trim()).filter(Boolean);
-  if (names.length === 1) parts.push(`One zone outlined: ${names[0]}.`);
-  else if (names.length > 1) parts.push(`${names.length} zones outlined: ${names.join(', ')}.`);
-  if (opts.hasPin) parts.push('Your pin is marked.');
+  if (names.length === 1) parts.push(t('land.oneZoneOutlined', { name: names[0] }));
+  else if (names.length > 1) {
+    parts.push(t('land.zonesOutlined', { count: names.length, names: names.join(t('land.listSeparator')) }));
+  }
+  if (opts.hasPin) parts.push(t('land.pinMarked'));
   const layer = opts.layer && layerReady(opts.layer) ? opts.layer : null;
   if (layer) {
     const steps = legendSteps(layer);
-    const range = steps.length >= 2 ? ` Colours run from ${steps[0].label} to ${steps[steps.length - 1].label}.`
-      : steps.length === 1 ? ` Coloured areas show ${steps[0].label}.` : '';
-    parts.push(`Showing the ${titleOf(layer)} layer.${range} The legend below lists every colour.`);
+    const range = steps.length >= 2 ? t('land.coloursRun', { from: steps[0].label, to: steps[steps.length - 1].label })
+      : steps.length === 1 ? t('land.colouredShow', { label: steps[0].label }) : '';
+    parts.push(t('land.showingLayer', { title: titleOf(layer), range }));
   }
   return parts.join(' ');
 }

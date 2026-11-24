@@ -7,26 +7,22 @@
 // every line here asks the gardener to confirm, nothing is chosen for them,
 // and no line claims the phone knows. Kept apart from identify.ts, which
 // loads the native module, so jest can pin the wording.
+import { t } from '../i18n';
+
 
 /** Above the suggested species, when the catalog has matches. */
-export const PHOTO_SUGGESTIONS_LABEL =
-  'Suggested from the photo. Tap the one that matches, and check it’s right before you save.';
+export const PHOTO_SUGGESTIONS_LABEL = t('common.photoId.suggestions');
 
 /** Kept for the report email: what the gardener was shown. */
-export const SUGGESTED_OBSERVATION =
-  'Suggested from the photo. Confirm it’s right, or pick another below.';
+export const SUGGESTED_OBSERVATION = t('common.photoId.suggested');
 
-export const UNAVAILABLE_OBSERVATION =
-  'Your phone can’t suggest plants from photos. Search for yours below.';
+export const UNAVAILABLE_OBSERVATION = t('common.photoId.unavailable');
 
-export const UNREADABLE_OBSERVATION =
-  'Couldn’t read the photo this time. Search for your plant below.';
+export const UNREADABLE_OBSERVATION = t('common.photoId.unreadable');
 
-export const NO_NAME_OBSERVATION =
-  'Your phone couldn’t suggest a name for this one. Search for it below.';
+export const NO_NAME_OBSERVATION = t('common.photoId.noName');
 
 /** The phone named something the catalog doesn't hold. */
 export function notInCatalogObservation(suggested: string): string {
-  return `Your phone suggested “${suggested}”, but that isn’t in the catalog yet. `
-    + 'Search below for the closest match.';
+  return t('common.photoId.notInCatalog', { suggested });
 }

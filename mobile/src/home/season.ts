@@ -1,15 +1,16 @@
 import { SeasonEventStatus, SeasonEventSummary, ProfileStatus } from '../types/site';
+import { t } from '../i18n';
 
 // Words for "The season ahead" and for a land profile still being read. Pure.
 
 export const EVENT_STATUS_WORDS: Record<SeasonEventStatus, string> = {
-  happened: 'Happened',
-  happening: 'Happening now',
-  forecast: 'In the forecast',
-  expected: 'Expected',
-  typically_around: 'Typically',
-  done: 'Done',
-  not_needed: 'Not needed',
+  happened: t('home.eventStatus.happened'),
+  happening: t('home.eventStatus.happening'),
+  forecast: t('home.eventStatus.forecast'),
+  expected: t('home.eventStatus.expected'),
+  typically_around: t('home.eventStatus.typically_around'),
+  done: t('home.eventStatus.done'),
+  not_needed: t('home.eventStatus.not_needed'),
 };
 
 /** How many events "The season ahead" lists on Home; Season has the rest. */
@@ -37,13 +38,13 @@ export function seasonAhead(
 export function profileProgressLine(status: ProfileStatus | null | undefined): string | null {
   if (!status) return null;
   const busy = (s: string) => s === 'pending' || s === 'building';
-  if (busy(status.fast)) return 'Still reading your land. The first values usually arrive within a minute.';
+  if (busy(status.fast)) return t('home.progress.fast');
   if (busy(status.background)) {
-    return 'Still reading slope, tree cover and the aerial image. Those values fill in when they arrive.';
+    return t('home.progress.background');
   }
   if (status.fast === 'failed' || status.background === 'failed'
     || status.fast === 'partial' || status.background === 'partial') {
-    return 'Some public maps could not be reached. PlantAdvocate will try them again.';
+    return t('home.progress.partial');
   }
   return null;
 }

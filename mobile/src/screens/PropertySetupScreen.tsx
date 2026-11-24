@@ -27,6 +27,7 @@ import {
 } from '../land/setup';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'PropertySetup'>;
 type Route = RouteProp<RootStackParamList, 'PropertySetup'>;
@@ -135,7 +136,7 @@ export default function PropertySetupScreen() {
   }
   if (editingId != null && propertyQ.isError) {
     return (
-      <LoadError message="Couldn’t load your land." error={propertyQ.error}
+      <LoadError message={t('land.setup.loadFailed')} error={propertyQ.error}
         onRetry={() => propertyQ.refetch()} retrying={propertyQ.isRefetching} />
     );
   }
@@ -145,10 +146,9 @@ export default function PropertySetupScreen() {
       scrollEnabled={!touching}>
       {step === 'address' && (
         <View>
-          <Text style={styles.title} accessibilityRole="header">Add your land</Text>
+          <Text style={styles.title} accessibilityRole="header">{t('land.setup.addTitle')}</Text>
           <Text style={styles.body}>
-            Type your address or use your location. The address is only used on this phone to find
-            the right aerial image. You then put a pin on your home, and the pin is what PlantAdvocate stores.
+            {t('land.setup.addBody')}
           </Text>
           <AddressPicker onChange={onPlace} />
           <Button
@@ -156,9 +156,9 @@ export default function PropertySetupScreen() {
             disabled={!place}
             onPress={() => setStep('pin')}
             style={styles.primary}
-            accessibilityLabel="Next: put the pin on your home"
+            accessibilityLabel={t('land.setup.nextA11y')}
           >
-            Next
+            {t('land.setup.next')}
           </Button>
         </View>
       )}
@@ -166,13 +166,11 @@ export default function PropertySetupScreen() {
       {step === 'pin' && (
         <View>
           <Text style={styles.title} accessibilityRole="header">
-            {editingId != null ? 'Move the pin' : 'Put the pin on your home'}
+            {editingId != null ? t('land.setup.movePin') : t('land.setup.putPin')}
           </Text>
           {!covered ? (
             <Text style={styles.body}>
-              The public land maps PlantAdvocate reads cover the United States only. You can still save
-              this place: the seasonal plan will run on the weather forecast, and you can tell PlantAdvocate
-              about your sun and soil yourself.
+              {t('land.setup.notCovered')}
             </Text>
           ) : null}
 
@@ -185,20 +183,17 @@ export default function PropertySetupScreen() {
 
           {covered && imageryQ.isError ? (
             <Text style={styles.body}>
-              The aerial image is not available right now. You can confirm the pin without it: it is
-              placed where {editingId != null ? 'it was before' : 'the address search found'}, and you can
-              move it later from Your land.
+              {editingId != null ? t('land.setup.noImageBefore') : t('land.setup.noImageFound')}
             </Text>
           ) : null}
 
           <Text style={styles.note}>
-            The pin is what gets stored, not an address. Public soil, elevation and land maps are asked
-            only about an area about 1,600 feet across that contains it.
+            {t('land.setup.pinNote')}
           </Text>
 
           {(createM.isError || editM.isError) ? (
             <Text style={styles.error}>
-              {serverMessage(createM.error ?? editM.error, 'Couldn’t save your land. Check your connection and try again.')}
+              {serverMessage(createM.error ?? editM.error, t('land.setup.saveFailed'))}
             </Text>
           ) : null}
 
@@ -207,14 +202,14 @@ export default function PropertySetupScreen() {
             disabled={!pin}
             onPress={() => setStep('lot')}
             style={styles.primary}
-            accessibilityLabel="Confirm the pin and continue"
+            accessibilityLabel={t('land.setup.confirmA11y')}
           >
-            This is my home
+            {t('land.setup.confirm')}
           </Button>
           {editingId == null ? (
             <Button mode="text" onPress={() => setStep('address')} textColor={palette.sub}
-              accessibilityLabel="Back to the address">
-              Back
+              accessibilityLabel={t('land.setup.backToAddressA11y')}>
+              {t('land.setup.back')}
             </Button>
           ) : null}
         </View>
@@ -222,9 +217,9 @@ export default function PropertySetupScreen() {
 
       {step === 'lot' && (
         <View>
-          <Text style={styles.title} accessibilityRole="header">What’s on your lot?</Text>
+          <Text style={styles.title} accessibilityRole="header">{t('land.setup.lotTitle')}</Text>
           <Text style={styles.body}>
-            Tap any that apply. This is optional and you can change it later.
+            {t('land.setup.lotBody')}
           </Text>
           <View style={styles.chips}>
             {lotContentChoices().map((c) => {
@@ -235,7 +230,7 @@ export default function PropertySetupScreen() {
                   selected={on}
                   showSelectedCheck
                   onPress={() => setLot((cur) => toggleLotContent(cur, c.value))}
-                  accessibilityLabel={`${c.label}. ${on ? 'Selected' : 'Not selected'}.`}
+                  accessibilityLabel={t(on ? 'land.selectedA11y' : 'land.notSelectedA11y', { label: c.label })}
                   accessibilityState={{ selected: on }}
                   style={styles.chip}
                 >
@@ -246,7 +241,7 @@ export default function PropertySetupScreen() {
           </View>
           {(createM.isError || editM.isError) ? (
             <Text style={styles.error}>
-              {serverMessage(createM.error ?? editM.error, 'Couldn’t save your land. Check your connection and try again.')}
+              {serverMessage(createM.error ?? editM.error, t('land.setup.saveFailed'))}
             </Text>
           ) : null}
           <Button
@@ -255,33 +250,32 @@ export default function PropertySetupScreen() {
             disabled={createM.isPending || editM.isPending || !pin}
             onPress={() => (editingId != null ? editM.mutate() : createM.mutate())}
             style={styles.primary}
-            accessibilityLabel={editingId != null ? 'Save the changes' : 'Save your land'}
+            accessibilityLabel={editingId != null ? t('land.setup.saveChangesA11y') : t('land.setup.saveLandA11y')}
           >
-            {editingId != null ? 'Save' : 'Save your land'}
+            {editingId != null ? t('land.setup.save') : t('land.setup.saveLand')}
           </Button>
           {editingId == null && lot.length === 0 ? (
             <Button mode="text" onPress={() => createM.mutate()} disabled={createM.isPending}
-              textColor={palette.sub} accessibilityLabel="Skip this and save your land">
-              Skip
+              textColor={palette.sub} accessibilityLabel={t('land.setup.skipA11y')}>
+              {t('land.setup.skip')}
             </Button>
           ) : null}
           <Button mode="text" onPress={() => setStep('pin')} textColor={palette.sub}
-            accessibilityLabel="Back to the pin">
-            Back
+            accessibilityLabel={t('land.setup.backToPinA11y')}>
+            {t('land.setup.back')}
           </Button>
         </View>
       )}
 
       {step === 'reading' && status && (
         <View>
-          <Text style={styles.title} accessibilityRole="header">Reading your land</Text>
+          <Text style={styles.title} accessibilityRole="header">{t('land.setup.readingTitle')}</Text>
           <Text style={styles.body}>
-            PlantAdvocate is reading public maps for the area around your pin. You do not need to wait:
-            values fill in on Home and in Your land as they arrive.
+            {t('land.setup.readingBody')}
           </Text>
           {readingLines(status).map((l) => (
             <View key={l.key} style={styles.readRow} accessible
-              accessibilityLabel={`${l.what}. ${l.state}.`}>
+              accessibilityLabel={t('land.setup.readingA11y', { what: l.what, state: l.state })}>
               <Text style={styles.readMark}>{l.done ? '✓' : '…'}</Text>
               <View style={styles.readText}>
                 <Text style={styles.readWhat}>{l.what}</Text>
@@ -292,8 +286,8 @@ export default function PropertySetupScreen() {
           {stillReading(status) ? <ActivityIndicator style={styles.spin} /> : null}
           {(profileQ.data?.notes ?? []).map((n) => <Text key={n} style={styles.note}>{n}</Text>)}
           <Button mode="contained" onPress={() => void goHome()} style={styles.primary}
-            accessibilityLabel="Go to Home">
-            See your report
+            accessibilityLabel={t('land.setup.goHomeA11y')}>
+            {t('land.setup.seeReport')}
           </Button>
         </View>
       )}
@@ -323,14 +317,14 @@ function PinOnImage({ imagery, uri, headers, pin, onPin, onGestureActive, palett
   };
   return (
     <View>
-      <Text style={styles.body}>Drag the pin onto your roof, or tap where your home is.</Text>
+      <Text style={styles.body}>{t('land.setup.dragPin')}</Text>
       <TopDownImage
         imagery={imagery}
         imageUri={uri}
         headers={headers}
         onTapPoint={fromPixel}
         onGestureActive={onGestureActive}
-        accessibilityLabel="Aerial image of the area around your address, with a pin on your home"
+        accessibilityLabel={t('land.setup.imageA11y')}
       >
         {(ctx) => (
           <PinMarker ctx={ctx} at={at} imageSize={size} onMove={fromPixel}
@@ -338,12 +332,14 @@ function PinOnImage({ imagery, uri, headers, pin, onPin, onGestureActive, palett
         )}
       </TopDownImage>
       <Text style={styles.credit}>
-        {`Image: ${sourceText(imagery.source)}${imagery.captured ? `, taken ${imagery.captured}` : ''}.`}
+        {imagery.captured
+          ? t('land.setup.creditTaken', { source: sourceText(imagery.source), captured: imagery.captured })
+          : t('land.setup.credit', { source: sourceText(imagery.source) })}
       </Text>
       <View style={styles.nudges}>
         {(['north', 'west', 'east', 'south'] as Direction[]).map((d) => (
           <Button key={d} mode="outlined" compact onPress={() => move(d)} textColor={palette.acc}
-            accessibilityLabel={`Move the pin about 16 feet ${d}`}>
+            accessibilityLabel={t(`land.setup.nudge.${d}`)}>
             {d === 'north' ? '↑' : d === 'south' ? '↓' : d === 'east' ? '→' : '←'}
           </Button>
         ))}

@@ -6,6 +6,7 @@ import { useGardenCareData } from '../care/useCareTasks';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
+import { t } from '../i18n';
 import {
   computeStreak, computeMetrics, computeBadges, Badge,
 } from './streaks';
@@ -69,12 +70,12 @@ export default function StreakBadges() {
             {streak.current > 0 ? (
               <>
                 <Text style={styles.streakNum}>
-                  {streak.current}-day care streak
+                  {t('care.streaks.current', { count: streak.current })}
                 </Text>
                 <Text style={styles.streakSub}>
                   {streak.best > streak.current
-                    ? `Your best is ${streak.best} days — keep it going.`
-                    : 'Every plant is on track. Nice work.'}
+                    ? t('care.streaks.best', { n: streak.best })
+                    : t('care.streaks.allOnTrack')}
                 </Text>
               </>
             ) : streak.behindCount > 0 && streak.trackedCount > 1 ? (
@@ -85,19 +86,17 @@ export default function StreakBadges() {
               // the whole point of showing it.
               <>
                 <Text style={styles.streakNum}>
-                  {streak.onTrackPct}% of your garden is on track
+                  {t('care.streaks.onTrackPct', { pct: streak.onTrackPct })}
                 </Text>
                 <Text style={styles.streakSub}>
-                  {streak.behindCount === 1
-                    ? 'One planting is past its window — it’s in your to-dos.'
-                    : `${streak.behindCount} plantings are past their window — they’re in your to-dos.`}
+                  {t('care.streaks.behind', { count: streak.behindCount })}
                 </Text>
               </>
             ) : (
               <>
-                <Text style={styles.streakNum}>No active streak</Text>
+                <Text style={styles.streakNum}>{t('care.streaks.none')}</Text>
                 <Text style={styles.streakSub}>
-                  A little care gets one going — no pressure.
+                  {t('care.streaks.noneSub')}
                 </Text>
               </>
             )}
@@ -107,7 +106,7 @@ export default function StreakBadges() {
         <Divider style={styles.divider} />
 
         {/* Badges */}
-        <Eyebrow style={styles.badgesHeading}>Badges · {earnedCount} of {badges.length}</Eyebrow>
+        <Eyebrow style={styles.badgesHeading}>{t('care.streaks.badgesHeading', { earned: earnedCount, total: badges.length })}</Eyebrow>
         <View style={styles.badgeGrid}>
           {badges.map((b) => (
             <Pressable

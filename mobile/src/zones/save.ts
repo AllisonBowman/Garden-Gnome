@@ -1,5 +1,6 @@
 import { Box, OverridePut, SiteProfile, Zone, ZoneCreate, ZonePatch } from '../types/site';
 import { ZoneDraft, correctionBodies, zoneCreateBody, zonePatchBody } from './describe';
+import { t } from '../i18n';
 
 /** The calls a zone save makes, passed in so the order can be tested. */
 export interface ZoneSaveApi {
@@ -23,7 +24,7 @@ export interface ZoneSaveInput {
 /** Thrown when the zone was created but an answer about it was not saved. */
 export class AnswersNotSaved extends Error {
   constructor(readonly zone: Zone, readonly cause: unknown) {
-    super('The zone was saved, but its answers were not.');
+    super(t('zones.answersNotSaved'));
   }
 }
 

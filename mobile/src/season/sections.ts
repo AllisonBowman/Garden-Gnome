@@ -3,27 +3,29 @@ import {
   SeasonTask,
 } from '../types/site';
 import { localDateString, parseServerDate } from '../api/serverDate';
+import { t } from '../i18n';
+import { clock, shortDay as shortDayWords, weekdayShort } from './dateWords';
 
 // The Season screen's logic: which events need attention now, which come in
 // the next twelve months, which are settled, and the words for statuses,
 // owner actions and the forecast strip. Pure.
 
 export const STATUS_WORDS: Record<SeasonEventStatus, string> = {
-  happened: 'Recorded for your area',
-  happening: 'Happening now',
-  forecast: 'In the forecast',
-  expected: 'Expected',
-  typically_around: 'Typically around',
-  done: 'Done',
-  not_needed: 'Not needed this year',
+  happened: t('season.status.happened'),
+  happening: t('season.status.happening'),
+  forecast: t('season.status.forecast'),
+  expected: t('season.status.expected'),
+  typically_around: t('season.status.typically_around'),
+  done: t('season.status.done'),
+  not_needed: t('season.status.not_needed'),
 };
 
 export const ACTION_LABELS: Record<OwnerAction, string> = {
-  mark_happened: 'It happened here',
-  mark_not_yet: 'Not yet at my place',
-  mark_done: 'Done',
-  mark_not_needed: 'Not needed',
-  clear: 'Clear my answer',
+  mark_happened: t('season.actions.mark_happened'),
+  mark_not_yet: t('season.actions.mark_not_yet'),
+  mark_done: t('season.actions.mark_done'),
+  mark_not_needed: t('season.actions.mark_not_needed'),
+  clear: t('season.actions.clear'),
 };
 
 /** The order the actions are offered in, whatever order the server sends. */
@@ -53,17 +55,25 @@ export function observedDayChoices(today: Date = new Date(), count = 7): { value
   const out: { value: string; label: string }[] = [];
   for (let i = 0; i < count; i++) {
     const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
-    out.push({ value: localDateString(d), label: i === 0 ? 'Today' : i === 1 ? 'Yesterday' : shortDay(d) });
+    out.push({
+      value: localDateString(d),
+      label: i === 0 ? t('season.dates.today') : i === 1 ? t('season.dates.yesterday') : shortDay(d),
+    });
   }
   return out;
 }
 
-const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** What a screen reader says for a day choice: "It happened today",
+ *  "It happened on Tue 17 Nov". `index` is the choice's place in the list. */
+export function observedDayA11y(index: number, label: string): string {
+  if (index === 0) return t('season.screen.happenedToday');
+  if (index === 1) return t('season.screen.happenedYesterday');
+  return t('season.screen.happenedOn', { day: label });
+}
 
 /** "Tue 17 Nov" */
 export function shortDay(d: Date): string {
-  return `${WEEKDAY[d.getDay()]} ${d.getDate()} ${MONTH[d.getMonth()]}`;
+  return shortDayWords(d);
 }
 
 /** How far ahead the screen plans: the next twelve months. */
@@ -75,9 +85,9 @@ export const NOW_DAYS = 7;
 export type SectionKey = 'now' | 'ahead' | 'settled';
 
 export const SECTION_TITLES: Record<SectionKey, string> = {
-  now: 'Needs attention now',
-  ahead: 'The next twelve months',
-  settled: 'Already happened or settled',
+  now: t('season.sections.now'),
+  ahead: t('season.sections.ahead'),
+  settled: t('season.sections.settled'),
 };
 
 export interface SeasonSection {
@@ -159,18 +169,18 @@ export function orderedTasks(tasks: SeasonTask[]): SeasonTask[] {
 }
 
 export const TASK_STATE_WORDS: Record<SeasonTask['state'], string> = {
-  open: 'To do',
-  done: 'Done',
-  not_needed: 'Not needed',
+  open: t('season.taskStates.open'),
+  done: t('season.taskStates.done'),
+  not_needed: t('season.taskStates.not_needed'),
 };
 
 // ── Forecast strip ───────────────────────────────────────────────────────────
 
 export const FROST_RISK_WORDS: Record<FrostRisk, string> = {
   none: '',
-  frost: 'Frost possible',
-  freeze: 'Freeze',
-  hard_freeze: 'Hard freeze',
+  frost: t('season.frostRisk.frost'),
+  freeze: t('season.frostRisk.freeze'),
+  hard_freeze: t('season.frostRisk.hard_freeze'),
 };
 
 export interface ForecastCell {
@@ -186,28 +196,29 @@ export interface ForecastCell {
 function dayLabel(dateStr: string, today: Date): string {
   const d = parseServerDate(dateStr);
   if (!d) return dateStr;
-  const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const diff = Math.round((d.getTime() - t.getTime()) / 86_400_000);
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Tomorrow';
-  return WEEKDAY[d.getDay()];
+  const t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diff = Math.round((d.getTime() - t0.getTime()) / 86_400_000);
+  if (diff === 0) return t('season.dates.today');
+  if (diff === 1) return t('season.dates.tomorrow');
+  return weekdayShort(d);
 }
 
-const deg = (n: number | null | undefined) => (n == null ? null : `${Math.round(n)}°F`);
+const deg = (n: number | null | undefined) => (n == null ? null : t('season.cells.degreesF', { temp: Math.round(n) }));
 
 export function forecastCells(days: ForecastDay[], today: Date = new Date()): ForecastCell[] {
   return days.map((d) => {
     const hi = deg(d.high_f);
     const lo = deg(d.low_f);
-    const temps = [hi, lo].filter(Boolean).join(' / ') || 'No temperature';
-    const rain = d.precipitation_chance == null ? null : `${Math.round(d.precipitation_chance)}% rain`;
+    const temps = [hi, lo].filter(Boolean).join(' / ') || t('season.cells.noTemperature');
+    const rain = d.precipitation_chance == null ? null
+      : t('season.cells.rain', { pct: Math.round(d.precipitation_chance) });
     const frost = FROST_RISK_WORDS[d.frost_risk] || null;
     const day = dayLabel(d.date, today);
     const a11y = [
       day,
-      hi ? `high ${hi.replace('°F', ' degrees Fahrenheit')}` : null,
-      lo ? `low ${lo.replace('°F', ' degrees Fahrenheit')}` : null,
-      rain ? `${Math.round(d.precipitation_chance!)} percent chance of rain` : null,
+      hi ? t('season.cells.a11yHigh', { temp: Math.round(d.high_f!) }) : null,
+      lo ? t('season.cells.a11yLow', { temp: Math.round(d.low_f!) }) : null,
+      rain ? t('season.cells.a11yRain', { pct: Math.round(d.precipitation_chance!) }) : null,
       frost, d.summary,
     ].filter(Boolean).join(', ');
     return { date: d.date, day, temps, rain, frost, summary: d.summary, a11y };
@@ -216,12 +227,10 @@ export function forecastCells(days: ForecastDay[], today: Date = new Date()): Fo
 
 /** "Forecast: National Weather Service, as of 2 pm Tue 17 Nov." */
 export function forecastCredit(providerName: string, fetchedAt: string): string {
-  const name = providerName.trim() || 'the forecast provider';
+  const name = providerName.trim() || t('season.credit.providerFallback');
   const d = new Date(fetchedAt);
-  if (Number.isNaN(d.getTime())) return `Forecast: ${name}.`;
-  const h = d.getHours();
-  const time = `${h % 12 === 0 ? 12 : h % 12}${d.getMinutes() ? `:${String(d.getMinutes()).padStart(2, '0')}` : ''} ${h < 12 ? 'am' : 'pm'}`;
-  return `Forecast: ${name}, as of ${time} ${shortDay(d)}.`;
+  if (Number.isNaN(d.getTime())) return t('season.credit.forecastBy', { name });
+  return t('season.credit.forecastByAsOf', { name, time: clock(d), day: shortDay(d) });
 }
 
 /**
@@ -232,6 +241,6 @@ export function forecastCredit(providerName: string, fetchedAt: string): string 
 export function frostNightsLine(days: ForecastDay[], today: Date = new Date()): string | null {
   const nights = forecastCells(days, today)
     .filter((c) => c.frost)
-    .map((c) => `${c.day} (${c.frost!.toLowerCase()})`);
-  return nights.length ? `Frost in the forecast: ${nights.join(', ')}.` : null;
+    .map((c) => t('season.frostNight', { day: c.day, risk: c.frost!.toLowerCase() }));
+  return nights.length ? t('season.frostNights', { nights: nights.join(', ') }) : null;
 }

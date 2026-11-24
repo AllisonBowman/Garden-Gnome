@@ -4,6 +4,7 @@ import {
 } from '../notifications/plan';
 import { GRACE_DAYS } from '../streaks/streaks';
 import { parseServerDate } from '../api/serverDate';
+import { t } from '../i18n';
 
 // One "next due" per plant × scheduled care-type, surfaced for the calendar and
 // the Plants to-do list. This is the same anchor math the reminder planner uses
@@ -206,20 +207,15 @@ export function unscheduledPlants(input: CareTasksInput): UnscheduledPlant[] {
 
 /** On a plant's own page: why nothing is scheduled for it, and where to look
  *  instead. */
-export const NO_SCHEDULE_LINE =
-  'No check schedule on record for this species yet; its care guide below has '
-  + 'what its sources say. There are no reminders for it until there is one.';
+export const NO_SCHEDULE_LINE = t('care.schedule.noScheduleLine');
 
 /** Under a to-do list or a calendar: which plants it leaves out, and why. */
 export function unscheduledLine(plants: UnscheduledPlant[]): string | null {
   if (plants.length === 0) return null;
   if (plants.length === 1) {
-    return `No check schedule on record for ${plants[0].nickname}’s species yet, so `
-      + 'nothing is scheduled for it. Its care guide has what its sources say.';
+    return t('care.schedule.unscheduledOne', { name: plants[0].nickname });
   }
-  return `${plants.length} plants have no check schedule on record for their species `
-    + 'yet, so nothing is scheduled for them. Each one’s care guide has what its '
-    + 'sources say.';
+  return t('care.schedule.unscheduledMany', { n: plants.length });
 }
 
 /** Whether the to-do card may say "All caught up": only when there are
@@ -233,9 +229,7 @@ export function allCaughtUp(taskCount: number, leftOutCount: number): boolean {
 /** Plants left out because their care log couldn't be read just now. */
 export function unreadLine(count: number): string | null {
   if (count <= 0) return null;
-  return count === 1
-    ? 'Couldn’t read 1 plant’s care log just now, so it’s left out here.'
-    : `Couldn’t read ${count} plants’ care logs just now, so they’re left out here.`;
+  return t('care.schedule.unread', { count });
 }
 
 /**
@@ -250,10 +244,10 @@ export function unreadLine(count: number): string | null {
 export function careTaskDueLabel(task: CareTask): string {
   if (task.status === 'overdue' || task.status === 'due') {
     const since = task.daysSinceLastCare;
-    if (since === null) return 'Worth a check';
-    return since === 1 ? 'Last done 1 day ago' : `Last done ${since} days ago`;
+    if (since === null) return t('care.schedule.worthCheck');
+    return t('care.schedule.lastDone', { count: since });
   }
   const n = task.daysUntilDue;
-  if (n === 1) return 'Check tomorrow';
-  return `Check in ${n} days`;
+  if (n === 1) return t('care.schedule.checkTomorrow');
+  return t('care.schedule.checkIn', { count: n });
 }

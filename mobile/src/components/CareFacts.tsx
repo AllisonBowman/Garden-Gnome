@@ -10,6 +10,7 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from './Eyebrow';
 import Pill from './Pill';
+import { t } from '../i18n';
 
 // The care facts as a screen shows them. The species detail and the plant
 // detail both describe a species, and both used to read the six legacy
@@ -119,7 +120,7 @@ export function CareSourceRows({ sources }: { sources: CareSource[] }) {
             disabled={!source.url}
             style={styles.sourceRow}
             accessibilityRole="link"
-            accessibilityLabel={`${label}. Opens the page these care facts came from.`}
+            accessibilityLabel={t('care.facts.sourceA11y', { label })}
           >
             <Text variant="bodyMedium" style={styles.sourceText}>
               {label}{source.url ? ' ›' : ''}

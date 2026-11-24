@@ -15,6 +15,7 @@ import {
   CareSource, FertilizeStrength, HumidityNeed, OutdoorSunExposure, SoilBase,
   SoilDrainage, Species, WaterRegime,
 } from '../types';
+import { t } from '../i18n';
 
 export type CareFactKey =
   | 'water' | 'light' | 'humidity' | 'temperature' | 'soil'
@@ -41,53 +42,46 @@ export interface LegacyStat {
 }
 
 /** The status line's phrasing, exported so screens and tests share one copy. */
-export const BORROWED_LINE = 'Care facts borrowed from the genus — not confirmed for this species';
+export const BORROWED_LINE = t('care.facts.borrowedLine');
 /** The pill on anything one species borrowed from its genus (ADR 0002). One
  *  copy, because the same fact is labelled on a care row and on a fit
  *  finding, and a reader should not have to learn two words for it. */
-export const INFERRED_PILL = 'genus-inferred';
-export const NONE_LINE = 'No care facts cited for this species yet';
+export const INFERRED_PILL = t('care.facts.inferredPill');
+export const NONE_LINE = t('care.facts.noneLine');
 /** The caption over the legacy stats: they are catalog values no claim
  *  backs, and under a "cited to …" line they would read as equally cited. */
-export const CATALOG_LINE = 'From the catalog — not yet cited';
+export const CATALOG_LINE = t('care.facts.catalogLine');
 
 // Wording for the categorical columns. A token is a column value, not a fact
 // anyone can act on, so none of these leak through as-is.
-const WATER_REGIME_TEXT: Record<WaterRegime, string> = {
-  keep_moist: 'keep the medium evenly moist',
-  keep_barely_moist: 'keep the medium barely moist',
-  dry_surface_between: 'let the surface dry between waterings',
-  dry_thoroughly_between: 'let the medium dry thoroughly between waterings',
+// Read from the translation, keyed by the column's own token; null for a
+// token this build does not know.
+const WATER_REGIMES: Record<WaterRegime, true> = {
+  keep_moist: true, keep_barely_moist: true, dry_surface_between: true, dry_thoroughly_between: true,
 };
-const HUMIDITY_TEXT: Record<HumidityNeed, string> = {
-  low: 'low; tolerates dry air',
-  average: 'average room humidity',
-  high: 'high; wants humid air',
+const HUMIDITIES: Record<HumidityNeed, true> = { low: true, average: true, high: true };
+const SOIL_BASES: Record<SoilBase, true> = {
+  standard_potting: true, chunky_aroid: true, cactus_succulent: true, ericaceous: true,
+  orchid_bark: true, african_violet: true, semi_hydro: true, garden_bed: true,
 };
-const SOIL_BASE_TEXT: Record<SoilBase, string> = {
-  standard_potting: 'standard potting mix',
-  chunky_aroid: 'chunky aroid mix',
-  cactus_succulent: 'cactus and succulent mix',
-  ericaceous: 'ericaceous (acid) mix',
-  orchid_bark: 'orchid bark',
-  african_violet: 'African violet mix',
-  semi_hydro: 'semi-hydro (inert medium)',
-  garden_bed: 'garden bed soil',
+const DRAINAGES: Record<SoilDrainage, true> = { fast: true, moderate: true, moisture_retentive: true };
+const STRENGTHS: Record<FertilizeStrength, true> = { full: true, half: true, quarter: true };
+const SUNS: Record<OutdoorSunExposure, true> = {
+  full_sun: true, part_sun: true, part_shade: true, full_shade: true,
 };
-const DRAINAGE_TEXT: Record<SoilDrainage, string> = {
-  fast: 'fast-draining',
-  moderate: 'moderately draining',
-  moisture_retentive: 'moisture-retentive',
-};
-const STRENGTH_TEXT: Record<FertilizeStrength, string> = {
-  full: 'full strength', half: 'half strength', quarter: 'quarter strength',
-};
-const SUN_TEXT: Record<OutdoorSunExposure, string> = {
-  full_sun: 'full sun', part_sun: 'part sun',
-  part_shade: 'part shade', full_shade: 'full shade',
-};
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const WATER_REGIME_TEXT = (v: WaterRegime): string | null =>
+  (v in WATER_REGIMES ? t(`care.facts.waterRegime.${v}`) : null);
+const HUMIDITY_TEXT = (v: HumidityNeed): string | null =>
+  (v in HUMIDITIES ? t(`care.facts.humidity.${v}`) : null);
+const SOIL_BASE_TEXT = (v: SoilBase): string | null =>
+  (v in SOIL_BASES ? t(`care.facts.soilBase.${v}`) : null);
+const DRAINAGE_TEXT = (v: SoilDrainage): string | null =>
+  (v in DRAINAGES ? t(`care.facts.drainage.${v}`) : null);
+const STRENGTH_TEXT = (v: FertilizeStrength): string | null =>
+  (v in STRENGTHS ? t(`care.facts.strength.${v}`) : null);
+const SUN_TEXT = (v: OutdoorSunExposure): string | null =>
+  (v in SUNS ? t(`care.facts.sun.${v}`) : null);
+const MONTHS = t('care.facts.monthsShort').split(',');
 
 /** The concepts a resolved column replaces. A legacy stat shows only while
  *  every resolved column for its concept is absent. */
@@ -126,7 +120,9 @@ const hasAny = (s: Species, fields: (keyof Species)[]) => fields.some((f) => has
  *  in a sentence is the "7 ft" printed for the 84 in somebody measured. The
  *  fixtures in facts.test.ts are shared with the engine's tests. */
 export const lengthSaid = (v: number) => (
-  v < 24 ? `${num(v)} in` : `${num(Math.floor((v * 10) / 12 + 0.5) / 10)} ft`);
+  v < 24
+    ? t('care.facts.inches', { n: num(v) })
+    : t('care.facts.feet', { n: num(Math.floor((v * 10) / 12 + 0.5) / 10) }));
 
 /** A mature-size range. Null at both ends means nobody measured it, which is
  *  not the same as a plant with no size — so the row simply does not appear. */
@@ -134,14 +130,24 @@ export const lengthSaid = (v: number) => (
  *  it climbs rather than how tall it stands. */
 function climb(lo: number | null | undefined, hi: number | null | undefined): string | null {
   if (lo == null && hi == null) return null;
-  if (lo != null && hi != null) return `climbs ${lengthSaid(lo)}-${lengthSaid(hi)}`;
-  return lo != null ? `climbs from ${lengthSaid(lo)}` : `climbs up to ${lengthSaid(hi!)}`;
+  if (lo != null && hi != null) {
+    return t('care.facts.climbsRange', { low: lengthSaid(lo), high: lengthSaid(hi) });
+  }
+  return lo != null
+    ? t('care.facts.climbsFrom', { low: lengthSaid(lo) })
+    : t('care.facts.climbsUpTo', { high: lengthSaid(hi!) });
 }
 
-function span(lo: number | null | undefined, hi: number | null | undefined, word: string): string | null {
+function span(
+  lo: number | null | undefined, hi: number | null | undefined, word: 'tall' | 'wide',
+): string | null {
   if (lo == null && hi == null) return null;
-  if (lo != null && hi != null) return `${lengthSaid(lo)}-${lengthSaid(hi)} ${word}`;
-  return lo != null ? `from ${lengthSaid(lo)} ${word}` : `up to ${lengthSaid(hi!)} ${word}`;
+  if (lo != null && hi != null) {
+    return t(`care.facts.${word}Range`, { low: lengthSaid(lo), high: lengthSaid(hi) });
+  }
+  return lo != null
+    ? t(`care.facts.${word}From`, { low: lengthSaid(lo) })
+    : t(`care.facts.${word}UpTo`, { high: lengthSaid(hi!) });
 }
 
 /** 3 -> "3", 2.5 -> "2.5": depths, hours and degrees read as counts. */
@@ -153,8 +159,8 @@ const num = (v: number) => String(v);
  *  agree. */
 export function depthSaid(cm: number): string {
   const half = Math.floor((cm / 2.54) * 2 + 0.5) / 2;
-  if (half <= 0.5) return 'half an inch';
-  return `${num(half)} ${half === 1 ? 'inch' : 'inches'}`;
+  if (half <= 0.5) return t('care.facts.halfInch');
+  return t('care.facts.depthInches', { count: half });
 }
 
 /** Sentence case for a row, leaving a leading unit symbol alone: "pH 6–6.5"
@@ -169,8 +175,8 @@ export const capitalize = (text: string) => (
 /** "65–80°F", or the half that exists: "from 55°F" / "up to 80°F". */
 function band(low: number | null | undefined, high: number | null | undefined, unit: string) {
   if (low != null && high != null) return `${num(low)}–${num(high)}${unit}`;
-  if (low != null) return `from ${num(low)}${unit}`;
-  return `up to ${num(high as number)}${unit}`;
+  if (low != null) return t('care.facts.bandFrom', { low: num(low), unit });
+  return t('care.facts.bandUpTo', { high: num(high as number), unit });
 }
 
 /** Whether any of `fields` was borrowed from the genus (ADR 0002). */
@@ -183,12 +189,12 @@ export function isGenusInferred(species: Species, ...fields: string[]): boolean 
  *  shade" — or null when nothing resolved. */
 export function outdoorSunPhrase(values: OutdoorSunExposure[] | null | undefined): string | null {
   if (!values?.length) return null;
-  return values.map((v) => SUN_TEXT[v] ?? v.replace(/_/g, ' ')).join(', ');
+  return values.map((v) => SUN_TEXT(v) ?? v.replace(/_/g, ' ')).join(', ');
 }
 
 /** The regime as a caretaker would say it; null when nothing resolved. */
 export function waterRegimeSentence(species: Species): string | null {
-  return species.water_regime ? WATER_REGIME_TEXT[species.water_regime] ?? null : null;
+  return species.water_regime ? WATER_REGIME_TEXT(species.water_regime) : null;
 }
 
 /** "Mar–Oct" when the months run without a gap — wrapping through December
@@ -198,7 +204,7 @@ export function monthSpan(months: number[]): string {
   const ordered = [...new Set(months.filter((m) => m >= 1 && m <= 12))].sort((a, b) => a - b);
   const names = ordered.map((m) => MONTHS[m - 1]);
   if (names.length <= 1) return names.join('');
-  if (names.length === 12) return 'All year';
+  if (names.length === 12) return t('care.facts.allYear');
   // Around the circle of the year a contiguous run has exactly one gap that
   // is not a single month; the span starts just after it and ends on it.
   const gaps = ordered.map((m, i) => (((ordered[(i + 1) % ordered.length] - m) % 12) + 12) % 12);
@@ -207,7 +213,7 @@ export function monthSpan(months: number[]): string {
     const i = breaks[0];
     return `${names[(i + 1) % names.length]}–${names[i]}`;
   }
-  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+  return t('care.facts.listAnd', { list: names.slice(0, -1).join(', '), last: names[names.length - 1] });
 }
 
 /** One concept's parts and the fields they were read from. */
@@ -242,54 +248,56 @@ const CONCEPTS: {
 }[] = [
   // The regime and the check depth — never the dry-down target, which is a
   // verbatim passage and stays on the server (ADR 0003).
-  { key: 'water', label: 'Watering', join: '; ', read: (s) => concept([
+  { key: 'water', label: t('care.facts.labels.water'), join: '; ', read: (s) => concept([
     [waterRegimeSentence(s), ['water_regime']],
-    [s.water_check_depth_cm != null ? `check ${depthSaid(s.water_check_depth_cm)} down` : null,
+    [s.water_check_depth_cm != null
+      ? t('care.facts.checkDepth', { depth: depthSaid(s.water_check_depth_cm) }) : null,
       ['water_check_depth_cm']],
   ]) },
-  { key: 'light', label: 'Light', join: '; ', read: (s) => concept([
-    [s.light_fc_min != null ? `at least ${num(s.light_fc_min)} footcandles` : null, ['light_fc_min']],
-    [s.light_fc_good != null ? `${num(s.light_fc_good)} footcandles is comfortable` : null, ['light_fc_good']],
+  { key: 'light', label: t('care.facts.labels.light'), join: '; ', read: (s) => concept([
+    [s.light_fc_min != null ? t('care.facts.lightMin', { n: num(s.light_fc_min) }) : null, ['light_fc_min']],
+    [s.light_fc_good != null ? t('care.facts.lightGood', { n: num(s.light_fc_good) }) : null, ['light_fc_good']],
     // "Up to 0 hours" is true and not how anyone says it.
     [s.direct_sun_hours_max == null ? null
-      : s.direct_sun_hours_max === 0 ? 'no direct sun'
-        : `up to ${num(s.direct_sun_hours_max)} hours of direct sun`, ['direct_sun_hours_max']],
+      : s.direct_sun_hours_max === 0 ? t('care.facts.noDirectSun')
+        : t('care.facts.directSunMax', { count: s.direct_sun_hours_max }), ['direct_sun_hours_max']],
   ]) },
-  { key: 'humidity', label: 'Humidity', join: '; ', read: (s) => concept([
-    [s.humidity_need ? HUMIDITY_TEXT[s.humidity_need] ?? null : null, ['humidity_need']],
+  { key: 'humidity', label: t('care.facts.labels.humidity'), join: '; ', read: (s) => concept([
+    [s.humidity_need ? HUMIDITY_TEXT(s.humidity_need) : null, ['humidity_need']],
   ]) },
-  { key: 'temperature', label: 'Temperature', join: '; ', read: (s) => concept([
+  { key: 'temperature', label: t('care.facts.labels.temperature'), join: '; ', read: (s) => concept([
     [s.day_f_min != null || s.day_f_max != null
-      ? `days ${band(s.day_f_min, s.day_f_max, '°F')}` : null, ['day_f_min', 'day_f_max']],
+      ? t('care.facts.days', { band: band(s.day_f_min, s.day_f_max, '°F') }) : null, ['day_f_min', 'day_f_max']],
     [s.night_f_min != null || s.night_f_max != null
-      ? `nights ${band(s.night_f_min, s.night_f_max, '°F')}` : null, ['night_f_min', 'night_f_max']],
-    [s.chill_damage_f != null ? `cold damage below ${num(s.chill_damage_f)}°F` : null, ['chill_damage_f']],
+      ? t('care.facts.nights', { band: band(s.night_f_min, s.night_f_max, '°F') }) : null, ['night_f_min', 'night_f_max']],
+    [s.chill_damage_f != null ? t('care.facts.chillDamage', { n: num(s.chill_damage_f) }) : null, ['chill_damage_f']],
   ]) },
-  { key: 'soil', label: 'Soil', join: '; ', read: (s) => concept([
-    [s.soil_base ? SOIL_BASE_TEXT[s.soil_base] ?? null : null, ['soil_base']],
-    [s.soil_drainage ? DRAINAGE_TEXT[s.soil_drainage] ?? null : null, ['soil_drainage']],
+  { key: 'soil', label: t('care.facts.labels.soil'), join: '; ', read: (s) => concept([
+    [s.soil_base ? SOIL_BASE_TEXT(s.soil_base) : null, ['soil_base']],
+    [s.soil_drainage ? DRAINAGE_TEXT(s.soil_drainage) : null, ['soil_drainage']],
     [s.soil_ph_min != null || s.soil_ph_max != null
-      ? `pH ${band(s.soil_ph_min, s.soil_ph_max, '')}` : null, ['soil_ph_min', 'soil_ph_max']],
+      ? t('care.facts.ph', { band: band(s.soil_ph_min, s.soil_ph_max, '') }) : null, ['soil_ph_min', 'soil_ph_max']],
   ]) },
-  { key: 'fertilize', label: 'Fertilize', join: '; ', read: (s) => concept([
+  { key: 'fertilize', label: t('care.facts.labels.fertilize'), join: '; ', read: (s) => concept([
     [monthSpan(s.fertilize_active_months ?? []) || null, ['fertilize_active_months']],
-    [s.fertilize_interval_days != null ? `every ${num(s.fertilize_interval_days)} days` : null,
+    [s.fertilize_interval_days != null
+      ? t('care.facts.everyDays', { count: s.fertilize_interval_days }) : null,
       ['fertilize_interval_days']],
-    [s.fertilize_strength ? STRENGTH_TEXT[s.fertilize_strength] ?? null : null, ['fertilize_strength']],
+    [s.fertilize_strength ? STRENGTH_TEXT(s.fertilize_strength) : null, ['fertilize_strength']],
   ]) },
-  { key: 'outdoor_sun', label: 'Outdoor sun', join: ', ', read: (s) => concept([
+  { key: 'outdoor_sun', label: t('care.facts.labels.outdoorSun'), join: ', ', read: (s) => concept([
     [outdoorSunPhrase(s.outdoor_sun_exposure), ['outdoor_sun_exposure']],
   ]) },
   // A survival floor from USDA PLANTS — not the temperature row's damage
   // point, which is where harm begins in cultivation. The two can sit tens
   // of degrees apart on one plant, so they are never folded into one row.
-  { key: 'cold', label: 'Cold', join: '', read: (s) => concept([
-    [s.outdoor_temp_min_f != null ? `survives to ${num(s.outdoor_temp_min_f)}°F outdoors` : null,
+  { key: 'cold', label: t('care.facts.labels.cold'), join: '', read: (s) => concept([
+    [s.outdoor_temp_min_f != null ? t('care.facts.survives', { n: num(s.outdoor_temp_min_f) }) : null,
       ['outdoor_temp_min_f']],
   ]) },
   // Size answers a different question from the care rows above: not "what
   // does it need from me" but "does it belong in this space".
-  { key: 'size', label: 'Mature size', join: ', ', read: (s) => concept([
+  { key: 'size', label: t('care.facts.labels.size'), join: ', ', read: (s) => concept([
     s.climbs
       ? [climb(s.mature_height_in_min, s.mature_height_in_max),
         ['mature_height_in_min', 'mature_height_in_max', 'climbs']]
@@ -298,18 +306,19 @@ const CONCEPTS: {
     [span(s.mature_spread_in_min, s.mature_spread_in_max, 'wide'),
       ['mature_spread_in_min', 'mature_spread_in_max']],
   ]) },
-  { key: 'place', label: 'Where it lives', join: '; ', read: (s) => concept([
-    [s.is_houseplant == null ? null : (s.is_houseplant ? 'grown indoors' : 'an outdoor plant'),
+  { key: 'place', label: t('care.facts.labels.place'), join: '; ', read: (s) => concept([
+    [s.is_houseplant == null ? null
+      : (s.is_houseplant ? t('care.facts.indoors') : t('care.facts.outdoors')),
       ['is_houseplant']],
-    [s.climbs ? 'a climber that needs a support' : null, ['climbs']],
-    [plainlyEdible(s) ? 'grown to eat' : null, ['is_edible']],
-    [s.attracts_pollinators ? 'feeds pollinators' : null, ['attracts_pollinators']],
+    [s.climbs ? t('care.facts.climber') : null, ['climbs']],
+    [plainlyEdible(s) ? t('care.facts.edible') : null, ['is_edible']],
+    [s.attracts_pollinators ? t('care.facts.pollinators') : null, ['attracts_pollinators']],
   ]) },
   // Its own row, in the warning colour, never folded into "Where it lives":
   // the note is a whole sentence about which parts are safe to eat, and
   // squeezed between "grown indoors" and "feeds pollinators" it would read
   // as one more pleasant trait.
-  { key: 'eating', label: 'Eating', join: '', caution: true, read: (s) => concept([
+  { key: 'eating', label: t('care.facts.labels.eating'), join: '', caution: true, read: (s) => concept([
     [edibilityNote(s), ['is_edible']],
   ]) },
 ];
@@ -341,11 +350,11 @@ export function careStatusLine(species: Species): string | null {
     const names = [...new Set(
       (sources ?? []).filter((c) => !c.inferred && c.authority).map((c) => c.authority),
     )].sort();
-    if (names.length === 1) return `Care facts cited to ${names[0]}`;
-    if (names.length > 1) return `Care facts cited to ${names[0]} and ${names.length - 1} more`;
+    if (names.length === 1) return t('care.facts.citedOne', { name: names[0] });
+    if (names.length > 1) return t('care.facts.citedMore', { name: names[0], n: names.length - 1 });
     if (status === 'inferred' || (sources && sources.length > 0)) return BORROWED_LINE;
     // The list endpoint omits the sources; a sourced row is still sourced.
-    return 'Care facts cited to published sources';
+    return t('care.facts.citedPublished');
   }
   if (hasAny(species, RESOLVED_COLUMNS) || hasAny(species, LEGACY_COLUMNS)) return null;
   return NONE_LINE;
@@ -360,7 +369,10 @@ export function careSourceLabels(sources: CareSource[]): string[] {
   return sources.map((source) => {
     const nth = (seen.get(source.authority) ?? 0) + 1;
     seen.set(source.authority, nth);
-    const notes = [source.inferred ? 'genus' : '', nth > 1 ? `page ${nth}` : ''].filter(Boolean);
+    const notes = [
+      source.inferred ? t('care.facts.sourceGenus') : '',
+      nth > 1 ? t('care.facts.sourcePage', { n: nth }) : '',
+    ].filter(Boolean);
     return notes.length ? `${source.authority} (${notes.join(', ')})` : source.authority;
   });
 }
@@ -372,18 +384,18 @@ export function legacyStats(species: Species): LegacyStat[] {
   const stats: LegacyStat[] = [];
   const s = species;
   if (s.light_need && !hasAny(s, RESOLVED_FOR.light)) {
-    stats.push({ key: 'light', label: 'Light', value: capitalize(s.light_need.replace(/_/g, ' ')) });
+    stats.push({ key: 'light', label: t('care.facts.labels.light'), value: capitalize(s.light_need.replace(/_/g, ' ')) });
   }
   // Derived humidity (imported rows) is not a fact: nobody measured it.
   if (s.humidity_pct_min != null && s.humidity_pct_max != null
       && s.humidity_sourced !== false && !hasAny(s, RESOLVED_FOR.humidity)) {
-    stats.push({ key: 'humidity', label: 'Humidity', value: `${s.humidity_pct_min}–${s.humidity_pct_max}%` });
+    stats.push({ key: 'humidity', label: t('care.facts.labels.humidity'), value: `${s.humidity_pct_min}–${s.humidity_pct_max}%` });
   }
   if (s.temp_f_min != null && s.temp_f_max != null && !hasAny(s, RESOLVED_FOR.temperature)) {
-    stats.push({ key: 'temperature', label: 'Temp', value: `${s.temp_f_min}–${s.temp_f_max}°F` });
+    stats.push({ key: 'temperature', label: t('care.facts.labels.temp'), value: `${s.temp_f_min}–${s.temp_f_max}°F` });
   }
   if (s.soil_type && !hasAny(s, RESOLVED_FOR.soil)) {
-    stats.push({ key: 'soil', label: 'Soil', value: s.soil_type });
+    stats.push({ key: 'soil', label: t('care.facts.labels.soil'), value: s.soil_type });
   }
   return stats;
 }

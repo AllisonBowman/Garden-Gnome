@@ -4,6 +4,7 @@ import { parseServerDate } from '../api/serverDate';
 import { startOfDay } from '../care/schedule';
 import { conditionText } from '../weather/translate';
 import { dayWord, nextFrostNight, nightWord } from './headline';
+import { t } from '../i18n';
 
 // Home's weather vitals: today, the next frost or freeze risk, and rain.
 // From the server's cards when it sends them; built from the older weather
@@ -34,7 +35,7 @@ export function legacyWeatherCards(
   weather: Weather, placeName: string, today: Date = new Date(),
 ): VitalCard[] {
   const cards: VitalCard[] = [];
-  const where = `Forecast for ${placeName}.`;
+  const where = t('home.weather.forecastFor', { place: placeName });
   const start = startOfDay(today).getTime();
   const ahead = weather.daily
     .map((d) => ({ d, at: parseServerDate(d.date) }))
@@ -42,15 +43,15 @@ export function legacyWeatherCards(
     .sort((a, b) => a.at!.getTime() - b.at!.getTime());
   const first = ahead[0]?.d;
 
-  const t = weather.current.temp_f;
+  const temp = weather.current.temp_f;
   const cond = conditionText(weather.current.condition);
-  if (t != null || cond) {
+  if (temp != null || cond) {
     const range = first && first.high_f != null && first.low_f != null
-      ? ` High ${Math.round(first.high_f)}°F, low ${Math.round(first.low_f)}°F.` : '';
+      ? ` ${t('home.weather.range', { high: Math.round(first.high_f), low: Math.round(first.low_f) })}` : '';
     cards.push({
       key: 'weather_now',
-      title: 'Today',
-      value_text: [t != null ? `${Math.round(t)}°F` : null, cond || null].filter(Boolean).join(', '),
+      title: t('home.weather.today'),
+      value_text: [temp != null ? `${Math.round(temp)}°F` : null, cond || null].filter(Boolean).join(', '),
       detail: `${where}${range}`,
       tone: 'ok',
     });
@@ -60,12 +61,12 @@ export function legacyWeatherCards(
     const frost = nextFrostNight(ahead.map(({ d }) => ({ date: d.date, low_f: d.low_f })), today);
     if (frost) {
       const day = ahead.find(({ at }) => at!.getTime() === frost.date.getTime())?.d;
-      const low = day?.low_f != null ? ` Forecast low of ${Math.round(day.low_f)}°F.` : '';
+      const low = day?.low_f != null ? ` ${t('home.weather.forecastLow', { low: Math.round(day.low_f) })}` : '';
       cards.push({
         key: 'frost',
-        title: frost.risk === 'frost' ? 'Frost' : 'Freeze',
-        value_text: `Possible ${nightWord(frost.date, today)}`,
-        detail: `${where}${low} Tender plants outdoors may want covering or bringing in.`,
+        title: frost.risk === 'frost' ? t('home.weather.frost') : t('home.weather.freeze'),
+        value_text: t('home.weather.possible', { night: nightWord(frost.date, today) }),
+        detail: `${where}${low} ${t('home.weather.tender')}`,
         tone: 'act',
       });
     } else {
@@ -73,9 +74,9 @@ export function legacyWeatherCards(
       if (lows.length > 0) {
         cards.push({
           key: 'frost',
-          title: 'Frost',
-          value_text: 'None in the next 3 days',
-          detail: `${where} Lowest forecast low ${Math.round(Math.min(...lows))}°F.`,
+          title: t('home.weather.frost'),
+          value_text: t('home.weather.noFrost'),
+          detail: `${where} ${t('home.weather.lowestLow', { low: Math.round(Math.min(...lows)) })}`,
           tone: 'ok',
         });
       }
@@ -89,9 +90,9 @@ export function legacyWeatherCards(
       const when = dayWord(rain.at!, today);
       cards.push({
         key: 'rain',
-        title: 'Rain',
-        value_text: pct === 0 ? 'None in the forecast' : `${pct}% chance ${when}`,
-        detail: `${where} The highest chance of rain in the next 3 days.`,
+        title: t('home.weather.rain'),
+        value_text: pct === 0 ? t('home.weather.noRain') : t('home.weather.rainChance', { pct, when }),
+        detail: `${where} ${t('home.weather.rainDetail')}`,
         tone: pct >= 60 ? 'watch' : 'ok',
       });
     }

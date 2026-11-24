@@ -35,6 +35,7 @@ import { AuthProvider, useAuth } from './src/auth/AuthContext';
 import LoginScreen from './src/auth/LoginScreen';
 import ErrorBoundary, { guarded } from './src/components/ErrorBoundary';
 import { refreshAfterCrash } from './src/components/crashRefresh';
+import { t } from './src/i18n';
 
 // ── Param lists ───────────────────────────────────────────────────────────────
 // One stack, no tabs (build spec section 6). The param list lives in
@@ -109,10 +110,10 @@ function RootNavigator() {
   return (
     <Stack.Navigator initialRouteName="Home" screenOptions={useHeaderOpts()}>
       <Stack.Screen name="Home"          component={Home}          options={{ title: 'PlantAdvocate' }} />
-      <Stack.Screen name="PropertySetup" component={PropertySetup} options={{ title: 'Add your land' }} />
-      <Stack.Screen name="Land"          component={Land}          options={{ title: 'Your land' }} />
-      <Stack.Screen name="ZoneMap"       component={ZoneMap}       options={{ title: 'Zone map' }} />
-      <Stack.Screen name="Season"        component={Season}        options={{ title: 'The season' }} />
+      <Stack.Screen name="PropertySetup" component={PropertySetup} options={{ title: t('nav.propertySetup') }} />
+      <Stack.Screen name="Land"          component={Land}          options={{ title: t('nav.land') }} />
+      <Stack.Screen name="ZoneMap"       component={ZoneMap}       options={{ title: t('nav.zoneMap') }} />
+      <Stack.Screen name="Season"        component={Season}        options={{ title: t('nav.season') }} />
       {/* First-run onboarding sends people here by this title. */}
       <Stack.Screen name="Spaces"        component={GrowingAreas}  options={{
         title: GROWING_AREAS_TAB,
@@ -120,17 +121,17 @@ function RootNavigator() {
       <Stack.Screen
         name="SpaceDetail"
         component={GrowingAreaDetail}
-        options={({ route }) => ({ title: route.params.name ?? 'Growing area' })}
+        options={({ route }) => ({ title: route.params.name ?? t('nav.growingArea') })}
       />
-      <Stack.Screen name="Plants"        component={Plants}        options={{ title: 'My Plants' }} />
-      <Stack.Screen name="PlantDetail"   component={PlantDetail}   options={{ title: 'Plant' }} />
-      <Stack.Screen name="AddPlant"      component={AddPlant}      options={{ title: 'Add plant' }} />
-      <Stack.Screen name="CaptureGarden" component={CaptureGarden} options={{ title: 'Walk the garden' }} />
-      <Stack.Screen name="Species"       component={Species}       options={{ title: 'Species catalog' }} />
-      <Stack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
-      <Stack.Screen name="Almanac"       component={Almanac}       options={{ title: 'Species Almanac' }} />
-      <Stack.Screen name="Settings"      component={Settings}      options={{ title: 'Settings' }} />
-      <Stack.Screen name="Census"        component={Census}        options={{ title: 'Census' }} />
+      <Stack.Screen name="Plants"        component={Plants}        options={{ title: t('nav.plants') }} />
+      <Stack.Screen name="PlantDetail"   component={PlantDetail}   options={{ title: t('nav.plant') }} />
+      <Stack.Screen name="AddPlant"      component={AddPlant}      options={{ title: t('nav.addPlant') }} />
+      <Stack.Screen name="CaptureGarden" component={CaptureGarden} options={{ title: t('nav.captureGarden') }} />
+      <Stack.Screen name="Species"       component={Species}       options={{ title: t('nav.species') }} />
+      <Stack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: t('nav.speciesDetail') }} />
+      <Stack.Screen name="Almanac"       component={Almanac}       options={{ title: t('nav.almanac') }} />
+      <Stack.Screen name="Settings"      component={Settings}      options={{ title: t('nav.settings') }} />
+      <Stack.Screen name="Census"        component={Census}        options={{ title: t('nav.census') }} />
     </Stack.Navigator>
   );
 }

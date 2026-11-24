@@ -16,6 +16,7 @@ import { StyleSheet, View } from 'react-native';
 import { Chip, Text } from 'react-native-paper';
 import { MapChip, MapChipKey, layerStatusLines } from '../land/mapLayers';
 import { useAppTheme } from '../theme/ThemeProvider';
+import { t } from '../i18n';
 
 export interface LayerChipsProps {
   chips: MapChip[];
@@ -31,7 +32,7 @@ export default function LayerChips({ chips, chosen, onChoose, showStatus = true 
   const lines = showStatus ? layerStatusLines(chips) : [];
   return (
     <View style={styles.wrap}>
-      <View style={styles.row} accessibilityRole="radiogroup" accessibilityLabel="Map layer">
+      <View style={styles.row} accessibilityRole="radiogroup" accessibilityLabel={t('land.mapLayerA11y')}>
         {chips.map((c) => {
           const on = c.key === chosen;
           return (
@@ -43,7 +44,7 @@ export default function LayerChips({ chips, chosen, onChoose, showStatus = true 
               disabled={!c.enabled}
               onPress={() => onChoose(c.key)}
               accessibilityRole="radio"
-              accessibilityLabel={`${c.a11y} ${on ? 'Selected' : 'Not selected'}.`}
+              accessibilityLabel={`${c.a11y} ${on ? t('land.selected') : t('land.notSelected')}.`}
               accessibilityState={{ selected: on, disabled: !c.enabled }}
               style={styles.chip}
             >

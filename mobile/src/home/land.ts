@@ -1,4 +1,5 @@
 import { Explained, SiteField, SiteProfile, VitalCard, VitalCardKey } from '../types/site';
+import { t } from '../i18n';
 
 // "Your land" on Home: one line each for sun, soil, drainage and hardiness
 // zone, each with its confidence, taken from the whole-lot values of the site
@@ -19,10 +20,10 @@ const ROWS: Array<{
   fields: SiteField[];
   card?: VitalCardKey;
 }> = [
-  { key: 'sun', title: 'Sun', fields: ['sun'], card: 'sun' },
-  { key: 'soil', title: 'Soil', fields: ['soil_texture'], card: 'soil' },
-  { key: 'drainage', title: 'Drainage', fields: ['water_collects', 'soil_drainage'], card: 'drainage' },
-  { key: 'hardiness', title: 'Hardiness zone', fields: ['hardiness_zone'] },
+  { key: 'sun', title: t('home.land.sun'), fields: ['sun'], card: 'sun' },
+  { key: 'soil', title: t('home.land.soil'), fields: ['soil_texture'], card: 'soil' },
+  { key: 'drainage', title: t('home.land.drainage'), fields: ['water_collects', 'soil_drainage'], card: 'drainage' },
+  { key: 'hardiness', title: t('home.land.hardiness'), fields: ['hardiness_zone'] },
 ];
 
 function explainedOf(v: Explained): Explained {

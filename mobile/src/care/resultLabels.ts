@@ -4,17 +4,21 @@
 // the server reports those for operators, and a company's name on a badge is
 // developer text that reached a user.
 
+import { t } from '../i18n';
+
 const RULE_ENGINE = 'stub';
 
 /** Under care advice: "rule-based", or "care engine" for anything else the
  *  server reports, with "gnome voice" when the on-device restyle was kept. */
 export function adviceSourceLabel(backend: string | null | undefined, gnomeStyled: boolean): string {
-  const source = !backend || backend === RULE_ENGINE ? 'rule-based' : 'care engine';
-  return gnomeStyled ? `${source} • gnome voice` : source;
+  const source = !backend || backend === RULE_ENGINE
+    ? t('care.source.ruleBased') : t('care.source.careEngine');
+  return gnomeStyled ? t('care.source.withGnome', { source }) : source;
 }
 
 /** Under a photo check-up's reading. The rule engine has no reading to give,
  *  so its answer is labelled as the feature not being on. */
 export function diagnosisSourceLabel(backend: string | null | undefined): string {
-  return !backend || backend === RULE_ENGINE ? 'not switched on yet' : 'photo check-up';
+  return !backend || backend === RULE_ENGINE
+    ? t('care.source.notOnYet') : t('care.source.photoCheckup');
 }

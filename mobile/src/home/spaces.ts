@@ -1,5 +1,6 @@
 import { GrowingArea } from '../types';
 import { VitalSpace } from '../types/site';
+import { t } from '../i18n';
 
 // "Your growing spaces" on Home. The server's vitals list them (zones of the
 // property and every other space); when the feature is off Home builds the
@@ -28,11 +29,11 @@ export function orderSpaces(spaces: VitalSpace[]): VitalSpace[] {
 
 /** "3 plants, indoors" / "No plants yet, outdoors" / "1 plant, part of your land". */
 export function spaceLine(space: VitalSpace): string {
-  const count = space.plant_count === 0
-    ? 'No plants yet'
-    : space.plant_count === 1 ? '1 plant' : `${space.plant_count} plants`;
+  const plants = space.plant_count === 0
+    ? t('home.spaces.noPlants')
+    : t('home.spaces.plants', { count: space.plant_count });
   const where = space.kind === 'zone'
-    ? 'part of your land'
-    : space.indoor ? 'indoors' : 'outdoors';
-  return `${count}, ${where}`;
+    ? t('home.spaces.zone')
+    : space.indoor ? t('home.spaces.indoors') : t('home.spaces.outdoors');
+  return t('home.spaces.line', { plants, where });
 }

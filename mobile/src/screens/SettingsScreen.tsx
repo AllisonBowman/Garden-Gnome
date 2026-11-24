@@ -24,6 +24,7 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { BUILD_NUMBER, BUILD_COMMIT } from '../buildInfo';
 import { CareType } from '../types';
+import { t } from '../i18n';
 
 // The backend-URL override is shown in dev AND in builds that opt in via
 // EXPO_PUBLIC_SHOW_BACKEND_OVERRIDE (set for the development + preview EAS
@@ -35,22 +36,17 @@ const SHOW_BACKEND_OVERRIDE =
 // Each switch is for a kind of check: a reminder asks the caretaker to look,
 // never to do the chore, because no schedule knows what a plant needs today.
 const REMINDER_TOGGLES: { type: CareType; icon: string; label: string }[] = [
-  { type: 'water',     icon: '💧', label: 'Watering checks' },
-  { type: 'fertilize', icon: '🌿', label: 'Feeding checks'  },
-  { type: 'prune',     icon: '✂️', label: 'Pruning checks'  },
-  { type: 'repot',     icon: '🪴', label: 'Spring repot check' },
-  { type: 'rotate',    icon: '🔄', label: 'Turning checks'  },
+  { type: 'water',     icon: '💧', label: t('settings.reminderToggles.water') },
+  { type: 'fertilize', icon: '🌿', label: t('settings.reminderToggles.fertilize') },
+  { type: 'prune',     icon: '✂️', label: t('settings.reminderToggles.prune') },
+  { type: 'repot',     icon: '🪴', label: t('settings.reminderToggles.repot') },
+  { type: 'rotate',    icon: '🔄', label: t('settings.reminderToggles.rotate') },
 ];
 
 /** What the reminders promise, and only what the planner keeps: a plan a
  *  month ahead, rebuilt when the app opens or care is logged, for plants
  *  whose species has a check schedule (notifications/plan.ts). */
-const REMINDERS_HINT =
-  'Get a nudge to look at a plant when it reaches its usual window, based on its '
-  + 'species’ check schedule and your care log. Plants due the same day share one '
-  + 'notification. A plant whose species has no check schedule on record gets no '
-  + 'reminders. Reminders are planned a month ahead each time you open '
-  + 'PlantAdvocate, so open it at least once a month to keep them coming.';
+const REMINDERS_HINT = t('settings.remindersHint');
 
 // Cross-platform confirm: Alert.alert buttons are no-ops on react-native-web
 function confirmDialog(
@@ -61,7 +57,7 @@ function confirmDialog(
   }
   return new Promise((resolve) => {
     Alert.alert(title, message, [
-      { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+      { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
       { text: confirmLabel, style: 'destructive', onPress: () => resolve(true) },
     ]);
   });
@@ -100,10 +96,9 @@ export default function SettingsScreen() {
 
   async function onDeleteAccount() {
     const sure = await confirmDialog(
-      'Delete your account?',
-      'This permanently deletes your account, plants, care history, and '
-      + 'growing areas from PlantAdvocate. This cannot be undone.',
-      'Delete forever',
+      t('settings.deleteConfirm.title'),
+      t('settings.deleteConfirm.body'),
+      t('settings.deleteConfirm.confirm'),
     );
     if (!sure) return;
     setDeleting(true);
@@ -111,8 +106,8 @@ export default function SettingsScreen() {
       await deleteAccount();
     } catch {
       Alert.alert(
-        'Deletion failed',
-        'PlantAdvocate could not delete your account. Check your connection and try again.',
+        t('settings.deleteFailed.title'),
+        t('settings.deleteFailed.body'),
       );
     } finally {
       setDeleting(false);
@@ -138,9 +133,8 @@ export default function SettingsScreen() {
       await updateUser({ ...user, census_opt_in: updated.census_opt_in });
     } catch {
       Alert.alert(
-        'Could not save that',
-        'PlantAdvocate could not reach the server to change your census '
-        + 'setting, so nothing has changed. Check your connection and try again.',
+        t('settings.censusFailed.title'),
+        t('settings.censusFailed.body'),
       );
     } finally {
       setCensusSaving(false);
@@ -159,8 +153,8 @@ export default function SettingsScreen() {
   async function toggleSeasonalAlerts(value: boolean) {
     if (value && !(await ensureNotificationPermission())) {
       Alert.alert(
-        'Notifications disabled',
-        'PlantAdvocate needs notification permission for frost and weather alerts. You can enable it in your device settings.',
+        t('settings.notificationsDisabled'),
+        t('settings.alertsNeedPermission'),
       );
       return;
     }
@@ -175,8 +169,8 @@ export default function SettingsScreen() {
       const granted = await ensureNotificationPermission();
       if (!granted) {
         Alert.alert(
-          'Notifications disabled',
-          'PlantAdvocate needs notification permission for care reminders. You can enable it in your device settings.',
+          t('settings.notificationsDisabled'),
+          t('settings.remindersNeedPermission'),
         );
         return;
       }
@@ -212,10 +206,10 @@ export default function SettingsScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Card style={styles.card}>
-        <Card.Title title="Account" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('settings.account')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodyMedium" style={styles.accountName}>
-            {user?.display_name || user?.email || 'Signed in'}
+            {user?.display_name || user?.email || t('settings.signedIn')}
           </Text>
           {user?.email && user.display_name ? (
             <Text variant="bodySmall" style={styles.hint}>{user.email}</Text>
@@ -228,7 +222,7 @@ export default function SettingsScreen() {
             disabled={signingOut || deleting}
             style={styles.btn}
           >
-            Sign out
+            {t('settings.signOut')}
           </Button>
           <Button
             mode="text"
@@ -239,7 +233,7 @@ export default function SettingsScreen() {
             textColor={palette.warn}
             style={styles.btn}
           >
-            Delete account
+            {t('settings.deleteAccount')}
           </Button>
         </Card.Content>
       </Card>
@@ -247,11 +241,11 @@ export default function SettingsScreen() {
       <Divider style={styles.divider} />
 
       <Card style={styles.card}>
-        <Card.Title title="Appearance" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('settings.appearance')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <View style={styles.reminderRow}>
             <Text variant="bodyMedium" style={styles.reminderLabel}>
-              {themeName === 'observatory' ? '🌙 Observatory (dark)' : '☀️ Almanac (light)'}
+              {themeName === 'observatory' ? t('settings.themeDark') : t('settings.themeLight')}
             </Text>
             <Switch
               value={themeName === 'observatory'}
@@ -259,10 +253,7 @@ export default function SettingsScreen() {
               color={palette.acc}
             />
           </View>
-          <Text variant="bodySmall" style={styles.hint}>
-            Almanac is the warm field-notebook look; Observatory is a dark,
-            colorblind-safe night theme.
-          </Text>
+          <Text variant="bodySmall" style={styles.hint}>{t('settings.themeHint')}</Text>
         </Card.Content>
       </Card>
 
@@ -316,22 +307,22 @@ export default function SettingsScreen() {
       )}
 
       <Card style={styles.card}>
-        <Card.Title title="Care reminders" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('settings.careReminders')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.hint}>
             {remindersSupported
               ? REMINDERS_HINT
-              : 'Reminders are available in the mobile app (iOS and Android).'}
+              : t('settings.remindersMobileOnly')}
           </Text>
-          {REMINDER_TOGGLES.map((t) => (
-            <View key={t.type} style={styles.reminderRow}>
+          {REMINDER_TOGGLES.map((toggle) => (
+            <View key={toggle.type} style={styles.reminderRow}>
               <Text variant="bodyMedium" style={styles.reminderLabel}>
-                {t.icon} {t.label}
+                {toggle.icon} {toggle.label}
               </Text>
               <Switch
-                value={!!prefs[t.type]}
+                value={!!prefs[toggle.type]}
                 disabled={!remindersSupported}
-                onValueChange={(v) => toggleReminder(t.type, v)}
+                onValueChange={(v) => toggleReminder(toggle.type, v)}
                 color={palette.acc}
               />
             </View>
@@ -342,7 +333,7 @@ export default function SettingsScreen() {
               <Divider style={styles.innerDivider} />
               <View style={styles.reminderRow}>
                 <Text variant="bodyMedium" style={styles.reminderLabel}>
-                  🌦️ Let weather adjust watering
+                  {t('settings.weatherShift')}
                 </Text>
                 <Switch
                   value={weatherShift}
@@ -353,23 +344,23 @@ export default function SettingsScreen() {
               </View>
               <Text variant="bodySmall" style={styles.subHint}>
                 {prefs.water
-                  ? 'Nudges watering reminders by a day or two for outdoor, unsheltered plants. Later before rain, sooner in a heat spike. Needs a location on the growing area.'
-                  : 'Turn on watering reminders above to use this.'}
+                  ? t('settings.weatherShiftHint')
+                  : t('settings.weatherShiftNeedsWater')}
               </Text>
               <Divider style={styles.innerDivider} />
               <View style={styles.reminderRow}>
                 <Text variant="bodyMedium" style={styles.reminderLabel}>
-                  ❄️ Frost and weather alerts
+                  {`❄️ ${t('settings.frostAlerts')}`}
                 </Text>
                 <Switch
                   value={seasonalAlerts}
                   onValueChange={toggleSeasonalAlerts}
                   color={palette.acc}
-                  accessibilityLabel="Frost and weather alerts"
+                  accessibilityLabel={t('settings.frostAlerts')}
                 />
               </View>
               <Text variant="bodySmall" style={styles.subHint}>
-                A note before a frost or freeze night and other moments in your seasonal plan, at most one a day and none between 9 pm and 8 am. Each alert uses the forecast from the last time you opened the app and says when that forecast was made, so it can be out of date. Needs your land added.
+                {t('settings.frostAlertsHint')}
               </Text>
             </>
           )}
@@ -379,7 +370,7 @@ export default function SettingsScreen() {
       <Divider style={styles.divider} />
 
       <Card style={styles.card}>
-        <Card.Title title="Privacy & data" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('settings.privacy')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.hint}>{PRIVACY_INTRO}</Text>
 
@@ -408,9 +399,9 @@ export default function SettingsScreen() {
             onPress={() => navigation.navigate('Census')}
             style={styles.censusLink}
             textColor={palette.acc}
-            accessibilityLabel="See the census of what everyone grows"
+            accessibilityLabel={t('settings.seeCensusA11y')}
           >
-            See the census
+            {t('settings.seeCensus')}
           </Button>
 
           <Divider style={styles.innerDivider} />
@@ -426,10 +417,9 @@ export default function SettingsScreen() {
                   contentStyle={styles.flowBtnContent}
                   labelStyle={styles.flowBtnLabel}
                   textColor={palette.ink}
-                  accessibilityLabel={
-                    `${flow.title}. ${DESTINATION_LABELS[flow.destination]}. `
-                    + `${open ? 'Hide' : 'Show'} details.`
-                  }
+                  accessibilityLabel={t(open ? 'settings.flowA11yHide' : 'settings.flowA11yShow', {
+                    title: flow.title, destination: DESTINATION_LABELS[flow.destination],
+                  })}
                 >
                   {`${open ? '▾' : '▸'}  ${flow.title}`}
                 </Button>
@@ -449,7 +439,7 @@ export default function SettingsScreen() {
             onPress={() => openExternal(PRIVACY_URL)}
             style={styles.privacyBtn}
           >
-            Read the full policy
+            {t('settings.readPolicy')}
           </Button>
         </Card.Content>
       </Card>
@@ -457,14 +447,13 @@ export default function SettingsScreen() {
       <Divider style={styles.divider} />
 
       <Card style={styles.card}>
-        <Card.Title title="About & Support" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('settings.aboutSupport')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text variant="bodySmall" style={styles.about}>
             PlantAdvocate v{APP_VERSION}
-            {BUILD_NUMBER > 0 ? `  ·  build ${BUILD_NUMBER} (${BUILD_COMMIT})` : ''}{'\n'}
-            Every plant deserves an advocate. Care schedules, reminders, and a
-            care engine grounded in a curated species database.{'\n\n'}
-            Species data provided in part by Perenual (perenual.com).
+            {BUILD_NUMBER > 0 ? `  ·  ${t('settings.build', { number: BUILD_NUMBER, commit: BUILD_COMMIT })}` : ''}{'\n'}
+            {t('settings.aboutBody')}{'\n\n'}
+            {t('settings.perenual')}
           </Text>
           <Button
             mode="outlined"
@@ -480,7 +469,7 @@ export default function SettingsScreen() {
             onPress={() => openExternal(SUPPORT_URL)}
             style={styles.btn}
           >
-            Help & support
+            {t('settings.helpSupport')}
           </Button>
           <Button
             mode="outlined"

@@ -7,6 +7,7 @@ import type { RootStackParamList } from '../navigation/types';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { FINISH, SLIDES } from './slides';
+import { t } from '../i18n';
 
 interface Props {
   /** Marks onboarding as seen and hides it. */
@@ -31,7 +32,7 @@ export default function Onboarding({ onSkip }: Props) {
     <SafeAreaView style={styles.overlay}>
       <View style={styles.skipRow}>
         <Pressable onPress={onSkip} hitSlop={12}>
-          <Text style={styles.skip}>Skip</Text>
+          <Text style={styles.skip}>{t('onboarding.skip')}</Text>
         </Pressable>
       </View>
 
@@ -55,7 +56,7 @@ export default function Onboarding({ onSkip }: Props) {
           buttonColor={palette.btn}
           textColor={palette.btnInk}
         >
-          {isLast ? FINISH.label : 'Next'}
+          {isLast ? FINISH.label : t('onboarding.next')}
         </Button>
         {/* The last button already ends onboarding on Home, so no second
             "Maybe later" link that would do the same; Skip stays at the top. */}

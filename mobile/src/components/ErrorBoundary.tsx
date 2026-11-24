@@ -5,6 +5,7 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { ALMANAC, Palette } from '../theme/tokens';
 import { APP_VERSION, SUPPORT_EMAIL, openExternal } from '../support';
 import { buildProblemMailto } from './errorReport';
+import { t } from '../i18n';
 
 interface Props {
   /** Which part of the app this guards, for the report email. */
@@ -124,10 +125,8 @@ function ErrorCard({ where, error, onRetry, retrying }: {
   return (
     <View style={styles.screen}>
       <View style={styles.card}>
-        <Text style={styles.title}>Something went wrong here</Text>
-        <Text style={styles.body}>
-          This screen ran into a problem. Nothing you’ve saved is lost.
-        </Text>
+        <Text style={styles.title}>{t('common.errorCard.title')}</Text>
+        <Text style={styles.body}>{t('common.errorCard.body')}</Text>
         <Button
           mode="contained"
           onPress={onRetry}
@@ -137,7 +136,7 @@ function ErrorCard({ where, error, onRetry, retrying }: {
           buttonColor={palette.acc}
           textColor={palette.btnInk}
         >
-          Try again
+          {t('common.tryAgain')}
         </Button>
         <Button
           mode="text"
@@ -146,7 +145,7 @@ function ErrorCard({ where, error, onRetry, retrying }: {
           textColor={palette.sub}
           style={styles.button}
         >
-          Report this problem
+          {t('common.errorCard.report')}
         </Button>
       </View>
     </View>

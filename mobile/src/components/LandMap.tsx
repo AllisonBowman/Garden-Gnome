@@ -38,6 +38,7 @@ import { layerPicturePath, layerReady, mapA11yLabel, pictureLoadKey } from '../l
 import { mapZoneLabel, zoneLabel } from '../zones/describe';
 import MapLabels from './MapLabels';
 import { useAppTheme } from '../theme/ThemeProvider';
+import { t } from '../i18n';
 
 export interface LandMapProps {
   imagery: Imagery;
@@ -92,7 +93,7 @@ export default function LandMap({
     return (
       <View style={[styles.placeholder, { backgroundColor: palette.desk }, style]}>
         <Text style={{ color: palette.sub, fontSize: 13.5 }} accessibilityLiveRegion="polite">
-          {failed ? 'The map could not be loaded.' : 'Loading the map.'}
+          {failed ? t('land.mapFailed') : t('land.mapLoading')}
         </Text>
       </View>
     );
@@ -131,7 +132,7 @@ export default function LandMap({
       ) : map}
       {layerFailed ? (
         <Text style={[styles.note, { color: palette.sub }]}>
-          {`The ${shownLayer!.title.toLowerCase()} layer could not be loaded, so the photograph shows alone.`}
+          {t('land.layerFailed', { layer: shownLayer!.title.toLowerCase() })}
         </Text>
       ) : null}
     </View>

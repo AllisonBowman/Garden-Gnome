@@ -5,7 +5,8 @@ import { Explained } from '../types/site';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import ConfidenceChip from './ConfidenceChip';
-import { WHY_LABEL, disclosureLines, explainedA11yLabel } from './explainedText';
+import { WHY_LABEL, disclosureLines, explainedA11yLabel, localConfidenceLabel } from './explainedText';
+import { t } from '../i18n';
 
 interface Props {
   explained: Explained;
@@ -43,7 +44,7 @@ export default function ExplainedBlock({
       </View>
       <ConfidenceChip
         confidence={explained.confidence}
-        label={explained.confidence_label}
+        label={localConfidenceLabel(explained.confidence_label, explained.confidence)}
         style={styles.chip}
       />
     </View>
@@ -56,7 +57,7 @@ export default function ExplainedBlock({
           onPress={onPress}
           accessibilityRole="button"
           accessibilityLabel={explainedA11yLabel(title, explained)}
-          accessibilityHint="Opens the details"
+          accessibilityHint={t('land.opensDetails')}
         >
           {head}
         </Pressable>
@@ -70,7 +71,7 @@ export default function ExplainedBlock({
         onPress={() => setOpen((o) => !o)}
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
-        accessibilityLabel={`${WHY_LABEL}. ${open ? 'Hide' : 'Show'}.`}
+        accessibilityLabel={t(open ? 'land.whyHide' : 'land.whyShow', { why: WHY_LABEL })}
         hitSlop={8}
         style={styles.toggle}
       >
@@ -87,7 +88,7 @@ export default function ExplainedBlock({
                 onPress={s.url ? () => void Linking.openURL(s.url!) : undefined}
                 accessibilityRole={s.url ? 'link' : 'text'}
               >
-                {`Data: ${lines.sources[i]}${s.url ? ' ›' : ''}`}
+                {`${t('land.dataLine', { source: lines.sources[i] })}${s.url ? ' ›' : ''}`}
               </Text>
             ))
             : <Text style={styles.source}>{lines.sources[0]}</Text>}

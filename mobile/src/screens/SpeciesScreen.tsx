@@ -20,6 +20,7 @@ import {
   LOAD_FAILED, loadFailedBody, loadFailedTitle, loadView,
 } from '../care/loadFailed';
 import RefreshFailed from '../components/RefreshFailed';
+import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<SpeciesStackParamList, 'Species'>;
 
@@ -60,10 +61,10 @@ function SpeciesCard({ species, onPress }: { species: Species; onPress: () => vo
                 are catalog values, and a cited pill next to them alone would
                 lend them a citation no source gave. */}
             {watering && species.care_data_status === 'sourced' && (
-              <Pill tone="good">cited</Pill>
+              <Pill tone="good">{t('species.list.cited')}</Pill>
             )}
             {species.toxic_to_pets && (
-              <Pill tone="warn" filled>Pet caution</Pill>
+              <Pill tone="warn" filled>{t('species.list.petCaution')}</Pill>
             )}
           </View>
         </Card.Content>
@@ -113,7 +114,7 @@ export default function SpeciesScreen() {
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
-          title={loadFailedTitle('the catalog')}
+          title={loadFailedTitle(t('species.list.loadFailedWhat'))}
           body={loadFailedBody(error, 'list')}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
@@ -133,7 +134,7 @@ export default function SpeciesScreen() {
         />
       ) : null}
       <Searchbar
-        placeholder="Search species…"
+        placeholder={t('species.list.searchPlaceholder')}
         value={search}
         onChangeText={setSearch}
         style={styles.searchbar}
@@ -151,16 +152,15 @@ export default function SpeciesScreen() {
             style={styles.almanacCard}
             mode="outlined"
             onPress={() => navigation.navigate('Almanac')}
-            accessibilityHint="Opens the Species Almanac"
+            accessibilityHint={t('species.list.almanacHint')}
           >
             <Card.Content>
-              <Eyebrow>Species Almanac</Eyebrow>
+              <Eyebrow>{t('species.list.almanacEyebrow')}</Eyebrow>
               <Text variant="titleSmall" style={styles.almanacTitle}>
-                What suits one of your spaces ›
+                {t('species.list.almanacTitle')}
               </Text>
               <Text variant="bodySmall" style={styles.almanacSub}>
-                The same catalog, narrowed to one of your growing areas. The
-                species with the most confirmed for it come first.
+                {t('species.list.almanacBody')}
               </Text>
             </Card.Content>
           </Card>

@@ -9,6 +9,7 @@ import {
   ViewTransform, clampTransform, fitTransform, focusTransform, isTap, panBy, pinch, toImage, toView, touchPair,
 } from '../land/viewTransform';
 import { useAppTheme } from '../theme/ThemeProvider';
+import { t as tr } from '../i18n';
 
 /** What an overlay gets to place itself: `scale` is view pixels per image
  *  pixel; `toView` and `toImage` convert points between image pixels and
@@ -194,7 +195,7 @@ export default function TopDownImage({
           onError={onImageError}
           accessible
           accessibilityRole="image"
-          accessibilityLabel={accessibilityLabel ?? `Top-down aerial image. ${imagery.source.name}.`}
+          accessibilityLabel={accessibilityLabel ?? tr('land.imageA11y', { source: imagery.source.name })}
         />
       ) : null}
       {ready && overlayUri ? (
@@ -217,9 +218,9 @@ export default function TopDownImage({
       ) : null}
       {gesturesEnabled && ready ? (
         <View style={styles.zoomBar} pointerEvents="box-none">
-          <ZoomButton label="+" a11y="Zoom in" onPress={() => zoom(1.6)} palette={palette} />
-          <ZoomButton label="−" a11y="Zoom out" onPress={() => zoom(1 / 1.6)} palette={palette} />
-          {zoomed ? <ZoomButton label="⤢" a11y="Show the whole image" onPress={reset} palette={palette} /> : null}
+          <ZoomButton label="+" a11y={tr('land.zoomIn')} onPress={() => zoom(1.6)} palette={palette} />
+          <ZoomButton label="−" a11y={tr('land.zoomOut')} onPress={() => zoom(1 / 1.6)} palette={palette} />
+          {zoomed ? <ZoomButton label="⤢" a11y={tr('land.zoomReset')} onPress={reset} palette={palette} /> : null}
         </View>
       ) : null}
     </View>

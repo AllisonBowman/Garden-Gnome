@@ -2,6 +2,8 @@
 // pixels (x to the right, y down). Converting to and from degrees is
 // land/imageGeometry.ts's job. Pure.
 
+import { t } from '../i18n';
+
 export interface Point { x: number; y: number }
 export interface Rect { x: number; y: number; w: number; h: number }
 
@@ -10,7 +12,7 @@ export type Handle = 'nw' | 'ne' | 'sw' | 'se';
 export const HANDLES: Handle[] = ['nw', 'ne', 'sw', 'se'];
 
 export const HANDLE_NAMES: Record<Handle, string> = {
-  nw: 'top left', ne: 'top right', sw: 'bottom left', se: 'bottom right',
+  nw: t('zones.handles.nw'), ne: t('zones.handles.ne'), sw: t('zones.handles.sw'), se: t('zones.handles.se'),
 };
 
 /** The smallest box the tool keeps, in image pixels. A tap that barely

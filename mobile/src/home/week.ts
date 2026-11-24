@@ -2,6 +2,7 @@ import { CareType } from '../types';
 import { Source, TaskState, VitalsWeekItem } from '../types/site';
 import { CareTask, careTaskDueLabel } from '../care/schedule';
 import { careActionLabel } from '../care/labels';
+import { t } from '../i18n';
 
 // Home's "This week": the seasonal tasks the server's plan puts in this week,
 // merged with per-plant care that is due. Pure, so the order is pinned.
@@ -90,9 +91,7 @@ export function mergeThisWeek(
 /** The line under a list that left plant checks out. */
 export function moreCareLine(n: number): string | null {
   if (n <= 0) return null;
-  return n === 1
-    ? '1 more plant check is due. Plants has the full list.'
-    : `${n} more plant checks are due. Plants has the full list.`;
+  return t('home.week.moreCare', { count: n });
 }
 
 /** Counts the headline speaks of. */
