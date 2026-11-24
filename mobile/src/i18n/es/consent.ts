@@ -139,7 +139,7 @@ const consent: Strings<typeof en> = {
   },
   privacyIntro:
     'En pocas palabras: qué hace esta app con lo que le das. La política completa '
-    + 'está enlazada al final y es la versión que vale.',
+    + 'está enlazada al final y es la versión vinculante.',
 };
 
 export default consent;

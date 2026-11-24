@@ -62,7 +62,7 @@ const home: Strings<typeof en> = {
     range: 'Máxima de {{high}}°F, mínima de {{low}}°F.',
     today: 'Hoy',
     frost: 'Helada',
-    freeze: 'Congelación',
+    freeze: 'Helada fuerte',
     possible: 'Posible {{night}}',
     forecastLow: 'Mínima pronosticada de {{low}}°F.',
     tender: 'Quizá convenga cubrir las plantas delicadas que están afuera, o meterlas.',

@@ -47,8 +47,8 @@ const season: Strings<typeof en> = {
   },
   frostRisk: {
     frost: 'Posible helada',
-    freeze: 'Congelación',
-    hard_freeze: 'Congelación fuerte',
+    freeze: 'Helada fuerte',
+    hard_freeze: 'Helada severa',
   },
   cells: {
     noTemperature: 'Sin temperatura',

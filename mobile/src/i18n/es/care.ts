@@ -10,7 +10,7 @@ const care: Strings<typeof en> = {
     mist: { check: 'Ve si {{name}} necesita rocío', done: 'Rociada' },
     prune: { check: 'Ve si {{name}} necesita poda', done: 'Podada' },
     repot: { check: 'Revisa las raíces de {{name}}', done: 'Trasplantada' },
-    rotate: { check: 'Ve si a {{name}} le falta girarla', done: 'Girada' },
+    rotate: { check: 'Ve si conviene girar a {{name}}', done: 'Girada' },
     clean: { check: 'Ve si las hojas de {{name}} necesitan una limpieza', done: 'Limpiada' },
     other: { check: 'Échale un vistazo a {{name}}', done: 'Atendida' },
   },
