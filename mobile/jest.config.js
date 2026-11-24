@@ -11,6 +11,10 @@ module.exports = {
   watchman: false,
   // One time zone for every run, west of UTC (see the file).
   globalSetup: '<rootDir>/jest.globalSetup.js',
+  // expo-localization is a native module; the i18n tests choose the locale.
+  moduleNameMapper: {
+    '^expo-localization$': '<rootDir>/src/i18n/testing/expoLocalization.ts',
+  },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.jest.json' }],
   },
