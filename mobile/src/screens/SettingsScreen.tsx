@@ -21,6 +21,7 @@ import {
 } from '../notifications/reminders';
 import { ReminderPrefs } from '../notifications/plan';
 import { useAppTheme } from '../theme/ThemeProvider';
+import { useUnits } from '../units/UnitsProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { BUILD_NUMBER, BUILD_COMMIT } from '../buildInfo';
 import { CareType } from '../types';
@@ -71,6 +72,7 @@ export default function SettingsScreen() {
   // and their disclosures appear and disappear with them.
   const capabilities = useAiCapabilities();
   const { name: themeName, toggle: toggleTheme, palette, fonts } = useAppTheme();
+  const { unit, setUnit } = useUnits();
   const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
   const [url, setUrl]       = useState('');
   const [saved, setSaved]   = useState(false);
@@ -254,6 +256,18 @@ export default function SettingsScreen() {
             />
           </View>
           <Text variant="bodySmall" style={styles.hint}>{t('settings.themeHint')}</Text>
+          <View style={styles.reminderRow}>
+            <Text variant="bodyMedium" style={styles.reminderLabel}>
+              {unit === 'C' ? t('controls.units.c') : t('controls.units.f')}
+            </Text>
+            <Switch
+              value={unit === 'C'}
+              onValueChange={(c) => setUnit(c ? 'C' : 'F')}
+              color={palette.acc}
+              accessibilityLabel={t('settings.celsius')}
+            />
+          </View>
+          <Text variant="bodySmall" style={styles.hint}>{t('settings.unitsHint')}</Text>
         </Card.Content>
       </Card>
 

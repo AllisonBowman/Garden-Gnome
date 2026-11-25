@@ -44,6 +44,8 @@ const settings: Strings<typeof en> = {
   themeDark: '🌙 Observatorio (oscuro)',
   themeLight: '☀️ Almanaque (claro)',
   themeHint: 'Almanaque es el aspecto cálido de libreta de campo; Observatorio es un tema nocturno oscuro, apto para daltonismo.',
+  celsius: 'Mostrar las temperaturas en Celsius',
+  unitsHint: 'Las temperaturas que escribe la app. Los pronósticos y el plan de temporada llegan en °F y se convierten; algunas notas del servidor pueden seguir en °F.',
   careReminders: 'Recordatorios de cuidado',
   weatherShift: '🌦️ Ajustar el riego según el tiempo',
   weatherShiftHint: 'Mueve los recordatorios de riego uno o dos días para las plantas al aire libre y sin resguardo. Más tarde antes de la lluvia, antes en una ola de calor. Necesita una ubicación en el área de cultivo.',

@@ -40,6 +40,8 @@ const settings = {
   themeDark: '🌙 Observatory (dark)',
   themeLight: '☀️ Almanac (light)',
   themeHint: 'Almanac is the warm field-notebook look; Observatory is a dark, colorblind-safe night theme.',
+  celsius: 'Show temperatures in Celsius',
+  unitsHint: 'Temperatures the app writes itself. Forecasts and the season plan arrive in °F and are converted; a few notes from the server may still read in °F.',
   careReminders: 'Care reminders',
   weatherShift: '🌦️ Let weather adjust watering',
   weatherShiftHint: 'Nudges watering reminders by a day or two for outdoor, unsheltered plants. Later before rain, sooner in a heat spike. Needs a location on the growing area.',
