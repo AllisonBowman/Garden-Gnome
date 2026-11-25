@@ -33,6 +33,8 @@ import Eyebrow from '../components/Eyebrow';
 import HowWeKnowButton from '../components/HowWeKnowButton';
 import LoadError from '../components/LoadError';
 import RefreshFailed from '../components/RefreshFailed';
+import WeatherCredit from '../components/WeatherCredit';
+import { APPLE_WEATHER_LEGAL, isAppleForecast } from '../weather/appleCredit';
 import { formatServerTime } from '../home/serverTime';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
@@ -118,6 +120,7 @@ export default function HomeScreen() {
   });
   const verdict = oneThing(legacy ? null : vitals?.headline, localHeadline, getTempUnit() === 'C');
   const today = new Date();
+  const forecastWhen = vitals?.forecast?.fetched_at ? formatServerTime(vitals.forecast.fetched_at) : null;
 
   const glance = landGlance(profileQ.data);
   const progress = profileProgressLine(profileQ.data?.status ?? property?.profile_status);
@@ -168,7 +171,7 @@ export default function HomeScreen() {
     week: week.items,
     seasonAhead: seasonAhead(vitals?.season_ahead ?? []),
     legacyCredit: legacy && legacyWeather?.attribution ? legacyWeather.attribution.text ?? null : null,
-    forecastWhen: vitals?.forecast?.fetched_at ? formatServerTime(vitals.forecast.fetched_at) : null,
+    forecastWhen,
   });
 
   const onRefresh = useCallback(async () => {
@@ -236,10 +239,19 @@ export default function HomeScreen() {
           {property ? t('home.almanac.title') : t('home.almanac.titleNoLand')}
         </Text>
         <View accessible accessibilityLabel={`${almanacDate(today)}. ${seasonWeekLine(today)}.`}>
-          <Text style={styles.date}>{almanacDate(today)}</Text>
+          <Text style={styles.date} maxFontSizeMultiplier={2}>{almanacDate(today)}</Text>
           <Text style={styles.weekLine}>{seasonWeekLine(today)}</Text>
         </View>
-        <Text style={styles.verdict} accessibilityRole="text">{verdict.line}</Text>
+        <Text style={styles.verdict} accessibilityRole="text" maxFontSizeMultiplier={2.2}>{verdict.line}</Text>
+        {/* A date stamp is trust, not justification: it stays on the face. */}
+        {forecastWhen ? <Text style={styles.quietTight}>{t('home.almanac.asOf', { when: forecastWhen })}</Text> : null}
+        {/* The Apple Weather credit is a licence term wherever its data is
+            shown, the line above included, so it never moves behind a tap. */}
+        {legacy
+          ? <WeatherCredit attribution={legacyWeather?.attribution} />
+          : vitals?.forecast && isAppleForecast(vitals.forecast)
+            ? <WeatherCredit attribution={{ text: vitals.forecast.provider_name, url: APPLE_WEATHER_LEGAL }} />
+            : null}
       </View>
 
       {/* ── 2. Up to three tasks ── */}
@@ -297,7 +309,7 @@ export default function HomeScreen() {
               >
                 <Text style={styles.glanceTitle}>{g.title}</Text>
                 <View style={styles.glanceValue}>
-                  <Text style={styles.glanceWord}>{g.word}</Text>
+                  <Text style={styles.glanceWord} maxFontSizeMultiplier={2.5}>{g.word}</Text>
                   {g.estimated || g.checking ? <EstTag checking={g.checking} /> : null}
                 </View>
               </Pressable>

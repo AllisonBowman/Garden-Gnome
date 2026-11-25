@@ -24,6 +24,7 @@ import LoadError from '../components/LoadError';
 import Pill from '../components/Pill';
 import RefreshFailed from '../components/RefreshFailed';
 import WeatherCredit from '../components/WeatherCredit';
+import { APPLE_WEATHER_LEGAL, isAppleForecast } from '../weather/appleCredit';
 import HowWeKnowButton from '../components/HowWeKnowButton';
 import { seasonSections as seasonHowWeKnow } from '../howWeKnow/sections';
 import { useAppTheme } from '../theme/ThemeProvider';
@@ -44,12 +45,6 @@ type Styles = ReturnType<typeof makeStyles>;
 // timeline sits above the sections; tapping an event on it scrolls to its
 // card. Events with no dates are not drawn and stay in the list.
 
-/** Apple's attribution page, linked whenever Apple Weather supplied the forecast. */
-const APPLE_WEATHER_LEGAL = 'https://weatherkit.apple.com/legal-attribution.html';
-
-function isAppleForecast(f: Forecast): boolean {
-  return /weatherkit|apple/i.test(`${f.provider} ${f.provider_name}`);
-}
 
 export default function SeasonScreen() {
   const { params } = useRoute<Route>();

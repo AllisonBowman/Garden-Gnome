@@ -85,6 +85,7 @@ const home = {
     title: 'This week on your land',
     date: '{{weekday}}, {{month}} {{day}}',
     dateTime: '{{day}}, {{time}}',
+    asOf: 'Forecast as of {{when}}',
     titleNoLand: 'This week where you grow',
     week: {
       spring: 'Week {{week}} of spring',

@@ -57,15 +57,15 @@ export function ControlTile({ label, note, on, a11yLabel, a11yHint, icon, onPres
       ]}
     >
       <View style={styles.row} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
-        <Text style={[styles.icon, { color: ink }]}>{icon}</Text>
+        <Text style={[styles.icon, { color: ink }]} maxFontSizeMultiplier={1.4}>{icon}</Text>
         <View style={styles.texts}>
           <Text style={[styles.label, { color: ink }]}>{label}</Text>
           {note ? <Text style={[styles.note, { color: ink }]}>{note}</Text> : null}
         </View>
         {isSwitch ? (
           // The state as a mark as well as the word: never color alone.
-          <Text style={[styles.mark, { color: ink }]}>{on ? '✓' : '○'}</Text>
-        ) : <Text style={[styles.mark, { color: ink }]}>›</Text>}
+          <Text style={[styles.mark, { color: ink }]} maxFontSizeMultiplier={1.6}>{on ? '✓' : '○'}</Text>
+        ) : <Text style={[styles.mark, { color: ink }]} maxFontSizeMultiplier={1.6}>›</Text>}
       </View>
     </Pressable>
   );

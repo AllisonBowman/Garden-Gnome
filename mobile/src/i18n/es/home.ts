@@ -88,6 +88,7 @@ const home: Strings<typeof en> = {
     title: 'Esta semana en tu terreno',
     date: '{{weekday}} {{day}} de {{month}}',
     dateTime: '{{day}}, {{time}}',
+    asOf: 'Pronóstico al {{when}}',
     titleNoLand: 'Esta semana donde cultivas',
     week: {
       spring: 'Semana {{week}} de la primavera',
