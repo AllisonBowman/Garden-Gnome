@@ -43,7 +43,10 @@ The PlantAdvocate half of Duet's note "ui-redesign: controls first, sources behi
 - Frost alerts have no "how early" choice, and task reminders have no time of day, because neither exists in the reminder preferences. Both tiles are On/Off. The reminders tile turns every kind of check on or off together, and Settings keeps the per-kind switches.
 - Done and Skip on a season task answer its event, which is how the server's API works, the same as on the Season screen. Skip on a plant check other than water logs nothing and hides the row until next week.
 - The species pages were not changed. The hazard notes and the not-advice line must stay on the face, and the care-fact sources already sit in their own card at the foot of the page.
-- The status bar text in Observatory is white on a light blue header (this was already so). Also, iOS 26 draws its own glass capsule around header buttons.
+- The weather-now, rain and heat cards and the growing-space rows are no longer on Home's face. The weather cards are inside How we know, and the forecast chart and spaces are one link away (Season, Growing spaces). Whether any of them should come back to the face is Allison's call.
+- The status bar now follows the header colour in each theme; it used to be white on Observatory's light blue header. iOS 26 still draws its own glass capsule around header buttons.
+- Done and Skip send only the answers an event offers. A frost event offers "it happened" and "not needed" but not "done", so Done on "Cover tender plants" hides the row for the week and records nothing.
+- VoiceOver was not run end to end. The tiles carry one label, a role and a state each, but nobody has listened to them yet.
 - The Spanish strings are a first pass and need review by a native speaker.
 
 ## Store and review copy to update before this ships
@@ -52,6 +55,15 @@ The PlantAdvocate half of Duet's note "ui-redesign: controls first, sources behi
 - `docs/app-store/review-notes.md` steps 5 and 7 and the table rows for Your land and Season mention the chips, Why and data source, and "Know better?". The new words are "est.", How we know, and "Not right? Fix it".
 - The 1.2.0 store screenshot 02 shows confidence chips on the reading tiles. It should be retaken.
 - The privacy pages are unaffected. No new data leaves the phone: the °C choice and Home's skips are kept on the phone.
+
+## Interaction pass (Release simulator build, sample data)
+
+- Done on a task whose event offers it worked: the row left and the next task moved up. Done on the frost task hid it and sent nothing.
+- The frost alerts tile went On after the system notification prompt, and the task reminders tile also turned On. Both show On as a word, a check mark and a solid fill.
+- The Temperatures tile changes °F/°C in place. A first build threw Home back to the top; that is fixed and checked.
+- "Fix it" on a glance value opens Your land at that value. Your land, Season, and Your land's How we know sheet all open and read correctly.
+- On the device, the plurals "1 more task" and "Zones: 1" render.
+- Not exercised: the correction chips themselves (the sample values had no choices) and the care-check rows (the sample garden has no plants).
 
 ## Screenshots
 
