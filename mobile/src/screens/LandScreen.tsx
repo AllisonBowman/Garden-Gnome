@@ -12,6 +12,8 @@ import {
 import { serverMessage } from '../api/errorMessage';
 import { FrostBias, LotContent, PropertyPatch, SiteProfile, SiteValue } from '../types/site';
 import ExplainedBlock from '../components/ExplainedBlock';
+import HowWeKnowButton from '../components/HowWeKnowButton';
+import { landSections } from '../howWeKnow/sections';
 import LandMap from '../components/LandMap';
 import LayerChips from '../components/LayerChips';
 import MapLegend from '../components/MapLegend';
@@ -184,7 +186,6 @@ export default function LandScreen() {
       key={`${v.field}-${zone ?? v.zone_id ?? 'lot'}`}
       title={v.title}
       explained={v}
-      initiallyOpen={zone == null && field === v.field}
     >
       <CorrectionControl
         value={v}
@@ -209,9 +210,10 @@ export default function LandScreen() {
 
       <Text style={styles.title} accessibilityRole="header">{property?.name ?? t('land.screen.yourLand')}</Text>
       {progress ? (
-        <View style={styles.progress} accessible accessibilityLabel={progress}>
+        // The slow-service sentence lives in How we know; the face says "Checking".
+        <View style={styles.progress} accessible accessibilityLabel={t('howWeKnow.checkingA11y')}>
           {stillBusy(profile) ? <ActivityIndicator size={14} /> : null}
-          <Text style={styles.quiet}>{progress}</Text>
+          <Text style={styles.quiet}>{t('howWeKnow.checking')}</Text>
         </View>
       ) : null}
       {saveError ? (
@@ -271,6 +273,8 @@ export default function LandScreen() {
       ))}
 
       {profile.notes.map((n) => <Text key={n} style={styles.quietBlock}>{n}</Text>)}
+
+      <HowWeKnowButton sections={() => landSections({ profile, progress, layer: chosen.layer })} />
 
       {/* ── Zones ── */}
       <View style={styles.section} collapsable={false} onLayout={(e) => remember('zones', e.nativeEvent.layout.y)}>

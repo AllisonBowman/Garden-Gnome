@@ -120,7 +120,7 @@ const land = {
   correction: {
     thisValue: 'this value',
     change: 'Change your answer:',
-    knowBetter: 'Know better? Tap what is true here:',
+    knowBetter: 'Not right? Fix it. Tap what is true here:',
     choiceA11y: '{{title}}: {{label}}. Your answer.',
     choiceSetA11y: '{{title}}: {{label}}. Tap to set.',
     phAsk: 'Have a soil test? Enter its soil acidity (pH) number.',

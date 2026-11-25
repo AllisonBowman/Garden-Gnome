@@ -1,17 +1,19 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Platform } from 'react-native';
+import { AccessibilityInfo, Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import {
   Provider as PaperProvider, MD3LightTheme, MD3DarkTheme,
 } from 'react-native-paper';
 import { PALETTES, FONTS, ThemeName, Palette, Fonts } from './tokens';
+import { DisplayPrefs, NO_PREFS, paletteFor } from './paletteFor';
+
+export type { DisplayPrefs } from './paletteFor';
 
 const THEME_KEY = 'garden_gnome_theme';
 
 // Build a Paper MD3 theme from a palette so stock Paper components adopt the
 // design-lab colors even before a screen is hand-restyled.
-function buildPaperTheme(name: ThemeName) {
-  const p = PALETTES[name];
+function buildPaperTheme(name: ThemeName, p: Palette) {
   const base = name === 'observatory' ? MD3DarkTheme : MD3LightTheme;
   return {
     ...base,
@@ -42,6 +44,7 @@ interface ThemeCtx {
   name: ThemeName;
   palette: Palette;
   fonts: Fonts;
+  display: DisplayPrefs;
   toggle: () => void;
 }
 
@@ -71,6 +74,7 @@ async function saveTheme(name: ThemeName): Promise<void> {
 
 export function AppThemeProvider({ children }: { children: React.ReactNode }) {
   const [name, setName] = useState<ThemeName>('almanac');
+  const display = useDisplayPrefs();
 
   useEffect(() => {
     void loadTheme().then((stored) => { if (stored) setName(stored); });
@@ -84,16 +88,42 @@ export function AppThemeProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const palette = paletteFor(name, display);
   const value: ThemeCtx = {
     name,
-    palette: PALETTES[name],
+    palette,
     fonts: FONTS[name],
+    display,
     toggle,
   };
 
   return (
     <Ctx.Provider value={value}>
-      <PaperProvider theme={buildPaperTheme(name)}>{children}</PaperProvider>
+      <PaperProvider theme={buildPaperTheme(name, palette)}>{children}</PaperProvider>
     </Ctx.Provider>
   );
+}
+
+/** Follows Increase Contrast, Bold Text and Reduce Transparency, live. */
+function useDisplayPrefs(): DisplayPrefs {
+  const [prefs, setPrefs] = useState<DisplayPrefs>(NO_PREFS);
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return undefined;
+    let alive = true;
+    const set = (patch: Partial<DisplayPrefs>) => { if (alive) setPrefs((p) => ({ ...p, ...patch })); };
+    void Promise.all([
+      AccessibilityInfo.isDarkerSystemColorsEnabled(),
+      AccessibilityInfo.isBoldTextEnabled(),
+      AccessibilityInfo.isReduceTransparencyEnabled(),
+    ]).then(([increaseContrast, boldText, reduceTransparency]) => {
+      set({ increaseContrast, boldText, reduceTransparency });
+    }).catch(() => undefined);
+    const subs = [
+      AccessibilityInfo.addEventListener('darkerSystemColorsChanged', (v: boolean) => set({ increaseContrast: v })),
+      AccessibilityInfo.addEventListener('boldTextChanged', (v: boolean) => set({ boldText: v })),
+      AccessibilityInfo.addEventListener('reduceTransparencyChanged', (v: boolean) => set({ reduceTransparency: v })),
+    ];
+    return () => { alive = false; subs.forEach((s) => s.remove()); };
+  }, []);
+  return prefs;
 }

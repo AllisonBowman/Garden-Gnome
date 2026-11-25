@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { useTempUnitOrDefault } from '../units/context';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { ALMANAC, Palette } from '../theme/tokens';
 import { APP_VERSION, SUPPORT_EMAIL, openExternal } from '../support';
@@ -91,12 +92,22 @@ export function guarded<P extends object>(
   function Guarded(props: P) {
     return (
       <ErrorBoundary where={where} onReset={onReset}>
-        <Screen {...props} />
+        <UnitKeyed Screen={Screen} screenProps={props} />
       </ErrorBoundary>
     );
   }
   Guarded.displayName = `Guarded(${where})`;
   return Guarded;
+}
+
+/** Draws the screen keyed on the temperature unit: a °F/°C change redraws
+ *  it from scratch (its navigation stays), so no sentence written with the
+ *  old unit lingers in a memo. */
+export function UnitKeyed<P extends object>({ Screen, screenProps }: {
+  Screen: React.ComponentType<P>; screenProps: P;
+}) {
+  const unit = useTempUnitOrDefault();
+  return <Screen key={unit} {...screenProps} />;
 }
 
 /** The theme's palette, or the default one if the theme itself is what

@@ -22,6 +22,9 @@ import species from './species';
 import census from './census';
 import capture from './capture';
 import areas from './areas';
+import units from './units';
+import controls from './controls';
+import howWeKnow from './howWeKnow';
 
 export const ES_META = {
   needsReview: true,
@@ -50,6 +53,9 @@ const es: Strings<typeof en> = {
   census,
   capture,
   areas,
+  units,
+  controls,
+  howWeKnow,
 };
 
 export default es;

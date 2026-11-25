@@ -1,10 +1,10 @@
 // First-run onboarding, in the order it is read. Pure data, so the claims
 // in it can be checked against the screens they point to (slides.test.ts).
 //
-// Short and plain: what the app is, then the land, then what the land shows,
-// then the plants. The land comes before the plants because Home is a report
-// on the land: with no land yet, Home shows one "Add your land" card, which
-// is where the last slide's button leads.
+// Short and plain, around what Home now is: an almanac for the week, up to
+// three things to do, the controls up front, then the land, then where the
+// sources went (the How we know sheet). With no land yet, Home's almanac
+// offers "Add your land", which is where the last slide's button leads.
 
 import { t } from '../i18n';
 
@@ -27,9 +27,23 @@ export const FINISH: { route: 'Home'; label: string } = {
 
 export const SLIDES: Slide[] = [
   {
-    emoji: '🌱',
-    title: t('onboarding.welcomeTitle'),
-    body: t('onboarding.welcomeBody'),
+    emoji: '🗓️',
+    title: t('onboarding.almanacTitle'),
+    // Home's almanac line (home/almanac.ts): date, week of the season, and
+    // the one thing that matters.
+    body: t('onboarding.almanacBody'),
+  },
+  {
+    emoji: '✅',
+    title: t('onboarding.tasksTitle'),
+    // Home lists at most HOME_TASKS (home/homeTasks.ts) with Done and Skip.
+    body: t('onboarding.tasksBody'),
+  },
+  {
+    emoji: '🎛️',
+    title: t('onboarding.controlsTitle'),
+    // The Controls row (components/ControlsRow.tsx), each tile's state in words.
+    body: t('onboarding.controlsBody'),
   },
   {
     emoji: '📍',
@@ -39,16 +53,9 @@ export const SLIDES: Slide[] = [
     body: t('onboarding.landBody'),
   },
   {
-    emoji: '🗺️',
-    title: t('onboarding.seeTitle'),
-    body: t('onboarding.seeBody'),
-  },
-  {
-    emoji: '💧',
-    title: t('onboarding.plantsTitle'),
-    // Advice: the plant page's "Get care advice" is always offered and is
-    // rule-based (care/resultLabels.ts). Photo check-ups and free-text
-    // questions are switched off, so they are not mentioned.
-    body: t('onboarding.plantsBody'),
+    emoji: '🔎',
+    title: t('onboarding.howTitle'),
+    // The How we know sheet (screens/HowWeKnowScreen.tsx).
+    body: t('onboarding.howBody'),
   },
 ];

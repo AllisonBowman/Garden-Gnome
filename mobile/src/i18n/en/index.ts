@@ -18,6 +18,9 @@ import species from './species';
 import census from './census';
 import capture from './capture';
 import areas from './areas';
+import units from './units';
+import controls from './controls';
+import howWeKnow from './howWeKnow';
 
 const en = {
   common,
@@ -39,6 +42,9 @@ const en = {
   census,
   capture,
   areas,
+  units,
+  controls,
+  howWeKnow,
 };
 
 export default en;

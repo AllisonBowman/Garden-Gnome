@@ -18,6 +18,9 @@ import GrowingAreaDetailScreen from './src/screens/GrowingAreaDetailScreen';
 import CensusScreen        from './src/screens/CensusScreen';
 import AlmanacScreen      from './src/screens/AlmanacScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
+import HowWeKnowScreen     from './src/screens/HowWeKnowScreen';
+import { UnitsProvider } from './src/units/UnitsProvider';
+import { HeaderTextButton } from './src/components/HeaderTextButton';
 import HomeScreen          from './src/screens/HomeScreen';
 import PropertySetupScreen from './src/screens/PropertySetupScreen';
 import LandScreen          from './src/screens/LandScreen';
@@ -91,6 +94,7 @@ const GrowingAreas  = guarded(GrowingAreasScreen, 'Growing areas', resetData);
 const GrowingAreaDetail = guarded(GrowingAreaDetailScreen, 'Growing area', resetData);
 const Census        = guarded(CensusScreen, 'Census', resetData);
 const Settings      = guarded(SettingsScreen, 'Settings', resetData);
+const HowWeKnow     = guarded(HowWeKnowScreen, 'How we know', resetData);
 
 // ── The one stack ─────────────────────────────────────────────────────────────
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -109,7 +113,18 @@ function useHeaderOpts() {
 function RootNavigator() {
   return (
     <Stack.Navigator initialRouteName="Home" screenOptions={useHeaderOpts()}>
-      <Stack.Screen name="Home"          component={Home}          options={{ title: 'PlantAdvocate' }} />
+      <Stack.Screen name="Home" component={Home} options={({ navigation }) => ({
+        title: 'PlantAdvocate',
+        // Settings one tap from the first screen, labeled in words.
+        headerRight: () => (
+          <HeaderTextButton
+            label={t('controls.settings')}
+            a11yLabel={t('controls.settingsA11y')}
+            a11yHint={t('controls.settingsHint')}
+            onPress={() => navigation.navigate('Settings')}
+          />
+        ),
+      })} />
       <Stack.Screen name="PropertySetup" component={PropertySetup} options={{ title: t('nav.propertySetup') }} />
       <Stack.Screen name="Land"          component={Land}          options={{ title: t('nav.land') }} />
       <Stack.Screen name="ZoneMap"       component={ZoneMap}       options={{ title: t('nav.zoneMap') }} />
@@ -132,6 +147,17 @@ function RootNavigator() {
       <Stack.Screen name="Almanac"       component={Almanac}       options={{ title: t('nav.almanac') }} />
       <Stack.Screen name="Settings"      component={Settings}      options={{ title: t('nav.settings') }} />
       <Stack.Screen name="Census"        component={Census}        options={{ title: t('nav.census') }} />
+      <Stack.Screen name="HowWeKnow" component={HowWeKnow} options={({ navigation }) => ({
+        title: t('howWeKnow.title'),
+        presentation: 'modal',
+        headerRight: () => (
+          <HeaderTextButton
+            label={t('howWeKnow.close')}
+            a11yLabel={t('howWeKnow.closeA11y')}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      })} />
     </Stack.Navigator>
   );
 }
@@ -228,6 +254,7 @@ export default function App() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <AppThemeProvider>
+          <UnitsProvider>
           {/* The last line of defence: anything the per-screen boundaries
               don't cover (sign-in, the header, onboarding) shows a card
               with Try again instead of closing the app. */}
@@ -236,6 +263,7 @@ export default function App() {
               <AuthGate />
             </AuthProvider>
           </ErrorBoundary>
+          </UnitsProvider>
         </AppThemeProvider>
       </QueryClientProvider>
     </SafeAreaProvider>

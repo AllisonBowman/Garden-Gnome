@@ -5,6 +5,7 @@
 import { GrowingArea, Weather } from '../types';
 import { parseServerDate } from '../api/serverDate';
 import { language, localeTag, t } from '../i18n';
+import { formatTemp } from '../units/temperature';
 
 // WeatherKit reports camelCase condition codes (e.g. "MostlyCloudy"). Friendly
 // text for the common ones (i18n weather.conditions); fall back to spacing the
@@ -82,11 +83,11 @@ export function translateWeather(env: GrowingArea, weather: Weather): string[] {
   if (outdoor) {
     const hot = days.find((d) => (d.high_f ?? -999) >= 90);
     if (hot) {
-      lines.push(t('weather.lines.hot', { high: hot.high_f, day: weekday(hot.date) }));
+      lines.push(t('weather.lines.hot', { high: formatTemp(hot.high_f!), day: weekday(hot.date) }));
     }
     const cold = days.find((d) => (d.low_f ?? 999) <= 40);
     if (cold) {
-      lines.push(t('weather.lines.cold', { low: cold.low_f, day: weekday(cold.date) }));
+      lines.push(t('weather.lines.cold', { low: formatTemp(cold.low_f!), day: weekday(cold.date) }));
     }
   }
   if (openSun) {

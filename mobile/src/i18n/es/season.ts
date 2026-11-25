@@ -52,10 +52,9 @@ const season: Strings<typeof en> = {
   },
   cells: {
     noTemperature: 'Sin temperatura',
-    degreesF: '{{temp}}°F',
     rain: '{{pct}}% lluvia',
-    a11yHigh: 'máxima de {{temp}} grados Fahrenheit',
-    a11yLow: 'mínima de {{temp}} grados Fahrenheit',
+    a11yHigh: 'máxima de {{temp}} {{unit}}',
+    a11yLow: 'mínima de {{temp}} {{unit}}',
     a11yRain: '{{pct}} por ciento de probabilidad de lluvia',
   },
   credit: {

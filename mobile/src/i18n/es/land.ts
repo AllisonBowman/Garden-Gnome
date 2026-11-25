@@ -117,7 +117,7 @@ const land: Strings<typeof en> = {
   correction: {
     thisValue: 'este valor',
     change: 'Cambia tu respuesta:',
-    knowBetter: '¿Lo sabes mejor? Toca lo que es cierto aquí:',
+    knowBetter: '¿No es correcto? Corrígelo. Toca lo que es cierto aquí:',
     choiceA11y: '{{title}}: {{label}}. Tu respuesta.',
     choiceSetA11y: '{{title}}: {{label}}. Toca para elegir.',
     phAsk: '¿Tienes un análisis de suelo? Escribe su número de acidez del suelo (pH).',

@@ -8,20 +8,24 @@ const onboarding: Strings<typeof en> = {
   getStarted: 'Comenzar',
   next: 'Siguiente',
   skip: 'Omitir',
-  welcomeTitle: 'Te damos la bienvenida a PlantAdvocate',
-  welcomeBody: 'PlantAdvocate te ayuda a cuidar tu terreno y las plantas que crecen en él, a lo largo de las temporadas.',
+  slideOf: 'Página {{n}} de {{total}}',
+  almanacTitle: 'Un almanaque para tu terreno',
+  almanacBody: 'PlantAdvocate abre con una página para la semana: la fecha, la semana de la temporada '
+    + 'y lo único que importa, como una helada que se acerca.',
+  tasksTitle: 'Hasta tres cosas por hacer',
+  tasksBody: 'Las tareas de esta semana vienen de tu plan de temporada y de las revisiones de tus plantas. '
+    + 'Toca Hecho u Omitir y el plan sigue adelante.',
+  controlsTitle: 'Tus controles, a la vista',
+  controlsBody: 'Los avisos de helada, tu terreno, las zonas, °F o °C y los recordatorios de tareas están en una fila '
+    + 'en la primera pantalla. Cada uno dice si está activado, y un toque lo cambia.',
   landTitle: 'Agrega tu terreno',
   landBody: 'Escribe una dirección o usa tu ubicación, y luego pon un marcador en tu casa. '
     + 'PlantAdvocate consulta mapas públicos para estimar el sol, dónde se junta el agua, el suelo, '
-    + 'la zona de rusticidad y las fechas de helada. Cada estimación dice qué tan segura es y de dónde viene, '
-    + 'y puedes corregir cualquiera de ellas. Los mapas cubren terrenos en los Estados Unidos.',
-  seeTitle: 'Mira tu terreno',
-  seeBody: 'Inicio muestra un mapa de tu terreno con las capas Sol, Árboles y Agua, el pronóstico del tiempo '
-    + 'y una línea de tiempo de la temporada. Cada paso dice qué hacer y por qué.',
-  plantsTitle: 'Agrega plantas y registra cuidados',
-  plantsBody: 'Agrega cada planta donde crece y luego toca para registrar riego, abonado y más. '
-    + 'Cada especie tiene datos de cuidado y riesgos, con fuentes cuando se conocen. '
-    + 'La página de cada planta también da consejos de cuidado, calculados con reglas fijas a partir de su especie y su registro de cuidados.',
+    + 'la zona de rusticidad y las fechas de helada. Si un valor parece incorrecto, “¿No es correcto? Corrígelo” '
+    + 'te deja corregir cualquiera. Los mapas cubren terrenos en los Estados Unidos.',
+  howTitle: 'Cómo lo sabemos',
+  howBody: 'Cada pantalla tiene una página Cómo lo sabemos: de dónde viene cada valor, cómo se calculó '
+    + 'y qué tan seguro es. Las plantas y las especies también muestran ahí sus fuentes.',
 };
 
 export default onboarding;

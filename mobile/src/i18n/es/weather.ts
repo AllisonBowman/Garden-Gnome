@@ -31,8 +31,8 @@ const weather: Strings<typeof en> = {
     rainLikely: '🌧️ Probable lluvia ({{pct}}% el {{day}}): {{reach}}; revisa el suelo después, antes de volver a regar.',
     reachPartial: 'puede que parte llegue a las plantas de aquí',
     reachOpen: 'puede regar las plantas sin protección de aquí',
-    hot: '🔥 Racha de calor (máxima de {{high}}°F el {{day}}): las plantas aquí se secan más rápido; revisa el suelo antes.',
-    cold: '❄️ Noche fría (mínima de {{low}}°F el {{day}}): quizá convenga cubrir las plantas delicadas de aquí o meterlas.',
+    hot: '🔥 Racha de calor (máxima de {{high}} el {{day}}): las plantas aquí se secan más rápido; revisa el suelo antes.',
+    cold: '❄️ Noche fría (mínima de {{low}} el {{day}}): quizá convenga cubrir las plantas delicadas de aquí o meterlas.',
     uv: '😎 UV muy alto (hasta {{peak}}): incluso las plantas de sol pueden quemarse aquí al mediodía.',
   },
   credit: {

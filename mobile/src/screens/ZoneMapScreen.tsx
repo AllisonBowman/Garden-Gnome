@@ -14,6 +14,8 @@ import {
 import { Box, Imagery, SiteProfile, Zone } from '../types/site';
 import TopDownImage, { TopDownImageContext } from '../components/TopDownImage';
 import ExplainedBlock from '../components/ExplainedBlock';
+import HowWeKnowButton from '../components/HowWeKnowButton';
+import { zoneSections } from '../howWeKnow/sections';
 import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
 import { useImagerySource } from '../land/useImagerySource';
@@ -432,6 +434,9 @@ export default function ZoneMapScreen() {
                   : t('zones.screen.notReady')}
               </Text>
             ) : null}
+            <HowWeKnowButton sections={() => zoneSections({
+              name: savedZone.name, values: zoneShownValues(savedZone.values),
+            })} />
           </Card.Content>
         </Card>
       )}

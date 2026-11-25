@@ -51,10 +51,9 @@ const season = {
   },
   cells: {
     noTemperature: 'No temperature',
-    degreesF: '{{temp}}°F',
     rain: '{{pct}}% rain',
-    a11yHigh: 'high {{temp}} degrees Fahrenheit',
-    a11yLow: 'low {{temp}} degrees Fahrenheit',
+    a11yHigh: 'high {{temp}} {{unit}}',
+    a11yLow: 'low {{temp}} {{unit}}',
     a11yRain: '{{pct}} percent chance of rain',
   },
   credit: {

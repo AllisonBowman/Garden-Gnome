@@ -5,6 +5,7 @@ import { startOfDay } from '../care/schedule';
 import { conditionText } from '../weather/translate';
 import { dayWord, nextFrostNight, nightWord } from './headline';
 import { t } from '../i18n';
+import { formatTemp } from '../units/temperature';
 
 // Home's weather vitals: today, the next frost or freeze risk, and rain.
 // From the server's cards when it sends them; built from the older weather
@@ -47,11 +48,11 @@ export function legacyWeatherCards(
   const cond = conditionText(weather.current.condition);
   if (temp != null || cond) {
     const range = first && first.high_f != null && first.low_f != null
-      ? ` ${t('home.weather.range', { high: Math.round(first.high_f), low: Math.round(first.low_f) })}` : '';
+      ? ` ${t('home.weather.range', { high: formatTemp(first.high_f), low: formatTemp(first.low_f) })}` : '';
     cards.push({
       key: 'weather_now',
       title: t('home.weather.today'),
-      value_text: [temp != null ? `${Math.round(temp)}°F` : null, cond || null].filter(Boolean).join(', '),
+      value_text: [temp != null ? formatTemp(temp) : null, cond || null].filter(Boolean).join(', '),
       detail: `${where}${range}`,
       tone: 'ok',
     });
@@ -61,7 +62,7 @@ export function legacyWeatherCards(
     const frost = nextFrostNight(ahead.map(({ d }) => ({ date: d.date, low_f: d.low_f })), today);
     if (frost) {
       const day = ahead.find(({ at }) => at!.getTime() === frost.date.getTime())?.d;
-      const low = day?.low_f != null ? ` ${t('home.weather.forecastLow', { low: Math.round(day.low_f) })}` : '';
+      const low = day?.low_f != null ? ` ${t('home.weather.forecastLow', { low: formatTemp(day.low_f) })}` : '';
       cards.push({
         key: 'frost',
         title: frost.risk === 'frost' ? t('home.weather.frost') : t('home.weather.freeze'),
@@ -76,7 +77,7 @@ export function legacyWeatherCards(
           key: 'frost',
           title: t('home.weather.frost'),
           value_text: t('home.weather.noFrost'),
-          detail: `${where} ${t('home.weather.lowestLow', { low: Math.round(Math.min(...lows)) })}`,
+          detail: `${where} ${t('home.weather.lowestLow', { low: formatTemp(Math.min(...lows)) })}`,
           tone: 'ok',
         });
       }

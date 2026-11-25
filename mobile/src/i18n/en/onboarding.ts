@@ -4,20 +4,24 @@ const onboarding = {
   getStarted: 'Get started',
   next: 'Next',
   skip: 'Skip',
-  welcomeTitle: 'Welcome to PlantAdvocate',
-  welcomeBody: 'PlantAdvocate helps you look after your land and the plants on it, through the seasons.',
+  slideOf: 'Page {{n}} of {{total}}',
+  almanacTitle: 'An almanac for your land',
+  almanacBody: 'PlantAdvocate opens on one page for the week: the date, the week of the season, '
+    + 'and the one thing that matters, like a frost on the way.',
+  tasksTitle: 'Up to three things to do',
+  tasksBody: 'This week’s tasks come from your season plan and your plants’ checks. '
+    + 'Tap Done or Skip and the plan moves on.',
+  controlsTitle: 'Your controls, up front',
+  controlsBody: 'Frost and freeze alerts, your land, zones, °F or °C, and task reminders sit in one row '
+    + 'on the first screen. Each says whether it is on, and one tap changes it.',
   landTitle: 'Add your land',
   landBody: 'Type an address or use your location, then put a pin on your home. '
     + 'PlantAdvocate reads public maps to estimate sun, where water collects, soil, '
-    + 'hardiness zone and frost dates. Each estimate says how sure it is and where it came from, '
-    + 'and you can correct any of them. The maps cover land in the United States.',
-  seeTitle: 'See your land',
-  seeBody: 'Home shows a map of your land with Sun, Trees and Water layers, the weather forecast, '
-    + 'and a season timeline. Each step on it says what to do and why.',
-  plantsTitle: 'Add plants, log care',
-  plantsBody: 'Add each plant where it grows, then tap to log watering, feeding and more. '
-    + 'Each species has care facts and hazards, with sources where they are known. '
-    + 'A plant’s page also gives care tips, worked out by set rules from its species and its care log.',
+    + 'hardiness zone and frost dates. If a value looks wrong, “Not right? Fix it” lets you '
+    + 'correct any of them. The maps cover land in the United States.',
+  howTitle: 'How we know',
+  howBody: 'Every screen has a How we know page: where each value comes from, how it was '
+    + 'worked out, and how sure it is. Plants and species carry their sources there too.',
 };
 
 export default onboarding;

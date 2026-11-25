@@ -2,6 +2,7 @@ import { ConfidenceLabel, Explained, SiteField, SiteProfile, SiteValue, VitalCar
 import { LandLine, landLines } from '../home/land';
 import { t } from '../i18n';
 import { localConfidenceLabel } from '../components/explainedText';
+import { formatTemp, unitSpoken } from '../units/temperature';
 
 // The reading tiles on Home and Your land (map and visuals spec sections 1
 // and 4.2): sun hours, hardiness zone, where water collects and topsoil, each
@@ -85,7 +86,7 @@ const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
-const fmtF = (x: number) => `${Math.round(x)} °F`;
+const fmtF = (x: number) => formatTemp(x);
 
 function tileTitle(key: keyof typeof SERVER_TITLES): string {
   switch (key) {
@@ -159,7 +160,7 @@ export function parseSoil(v: unknown): { texture: string | null; mix: SoilMix | 
 
 // ── Tiles ────────────────────────────────────────────────────────────────────
 
-function valueFor(profile: SiteProfile | null | undefined, field: SiteField | undefined): SiteValue | undefined {
+export function valueFor(profile: SiteProfile | null | undefined, field: SiteField | undefined): SiteValue | undefined {
   if (!profile || !field) return undefined;
   return profile.values.find((v) => v.field === field && v.zone_id == null)
     ?? profile.values.find((v) => v.field === field);
@@ -302,7 +303,7 @@ export function readingTiles(profile: SiteProfile | null | undefined, cards: Vit
       confidenceLabel: label,
       explained: line.explained,
       field: line.field,
-      a11y: a11y.replace(/ ?°F/g, t('land.tiles.degreesF')).replace(/%/g, t('land.tiles.percent')),
+      a11y: a11y.replace(/ ?°[FC]/g, ` ${unitSpoken()}`).replace(/%/g, t('land.tiles.percent')),
     };
   });
 }

@@ -24,7 +24,8 @@ import LoadError from '../components/LoadError';
 import Pill from '../components/Pill';
 import RefreshFailed from '../components/RefreshFailed';
 import WeatherCredit from '../components/WeatherCredit';
-import { WHY_LABEL, disclosureLines } from '../components/explainedText';
+import HowWeKnowButton from '../components/HowWeKnowButton';
+import { seasonSections as seasonHowWeKnow } from '../howWeKnow/sections';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 
@@ -186,7 +187,11 @@ export default function SeasonScreen() {
         </View>
       ))}
 
-      {plan.notes.map((n, i) => <Text key={i} style={styles.note}>{n}</Text>)}
+      <HowWeKnowButton sections={() => seasonHowWeKnow({
+        events: plan.events,
+        forecastCredit: plan.forecast ? forecastCredit(plan.forecast.provider_name, plan.forecast.fetched_at) : null,
+        notes: plan.notes,
+      })} />
     </ScrollView>
   );
 }
@@ -279,8 +284,7 @@ function EventCard({ event, highlighted, busy, onAction, styles }: {
 }
 
 function TaskRow({ task, styles }: { task: SeasonTask; styles: Styles }) {
-  const [open, setOpen] = useState(false);
-  const lines = disclosureLines(task);
+  // The task's reason and sources live in How we know (one sheet per screen).
   const settled = task.state !== 'open';
   return (
     <View style={styles.task}>
@@ -289,22 +293,6 @@ function TaskRow({ task, styles }: { task: SeasonTask; styles: Styles }) {
         <Text style={[styles.taskText, settled && styles.taskSettled]}>{task.text}</Text>
       </View>
       {task.low_impact_note ? <Text style={styles.lowImpact}>{task.low_impact_note}</Text> : null}
-      <Pressable
-        onPress={() => setOpen((o) => !o)}
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-        accessibilityLabel={t('season.screen.whyTaskA11y', { why: WHY_LABEL, toggle: open ? t('season.screen.hide') : t('season.screen.show') })}
-        hitSlop={8}
-        style={styles.toggle}
-      >
-        <Text style={styles.toggleText}>{`${open ? '▾' : '▸'} ${WHY_LABEL}`}</Text>
-      </Pressable>
-      {open && (
-        <View style={styles.detail}>
-          {lines.reason ? <Text style={styles.reason}>{lines.reason}</Text> : null}
-          {lines.sources.map((s, i) => <Text key={i} style={styles.source}>{t('season.screen.data', { source: s })}</Text>)}
-        </View>
-      )}
     </View>
   );
 }

@@ -2,6 +2,7 @@ import { ForecastDay, FrostRisk } from '../types/site';
 import { forecastCells } from '../season/sections';
 import { parseServerDate } from '../api/serverDate';
 import { t } from '../i18n';
+import { formatDegrees, formatTemp, unitSymbol } from '../units/temperature';
 import { weekdayShort } from '../season/dateWords';
 
 // The forecast as bars (map and visuals spec sections 1 and 4.2): one
@@ -12,13 +13,15 @@ import { weekdayShort } from '../season/dateWords';
 
 export const FREEZING_F = 32;
 
-/** The label on the 32 °F line. */
-export const FREEZING_LABEL = '32 °F';
+/** The label on the freezing line: "32 °F" or "0 °C". */
+export function freezingLabel(): string {
+  return formatTemp(FREEZING_F);
+}
 
 /** The caption under the chart: the per-bar labels are bare degrees, so the
  *  unit is said once here, with what the percentages are when shown. */
 export function forecastCaption(anyRain: boolean): string {
-  return anyRain ? t('home.bars.captionRain') : t('home.bars.caption');
+  return anyRain ? t('home.bars.captionRain', { unit: unitSymbol() }) : t('home.bars.caption', { unit: unitSymbol() });
 }
 
 /** What a day with neither temperature shows in its column (short words, so
@@ -114,7 +117,7 @@ export interface ForecastBarsLayout {
   ticks: Array<{ value: number; y: number }>;
 }
 
-const deg = (n: number | null) => (n == null ? null : `${Math.round(n)}°`);
+const deg = (n: number | null) => (n == null ? null : formatDegrees(n));
 
 const has = (s: string, ...words: string[]) => words.some((w) => s.includes(w));
 
@@ -213,9 +216,9 @@ export function forecastBars(days: ForecastDay[], box: BarsBox, today: Date = ne
     if (FREEZING_F >= scale.min && FREEZING_F <= scale.max) {
       freezingY = yOf(FREEZING_F);
     } else if (FREEZING_F < scale.min) {
-      freezingNote = t('home.bars.aboveFreezing');
+      freezingNote = t('home.bars.aboveFreezing', { temp: freezingLabel() });
     } else {
-      freezingNote = t('home.bars.belowFreezing');
+      freezingNote = t('home.bars.belowFreezing', { temp: freezingLabel() });
     }
   }
 

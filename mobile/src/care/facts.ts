@@ -16,6 +16,7 @@ import {
   SoilDrainage, Species, WaterRegime,
 } from '../types';
 import { t } from '../i18n';
+import { formatTemp, fromFahrenheit, unitSymbol } from '../units/temperature';
 
 export type CareFactKey =
   | 'water' | 'light' | 'humidity' | 'temperature' | 'soil'
@@ -152,6 +153,8 @@ function span(
 
 /** 3 -> "3", 2.5 -> "2.5": depths, hours and degrees read as counts. */
 const num = (v: number) => String(v);
+/** A Fahrenheit value in the person's unit, whole degrees. */
+const cv = <T extends number | null | undefined>(v: T): T => (v == null ? v : Math.round(fromFahrenheit(v)) as T);
 
 /** A soil depth in centimetres, said in inches to the nearest half inch:
  *  "1 inch", "1.5 inches", "half an inch" for anything shallower. The same
@@ -267,10 +270,10 @@ const CONCEPTS: {
   ]) },
   { key: 'temperature', label: t('care.facts.labels.temperature'), join: '; ', read: (s) => concept([
     [s.day_f_min != null || s.day_f_max != null
-      ? t('care.facts.days', { band: band(s.day_f_min, s.day_f_max, '°F') }) : null, ['day_f_min', 'day_f_max']],
+      ? t('care.facts.days', { band: band(cv(s.day_f_min), cv(s.day_f_max), unitSymbol()) }) : null, ['day_f_min', 'day_f_max']],
     [s.night_f_min != null || s.night_f_max != null
-      ? t('care.facts.nights', { band: band(s.night_f_min, s.night_f_max, '°F') }) : null, ['night_f_min', 'night_f_max']],
-    [s.chill_damage_f != null ? t('care.facts.chillDamage', { n: num(s.chill_damage_f) }) : null, ['chill_damage_f']],
+      ? t('care.facts.nights', { band: band(cv(s.night_f_min), cv(s.night_f_max), unitSymbol()) }) : null, ['night_f_min', 'night_f_max']],
+    [s.chill_damage_f != null ? t('care.facts.chillDamage', { n: formatTemp(s.chill_damage_f) }) : null, ['chill_damage_f']],
   ]) },
   { key: 'soil', label: t('care.facts.labels.soil'), join: '; ', read: (s) => concept([
     [s.soil_base ? SOIL_BASE_TEXT(s.soil_base) : null, ['soil_base']],
@@ -292,7 +295,7 @@ const CONCEPTS: {
   // point, which is where harm begins in cultivation. The two can sit tens
   // of degrees apart on one plant, so they are never folded into one row.
   { key: 'cold', label: t('care.facts.labels.cold'), join: '', read: (s) => concept([
-    [s.outdoor_temp_min_f != null ? t('care.facts.survives', { n: num(s.outdoor_temp_min_f) }) : null,
+    [s.outdoor_temp_min_f != null ? t('care.facts.survives', { n: formatTemp(s.outdoor_temp_min_f) }) : null,
       ['outdoor_temp_min_f']],
   ]) },
   // Size answers a different question from the care rows above: not "what
@@ -392,7 +395,7 @@ export function legacyStats(species: Species): LegacyStat[] {
     stats.push({ key: 'humidity', label: t('care.facts.labels.humidity'), value: `${s.humidity_pct_min}–${s.humidity_pct_max}%` });
   }
   if (s.temp_f_min != null && s.temp_f_max != null && !hasAny(s, RESOLVED_FOR.temperature)) {
-    stats.push({ key: 'temperature', label: t('care.facts.labels.temp'), value: `${s.temp_f_min}–${s.temp_f_max}°F` });
+    stats.push({ key: 'temperature', label: t('care.facts.labels.temp'), value: `${cv(s.temp_f_min)}–${cv(s.temp_f_max)}${unitSymbol()}` });
   }
   if (s.soil_type && !hasAny(s, RESOLVED_FOR.soil)) {
     stats.push({ key: 'soil', label: t('care.facts.labels.soil'), value: s.soil_type });

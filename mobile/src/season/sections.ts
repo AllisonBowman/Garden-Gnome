@@ -4,6 +4,7 @@ import {
 } from '../types/site';
 import { localDateString, parseServerDate } from '../api/serverDate';
 import { t } from '../i18n';
+import { formatTemp, roundedTemp, unitSpoken } from '../units/temperature';
 import { clock, shortDay as shortDayWords, weekdayShort } from './dateWords';
 
 // The Season screen's logic: which events need attention now, which come in
@@ -203,7 +204,7 @@ function dayLabel(dateStr: string, today: Date): string {
   return weekdayShort(d);
 }
 
-const deg = (n: number | null | undefined) => (n == null ? null : t('season.cells.degreesF', { temp: Math.round(n) }));
+const deg = (n: number | null | undefined) => (n == null ? null : formatTemp(n));
 
 export function forecastCells(days: ForecastDay[], today: Date = new Date()): ForecastCell[] {
   return days.map((d) => {
@@ -216,8 +217,8 @@ export function forecastCells(days: ForecastDay[], today: Date = new Date()): Fo
     const day = dayLabel(d.date, today);
     const a11y = [
       day,
-      hi ? t('season.cells.a11yHigh', { temp: Math.round(d.high_f!) }) : null,
-      lo ? t('season.cells.a11yLow', { temp: Math.round(d.low_f!) }) : null,
+      hi ? t('season.cells.a11yHigh', { temp: roundedTemp(d.high_f!), unit: unitSpoken() }) : null,
+      lo ? t('season.cells.a11yLow', { temp: roundedTemp(d.low_f!), unit: unitSpoken() }) : null,
       rain ? t('season.cells.a11yRain', { pct: Math.round(d.precipitation_chance!) }) : null,
       frost, d.summary,
     ].filter(Boolean).join(', ');

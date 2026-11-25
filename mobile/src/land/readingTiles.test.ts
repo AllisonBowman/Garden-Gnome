@@ -42,7 +42,7 @@ test('all four tiles from the whole lot, in order, with graphics', () => {
   expect(soil.gauge).toBeNull();
   expect(water.gauge).toBeNull();
   expect(water.steps).toEqual({ labels: ['Drains freely', 'Slow to drain', 'Gathers after rain', 'Often wet'], current: 0 });
-  expect(zone.detail).toBe('Coldest night of the year, on average 5 °F to 10 °F');
+  expect(zone.detail).toBe('Coldest night of the year, on average 5°F to 10°F');
   expect(zone.gauge?.fraction).toBeCloseTo(13.5 / 26);
   expect(zone.a11y).toBe('Hardiness zone: Zone 7b. Coldest night of the year, on average 5 degrees Fahrenheit to 10 degrees Fahrenheit. Confidence: Area estimate.');
   expect(soil.a11y).toContain('Sand 20 percent');
@@ -113,7 +113,7 @@ describe('parsers', () => {
 
   test('hardiness with only a low, or a whole zone', () => {
     const [t] = readingTiles(profile([value('hardiness_zone', 'Zone 5', { zone: '5', low_f: -20 })]), []);
-    expect(t.detail).toBe('Coldest night of the year, on average down to -20 °F');
+    expect(t.detail).toBe('Coldest night of the year, on average down to -20°F');
     expect(t.gauge?.fraction).toBeCloseTo(9 / 26);
   });
 

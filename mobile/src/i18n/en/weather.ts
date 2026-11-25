@@ -28,8 +28,8 @@ const weather = {
     rainLikely: '🌧️ Rain likely ({{pct}}% {{day}}) — {{reach}}; check the soil afterwards before you water again.',
     reachPartial: 'some of it may reach plants here',
     reachOpen: 'it may water unsheltered plants here',
-    hot: '🔥 Hot stretch (high {{high}}°F {{day}}) — plants here dry out faster; check soil sooner.',
-    cold: '❄️ Cold night (low {{low}}°F {{day}}) — tender plants here may want cover or a move inside.',
+    hot: '🔥 Hot stretch (high {{high}} {{day}}) — plants here dry out faster; check soil sooner.',
+    cold: '❄️ Cold night (low {{low}} {{day}}) — tender plants here may want cover or a move inside.',
     uv: '😎 Very high UV (up to {{peak}}) — even sun-lovers here can scorch at midday.',
   },
   credit: {

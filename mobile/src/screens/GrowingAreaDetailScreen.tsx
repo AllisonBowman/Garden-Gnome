@@ -40,6 +40,7 @@ import { FIRST_FEW, cutNote, listIntro } from '../growingAreas/ranking';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
 import { t } from '../i18n';
+import { formatDegrees, formatTemp } from '../units/temperature';
 
 type Route = RouteProp<GrowingAreasStackParamList, 'SpaceDetail'>;
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'SpaceDetail'>;
@@ -67,10 +68,10 @@ function ForecastDay({ day }: { day: WeatherDay }) {
     <View style={styles.foreDay}>
       <Text style={styles.foreDow}>{weekday(day.date)}</Text>
       <Text style={styles.foreTemp}>
-        {day.high_f != null ? `${day.high_f}°` : '—'}
+        {day.high_f != null ? formatDegrees(day.high_f) : '—'}
       </Text>
       <Text style={styles.foreLow}>
-        {day.low_f != null ? `${day.low_f}°` : '—'}
+        {day.low_f != null ? formatDegrees(day.low_f) : '—'}
       </Text>
       <Text style={styles.foreMeta}>💧{day.precip_chance_pct ?? 0}%</Text>
       {day.uv_max != null ? <Text style={styles.foreMeta}>UV {day.uv_max}</Text> : null}
@@ -490,7 +491,7 @@ export default function GrowingAreaDetailScreen() {
               <View style={styles.nowRow}>
                 <View style={styles.nowMain}>
                   <Text style={styles.nowTemp}>
-                    {cur?.temp_f != null ? `${cur.temp_f}°F` : '—'}
+                    {cur?.temp_f != null ? formatTemp(cur.temp_f) : '—'}
                   </Text>
                   <Text style={styles.nowCond}>{conditionText(cur?.condition ?? null)}</Text>
                 </View>

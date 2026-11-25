@@ -15,7 +15,7 @@ jest.mock('../support', () => ({
 }));
 
 import React from 'react';
-import ErrorBoundary, { guarded } from './ErrorBoundary';
+import ErrorBoundary, { UnitKeyed, guarded } from './ErrorBoundary';
 
 type Element = React.ReactElement<Record<string, unknown>>;
 
@@ -114,8 +114,10 @@ test('guarded wraps a screen in a boundary named for it, passing its props throu
   expect(out.type).toBe(ErrorBoundary);
   expect(out.props.where).toBe('Plant');
   expect(out.props.onReset).toBe(onReset);
+  // The screen is drawn inside UnitKeyed, which keys it on °F/°C.
   const inner = out.props.children as Element;
-  expect(inner.type).toBe(Screen);
-  expect(inner.props.route).toBe('PlantDetail');
+  expect(inner.type).toBe(UnitKeyed);
+  expect(inner.props.Screen).toBe(Screen);
+  expect((inner.props.screenProps as { route: string }).route).toBe('PlantDetail');
   expect((Guarded as unknown as { displayName: string }).displayName).toBe('Guarded(Plant)');
 });
