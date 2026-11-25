@@ -121,3 +121,10 @@ test('guarded wraps a screen in a boundary named for it, passing its props throu
   expect((inner.props.screenProps as { route: string }).route).toBe('PlantDetail');
   expect((Guarded as unknown as { displayName: string }).displayName).toBe('Guarded(Plant)');
 });
+
+test('a screen that holds the unit control is drawn directly, not re-keyed', () => {
+  const Screen = (props: { route: string }) => React.createElement('Screen', props);
+  const Guarded = guarded(Screen, 'Home', undefined, { keyOnUnit: false }) as (p: { route: string }) => Element;
+  const inner = Guarded({ route: 'Home' }).props.children as Element;
+  expect(inner.type).toBe(Screen);
+});

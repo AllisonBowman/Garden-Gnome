@@ -38,7 +38,7 @@ import { APPLE_WEATHER_LEGAL, isAppleForecast } from '../weather/appleCredit';
 import { formatServerTime } from '../home/serverTime';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
-import { getTempUnit } from '../units/temperature';
+import { useUnits } from '../units/UnitsProvider';
 import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -68,6 +68,9 @@ export default function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const queryClient = useQueryClient();
   const { palette, fonts, display } = useAppTheme();
+  // Home holds the °F/°C tile, so it redraws in place on a change (App.tsx
+  // does not re-key it) and reads the unit here.
+  const { unit } = useUnits();
   const styles = useMemo(() => makeStyles(palette, fonts, display.boldText), [palette, fonts, display.boldText]);
   const [pulling, setPulling] = useState(false);
   const [skipped, setSkipped] = useState<Set<string>>(new Set());
@@ -118,7 +121,7 @@ export default function HomeScreen() {
   const localHeadline = pickHeadline({
     serverHeadline: null, days: headlineDays, careDue: counts.careDue, openSeasonTasks: counts.openSeason,
   });
-  const verdict = oneThing(legacy ? null : vitals?.headline, localHeadline, getTempUnit() === 'C');
+  const verdict = oneThing(legacy ? null : vitals?.headline, localHeadline, unit === 'C');
   const today = new Date();
   const forecastWhen = vitals?.forecast?.fetched_at ? formatServerTime(vitals.forecast.fetched_at) : null;
 

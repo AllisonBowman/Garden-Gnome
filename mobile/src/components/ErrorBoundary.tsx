@@ -88,11 +88,17 @@ export function guarded<P extends object>(
   Screen: React.ComponentType<P>,
   where: string,
   onReset?: Props['onReset'],
+  options: { keyOnUnit?: boolean } = {},
 ): React.ComponentType<P> {
+  const keyOnUnit = options.keyOnUnit ?? true;
   function Guarded(props: P) {
     return (
       <ErrorBoundary where={where} onReset={onReset}>
-        <UnitKeyed Screen={Screen} screenProps={props} />
+        {keyOnUnit
+          ? <UnitKeyed Screen={Screen} screenProps={props} />
+          // A screen that holds the °F/°C control itself reads the unit and
+          // redraws in place, so a tap there does not throw it back to the top.
+          : <Screen {...props} />}
       </ErrorBoundary>
     );
   }

@@ -78,7 +78,7 @@ const resetData = () => refreshAfterCrash(queryClient);
 // A render error costs one screen: the header's back button and every other
 // screen keep working. Wrapped once here, never inside a render, so each
 // wrapper keeps its identity.
-const Home          = guarded(HomeScreen, 'Home', resetData);
+const Home          = guarded(HomeScreen, 'Home', resetData, { keyOnUnit: false });
 const PropertySetup = guarded(PropertySetupScreen, 'Add your land', resetData);
 const Land          = guarded(LandScreen, 'Your land', resetData);
 const ZoneMap       = guarded(ZoneMapScreen, 'Zone map', resetData);
@@ -93,7 +93,7 @@ const Almanac       = guarded(AlmanacScreen, 'Species Almanac', resetData);
 const GrowingAreas  = guarded(GrowingAreasScreen, 'Growing areas', resetData);
 const GrowingAreaDetail = guarded(GrowingAreaDetailScreen, 'Growing area', resetData);
 const Census        = guarded(CensusScreen, 'Census', resetData);
-const Settings      = guarded(SettingsScreen, 'Settings', resetData);
+const Settings      = guarded(SettingsScreen, 'Settings', resetData, { keyOnUnit: false });
 const HowWeKnow     = guarded(HowWeKnowScreen, 'How we know', resetData);
 
 // ── The one stack ─────────────────────────────────────────────────────────────
