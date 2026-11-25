@@ -18,7 +18,7 @@ import { rescheduleAllReminders } from '../notifications/reminders';
 import { homeForm, offersAddLand, usesLegacyRoutes } from '../home/form';
 import { mergeThisWeek, moreCareLine, weekCounts, WeekItem } from '../home/week';
 import { pickHeadline, HeadlineDay } from '../home/headline';
-import { legacyWeatherCards, weatherCards } from '../home/weather';
+import { legacyWeatherCards, seasonCard, weatherCards } from '../home/weather';
 import { profileProgressLine, seasonAhead } from '../home/season';
 import { almanacDate, oneThing, seasonWeekLine } from '../home/almanac';
 import { landGlance } from '../home/glance';
@@ -128,7 +128,10 @@ export default function HomeScreen() {
 
   const answer = useMutation({
     mutationFn: async ({ item, button }: { item: WeekItem; button: 'done' | 'skip' }) => {
-      const a = taskAnswer(item, button);
+      const actions = item.kind === 'season'
+        ? (vitals?.season_ahead ?? []).find((e) => e.event_key === item.eventKey)?.owner_actions ?? null
+        : null;
+      const a = taskAnswer(item, button, actions);
       if (a.kind === 'season') {
         if (!property || item.kind !== 'season' || !item.eventKey) return;
         await putSeasonEvent(property.id, item.eventKey, { state: a.state });
@@ -170,6 +173,7 @@ export default function HomeScreen() {
     progress,
     week: week.items,
     seasonAhead: seasonAhead(vitals?.season_ahead ?? []),
+    seasonCard: seasonCard(vitals?.cards ?? []),
     legacyCredit: legacy && legacyWeather?.attribution ? legacyWeather.attribution.text ?? null : null,
     forecastWhen,
   });
@@ -269,7 +273,7 @@ export default function HomeScreen() {
             item={item}
             styles={styles}
             busy={busyKey === item.key}
-            canAnswer={item.kind === 'care' || (!!property && !!item.eventKey)}
+            canAnswer
             onOpen={() => openItem(item)}
             onAnswer={(button) => answer.mutate({ item, button })}
           />
@@ -436,7 +440,7 @@ const makeStyles = (p: Palette, f: Fonts, bold: boolean) => StyleSheet.create({
   glanceValue: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
   glanceWord: { color: p.ink, fontFamily: f.display, fontSize: 20, fontWeight: '700' },
   fixIt: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 4 },
-  fixItText: { color: p.acc, fontSize: 15, fontWeight: bold ? '800' : '700', textDecorationLine: 'underline' },
+  fixItText: { color: p.ink, fontSize: 15, fontWeight: bold ? '800' : '700', textDecorationLine: 'underline' },
   addLandBtn: { alignSelf: 'flex-start', marginTop: 12, borderRadius: 10 },
   addLandContent: { minHeight: 48 },
   links: { marginTop: 24 },

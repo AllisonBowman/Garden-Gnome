@@ -105,7 +105,7 @@ const home = {
     doneWaterA11y: 'Watered: {{text}}',
     skipWaterA11y: 'Checked, still damp: {{text}}',
     skippedNote: 'Skipped for this week.',
-    saveFailed: 'That could not be saved. Check your connection and try again.',
+    saveFailed: 'That could not be saved. Try again in a moment.',
     moreTasks_one: '1 more task this week. Open the season or your plants to see it.',
     moreTasks_other: '{{count}} more tasks this week. Open the season or your plants to see them.',
     glance: 'Your land at a glance',

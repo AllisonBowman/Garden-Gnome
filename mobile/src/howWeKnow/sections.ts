@@ -50,6 +50,8 @@ export interface HomeSheetInput {
   progress: string | null;
   week: WeekItem[];
   seasonAhead: SeasonEventSummary[];
+  /** The vitals' season card, when the server sends one. */
+  seasonCard?: VitalCard | null;
   /** The older weather route's credit, when Home read it. */
   legacyCredit: string | null;
   forecastWhen: string | null;
@@ -75,8 +77,13 @@ export function homeSections(i: HomeSheetInput): HowWeKnowSection[] {
     section('land', t('howWeKnow.sections.land'), [i.progress], i.land),
     section('tasks', t('howWeKnow.sections.tasks'), [],
       tasks.map((w) => ({ explained: taskExplained(w.text, w.reason, w.sources) }))),
-    section('season', t('howWeKnow.sections.season'), [],
-      i.seasonAhead.map((e) => ({ title: e.title, explained: e.explained }))),
+    section('season', t('howWeKnow.sections.season'),
+      i.seasonCard && !i.seasonCard.explained
+        ? [[i.seasonCard.title, i.seasonCard.value_text, i.seasonCard.detail].filter(Boolean).join('. ')] : [],
+      [
+        ...explainedCards(i.seasonCard ? [i.seasonCard] : []),
+        ...i.seasonAhead.map((e) => ({ title: e.title, explained: e.explained })),
+      ]),
     section('notes', t('howWeKnow.sections.notes'), v?.notes ?? []),
     marksSection(),
   ];

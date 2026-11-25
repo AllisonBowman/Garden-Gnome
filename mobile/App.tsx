@@ -225,7 +225,9 @@ function AuthGate() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <StatusBar style="light" />
+      {/* The header is the accent: dark green in Almanac (light text), light
+          blue in Observatory (dark text). */}
+      <StatusBar style={themeName === 'observatory' ? 'dark' : 'light'} />
       <RootNavigator />
       {showOnboarding && (
         <Onboarding onSkip={dismissOnboarding} />

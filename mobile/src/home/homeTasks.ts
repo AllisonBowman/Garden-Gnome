@@ -3,7 +3,8 @@
 //
 // What the buttons do, honestly:
 // - A season task belongs to an event; Done marks that event done and Skip
-//   marks it not needed, the same answers the season screen offers.
+//   marks it not needed, only where the event offers those answers (the
+//   season screen offers the same). Otherwise the row is hidden for the week.
 // - A plant check keeps the check's own endings. Water: Done logs
 //   "watered" and Skip logs "checked, still damp" (both re-anchor the
 //   schedule, as on the Plants list). Roots: Done logs "checked, all fine".
@@ -27,8 +28,24 @@ export type TaskAnswer =
   | { kind: 'log'; outcome?: CareOutcome }
   | { kind: 'hide' };
 
-export function taskAnswer(item: WeekItem, button: 'done' | 'skip'): TaskAnswer {
-  if (item.kind === 'season') return { kind: 'season', state: button === 'done' ? 'done' : 'not_needed' };
+/**
+ * What a button does. `actions` are the owner actions the task's event
+ * offers (from `vitals.season_ahead`), or null when Home does not know the
+ * event. A season answer the event does not offer is never sent: a frost
+ * event offers "it happened" and "not needed", not "done", and marking the
+ * frost itself done because the plants were covered would change the plan.
+ * Then the row is only hidden on Home for the week, and nothing is recorded.
+ */
+export function taskAnswer(
+  item: WeekItem, button: 'done' | 'skip', actions: readonly string[] | null = null,
+): TaskAnswer {
+  if (item.kind === 'season') {
+    const wanted = button === 'done' ? 'mark_done' : 'mark_not_needed';
+    if (item.eventKey && actions?.includes(wanted)) {
+      return { kind: 'season', state: button === 'done' ? 'done' : 'not_needed' };
+    }
+    return { kind: 'hide' };
+  }
   if (item.careType === 'water') return { kind: 'log', outcome: button === 'done' ? 'watered' : 'checked_not_needed' };
   if (button === 'skip') return { kind: 'hide' };
   if (item.careType === 'repot') return { kind: 'log', outcome: 'checked_fine' };

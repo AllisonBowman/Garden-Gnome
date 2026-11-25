@@ -18,8 +18,15 @@ test('at most three open tasks, skipped ones left out, the rest counted', () => 
 });
 
 test('Done and Skip never claim a chore that was not done', () => {
-  expect(taskAnswer(season('a'), 'done')).toEqual({ kind: 'season', state: 'done' });
-  expect(taskAnswer(season('a'), 'skip')).toEqual({ kind: 'season', state: 'not_needed' });
+  const task = ['mark_done', 'mark_not_needed'];
+  expect(taskAnswer(season('a'), 'done', task)).toEqual({ kind: 'season', state: 'done' });
+  expect(taskAnswer(season('a'), 'skip', task)).toEqual({ kind: 'season', state: 'not_needed' });
+  // A frost event offers no "done": covering the plants must not mark the frost done.
+  const frost = ['mark_happened', 'mark_not_needed'];
+  expect(taskAnswer(season('a'), 'done', frost)).toEqual({ kind: 'hide' });
+  expect(taskAnswer(season('a'), 'skip', frost)).toEqual({ kind: 'season', state: 'not_needed' });
+  // An event Home does not know is never answered.
+  expect(taskAnswer(season('a'), 'done', null)).toEqual({ kind: 'hide' });
   expect(taskAnswer(care(1, 'water'), 'done')).toEqual({ kind: 'log', outcome: 'watered' });
   expect(taskAnswer(care(1, 'water'), 'skip')).toEqual({ kind: 'log', outcome: 'checked_not_needed' });
   expect(taskAnswer(care(1, 'repot'), 'done')).toEqual({ kind: 'log', outcome: 'checked_fine' });

@@ -108,7 +108,7 @@ const home: Strings<typeof en> = {
     doneWaterA11y: 'Regada: {{text}}',
     skipWaterA11y: 'Revisada, sigue húmeda: {{text}}',
     skippedNote: 'Omitida esta semana.',
-    saveFailed: 'No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.',
+    saveFailed: 'No se pudo guardar. Inténtalo de nuevo en un momento.',
     moreTasks_one: '1 tarea más esta semana. Abre la temporada o tus plantas para verla.',
     moreTasks_other: '{{count}} tareas más esta semana. Abre la temporada o tus plantas para verlas.',
     glance: 'Tu terreno de un vistazo',
