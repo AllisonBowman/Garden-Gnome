@@ -7,6 +7,8 @@
 //
 // Pure on purpose (no React Native imports) so jest can pin it; the card
 // passes in the support address, the version and the platform.
+import { t } from '../i18n';
+
 
 export interface ProblemReport {
   supportEmail: string;
@@ -36,9 +38,9 @@ export function describeError(error: unknown): string {
 }
 
 export function buildProblemMailto(report: ProblemReport): string {
-  const subject = 'Report a problem in PlantAdvocate';
+  const subject = t('common.report.problemSubject');
   const body = [
-    'Tell us what you were doing when this happened:',
+    t('common.report.problemPrompt'),
     '',
     '',
     '——— What the app saw ———',

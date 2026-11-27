@@ -39,14 +39,14 @@ test('the 32°F line sits inside the scale when it can', () => {
 test('all days above freezing: no line, a note instead', () => {
   const layout = forecastBars([day('2026-11-16', 70, 50), day('2026-11-17', 75, 55)], box, today);
   expect(layout.freezingY).toBeNull();
-  expect(layout.freezingNote).toBe('Every day in this forecast stays above freezing (32 °F).');
+  expect(layout.freezingNote).toBe('Every day in this forecast stays above freezing (32°F).');
 });
 
 test('all days below freezing: no line, a note instead', () => {
   const layout = forecastBars([day('2026-11-16', 20, 5)], box, today);
   expect(layout.scale).toEqual({ min: 5, max: 20 });
   expect(layout.freezingY).toBeNull();
-  expect(layout.freezingNote).toBe('Every day in this forecast stays below freezing (32 °F).');
+  expect(layout.freezingNote).toBe('Every day in this forecast stays below freezing (32°F).');
 });
 
 test('a single day with equal high and low still gets a 10°F scale', () => {

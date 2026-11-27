@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { PanResponder, StyleSheet, Text, View } from 'react-native';
 import { Point } from './imageGeometry';
 import { TopDownImageContext } from '../components/TopDownImage';
+import { t } from '../i18n';
 
 const SIZE = 36;
 
@@ -53,7 +54,7 @@ export default function PinMarker({
       {...responder.panHandlers}
       accessible
       accessibilityRole="adjustable"
-      accessibilityLabel="Home pin. Drag it onto your home, or use the move buttons below the image."
+      accessibilityLabel={t('land.pinA11y')}
       hitSlop={12}
       style={[styles.pin, { left: v.x - SIZE / 2, top: v.y - SIZE, }]}
     >

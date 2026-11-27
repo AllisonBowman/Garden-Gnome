@@ -7,6 +7,7 @@ import { useAuth } from './AuthContext';
 import { signInWithApple, signInWithGoogle } from './signIn';
 import { createSignInGate, Provider } from './signInGate';
 import { SIGN_IN_REASON } from './loginCopy';
+import { t } from '../i18n';
 
 // Sign in with Apple renders Apple's own button component (required styling).
 // Loaded lazily so the web bundle never imports the native module.
@@ -39,7 +40,7 @@ export default function LoginScreen() {
       // User-cancelled Apple sign-in throws ERR_REQUEST_CANCELED — stay quiet
       const code = (e as { code?: string }).code;
       if (code !== 'ERR_REQUEST_CANCELED' && code !== 'SIGN_IN_CANCELLED') {
-        setError('Sign-in didn\'t complete. Please try again.');
+        setError(t('auth.failed'));
       }
     } finally {
       gate.finish();
@@ -52,9 +53,7 @@ export default function LoginScreen() {
       <View style={styles.hero}>
         <Text style={styles.mascot}>🧙🌱</Text>
         <Text style={styles.title}>PlantAdvocate</Text>
-        <Text style={styles.tagline}>
-          Look after your land and your plants, through the seasons.
-        </Text>
+        <Text style={styles.tagline}>{t('auth.tagline')}</Text>
       </View>
 
       <View style={styles.buttons}>
@@ -96,22 +95,16 @@ export default function LoginScreen() {
             buttonColor="#FFFFFF"
             textColor="#1F1F1F"
           >
-            Sign in with Google
+            {t('auth.signInWithGoogle')}
           </Button>
         )}
         {Platform.OS === 'web' && (
-          <Text style={styles.webNote}>
-            Signing in requires the PlantAdvocate mobile app — Apple and
-            Google sign-in aren&apos;t available in the browser preview.
-          </Text>
+          <Text style={styles.webNote}>{t('auth.webNote')}</Text>
         )}
         {error && <Text style={styles.error}>{error}</Text>}
       </View>
 
-      <Text style={styles.footer}>
-        Your plants stay yours: private by default, and the anonymized census
-        is strictly opt-in.
-      </Text>
+      <Text style={styles.footer}>{t('auth.footer')}</Text>
     </View>
   );
 }

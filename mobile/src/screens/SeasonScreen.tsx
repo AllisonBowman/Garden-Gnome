@@ -11,8 +11,9 @@ import { rescheduleAllReminders } from '../notifications/reminders';
 import { Forecast, OwnerAction, SeasonEvent, SeasonTask, SeasonalPlan } from '../types/site';
 import {
   ACTION_LABELS, STATUS_WORDS, TASK_STATE_WORDS, actionBody, forecastCredit,
-  observedDayChoices, orderedActions, orderedTasks, seasonSections,
+  observedDayA11y, observedDayChoices, orderedActions, orderedTasks, seasonSections,
 } from '../season/sections';
+import { t } from '../i18n';
 import ExplainedBlock from '../components/ExplainedBlock';
 import ForecastBars from '../components/ForecastBars';
 import { followTarget } from '../land/followTarget';
@@ -23,7 +24,9 @@ import LoadError from '../components/LoadError';
 import Pill from '../components/Pill';
 import RefreshFailed from '../components/RefreshFailed';
 import WeatherCredit from '../components/WeatherCredit';
-import { WHY_LABEL, disclosureLines } from '../components/explainedText';
+import { APPLE_WEATHER_LEGAL, isAppleForecast } from '../weather/appleCredit';
+import HowWeKnowButton from '../components/HowWeKnowButton';
+import { seasonSections as seasonHowWeKnow } from '../howWeKnow/sections';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 
@@ -42,12 +45,6 @@ type Styles = ReturnType<typeof makeStyles>;
 // timeline sits above the sections; tapping an event on it scrolls to its
 // card. Events with no dates are not drawn and stay in the list.
 
-/** Apple's attribution page, linked whenever Apple Weather supplied the forecast. */
-const APPLE_WEATHER_LEGAL = 'https://weatherkit.apple.com/legal-attribution.html';
-
-function isAppleForecast(f: Forecast): boolean {
-  return /weatherkit|apple/i.test(`${f.provider} ${f.provider_name}`);
-}
 
 export default function SeasonScreen() {
   const { params } = useRoute<Route>();
@@ -126,7 +123,7 @@ export default function SeasonScreen() {
   if (!plan) {
     return (
       <LoadError
-        message="Couldn’t load your seasonal plan."
+        message={t('season.screen.loadFailed')}
         error={planQ.error}
         onRetry={() => planQ.refetch()}
         retrying={planQ.isRefetching}
@@ -143,31 +140,31 @@ export default function SeasonScreen() {
       refreshControl={<RefreshControl refreshing={pulling} onRefresh={onRefresh} />}
     >
       {planQ.isError && <RefreshFailed onRetry={() => planQ.refetch()} retrying={planQ.isRefetching} />}
-      <Text style={styles.headline} accessibilityRole="header">{plan.season_label || 'Your seasonal plan'}</Text>
+      <Text style={styles.headline} accessibilityRole="header">{plan.season_label || t('season.screen.titleFallback')}</Text>
 
       {plan.forecast && plan.forecast.days.length > 0 ? (
         <ForecastStrip forecast={plan.forecast} styles={styles} />
       ) : (
         <Text style={styles.quiet}>
-          No forecast right now. Dates below are typical dates for your area, not this year's forecast.
+          {t('season.screen.noForecast')}
         </Text>
       )}
 
       {act.isError ? (
         <Text style={styles.error} accessibilityLiveRegion="polite">
-          That answer was not saved. Check your connection and try again.
+          {t('season.screen.notSaved')}
         </Text>
       ) : null}
 
       {timelineDrawsAnything(plan.events) ? (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>The year at a glance</Eyebrow>
+          <Eyebrow style={styles.eyebrow}>{t('season.screen.yearAtAGlance')}</Eyebrow>
           <SeasonTimeline events={plan.events} onPressEvent={scrollToEvent} />
         </View>
       ) : null}
 
       {sections.length === 0 ? (
-        <Text style={styles.quietBlock}>Nothing is in your seasonal plan yet.</Text>
+        <Text style={styles.quietBlock}>{t('season.screen.empty')}</Text>
       ) : sections.map((s) => (
         <View key={s.key} style={styles.section} collapsable={false} onLayout={(ev) => onSectionLayout(s.key, ev.nativeEvent.layout.y)}>
           <Eyebrow style={styles.eyebrow}>{s.title}</Eyebrow>
@@ -185,7 +182,11 @@ export default function SeasonScreen() {
         </View>
       ))}
 
-      {plan.notes.map((n, i) => <Text key={i} style={styles.note}>{n}</Text>)}
+      <HowWeKnowButton sections={() => seasonHowWeKnow({
+        events: plan.events,
+        forecastCredit: plan.forecast ? forecastCredit(plan.forecast.provider_name, plan.forecast.fetched_at) : null,
+        notes: plan.notes,
+      })} />
     </ScrollView>
   );
 }
@@ -195,7 +196,7 @@ function ForecastStrip({ forecast, styles }: { forecast: Forecast; styles: Style
   // strip's (forecastCells), and the rain and frost words stay on screen.
   return (
     <View style={styles.section}>
-      <Eyebrow style={styles.eyebrow}>Forecast</Eyebrow>
+      <Eyebrow style={styles.eyebrow}>{t('season.screen.forecast')}</Eyebrow>
       <ForecastBars days={forecast.days} />
       <Text style={styles.quiet}>{forecastCredit(forecast.provider_name, forecast.fetched_at)}</Text>
       {isAppleForecast(forecast) ? (
@@ -253,16 +254,16 @@ function EventCard({ event, highlighted, busy, onAction, styles }: {
         )}
         {pickingDay && (
           <View>
-            <Text style={styles.pickLabel}>When did it happen at your place?</Text>
+            <Text style={styles.pickLabel}>{t('season.screen.whenHappened')}</Text>
             <View style={styles.actions}>
-              {observedDayChoices().map((d) => (
+              {observedDayChoices().map((d, i) => (
                 <Button
                   key={d.value}
                   mode="outlined"
                   compact
                   disabled={busy}
                   onPress={() => onAction('mark_happened', d.value)}
-                  accessibilityLabel={`It happened ${d.label === 'Today' || d.label === 'Yesterday' ? d.label.toLowerCase() : `on ${d.label}`}`}
+                  accessibilityLabel={observedDayA11y(i, d.label)}
                   style={styles.actionBtn}
                 >
                   {d.label}
@@ -278,8 +279,7 @@ function EventCard({ event, highlighted, busy, onAction, styles }: {
 }
 
 function TaskRow({ task, styles }: { task: SeasonTask; styles: Styles }) {
-  const [open, setOpen] = useState(false);
-  const lines = disclosureLines(task);
+  // The task's reason and sources live in How we know (one sheet per screen).
   const settled = task.state !== 'open';
   return (
     <View style={styles.task}>
@@ -288,22 +288,6 @@ function TaskRow({ task, styles }: { task: SeasonTask; styles: Styles }) {
         <Text style={[styles.taskText, settled && styles.taskSettled]}>{task.text}</Text>
       </View>
       {task.low_impact_note ? <Text style={styles.lowImpact}>{task.low_impact_note}</Text> : null}
-      <Pressable
-        onPress={() => setOpen((o) => !o)}
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-        accessibilityLabel={`${WHY_LABEL} for this task. ${open ? 'Hide' : 'Show'}.`}
-        hitSlop={8}
-        style={styles.toggle}
-      >
-        <Text style={styles.toggleText}>{`${open ? '▾' : '▸'} ${WHY_LABEL}`}</Text>
-      </Pressable>
-      {open && (
-        <View style={styles.detail}>
-          {lines.reason ? <Text style={styles.reason}>{lines.reason}</Text> : null}
-          {lines.sources.map((s, i) => <Text key={i} style={styles.source}>{`Data: ${s}`}</Text>)}
-        </View>
-      )}
     </View>
   );
 }

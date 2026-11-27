@@ -1,6 +1,9 @@
 import { ForecastDay, FrostRisk } from '../types/site';
 import { forecastCells } from '../season/sections';
 import { parseServerDate } from '../api/serverDate';
+import { t } from '../i18n';
+import { formatDegrees, formatTemp, unitSymbol } from '../units/temperature';
+import { weekdayShort } from '../season/dateWords';
 
 // The forecast as bars (map and visuals spec sections 1 and 4.2): one
 // high-to-low bar per day on a scale shared by every day, a line at 32 °F when
@@ -10,20 +13,20 @@ import { parseServerDate } from '../api/serverDate';
 
 export const FREEZING_F = 32;
 
-/** The label on the 32 °F line. */
-export const FREEZING_LABEL = '32 °F';
+/** The label on the freezing line: "32 °F" or "0 °C". */
+export function freezingLabel(): string {
+  return formatTemp(FREEZING_F);
+}
 
 /** The caption under the chart: the per-bar labels are bare degrees, so the
  *  unit is said once here, with what the percentages are when shown. */
 export function forecastCaption(anyRain: boolean): string {
-  return anyRain
-    ? 'Highs and lows in °F. Percentages are the chance of rain.'
-    : 'Highs and lows in °F.';
+  return anyRain ? t('home.bars.captionRain', { unit: unitSymbol() }) : t('home.bars.caption', { unit: unitSymbol() });
 }
 
 /** What a day with neither temperature shows in its column (short words, so
  *  they wrap at the space in a narrow column and never inside a word). */
-export const NO_TEMPERATURE_TEXT = 'Not known';
+export const NO_TEMPERATURE_TEXT = t('home.bars.notKnown');
 
 /** The chart's fixed parts, in view pixels: the day name and icon above the
  *  bars, and the rain line under them. */
@@ -42,17 +45,15 @@ export function forecastChartHeight(barsHeight: number, anyRain: boolean): numbe
  *  a share of the font size, to check that labels fit their columns. */
 export const CHART_TEXT = { day: 11.5, temp: 11, rain: 11, none: 10, charWidth: 0.62 } as const;
 
-const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 /** A day's name over its bar: "Today", then the short weekday for every
  *  other day (tomorrow too: "Tomorrow" does not fit a narrow column). The
  *  spoken sentence keeps saying "Tomorrow". */
 export function chartDayLabel(dateStr: string, today: Date = new Date()): string {
   const d = parseServerDate(dateStr);
   if (!d) return dateStr;
-  const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const diff = Math.round((d.getTime() - t.getTime()) / 86_400_000);
-  return diff === 0 ? 'Today' : WEEKDAY[d.getDay()];
+  const t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diff = Math.round((d.getTime() - t0.getTime()) / 86_400_000);
+  return diff === 0 ? t('season.dates.today') : weekdayShort(d);
 }
 
 /** MaterialCommunityIcons names, all in the bundled icon font. */
@@ -116,7 +117,7 @@ export interface ForecastBarsLayout {
   ticks: Array<{ value: number; y: number }>;
 }
 
-const deg = (n: number | null) => (n == null ? null : `${Math.round(n)}°`);
+const deg = (n: number | null) => (n == null ? null : formatDegrees(n));
 
 const has = (s: string, ...words: string[]) => words.some((w) => s.includes(w));
 
@@ -215,9 +216,9 @@ export function forecastBars(days: ForecastDay[], box: BarsBox, today: Date = ne
     if (FREEZING_F >= scale.min && FREEZING_F <= scale.max) {
       freezingY = yOf(FREEZING_F);
     } else if (FREEZING_F < scale.min) {
-      freezingNote = 'Every day in this forecast stays above freezing (32 °F).';
+      freezingNote = t('home.bars.aboveFreezing', { temp: freezingLabel() });
     } else {
-      freezingNote = 'Every day in this forecast stays below freezing (32 °F).';
+      freezingNote = t('home.bars.belowFreezing', { temp: freezingLabel() });
     }
   }
 

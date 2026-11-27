@@ -142,7 +142,8 @@ test('the species page offers the link under its sources, or alone without them'
   expect(src).toMatch(/import ReportFact from '\.\.\/components\/ReportFact'/);
   const rows = src.indexOf('<CareSourceRows');
   const cardEnd = src.indexOf('</Card>', rows);
-  const schedule = src.indexOf('Recommended schedule');
+  // The schedule card's title, by its English words or its translation key.
+  const schedule = Math.max(src.indexOf('Recommended schedule'), src.indexOf("t('species.detail.schedule')"));
   expect(rows).toBeGreaterThan(-1);
   expect(schedule).toBeGreaterThan(cardEnd);
   const links = [...src.matchAll(/<ReportFact\b/g)].map((m) => m.index!);

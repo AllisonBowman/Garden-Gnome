@@ -39,24 +39,26 @@ import {
 import { FIRST_FEW, cutNote, listIntro } from '../growingAreas/ranking';
 import Eyebrow from '../components/Eyebrow';
 import FitFindingRow from '../components/FitFindingRow';
+import { t } from '../i18n';
+import { formatDegrees, formatTemp } from '../units/temperature';
 
 type Route = RouteProp<GrowingAreasStackParamList, 'SpaceDetail'>;
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'SpaceDetail'>;
 
 const SHELTER_LABEL: Record<string, string> = {
-  sheltered: '🏠 Sheltered',
-  partial: '⛱️ Partial cover',
-  exposed: '🌤️ Exposed',
+  sheltered: t('areas.detail.shelter.sheltered'),
+  partial: t('areas.detail.shelter.partial'),
+  exposed: t('areas.detail.shelter.exposed'),
 };
 // The same words the setup asks it in: whether the spot is indoors or out.
 const TEMP_LABEL: Record<string, string> = {
-  indoor: '🌡️ Indoors',
-  outdoor: '🍃 Outdoors',
+  indoor: t('areas.detail.temp.indoor'),
+  outdoor: t('areas.detail.temp.outdoor'),
 };
 const SUN_LABEL: Record<string, string> = {
-  full_sun: '☀️ Full sun',
-  partial_sun: '🌤️ Partial sun',
-  shade: '🌥️ Shade',
+  full_sun: t('areas.detail.sun.full_sun'),
+  partial_sun: t('areas.detail.sun.partial_sun'),
+  shade: t('areas.detail.sun.shade'),
 };
 
 function ForecastDay({ day }: { day: WeatherDay }) {
@@ -66,10 +68,10 @@ function ForecastDay({ day }: { day: WeatherDay }) {
     <View style={styles.foreDay}>
       <Text style={styles.foreDow}>{weekday(day.date)}</Text>
       <Text style={styles.foreTemp}>
-        {day.high_f != null ? `${day.high_f}°` : '—'}
+        {day.high_f != null ? formatDegrees(day.high_f) : '—'}
       </Text>
       <Text style={styles.foreLow}>
-        {day.low_f != null ? `${day.low_f}°` : '—'}
+        {day.low_f != null ? formatDegrees(day.low_f) : '—'}
       </Text>
       <Text style={styles.foreMeta}>💧{day.precip_chance_pct ?? 0}%</Text>
       {day.uv_max != null ? <Text style={styles.foreMeta}>UV {day.uv_max}</Text> : null}
@@ -157,8 +159,8 @@ export default function GrowingAreaDetailScreen() {
       queryClient.invalidateQueries({ queryKey: ['growingAreas'] });
     },
     onError: () => Alert.alert(
-      'Could not save that place',
-      'PlantAdvocate could not reach the server. Check your connection and try again.',
+      t('areas.detail.saveFailedTitle'),
+      t('areas.detail.saveFailedBody'),
     ),
   });
 
@@ -173,7 +175,7 @@ export default function GrowingAreaDetailScreen() {
       <View style={styles.scroll}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
-          title={loadFailedTitle('this growing area')}
+          title={loadFailedTitle(t('areas.detail.thisArea'))}
           body={loadFailedBody(error)}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
@@ -211,7 +213,7 @@ export default function GrowingAreaDetailScreen() {
   // Lengths are said the way the reasons below say them — "7 ft (84 in)" —
   // so the 7 ft in "there is 7 ft of headroom" is visibly this number.
   const dims = [
-    { label: prompts.area.label, raw: env.area_sqft, say: (n: number) => `${n} sq ft` },
+    { label: prompts.area.label, raw: env.area_sqft, say: (n: number) => t('areas.sqft', { n }) },
     { label: prompts.headroom.label, raw: env.headroom_in, say: measuredLength },
     { label: prompts.depth.label, raw: env.soil_depth_in, say: measuredLength },
   ];
@@ -244,13 +246,13 @@ export default function GrowingAreaDetailScreen() {
           onPress={() => navigation.navigate('AddPlant', { growingAreaId })}
           style={styles.addHere}
         >
-          Add a plant here
+          {t('areas.detail.addPlantHere')}
         </Button>
       </Surface>
 
       {/* The space itself — what there is to plant into, and what it is for */}
       <Card style={styles.card}>
-        <Card.Title title="The space" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('areas.detail.theSpace')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <View style={styles.chipRow}>
             {env.surface ? (
@@ -274,17 +276,16 @@ export default function GrowingAreaDetailScreen() {
 
           {unmeasured.length > 0 ? (
             <Text style={styles.unmeasured}>
-              Not measured yet: {unmeasured.join(', ')}. Until it is, nothing is
-              recommended or ruled out on size here.
+              {t('areas.detail.unmeasured', { list: unmeasured.join(', ') })}
             </Text>
           ) : null}
 
           {env.goals != null ? (
             <>
-              <Eyebrow style={styles.goalsLabel}>What it’s for</Eyebrow>
+              <Eyebrow style={styles.goalsLabel}>{t('areas.detail.whatFor')}</Eyebrow>
               {env.goals.length === 0 ? (
                 <Text style={styles.unmeasured}>
-                  Nothing in particular — anything that fits the space.
+                  {t('areas.detail.noGoals')}
                 </Text>
               ) : (
                 <View style={styles.chipRow}>
@@ -303,7 +304,7 @@ export default function GrowingAreaDetailScreen() {
           that asks the caretaker to do something. */}
       <Card style={styles.card}>
         <Card.Title
-          title="Needs addressing"
+          title={t('areas.detail.needsAddressing')}
           titleVariant="titleMedium"
           titleStyle={styles.cardTitle}
         />
@@ -314,16 +315,14 @@ export default function GrowingAreaDetailScreen() {
             <View>
               <Text style={styles.unavailable}>{CHECK_FAILED}</Text>
               <Button compact onPress={() => refetchMisfits()} style={styles.retry}>
-                Try again
+                {t('areas.detail.tryAgain')}
               </Button>
             </View>
           ) : misfitRows.length === 0 ? (
             <Text style={styles.unavailable}>
               {env.plant_count === 0
-                ? 'No plants here yet. Anything this space has against a plant '
-                  + 'you add here will show up on this card.'
-                : 'Nothing here contradicts the space. Plants the catalog can’t '
-                  + 'judge aren’t listed as fine — they’re just not listed.'}
+                ? t('areas.detail.noPlantsYet')
+                : t('areas.detail.nothingContradicts')}
             </Text>
           ) : (
             misfitRows.map((m) => {
@@ -349,7 +348,7 @@ export default function GrowingAreaDetailScreen() {
           least one axis the catalog actually confirmed. */}
       <Card style={styles.card}>
         <Card.Title
-          title="Good candidates here"
+          title={t('areas.detail.goodCandidates')}
           titleVariant="titleMedium"
           titleStyle={styles.cardTitle}
         />
@@ -364,14 +363,12 @@ export default function GrowingAreaDetailScreen() {
             <View>
               <Text style={styles.unavailable}>{CHECK_FAILED}</Text>
               <Button compact onPress={() => refetchCandidates()} style={styles.retry}>
-                Try again
+                {t('areas.detail.tryAgain')}
               </Button>
             </View>
           ) : candidateRows.length === 0 ? (
             <Text style={styles.unavailable}>
-              Nothing to put forward yet. A species only appears here once a
-              source has confirmed it suits this spot — an unresearched plant
-              isn’t a recommendation.
+              {t('areas.detail.noCandidates')}
             </Text>
           ) : (
             candidateRows.map((c) => {
@@ -382,7 +379,7 @@ export default function GrowingAreaDetailScreen() {
                 onPress={() => navigation.navigate(
                   'SpeciesDetail', { speciesId: c.species_id, growingAreaId })}
                 accessibilityRole="button"
-                accessibilityHint={`Opens ${c.common_name}, with how it suits this space`}
+                accessibilityHint={t('areas.detail.opensSpecies', { name: c.common_name })}
                 style={styles.candidate}
               >
                 <View>
@@ -417,8 +414,8 @@ export default function GrowingAreaDetailScreen() {
                 style={styles.seeAll}
               >
                 {candidateTotal != null
-                  ? `See all ${candidateTotal} in the Almanac`
-                  : 'See the rest in the Almanac'}
+                  ? t('areas.detail.seeAll', { total: candidateTotal })
+                  : t('areas.detail.seeRest')}
               </Button>
             </View>
           ) : null}
@@ -427,25 +424,24 @@ export default function GrowingAreaDetailScreen() {
 
       {/* Care calendar — the schedule for plants living in this growing area */}
       <Card style={styles.card}>
-        <Card.Title title="Care calendar" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('areas.detail.careCalendar')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {careLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
           ) : careFailed ? (
             <View>
               <Text style={styles.unavailable}>
-                Couldn’t load the care calendar just now — that isn’t an all-clear.
+                {t('areas.detail.careFailed')}
               </Text>
               <Button compact onPress={() => refetchCare()} style={styles.retry}>
-                Try again
+                {t('areas.detail.tryAgain')}
               </Button>
             </View>
           ) : careTasks.length === 0 && careLeftOut.length === 0 ? (
             <Text style={styles.unavailable}>
               {env.plant_count === 0
-                ? 'No checks scheduled here yet. Add plants to this growing area and '
-                  + 'their checks fill in the calendar.'
-                : 'Nothing in season to check here right now.'}
+                ? t('areas.detail.noChecksNoPlants')
+                : t('areas.detail.nothingInSeason')}
             </Text>
           ) : (
             <>
@@ -462,7 +458,7 @@ export default function GrowingAreaDetailScreen() {
 
       {/* Weather strip */}
       <Card style={styles.card}>
-        <Card.Title title="Local weather" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('areas.detail.localWeather')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {weatherLoading ? (
             <ActivityIndicator style={{ marginVertical: 16 }} />
@@ -472,8 +468,7 @@ export default function GrowingAreaDetailScreen() {
             // looked like a broken feature rather than an unfinished setup.
             <View>
               <Text style={styles.unavailable}>
-                This growing area has no place yet, so there’s no forecast to
-                show. Set where it is and the weather follows.
+                {t('areas.detail.noPlace')}
               </Text>
               <AddressPicker onChange={setPlace} />
               <Button
@@ -483,12 +478,12 @@ export default function GrowingAreaDetailScreen() {
                 onPress={() => saveLocation.mutate()}
                 style={styles.saveLocationBtn}
               >
-                Save this place
+                {t('areas.detail.savePlace')}
               </Button>
             </View>
           ) : !weather ? (
             <Text style={styles.unavailable}>
-              {weatherResp?.detail ?? 'Weather isn’t available for this spot yet.'}
+              {weatherResp?.detail ?? t('areas.detail.noWeather')}
             </Text>
           ) : (
             <>
@@ -496,13 +491,13 @@ export default function GrowingAreaDetailScreen() {
               <View style={styles.nowRow}>
                 <View style={styles.nowMain}>
                   <Text style={styles.nowTemp}>
-                    {cur?.temp_f != null ? `${cur.temp_f}°F` : '—'}
+                    {cur?.temp_f != null ? formatTemp(cur.temp_f) : '—'}
                   </Text>
                   <Text style={styles.nowCond}>{conditionText(cur?.condition ?? null)}</Text>
                 </View>
                 <View style={styles.nowStats}>
                   {cur?.humidity_pct != null ? (
-                    <Text style={styles.nowStat}>💧 {cur.humidity_pct}% humidity</Text>
+                    <Text style={styles.nowStat}>{t('areas.detail.humidity', { pct: cur.humidity_pct })}</Text>
                   ) : null}
                   {cur?.uv_index != null ? (
                     <Text style={styles.nowStat}>😎 UV {cur.uv_index}</Text>
@@ -530,7 +525,7 @@ export default function GrowingAreaDetailScreen() {
       {weather && (
         <Card style={styles.specimenCard}>
           <View style={styles.specimenHeader}>
-            <Text style={styles.specimenLabel}>OUTSIDE → IN HERE</Text>
+            <Text style={styles.specimenLabel}>{t('areas.detail.outsideIn')}</Text>
             <Text style={styles.specimenSub}>{exposureSummary(env)}</Text>
           </View>
           <Card.Content style={styles.specimenBody}>
@@ -538,7 +533,7 @@ export default function GrowingAreaDetailScreen() {
               <Text key={i} style={styles.translateLine}>{line}</Text>
             ))}
             <Text style={styles.translateFootnote}>
-              Per-plant timing lives in each plant’s “Ask the Gnome” advice.
+              {t('areas.detail.perPlantTiming')}
             </Text>
           </Card.Content>
         </Card>

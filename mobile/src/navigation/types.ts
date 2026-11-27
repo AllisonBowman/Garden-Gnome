@@ -53,6 +53,9 @@ export type RootStackParamList = {
   Almanac:       AlmanacParams;
   Settings:      undefined;
   Census:        undefined;
+  /** The "How we know" sheet: sources, method and confidence for the
+   *  screen that opened it (howWeKnow/store.ts holds what it shows). */
+  HowWeKnow:     undefined;
 };
 
 export type ScreenName = keyof RootStackParamList;

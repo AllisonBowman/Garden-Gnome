@@ -4,6 +4,7 @@ import { Text } from 'react-native-paper';
 import { WeatherAttribution } from '../types';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette } from '../theme/tokens';
+import { t } from '../i18n';
 
 // The Apple Weather credit. WeatherKit's terms require it wherever its data is
 // displayed — which includes advice that restates the forecast in words, not
@@ -16,7 +17,7 @@ import { Palette } from '../theme/tokens';
 /** Fallback if the server ever sends an empty label. The API supplies
  *  " Weather" (the Apple logo glyph); it renders as a blank box on a device
  *  without the glyph, so never show the raw string alone. */
-const FALLBACK = 'Weather';
+const FALLBACK = t('weather.credit.fallback');
 
 export default function WeatherCredit({
   attribution, style,
@@ -40,7 +41,7 @@ export default function WeatherCredit({
       disabled={!url}
       style={[styles.wrap, style]}
       accessibilityRole="link"
-      accessibilityLabel={`${label}. Opens the weather data provider's attribution page.`}
+      accessibilityLabel={t('weather.credit.a11y', { label })}
     >
       <Text style={styles.text}>{label}{url ? ' ›' : ''}</Text>
     </Pressable>

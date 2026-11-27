@@ -22,11 +22,13 @@ import { Button, Text } from 'react-native-paper';
 import Svg, { Circle, Rect } from 'react-native-svg';
 import { ReadingTile as Tile, ReadingTileKey, TileGauge, TileSteps } from '../land/readingTiles';
 import ExplainedBlock from './ExplainedBlock';
-import ConfidenceChip from './ConfidenceChip';
+import EstTag from './EstTag';
 import Eyebrow from './Eyebrow';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { useMeasuredWidth } from './useMeasuredWidth';
 import { Palette } from '../theme/tokens';
+import { t } from '../i18n';
+import { faceMark } from './explainedText';
 
 export interface ReadingTileProps {
   tile: Tile;
@@ -120,17 +122,20 @@ export function ReadingTile({ tile, open = false, onPress }: ReadingTileProps) {
   const body = (
     <>
       <Eyebrow>{tile.title}</Eyebrow>
-      <Text style={[styles.value, { color: palette.ink, fontFamily: fonts.display }]} numberOfLines={2}>{tile.valueText}</Text>
+      <Text style={[styles.value, { color: palette.ink, fontFamily: fonts.display }]}>
+        {tile.explained.confidence === 'not_known_yet' ? t('howWeKnow.checking') : tile.valueText}
+      </Text>
       <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         {tile.gauge ? <Gauge gauge={tile.gauge} color={gaugeColor(tile.key, palette)} palette={palette} /> : null}
         {tile.steps ? <Steps steps={tile.steps} color={gaugeColor(tile.key, palette)} palette={palette} /> : null}
         {tile.mix ? <MixBar mix={tile.mix} palette={palette} /> : null}
       </View>
-      {tile.detail ? <Text style={[styles.detail, { color: palette.sub }]} numberOfLines={3}>{tile.detail}</Text> : null}
-      {/* "Not known yet" as the value needs no chip repeating it. */}
-      {tile.confidenceLabel.trim().toLowerCase() === tile.valueText.trim().toLowerCase() ? null : (
-        <ConfidenceChip confidence={tile.explained.confidence} label={tile.confidenceLabel} style={styles.chip} />
-      )}
+      {tile.detail ? <Text style={[styles.detail, { color: palette.sub }]}>{tile.detail}</Text> : null}
+      {/* How sure it is lives in How we know; the face carries "est." or
+          "Checking" only. */}
+      {faceMark(tile.explained.confidence) ? (
+        <View style={styles.chip}><EstTag checking={faceMark(tile.explained.confidence) === 'checking'} /></View>
+      ) : null}
     </>
   );
   const frame = [styles.tile, {
@@ -142,7 +147,7 @@ export function ReadingTile({ tile, open = false, onPress }: ReadingTileProps) {
       style={frame}
       accessibilityRole="button"
       accessibilityLabel={tile.a11y}
-      accessibilityHint={open ? 'Hides why and the data source' : 'Shows why and the data source'}
+      accessibilityHint={open ? t('land.tileHideHint') : t('land.tileShowHint')}
       accessibilityState={{ expanded: open }}
     >
       {body}
@@ -164,7 +169,7 @@ export interface ReadingTileGridProps {
 
 /** Tiles in two columns, with the tapped tile's ExplainedBlock under them. */
 export default function ReadingTileGrid({
-  tiles, selected, onSelect, onOpen, openLabel = 'Open in Your land',
+  tiles, selected, onSelect, onOpen, openLabel = t('land.openInYourLand'),
 }: ReadingTileGridProps) {
   const [own, setOwn] = useState<ReadingTileKey | null>(null);
   const current = selected !== undefined ? selected : own;
@@ -182,10 +187,10 @@ export default function ReadingTileGrid({
       </View>
       {openTile ? (
         <View style={styles.explained}>
-          <ExplainedBlock explained={openTile.explained} title={openTile.title} initiallyOpen />
+          <ExplainedBlock explained={openTile.explained} title={openTile.title} />
           {onOpen ? (
             <Button mode="text" compact onPress={() => onOpen(openTile)} style={styles.openBtn}
-              accessibilityLabel={`${openLabel}: ${openTile.title}`}>
+              accessibilityLabel={t('land.openA11y', { label: openLabel, title: openTile.title })}>
               {openLabel}
             </Button>
           ) : null}
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
   cell: { width: '50%', padding: 4 },
   tile: { borderRadius: 12, borderWidth: 1, padding: 10, minHeight: 44, gap: 4, flexGrow: 1 },
   value: { fontSize: 17, fontWeight: '700' },
-  detail: { fontSize: 12, lineHeight: 16 },
+  detail: { fontSize: 13, lineHeight: 18 },
   gauge: { width: '100%', height: GAUGE_H + 4, marginTop: 2 },
   ends: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginBottom: 2 },
   end: { fontSize: 11, lineHeight: 14, flexShrink: 1 },

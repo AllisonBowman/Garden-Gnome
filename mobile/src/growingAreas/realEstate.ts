@@ -8,6 +8,7 @@ import {
 } from '../types';
 import type { Candidate, FitFinding } from '../api/growingAreas';
 import { lengthSaid } from '../care/facts';
+import { t } from '../i18n';
 
 export const SURFACES: GrowingSurface[] = [
   'in_ground_bed', 'raised_bed', 'containers', 'windowsill',
@@ -15,14 +16,14 @@ export const SURFACES: GrowingSurface[] = [
 ];
 
 export const SURFACE_LABEL: Record<GrowingSurface, string> = {
-  in_ground_bed:    '🌍 In-ground bed',
-  raised_bed:       '🪵 Raised bed',
-  containers:       '🪴 Containers',
-  windowsill:       '🪟 Windowsill',
-  shelf_or_floor:   '🗄️ Shelf or floor',
-  hanging:          '🌿 Hanging',
-  greenhouse_bench: '🏕️ Greenhouse bench',
-  pond_or_water:    '💧 Pond or water',
+  in_ground_bed: t('areas.surface.in_ground_bed'),
+  raised_bed: t('areas.surface.raised_bed'),
+  containers: t('areas.surface.containers'),
+  windowsill: t('areas.surface.windowsill'),
+  shelf_or_floor: t('areas.surface.shelf_or_floor'),
+  hanging: t('areas.surface.hanging'),
+  greenhouse_bench: t('areas.surface.greenhouse_bench'),
+  pond_or_water: t('areas.surface.pond_or_water'),
 };
 
 /** A surface as it reads mid-sentence or in quotes: "Raised bed", without the
@@ -36,12 +37,10 @@ export function surfaceName(surface: GrowingSurface): string {
  *  sentences quote them — "this spot gets 6+ hours of direct sun" — so the
  *  setup says them first, rather than leaving a finding to define the word
  *  after the fact. If the bands change there, they change here. */
-export const SUN_HINT =
-  'Hours of direct sun a day: full sun is 6 or more, partial 3 to 6, shade under 3.';
+export const SUN_HINT = t('areas.sunHint');
 
 /** What "Indoors or out" decides: whether the spot follows the weather. */
-export const INDOOR_OUTDOOR_HINT =
-  'Outdoors if it follows the outside temperature — a greenhouse does.';
+export const INDOOR_OUTDOOR_HINT = t('areas.indoorOutdoorHint');
 
 /** Surfaces whose soil is whatever is already there, at whatever depth. */
 export const IS_BED: Record<GrowingSurface, boolean> = {
@@ -50,23 +49,13 @@ export const IS_BED: Record<GrowingSurface, boolean> = {
   pond_or_water: false,
 };
 
-export const GOALS: { value: GrowingGoal; label: string; hint: string }[] = [
-  {
-    value: 'edible',
-    label: '🥕 Something to eat',
-    hint: 'Only species grown to eat.',
-  },
-  {
-    value: 'low_upkeep',
-    label: '😌 Low upkeep',
-    hint: 'Only species that tolerate being left alone.',
-  },
-  {
-    value: 'pollinators',
-    label: '🐝 Feeds pollinators',
-    hint: 'Only species recorded as feeding bees, butterflies or hummingbirds.',
-  },
-];
+export const GOALS: { value: GrowingGoal; label: string; hint: string }[] = (
+  ['edible', 'low_upkeep', 'pollinators'] as const
+).map((value) => ({
+  value,
+  label: t(`areas.goal.${value}.label`),
+  hint: t(`areas.goal.${value}.hint`),
+}));
 
 export type Climate = {
   shelter: Shelter;
@@ -109,14 +98,14 @@ export const AREA_TYPES: GrowingAreaType[] = [
 /** Keyed by string, not by the type: the server knows a few more types than
  *  the setup offers (balcony, greenhouse, other), and those still need words. */
 const AREA_TYPE_LABEL: Record<string, string> = {
-  home: '🏠 Home',
-  nursery: '🌱 Nursery',
-  community_garden: '🌳 Community garden',
-  conservation: '🌿 Conservation',
-  research: '🔬 Research',
-  balcony: '🪴 Balcony',
-  greenhouse: '🏕️ Greenhouse',
-  other: '📍 Other',
+  home: t('areas.areaType.home'),
+  nursery: t('areas.areaType.nursery'),
+  community_garden: t('areas.areaType.community_garden'),
+  conservation: t('areas.areaType.conservation'),
+  research: t('areas.areaType.research'),
+  balcony: t('areas.areaType.balcony'),
+  greenhouse: t('areas.areaType.greenhouse'),
+  other: t('areas.areaType.other'),
 };
 
 /** An area type in words — never the raw token, even for one this build
@@ -132,7 +121,7 @@ export function areaTypeLabel(type: string): string {
  *  under the button rather than leaving it greyed out with no reason. */
 export function setupBlocker(step: number, name: string): string | null {
   if (step === 0 && name.trim().length === 0) {
-    return 'Give it a name to go on — one you’ll know it by among your other spaces.';
+    return t('areas.needName');
   }
   return null;
 }
@@ -144,7 +133,7 @@ export type Prompt = { label: string; hint: string };
  *  that silently does nothing breaks the promise the form makes, that a
  *  number given here shapes what gets suggested. Drop this when an axis
  *  reads `soil_depth_in`. */
-const DEPTH_UNCHECKED = 'Kept with the space — no plant is checked against it yet.';
+const DEPTH_UNCHECKED = t('areas.depthUnchecked');
 export type DimensionPrompts = {
   area: Prompt; headroom: Prompt; depth: Prompt;
 };
@@ -160,26 +149,27 @@ export function dimensionPrompts(surface: GrowingSurface | null): DimensionPromp
 
   return {
     area: {
-      label: 'Footprint (sq ft)',
+      label: t('areas.dim.areaLabel'),
       hint: bed
-        ? 'Roughly how much bed there is to fill.'
+        ? t('areas.dim.areaHintBed')
         : water
-          ? 'Surface area of the water.'
-          : 'How much shelf, sill or floor this spot gives you.',
+          ? t('areas.dim.areaHintWater')
+          : t('areas.dim.areaHintOther'),
     },
     headroom: {
-      label: 'Headroom (inches)',
-      hint: bed
-        ? 'How tall something can get before it shades or crowds its neighbours.'
-        : 'Distance to the shelf, cupboard or ceiling above.',
+      label: t('areas.dim.headroomLabel'),
+      hint: bed ? t('areas.dim.headroomHintBed') : t('areas.dim.headroomHintOther'),
     },
     depth: {
-      label: bed ? 'Soil depth (inches)' : water ? 'Water depth (inches)' : 'Pot depth (inches)',
-      hint: `${bed
-        ? 'How far roots can run before they hit hardpan, liner or rock.'
-        : water
-          ? 'Depth at the planting shelf, not the deepest point.'
-          : 'Inside depth of the pots you’ll use here.'} ${DEPTH_UNCHECKED}`,
+      label: bed
+        ? t('areas.dim.depthLabelBed')
+        : water ? t('areas.dim.depthLabelWater') : t('areas.dim.depthLabelOther'),
+      hint: t('areas.twoSentences', {
+        first: bed
+          ? t('areas.dim.depthHintBed')
+          : water ? t('areas.dim.depthHintWater') : t('areas.dim.depthHintOther'),
+        second: DEPTH_UNCHECKED,
+      }),
     },
   };
 }
@@ -196,7 +186,8 @@ export function dimensionPrompts(surface: GrowingSurface | null): DimensionPromp
  *  the sentences would say inches too. */
 export function measuredLength(inches: number): string {
   const said = lengthSaid(inches);
-  return said === `${inches} in` ? said : `${said} (${inches} in)`;
+  // lengthSaid keeps a length under two feet in inches (in either language).
+  return inches < 24 ? said : t('areas.measuredBoth', { said, inches });
 }
 
 /** Under a length field as it is typed, once the reasons would say it in
@@ -205,8 +196,7 @@ export function measuredLength(inches: number): string {
 export function lengthEcho(raw: string): string | null {
   const inches = parseFloat(raw);
   if (!Number.isFinite(inches) || inches <= 0) return null;
-  const said = lengthSaid(inches);
-  return said === `${inches} in` ? null : `That’s ${said}.`;
+  return inches < 24 ? null : t('areas.lengthEcho', { said: lengthSaid(inches) });
 }
 
 // --- what could not be checked -------------------------------------------
@@ -268,9 +258,7 @@ export function uncheckedNotes(
   // about the space, true whatever the catalog holds — and it is said in a
   // gardener's words, not in the database's ("the old light column").
   if (area.temp_exposure === 'indoor') {
-    notes.push(
-      'Indoor light isn’t checked: nothing records how bright this spot is, '
-      + 'so nothing here was matched on light.');
+    notes.push(t('areas.note.indoorLight'));
   }
 
   if (candidates.length === 0) return notes;
@@ -281,27 +269,19 @@ export function uncheckedNotes(
     .filter((g) => (area.goals ?? []).includes(g.value) && !goalsConfirmed.has(g.value))
     .map((g) => goalPhrase(g.value));
   if (unanswered.length > 0) {
-    notes.push(
-      `Nothing here is filtered by what you asked for (${unanswered.join(', ')}). `
-      + 'Nothing on this list has a source that answers it yet, so the list '
-      + 'honours the space but not the wish.');
+    notes.push(t('areas.note.goalsUnanswered', { goals: unanswered.join(', ') }));
   }
 
   const measured = area.area_sqft != null || area.headroom_in != null;
   if (measured && !axesConfirmed.has('footprint')) {
-    notes.push(
-      'Size isn’t checked against your measurements. Nothing on this list has '
-      + 'a recorded mature size to set against them, so whether any of it would '
-      + 'outgrow the space is unknown.');
+    notes.push(t('areas.note.sizeUnchecked'));
   }
 
   // A depth was measured and nothing reads it (DEPTH_UNCHECKED): said, so the
   // number is not taken to have narrowed the list.
   if (area.soil_depth_in != null) {
     const depth = dimensionPrompts(area.surface ?? null).depth.label.replace(/ \(.*\)$/, '');
-    notes.push(
-      `${depth} isn’t checked: nothing on this list was compared with the `
-      + `${area.soil_depth_in} in you measured.`);
+    notes.push(t('areas.note.depthUnchecked', { depth, inches: area.soil_depth_in }));
   }
 
   return notes;

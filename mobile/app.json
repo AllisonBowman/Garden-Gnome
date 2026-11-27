@@ -77,7 +77,8 @@
       },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSSpeechRecognitionUsageDescription": "On Walk the garden, PlantAdvocate turns what you say into a list of plants. Your phone does this itself where it can, and Apple does it otherwise. PlantAdvocate only receives the plants you confirm."
+        "NSSpeechRecognitionUsageDescription": "On Walk the garden, PlantAdvocate turns what you say into a list of plants. Your phone does this itself where it can, and Apple does it otherwise. PlantAdvocate only receives the plants you confirm.",
+        "CFBundleAllowMixedLocalizations": true
       }
     },
     "android": {
@@ -152,6 +153,17 @@
           "color": "#2F4A33"
         }
       ],
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "ios": [
+              "en",
+              "es"
+            ]
+          }
+        }
+      ],
       "expo-status-bar",
       "./plugins/withGoogleModularHeaders",
       [
@@ -168,6 +180,9 @@
         "projectId": "9f8bf927-1520-4e6f-ad37-c4fa5f70097e"
       }
     },
-    "owner": "allisonbowman"
+    "owner": "allisonbowman",
+    "locales": {
+      "es": "./locales/es.json"
+    }
   }
 }

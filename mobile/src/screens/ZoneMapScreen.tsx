@@ -14,6 +14,8 @@ import {
 import { Box, Imagery, SiteProfile, Zone } from '../types/site';
 import TopDownImage, { TopDownImageContext } from '../components/TopDownImage';
 import ExplainedBlock from '../components/ExplainedBlock';
+import HowWeKnowButton from '../components/HowWeKnowButton';
+import { zoneSections } from '../howWeKnow/sections';
 import Eyebrow from '../components/Eyebrow';
 import LoadError from '../components/LoadError';
 import { useImagerySource } from '../land/useImagerySource';
@@ -35,6 +37,7 @@ import {
 import { AnswersNotSaved, saveZone } from '../zones/save';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { t } from '../i18n';
 
 type Route = RouteProp<RootStackParamList, 'ZoneMap'>;
 type Styles = ReturnType<typeof makeStyles>;
@@ -178,7 +181,7 @@ export default function ZoneMapScreen() {
     // The whole-lot zone has no vegetation type to choose, and keeps its box.
     const why = mode.zone?.is_whole_lot
       ? null
-      : draftProblem(draft, box) ?? (box ? null : 'The map has not loaded yet. Try again in a moment.');
+      : draftProblem(draft, box) ?? (box ? null : t('zones.screen.mapNotLoaded'));
     if (why) { setProblem(why); return; }
     setSaving(true);
     setProblem(null);
@@ -213,8 +216,8 @@ export default function ZoneMapScreen() {
       await refreshHome(queryClient).catch(() => undefined);
     } catch (err) {
       setProblem(err instanceof AnswersNotSaved
-        ? 'The zone was saved, but your answers about it were not. Check your connection and tap Save again.'
-        : 'That zone was not saved. Check your connection and try again.');
+        ? t('zones.screen.answersNotSaved')
+        : t('zones.screen.notSaved'));
     } finally {
       setSaving(false);
     }
@@ -222,11 +225,11 @@ export default function ZoneMapScreen() {
 
   const remove = (z: Zone) => {
     const blocked = deleteBlockedReason(z);
-    if (blocked) { Alert.alert('This zone stays', blocked); return; }
-    Alert.alert('Delete this zone?', `"${z.name}" and its corrections will be removed.`, [
-      { text: 'Keep it', style: 'cancel' },
+    if (blocked) { Alert.alert(t('zones.screen.staysTitle'), blocked); return; }
+    Alert.alert(t('zones.screen.deleteTitle'), t('zones.screen.deleteBody', { name: z.name }), [
+      { text: t('zones.screen.keep'), style: 'cancel' },
       {
-        text: 'Delete', style: 'destructive', onPress: async () => {
+        text: t('zones.screen.delete'), style: 'destructive', onPress: async () => {
           try {
             await deleteZone(propertyId, z.id);
             queryClient.setQueryData<Zone[]>(SITE_QUERY_KEYS.zones(propertyId), (old) => (old ?? []).filter((x) => x.id !== z.id));
@@ -234,7 +237,7 @@ export default function ZoneMapScreen() {
             await refreshHome(queryClient);
           } catch (err) {
             const refused = axios.isAxiosError(err) && err.response?.status === 409;
-            Alert.alert('Not deleted', refused ? DELETE_REFUSED : 'The zone was not deleted. Check your connection and try again.');
+            Alert.alert(t('zones.screen.notDeletedTitle'), refused ? DELETE_REFUSED : t('zones.screen.notDeleted'));
           }
         },
       },
@@ -245,7 +248,7 @@ export default function ZoneMapScreen() {
   if (!zonesQ.data) {
     return (
       <LoadError
-        message="Couldn’t load your zones."
+        message={t('zones.screen.loadFailed')}
         error={zonesQ.error}
         onRetry={() => zonesQ.refetch()}
         retrying={zonesQ.isRefetching}
@@ -260,11 +263,11 @@ export default function ZoneMapScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} scrollEnabled={!drawing}>
-      <Text style={styles.headline} accessibilityRole="header">Your zones</Text>
+      <Text style={styles.headline} accessibilityRole="header">{t('zones.screen.title')}</Text>
       <Text style={styles.intro}>
         {drawing
-          ? 'Drag across the image to stretch a box over the bed or area. Drag a corner to adjust it, or drag the middle to move it.'
-          : 'Each box is a part of your land. Tap one to change it.'}
+          ? t('zones.screen.introDraw')
+          : t('zones.screen.introView')}
       </Text>
 
       {imagery && uri ? (
@@ -278,7 +281,7 @@ export default function ZoneMapScreen() {
             const hit = hitZone(zoneRects, p);
             if (hit) openZone(hit.zone);
           }}
-          accessibilityLabel={`Top-down aerial image of your land. ${imagery.source.name}${imagery.captured ? `, ${imagery.captured}` : ''}.`}
+          accessibilityLabel={t('zones.screen.imageA11y', { source: `${imagery.source.name}${imagery.captured ? `, ${imagery.captured}` : ''}` })}
         >
           {(ctx) => (
             <>
@@ -308,19 +311,19 @@ export default function ZoneMapScreen() {
         <ActivityIndicator style={styles.inlineSpin} />
       ) : (
         <Text style={styles.quietBlock}>
-          The aerial image is not available right now, so boxes cannot be drawn. You can still add a zone without drawing.
+          {t('zones.screen.noImage')}
         </Text>
       )}
       {imagery ? (
         <Text style={styles.credit}>
-          {`Image: ${imagery.source.name}${imagery.captured ? `, ${imagery.captured}` : ''}.`}
+          {t('zones.screen.credit', { source: `${imagery.source.name}${imagery.captured ? `, ${imagery.captured}` : ''}` })}
         </Text>
       ) : null}
 
       {/* Screen-reader and no-gesture path to every zone. */}
       {mode.kind === 'view' && (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>Zones</Eyebrow>
+          <Eyebrow style={styles.eyebrow}>{t('zones.screen.zones')}</Eyebrow>
           {zones.map((z) => (
             <Button
               key={z.id}
@@ -341,18 +344,18 @@ export default function ZoneMapScreen() {
               icon="vector-square"
               disabled={!imagery || !uri}
               onPress={() => startDrawing(null)}
-              accessibilityLabel="Add a bed or area by drawing a box on the image"
+              accessibilityLabel={t('zones.screen.addDrawA11y')}
               buttonColor={palette.btn}
               textColor={palette.btnInk}
             >
-              Add a bed or area
+              {t('zones.screen.addDraw')}
             </Button>
             <Button
               mode="outlined"
               onPress={startWithoutDrawing}
-              accessibilityLabel="Add a zone without drawing"
+              accessibilityLabel={t('zones.screen.addNoDraw')}
             >
-              Add a zone without drawing
+              {t('zones.screen.addNoDraw')}
             </Button>
           </View>
         </View>
@@ -365,37 +368,37 @@ export default function ZoneMapScreen() {
               mode="contained"
               disabled={!isUsableRect(rect)}
               onPress={() => setMode({ kind: 'describe', zone: mode.zone, noDraw: false })}
-              accessibilityLabel="Done drawing. Describe this area next."
+              accessibilityLabel={t('zones.screen.doneA11y')}
               buttonColor={palette.btn}
               textColor={palette.btnInk}
             >
-              Done drawing
+              {t('zones.screen.done')}
             </Button>
             <Button
               mode="outlined"
               disabled={!rect}
               onPress={() => rect && setRect(scaleRect(rect, 1.25, imagery.width, imagery.height))}
-              accessibilityLabel="Make the box bigger"
+              accessibilityLabel={t('zones.screen.biggerA11y')}
             >
-              Bigger
+              {t('zones.screen.bigger')}
             </Button>
             <Button
               mode="outlined"
               disabled={!rect}
               onPress={() => rect && setRect(scaleRect(rect, 0.8, imagery.width, imagery.height))}
-              accessibilityLabel="Make the box smaller"
+              accessibilityLabel={t('zones.screen.smallerA11y')}
             >
-              Smaller
+              {t('zones.screen.smaller')}
             </Button>
             <Button
               mode="text"
               disabled={!rect || !!mode.zone}
               onPress={() => setRect(null)}
-              accessibilityLabel="Start the box over"
+              accessibilityLabel={t('zones.screen.startOverA11y')}
             >
-              Start over
+              {t('zones.screen.startOver')}
             </Button>
-            <Button mode="text" onPress={cancel} accessibilityLabel="Cancel drawing">Cancel</Button>
+            <Button mode="text" onPress={cancel} accessibilityLabel={t('zones.screen.cancelDrawA11y')}>{t('zones.screen.cancel')}</Button>
           </View>
         </View>
       )}
@@ -420,17 +423,20 @@ export default function ZoneMapScreen() {
       {mode.kind === 'view' && savedZone && (
         <Card style={styles.card}>
           <Card.Content>
-            <Text style={styles.cardTitle} accessibilityRole="header">{`Saved: ${savedZone.name}`}</Text>
+            <Text style={styles.cardTitle} accessibilityRole="header">{t('zones.screen.saved', { name: savedZone.name })}</Text>
             {zoneShownValues(savedZone.values).map((v) => (
               <ExplainedBlock key={v.field} explained={v} title={v.title} />
             ))}
             {zoneValuesPending(savedZone.values) ? (
               <Text style={styles.quiet} accessibilityLiveRegion="polite">
                 {polls < VALUES_POLL_TRIES
-                  ? 'Working out the sun and where water collects for this zone. They show here when ready.'
-                  : 'Some values for this zone are not ready yet. They will show on your land page when they are.'}
+                  ? t('zones.screen.working')
+                  : t('zones.screen.notReady')}
               </Text>
             ) : null}
+            <HowWeKnowButton sections={() => zoneSections({
+              name: savedZone.name, values: zoneShownValues(savedZone.values),
+            })} />
           </Card.Content>
         </Card>
       )}
@@ -549,7 +555,7 @@ function DrawLayer({ imagery, rect, onRect, ctx, styles }: {
       style={StyleSheet.absoluteFill}
       {...responder.panHandlers}
       accessible
-      accessibilityLabel="Drawing area. Drag to stretch a box. Use the Bigger and Smaller buttons below to adjust it without dragging."
+      accessibilityLabel={t('zones.screen.drawAreaA11y')}
     >
       {rect ? HANDLES.map((h) => {
         const q = ctx.toView(handlePoint(rect, h));
@@ -557,7 +563,7 @@ function DrawLayer({ imagery, rect, onRect, ctx, styles }: {
           <View
             key={h}
             pointerEvents="none"
-            accessibilityLabel={`${HANDLE_NAMES[h]} corner handle`}
+            accessibilityLabel={t('zones.screen.handleA11y', { handle: HANDLE_NAMES[h] })}
             style={[styles.handle, { left: q.x - HANDLE_SIZE / 2, top: q.y - HANDLE_SIZE / 2 }]}
           />
         );
@@ -594,33 +600,33 @@ function DescribePanel({
     <Card style={styles.card}>
       <Card.Content>
         <Text style={styles.cardTitle} accessibilityRole="header">
-          {zone ? `Change ${zone.name}` : 'Describe this area'}
+          {zone ? t('zones.screen.change', { name: zone.name }) : t('zones.screen.describe')}
         </Text>
         {mode.noDraw ? (
           <Text style={styles.quiet}>
-            Without a drawing, this zone covers your whole approximate yard. Draw its box later to make its values more exact.
+            {t('zones.screen.noDrawNote')}
           </Text>
         ) : null}
 
         <TextInput
-          label="Name (optional)"
+          label={t('zones.screen.nameLabel')}
           value={draft.name}
           onChangeText={(name) => setDraft({ ...draft, name })}
           mode="outlined"
           style={styles.input}
-          accessibilityLabel="Zone name, optional"
+          accessibilityLabel={t('zones.screen.nameA11y')}
         />
 
         {!wholeLot && (
           <>
-            <Text style={styles.question}>What grows there?</Text>
+            <Text style={styles.question}>{t('zones.screen.whatGrows')}</Text>
             <View style={styles.chips}>
               {VEGETATION_CHOICES.map((c) => (
                 <Chip
                   key={c.value}
                   selected={draft.vegetation === c.value}
                   onPress={() => setDraft({ ...draft, vegetation: c.value })}
-                  accessibilityLabel={`${c.label}. ${c.hint}`}
+                  accessibilityLabel={t('zones.screen.hintA11y', { label: c.label, hint: c.hint })}
                   accessibilityState={{ selected: draft.vegetation === c.value }}
                   style={styles.chip}
                 >
@@ -633,7 +639,7 @@ function DescribePanel({
 
         {leafHabitApplies(draft.vegetation) && (
           <>
-            <Text style={styles.question}>Do they lose their leaves?</Text>
+            <Text style={styles.question}>{t('zones.screen.loseLeaves')}</Text>
             <View style={styles.chips}>
               {LEAF_HABIT_CHOICES.map((c) => (
                 <Chip
@@ -664,7 +670,7 @@ function DescribePanel({
                     onPress={() => setDraft({
                       ...draft, corrections: { ...draft.corrections, [q.field]: on ? '' : c.value },
                     })}
-                    accessibilityLabel={`${q.title.replace(' (optional)', '')}: ${c.label}`}
+                    accessibilityLabel={t('zones.screen.choiceA11y', { title: q.title.replace(t('zones.optionalSuffix'), ''), label: c.label })}
                     accessibilityState={{ selected: on }}
                     style={styles.chip}
                   >
@@ -684,26 +690,26 @@ function DescribePanel({
             onPress={onSave}
             loading={saving}
             disabled={saving}
-            accessibilityLabel="Save this zone"
+            accessibilityLabel={t('zones.screen.saveA11y')}
             style={styles.saveBtn}
           >
-            Save
+            {t('zones.screen.save')}
           </Button>
           {zone && canRedraw ? (
-            <Button mode="outlined" onPress={onRedraw} disabled={saving} accessibilityLabel="Change the box on the image">
-              Change the box
+            <Button mode="outlined" onPress={onRedraw} disabled={saving} accessibilityLabel={t('zones.screen.changeBoxA11y')}>
+              {t('zones.screen.changeBox')}
             </Button>
           ) : null}
-          <Button mode="text" onPress={onCancel} disabled={saving} accessibilityLabel="Cancel without saving">
-            Cancel
+          <Button mode="text" onPress={onCancel} disabled={saving} accessibilityLabel={t('zones.screen.cancelA11y')}>
+            {t('zones.screen.cancel')}
           </Button>
         </View>
         {zone && onDelete ? (
           blocked ? (
             <Text style={styles.quiet}>{blocked}</Text>
           ) : (
-            <Button mode="text" onPress={onDelete} disabled={saving} accessibilityLabel={`Delete ${zone.name}`} style={styles.deleteBtn}>
-              Delete this zone
+            <Button mode="text" onPress={onDelete} disabled={saving} accessibilityLabel={t('zones.screen.deleteA11y', { name: zone.name })} style={styles.deleteBtn}>
+              {t('zones.screen.deleteZone')}
             </Button>
           )
         ) : null}

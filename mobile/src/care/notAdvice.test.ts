@@ -70,6 +70,7 @@ function walk(dir: string): string[] {
 test('the sentence lives in one place, not in a copy per screen', () => {
   const holders = walk('')
     .filter((f) => /\.tsx?$/.test(f) && !/\.test\.ts$/.test(f))
-    .filter((f) => /medical or veterinary/i.test(read(f)));
-  expect(holders).toEqual(['care/notAdvice.ts']);
+    // The words live in the English resource; one module holds the line.
+    .filter((f) => /medical or veterinary/i.test(read(f)) || /'care\.notAdvice'/.test(read(f)));
+  expect(holders).toEqual(['care/notAdvice.ts', 'i18n/en/care.ts']);
 });

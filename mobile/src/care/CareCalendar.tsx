@@ -5,12 +5,10 @@ import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { CareTask, dayKey, startOfDay, careTaskDueLabel } from './schedule';
 import { careActionLabel } from './labels';
+import { localeTag, t } from '../i18n';
 
-const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
+const WEEKDAYS = t('care.calendar.weekdays').split(',');
+const MONTHS = t('care.calendar.months').split(',');
 
 type Cell = { date: Date; key: string } | null;
 
@@ -73,7 +71,7 @@ export default function CareCalendar({ tasks }: { tasks: CareTask[] }) {
       <View style={styles.navRow}>
         <IconButton icon="chevron-left" size={22} onPress={() => shiftMonth(-1)} iconColor={palette.acc} />
         <Text style={styles.monthLabel}>
-          {MONTHS[view.getMonth()]} {view.getFullYear()}
+          {t('care.calendar.monthYear', { month: MONTHS[view.getMonth()], year: view.getFullYear() })}
         </Text>
         <IconButton icon="chevron-right" size={22} onPress={() => shiftMonth(1)} iconColor={palette.acc} />
       </View>
@@ -88,7 +86,7 @@ export default function CareCalendar({ tasks }: { tasks: CareTask[] }) {
           }}
         >
           <Text style={styles.overdueBannerText}>
-            ⚠️ {overdueCount} care {overdueCount === 1 ? 'task is' : 'tasks are'} overdue
+            {t('care.calendar.overdue', { count: overdueCount })}
           </Text>
         </TouchableOpacity>
       )}
@@ -145,10 +143,10 @@ export default function CareCalendar({ tasks }: { tasks: CareTask[] }) {
       {/* Selected-day agenda */}
       <View style={styles.agenda}>
         <Text style={styles.agendaTitle}>
-          {selectedIsToday ? 'Today' : formatSelected(selectedKey)}
+          {selectedIsToday ? t('care.calendar.today') : formatSelected(selectedKey)}
         </Text>
         {selected.length === 0 ? (
-          <Text style={styles.agendaEmpty}>Nothing scheduled.</Text>
+          <Text style={styles.agendaEmpty}>{t('care.calendar.nothingScheduled')}</Text>
         ) : (
           selected
             .slice()
@@ -174,7 +172,7 @@ export default function CareCalendar({ tasks }: { tasks: CareTask[] }) {
 
 function formatSelected(key: string): string {
   const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m, d).toLocaleDateString(undefined, {
+  return new Date(y, m, d).toLocaleDateString(localeTag, {
     weekday: 'short', month: 'short', day: 'numeric',
   });
 }

@@ -1,6 +1,8 @@
 import {
   FrostBias, OverridePut, ProfileStatus, SiteField, SiteProfile, SiteValue,
 } from '../types/site';
+import { t } from '../i18n';
+import { localConfidenceLabel } from '../components/explainedText';
 
 // The Land screen as pure logic: the site profile grouped in a fixed order,
 // the corrections the owner can make, and when to ask the server again.
@@ -13,14 +15,14 @@ export interface LandSection {
 
 /** The order the Land screen reads in, and the heading of each group. */
 export const LAND_SECTIONS: Array<{ key: string; title: string; fields: SiteField[] }> = [
-  { key: 'sun', title: 'Sun', fields: ['sun'] },
-  { key: 'soil', title: 'Soil and drainage', fields: ['soil_drainage', 'soil_texture', 'soil_ph', 'disturbed_soil'] },
-  { key: 'water', title: 'Where water collects', fields: ['water_collects'] },
-  { key: 'slope', title: 'Slope and facing', fields: ['slope', 'facing'] },
-  { key: 'flooding', title: 'Flooding', fields: ['flooding'] },
-  { key: 'hardiness', title: 'Hardiness zone', fields: ['hardiness_zone'] },
-  { key: 'frost', title: 'Typical frost dates', fields: ['frost_dates'] },
-  { key: 'land_cover', title: 'Land cover around you', fields: ['land_cover'] },
+  { key: 'sun', title: t('land.sections.sun'), fields: ['sun'] },
+  { key: 'soil', title: t('land.sections.soil'), fields: ['soil_drainage', 'soil_texture', 'soil_ph', 'disturbed_soil'] },
+  { key: 'water', title: t('land.sections.water'), fields: ['water_collects'] },
+  { key: 'slope', title: t('land.sections.slope'), fields: ['slope', 'facing'] },
+  { key: 'flooding', title: t('land.sections.flooding'), fields: ['flooding'] },
+  { key: 'hardiness', title: t('land.sections.hardiness'), fields: ['hardiness_zone'] },
+  { key: 'frost', title: t('land.sections.frost'), fields: ['frost_dates'] },
+  { key: 'land_cover', title: t('land.sections.land_cover'), fields: ['land_cover'] },
 ];
 
 /** Group values into the sections above, in order, leaving out empty ones.
@@ -37,7 +39,7 @@ export function groupValues(values: readonly SiteValue[]): LandSection[] {
     if (vs.length > 0) out.push({ key: s.key, title: s.title, values: vs });
   }
   const rest = values.filter((v) => !placed.has(v));
-  if (rest.length > 0) out.push({ key: 'more', title: 'More', values: rest });
+  if (rest.length > 0) out.push({ key: 'more', title: t('land.sections.more'), values: rest });
   return out;
 }
 
@@ -69,7 +71,7 @@ export function correctionShowing(v: SiteValue): boolean {
 /** The public-data reading kept visible beside a correction. */
 export function publicLine(v: SiteValue): string | null {
   if (!v.public) return null;
-  return `Public data reading: ${v.public.display} (${v.public.confidence_label}).`;
+  return t('land.publicLine', { display: v.public.display, label: localConfidenceLabel(v.public.confidence_label) });
 }
 
 /** Which choice, if any, is the owner's current answer. */
@@ -98,33 +100,33 @@ export function parseNumberOverride(field: SiteField, text: string): NumberParse
   const cleaned = text.trim().replace(',', '.');
   if (!/^\d+(\.\d+)?$/.test(cleaned)) {
     return { ok: false, message: field === 'soil_ph'
-      ? 'Enter the soil acidity (pH) number from your soil test, such as 6.5.'
-      : 'Enter a number.' };
+      ? t('land.phEnter')
+      : t('land.numberEnter') };
   }
   const n = Number(cleaned);
   if (field === 'soil_ph') {
-    if (n < 0 || n > 14) return { ok: false, message: 'Soil acidity (pH) is a number from 0 to 14.' };
+    if (n < 0 || n > 14) return { ok: false, message: t('land.phRange') };
     return { ok: true, value: Math.round(n * 10) / 10 };
   }
   return { ok: true, value: n };
 }
 
 /** The label of the control that puts the public reading back. */
-export const USE_ESTIMATE_LABEL = 'Use the public data reading';
+export const USE_ESTIMATE_LABEL = t('land.useEstimate');
 
 // ── Property-level settings ──────────────────────────────────────────────────
 
 export const FROST_BIAS_CHOICES: Array<{ value: FrostBias | null; label: string; a11y: string }> = [
-  { value: 'earlier', label: 'Earlier', a11y: 'My yard frosts earlier than the neighbourhood' },
-  { value: null, label: 'About the same', a11y: 'My yard frosts about when the neighbourhood does' },
-  { value: 'later', label: 'Later', a11y: 'My yard frosts later than the neighbourhood' },
+  { value: 'earlier', label: t('land.frostBias.earlier'), a11y: t('land.frostBias.earlierA11y') },
+  { value: null, label: t('land.frostBias.same'), a11y: t('land.frostBias.sameA11y') },
+  { value: 'later', label: t('land.frostBias.later'), a11y: t('land.frostBias.laterA11y') },
 ];
 
 /** A property name the server will take: trimmed, not empty, not overlong. */
 export function cleanName(text: string): string | null {
-  const t = text.trim().replace(/\s+/g, ' ');
-  if (!t) return null;
-  return t.slice(0, 80);
+  const s = text.trim().replace(/\s+/g, ' ');
+  if (!s) return null;
+  return s.slice(0, 80);
 }
 
 // ── Refreshing while the background step runs ───────────────────────────────

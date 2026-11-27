@@ -22,7 +22,7 @@ import { Icon, Text } from 'react-native-paper';
 import Svg, { Circle, Line, Rect } from 'react-native-svg';
 import { ForecastDay } from '../types/site';
 import {
-  CHART_TEXT, FORECAST_HEAD, FORECAST_RAIN_ROW, FREEZING_LABEL, NO_TEMPERATURE_TEXT, forecastBars, forecastCaption,
+  CHART_TEXT, FORECAST_HEAD, FORECAST_RAIN_ROW, freezingLabel, NO_TEMPERATURE_TEXT, forecastBars, forecastCaption,
   forecastChartHeight,
 } from '../home/forecastBars';
 import { frostNightsLine } from '../season/sections';
@@ -72,7 +72,7 @@ export default function ForecastBars({ days, height = 120, today }: ForecastBars
             </Svg>
             {layout.freezingY != null ? (
               <Text style={[styles.freezeLabel, { top: layout.freezingY - 15, color: palette.acc, fontFamily: fonts.numeric }]}>
-                {FREEZING_LABEL}
+                {freezingLabel()}
               </Text>
             ) : null}
           </View>

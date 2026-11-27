@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { Text, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import type { RootStackParamList } from '../navigation/types';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { FINISH, SLIDES } from './slides';
+import { t } from '../i18n';
 
 interface Props {
   /** Marks onboarding as seen and hides it. */
@@ -30,19 +31,19 @@ export default function Onboarding({ onSkip }: Props) {
   return (
     <SafeAreaView style={styles.overlay}>
       <View style={styles.skipRow}>
-        <Pressable onPress={onSkip} hitSlop={12}>
-          <Text style={styles.skip}>Skip</Text>
+        <Pressable onPress={onSkip} hitSlop={12} accessibilityRole="button" style={styles.skipBtn}>
+          <Text style={styles.skip}>{t('onboarding.skip')}</Text>
         </Pressable>
       </View>
 
-      <View style={styles.content}>
-        <Text style={styles.emoji}>{slide.emoji}</Text>
-        <Text style={styles.title}>{slide.title}</Text>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        <Text style={styles.emoji} accessibilityElementsHidden importantForAccessibility="no">{slide.emoji}</Text>
+        <Text style={styles.title} accessibilityRole="header">{slide.title}</Text>
         <Text style={styles.body}>{slide.body}</Text>
-      </View>
+      </ScrollView>
 
       <View style={styles.footer}>
-        <View style={styles.dots}>
+        <View style={styles.dots} accessible accessibilityLabel={t('onboarding.slideOf', { n: index + 1, total: SLIDES.length })}>
           {SLIDES.map((_, d) => (
             <View key={d} style={[styles.dot, d === index && styles.dotActive]} />
           ))}
@@ -55,7 +56,7 @@ export default function Onboarding({ onSkip }: Props) {
           buttonColor={palette.btn}
           textColor={palette.btnInk}
         >
-          {isLast ? FINISH.label : 'Next'}
+          {isLast ? FINISH.label : t('onboarding.next')}
         </Button>
         {/* The last button already ends onboarding on Home, so no second
             "Maybe later" link that would do the same; Skip stays at the top. */}
@@ -74,15 +75,17 @@ const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
     elevation: 100,
     justifyContent: 'space-between',
   },
+  scroll: { flex: 1 },
   skipRow: { flexDirection: 'row', justifyContent: 'flex-end', padding: 18 },
-  skip: { color: p.sub, fontSize: 15, fontWeight: '600' },
-  content: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 36 },
+  skipBtn: { minHeight: 44, minWidth: 44, justifyContent: 'center', paddingHorizontal: 8 },
+  skip: { color: p.ink, fontSize: 16, fontWeight: '700' },
+  content: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28 },
   emoji: { fontSize: 72, marginBottom: 28 },
   title: {
     fontSize: 26, fontWeight: '700', color: p.acc, fontFamily: f.display,
     textAlign: 'center', marginBottom: 14,
   },
-  body: { fontSize: 16, lineHeight: 24, color: p.sub, textAlign: 'center', maxWidth: 340 },
+  body: { fontSize: 17, lineHeight: 25, color: p.ink, textAlign: 'center', maxWidth: 360 },
   footer: { paddingHorizontal: 28, paddingBottom: 28, alignItems: 'center' },
   dots: { flexDirection: 'row', gap: 8, marginBottom: 24 },
   dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: p.line },

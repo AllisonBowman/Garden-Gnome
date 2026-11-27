@@ -12,6 +12,7 @@ import {
 } from './plan';
 import { fallHardeningStart, SeasonalInput } from '../season/alerts';
 import { computeWeatherSignal } from '../weather/signal';
+import { t } from '../i18n';
 
 const PREFS_KEY = 'garden_gnome_reminder_prefs';
 const WEATHER_SHIFT_KEY = 'garden_gnome_weather_shift';
@@ -269,7 +270,7 @@ async function reschedulePass(): Promise<void> {
 
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
-        name: 'Care reminders',
+        name: t('notifications.channel'),
         importance: Notifications.AndroidImportance.DEFAULT,
         lightColor: '#2D6A4F',
       });

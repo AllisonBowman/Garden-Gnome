@@ -2,16 +2,17 @@ import {
   Box, Imagery, LeafHabit, OverrideChoice, OverridePut, SiteField, SiteValue, VegetationType,
   Zone, ZoneCreate, ZonePatch,
 } from '../types/site';
+import { t } from '../i18n';
 
 // Describing a zone by taps: what grows there, leaf habit where it applies,
 // optional sun and soil corrections, and the words the zone map shows. Pure.
 
 export const VEGETATION_CHOICES: { value: VegetationType; label: string; hint: string }[] = [
-  { value: 'garden_bed', label: 'Garden bed', hint: 'Flowers, vegetables or other planted beds' },
-  { value: 'grass', label: 'Lawn or grass', hint: 'Mown grass or a meadow' },
-  { value: 'shrub', label: 'Shrubs or bushes', hint: 'Woody plants shorter than a tree' },
-  { value: 'tree', label: 'Trees', hint: 'One tree or a group of trees' },
-  { value: 'bare_hardscape', label: 'Paving, gravel or bare ground', hint: 'Patio, path, driveway or bare soil' },
+  { value: 'garden_bed', label: t('zones.vegetation.garden_bed'), hint: t('zones.vegetation.garden_bedHint') },
+  { value: 'grass', label: t('zones.vegetation.grass'), hint: t('zones.vegetation.grassHint') },
+  { value: 'shrub', label: t('zones.vegetation.shrub'), hint: t('zones.vegetation.shrubHint') },
+  { value: 'tree', label: t('zones.vegetation.tree'), hint: t('zones.vegetation.treeHint') },
+  { value: 'bare_hardscape', label: t('zones.vegetation.bare_hardscape'), hint: t('zones.vegetation.bare_hardscapeHint') },
 ];
 
 export const VEGETATION_WORDS: Record<VegetationType, string> = Object.fromEntries(
@@ -19,9 +20,9 @@ export const VEGETATION_WORDS: Record<VegetationType, string> = Object.fromEntri
 ) as Record<VegetationType, string>;
 
 export const LEAF_HABIT_CHOICES: { value: LeafHabit; label: string }[] = [
-  { value: 'drops_leaves', label: 'Loses its leaves in fall' },
-  { value: 'evergreen', label: 'Evergreen' },
-  { value: 'mixed', label: 'Some of each' },
+  { value: 'drops_leaves', label: t('zones.leafHabit.drops_leaves') },
+  { value: 'evergreen', label: t('zones.leafHabit.evergreen') },
+  { value: 'mixed', label: t('zones.leafHabit.mixed') },
 ];
 
 /** Leaf habit is asked only for trees and shrubs. */
@@ -31,9 +32,9 @@ export function leafHabitApplies(v: VegetationType | null | undefined): boolean 
 
 /** The sun choices, used when the server sends none for a zone. */
 export const DEFAULT_SUN_CHOICES: OverrideChoice[] = [
-  { value: 'full_sun', label: 'Full sun (6 hours or more)' },
-  { value: 'part_shade', label: 'Part shade (3 to 6 hours)' },
-  { value: 'shade', label: 'Shade (under 3 hours)' },
+  { value: 'full_sun', label: t('zones.sunChoices.full_sun') },
+  { value: 'part_shade', label: t('zones.sunChoices.part_shade') },
+  { value: 'shade', label: t('zones.sunChoices.shade') },
 ];
 
 /** The fields a zone can be corrected on here, in the order asked. Soil is
@@ -41,9 +42,9 @@ export const DEFAULT_SUN_CHOICES: OverrideChoice[] = [
 export const CORRECTION_FIELDS: SiteField[] = ['sun', 'water_collects', 'soil_texture'];
 
 export const CORRECTION_TITLES: Partial<Record<SiteField, string>> = {
-  sun: 'Sun here (optional)',
-  water_collects: 'Water after rain (optional)',
-  soil_texture: 'Soil here (optional)',
+  sun: t('zones.correctionTitles.sun'),
+  water_collects: t('zones.correctionTitles.water_collects'),
+  soil_texture: t('zones.correctionTitles.soil_texture'),
 };
 
 export interface CorrectionQuestion {
@@ -98,15 +99,15 @@ export function defaultZoneName(v: VegetationType, existing: string[]): string {
   const taken = new Set(existing.map((n) => n.trim().toLowerCase()));
   if (!taken.has(base.toLowerCase())) return base;
   for (let i = 2; ; i++) {
-    const name = `${base} ${i}`;
+    const name = t('zones.numberedName', { base, n: i });
     if (!taken.has(name.toLowerCase())) return name;
   }
 }
 
 /** What is still missing before a draft can be saved, or null. */
 export function draftProblem(d: ZoneDraft, box: Box | null): string | null {
-  if (!d.vegetation) return 'Choose what grows there.';
-  if (!box) return 'Stretch a box over the area first.';
+  if (!d.vegetation) return t('zones.chooseGrowth');
+  if (!box) return t('zones.stretchFirst');
   return null;
 }
 
@@ -185,24 +186,21 @@ export function defaultZoneBox(
 /** Why a zone cannot be deleted, in plain words, or null if it can. */
 export function deleteBlockedReason(z: Pick<Zone, 'is_whole_lot' | 'plant_count'>): string | null {
   if (z.is_whole_lot) {
-    return 'The whole yard cannot be deleted. It holds the values for your land as a whole.';
+    return t('zones.wholeYardStays');
   }
-  if (z.plant_count > 0) {
-    const n = z.plant_count === 1 ? '1 plant' : `${z.plant_count} plants`;
-    return `This zone has ${n} in it, so it cannot be deleted. Move ${z.plant_count === 1 ? 'it' : 'them'} to another space first.`;
-  }
+  if (z.plant_count > 0) return t('zones.hasPlants', { count: z.plant_count });
   return null;
 }
 
 /** What to say when the server refuses a delete (it answers 409). */
-export const DELETE_REFUSED = 'This zone still has plants in it, so it cannot be deleted. Move them to another space first.';
+export const DELETE_REFUSED = t('zones.deleteRefused');
 
 // ── What the zone map shows ──────────────────────────────────────────────────
 
 /** The label drawn on a zone's box. */
 export function zoneLabel(z: Pick<Zone, 'name' | 'is_whole_lot' | 'boundary_source'>): string {
   if (z.is_whole_lot && z.boundary_source === 'default') {
-    return 'Approximate yard (typical United States lot size, not your property line)';
+    return t('zones.approximateYard');
   }
   return z.name;
 }
@@ -211,7 +209,7 @@ export function zoneLabel(z: Pick<Zone, 'name' | 'is_whole_lot' | 'boundary_sour
  *  whole-lot zone on its default boundary is "Your yard" there; the list
  *  under the map and the map's spoken description keep zoneLabel, which says
  *  the boundary is an approximate guess. Every other zone shows its own name. */
-export const DEFAULT_YARD_MAP_NAME = 'Your yard';
+export const DEFAULT_YARD_MAP_NAME = t('zones.yourYard');
 
 export function mapZoneLabel(z: Pick<Zone, 'name' | 'is_whole_lot' | 'boundary_source'>): string {
   if (z.is_whole_lot && z.boundary_source === 'default') return DEFAULT_YARD_MAP_NAME;
@@ -237,6 +235,6 @@ export function zoneValuesPending(values: SiteValue[] | null | undefined): boole
 /** One line for a screen reader about a zone's box. */
 export function zoneA11yLabel(z: Pick<Zone, 'name' | 'vegetation_type' | 'is_whole_lot' | 'boundary_source' | 'plant_count'>): string {
   const what = z.vegetation_type ? VEGETATION_WORDS[z.vegetation_type] : null;
-  const plants = z.plant_count === 1 ? '1 plant' : `${z.plant_count} plants`;
-  return [zoneLabel(z), what, plants].filter(Boolean).join('. ') + '. Opens this zone to edit it.';
+  const plants = t('zones.plants', { count: z.plant_count });
+  return [zoneLabel(z), what, plants].filter(Boolean).join('. ') + '. ' + t('zones.zoneA11yEnd');
 }

@@ -13,13 +13,13 @@
 // Pure, like fitFindings: the area screen and the Almanac say it alike.
 
 import type { Candidate } from '../api/growingAreas';
+import { t } from '../i18n';
 
 /** How many candidates an area's screen shows before offering the rest. */
 export const FIRST_FEW = 12;
 
 /** The ranking rule, said once wherever a ranked list is shown. */
-export const RANK_ORDER =
-  'The more that’s confirmed here, the higher a species sits; where they tie, it’s A to Z.';
+export const RANK_ORDER = t('areas.rankOrder');
 
 /** The whole count the server sent with a cut list (its X-Total-Count
  *  header), or null when there is none to read — a server older than the
@@ -40,12 +40,10 @@ export function totalCount(headers: unknown): number | null {
  *  order by. Null when there is no list to introduce. */
 export function listIntro(total: number | null, shown: number): string | null {
   if (total === 1) {
-    return 'One species has nothing on record against this spot and at least one '
-      + 'thing confirmed.';
+    return t('areas.listIntroOne');
   }
   if (total != null && total > 1) {
-    return `${total} species have nothing on record against this spot and at least `
-      + `one thing confirmed. ${RANK_ORDER}`;
+    return t('areas.listIntroMany', { total, order: RANK_ORDER });
   }
   // A server that sent no count: the order is still true of what is shown.
   return total == null && shown > 1 ? RANK_ORDER : null;
@@ -62,17 +60,16 @@ export function cutNote(
   const more = total != null ? total > shown.length : next != null;
   if (!more || shown.length === 0) return null;
   const showing = total != null
-    ? `Showing ${shown.length} of ${total}.`
-    : `Showing the first ${shown.length}.`;
+    ? t('areas.showingOf', { shown: shown.length, total })
+    : t('areas.showingFirst', { shown: shown.length });
   if (next == null) return showing;
   const last = shown[shown.length - 1];
   if (next.score === last.score) {
-    return `${showing} The next one has as much confirmed as the last one here, so `
-      + 'where this list stops is down to the alphabet, not the evidence.';
+    return t('areas.cutTie', { showing });
   }
   // The list is ranked, so a next one with less confirmed than the last one
   // here means everything after it has less confirmed too.
-  if (next.score < last.score) return `${showing} Everything after these has less confirmed.`;
+  if (next.score < last.score) return t('areas.cutLess', { showing });
   return showing;
 }
 

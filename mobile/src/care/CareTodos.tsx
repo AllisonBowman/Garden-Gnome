@@ -12,6 +12,7 @@ import { Palette, Fonts } from '../theme/tokens';
 import { useCareTasks, CARE_TASKS_QUERY_KEY } from './useCareTasks';
 import { allCaughtUp, careTaskDueLabel, unreadLine, unscheduledLine } from './schedule';
 import { CARE_PRESENTATION } from './labels';
+import { t } from '../i18n';
 
 // The "what to look at today" list at the top of the Plants tab: every
 // plant × care-type whose window is open or past, most-overdue first. Each
@@ -68,16 +69,16 @@ export default function CareTodos({
       // chore — the confirmation should say so.
       setDoneMsg(
         outcome === 'checked_not_needed'
-          ? '💧 Checked, still damp — the wait was the right call'
+          ? t('care.todos.doneStillDamp')
           : outcome === 'checked_fine'
-            ? '🪴 Checked — happy in its pot for now'
+            ? t('care.todos.doneFineInPot')
             : outcome === 'top_dressed'
-              ? '🪴 Top-dressed — fresh mix, same home'
-              : `${p.icon} ${p.done} — logged and rescheduled`,
+              ? t('care.todos.doneTopDressed')
+              : t('care.todos.doneLogged', { icon: p.icon, done: p.done }),
       );
       void rescheduleAllReminders(); // keep notifications in step with the log
     },
-    onError: () => Alert.alert('Error', 'Could not log that care action.'),
+    onError: () => Alert.alert(t('care.todos.errorTitle'), t('care.todos.errorBody')),
     onSettled: (_data, _err, { key }) => setPendingKeys((prev) => {
       const next = new Set(prev);
       next.delete(key);
@@ -97,9 +98,9 @@ export default function CareTodos({
       <Card style={styles.caughtUpCard} mode="contained">
         <Card.Content style={styles.caughtUpContent}>
           <Text style={styles.caughtUpText}>
-            Couldn’t check what’s due just now — that isn’t an all-clear.
+            {t('care.todos.couldntCheck')}
           </Text>
-          <Button compact onPress={() => refetch()} style={styles.retry}>Try again</Button>
+          <Button compact onPress={() => refetch()} style={styles.retry}>{t('care.todos.tryAgain')}</Button>
         </Card.Content>
       </Card>
     );
@@ -125,12 +126,12 @@ export default function CareTodos({
       <Card style={styles.caughtUpCard} mode="contained">
         <Card.Content style={styles.caughtUpContent}>
           {caughtUp ? (
-            <Text style={styles.caughtUpText}>🌿 All caught up — nothing due today.</Text>
+            <Text style={styles.caughtUpText}>{t('care.todos.caughtUp')}</Text>
           ) : (
             <>
               {tasks.length > 0 ? (
                 <Text style={styles.caughtUpText}>
-                  🌿 Nothing due today for the plants with a check schedule.
+                  {t('care.todos.nothingDueScheduled')}
                 </Text>
               ) : null}
               {leftOutNotes}
@@ -145,7 +146,7 @@ export default function CareTodos({
     <>
       <Card style={styles.card} mode="elevated">
         <Card.Title
-          title="Checks for today"
+          title={t('care.todos.title')}
           titleVariant="titleMedium"
           titleStyle={styles.cardTitle}
           right={() => (
@@ -155,31 +156,31 @@ export default function CareTodos({
           )}
         />
         <Card.Content style={styles.list}>
-          {visible.map((t) => {
-            const key = `${t.plantId}-${t.careType}`;
-            const p = CARE_PRESENTATION[t.careType];
+          {visible.map((task) => {
+            const key = `${task.plantId}-${task.careType}`;
+            const p = CARE_PRESENTATION[task.careType];
             const busy = pendingKeys.has(key);
             return (
               <View key={key} style={styles.row}>
                 <TouchableOpacity
                   style={styles.rowMain}
                   activeOpacity={0.6}
-                  onPress={() => onOpenPlant(t.plantId)}
+                  onPress={() => onOpenPlant(task.plantId)}
                 >
                   <Text style={styles.rowEmoji}>{p.icon}</Text>
                   <View style={styles.rowText}>
-                    <Text style={styles.rowTitle}>{p.check(t.nickname)}</Text>
+                    <Text style={styles.rowTitle}>{p.check(task.nickname)}</Text>
                     <Text style={[
                       styles.rowWhen,
-                      t.status === 'overdue' && { color: palette.warn },
+                      task.status === 'overdue' && { color: palette.warn },
                     ]}>
-                      {careTaskDueLabel(t)}
+                      {careTaskDueLabel(task)}
                     </Text>
                   </View>
                 </TouchableOpacity>
                 {busy ? (
                   <ActivityIndicator style={styles.rowCheck} size={20} color={palette.acc} />
-                ) : t.careType === 'repot' ? (
+                ) : task.careType === 'repot' ? (
                   // The February inspection's three honest endings. "All fine"
                   // logs a repot-family action, which is what clears the
                   // inspection for the year — looking and deciding not to
@@ -188,35 +189,35 @@ export default function CareTodos({
                     <TouchableOpacity
                       style={styles.outcomePill}
                       onPress={() => logMutation.mutate({
-                        plantId: t.plantId, careType: t.careType,
+                        plantId: task.plantId, careType: task.careType,
                         outcome: 'repotted', key,
                       })}
-                      accessibilityLabel={`Log ${t.nickname} repotted`}
+                      accessibilityLabel={t('care.todos.a11yRepotted', { name: task.nickname })}
                     >
-                      <Text style={styles.outcomePillText}>Repotted</Text>
+                      <Text style={styles.outcomePillText}>{t('care.todos.repotted')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.outcomePill, styles.outcomePillQuiet]}
                       onPress={() => logMutation.mutate({
-                        plantId: t.plantId, careType: t.careType,
+                        plantId: task.plantId, careType: task.careType,
                         outcome: 'top_dressed', key,
                       })}
-                      accessibilityLabel={`Log ${t.nickname} top-dressed with fresh mix`}
+                      accessibilityLabel={t('care.todos.a11yTopDressed', { name: task.nickname })}
                     >
-                      <Text style={styles.outcomePillQuietText}>Top-dressed</Text>
+                      <Text style={styles.outcomePillQuietText}>{t('care.todos.topDressed')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.outcomePill, styles.outcomePillQuiet]}
                       onPress={() => logMutation.mutate({
-                        plantId: t.plantId, careType: t.careType,
+                        plantId: task.plantId, careType: task.careType,
                         outcome: 'checked_fine', key,
                       })}
-                      accessibilityLabel={`Log ${t.nickname} checked — all fine`}
+                      accessibilityLabel={t('care.todos.a11yAllFine', { name: task.nickname })}
                     >
-                      <Text style={styles.outcomePillQuietText}>All fine</Text>
+                      <Text style={styles.outcomePillQuietText}>{t('care.todos.allFine')}</Text>
                     </TouchableOpacity>
                   </View>
-                ) : t.careType === 'water' ? (
+                ) : task.careType === 'water' ? (
                   // A water to-do is a *check*, and a check has two honest
                   // endings. "Still damp" logs and re-anchors exactly like
                   // watering does — waiting is care, and the streak agrees.
@@ -224,22 +225,22 @@ export default function CareTodos({
                     <TouchableOpacity
                       style={styles.outcomePill}
                       onPress={() => logMutation.mutate({
-                        plantId: t.plantId, careType: t.careType,
+                        plantId: task.plantId, careType: task.careType,
                         outcome: 'watered', key,
                       })}
-                      accessibilityLabel={`Log ${t.nickname} watered`}
+                      accessibilityLabel={t('care.todos.a11yWatered', { name: task.nickname })}
                     >
-                      <Text style={styles.outcomePillText}>Watered</Text>
+                      <Text style={styles.outcomePillText}>{t('care.todos.watered')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.outcomePill, styles.outcomePillQuiet]}
                       onPress={() => logMutation.mutate({
-                        plantId: t.plantId, careType: t.careType,
+                        plantId: task.plantId, careType: task.careType,
                         outcome: 'checked_not_needed', key,
                       })}
-                      accessibilityLabel={`Log ${t.nickname} checked — still damp`}
+                      accessibilityLabel={t('care.todos.a11yStillDamp', { name: task.nickname })}
                     >
-                      <Text style={styles.outcomePillQuietText}>Still damp</Text>
+                      <Text style={styles.outcomePillQuietText}>{t('care.todos.stillDamp')}</Text>
                     </TouchableOpacity>
                   </View>
                 ) : (
@@ -252,8 +253,8 @@ export default function CareTodos({
                     // checkbox meant clearing a backlog was strictly one
                     // round-trip at a time — fine for three plants, unusable
                     // for a garden.
-                    onPress={() => logMutation.mutate({ plantId: t.plantId, careType: t.careType, key })}
-                    accessibilityLabel={`Log ${t.nickname}: ${p.done.toLowerCase()}`}
+                    onPress={() => logMutation.mutate({ plantId: task.plantId, careType: task.careType, key })}
+                    accessibilityLabel={t('care.todos.a11yDone', { name: task.nickname, done: p.done.toLowerCase() })}
                   />
                 )}
               </View>
@@ -261,9 +262,7 @@ export default function CareTodos({
           })}
           {hiddenCount > 0 && (
             <Text style={styles.moreNote}>
-              {hiddenCount === 1
-                ? '1 more waiting — tick a few off and it’ll appear.'
-                : `${hiddenCount} more waiting — tick a few off and they’ll appear.`}
+              {t('care.todos.more', { count: hiddenCount })}
             </Text>
           )}
           {leftOutNotes}

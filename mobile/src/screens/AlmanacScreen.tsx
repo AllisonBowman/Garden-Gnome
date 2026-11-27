@@ -26,6 +26,7 @@ import {
 } from '../care/loadFailed';
 import RefreshFailed from '../components/RefreshFailed';
 import type { CensusStackParamList } from '../../App';
+import { t } from '../i18n';
 
 // Registered in more than one tab's stack, with the same params in each;
 // typed against the Census stack, where it began.
@@ -34,7 +35,7 @@ type Route = RouteProp<CensusStackParamList, 'Almanac'>;
 type Filter = 'all' | Tier;
 
 const FILTERS: { value: Filter; label: string }[] = [
-  { value: 'all', label: 'All' },
+  { value: 'all', label: t('almanac.screen.all') },
   { value: 'beginner', label: TIER_LABELS.beginner },
   { value: 'intermediate', label: TIER_LABELS.intermediate },
   { value: 'fussy', label: TIER_LABELS.fussy },
@@ -83,7 +84,7 @@ function SpeciesCard({
 
         {hazard ? <Text style={styles.hazard}>⚠️ {hazard}</Text> : null}
         {confirmed ? <Text style={styles.confirmed}>{confirmed}</Text> : null}
-        {owned ? <Text style={styles.owned}>✿ you keep this one</Text> : null}
+        {owned ? <Text style={styles.owned}>{t('almanac.screen.owned')}</Text> : null}
       </Card.Content>
     </Card>
   );
@@ -198,7 +199,7 @@ export default function AlmanacScreen() {
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
-          title={loadFailedTitle('the Almanac')}
+          title={loadFailedTitle(t('almanac.screen.loadFailedName'))}
           body={loadFailedBody(catalogError, 'list')}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetchCatalog()}
@@ -221,13 +222,13 @@ export default function AlmanacScreen() {
         <RefreshFailed onRetry={() => refetchCatalog()} retrying={catalogFetching} />
       ) : null}
       <Text variant="bodyMedium" style={styles.intro}>
-        A living count of what growers keep — {species.length} species in the
-        catalog{ownedIds.size > 0 ? `, ${ownedIds.size} of them on your shelf` : ''}.
-        Read any species to learn its ways.
+        {ownedIds.size > 0
+          ? t('almanac.screen.introOwned', { count: species.length, owned: ownedIds.size })
+          : t('almanac.screen.intro', { count: species.length })}
       </Text>
 
       <Searchbar
-        placeholder={`Search ${species.length} species…`}
+        placeholder={t('almanac.screen.search', { count: species.length })}
         value={query}
         onChangeText={setQuery}
         style={styles.search}
@@ -256,7 +257,7 @@ export default function AlmanacScreen() {
             style={styles.filterChip}
             compact
           >
-            Anywhere
+            {t('almanac.screen.anywhere')}
           </Chip>
           {areas.map((a) => (
             <Chip
@@ -266,7 +267,7 @@ export default function AlmanacScreen() {
               style={styles.filterChip}
               compact
             >
-              {`Fits ${a.name}`}
+              {t('almanac.screen.fits', { name: a.name })}
             </Chip>
           ))}
         </ScrollView>
@@ -274,19 +275,18 @@ export default function AlmanacScreen() {
 
       {filter !== 'all' ? (
         <Text style={styles.fitNote}>
-          Graded only where the catalog records humidity, temperature or light
-          {ungraded > 0 ? ` — ${ungraded} species have nothing to grade yet and aren’t in any grade` : ''}.
+          {ungraded > 0
+            ? t('almanac.screen.gradedOnlyUngraded', { count: ungraded })
+            : t('almanac.screen.gradedOnly')}
         </Text>
       ) : null}
 
-      <Eyebrow style={styles.eyebrow}>Species · {fitFailed ? 0 : shown.length} shown</Eyebrow>
+      <Eyebrow style={styles.eyebrow}>{t('almanac.screen.shown', { count: fitFailed ? 0 : shown.length })}</Eyebrow>
 
       {area != null && !fitLoading && !fitFailed ? (
         <>
           <Text style={styles.fitNote}>
-            Showing species with nothing on record against {area.name} and at
-            least one thing confirmed. A plant missing from here may simply be
-            one the catalog can’t judge for this spot yet. {RANK_ORDER}
+            {t('almanac.screen.fitNote', { area: area.name, rankOrder: RANK_ORDER })}
           </Text>
           {notes.map((note, i) => (
             <Text key={i} style={styles.caveat}>{note}</Text>
@@ -299,13 +299,13 @@ export default function AlmanacScreen() {
   const empty = fitCheckFailed ? (
     <View style={styles.failed}>
       <Text style={styles.empty}>{CHECK_FAILED}</Text>
-      <Button compact onPress={() => refetchFit()}>Try again</Button>
+      <Button compact onPress={() => refetchFit()}>{t('almanac.screen.tryAgain')}</Button>
     </View>
   ) : (
     <Text style={styles.empty}>
       {fitLoading
-        ? 'Checking what suits that spot…'
-        : 'Nothing matches that. Try a different name, or widen the filter.'}
+        ? t('almanac.screen.checking')
+        : t('almanac.screen.noMatch')}
     </Text>
   );
 

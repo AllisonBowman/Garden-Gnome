@@ -1,71 +1,83 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Pressable, RefreshControl, ScrollView, StyleSheet, View,
 } from 'react-native';
-import { ActivityIndicator, Button, Card, Text } from 'react-native-paper';
-import { useQuery } from '@tanstack/react-query';
+import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList, ScreenName } from '../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 import {
-  SITE_QUERY_KEYS, fetchMapLayersOrOff, fetchPropertyImagery, fetchSiteProfile, fetchVitalsOrOff,
-  fetchZones,
+  SITE_QUERY_KEYS, fetchSiteProfile, fetchVitalsOrOff, fetchZones, putSeasonEvent, refreshHome,
 } from '../api/properties';
 import { fetchGrowingAreas, fetchGrowingAreaWeather } from '../api/growingAreas';
-import { useCareTasks } from '../care/useCareTasks';
+import { logCare } from '../api/plants';
+import { CARE_TASKS_QUERY_KEY, useCareTasks } from '../care/useCareTasks';
 import { unreadLine, unscheduledLine } from '../care/schedule';
-import { VitalCard, VitalSpace } from '../types/site';
+import { rescheduleAllReminders } from '../notifications/reminders';
 import { homeForm, offersAddLand, usesLegacyRoutes } from '../home/form';
 import { mergeThisWeek, moreCareLine, weekCounts, WeekItem } from '../home/week';
 import { pickHeadline, HeadlineDay } from '../home/headline';
-import { legacyWeatherCards, weatherCards, seasonCard } from '../home/weather';
-import { readingTiles } from '../land/readingTiles';
-import { MapChipKey, chosenChip, mapChips } from '../land/mapLayers';
-import { IMAGERY_STALE_MS, landMapState, layersRefetchEvery } from '../home/landMap';
-import { orderSpaces, spaceLine, spacesFromAreas } from '../home/spaces';
-import { EVENT_STATUS_WORDS, profileProgressLine, seasonAhead } from '../home/season';
-import ExplainedBlock from '../components/ExplainedBlock';
-import ForecastBars from '../components/ForecastBars';
-import LandMap from '../components/LandMap';
-import LayerChips from '../components/LayerChips';
-import MapLegend from '../components/MapLegend';
-import ReadingTileGrid from '../components/ReadingTile';
-import SeasonTimeline from '../components/SeasonTimeline';
-import ConfidenceChip from '../components/ConfidenceChip';
+import { legacyWeatherCards, seasonCard, weatherCards } from '../home/weather';
+import { profileProgressLine, seasonAhead } from '../home/season';
+import { almanacDate, oneThing, seasonWeekLine } from '../home/almanac';
+import { landGlance } from '../home/glance';
+import { pickHomeTasks, taskAnswer, taskButtons } from '../home/homeTasks';
+import { loadSkips, saveSkips } from '../home/homeSkips';
+import { homeSections } from '../howWeKnow/sections';
+import { valueFor } from '../land/readingTiles';
+import { drawnZones } from '../land/profileRows';
+import ControlsRow from '../components/ControlsRow';
+import EstTag from '../components/EstTag';
 import Eyebrow from '../components/Eyebrow';
+import HowWeKnowButton from '../components/HowWeKnowButton';
 import LoadError from '../components/LoadError';
 import RefreshFailed from '../components/RefreshFailed';
 import WeatherCredit from '../components/WeatherCredit';
-import { WHY_LABEL, disclosureLines } from '../components/explainedText';
+import { APPLE_WEATHER_LEGAL, isAppleForecast } from '../weather/appleCredit';
+import { formatServerTime } from '../home/serverTime';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { useUnits } from '../units/UnitsProvider';
+import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
-// Home: the vitals report the app opens on (build spec section 6). Top to
-// bottom: a headline about today, weather vitals, "This week" (seasonal tasks
-// merged with plant care that is due), "The season ahead", "Your land",
-// "Your growing spaces", and quiet links to the rest of the app.
+// Home: "This week on your land", an almanac page for the week. Top to
+// bottom (Controls first redesign, Nov 2026):
 //
-// Three forms (home/form.ts): with land; with no property (weather, care and
-// spaces, and one calm "Add your land" card); and for a server with the new
-// routes off, the same no-property report built from the routes the app used
-// before, with the card hidden.
+//   1. The almanac line: the date, the week of the season, and the one
+//      thing that matters.
+//   2. Up to three tasks for this week, each with Done and Skip.
+//   3. The Controls row: frost alerts, your land, zones, fix a value,
+//      °F or °C, task reminders. Settings is in the header, in words.
+//   4. Your land at a glance: sun, water and soil, one word each, with
+//      "est." where it is an estimate and "Not right? Fix it" on each.
+//   5. How we know: one sheet with every source, method, confidence label
+//      and note this screen used to show on its face.
 //
-// Visuals (map and visuals spec section 4.4): forecast bars at the top of
-// Weather, the season's timeline at the top of "The season ahead", and
-// "Your land" as the land map (read-only, on the yard, with layer chips and
-// legend) and reading tiles. None of the land visuals show without land.
-// The map, its zones and its layers load on their own: any of them failing
-// is one line and the rest of Home renders.
-
-const SCREENS_NEEDING_PROPERTY = new Set<ScreenName>(['Land', 'Season', 'ZoneMap']);
+// Then quiet text links to the rest of the app (Home has no tab bar, so it
+// must stay the way in): the season and its forecast chart, the land and
+// its map, growing spaces, plants and species.
+//
+// Three forms (home/form.ts): with land; with no property (the same almanac
+// and tasks, and "Add your land"); and for a server with the new routes
+// off, the same report built from the routes the app used before.
 
 export default function HomeScreen() {
   const navigation = useNavigation<Nav>();
-  const { palette, fonts } = useAppTheme();
-  const styles = useMemo(() => makeStyles(palette, fonts), [palette, fonts]);
+  const queryClient = useQueryClient();
+  const { palette, fonts, display } = useAppTheme();
+  // Home holds the °F/°C tile, so it redraws in place on a change (App.tsx
+  // does not re-key it) and reads the unit here.
+  const { unit } = useUnits();
+  const styles = useMemo(() => makeStyles(palette, fonts, display.boldText), [palette, fonts, display.boldText]);
   const [pulling, setPulling] = useState(false);
+  const [skipped, setSkipped] = useState<Set<string>>(new Set());
+  const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
+
+  useEffect(() => { void loadSkips().then(setSkipped); }, []);
 
   const vitalsQ = useQuery({ queryKey: SITE_QUERY_KEYS.vitals, queryFn: () => fetchVitalsOrOff() });
   const vitals = vitalsQ.data;
@@ -80,34 +92,14 @@ export default function HomeScreen() {
     queryFn: () => fetchSiteProfile(property!.id),
     enabled: property != null,
   });
-
-  // The land map: the same query keys as the zone map, so the cache is shared.
-  const imageryQ = useQuery({
-    queryKey: SITE_QUERY_KEYS.imagery(property?.id ?? -1),
-    queryFn: () => fetchPropertyImagery(property!.id),
-    enabled: property != null,
-    retry: 1,
-    staleTime: IMAGERY_STALE_MS,
-  });
   const zonesQ = useQuery({
     queryKey: SITE_QUERY_KEYS.zones(property?.id ?? -1),
     queryFn: () => fetchZones(property!.id),
     enabled: property != null,
   });
-  const layersQ = useQuery({
-    queryKey: SITE_QUERY_KEYS.mapLayers(property?.id ?? -1),
-    queryFn: () => fetchMapLayersOrOff(property!.id),
-    enabled: property != null,
-    refetchInterval: (q) => layersRefetchEvery(q.state.data),
-  });
-  const [wantedChip, setWantedChip] = useState<MapChipKey>('aerial');
 
   // The routes the app used before, for a server with the new ones off.
-  const areasQ = useQuery({
-    queryKey: ['growingAreas'],
-    queryFn: fetchGrowingAreas,
-    enabled: legacy,
-  });
+  const areasQ = useQuery({ queryKey: ['growingAreas'], queryFn: fetchGrowingAreas, enabled: legacy });
   const weatherArea = legacy
     ? (areasQ.data ?? []).find((a) => a.lat != null && a.lng != null) ?? null
     : null;
@@ -115,111 +107,124 @@ export default function HomeScreen() {
     queryKey: ['growingAreaWeather', weatherArea?.id ?? -1],
     queryFn: () => fetchGrowingAreaWeather(weatherArea!.id),
     enabled: weatherArea != null,
-    staleTime: 30 * 60 * 1000, // weather is cached hourly server-side
+    staleTime: 30 * 60 * 1000,
   });
   const legacyWeather = weatherQ.data?.available ? weatherQ.data.weather : null;
 
-  const week = useMemo(
-    () => mergeThisWeek(vitals?.this_week ?? [], care.tasks),
-    [vitals, care.tasks],
-  );
+  const week = useMemo(() => mergeThisWeek(vitals?.this_week ?? [], care.tasks), [vitals, care.tasks]);
   const counts = weekCounts(week);
-
-  const cards: VitalCard[] = useMemo(() => {
-    if (legacy) return legacyWeather && weatherArea ? legacyWeatherCards(legacyWeather, weatherArea.name) : [];
-    return weatherCards(vitals?.cards ?? []);
-  }, [legacy, legacyWeather, weatherArea, vitals]);
+  const tasks = pickHomeTasks(week.items, skipped);
 
   const headlineDays: HeadlineDay[] = legacy
     ? (legacyWeather?.daily ?? []).map((d) => ({ date: d.date, low_f: d.low_f }))
     : (vitals?.forecast?.days ?? []);
-  const headline = pickHeadline({
-    serverHeadline: legacy ? null : vitals?.headline,
-    days: headlineDays,
-    careDue: counts.careDue,
-    openSeasonTasks: counts.openSeason,
+  const localHeadline = pickHeadline({
+    serverHeadline: null, days: headlineDays, careDue: counts.careDue, openSeasonTasks: counts.openSeason,
   });
+  const verdict = oneThing(legacy ? null : vitals?.headline, localHeadline, unit === 'C');
+  const today = new Date();
+  const forecastWhen = vitals?.forecast?.fetched_at ? formatServerTime(vitals.forecast.fetched_at) : null;
 
-  const spaces: VitalSpace[] = orderSpaces(
-    legacy ? spacesFromAreas(areasQ.data ?? []) : (vitals?.spaces ?? []));
-  const tiles = property ? readingTiles(profileQ.data, vitals?.cards ?? []) : [];
-  const chips = mapChips(layersQ.data);
-  const chosen = chosenChip(chips, wantedChip);
-  const mapState = landMapState({
-    imagery: { hasData: !!imageryQ.data, isLoading: imageryQ.isLoading, isError: imageryQ.isError },
-    zones: { hasData: zonesQ.data !== undefined, isError: zonesQ.isError },
-    layers: { hasData: layersQ.data !== undefined, isError: layersQ.isError },
-  });
-  const forecastDays = legacy ? [] : (vitals?.forecast?.days ?? []);
-  const ahead = seasonAhead(vitals?.season_ahead ?? []);
-  const season = seasonCard(vitals?.cards ?? []);
+  const glance = landGlance(profileQ.data);
   const progress = profileProgressLine(profileQ.data?.status ?? property?.profile_status);
+  const zoneCount = profileQ.data ? drawnZones(profileQ.data).length : (zonesQ.data?.length ?? null);
 
-  const go = useCallback((screen: ScreenName, extra?: { eventKey?: string; field?: string }) => {
-    if (SCREENS_NEEDING_PROPERTY.has(screen)) {
-      if (!property) return;
-      if (screen === 'Season') navigation.navigate('Season', { propertyId: property.id, eventKey: extra?.eventKey });
-      else if (screen === 'Land') navigation.navigate('Land', { propertyId: property.id, field: extra?.field });
-      else navigation.navigate('ZoneMap', { propertyId: property.id });
-      return;
-    }
-    // Screens without required params. The cast is to the subset that has none.
-    (navigation.navigate as (name: ScreenName) => void)(screen);
+  const answer = useMutation({
+    mutationFn: async ({ item, button }: { item: WeekItem; button: 'done' | 'skip' }) => {
+      const actions = item.kind === 'season'
+        ? (vitals?.season_ahead ?? []).find((e) => e.event_key === item.eventKey)?.owner_actions ?? null
+        : null;
+      const a = taskAnswer(item, button, actions);
+      if (a.kind === 'season') {
+        if (!property || item.kind !== 'season' || !item.eventKey) return;
+        await putSeasonEvent(property.id, item.eventKey, { state: a.state });
+      } else if (a.kind === 'log' && item.kind === 'care') {
+        await logCare(item.plantId, item.careType, '', a.outcome);
+      } else {
+        const next = new Set(skipped).add(item.key);
+        setSkipped(next);
+        await saveSkips(next);
+      }
+    },
+    onMutate: ({ item }) => { setBusyKey(item.key); setSaveFailed(false); },
+    onSuccess: async () => {
+      await Promise.all([
+        refreshHome(queryClient),
+        queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY }),
+      ]);
+      void rescheduleAllReminders();
+    },
+    onError: () => setSaveFailed(true),
+    onSettled: () => setBusyKey(null),
+  });
+
+  const openItem = useCallback((item: WeekItem) => {
+    if (item.kind === 'care') navigation.navigate('PlantDetail', { plantId: item.plantId });
+    else if (property) navigation.navigate('Season', { propertyId: property.id, eventKey: item.eventKey ?? undefined });
   }, [navigation, property]);
 
-  const linkTarget = (link: string | null | undefined): ScreenName | null => {
-    if (!link) return null;
-    const known: ScreenName[] = ['Home', 'PropertySetup', 'Land', 'ZoneMap', 'Season', 'Spaces',
-      'Plants', 'CaptureGarden', 'Species', 'Settings', 'Census', 'AddPlant'];
-    return (known as string[]).includes(link) ? link as ScreenName : null;
-  };
+  const sheet = () => homeSections({
+    vitals,
+    headline: verdict,
+    weatherCards: legacy
+      ? (legacyWeather && weatherArea ? legacyWeatherCards(legacyWeather, weatherArea.name) : [])
+      : weatherCards(vitals?.cards ?? []),
+    land: glance.flatMap((g) => {
+      const v = profileQ.data ? valueFor(profileQ.data, g.field) : undefined;
+      return v ? [{ title: v.title || g.title, explained: v }] : [];
+    }),
+    progress,
+    week: week.items,
+    seasonAhead: seasonAhead(vitals?.season_ahead ?? []),
+    seasonCard: seasonCard(vitals?.cards ?? []),
+    legacyCredit: legacy && legacyWeather?.attribution ? legacyWeather.attribution.text ?? null : null,
+    forecastWhen,
+  });
 
   const onRefresh = useCallback(async () => {
     setPulling(true);
     try {
       await Promise.all([
-        vitalsQ.refetch(),
-        care.refetch(),
+        vitalsQ.refetch(), care.refetch(),
         property ? profileQ.refetch() : null,
-        property ? imageryQ.refetch() : null,
         property ? zonesQ.refetch() : null,
-        property ? layersQ.refetch() : null,
         legacy ? areasQ.refetch() : null,
         weatherArea ? weatherQ.refetch() : null,
       ]);
-    } finally {
-      setPulling(false);
-    }
-  }, [vitalsQ, care, profileQ, imageryQ, zonesQ, layersQ, areasQ, weatherQ, property, legacy, weatherArea]);
+    } finally { setPulling(false); }
+  }, [vitalsQ, care, profileQ, zonesQ, areasQ, weatherQ, property, legacy, weatherArea]);
 
-  if (form === 'loading') {
-    return <ActivityIndicator style={styles.center} size="large" />;
-  }
+  const links = (
+    <View style={styles.links}>
+      <Eyebrow style={styles.eyebrow}>{t('home.almanac.more')}</Eyebrow>
+      {property ? (
+        <>
+          <TextLink label={t('home.almanac.season')} styles={styles}
+            onPress={() => navigation.navigate('Season', { propertyId: property.id })} />
+          <TextLink label={t('home.almanac.landMap')} styles={styles}
+            onPress={() => navigation.navigate('Land', { propertyId: property.id })} />
+        </>
+      ) : null}
+      <TextLink label={t('home.almanac.spaces')} styles={styles} onPress={() => navigation.navigate('Spaces')} />
+      <TextLink label={t('home.screen.plants')} styles={styles} onPress={() => navigation.navigate('Plants')} />
+      <TextLink label={t('home.screen.species')} styles={styles} onPress={() => navigation.navigate('Species')} />
+      <TextLink label={t('home.screen.settings')} styles={styles} onPress={() => navigation.navigate('Settings')} />
+    </View>
+  );
+
+  if (form === 'loading') return <ActivityIndicator style={styles.center} size="large" />;
   if (form === 'failed') {
     // Home is the only way into the rest of the app, so a report that will
-    // not load must not strand the person: plants, species and settings
-    // (where the sign-out and server settings live) stay one tap away.
+    // not load must not strand the person.
     return (
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={vitalsQ.isRefetching} onRefresh={() => { void vitalsQ.refetch(); }} />}
       >
-        <LoadError
-          inline
-          message="Couldn’t load today’s report."
-          error={vitalsQ.error}
-          onRetry={() => vitalsQ.refetch()}
-          retrying={vitalsQ.isRefetching}
-        />
-        <View style={styles.links}>
-          <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}
-          accessibilityLabel="Open plants">Plants</Button>
-          <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}
-          accessibilityLabel="Open species">Species</Button>
-          <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}
-          accessibilityLabel="Open settings">Settings</Button>
-        </View>
+        <LoadError inline message={t('home.screen.loadFailed')} error={vitalsQ.error}
+          onRetry={() => vitalsQ.refetch()} retrying={vitalsQ.isRefetching} />
+        {links}
       </ScrollView>
     );
   }
@@ -235,315 +240,213 @@ export default function HomeScreen() {
     >
       {vitalsQ.isError && <RefreshFailed onRetry={() => vitalsQ.refetch()} retrying={vitalsQ.isRefetching} />}
 
-      <Text style={styles.headline} accessibilityRole="header">{headline}</Text>
-      {property ? <Text style={styles.place}>{placeLine(property)}</Text> : null}
-
-      {/* ── Weather vitals ── */}
-      {(cards.length > 0 || forecastDays.length > 0) && (
-        <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>Weather</Eyebrow>
-          {forecastDays.length > 0 ? <ForecastBars days={forecastDays} /> : null}
-          {cards.map((c) => (
-            <VitalCardView key={c.key} card={c} styles={styles} onOpen={linkTarget(c.link)
-              ? () => go(linkTarget(c.link)!) : undefined} />
-          ))}
-          {legacy
-            ? <WeatherCredit attribution={legacyWeather?.attribution} />
-            : vitals?.forecast
-              ? <Text style={styles.quiet}>{`Forecast: ${vitals.forecast.provider_name}.`}</Text>
-              : null}
-        </View>
-      )}
-      {legacy && !weatherArea && areasQ.data && (
-        <Text style={styles.quietBlock}>
-          Give a growing space a location and its weather shows here.
+      {/* ── 1. The almanac line ── */}
+      <View style={styles.almanac}>
+        <Text style={styles.almanacTitle} accessibilityRole="header">
+          {property ? t('home.almanac.title') : t('home.almanac.titleNoLand')}
         </Text>
-      )}
+        <View accessible accessibilityLabel={`${almanacDate(today)}. ${seasonWeekLine(today)}.`}>
+          <Text style={styles.date} maxFontSizeMultiplier={2}>{almanacDate(today)}</Text>
+          <Text style={styles.weekLine}>{seasonWeekLine(today)}</Text>
+        </View>
+        <Text style={styles.verdict} accessibilityRole="text" maxFontSizeMultiplier={2.2}>{verdict.line}</Text>
+        {/* A date stamp is trust, not justification: it stays on the face. */}
+        {forecastWhen ? <Text style={styles.quietTight}>{t('home.almanac.asOf', { when: forecastWhen })}</Text> : null}
+        {/* The Apple Weather credit is a licence term wherever its data is
+            shown, the line above included, so it never moves behind a tap. */}
+        {legacy
+          ? <WeatherCredit attribution={legacyWeather?.attribution} />
+          : vitals?.forecast && isAppleForecast(vitals.forecast)
+            ? <WeatherCredit attribution={{ text: vitals.forecast.provider_name, url: APPLE_WEATHER_LEGAL }} />
+            : null}
+      </View>
 
-      {/* ── This week ── */}
+      {/* ── 2. Up to three tasks ── */}
       <View style={styles.section}>
-        <Eyebrow style={styles.eyebrow}>This week</Eyebrow>
+        <Eyebrow style={styles.eyebrow}>{t('home.almanac.tasks')}</Eyebrow>
         {care.isLoading && !care.loaded ? <ActivityIndicator style={styles.inlineSpin} /> : null}
         {care.isError && !care.loaded ? (
-          <LoadError inline message="Couldn’t load your plants’ care." error={null}
+          <LoadError inline message={t('home.screen.careFailed')} error={null}
             onRetry={() => care.refetch()} retrying={care.isRefetching} />
         ) : null}
-        {week.items.length === 0 && care.loaded ? (
-          <Text style={styles.quiet}>Nothing is due this week.</Text>
-        ) : null}
-        {week.items.map((item) => (
-          <WeekRow
+        {tasks.shown.length === 0 && care.loaded ? <Text style={styles.body}>{t('home.almanac.noTasks')}</Text> : null}
+        {tasks.shown.map((item) => (
+          <TaskRow
             key={item.key}
             item={item}
             styles={styles}
-            onPress={() => {
-              if (item.kind === 'care') navigation.navigate('PlantDetail', { plantId: item.plantId });
-              else go('Season', { eventKey: item.eventKey ?? undefined });
-            }}
+            busy={busyKey === item.key}
+            canAnswer
+            onOpen={() => openItem(item)}
+            onAnswer={(button) => answer.mutate({ item, button })}
           />
         ))}
+        {saveFailed ? <Text style={styles.error} accessibilityLiveRegion="polite">{t('home.almanac.saveFailed')}</Text> : null}
+        {tasks.more > 0 ? <Text style={styles.quiet}>{t('home.almanac.moreTasks', { count: tasks.more })}</Text> : null}
         {careNotes.map((l) => <Text key={l} style={styles.quiet}>{l}</Text>)}
       </View>
 
-      {/* ── The season ahead ── */}
-      {property && (ahead.length > 0 || season) ? (
-        <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>The season ahead</Eyebrow>
-          <SeasonTimeline events={ahead} onPressEvent={(key) => go('Season', { eventKey: key })} />
-          {season ? <VitalCardView card={season} styles={styles} onOpen={() => go('Season')} /> : null}
-          {ahead.map((e) => (
-            <Pressable
-              key={e.event_key}
-              onPress={() => go('Season', { eventKey: e.event_key })}
-              accessibilityRole="button"
-              accessibilityLabel={`${e.title}. ${EVENT_STATUS_WORDS[e.status]} ${e.window.text}. Opens the seasonal plan.`}
-              style={styles.row}
-            >
-              <View style={styles.rowText}>
-                <Text style={styles.rowTitle}>{e.title}</Text>
-                <Text style={styles.rowDetail}>{`${EVENT_STATUS_WORDS[e.status]}: ${e.window.text}`}</Text>
-              </View>
-              <ConfidenceChip confidence={e.explained.confidence} label={e.explained.confidence_label} />
-            </Pressable>
-          ))}
-          <Button mode="text" compact onPress={() => go('Season')} textColor={palette.acc} style={styles.more}
-            accessibilityLabel="The whole season">
-            The whole season
-          </Button>
-        </View>
-      ) : null}
+      {/* ── 3. Controls ── */}
+      <View style={styles.controls}>
+        <Eyebrow style={styles.eyebrow}>{t('controls.title')}</Eyebrow>
+        <ControlsRow
+          property={property ? { id: property.id, name: property.name } : null}
+          zoneCount={zoneCount}
+          canAddLand={offersAddLand(form, vitals)}
+        />
+      </View>
 
-      {/* ── Your land ── */}
+      {/* ── 4. Land at a glance ── */}
       {property ? (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>Your land</Eyebrow>
-          {progress ? <Text style={styles.quiet}>{progress}</Text> : null}
-          {mapState.kind === 'map' && imageryQ.data ? (
-            <LandMap
-              imagery={imageryQ.data}
-              zones={zonesQ.data ?? []}
-              layer={chosen.layer}
-              onPress={() => go('Land')}
-              pressHint="Opens your land"
-              imageryVersion={imageryQ.dataUpdatedAt}
-              layersVersion={layersQ.dataUpdatedAt}
-            />
-          ) : (
-            <Text style={styles.mapLine} accessibilityLiveRegion="polite">{mapState.line}</Text>
-          )}
-          {mapState.notes.map((n) => <Text key={n} style={styles.quiet}>{n}</Text>)}
-          {mapState.kind === 'map' ? (
-            <>
-              <LayerChips chips={chips} chosen={chosen.key} onChoose={setWantedChip} />
-              <MapLegend layer={chosen.layer} />
-            </>
-          ) : null}
-          {profileQ.isError && !profileQ.data && tiles.length === 0 ? (
-            <LoadError inline message="Couldn’t load what is known about your land." error={profileQ.error}
+          <Eyebrow style={styles.eyebrow}>{t('home.almanac.glance')}</Eyebrow>
+          {profileQ.isLoading ? <ActivityIndicator style={styles.inlineSpin} /> : null}
+          {profileQ.isError && !profileQ.data ? (
+            <LoadError inline message={t('home.screen.landFailed')} error={profileQ.error}
               onRetry={() => profileQ.refetch()} retrying={profileQ.isRefetching} />
           ) : null}
-          {tiles.length > 0 ? (
-            <View style={styles.tiles}>
-              <ReadingTileGrid tiles={tiles} onOpen={(t) => go('Land', { field: t.field })} />
+          {glance.map((g) => (
+            <View key={g.key} style={styles.glanceRow}>
+              <Pressable
+                onPress={() => navigation.navigate('Land', { propertyId: property.id, field: g.field })}
+                accessibilityRole="button"
+                accessibilityLabel={g.a11y}
+                accessibilityHint={t('home.almanac.glanceHint')}
+                style={styles.glanceMain}
+              >
+                <Text style={styles.glanceTitle}>{g.title}</Text>
+                <View style={styles.glanceValue}>
+                  <Text style={styles.glanceWord} maxFontSizeMultiplier={2.5}>{g.word}</Text>
+                  {g.estimated || g.checking ? <EstTag checking={g.checking} /> : null}
+                </View>
+              </Pressable>
+              {!g.checking ? (
+                <Pressable
+                  onPress={() => navigation.navigate('Land', { propertyId: property.id, field: g.field })}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('home.almanac.fixItA11y', { title: g.title })}
+                  style={styles.fixIt}
+                  hitSlop={6}
+                >
+                  <Text style={styles.fixItText}>{t('home.almanac.fixIt')}</Text>
+                </Pressable>
+              ) : null}
             </View>
-          ) : null}
-          <Button mode="text" compact onPress={() => go('Land')} textColor={palette.acc} style={styles.more}
-            accessibilityLabel="Everything about your land">
-            Everything about your land
+          ))}
+        </View>
+      ) : offersAddLand(form, vitals) ? (
+        <View style={styles.section}>
+          <Eyebrow style={styles.eyebrow}>{t('home.almanac.glance')}</Eyebrow>
+          <Text style={styles.body}>{t('home.almanac.addLandGlance')}</Text>
+          <Button mode="contained" onPress={() => navigation.navigate('PropertySetup')}
+            buttonColor={palette.btn} textColor={palette.btnInk} style={styles.addLandBtn}
+            contentStyle={styles.addLandContent} accessibilityLabel={t('home.screen.addLand')}>
+            {t('home.screen.addLand')}
           </Button>
         </View>
       ) : null}
 
-      {offersAddLand(form, vitals) ? (
-        <Card style={styles.addLand} mode="contained">
-          <Card.Content>
-            <Text style={styles.addLandTitle}>Have a yard or garden beds?</Text>
-            <Text style={styles.addLandBody}>
-              Add your land and PlantAdvocate reads its soil, sun and typical frost dates
-              from public maps, then plans the season with you. Pots on a balcony or a
-              windowsill need nothing more.
-            </Text>
-            <Button
-              mode="outlined"
-              onPress={() => navigation.navigate('PropertySetup')}
-              textColor={palette.acc}
-              style={styles.addLandBtn}
-              accessibilityLabel="Add your land"
-            >
-              Add your land
-            </Button>
-          </Card.Content>
-        </Card>
-      ) : null}
+      {/* ── 5. How we know ── */}
+      <HowWeKnowButton sections={sheet} />
 
-      {/* ── Your growing spaces ── */}
-      <View style={styles.section}>
-        <Eyebrow style={styles.eyebrow}>Your growing spaces</Eyebrow>
-        {legacy && areasQ.isError && !areasQ.data ? (
-          <LoadError inline message="Couldn’t load your growing spaces." error={areasQ.error}
-            onRetry={() => areasQ.refetch()} retrying={areasQ.isRefetching} />
-        ) : null}
-        {spaces.map((s) => (
-          <Pressable
-            key={s.growing_area_id}
-            onPress={() => navigation.navigate('SpaceDetail', { growingAreaId: s.growing_area_id, name: s.name })}
-            accessibilityRole="button"
-            accessibilityLabel={`${s.name}. ${spaceLine(s)}.`}
-            style={styles.row}
-          >
-            <View style={styles.rowText}>
-              <Text style={styles.rowTitle}>{s.name}</Text>
-              <Text style={styles.rowDetail}>{spaceLine(s)}</Text>
-            </View>
-            <Text style={styles.chevron}>›</Text>
-          </Pressable>
-        ))}
-        <Button mode="text" compact onPress={() => navigation.navigate('Spaces')} textColor={palette.acc} style={styles.more}
-          accessibilityLabel={spaces.length === 0 ? 'Add a growing space' : 'All growing spaces'}>
-          {spaces.length === 0 ? 'Add a growing space' : 'All growing spaces'}
-        </Button>
-      </View>
-
-      {(vitals?.notes ?? []).map((n) => <Text key={n} style={styles.quietBlock}>{n}</Text>)}
-
-      {/* ── Quiet links ── */}
-      <View style={styles.links}>
-        <Button mode="text" compact onPress={() => navigation.navigate('Plants')} textColor={palette.sub}
-          accessibilityLabel="Open plants">Plants</Button>
-        <Button mode="text" compact onPress={() => navigation.navigate('Species')} textColor={palette.sub}
-          accessibilityLabel="Open species">Species</Button>
-        <Button mode="text" compact onPress={() => navigation.navigate('Settings')} textColor={palette.sub}
-          accessibilityLabel="Open settings">Settings</Button>
-      </View>
+      {links}
     </ScrollView>
   );
 }
 
-function placeLine(p: { name: string; city?: string | null; region?: string | null }): string {
-  const where = [p.city, p.region].filter(Boolean).join(', ');
-  return where && where !== p.name ? `${p.name}, ${where}` : p.name;
-}
-
 type Styles = ReturnType<typeof makeStyles>;
 
-function VitalCardView({ card, styles, onOpen }: {
-  card: VitalCard; styles: Styles; onOpen?: () => void;
-}) {
-  const toneStyle = card.tone === 'act' ? styles.toneAct : card.tone === 'watch' ? styles.toneWatch : null;
-  if (card.explained) {
-    return (
-      <View style={[styles.vital, toneStyle]}>
-        <ExplainedBlock
-          title={card.title}
-          explained={{ ...card.explained, display: card.value_text }}
-          onPress={onOpen}
-        >
-          {card.detail ? <Text style={styles.rowDetail}>{card.detail}</Text> : null}
-        </ExplainedBlock>
-      </View>
-    );
-  }
-  const body = (
-    <>
-      <Text style={styles.vitalTitle}>{card.title}</Text>
-      <Text style={styles.vitalValue}>{card.value_text}</Text>
-      {card.detail ? <Text style={styles.rowDetail}>{card.detail}</Text> : null}
-    </>
-  );
-  return onOpen ? (
-    <Pressable onPress={onOpen} accessibilityRole="button"
-      accessibilityLabel={`${card.title}. ${card.value_text}. ${card.detail}`}
-      style={[styles.vital, toneStyle]}>
-      {body}
-    </Pressable>
-  ) : (
-    <View accessible accessibilityLabel={`${card.title}. ${card.value_text}. ${card.detail}`}
-      style={[styles.vital, toneStyle]}>
-      {body}
-    </View>
-  );
-}
-
-function WeekRow({ item, styles, onPress }: {
-  item: WeekItem; styles: Styles; onPress: () => void;
-}) {
-  const [open, setOpen] = useState(false);
-  if (item.kind === 'care') {
-    return (
-      <Pressable onPress={onPress} accessibilityRole="button"
-        accessibilityLabel={`${item.text}. ${item.detail}. Opens the plant.`} style={styles.row}>
-        <View style={styles.rowText}>
-          <Text style={styles.rowTitle}>{item.text}</Text>
-          <Text style={[styles.rowDetail, item.overdue && styles.overdue]}>{item.detail}</Text>
-        </View>
-        <Text style={styles.chevron}>›</Text>
-      </Pressable>
-    );
-  }
-  const settled = item.state !== 'open';
-  const lines = disclosureLines(item);
+function TextLink({ label, onPress, styles }: { label: string; onPress: () => void; styles: Styles }) {
   return (
-    <View style={styles.taskWrap}>
-      <Pressable onPress={onPress} accessibilityRole="button"
-        accessibilityLabel={`${item.text}.${settled ? ' Done.' : ''} Opens the seasonal plan.`} style={styles.row}>
-        <View style={styles.rowText}>
-          <Text style={[styles.rowTitle, settled && styles.settled]}>
-            {settled ? `✓ ${item.text}` : item.text}
-          </Text>
-          {item.lowImpactNote ? <Text style={styles.rowDetail}>{item.lowImpactNote}</Text> : null}
-        </View>
-        <Text style={styles.chevron}>›</Text>
+    <Pressable onPress={onPress} accessibilityRole="link" accessibilityLabel={label} style={styles.link}>
+      <Text style={styles.linkText}>{`${label} ›`}</Text>
+    </Pressable>
+  );
+}
+
+function TaskRow({ item, styles, busy, canAnswer, onOpen, onAnswer }: {
+  item: WeekItem; styles: Styles; busy: boolean; canAnswer: boolean;
+  onOpen: () => void; onAnswer: (b: 'done' | 'skip') => void;
+}) {
+  const b = taskButtons(item);
+  const detail = item.kind === 'care' ? item.detail : item.lowImpactNote;
+  return (
+    <View style={styles.task}>
+      <Pressable onPress={onOpen} accessibilityRole="button"
+        accessibilityLabel={t('home.almanac.openA11y', { text: [item.text, detail].filter(Boolean).join('. ') })}
+        style={styles.taskMain}>
+        <Text style={styles.taskText}>{item.text}</Text>
+        {detail ? (
+          <Text style={[styles.quietTight, item.kind === 'care' && item.overdue && styles.overdue]}>{detail}</Text>
+        ) : null}
       </Pressable>
-      <Pressable onPress={() => setOpen((o) => !o)} accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-        accessibilityLabel={`${WHY_LABEL}. ${open ? 'Hide' : 'Show'}.`} hitSlop={8}>
-        <Text style={styles.why}>{`${open ? '▾' : '▸'} ${WHY_LABEL}`}</Text>
-      </Pressable>
-      {open && (
-        <View style={styles.whyBody}>
-          <Text style={styles.rowDetail}>{lines.reason}</Text>
-          {lines.sources.map((s) => <Text key={s} style={styles.quiet}>{`Data: ${s}`}</Text>)}
+      {canAnswer ? (
+        <View style={styles.taskButtons}>
+          {busy ? <ActivityIndicator size={20} /> : (
+            <>
+              <Pressable onPress={() => onAnswer('done')} accessibilityRole="button" accessibilityLabel={b.doneA11y}
+                style={[styles.taskBtn, styles.taskBtnDone]}>
+                <Text style={styles.taskBtnDoneText}>{`✓ ${b.done}`}</Text>
+              </Pressable>
+              <Pressable onPress={() => onAnswer('skip')} accessibilityRole="button" accessibilityLabel={b.skipA11y}
+                style={styles.taskBtn}>
+                <Text style={styles.taskBtnText}>{b.skip}</Text>
+              </Pressable>
+            </>
+          )}
         </View>
-      )}
+      ) : null}
     </View>
   );
 }
 
-const makeStyles = (p: Palette, f: Fonts) => StyleSheet.create({
+const makeStyles = (p: Palette, f: Fonts, bold: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: p.bg },
   content: { padding: 16, paddingBottom: 48 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  headline: { color: p.acc, fontFamily: f.display, fontSize: 22, fontWeight: '700', lineHeight: 29 },
-  place: { color: p.sub, marginTop: 4 },
-  section: {
-    marginTop: 18, backgroundColor: p.card, borderRadius: 14, padding: 14,
-    borderWidth: 1, borderColor: p.line2,
+  almanac: {
+    backgroundColor: p.card, borderRadius: 14, padding: 16, borderWidth: 1.5, borderColor: p.tileBorder,
   },
+  almanacTitle: { color: p.ink, fontFamily: f.label, fontSize: 14, fontWeight: '700', letterSpacing: 0.5 },
+  date: { color: p.ink, fontFamily: f.display, fontSize: 24, fontWeight: '700', lineHeight: 30, marginTop: 6 },
+  weekLine: { color: p.sub, fontSize: 16, lineHeight: 22, fontWeight: bold ? '700' : '600' },
+  verdict: { color: p.ink, fontFamily: f.display, fontSize: 21, fontWeight: '700', lineHeight: 28, marginTop: 10 },
+  section: {
+    marginTop: 16, backgroundColor: p.card, borderRadius: 14, padding: 14,
+    borderWidth: 1, borderColor: p.tileBorder,
+  },
+  controls: { marginTop: 16 },
   eyebrow: { marginBottom: 8 },
-  vital: { paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line2 },
-  toneAct: { borderLeftWidth: 3, borderLeftColor: p.warn, paddingLeft: 8 },
-  toneWatch: { borderLeftWidth: 3, borderLeftColor: p.hedge, paddingLeft: 8 },
-  vitalTitle: { color: p.faint, fontFamily: f.label, fontSize: 12 },
-  vitalValue: { color: p.ink, fontSize: 17, fontWeight: '600', fontFamily: f.numeric, marginVertical: 1 },
-  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, gap: 8, minHeight: 44 },
-  rowText: { flex: 1 },
-  rowTitle: { color: p.ink, fontSize: 15, lineHeight: 21 },
-  rowDetail: { color: p.sub, fontSize: 13, lineHeight: 19 },
+  body: { color: p.ink, fontSize: 16, lineHeight: 22, fontWeight: bold ? '600' : undefined },
+  quiet: { color: p.sub, fontSize: 14, lineHeight: 20, marginTop: 8, fontWeight: bold ? '600' : undefined },
+  quietTight: { color: p.sub, fontSize: 14, lineHeight: 20, fontWeight: bold ? '600' : undefined },
+  error: { color: p.warn, fontSize: 14, lineHeight: 20, marginTop: 8, fontWeight: '700' },
   overdue: { color: p.warn },
-  settled: { color: p.sub },
-  chevron: { color: p.faint, fontSize: 20 },
-  taskWrap: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line2, paddingBottom: 6 },
-  why: { color: p.acc, fontSize: 13, fontWeight: '600' },
-  whyBody: { marginTop: 4, paddingLeft: 10, borderLeftWidth: 2, borderLeftColor: p.line, gap: 3 },
-  quiet: { color: p.faint, fontSize: 12.5, lineHeight: 18, marginTop: 6 },
-  quietBlock: { color: p.faint, fontSize: 13, lineHeight: 19, marginTop: 14, paddingHorizontal: 4 },
-  more: { alignSelf: 'flex-start', marginTop: 4 },
-  mapLine: { color: p.sub, fontSize: 13.5, lineHeight: 19, paddingVertical: 8 },
-  tiles: { marginTop: 10 },
   inlineSpin: { marginVertical: 8 },
-  addLand: { marginTop: 18, borderRadius: 14, backgroundColor: p.accSoft },
-  addLandTitle: { color: p.acc, fontFamily: f.display, fontSize: 17, fontWeight: '700', marginBottom: 6 },
-  addLandBody: { color: p.sub, lineHeight: 20 },
-  addLandBtn: { alignSelf: 'flex-start', marginTop: 12, borderRadius: 8 },
-  links: { flexDirection: 'row', justifyContent: 'center', marginTop: 24, gap: 8 },
+  task: { paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line, gap: 8 },
+  taskMain: { minHeight: 44, justifyContent: 'center' },
+  taskText: { color: p.ink, fontSize: 17, lineHeight: 23, fontWeight: bold ? '700' : '600' },
+  taskButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  taskBtn: {
+    minHeight: 44, minWidth: 88, paddingHorizontal: 16, borderRadius: 10, borderWidth: 2,
+    borderColor: p.tileBorder, backgroundColor: p.tile, justifyContent: 'center', alignItems: 'center',
+  },
+  taskBtnDone: { backgroundColor: p.tileOn, borderColor: p.tileOn },
+  taskBtnText: { color: p.tileInk, fontSize: 16, fontWeight: bold ? '800' : '700' },
+  taskBtnDoneText: { color: p.tileOnInk, fontSize: 16, fontWeight: bold ? '800' : '700' },
+  glanceRow: {
+    flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between',
+    paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: p.line, gap: 6,
+  },
+  glanceMain: { minHeight: 44, justifyContent: 'center', flexGrow: 1, flexShrink: 1, minWidth: 150 },
+  glanceTitle: { color: p.sub, fontSize: 14, fontWeight: bold ? '700' : '600' },
+  glanceValue: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
+  glanceWord: { color: p.ink, fontFamily: f.display, fontSize: 20, fontWeight: '700' },
+  fixIt: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 4 },
+  fixItText: { color: p.ink, fontSize: 15, fontWeight: bold ? '800' : '700', textDecorationLine: 'underline' },
+  addLandBtn: { alignSelf: 'flex-start', marginTop: 12, borderRadius: 10 },
+  addLandContent: { minHeight: 48 },
+  links: { marginTop: 24 },
+  link: { minHeight: 44, justifyContent: 'center' },
+  linkText: { color: p.acc, fontSize: 16, fontWeight: bold ? '800' : '600' },
 });

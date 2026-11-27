@@ -2,6 +2,7 @@ import { CareLog, CareType, Plant, Species, WaterRegime } from '../types';
 import { depthSaid, waterRegimeSentence } from '../care/facts';
 import { parseServerDate } from '../api/serverDate';
 import { planSeasonalNotices, SeasonalInput, SEASONAL_RESERVE } from '../season/alerts';
+import { t } from '../i18n';
 
 // Care types that can have reminders (matches the quick-log actions on
 // PlantDetailScreen; 'clean'/'other' have no species schedules).
@@ -46,13 +47,18 @@ export function isInSeason(careType: CareType, date: Date): boolean {
 // checks, never actions). 'root check', not 'repot': the February check-up
 // asks you to look at the roots; repotting is one of three ways it can end.
 export const CARE_VERBS: Record<string, string> = {
-  water: 'check', fertilize: 'feeding check',
-  prune: 'pruning check', repot: 'root check', rotate: 'turning check',
+  water: t('notifications.careVerbs.water'),
+  fertilize: t('notifications.careVerbs.fertilize'),
+  prune: t('notifications.careVerbs.prune'),
+  repot: t('notifications.careVerbs.repot'),
+  rotate: t('notifications.careVerbs.rotate'),
 };
 
 /** The window a single non-water reminder says has opened. */
 const WINDOW_WORD: Record<string, string> = {
-  fertilize: 'feeding', prune: 'pruning', rotate: 'turning',
+  fertilize: t('notifications.windowWords.fertilize'),
+  prune: t('notifications.windowWords.prune'),
+  rotate: t('notifications.windowWords.rotate'),
 };
 
 /**
@@ -304,11 +310,8 @@ function composeMessage(items: ReminderItem[]): { title: string; body: string } 
       // conditional answer, and top-dressing is the lighter one their
       // annual-fresh-mix rationale supports.
       return {
-        title: `🪴 ${it.nickname}'s spring check-up`,
-        body: `Have a look at ${it.nickname}: roots pushing out of the pot? `
-          + 'Crown or roots showing at the surface? Wilting again soon after '
-          + 'you water, or growth stalled? Repot if so — or just top-dress '
-          + 'with fresh mix.',
+        title: t('notifications.repotTitle', { name: it.nickname }),
+        body: t('notifications.repotBody', { name: it.nickname }),
       };
     }
     if (it.careType === 'water') {
@@ -316,31 +319,30 @@ function composeMessage(items: ReminderItem[]): { title: string; body: string } 
       // watering only as its consequence. Never "time to water" — that's the
       // sentence that made people pour on damp soil.
       const days = it.daysSinceCare ?? 0;
-      const been = days === 1 ? "it's been 1 day" : `it's been ${days} days`;
+      const been = t('notifications.been', { count: days });
       return {
-        title: `🪴 ${it.nickname} could use a look`,
-        body: `Check ${it.nickname} — ${been}. ${waterCheck(it)}`,
+        title: t('notifications.lookTitle', { name: it.nickname }),
+        body: t('notifications.waterBody', { name: it.nickname, been, check: waterCheck(it) }),
       };
     }
     // The window has opened; whether the plant wants anything is the
     // caretaker's call, made by looking — never "time to fertilize".
     const window = WINDOW_WORD[it.careType];
     return {
-      title: `🪴 Time to look at ${it.nickname}`,
+      title: t('notifications.windowTitle', { name: it.nickname }),
       body: window
-        ? `${it.nickname} has reached its ${window} window. `
-          + 'Have a look and decide whether it needs it.'
-        : `${it.nickname} could use a look. Decide whether it needs anything.`,
+        ? t('notifications.windowBody', { name: it.nickname, window })
+        : t('notifications.lookBody', { name: it.nickname }),
     };
   }
   const plantCount = new Set(items.map((i) => i.plantId)).size;
   const shown = items.slice(0, 6)
-    .map((i) => `${i.nickname} — ${CARE_VERBS[i.careType] ?? 'check'}`);
-  const more = items.length > 6 ? ` +${items.length - 6} more` : '';
+    .map((i) => t('notifications.batchItem', { name: i.nickname, verb: CARE_VERBS[i.careType] ?? CARE_VERBS.water }));
+  const more = items.length > 6 ? t('notifications.more', { count: items.length - 6 }) : '';
   return {
     title: plantCount === 1
-      ? `🪴 ${items[0].nickname} could use a look`
-      : `🪴 ${plantCount} plants could use a look today`,
+      ? t('notifications.lookTitle', { name: items[0].nickname })
+      : t('notifications.batchTitle', { count: plantCount }),
     body: shown.join(' · ') + more,
   };
 }
@@ -353,11 +355,11 @@ export function waterCheck(it: Pick<ReminderItem, 'waterRegime' | 'checkDepthCm'
   const regime = it.waterRegime
     ? waterRegimeSentence({ water_regime: it.waterRegime } as Species) : null;
   if (regime && (it.waterRegime === 'keep_moist' || it.waterRegime === 'keep_barely_moist')) {
-    return `Its sources say ${regime}; water if the surface feels dry.`;
+    return t('notifications.waterCheck.moist', { regime });
   }
   if (it.checkDepthCm != null && it.checkDepthCm > 0) {
-    return `Feel the soil ${depthSaid(it.checkDepthCm)} down; water only if it's dry there.`;
+    return t('notifications.waterCheck.depth', { depth: depthSaid(it.checkDepthCm) });
   }
-  if (regime) return `Its sources say ${regime}; feel the soil before you water.`;
-  return 'Feel the soil before you water.';
+  if (regime) return t('notifications.waterCheck.regime', { regime });
+  return t('notifications.waterCheck.plain');
 }

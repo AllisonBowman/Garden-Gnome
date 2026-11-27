@@ -16,29 +16,46 @@
 //
 // Pure on purpose (no React Native imports) so jest can pin it.
 import axios from 'axios';
+import { t } from '../i18n';
 
 export const LOAD_FAILED = {
   emoji: '🌧️',
   /** The server was never reached: no signal, or no answer in time. */
-  body: 'PlantAdvocate couldn’t reach the server just now. Check your connection and try again.',
+  body: t('care.loadFailed.body'),
   /** The server answered that the thing isn't there. */
-  gone: 'PlantAdvocate can’t find it any more. It may have been removed since the list was loaded.',
+  gone: t('care.loadFailed.gone'),
   /** The server answered, with a problem of its own. */
-  answered: 'The server answered, but ran into a problem. Try again in a few minutes.',
+  answered: t('care.loadFailed.answered'),
   /** Not a network failure at all. */
-  other: 'Something went wrong while loading it. Try again in a few minutes.',
-  action: 'Try again',
+  other: t('care.loadFailed.other'),
+  action: t('care.loadFailed.action'),
 } as const;
 
 /** The one line a screen shows over content it kept after a refresh failed. */
 export const REFRESH_FAILED = {
-  line: 'Couldn’t refresh just now, so this is what was loaded before.',
-  action: 'Try again',
+  line: t('care.loadFailed.refreshLine'),
+  action: t('care.loadFailed.action'),
 } as const;
+
+// The things a screen names in its heading. A caller may pass one of these
+// English phrases (or the key) and get it in the app's language; anything
+// else is used as given, so a caller can pass its own translated phrase.
+const LOAD_FAILED_WHAT = {
+  'this plant': 'plant',
+  'this species': 'species',
+  'the catalog': 'catalog',
+  'this growing area': 'area',
+  'the Almanac': 'almanac',
+} as const;
+type LoadFailedWhat = (typeof LOAD_FAILED_WHAT)[keyof typeof LOAD_FAILED_WHAT];
+const WHAT_KEYS: readonly string[] = Object.values(LOAD_FAILED_WHAT);
 
 /** The heading for a screen about one thing: "Couldn’t load this plant". */
 export function loadFailedTitle(what: string): string {
-  return `Couldn’t load ${what}`;
+  const key = (LOAD_FAILED_WHAT as Record<string, LoadFailedWhat>)[what]
+    ?? (WHAT_KEYS.includes(what) ? (what as LoadFailedWhat) : undefined);
+  const phrase = key ? t(`care.loadFailed.what.${key}`) : what;
+  return t('care.loadFailed.title', { what: phrase });
 }
 
 /** Why a load failed, as far as it matters to the person reading. */
@@ -75,8 +92,8 @@ export function loadFailedBody(err: unknown, shows: 'one' | 'list' = 'one'): str
  *  on another phone, so a 404 there is the server's problem like any other. */
 export function loadFailedAdvice(err: unknown): string {
   const kind = loadFailure(err);
-  if (kind === 'unreached') return 'Check your connection and try again.';
-  if (kind === 'other') return 'Try again in a few minutes.';
+  if (kind === 'unreached') return t('care.loadFailed.adviceUnreached');
+  if (kind === 'other') return t('care.loadFailed.adviceOther');
   return LOAD_FAILED.answered;
 }
 

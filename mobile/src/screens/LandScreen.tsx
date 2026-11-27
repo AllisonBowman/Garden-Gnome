@@ -12,6 +12,8 @@ import {
 import { serverMessage } from '../api/errorMessage';
 import { FrostBias, LotContent, PropertyPatch, SiteProfile, SiteValue } from '../types/site';
 import ExplainedBlock from '../components/ExplainedBlock';
+import HowWeKnowButton from '../components/HowWeKnowButton';
+import { landSections } from '../howWeKnow/sections';
 import LandMap from '../components/LandMap';
 import LayerChips from '../components/LayerChips';
 import MapLegend from '../components/MapLegend';
@@ -32,6 +34,7 @@ import { lotContentChoices, toggleLotContent } from '../land/setup';
 import { profileProgressLine } from '../home/season';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Land'>;
 type Route = RouteProp<RootStackParamList, 'Land'>;
@@ -160,7 +163,7 @@ export default function LandScreen() {
   if (profileQ.isLoading) return <ActivityIndicator style={styles.center} size="large" />;
   if (!profile) {
     return (
-      <LoadError message="Couldn’t load what is known about your land." error={profileQ.error}
+      <LoadError message={t('land.screen.loadFailed')} error={profileQ.error}
         onRetry={() => profileQ.refetch()} retrying={profileQ.isRefetching} />
     );
   }
@@ -183,7 +186,6 @@ export default function LandScreen() {
       key={`${v.field}-${zone ?? v.zone_id ?? 'lot'}`}
       title={v.title}
       explained={v}
-      initiallyOpen={zone == null && field === v.field}
     >
       <CorrectionControl
         value={v}
@@ -206,20 +208,21 @@ export default function LandScreen() {
     >
       {profileQ.isError ? <RefreshFailed onRetry={() => profileQ.refetch()} retrying={profileQ.isRefetching} /> : null}
 
-      <Text style={styles.title} accessibilityRole="header">{property?.name ?? 'Your land'}</Text>
+      <Text style={styles.title} accessibilityRole="header">{property?.name ?? t('land.screen.yourLand')}</Text>
       {progress ? (
-        <View style={styles.progress} accessible accessibilityLabel={progress}>
+        // The slow-service sentence lives in How we know; the face says "Checking".
+        <View style={styles.progress} accessible accessibilityLabel={t('howWeKnow.checkingA11y')}>
           {stillBusy(profile) ? <ActivityIndicator size={14} /> : null}
-          <Text style={styles.quiet}>{progress}</Text>
+          <Text style={styles.quiet}>{t('howWeKnow.checking')}</Text>
         </View>
       ) : null}
       {saveError ? (
-        <Text style={styles.error}>{serverMessage(saveError, 'Couldn’t save that change. Try again.')}</Text>
+        <Text style={styles.error}>{serverMessage(saveError, t('land.screen.saveFailed'))}</Text>
       ) : null}
 
       {/* ── The land map ── */}
       <View style={styles.section}>
-        <Eyebrow style={styles.eyebrow}>The map</Eyebrow>
+        <Eyebrow style={styles.eyebrow}>{t('land.screen.theMap')}</Eyebrow>
         {mapState.kind === 'map' && imageryQ.data ? (
           <LandMap
             imagery={imageryQ.data}
@@ -242,14 +245,14 @@ export default function LandScreen() {
         ) : null}
         <Button mode="outlined" textColor={palette.acc} style={styles.action}
           onPress={() => navigation.navigate('ZoneMap', { propertyId })}
-          accessibilityLabel="Draw or change your zones on the zone map">
-          Draw or change your zones
+          accessibilityLabel={t('land.screen.drawZonesA11y')}>
+          {t('land.screen.drawZones')}
         </Button>
       </View>
 
       {tiles.length > 0 ? (
         <View style={styles.section}>
-          <Eyebrow style={styles.eyebrow}>At a glance</Eyebrow>
+          <Eyebrow style={styles.eyebrow}>{t('land.screen.atAGlance')}</Eyebrow>
           <ReadingTileGrid tiles={tiles} />
         </View>
       ) : null}
@@ -257,8 +260,8 @@ export default function LandScreen() {
       {sections.length === 0 ? (
         <Text style={styles.quietBlock}>
           {stillBusy(profile)
-            ? 'Nothing has arrived yet. Values appear here as the public maps answer.'
-            : 'No values could be read for this place. Outside the United States the public land maps do not reach; you can still describe each zone yourself on the zone map.'}
+            ? t('land.screen.nothingYet')
+            : t('land.screen.noValues')}
         </Text>
       ) : null}
 
@@ -271,39 +274,40 @@ export default function LandScreen() {
 
       {profile.notes.map((n) => <Text key={n} style={styles.quietBlock}>{n}</Text>)}
 
+      <HowWeKnowButton sections={() => landSections({ profile, progress, layer: chosen.layer })} />
+
       {/* ── Zones ── */}
       <View style={styles.section} collapsable={false} onLayout={(e) => remember('zones', e.nativeEvent.layout.y)}>
-        <Eyebrow style={styles.eyebrow}>Your zones</Eyebrow>
+        <Eyebrow style={styles.eyebrow}>{t('land.screen.yourZones')}</Eyebrow>
         {zones.length === 0 ? (
           <Text style={styles.quiet}>
-            Draw a box over a bed, a lawn or a tree on the aerial image, and each one gets its own sun,
-            soil and drainage values here.
+            {t('land.screen.zonesIntro')}
           </Text>
         ) : null}
         {zones.map((z) => (
           <View key={z.zone_id} style={styles.zone} collapsable={false} onLayout={(e) => remember(`zone-${z.zone_id}`, e.nativeEvent.layout.y)}>
             <Text style={styles.zoneName} accessibilityRole="header">{z.name}</Text>
             {groupValues(z.values).flatMap((s) => s.values).map((v) => row(v, z.zone_id))}
-            {z.values.length === 0 ? <Text style={styles.quiet}>No values for this zone yet.</Text> : null}
+            {z.values.length === 0 ? <Text style={styles.quiet}>{t('land.screen.zoneNoValues')}</Text> : null}
             <Button mode="text" compact textColor={palette.acc} style={styles.more}
               onPress={() => navigation.navigate('ZoneMap', { propertyId, zoneId: z.zone_id })}
-              accessibilityLabel={`Show ${z.name} on the zone map`}>
-              Show on the zone map
+              accessibilityLabel={t('land.screen.showOnMapA11y', { name: z.name })}>
+              {t('land.screen.showOnMap')}
             </Button>
           </View>
         ))}
         <Button mode="outlined" textColor={palette.acc} style={styles.action}
           onPress={() => navigation.navigate('ZoneMap', { propertyId })}
-          accessibilityLabel="Open the zone map to draw or change zones">
-          {zones.length === 0 ? 'Draw zones on the map' : 'Open the zone map'}
+          accessibilityLabel={t('land.screen.openZoneMapA11y')}>
+          {zones.length === 0 ? t('land.screen.drawOnMap') : t('land.screen.openZoneMap')}
         </Button>
       </View>
 
       {/* ── The property ── */}
       <View style={styles.section}>
-        <Eyebrow style={styles.eyebrow}>This property</Eyebrow>
+        <Eyebrow style={styles.eyebrow}>{t('land.screen.thisProperty')}</Eyebrow>
 
-        <Text style={styles.label}>Name</Text>
+        <Text style={styles.label}>{t('land.screen.name')}</Text>
         <View style={styles.inline}>
           <TextInput
             mode="outlined"
@@ -311,37 +315,37 @@ export default function LandScreen() {
             value={name ?? ''}
             onChangeText={setName}
             style={styles.grow}
-            accessibilityLabel="Property name"
+            accessibilityLabel={t('land.screen.nameA11y')}
           />
           <Button
             mode="outlined"
             textColor={palette.acc}
             disabled={patchM.isPending || !property || cleanName(name ?? '') == null || cleanName(name ?? '') === property.name}
             onPress={() => { const n = cleanName(name ?? ''); if (n) patchM.mutate({ name: n }); }}
-            accessibilityLabel="Save the property name"
+            accessibilityLabel={t('land.screen.saveNameA11y')}
           >
-            Save
+            {t('land.screen.save')}
           </Button>
         </View>
 
-        <Text style={styles.label}>Pin</Text>
+        <Text style={styles.label}>{t('land.screen.pin')}</Text>
         <Text style={styles.quiet}>
-          The pin on your home is the one place PlantAdvocate stores. Moving it reads the land again.
+          {t('land.screen.pinNote')}
         </Text>
         <Button mode="outlined" textColor={palette.acc} style={styles.action}
           onPress={() => navigation.navigate('PropertySetup', { propertyId })}
-          accessibilityLabel="Move the pin on your home">
-          Move the pin
+          accessibilityLabel={t('land.screen.movePinA11y')}>
+          {t('land.screen.movePin')}
         </Button>
 
-        <Text style={styles.label}>What’s on your lot</Text>
+        <Text style={styles.label}>{t('land.screen.lot')}</Text>
         <View style={styles.chips}>
           {lotContentChoices().map((c) => {
             const on = (lot ?? []).includes(c.value);
             return (
               <Chip key={c.value} selected={on} showSelectedCheck compact
                 onPress={() => setLot((cur) => toggleLotContent(cur ?? [], c.value))}
-                accessibilityLabel={`${c.label}. ${on ? 'Selected' : 'Not selected'}.`}
+                accessibilityLabel={t(on ? 'land.selectedA11y' : 'land.notSelectedA11y', { label: c.label })}
                 accessibilityState={{ selected: on }}>
                 {c.label}
               </Chip>
@@ -352,16 +356,14 @@ export default function LandScreen() {
           <Button mode="outlined" textColor={palette.acc} style={styles.action}
             disabled={patchM.isPending}
             onPress={() => patchM.mutate({ lot_contents: lot ?? [] })}
-            accessibilityLabel="Save what is on your lot">
-            Save lot contents
+            accessibilityLabel={t('land.screen.saveLotA11y')}>
+            {t('land.screen.saveLot')}
           </Button>
         ) : null}
 
-        <Text style={styles.label}>Frost in your yard</Text>
+        <Text style={styles.label}>{t('land.screen.frost')}</Text>
         <Text style={styles.quiet}>
-          Low spots and open ground often frost before the neighbourhood; ground near buildings often
-          frosts later. This moves your frost warnings and tasks a little earlier or later. It does not
-          change your hardiness zone.
+          {t('land.screen.frostNote')}
         </Text>
         <View style={styles.chips}>
           {FROST_BIAS_CHOICES.map((c) => {
@@ -370,7 +372,7 @@ export default function LandScreen() {
               <Chip key={c.label} selected={on} showSelectedCheck compact
                 disabled={patchM.isPending || !property}
                 onPress={() => { if (!on) patchM.mutate({ frost_bias: c.value as FrostBias | null }); }}
-                accessibilityLabel={`${c.a11y}. ${on ? 'Selected' : 'Not selected'}.`}
+                accessibilityLabel={t(on ? 'land.selectedA11y' : 'land.notSelectedA11y', { label: c.a11y })}
                 accessibilityState={{ selected: on }}>
                 {c.label}
               </Chip>
@@ -378,15 +380,15 @@ export default function LandScreen() {
           })}
         </View>
         {patchM.isError ? (
-          <Text style={styles.error}>{serverMessage(patchM.error, 'Couldn’t save that change. Try again.')}</Text>
+          <Text style={styles.error}>{serverMessage(patchM.error, t('land.screen.saveFailed'))}</Text>
         ) : null}
 
         <Button mode="text" textColor={palette.sub} style={styles.action}
           loading={readAgainM.isPending}
           disabled={readAgainM.isPending || stillBusy(profile)}
           onPress={() => readAgainM.mutate()}
-          accessibilityLabel="Read the public maps for your land again">
-          Read the public maps again
+          accessibilityLabel={t('land.screen.readAgainA11y')}>
+          {t('land.screen.readAgain')}
         </Button>
       </View>
     </ScrollView>

@@ -1,0 +1,40 @@
+// English strings: the "How we know" sheet and the small marks on a value's
+// face that send people to it. The source of truth; es/howWeKnow.ts mirrors its keys.
+const howWeKnow = {
+  button: 'How we know',
+  buttonA11y: 'How we know',
+  buttonHint: 'Opens the sources, how each value was worked out, and how sure it is.',
+  title: 'How we know',
+  intro: 'Where each value on this screen comes from, how it was worked out, and how sure it is.',
+  close: 'Done',
+  closeA11y: 'Close How we know',
+  est: 'est.',
+  estA11y: 'estimated',
+  checking: 'Checking',
+  checkingA11y: 'Still checking',
+  howSure: 'How sure: {{label}}',
+  howSureLead: 'How sure:',
+  source: 'Source: {{source}}',
+  empty: 'Nothing on this screen needs explaining yet.',
+  sections: {
+    almanac: 'The almanac line',
+    weather: 'Weather',
+    land: 'Your land',
+    season: 'The season ahead',
+    tasks: 'This week’s tasks',
+    map: 'The map',
+    zones: 'Your zones',
+    notes: 'Notes',
+    marks: 'What the marks mean',
+  },
+  weekMethod: 'The week of the season counts from the first day of the season on the calendar: spring from March 1, summer from June 1, fall from September 1 and winter from December 1. Week 1 is the first seven days.',
+  headlineFrom: 'The one thing that matters comes from your season plan and the forecast. Today’s full note: {{text}}',
+  headlineLocal: 'The one thing that matters is worked out on this phone from the forecast and what is due this week.',
+  forecastFetched: 'Forecast from {{name}}, fetched {{when}}.',
+  estBody: 'A value marked “est.” is an estimate from public maps or a model. You can correct any of them on Your land with “Not right? Fix it”.',
+  checkingBody: 'Some public map services answer slowly. A value marked “Checking” fills in when it arrives, and PlantAdvocate keeps trying.',
+  unitsNote: 'Forecasts and the season plan arrive in °F. PlantAdvocate converts the temperatures it writes itself; a few notes written by the server may still read in °F.',
+  taskReason: '{{task}}: {{reason}}',
+};
+
+export default howWeKnow;

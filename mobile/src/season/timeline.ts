@@ -1,6 +1,8 @@
 import { SeasonEventStatus, SeasonEventSummary, SeasonEventType } from '../types/site';
 import { parseServerDate } from '../api/serverDate';
 import { STATUS_WORDS } from './sections';
+import { t } from '../i18n';
+import { monthLong, monthShort, spokenDay } from './dateWords';
 
 // The season timeline (map and visuals spec sections 1 and 4.2): each event's
 // window as a band on a month axis, a single date as a mark, today as a
@@ -30,9 +32,6 @@ const TYPE_TONE: Record<SeasonEventType, Exclude<TimelineTone, 'settled'>> = {
 const SETTLED: SeasonEventStatus[] = ['happened', 'done', 'not_needed'];
 const LIVE: SeasonEventStatus[] = ['happening', 'forecast'];
 
-const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-  'September', 'October', 'November', 'December'];
 
 export function eventTone(type: SeasonEventType, status: SeasonEventStatus): TimelineTone {
   if (SETTLED.includes(status)) return 'settled';
@@ -162,10 +161,6 @@ function monthsBetween(a: Date, b: Date): number {
   return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
 }
 
-/** "12 November" */
-function spokenDay(d: Date): string {
-  return `${d.getDate()} ${MONTH_LONG[d.getMonth()]}`;
-}
 
 interface Dated { e: SeasonEventSummary; from: Date; to: Date; point: boolean }
 
@@ -226,7 +221,7 @@ export function seasonTimeline(
   for (let i = 0; i < months; i++) {
     const m = addMonths(start, i);
     const next = addMonths(start, i + 1);
-    ticks.push({ x: xOf(m), label: MONTH[m.getMonth()], width: xOf(next) - xOf(m) });
+    ticks.push({ x: xOf(m), label: monthShort(m), width: xOf(next) - xOf(m) });
   }
 
   const items: Omit<TimelineItem, 'row'>[] = [];
@@ -243,12 +238,12 @@ export function seasonTimeline(
     const labelX = Math.max(0, Math.min(x0, width - labelWidth));
     const status = STATUS_WORDS[d.e.status] ?? '';
     const when = d.e.window?.text?.trim()
-      || (d.point ? spokenDay(d.from) : `${spokenDay(d.from)} to ${spokenDay(d.to)}`);
+      || (d.point ? spokenDay(d.from) : t('season.timeline.range', { from: spokenDay(d.from), to: spokenDay(d.to) }));
     const a11y = [
       `${d.e.title}: ${when.replace(/[.\s]+$/, '')}`,
       status,
-      clippedEnd ? 'Runs past the end of this timeline' : '',
-      clippedStart ? 'Began before the start of this timeline' : '',
+      clippedEnd ? t('season.timeline.runsPast') : '',
+      clippedStart ? t('season.timeline.beganBefore') : '',
     ].filter(Boolean).join('. ') + '.';
     items.push({
       event_key: d.e.event_key, title: d.e.title, kind: d.point ? 'mark' : 'band',
@@ -273,7 +268,9 @@ export function seasonTimeline(
   const todayX = tN >= d0 && tN < dayNumber(end) ? xOf(today) : null;
 
   const last = addMonths(end, -1);
-  const spanText = `${MONTH_LONG[start.getMonth()]} ${start.getFullYear()} to ${MONTH_LONG[last.getMonth()]} ${last.getFullYear()}`;
+  const spanText = t('season.timeline.span', {
+    from: monthLong(start), fromYear: start.getFullYear(), to: monthLong(last), toYear: last.getFullYear(),
+  });
 
   return { start, end, months: ticks, items: placed, rows: rowEnds.length, todayX, leftOut, spanText };
 }

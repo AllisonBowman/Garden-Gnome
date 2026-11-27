@@ -1,5 +1,7 @@
 import { SeasonAlert, SeasonEvent, SeasonEventType, SeasonalPlan } from '../types/site';
 import { sourceText } from '../components/explainedText';
+import { t } from '../i18n';
+import { clock, monthLong, weekdayLong } from './dateWords';
 
 // The seasonal plan's alerts, turned into on-device notifications. Pure: the
 // one planner (notifications/plan.ts) takes what this returns as an input to
@@ -75,17 +77,6 @@ function dayKey(d: Date): string {
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }
 
-const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-  'August', 'September', 'October', 'November', 'December'];
-
-function clock(d: Date): string {
-  const h = d.getHours();
-  const m = d.getMinutes();
-  const hour12 = h % 12 === 0 ? 12 : h % 12;
-  const ampm = h < 12 ? 'am' : 'pm';
-  return m === 0 ? `${hour12} ${ampm}` : `${hour12}:${String(m).padStart(2, '0')} ${ampm}`;
-}
 
 /**
  * "Forecast as of 2 pm on Tuesday 17 November." The day is always written
@@ -95,7 +86,7 @@ function clock(d: Date): string {
 export function forecastAsOfLine(iso: string): string | null {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return null;
-  return `Forecast as of ${clock(d)} on ${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}.`;
+  return t('season.alerts.asOf', { time: clock(d), weekday: weekdayLong(d), day: d.getDate(), month: monthLong(d) });
 }
 
 /** The body as sent, with its data source when the server did not already
@@ -107,10 +98,12 @@ export function alertBody(
   const source = event?.explained.sources[0];
   if (source && !body.includes(source.name)) {
     const line = sourceText(source);
-    body = `${body}${body && !/[.!?]$/.test(body) ? '.' : ''} Data: ${line}.`;
+    body = `${body}${body && !/[.!?]$/.test(body) ? '.' : ''} ${t('season.alerts.data', { source: line })}`;
   }
   const asOf = forecastAsOfLine(alert.built_from_forecast_at);
-  if (asOf && !body.includes('Forecast as of')) {
+  // The server writes its bodies in English and may already end one with
+  // the forecast time.
+  if (asOf && !body.includes('Forecast as of') && !body.includes(asOf)) {
     body = `${body}${body && !/[.!?]$/.test(body) ? '.' : ''} ${asOf}`;
   }
   return body.trim();

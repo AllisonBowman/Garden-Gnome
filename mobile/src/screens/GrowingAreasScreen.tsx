@@ -25,6 +25,7 @@ import {
   areaTypeLabel, dimensionPrompts, climateForSurface, lengthEcho, setupBlocker,
   surfaceName,
 } from '../growingAreas/realEstate';
+import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<GrowingAreasStackParamList, 'Spaces'>;
 
@@ -43,8 +44,8 @@ function GrowingAreaCard({ area, onPress }: { area: GrowingArea; onPress: () => 
           <Text variant="bodySmall" style={styles.meta}>📍 {area.city}{area.region ? `, ${area.region}` : ''}</Text>
         ) : null}
         <View style={styles.cardFooter}>
-          <Text variant="bodySmall" style={styles.count}>{area.plant_count} plant{area.plant_count !== 1 ? 's' : ''}</Text>
-          <Text variant="bodySmall" style={styles.weatherHint}>Weather ›</Text>
+          <Text variant="bodySmall" style={styles.count}>{t('areas.list.plants', { count: area.plant_count })}</Text>
+          <Text variant="bodySmall" style={styles.weatherHint}>{t('areas.list.weather')}</Text>
         </View>
       </Card.Content>
     </Card>
@@ -81,7 +82,11 @@ function Measurement({
   );
 }
 
-const STEP_TITLES = ['The space', 'The conditions', 'What it’s for'];
+const STEP_TITLES = [
+  t('areas.setup.stepTitles.space'),
+  t('areas.setup.stepTitles.conditions'),
+  t('areas.setup.stepTitles.goals'),
+];
 
 export default function GrowingAreasScreen() {
   const queryClient = useQueryClient();
@@ -176,12 +181,8 @@ export default function GrowingAreasScreen() {
     // The modal stays open with everything entered, so it can simply be sent
     // again — which is what the message says.
     onError: (err) => Alert.alert(
-      'Couldn’t create it',
-      serverMessage(
-        err,
-        'This growing area couldn’t be saved just now. Check your connection and '
-        + 'try again — everything you entered is still here.',
-      ),
+      t('areas.setup.createFailedTitle'),
+      serverMessage(err, t('areas.setup.createFailedBody')),
     ),
   });
 
@@ -193,7 +194,7 @@ export default function GrowingAreasScreen() {
   if (isError && !data) {
     return (
       <LoadError
-        message="Couldn’t load your growing areas."
+        message={t('areas.list.loadFailed')}
         error={error}
         onRetry={() => refetch()}
         retrying={isFetching}
@@ -213,7 +214,7 @@ export default function GrowingAreasScreen() {
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
         {growingAreas.length === 0 ? (
-          <Text style={styles.empty}>No growing areas yet. Create one to get started.</Text>
+          <Text style={styles.empty}>{t('areas.list.empty')}</Text>
         ) : (
           growingAreas.map((a: GrowingArea) => (
             <GrowingAreaCard
@@ -229,7 +230,7 @@ export default function GrowingAreasScreen() {
         icon="plus"
         style={styles.fab}
         color={palette.btnInk}
-        label="New growing area"
+        label={t('areas.list.newArea')}
         onPress={() => { reset(); setModalVisible(true); }}
       />
 
@@ -239,21 +240,21 @@ export default function GrowingAreasScreen() {
           onDismiss={() => setModalVisible(false)}
           contentContainerStyle={styles.modal}
         >
-          <Eyebrow>{`Step ${step + 1} of ${STEP_TITLES.length}`}</Eyebrow>
+          <Eyebrow>{t('areas.setup.stepOf', { step: step + 1, total: STEP_TITLES.length })}</Eyebrow>
           <Text variant="titleLarge" style={styles.modalTitle}>{STEP_TITLES[step]}</Text>
 
           <ScrollView style={styles.stepScroll} keyboardShouldPersistTaps="handled">
             {step === 0 && (
               <>
                 <TextInput
-                  label="Name *"
+                  label={t('areas.setup.name')}
                   value={name}
                   onChangeText={setName}
                   mode="outlined"
                   style={styles.input}
                 />
 
-                <Eyebrow style={styles.label}>What will plants sit in?</Eyebrow>
+                <Eyebrow style={styles.label}>{t('areas.setup.surfaceQ')}</Eyebrow>
                 <View style={styles.chipWrap}>
                   {SURFACES.map((s) => (
                     <Chip
@@ -270,10 +271,9 @@ export default function GrowingAreasScreen() {
                   ))}
                 </View>
 
-                <Eyebrow style={styles.label}>How much room is there?</Eyebrow>
+                <Eyebrow style={styles.label}>{t('areas.setup.roomQ')}</Eyebrow>
                 <Text variant="bodySmall" style={styles.hint}>
-                  Leave anything you haven’t measured blank. Blank means unknown,
-                  and nothing gets recommended on a guess.
+                  {t('areas.setup.roomHint')}
                 </Text>
                 <Measurement
                   label={prompts.area.label} hint={prompts.area.hint}
@@ -290,10 +290,9 @@ export default function GrowingAreasScreen() {
                   echo={lengthEcho(soilDepthIn)}
                 />
 
-                <Eyebrow style={styles.label}>Location</Eyebrow>
+                <Eyebrow style={styles.label}>{t('areas.setup.location')}</Eyebrow>
                 <Text variant="bodySmall" style={styles.hint}>
-                  Set a place to unlock local weather. Search an address or use your
-                  location — only a real, resolved place can be saved.
+                  {t('areas.setup.locationHint')}
                 </Text>
                 <AddressPicker key={pickerKey} onChange={setPlace} />
               </>
@@ -303,18 +302,18 @@ export default function GrowingAreasScreen() {
               <>
                 <Text variant="bodySmall" style={styles.hint}>
                   {surface
-                    ? `Set from “${surfaceName(surface)}”. Change anything that isn’t right.`
-                    : 'Describe how much of the weather actually reaches this spot.'}
+                    ? t('areas.setup.presetFrom', { surface: surfaceName(surface) })
+                    : t('areas.setup.conditionsHint')}
                 </Text>
 
-                <Eyebrow style={styles.label}>Shelter</Eyebrow>
+                <Eyebrow style={styles.label}>{t('areas.setup.shelter')}</Eyebrow>
                 <SegmentedButtons
                   value={shelter}
                   onValueChange={(v) => setShelter(v as Shelter)}
                   buttons={[
-                    { value: 'sheltered', label: 'Sheltered' },
-                    { value: 'partial',   label: 'Partial'   },
-                    { value: 'exposed',   label: 'Exposed'   },
+                    { value: 'sheltered', label: t('areas.setup.sheltered') },
+                    { value: 'partial',   label: t('areas.setup.partial')   },
+                    { value: 'exposed',   label: t('areas.setup.exposed')   },
                   ]}
                   style={styles.segmented}
                 />
@@ -322,50 +321,49 @@ export default function GrowingAreasScreen() {
                 {/* Not "temperature": the choice is whether outside air
                     reaches the spot, and it is what the fit engine reads to
                     tell an indoor spot from an outdoor one. */}
-                <Eyebrow style={styles.label}>Indoors or out</Eyebrow>
+                <Eyebrow style={styles.label}>{t('areas.setup.indoorOrOut')}</Eyebrow>
                 <Text variant="bodySmall" style={styles.hint}>{INDOOR_OUTDOOR_HINT}</Text>
                 <SegmentedButtons
                   value={tempExposure}
                   onValueChange={(v) => setTempExposure(v as TempExposure)}
                   buttons={[
-                    { value: 'indoor',  label: 'Indoors'  },
-                    { value: 'outdoor', label: 'Outdoors' },
+                    { value: 'indoor',  label: t('areas.setup.indoors')  },
+                    { value: 'outdoor', label: t('areas.setup.outdoors') },
                   ]}
                   style={styles.segmented}
                 />
 
-                <Eyebrow style={styles.label}>Sun</Eyebrow>
+                <Eyebrow style={styles.label}>{t('areas.setup.sun')}</Eyebrow>
                 <Text variant="bodySmall" style={styles.hint}>{SUN_HINT}</Text>
                 <SegmentedButtons
                   value={sunExposure}
                   onValueChange={(v) => setSunExposure(v as SunExposure)}
                   buttons={[
-                    { value: 'full_sun',    label: 'Full sun' },
-                    { value: 'partial_sun', label: 'Partial'  },
-                    { value: 'shade',       label: 'Shade'    },
+                    { value: 'full_sun',    label: t('areas.setup.fullSun') },
+                    { value: 'partial_sun', label: t('areas.setup.partial')  },
+                    { value: 'shade',       label: t('areas.setup.shade')    },
                   ]}
                   style={styles.segmented}
                 />
 
                 {/* Words, not bare icons: nobody can tell conservation from
                     research by a leaf and a microscope. */}
-                <Eyebrow style={styles.label}>Kind of place</Eyebrow>
+                <Eyebrow style={styles.label}>{t('areas.setup.kindOfPlace')}</Eyebrow>
                 <Text variant="bodySmall" style={styles.hint}>
-                  Only used to group your spaces in the census — it doesn’t
-                  change what gets suggested.
+                  {t('areas.setup.kindHint')}
                 </Text>
                 <View style={styles.chipWrap}>
-                  {AREA_TYPES.map((t) => (
+                  {AREA_TYPES.map((kind) => (
                     <Chip
-                      key={t}
+                      key={kind}
                       compact
-                      selected={type === t}
+                      selected={type === kind}
                       showSelectedCheck={false}
-                      onPress={() => setType(t)}
-                      style={[styles.chip, type === t && styles.chipOn]}
-                      textStyle={type === t ? styles.chipOnText : undefined}
+                      onPress={() => setType(kind)}
+                      style={[styles.chip, type === kind && styles.chipOn]}
+                      textStyle={type === kind ? styles.chipOnText : undefined}
                     >
-                      {areaTypeLabel(t)}
+                      {areaTypeLabel(kind)}
                     </Chip>
                   ))}
                 </View>
@@ -375,8 +373,7 @@ export default function GrowingAreasScreen() {
             {step === 2 && (
               <>
                 <Text variant="bodySmall" style={styles.hint}>
-                  Pick any that apply, or none. These narrow what gets suggested
-                  for this spot — they never loosen it.
+                  {t('areas.setup.goalsHint')}
                 </Text>
                 {GOALS.map((g) => (
                   <Chip
@@ -392,7 +389,7 @@ export default function GrowingAreasScreen() {
                 ))}
                 <Text variant="bodySmall" style={styles.goalNote}>
                   {goals.length === 0
-                    ? 'Nothing in particular — you’ll see whatever fits the space.'
+                    ? t('areas.setup.noGoals')
                     : GOALS.filter((g) => goals.includes(g.value))
                         .map((g) => g.hint).join(' ')}
                 </Text>
@@ -407,7 +404,7 @@ export default function GrowingAreasScreen() {
               onPress={() => (step === 0 ? setModalVisible(false) : setStep((s) => s - 1))}
               disabled={mutation.isPending}
             >
-              {step === 0 ? 'Cancel' : 'Back'}
+              {step === 0 ? t('areas.setup.cancel') : t('areas.setup.back')}
             </Button>
             <Button
               mode="contained"
@@ -415,7 +412,7 @@ export default function GrowingAreasScreen() {
               disabled={!canAdvance || mutation.isPending}
               loading={mutation.isPending}
             >
-              {isLast ? 'Create' : 'Next'}
+              {isLast ? t('areas.setup.create') : t('areas.setup.next')}
             </Button>
           </View>
         </Modal>

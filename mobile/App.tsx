@@ -18,6 +18,9 @@ import GrowingAreaDetailScreen from './src/screens/GrowingAreaDetailScreen';
 import CensusScreen        from './src/screens/CensusScreen';
 import AlmanacScreen      from './src/screens/AlmanacScreen';
 import SettingsScreen      from './src/screens/SettingsScreen';
+import HowWeKnowScreen     from './src/screens/HowWeKnowScreen';
+import { UnitsProvider } from './src/units/UnitsProvider';
+import { HeaderTextButton } from './src/components/HeaderTextButton';
 import HomeScreen          from './src/screens/HomeScreen';
 import PropertySetupScreen from './src/screens/PropertySetupScreen';
 import LandScreen          from './src/screens/LandScreen';
@@ -35,6 +38,7 @@ import { AuthProvider, useAuth } from './src/auth/AuthContext';
 import LoginScreen from './src/auth/LoginScreen';
 import ErrorBoundary, { guarded } from './src/components/ErrorBoundary';
 import { refreshAfterCrash } from './src/components/crashRefresh';
+import { t } from './src/i18n';
 
 // ── Param lists ───────────────────────────────────────────────────────────────
 // One stack, no tabs (build spec section 6). The param list lives in
@@ -74,7 +78,7 @@ const resetData = () => refreshAfterCrash(queryClient);
 // A render error costs one screen: the header's back button and every other
 // screen keep working. Wrapped once here, never inside a render, so each
 // wrapper keeps its identity.
-const Home          = guarded(HomeScreen, 'Home', resetData);
+const Home          = guarded(HomeScreen, 'Home', resetData, { keyOnUnit: false });
 const PropertySetup = guarded(PropertySetupScreen, 'Add your land', resetData);
 const Land          = guarded(LandScreen, 'Your land', resetData);
 const ZoneMap       = guarded(ZoneMapScreen, 'Zone map', resetData);
@@ -89,7 +93,8 @@ const Almanac       = guarded(AlmanacScreen, 'Species Almanac', resetData);
 const GrowingAreas  = guarded(GrowingAreasScreen, 'Growing areas', resetData);
 const GrowingAreaDetail = guarded(GrowingAreaDetailScreen, 'Growing area', resetData);
 const Census        = guarded(CensusScreen, 'Census', resetData);
-const Settings      = guarded(SettingsScreen, 'Settings', resetData);
+const Settings      = guarded(SettingsScreen, 'Settings', resetData, { keyOnUnit: false });
+const HowWeKnow     = guarded(HowWeKnowScreen, 'How we know', resetData);
 
 // ── The one stack ─────────────────────────────────────────────────────────────
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -108,11 +113,22 @@ function useHeaderOpts() {
 function RootNavigator() {
   return (
     <Stack.Navigator initialRouteName="Home" screenOptions={useHeaderOpts()}>
-      <Stack.Screen name="Home"          component={Home}          options={{ title: 'PlantAdvocate' }} />
-      <Stack.Screen name="PropertySetup" component={PropertySetup} options={{ title: 'Add your land' }} />
-      <Stack.Screen name="Land"          component={Land}          options={{ title: 'Your land' }} />
-      <Stack.Screen name="ZoneMap"       component={ZoneMap}       options={{ title: 'Zone map' }} />
-      <Stack.Screen name="Season"        component={Season}        options={{ title: 'The season' }} />
+      <Stack.Screen name="Home" component={Home} options={({ navigation }) => ({
+        title: 'PlantAdvocate',
+        // Settings one tap from the first screen, labeled in words.
+        headerRight: () => (
+          <HeaderTextButton
+            label={t('controls.settings')}
+            a11yLabel={t('controls.settingsA11y')}
+            a11yHint={t('controls.settingsHint')}
+            onPress={() => navigation.navigate('Settings')}
+          />
+        ),
+      })} />
+      <Stack.Screen name="PropertySetup" component={PropertySetup} options={{ title: t('nav.propertySetup') }} />
+      <Stack.Screen name="Land"          component={Land}          options={{ title: t('nav.land') }} />
+      <Stack.Screen name="ZoneMap"       component={ZoneMap}       options={{ title: t('nav.zoneMap') }} />
+      <Stack.Screen name="Season"        component={Season}        options={{ title: t('nav.season') }} />
       {/* First-run onboarding sends people here by this title. */}
       <Stack.Screen name="Spaces"        component={GrowingAreas}  options={{
         title: GROWING_AREAS_TAB,
@@ -120,17 +136,28 @@ function RootNavigator() {
       <Stack.Screen
         name="SpaceDetail"
         component={GrowingAreaDetail}
-        options={({ route }) => ({ title: route.params.name ?? 'Growing area' })}
+        options={({ route }) => ({ title: route.params.name ?? t('nav.growingArea') })}
       />
-      <Stack.Screen name="Plants"        component={Plants}        options={{ title: 'My Plants' }} />
-      <Stack.Screen name="PlantDetail"   component={PlantDetail}   options={{ title: 'Plant' }} />
-      <Stack.Screen name="AddPlant"      component={AddPlant}      options={{ title: 'Add plant' }} />
-      <Stack.Screen name="CaptureGarden" component={CaptureGarden} options={{ title: 'Walk the garden' }} />
-      <Stack.Screen name="Species"       component={Species}       options={{ title: 'Species catalog' }} />
-      <Stack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: 'Species' }} />
-      <Stack.Screen name="Almanac"       component={Almanac}       options={{ title: 'Species Almanac' }} />
-      <Stack.Screen name="Settings"      component={Settings}      options={{ title: 'Settings' }} />
-      <Stack.Screen name="Census"        component={Census}        options={{ title: 'Census' }} />
+      <Stack.Screen name="Plants"        component={Plants}        options={{ title: t('nav.plants') }} />
+      <Stack.Screen name="PlantDetail"   component={PlantDetail}   options={{ title: t('nav.plant') }} />
+      <Stack.Screen name="AddPlant"      component={AddPlant}      options={{ title: t('nav.addPlant') }} />
+      <Stack.Screen name="CaptureGarden" component={CaptureGarden} options={{ title: t('nav.captureGarden') }} />
+      <Stack.Screen name="Species"       component={Species}       options={{ title: t('nav.species') }} />
+      <Stack.Screen name="SpeciesDetail" component={SpeciesDetail} options={{ title: t('nav.speciesDetail') }} />
+      <Stack.Screen name="Almanac"       component={Almanac}       options={{ title: t('nav.almanac') }} />
+      <Stack.Screen name="Settings"      component={Settings}      options={{ title: t('nav.settings') }} />
+      <Stack.Screen name="Census"        component={Census}        options={{ title: t('nav.census') }} />
+      <Stack.Screen name="HowWeKnow" component={HowWeKnow} options={({ navigation }) => ({
+        title: t('howWeKnow.title'),
+        presentation: 'modal',
+        headerRight: () => (
+          <HeaderTextButton
+            label={t('howWeKnow.close')}
+            a11yLabel={t('howWeKnow.closeA11y')}
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      })} />
     </Stack.Navigator>
   );
 }
@@ -198,7 +225,9 @@ function AuthGate() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <StatusBar style="light" />
+      {/* The header is the accent: dark green in Almanac (light text), light
+          blue in Observatory (dark text). */}
+      <StatusBar style={themeName === 'observatory' ? 'dark' : 'light'} />
       <RootNavigator />
       {showOnboarding && (
         <Onboarding onSkip={dismissOnboarding} />
@@ -227,6 +256,7 @@ export default function App() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <AppThemeProvider>
+          <UnitsProvider>
           {/* The last line of defence: anything the per-screen boundaries
               don't cover (sign-in, the header, onboarding) shows a card
               with Try again instead of closing the app. */}
@@ -235,6 +265,7 @@ export default function App() {
               <AuthGate />
             </AuthProvider>
           </ErrorBoundary>
+          </UnitsProvider>
         </AppThemeProvider>
       </QueryClientProvider>
     </SafeAreaProvider>

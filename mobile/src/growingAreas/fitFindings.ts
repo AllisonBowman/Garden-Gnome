@@ -9,14 +9,15 @@
 
 import type { Candidate, FitAxis, FitFinding, SpeciesFit } from '../api/growingAreas';
 import { goalPhrase } from './realEstate';
+import { t } from '../i18n';
 
 export const AXIS_LABEL: Record<FitAxis, string> = {
-  indoor_outdoor: 'Indoors or out',
-  sun: 'Sun',
-  soil: 'Soil',
-  footprint: 'Size',
-  upkeep: 'Upkeep',
-  goal: 'What it’s for',
+  indoor_outdoor: t('areas.axis.indoor_outdoor'),
+  sun: t('areas.axis.sun'),
+  soil: t('areas.axis.soil'),
+  footprint: t('areas.axis.footprint'),
+  upkeep: t('areas.axis.upkeep'),
+  goal: t('areas.axis.goal'),
 };
 
 const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
@@ -40,10 +41,10 @@ export function findingHeading(finding: FitFinding): string {
     : findingLabel(finding);
 }
 
-/** "a", "a and b", "a, b and c". */
+/** "a", "a and b", "a, b and c" ("a, b y c" in Spanish). */
 export function joinAnd(items: string[]): string {
   if (items.length <= 1) return items.join('');
-  return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
+  return t('areas.listAnd', { head: items.slice(0, -1).join(', '), last: items[items.length - 1] });
 }
 
 /** The labels of the findings with one verdict, once each, lower-cased for
@@ -59,7 +60,7 @@ function labelsWith(findings: FitFinding[], verdict: FitFinding['verdict']): str
  *  unknown is never a reason — so a list with none of them says nothing. */
 export function confirmedLine(findings: FitFinding[]): string | null {
   const labels = labelsWith(findings, 'fits');
-  return labels.length > 0 ? `Confirmed here: ${joinAnd(labels)}.` : null;
+  return labels.length > 0 ? t('areas.confirmedHere', { list: joinAnd(labels) }) : null;
 }
 
 /** The findings Add Plant lists one by one: the misfits, and only those. */
@@ -78,12 +79,12 @@ export function fitsOf(findings: FitFinding[]): FitFinding[] {
  *  it is not hidden either. Null when every axis was answered. */
 export function notKnownLine(findings: FitFinding[]): string | null {
   const unknown = labelsWith(findings, 'unknown');
-  return unknown.length > 0 ? `Not known here: ${joinAnd(unknown)}.` : null;
+  return unknown.length > 0 ? t('areas.notKnownHere', { list: joinAnd(unknown) }) : null;
 }
 
 /** The heading over an Add Plant answer that has misfits in it. */
 export function misfitIntro(areaName: string): string {
-  return `Worth knowing before it goes in ${areaName}`;
+  return t('areas.misfitIntro', { area: areaName });
 }
 
 /** What Add Plant says when the chosen spot has nothing on record against
@@ -95,13 +96,14 @@ export function misfitIntro(areaName: string): string {
 export function speciesFitNote(fit: SpeciesFit, areaName: string): string | null {
   if (misfitsOf(fit.findings).length > 0) return null;
   if (!fit.candidate) {
-    return `The catalog can’t judge it for ${areaName} yet — nothing is on `
-      + 'record for or against it there, so this is no recommendation either way.';
+    return t('areas.cantJudge', { area: areaName });
   }
   const confirmed = labelsWith(fit.findings, 'fits');
   const unknown = labelsWith(fit.findings, 'unknown');
-  const said = `Nothing on record against it in ${areaName}. Confirmed: ${joinAnd(confirmed)}.`;
-  return unknown.length > 0 ? `${said} Not known: ${joinAnd(unknown)}.` : said;
+  const said = t('areas.nothingAgainst', { area: areaName, list: joinAnd(confirmed) });
+  return unknown.length > 0
+    ? t('areas.twoSentences', { first: said, second: t('areas.notKnown', { list: joinAnd(unknown) }) })
+    : said;
 }
 
 /** How a plant is named on the "needs addressing" card: its nickname, and
@@ -123,9 +125,7 @@ export function plantTitle(
 /** Shown in place of a fit answer the app could not fetch. A failed request
  *  has checked nothing, so it must never fall through to an empty list's
  *  all-clear wording ("nothing here contradicts the space"). */
-export const CHECK_FAILED =
-  'Couldn’t reach the catalog to check this just now — that isn’t an all-clear. '
-  + 'Try again in a moment.';
+export const CHECK_FAILED = t('areas.checkFailed');
 
 /** The caution a candidate carries, or null. The server writes the line
  *  ("Toxic to pets and people if eaten.") and the screens show it as-is on

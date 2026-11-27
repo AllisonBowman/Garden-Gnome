@@ -1,4 +1,5 @@
 import { CareType } from '../types';
+import { t } from '../i18n';
 
 // Presentation for a care check on the calendar and the to-do list.
 // `check` is what a row asks for — always a look, never the chore, because
@@ -7,18 +8,24 @@ import { CareType } from '../types';
 // confirmation uses once the caretaker logs what they did. Water's check is
 // the soil, and the "💧 Watered" quick-log button is one of the ways a check
 // can end.
+const ICONS: Record<CareType, string> = {
+  water: '💧', fertilize: '🌿', mist: '💨', prune: '✂️',
+  repot: '🪴', rotate: '🔄', clean: '🧽', other: '🌱',
+};
+const TYPES = Object.keys(ICONS) as CareType[];
+
 export const CARE_PRESENTATION: Record<CareType, {
   icon: string; check: (nickname: string) => string; done: string;
-}> = {
-  water:     { icon: '💧', check: (n) => `Check ${n}`,                    done: 'Watered'    },
-  fertilize: { icon: '🌿', check: (n) => `See if ${n} wants feeding`,     done: 'Fertilized' },
-  mist:      { icon: '💨', check: (n) => `See if ${n} wants misting`,     done: 'Misted'     },
-  prune:     { icon: '✂️', check: (n) => `See if ${n} wants pruning`,     done: 'Pruned'     },
-  repot:     { icon: '🪴', check: (n) => `Look at ${n}’s roots`,          done: 'Repotted'   },
-  rotate:    { icon: '🔄', check: (n) => `See if ${n} wants turning`,     done: 'Rotated'    },
-  clean:     { icon: '🧽', check: (n) => `See if ${n}’s leaves want a wipe`, done: 'Cleaned' },
-  other:     { icon: '🌱', check: (n) => `Look in on ${n}`,               done: 'Cared for'  },
-};
+}> = Object.fromEntries(TYPES.map((type) => [type, {
+  icon: ICONS[type],
+  check: (n: string) => t(`care.presentation.${type}.check`, { name: n }),
+  done: t(`care.presentation.${type}.done`),
+}])) as Record<CareType, { icon: string; check: (nickname: string) => string; done: string }>;
+
+/** A care log row's title: "Water", "Repot". */
+export function careActionName(careType: CareType): string {
+  return TYPES.includes(careType) ? t(`care.actionNames.${careType}`) : careType;
+}
 
 /** "💧 Check Ferny" — the phrase for a to-do row or calendar entry. */
 export function careActionLabel(careType: CareType, nickname: string): string {

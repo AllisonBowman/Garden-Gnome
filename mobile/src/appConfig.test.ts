@@ -73,6 +73,48 @@ test('each string names the feature that uses it', () => {
   expect(shown.NSMicrophoneUsageDescription).toMatch(/never receives/);
 });
 
+// --- Spanish purpose strings ------------------------------------------------------
+// app.json "locales" points iOS at locales/es.json, which @expo/config-plugins
+// writes to es.lproj/InfoPlist.strings. A phone in Spanish reads these instead.
+
+const esPlist: Record<string, string> = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '../locales/es.json'), 'utf8'),
+);
+
+test('Spanish is wired up for iOS', () => {
+  expect(expo.locales).toEqual({ es: './locales/es.json' });
+  expect(expo.ios.infoPlist.CFBundleAllowMixedLocalizations).toBe(true);
+  expect(pluginOptions('expo-localization')).toEqual({ supportedLocales: { ios: ['en', 'es'] } });
+});
+
+test('every permission string has a Spanish one', () => {
+  const keys = [...Object.keys(shown), 'NSMotionUsageDescription'];
+  for (const key of keys) {
+    expect([key, typeof esPlist[key]]).toEqual([key, 'string']);
+    expect(esPlist[key]).toMatch(/PlantAdvocate/);
+    expect(esPlist[key]).not.toEqual(shown[key]);
+  }
+  // Only Info.plist purpose strings belong there.
+  for (const key of Object.keys(esPlist)) expect(key).toMatch(/^NS\w+UsageDescription$/);
+});
+
+test('the Spanish strings survive the .strings writer', () => {
+  // @expo/config-plugins ios/Locales.js writes `key = "value";` without
+  // escaping, so a double quote or backslash would break the file.
+  for (const text of Object.values(esPlist)) expect(text).not.toMatch(/["\\\n]/);
+});
+
+test('the Spanish strings name the features as the Spanish screens do', () => {
+  expect(esPlist.NSCameraUsageDescription).toMatch(/Recorre el jardín/);
+  expect(esPlist.NSCameraUsageDescription).toMatch(/revisiones con foto/);
+  expect(esPlist.NSMicrophoneUsageDescription).toMatch(/Recorre el jardín/);
+  expect(esPlist.NSSpeechRecognitionUsageDescription).toMatch(/Recorre el jardín/);
+  expect(esPlist.NSSpeechRecognitionUsageDescription).toMatch(/Apple/);
+  expect(esPlist.NSPhotoLibraryUsageDescription).toMatch(/revisiones con foto/);
+  expect(esPlist.NSLocationWhenInUseUsageDescription).toMatch(/Usar mi ubicación/);
+  expect(esPlist.NSLocationWhenInUseUsageDescription).toMatch(/área de cultivo/);
+});
+
 test('no string offers what this version does not', () => {
   // Photo identification is hidden from 1.2.0 (src/photoId/entry.ts). While
   // it is, no prompt may say the phone can suggest what a plant is. When the

@@ -1,5 +1,6 @@
 import { CareLog, CareType, Plant, Species } from '../types';
 import { parseServerDate } from '../api/serverDate';
+import { t } from '../i18n';
 
 // All derived from existing care-log data — no storage, no backend. Because
 // care logs are append-only, earned milestones stay earned.
@@ -194,23 +195,23 @@ interface Metrics {
 
 // Small, tasteful set spanning first-time / streak / count / variety.
 const BADGE_DEFS: BadgeDef[] = [
-  { id: 'first_sprout', name: 'First Sprout', emoji: '🌱',
-    description: 'Logged your first care action.',
+  { id: 'first_sprout', name: t('care.streaks.badges.first_sprout.name'), emoji: '🌱',
+    description: t('care.streaks.badges.first_sprout.description'),
     test: (m) => m.totalCareActions >= 1 },
-  { id: 'plant_parent', name: 'Plant Parent', emoji: '🪴',
-    description: 'Added 5 plants to your garden.',
+  { id: 'plant_parent', name: t('care.streaks.badges.plant_parent.name'), emoji: '🪴',
+    description: t('care.streaks.badges.plant_parent.description'),
     test: (m) => m.plantCount >= 5 },
-  { id: 'green_thumb', name: 'Green Thumb', emoji: '🌿',
-    description: 'Kept a 7-day care streak.',
+  { id: 'green_thumb', name: t('care.streaks.badges.green_thumb.name'), emoji: '🌿',
+    description: t('care.streaks.badges.green_thumb.description'),
     test: (m) => m.bestStreak >= 7 },
-  { id: 'botanist', name: 'Botanist', emoji: '📚',
-    description: 'Growing 5 different species.',
+  { id: 'botanist', name: t('care.streaks.badges.botanist.name'), emoji: '📚',
+    description: t('care.streaks.badges.botanist.description'),
     test: (m) => m.distinctSpecies >= 5 },
-  { id: 'consistent_carer', name: 'Consistent Carer', emoji: '📅',
-    description: 'Kept a 30-day care streak.',
+  { id: 'consistent_carer', name: t('care.streaks.badges.consistent_carer.name'), emoji: '📅',
+    description: t('care.streaks.badges.consistent_carer.description'),
     test: (m) => m.bestStreak >= 30 },
-  { id: 'century_club', name: 'Century Club', emoji: '💯',
-    description: 'Logged 100 care actions.',
+  { id: 'century_club', name: t('care.streaks.badges.century_club.name'), emoji: '💯',
+    description: t('care.streaks.badges.century_club.description'),
     test: (m) => m.totalCareActions >= 100 },
 ];
 

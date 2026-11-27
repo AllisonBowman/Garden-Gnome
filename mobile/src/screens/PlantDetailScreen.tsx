@@ -41,6 +41,8 @@ import { NO_SCHEDULE_LINE, hasCheckSchedule } from '../care/schedule';
 import { fetchSpecies } from '../api/species';
 import { useAiCapabilities } from '../care/useAiCapabilities';
 import { adviceSourceLabel, diagnosisSourceLabel } from '../care/resultLabels';
+import { careActionName } from '../care/labels';
+import { localeTag, t } from '../i18n';
 
 type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 
@@ -50,15 +52,15 @@ type Route = RouteProp<PlantsStackParamList, 'PlantDetail'>;
 const CARE_ACTIONS: {
   type: CareType; icon: string; label: string; outcome?: CareOutcome;
 }[] = [
-  { type: 'water',     icon: '💧', label: 'Watered',    outcome: 'watered'  },
-  { type: 'fertilize', icon: '🌿', label: 'Fertilized' },
-  { type: 'prune',     icon: '✂️', label: 'Pruned'     },
-  { type: 'repot',     icon: '🪴', label: 'Repotted',   outcome: 'repotted' },
-  { type: 'rotate',    icon: '🔄', label: 'Rotated'    },
+  { type: 'water',     icon: '💧', label: t('plants.detail.actions.water'),     outcome: 'watered'  },
+  { type: 'fertilize', icon: '🌿', label: t('plants.detail.actions.fertilize') },
+  { type: 'prune',     icon: '✂️', label: t('plants.detail.actions.prune')     },
+  { type: 'repot',     icon: '🪴', label: t('plants.detail.actions.repot'),     outcome: 'repotted' },
+  { type: 'rotate',    icon: '🔄', label: t('plants.detail.actions.rotate')    },
 ];
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, {
+  return new Date(iso).toLocaleDateString(localeTag, {
     month: 'short', day: 'numeric', year: 'numeric',
   });
 }
@@ -108,12 +110,18 @@ export default function PlantDetailScreen() {
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
       const action = CARE_ACTIONS.find((a) => a.type === type);
       setConfirmation(
-        `${action?.icon ?? '✅'} ${action?.label ?? 'Care'} — added to ${plant?.nickname ?? 'plant'}'s log`,
+        plant?.nickname
+          ? t('plants.detail.logged', {
+            icon: action?.icon ?? '✅', label: action?.label ?? careActionName(type), name: plant.nickname,
+          })
+          : t('plants.detail.loggedNoName', {
+            icon: action?.icon ?? '✅', label: action?.label ?? careActionName(type),
+          }),
       );
       // Care history changed — recompute reminder schedule in the background
       void rescheduleAllReminders();
     },
-    onError: () => Alert.alert('Error', 'Could not log care action.'),
+    onError: () => Alert.alert(t('plants.detail.errorTitle'), t('plants.detail.logError')),
     onSettled: () => setLoggingType(null),
   });
 
@@ -140,12 +148,14 @@ export default function PlantDetailScreen() {
       // Both areas' "needs addressing" lists change when a plant moves.
       queryClient.invalidateQueries({ queryKey: ['growingAreaMisfits'] });
       queryClient.invalidateQueries({ queryKey: CARE_TASKS_QUERY_KEY });
-      setConfirmation(`🌍 Moved to ${dest?.name ?? 'its new home'} — history came along`);
+      setConfirmation(dest?.name
+        ? t('plants.detail.moved', { place: dest.name })
+        : t('plants.detail.movedNoName'));
       void rescheduleAllReminders();
     },
     onError: (err) => Alert.alert(
-      'Could not move it',
-      serverMessage(err, 'That move didn’t go through. Please try again.'),
+      t('plants.detail.moveFailTitle'),
+      serverMessage(err, t('plants.detail.moveFailBody')),
     ),
     onSettled: () => setMovingTo(null),
   });
@@ -162,17 +172,19 @@ export default function PlantDetailScreen() {
       navigation.goBack();
     },
     onError: (err) => Alert.alert(
-      'Could not remove it',
-      serverMessage(err, 'That didn’t go through. Please try again.'),
+      t('plants.detail.removeFailTitle'),
+      serverMessage(err, t('plants.detail.removeFailBody')),
     ),
   });
 
   const confirmDelete = () => Alert.alert(
-    `Remove ${plant?.nickname ?? 'this plant'}?`,
-    'Its care log and history go too. This can’t be undone.',
+    plant?.nickname
+      ? t('plants.detail.removeConfirmTitle', { name: plant.nickname })
+      : t('plants.detail.removeConfirmTitleNoName'),
+    t('plants.detail.removeConfirmBody'),
     [
-      { text: 'Keep it', style: 'cancel' },
-      { text: 'Remove', style: 'destructive', onPress: () => deleteMutation.mutate() },
+      { text: t('plants.detail.keep'), style: 'cancel' },
+      { text: t('plants.detail.remove'), style: 'destructive', onPress: () => deleteMutation.mutate() },
     ],
   );
 
@@ -194,11 +206,8 @@ export default function PlantDetailScreen() {
     onSuccess: setAdvice,
     onError: (err) =>
       Alert.alert(
-        'No advice just now',
-        serverMessage(
-          err,
-          "The Gnome couldn't put together advice just now. Please try again in a few minutes.",
-        ),
+        t('plants.detail.noAdviceTitle'),
+        serverMessage(err, t('plants.detail.noAdviceBody')),
       ),
   });
   // A question in the caretaker's own words goes to an outside AI service,
@@ -222,11 +231,8 @@ export default function PlantDetailScreen() {
     },
     onError: (err) =>
       Alert.alert(
-        'No reading just now',
-        serverMessage(
-          err,
-          "The Gnome couldn't examine this photo just now. Your photo was not analyzed — please try again in a few minutes.",
-        ),
+        t('plants.detail.noReadingTitle'),
+        serverMessage(err, t('plants.detail.noReadingBody')),
       ),
   });
 
@@ -263,7 +269,7 @@ export default function PlantDetailScreen() {
       <View style={styles.container}>
         <EmptyState
           emoji={LOAD_FAILED.emoji}
-          title={loadFailedTitle('this plant')}
+          title={loadFailedTitle('plant')}
           body={loadFailedBody(error)}
           actionLabel={LOAD_FAILED.action}
           onAction={() => refetch()}
@@ -302,7 +308,7 @@ export default function PlantDetailScreen() {
 
       {/* Quick-log care */}
       <Card style={styles.card}>
-        <Card.Title title="Log care" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('plants.detail.logCare')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <View style={styles.careGrid}>
             {CARE_ACTIONS.map((a) => (
@@ -325,17 +331,17 @@ export default function PlantDetailScreen() {
 
       {/* Care advice */}
       <Card style={styles.card}>
-        <Card.Title title="Ask the Gnome 🧙" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('plants.detail.askGnome')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {capabilities.symptoms && (
             <TextInput
-              label="Anything wrong? (optional)"
+              label={t('plants.detail.symptomsLabel')}
               value={symptoms}
               onChangeText={setSymptoms}
               mode="outlined"
               multiline
               numberOfLines={2}
-              placeholder="e.g. leaves turning yellow at the base"
+              placeholder={t('plants.detail.symptomsPlaceholder')}
               style={styles.symptomsInput}
             />
           )}
@@ -346,12 +352,13 @@ export default function PlantDetailScreen() {
             disabled={adviceMutation.isPending}
             style={styles.adviceBtn}
           >
-            Get care advice
+            {t('plants.detail.getAdvice')}
           </Button>
           {!advice && !adviceMutation.isPending && (
             <Text style={styles.adviceHint}>
-              Care tips for {plant.nickname}, grounded in its species and history.
-              {capabilities.symptoms ? ' Mention anything that looks off above.' : ''}
+              {capabilities.symptoms
+                ? t('plants.detail.adviceHintSymptoms', { name: plant.nickname })
+                : t('plants.detail.adviceHint', { name: plant.nickname })}
             </Text>
           )}
           {advice && (
@@ -397,17 +404,17 @@ export default function PlantDetailScreen() {
       {capabilities.photoDiagnosis && (
         <Card style={styles.specimenCard}>
           <View style={styles.specimenHeader}>
-            <Eyebrow color={palette.warn}>SPECIMEN CHECK-UP</Eyebrow>
-            <Text style={styles.specimenTitle}>Photo diagnosis 📷</Text>
+            <Eyebrow color={palette.warn}>{t('plants.detail.specimenEyebrow')}</Eyebrow>
+            <Text style={styles.specimenTitle}>{t('plants.detail.photoTitle')}</Text>
             <Text style={styles.specimenSub}>
-              Snap what worries you and crop in close — the Gnome reads it
-              against {species?.common_name ?? 'this species'}&apos;s care facts
-              and this plant&apos;s history, then files it to the timeline.
+              {species?.common_name
+                ? t('plants.detail.photoSub', { species: species.common_name })
+                : t('plants.detail.photoSubNoSpecies')}
             </Text>
           </View>
           <Card.Content style={styles.specimenBody}>
             <TextInput
-              label="Anything specific you noticed? (optional)"
+              label={t('plants.detail.notesLabel')}
               value={diagnosisNotes}
               onChangeText={setDiagnosisNotes}
               mode="outlined"
@@ -415,7 +422,7 @@ export default function PlantDetailScreen() {
               outlineColor={palette.line}
               activeOutlineColor={palette.warn}
               textColor={palette.ink}
-              placeholder="e.g. brown spots since last week"
+              placeholder={t('plants.detail.notesPlaceholder')}
             />
             <View style={styles.diagnosisBtnRow}>
               {Platform.OS !== 'web' && (
@@ -428,7 +435,7 @@ export default function PlantDetailScreen() {
                   textColor={palette.btnInk}
                   style={styles.diagnosisBtn}
                 >
-                  Take photo
+                  {t('plants.detail.takePhoto')}
                 </Button>
               )}
               <Button
@@ -441,17 +448,17 @@ export default function PlantDetailScreen() {
                 textColor={Platform.OS === 'web' ? palette.btnInk : palette.warn}
                 style={styles.diagnosisBtn}
               >
-                Choose photo
+                {t('plants.detail.choosePhoto')}
               </Button>
             </View>
             {diagnoseMutation.isPending && (
               <Text style={styles.diagnosisPending}>
-                Examining the specimen… this can take a moment.
+                {t('plants.detail.examining')}
               </Text>
             )}
             {diagnosis && (
               <View style={styles.testimony}>
-                <Eyebrow color={palette.warn}>GNOME&apos;S FINDINGS</Eyebrow>
+                <Eyebrow color={palette.warn}>{t('plants.detail.findings')}</Eyebrow>
                 {diagnosis.diagnosis.split('\n').filter((l) => l.trim()).map((line, i) => (
                   <Text key={i} style={styles.testimonyText}>{line}</Text>
                 ))}
@@ -480,7 +487,7 @@ export default function PlantDetailScreen() {
           replaces them (a synthetic number must not sit beside a cited one). */}
       {species && (
         <Card style={styles.card}>
-          <Card.Title title="Care guide" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('plants.detail.careGuide')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             {species.care_notes ? (
               <>
@@ -500,7 +507,7 @@ export default function PlantDetailScreen() {
               </Text>
             ) : species.toxic_to_pets ? (
               <Chip icon="alert" style={styles.toxicChip} textStyle={{ color: palette.warn }}>
-                ⚠️ Caution: toxic to pets
+                {t('plants.detail.toxicChip')}
               </Chip>
             ) : null}
             {/* Under whatever was said about harm, the line the listing
@@ -529,18 +536,17 @@ export default function PlantDetailScreen() {
 
       {/* Care log */}
       <Card style={styles.card}>
-        <Card.Title title="Recent care log" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('plants.detail.recentLog')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           {(!logs || logs.length === 0) ? (
             <Text style={styles.empty}>
-              No care logged yet — tap a care action above and {plant.nickname}&apos;s
-              timeline starts here.
+              {t('plants.detail.noLog', { name: plant.nickname })}
             </Text>
           ) : (
             logs.slice(0, 10).map((log) => (
               <List.Item
                 key={log.id}
-                title={log.action.charAt(0).toUpperCase() + log.action.slice(1)}
+                title={careActionName(log.action)}
                 description={log.notes || formatDate(log.logged_at)}
                 left={(props) => <List.Icon {...props} icon="check-circle-outline" />}
                 style={styles.logItem}
@@ -553,11 +559,10 @@ export default function PlantDetailScreen() {
       {/* Moving and removing. Kept at the bottom, below everything a caretaker
           reads day to day, because neither is a routine action. */}
       <Card style={styles.card}>
-        <Card.Title title="Move or remove" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+        <Card.Title title={t('plants.detail.moveOrRemove')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
         <Card.Content>
           <Text style={styles.moveHint}>
-            Moving {plant.nickname} keeps its whole history — the same plant, in
-            a new place.
+            {t('plants.detail.moveHint', { name: plant.nickname })}
           </Text>
           <View style={styles.moveRow}>
             {otherGrowingAreas.map((env) => (
@@ -574,13 +579,12 @@ export default function PlantDetailScreen() {
                 style={styles.moveBtn}
                 labelStyle={styles.moveBtnLabel}
               >
-                Move to {env.name}
+                {t('plants.detail.moveTo', { place: env.name })}
               </Button>
             ))}
             {otherGrowingAreas.length === 0 && (
               <Text style={styles.empty}>
-                There&apos;s nowhere else to move it yet — add another
-                growing area first.
+                {t('plants.detail.nowhere')}
               </Text>
             )}
           </View>
@@ -595,10 +599,10 @@ export default function PlantDetailScreen() {
             disabled={deleteMutation.isPending}
             onPress={confirmDelete}
           >
-            Remove {plant.nickname}
+            {t('plants.detail.removeButton', { name: plant.nickname })}
           </Button>
           <Text style={styles.removeHint}>
-            This also removes its care log and history, and can&apos;t be undone.
+            {t('plants.detail.removeHint')}
           </Text>
         </Card.Content>
       </Card>

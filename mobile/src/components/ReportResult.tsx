@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 import { ReportSurface, buildReportMailto, openExternal } from '../support';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
+import { t } from '../i18n';
 
 type Props = {
   /** What is being reported: which feature produced the result, or a fact
@@ -20,7 +21,7 @@ type Props = {
 /** The link's words: a fact on a species page is reported as a fact, and
  *  everything else as a result. */
 export function reportLinkLabel(surface: ReportSurface): string {
-  return surface === 'fact' ? 'Report a fact' : 'Report this result';
+  return surface === 'fact' ? t('care.report.fact') : t('care.report.result');
 }
 
 /**

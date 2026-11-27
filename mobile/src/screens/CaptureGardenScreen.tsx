@@ -22,6 +22,7 @@ import * as speech from '../../modules/plant-speech';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import Eyebrow from '../components/Eyebrow';
+import { t } from '../i18n';
 
 // Walk the garden and say what's in it.
 //
@@ -133,7 +134,7 @@ export default function CaptureGardenScreen() {
       return;
     }
     if (!(await speech.requestPermission())) {
-      setNote('PlantAdvocate needs the microphone to listen. You can still type.');
+      setNote(t('capture.walk.micNeeded'));
       return;
     }
     beforeDictation.current = heard ? `${heard} ` : '';
@@ -141,10 +142,10 @@ export default function CaptureGardenScreen() {
       const onDevice = await speech.start();
       setListening(true);
       setNote(onDevice
-        ? 'Listening — say what’s planted. Nothing leaves your phone.'
-        : 'Listening — this device sends audio to Apple to transcribe it.');
+        ? t('capture.walk.listeningOnDevice')
+        : t('capture.walk.listeningApple'));
     } catch {
-      setNote('Couldn’t start listening. You can still type.');
+      setNote(t('capture.walk.cantListen'));
     }
   }, [listening, heard]);
 
@@ -177,7 +178,7 @@ export default function CaptureGardenScreen() {
   const add = useCallback(() => {
     const grounded = groundEntries(splitUtterance(heard), catalog);
     if (!grounded.length) {
-      setNote('Nothing to add there — try naming a plant.');
+      setNote(t('capture.walk.nothingToAdd'));
       return;
     }
     setDrafts((prev) => [...prev, ...grounded.map(toDraft)]);
@@ -225,8 +226,8 @@ export default function CaptureGardenScreen() {
     // saveInChunks reports a failed batch rather than throwing; this is for
     // anything else, so a tap never ends in silence.
     onError: () => Alert.alert(
-      'Nothing was saved',
-      'Your list is still here. Try again in a moment.',
+      t('capture.save.nothingSaved'),
+      `${t('capture.save.listStillHere')} ${t('capture.save.tryAgainSoon')}`,
     ),
   });
 
@@ -245,7 +246,7 @@ export default function CaptureGardenScreen() {
       <View style={[StyleSheet.absoluteFill, styles.scrim]} />
 
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Eyebrow color={palette.btnInk}>WALK AND SAY WHAT YOU SEE</Eyebrow>
+        <Eyebrow color={palette.btnInk}>{t('capture.walk.eyebrow')}</Eyebrow>
 
         {growingAreas.length > 1 && (
           <View style={styles.envRow}>
@@ -268,8 +269,8 @@ export default function CaptureGardenScreen() {
           multiline
           value={heard}
           onChangeText={setHeard}
-          placeholder="Twelve tomatoes along the south fence, a rosemary bush by the gate…"
-          label="What's planted here?"
+          placeholder={t('capture.walk.placeholder')}
+          label={t('capture.walk.label')}
           style={styles.input}
           right={(
             <TextInput.Icon
@@ -279,20 +280,20 @@ export default function CaptureGardenScreen() {
               icon={listening ? 'stop-circle' : 'microphone'}
               color={listening ? palette.warn : undefined}
               onPress={canListen ? toggleListening : () => setNote(
-                'Tap the microphone on your keyboard to speak instead of typing.',
+                t('capture.walk.keyboardMic'),
               )}
             />
           )}
         />
         {listening && (
-          <Text style={styles.listening}>● Listening — tap the square to stop.</Text>
+          <Text style={styles.listening}>{t('capture.walk.listening')}</Text>
         )}
         {catalogFailed && !catalogReady && (
           <Card style={styles.card} mode="elevated">
             <Card.Content>
               <LoadError
                 inline
-                message="Couldn’t load the plant catalog, so nothing you say can be matched yet. What you’ve typed stays here."
+                message={t('capture.walk.catalogFailed')}
                 error={catalogError}
                 onRetry={() => refetchCatalog()}
                 retrying={catalogFetching}
@@ -306,12 +307,12 @@ export default function CaptureGardenScreen() {
           disabled={!heard.trim() || !catalogReady}
           style={styles.addBtn}
         >
-          {catalogLoading ? 'Loading the catalog…' : 'Add these'}
+          {catalogLoading ? t('capture.walk.loadingCatalog') : t('capture.walk.addThese')}
         </Button>
 
         {permission && !permission.granted && (
           <Button mode="text" onPress={requestPermission} textColor={palette.btnInk}>
-            Turn the camera on
+            {t('capture.walk.cameraOn')}
           </Button>
         )}
 
@@ -334,8 +335,8 @@ export default function CaptureGardenScreen() {
             style={styles.saveBtn}
           >
             {ready.length === drafts.length
-              ? `Add ${ready.length} to the garden`
-              : `Add ${ready.length} of ${drafts.length} — pick a species for the rest`}
+              ? t('capture.walk.addAll', { n: ready.length })
+              : t('capture.walk.addSome', { ready: ready.length, total: drafts.length })}
           </Button>
         )}
       </ScrollView>
@@ -386,9 +387,9 @@ function DraftCard({
             dense
             keyboardType="number-pad"
             value={String(draft.count)}
-            onChangeText={(t) => onChange({ count: Math.max(1, parseInt(t, 10) || 1) })}
+            onChangeText={(v) => onChange({ count: Math.max(1, parseInt(v, 10) || 1) })}
             style={styles.countInput}
-            label="How many"
+            label={t('capture.walk.howMany')}
           />
           <View style={styles.speciesCell}>
             {chosen ? (
@@ -403,8 +404,8 @@ function DraftCard({
             ) : (
               <Text style={styles.unplaced}>
                 {draft.tier === 'none'
-                  ? 'Couldn’t place this one — search below.'
-                  : 'Pick which one you meant.'}
+                  ? t('capture.walk.cantPlace')
+                  : t('capture.walk.pickOne')}
               </Text>
             )}
           </View>
@@ -433,7 +434,7 @@ function DraftCard({
               dense
               value={search}
               onChangeText={setSearch}
-              placeholder="Search the catalog"
+              placeholder={t('capture.walk.searchCatalog')}
               style={styles.search}
             />
             {results.map((s) => (

@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { useTempUnitOrDefault } from '../units/context';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { ALMANAC, Palette } from '../theme/tokens';
 import { APP_VERSION, SUPPORT_EMAIL, openExternal } from '../support';
 import { buildProblemMailto } from './errorReport';
+import { t } from '../i18n';
 
 interface Props {
   /** Which part of the app this guards, for the report email. */
@@ -86,16 +88,32 @@ export function guarded<P extends object>(
   Screen: React.ComponentType<P>,
   where: string,
   onReset?: Props['onReset'],
+  options: { keyOnUnit?: boolean } = {},
 ): React.ComponentType<P> {
+  const keyOnUnit = options.keyOnUnit ?? true;
   function Guarded(props: P) {
     return (
       <ErrorBoundary where={where} onReset={onReset}>
-        <Screen {...props} />
+        {keyOnUnit
+          ? <UnitKeyed Screen={Screen} screenProps={props} />
+          // A screen that holds the °F/°C control itself reads the unit and
+          // redraws in place, so a tap there does not throw it back to the top.
+          : <Screen {...props} />}
       </ErrorBoundary>
     );
   }
   Guarded.displayName = `Guarded(${where})`;
   return Guarded;
+}
+
+/** Draws the screen keyed on the temperature unit: a °F/°C change redraws
+ *  it from scratch (its navigation stays), so no sentence written with the
+ *  old unit lingers in a memo. */
+export function UnitKeyed<P extends object>({ Screen, screenProps }: {
+  Screen: React.ComponentType<P>; screenProps: P;
+}) {
+  const unit = useTempUnitOrDefault();
+  return <Screen key={unit} {...screenProps} />;
 }
 
 /** The theme's palette, or the default one if the theme itself is what
@@ -124,10 +142,8 @@ function ErrorCard({ where, error, onRetry, retrying }: {
   return (
     <View style={styles.screen}>
       <View style={styles.card}>
-        <Text style={styles.title}>Something went wrong here</Text>
-        <Text style={styles.body}>
-          This screen ran into a problem. Nothing you’ve saved is lost.
-        </Text>
+        <Text style={styles.title}>{t('common.errorCard.title')}</Text>
+        <Text style={styles.body}>{t('common.errorCard.body')}</Text>
         <Button
           mode="contained"
           onPress={onRetry}
@@ -137,7 +153,7 @@ function ErrorCard({ where, error, onRetry, retrying }: {
           buttonColor={palette.acc}
           textColor={palette.btnInk}
         >
-          Try again
+          {t('common.tryAgain')}
         </Button>
         <Button
           mode="text"
@@ -146,7 +162,7 @@ function ErrorCard({ where, error, onRetry, retrying }: {
           textColor={palette.sub}
           style={styles.button}
         >
-          Report this problem
+          {t('common.errorCard.report')}
         </Button>
       </View>
     </View>

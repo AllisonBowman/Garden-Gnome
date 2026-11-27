@@ -17,6 +17,7 @@ import { MapLayer } from '../types/site';
 import { layerReady, legendA11y, legendSteps } from '../land/mapLayers';
 import ExplainedBlock from './ExplainedBlock';
 import { useAppTheme } from '../theme/ThemeProvider';
+import { t } from '../i18n';
 
 export interface MapLegendProps {
   /** The layer drawn on the map; null (Aerial) or a layer not ready draws nothing. */
@@ -46,7 +47,7 @@ export default function MapLegend({ layer, showExplained = true, showNotes = tru
       {showNotes ? layer.notes.filter((n) => n.trim()).map((n) => (
         <Text key={n} style={[styles.note, { color: palette.sub }]}>{n}</Text>
       )) : null}
-      {showExplained ? <ExplainedBlock explained={layer.explained} title={`${layer.title} layer`} /> : null}
+      {showExplained ? <ExplainedBlock explained={layer.explained} title={t('land.layerBlockTitle', { title: layer.title })} /> : null}
     </View>
   );
 }

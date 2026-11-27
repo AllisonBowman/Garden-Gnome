@@ -7,6 +7,7 @@ import {
 } from './profileRows';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette } from '../theme/tokens';
+import { t } from '../i18n';
 
 /**
  * The owner's correction under one site value: tap choices from the
@@ -29,7 +30,7 @@ export default function CorrectionControl({
   const showing = correctionShowing(value);
   const chosen = selectedChoice(value);
   const pub = publicLine(value);
-  const title = value.title || 'this value';
+  const title = value.title || t('land.correction.thisValue');
 
   if (!value.can_override && !showing) return null;
 
@@ -39,7 +40,7 @@ export default function CorrectionControl({
 
       {value.can_override && value.override_kind === 'choice' && value.override_choices.length > 0 ? (
         <View>
-          <Text style={styles.ask}>{showing ? 'Change your answer:' : 'Know better? Tap what is true here:'}</Text>
+          <Text style={styles.ask}>{showing ? t('land.correction.change') : t('land.correction.knowBetter')}</Text>
           <View style={styles.chips}>
             {value.override_choices.map((c) => {
               const on = chosen === c.value;
@@ -50,7 +51,7 @@ export default function CorrectionControl({
                   showSelectedCheck
                   disabled={busy}
                   onPress={() => { if (!on) onSet(c.value); }}
-                  accessibilityLabel={`${title}: ${c.label}. ${on ? 'Your answer.' : 'Tap to set.'}`}
+                  accessibilityLabel={t(on ? 'land.correction.choiceA11y' : 'land.correction.choiceSetA11y', { title, label: c.label })}
                   accessibilityState={{ selected: on, disabled: busy }}
                   compact
                 >
@@ -66,19 +67,19 @@ export default function CorrectionControl({
         <View>
           <Text style={styles.ask}>
             {value.field === 'soil_ph'
-              ? 'Have a soil test? Enter its soil acidity (pH) number.'
-              : 'Have a measurement? Enter it.'}
+              ? t('land.correction.phAsk')
+              : t('land.correction.numberAsk')}
           </Text>
           <View style={styles.numberRow}>
             <TextInput
               mode="outlined"
               dense
               value={text}
-              onChangeText={(t) => { setText(t); setProblem(null); }}
+              onChangeText={(next) => { setText(next); setProblem(null); }}
               keyboardType="decimal-pad"
               placeholder={value.field === 'soil_ph' ? '6.5' : undefined}
               style={styles.number}
-              accessibilityLabel={value.field === 'soil_ph' ? 'Soil acidity (pH) from your soil test' : `${title} you measured`}
+              accessibilityLabel={value.field === 'soil_ph' ? t('land.correction.phA11y') : t('land.correction.measuredA11y', { title })}
             />
             <Button
               mode="outlined"
@@ -90,9 +91,9 @@ export default function CorrectionControl({
                 setText('');
               }}
               textColor={palette.acc}
-              accessibilityLabel={`Save ${title}`}
+              accessibilityLabel={t('land.correction.saveA11y', { title })}
             >
-              Save
+              {t('land.correction.save')}
             </Button>
           </View>
           {problem ? <Text style={styles.problem}>{problem}</Text> : null}
@@ -107,7 +108,7 @@ export default function CorrectionControl({
           onPress={onClear}
           textColor={palette.sub}
           style={styles.clear}
-          accessibilityLabel={`${USE_ESTIMATE_LABEL} for ${title}`}
+          accessibilityLabel={t('land.correction.useEstimateA11y', { title })}
         >
           {USE_ESTIMATE_LABEL}
         </Button>

@@ -2,6 +2,7 @@ import {
   LOT_CONTENTS, LotContent, PinSource, ProfileStatus, ProfileStepStatus, PropertyCreate, PropertyPatch,
 } from '../types/site';
 import { LatLng } from './imageGeometry';
+import { t } from '../i18n';
 
 // Property setup as pure logic: the lot contents chips, whether a place is in
 // the United States, nudging the pin, and the body sent to the server. The
@@ -9,14 +10,14 @@ import { LatLng } from './imageGeometry';
 // ever puts it (or the city or country it came with) in a request.
 
 export const LOT_CONTENT_LABELS: Record<LotContent, string> = {
-  trees_that_drop_leaves: 'Trees that drop their leaves',
-  evergreens: 'Evergreen trees or shrubs',
-  shrubs: 'Shrubs',
-  lawn: 'Lawn',
-  garden_beds: 'Garden beds',
-  potted_plants: 'Plants in pots',
-  vegetables: 'Vegetables',
-  mostly_paved: 'Mostly paved',
+  trees_that_drop_leaves: t('land.lotContents.trees_that_drop_leaves'),
+  evergreens: t('land.lotContents.evergreens'),
+  shrubs: t('land.lotContents.shrubs'),
+  lawn: t('land.lotContents.lawn'),
+  garden_beds: t('land.lotContents.garden_beds'),
+  potted_plants: t('land.lotContents.potted_plants'),
+  vegetables: t('land.lotContents.vegetables'),
+  mostly_paved: t('land.lotContents.mostly_paved'),
 };
 
 /** The chips in their fixed order, with their labels. */
@@ -122,22 +123,22 @@ export function editPatch(
 export interface ReadingLine { key: 'fast' | 'background'; what: string; state: string; done: boolean }
 
 const STEP_WORDS: Record<ProfileStepStatus, string> = {
-  pending: 'Waiting to start',
-  building: 'Reading now',
-  ready: 'Done',
-  partial: 'Some maps could not be reached. We will try again.',
-  failed: 'Could not reach it. We will try again.',
+  pending: t('land.steps.pending'),
+  building: t('land.steps.building'),
+  ready: t('land.steps.ready'),
+  partial: t('land.steps.partial'),
+  failed: t('land.steps.failed'),
 };
 
 /** One line per step of the profile, for the screen shown after creating. */
 export function readingLines(status: ProfileStatus): ReadingLine[] {
   return [
     {
-      key: 'fast', what: 'Hardiness zone, typical frost dates and soil',
+      key: 'fast', what: t('land.readingFast'),
       state: STEP_WORDS[status.fast], done: status.fast !== 'pending' && status.fast !== 'building',
     },
     {
-      key: 'background', what: 'Slope, tree cover, sun, where water collects and the aerial image',
+      key: 'background', what: t('land.readingBackground'),
       state: STEP_WORDS[status.background],
       done: status.background !== 'pending' && status.background !== 'building',
     },

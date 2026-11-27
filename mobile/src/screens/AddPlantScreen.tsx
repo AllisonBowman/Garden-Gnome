@@ -35,12 +35,13 @@ import type { PlantsStackParamList } from '../../App';
 import {
   CHECK_FAILED, misfitIntro, misfitsOf, speciesFitNote,
 } from '../growingAreas/fitFindings';
+import { t } from '../i18n';
 
 /** The initial condition choices (the stored values are unchanged), in two
  *  rows of two so every label fits at 375 points wide. */
 const CONDITION_ROWS: Array<Array<{ value: string; label: string }>> = [
-  [{ value: 'excellent', label: 'Excellent' }, { value: 'good', label: 'Good' }],
-  [{ value: 'fair', label: 'Fair' }, { value: 'poor', label: 'Poor' }],
+  [{ value: 'excellent', label: t('species.add.conditionExcellent') }, { value: 'good', label: t('species.add.conditionGood') }],
+  [{ value: 'fair', label: t('species.add.conditionFair') }, { value: 'poor', label: t('species.add.conditionPoor') }],
 ];
 
 export default function AddPlantScreen() {
@@ -135,10 +136,10 @@ export default function AddPlantScreen() {
     },
     onError: (err) =>
       Alert.alert(
-        "Couldn't save",
+        t('species.add.saveFailedTitle'),
         serverMessage(
           err,
-          "This plant couldn't be saved just now. Check your connection and try again. Nothing was lost.",
+          t('species.add.saveFailedBody'),
         ),
       ),
   });
@@ -163,10 +164,10 @@ export default function AddPlantScreen() {
     onSuccess: (result) => setIdentifyResult(result),
     onError: (err) =>
       Alert.alert(
-        'No match just now',
+        t('species.add.identifyFailedTitle'),
         serverMessage(
           err,
-          "The Gnome couldn't read this photo just now. You can still pick the species from the search below.",
+          t('species.add.identifyFailedBody'),
         ),
       ),
   });
@@ -207,24 +208,24 @@ export default function AddPlantScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Eyebrow style={styles.sectionLabel}>Plant details</Eyebrow>
+        <Eyebrow style={styles.sectionLabel}>{t('species.add.plantDetails')}</Eyebrow>
 
         <TextInput
-          label="Nickname"
+          label={t('species.add.nickname')}
           value={nickname}
           onChangeText={setNickname}
           mode="outlined"
           style={styles.input}
-          placeholder="e.g. Sunny, Big Fern, Corner Cactus"
+          placeholder={t('species.add.nicknamePlaceholder')}
         />
 
         {/* A row of twelve tomatoes is one thing to the person who planted it,
             not twelve. Leaving this at 1 keeps the old behaviour exactly — a
             single plant you can name. */}
         <TextInput
-          label="How many?"
+          label={t('species.add.howMany')}
           value={quantity}
-          onChangeText={(t) => setQuantity(t.replace(/[^0-9]/g, ''))}
+          onChangeText={(v) => setQuantity(v.replace(/[^0-9]/g, ''))}
           mode="outlined"
           keyboardType="number-pad"
           style={styles.input}
@@ -232,17 +233,16 @@ export default function AddPlantScreen() {
         />
         {quantityValue > 1 && (
           <Text style={styles.quantityHint}>
-            Kept together as one planting. Care you log covers all
-            {' '}{quantityValue}.
+            {t('species.add.keptTogether', { n: quantityValue })}
           </Text>
         )}
 
-        <Eyebrow style={styles.sectionLabel}>Species *</Eyebrow>
+        <Eyebrow style={styles.sectionLabel}>{t('species.add.speciesRequired')}</Eyebrow>
 
         {speciesFailed && !catalogReady && (
           <LoadError
             inline
-            message="Couldn’t load the plant catalog, so there’s nothing to pick from yet."
+            message={t('species.add.catalogFailed')}
             error={speciesError}
             onRetry={() => refetchSpecies()}
             retrying={speciesFetching}
@@ -261,7 +261,7 @@ export default function AddPlantScreen() {
                   disabled={identifyMutation.isPending}
                   style={styles.identifyBtn}
                 >
-                  Take photo
+                  {t('species.add.takePhoto')}
                 </Button>
               )}
               <Button
@@ -272,13 +272,11 @@ export default function AddPlantScreen() {
                 disabled={identifyMutation.isPending}
                 style={styles.identifyBtn}
               >
-                Choose photo
+                {t('species.add.choosePhoto')}
               </Button>
             </View>
             <HelperText type="info" style={styles.identifyHint}>
-              Your phone suggests what the plant might be. Crop close to a leaf
-              or the flower: suggestions are much better from those than from a
-              wide shot.
+              {t('species.add.identifyHint')}
             </HelperText>
           </>
         )}
@@ -319,7 +317,7 @@ export default function AddPlantScreen() {
               result={[
                 identifyResult.observation,
                 ...(identifyResult.candidates.length > 0
-                  ? [`Candidates: ${identifyResult.candidates.map((c) => c.common_name).join(', ')}`]
+                  ? [t('species.add.candidates', { names: identifyResult.candidates.map((c) => c.common_name).join(', ') })]
                   : []),
               ].join('\n')}
             />
@@ -327,7 +325,7 @@ export default function AddPlantScreen() {
         )}
 
         <TextInput
-          label="Search species"
+          label={t('species.add.searchSpecies')}
           value={speciesSearch}
           onChangeText={setSpeciesSearch}
           mode="outlined"
@@ -336,7 +334,7 @@ export default function AddPlantScreen() {
         />
 
         {!catalogReady && !speciesFailed && (
-          <HelperText type="info">Loading the plant catalog…</HelperText>
+          <HelperText type="info">{t('species.add.loadingCatalog')}</HelperText>
         )}
 
         {speciesSearch.length > 0 && catalogReady && (
@@ -356,8 +354,7 @@ export default function AddPlantScreen() {
             </View>
           ) : (
             <HelperText type="info">
-              Nothing in the catalog by that name. Try its other name, or the
-              Latin one.
+              {t('species.add.noMatch')}
             </HelperText>
           )
         )}
@@ -386,7 +383,7 @@ export default function AddPlantScreen() {
             never left for the server to decide out of sight. */}
         {!areasPending && (
           <>
-            <Eyebrow style={styles.sectionLabel}>Growing area</Eyebrow>
+            <Eyebrow style={styles.sectionLabel}>{t('species.add.growingArea')}</Eyebrow>
             {areasFailed ? (
               <Text style={styles.areaNote}>{areasFailedNote(envId != null)}</Text>
             ) : growingAreas.length === 0 ? (
@@ -412,12 +409,12 @@ export default function AddPlantScreen() {
                 that keeps "confirmed" and "nothing known" apart. */}
             {chosenArea && speciesId != null ? (
               fitLoading ? (
-                <Text style={styles.fitQuiet}>{`Checking ${chosenArea.name}…`}</Text>
+                <Text style={styles.fitQuiet}>{t('species.add.checking', { area: chosenArea.name })}</Text>
               ) : fitFailed ? (
                 <View>
                   <Text style={styles.fitQuiet}>{CHECK_FAILED}</Text>
                   <Button compact onPress={() => refetchFit()} style={styles.retry}>
-                    Try again
+                    {t('species.add.tryAgain')}
                   </Button>
                 </View>
               ) : speciesFit && fitMisfits.length > 0 ? (
@@ -427,7 +424,7 @@ export default function AddPlantScreen() {
                     <FitFindingRow key={`${f.axis}-${i}`} finding={f} />
                   ))}
                   <Text style={styles.fitFoot}>
-                    You can still save it here, or pick another spot.
+                    {t('species.add.stillSave')}
                   </Text>
                 </View>
               ) : speciesFit ? (
@@ -437,17 +434,17 @@ export default function AddPlantScreen() {
           </>
         )}
 
-        <Eyebrow style={styles.sectionLabel}>Location note</Eyebrow>
+        <Eyebrow style={styles.sectionLabel}>{t('species.add.locationNote')}</Eyebrow>
         <TextInput
-          label="Where in the space?"
+          label={t('species.add.whereInSpace')}
           value={location}
           onChangeText={setLocation}
           mode="outlined"
           style={styles.input}
-          placeholder="e.g. South window, bathroom shelf"
+          placeholder={t('species.add.wherePlaceholder')}
         />
 
-        <Eyebrow style={styles.sectionLabel}>Initial condition</Eyebrow>
+        <Eyebrow style={styles.sectionLabel}>{t('species.add.initialCondition')}</Eyebrow>
         {/* Two rows of two: four in one row cut "Excellent" short on a
             375 point wide phone (each button keeps 16 points of padding a
             side). Same four values, one choice across both rows. */}
@@ -457,7 +454,7 @@ export default function AddPlantScreen() {
             value={condition}
             onValueChange={setCondition}
             buttons={row.map((c) => ({
-              ...c, accessibilityLabel: `Initial condition: ${c.label}`,
+              ...c, accessibilityLabel: t('species.add.conditionA11y', { label: c.label }),
             }))}
             style={i === CONDITION_ROWS.length - 1 ? styles.segmented : styles.segmentedRow}
           />
@@ -473,7 +470,7 @@ export default function AddPlantScreen() {
           buttonColor={palette.acc}
           textColor={palette.btnInk}
         >
-          Save plant
+          {t('species.add.save')}
         </Button>
       </ScrollView>
     </KeyboardAvoidingView>

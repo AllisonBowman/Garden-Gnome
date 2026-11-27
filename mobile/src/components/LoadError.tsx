@@ -4,6 +4,7 @@ import { Button, Text } from 'react-native-paper';
 import { useAppTheme } from '../theme/ThemeProvider';
 import { Palette, Fonts } from '../theme/tokens';
 import { loadFailedAdvice } from '../care/loadFailed';
+import { t } from '../i18n';
 
 interface Props {
   /** What failed, in the caretaker's words: "Couldn’t load your plants."
@@ -48,7 +49,7 @@ export default function LoadError({
         style={inline ? styles.buttonInline : styles.button}
         textColor={palette.acc}
       >
-        Try again
+        {t('common.tryAgain')}
       </Button>
     </View>
   );

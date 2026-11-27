@@ -13,6 +13,7 @@ import RefreshFailed from '../components/RefreshFailed';
 import { loadView } from '../care/loadFailed';
 import { areaTypeLabel } from '../growingAreas/realEstate';
 import type { CensusStackParamList } from '../../App';
+import { t } from '../i18n';
 
 type Nav = NativeStackNavigationProp<CensusStackParamList, 'Census'>;
 
@@ -39,7 +40,7 @@ export default function CensusScreen() {
   if (view === 'failed' || !summary) {
     return (
       <LoadError
-        message="Couldn’t load the census."
+        message={t('census.loadFailed')}
         error={error}
         onRetry={() => refetch()}
         retrying={isFetching}
@@ -62,32 +63,31 @@ export default function CensusScreen() {
       {/* The almanac: the catalog as something to read, not just count */}
       <Card style={styles.almanacCard} mode="elevated" onPress={() => navigation.navigate('Almanac')}>
         <Card.Content>
-          <Eyebrow>Species Almanac</Eyebrow>
+          <Eyebrow>{t('census.almanacEyebrow')}</Eyebrow>
           <Text variant="titleMedium" style={styles.almanacTitle}>
-            Read the catalog ›
+            {t('census.almanacTitle')}
           </Text>
           <Text variant="bodySmall" style={styles.almanacSub}>
-            Every species we hold, with its care fingerprint and how demanding
-            it is to keep — and which of them suit each of your growing areas.
+            {t('census.almanacBody')}
           </Text>
         </Card.Content>
       </Card>
 
       {/* Totals */}
       <View style={styles.totalsRow}>
-        <TotalCard styles={styles} label="Plants" value={summary.total_plants} color={palette.acc} />
-        <TotalCard styles={styles} label="Growing areas" value={summary.total_growing_areas} color={palette.sub} />
+        <TotalCard styles={styles} label={t('census.plants')} value={summary.total_plants} color={palette.acc} />
+        <TotalCard styles={styles} label={t('census.growingAreas')} value={summary.total_growing_areas} color={palette.sub} />
       </View>
 
       {/* Growing areas by type. Left out when the server didn't report it,
           rather than shown as a card that claims there are none. */}
       {areaTypes && (
         <Card style={styles.card}>
-          <Card.Title title="Growing areas by type" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('census.areasByType')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             {areaTypes.length === 0 ? (
               <Text variant="bodySmall" style={styles.emptyNote}>
-                No growing spaces yet. Add one from Your growing spaces on Home.
+                {t('census.noAreas')}
               </Text>
             ) : areaTypes.map(([type, count]) => (
               <View key={type} style={styles.envRow}>
@@ -104,11 +104,11 @@ export default function CensusScreen() {
       {/* Species distribution */}
       {topSpecies && (
         <Card style={styles.card}>
-          <Card.Title title="Top species" titleVariant="titleMedium" titleStyle={styles.cardTitle} />
+          <Card.Title title={t('census.topSpecies')} titleVariant="titleMedium" titleStyle={styles.cardTitle} />
           <Card.Content>
             {topSpecies.length === 0 ? (
               <Text variant="bodySmall" style={styles.emptyNote}>
-                No plants yet. Once you add some, the ones you grow most show up here.
+                {t('census.noPlants')}
               </Text>
             ) : topSpecies.map((s) => (
               <View key={s.species_id} style={styles.speciesRow}>

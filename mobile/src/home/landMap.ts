@@ -1,4 +1,5 @@
 import { MapLayers } from '../types/site';
+import { t } from '../i18n';
 
 // The land map card on Home and Your land (map and visuals spec section 4.4):
 // which form it takes from the state of its three queries, the one-line
@@ -13,10 +14,10 @@ export const IMAGERY_STALE_MS = 30 * 60 * 1000;
 /** How often to ask again while a layer is still being prepared. */
 export const LAYERS_POLL_MS = 60 * 1000;
 
-export const MAP_LOADING_LINE = 'Loading the map.';
-export const MAP_FAILED_LINE = 'The map could not be loaded. Everything else about your land is below.';
-export const ZONES_FAILED_LINE = 'Your zones could not be loaded, so they are not outlined on the map.';
-export const LAYERS_FAILED_LINE = 'The sun, trees and water layers could not be loaded, so the map shows the photograph alone.';
+export const MAP_LOADING_LINE = t('home.map.loading');
+export const MAP_FAILED_LINE = t('home.map.failed');
+export const ZONES_FAILED_LINE = t('home.map.zonesFailed');
+export const LAYERS_FAILED_LINE = t('home.map.layersFailed');
 
 export interface LandMapInput {
   imagery: { hasData: boolean; isLoading: boolean; isError: boolean };
